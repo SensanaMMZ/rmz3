@@ -4,7 +4,11 @@
 
 static void nop_080a5048(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_20.inc");
+INCASM("asm/projectile/unk_20_pre.inc");
+
+void FUN_080a5144(struct Projectile* p) {}
+
+INCASM("asm/projectile/unk_20_post.inc");
 
 void Projectile20_Init(struct Projectile* p);
 void Projectile20_Update(struct Projectile* p);

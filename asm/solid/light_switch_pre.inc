@@ -150,22 +150,3 @@ _080DBFDE:
 	.align 2, 0
 _080DBFF0: .4byte 0x0000DF01
 _080DBFF4: .4byte gCurStory
-
-	thumb_func_start Solid32_Die
-Solid32_Die:
-	bx lr
-	.align 2, 0
-
-	thumb_func_start Solid32_Disappear
-Solid32_Disappear: @ 0x080DBFFC
-	push {r4, lr}
-	adds r4, r0, #0
-	movs r0, #0xbd
-	bl ClearBlink
-	movs r0, #0xbe
-	bl ClearBlink
-	adds r0, r4, #0
-	bl DeleteSolid
-	pop {r4}
-	pop {r0}
-	bx r0

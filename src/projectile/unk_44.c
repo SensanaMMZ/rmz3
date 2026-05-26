@@ -2,7 +2,11 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_44.inc");
+INCASM("asm/projectile/unk_44_pre.inc");
+
+void FUN_080b17d8(struct Projectile* p) {}
+
+INCASM("asm/projectile/unk_44_post.inc");
 
 void FUN_080b16f4(struct Projectile* p);
 void FUN_080b1764(struct Projectile* p);

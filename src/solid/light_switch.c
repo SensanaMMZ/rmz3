@@ -41,7 +41,11 @@ static void Solid32_Init(struct Solid* p) {
   Solid32_Update(p);
 }
 
-INCASM("asm/solid/light_switch.inc");
+INCASM("asm/solid/light_switch_pre.inc");
+
+void Solid32_Die(struct Solid* p) {}
+
+INCASM("asm/solid/light_switch_post.inc");
 
 static const struct Collision sCollision = {
   kind : DRP,

@@ -2,7 +2,11 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/pantheon_aqua_mod.inc");
+INCASM("asm/projectile/pantheon_aqua_mod_pre.inc");
+
+void FUN_080a5cf8(struct Projectile* p) {}
+
+INCASM("asm/projectile/pantheon_aqua_mod_post.inc");
 
 void PantheonAquaModProjectile_Init(struct Projectile* p);
 void PantheonAquaModProjectile_Update(struct Projectile* p);

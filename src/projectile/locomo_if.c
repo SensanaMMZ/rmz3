@@ -4,7 +4,11 @@
 
 // LocomoIF
 
-INCASM("asm/projectile/locomo_if.inc");
+INCASM("asm/projectile/locomo_if_pre.inc");
+
+void FUN_080a7de8(struct Projectile* p) {}
+
+INCASM("asm/projectile/locomo_if_post.inc");
 
 void Projectile23_Init(struct Projectile* p);
 void Projectile23_Update(struct Projectile* p);
