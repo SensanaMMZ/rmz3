@@ -452,22 +452,3 @@ _080AA5BC:
 	bx r0
 	.align 2, 0
 _080AA5C4: .4byte gProjectileFnTable
-
-	thumb_func_start Projectile29_Die
-Projectile29_Die: @ 0x080AA5C8
-	ldrb r2, [r0, #0xa]
-	movs r1, #0xfe
-	ands r1, r2
-	strb r1, [r0, #0xa]
-	ldr r2, _080AA5E4 @ =gProjectileFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_080AA5E4: .4byte gProjectileFnTable

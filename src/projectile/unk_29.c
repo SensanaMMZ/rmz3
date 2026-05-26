@@ -4,9 +4,13 @@
 
 INCASM("asm/projectile/unk_29.inc");
 
+void Projectile29_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
 void Projectile29_Init(struct Projectile* p);
 void Projectile29_Update(struct Projectile* p);
-void Projectile29_Die(struct Projectile* p);
 
 // clang-format off
 const ProjectileRoutine gProjectile29Routine = {
