@@ -40,7 +40,11 @@ void CreateAnubisCoffins(struct Entity* anubis, bool8 r1) {
   }
 }
 
-INCASM("asm/solid/anubis_coffin.inc");
+INCASM("asm/solid/anubis_coffin_pre.inc");
+
+void nop_080cde6c(struct Solid* p) {}
+
+INCASM("asm/solid/anubis_coffin_post.inc");
 
 // --------------------------------------------
 
