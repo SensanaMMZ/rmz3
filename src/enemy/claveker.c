@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[3];
+
 void Claveker_Init(struct Enemy* p);
 void Claveker_Update(struct Enemy* p);
 void Claveker_Die(struct Enemy* p);
@@ -47,7 +49,19 @@ INCASM("asm/enemy/claveker_p4.inc");
 
 bool8 FUN_0808f158(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/claveker_p5.inc");
+void FUN_0808f15c(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    *slot = NULL;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 FUN_0808f198(struct Enemy* p) { return TRUE; }
 
