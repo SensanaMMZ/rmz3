@@ -114,7 +114,14 @@ static void FUN_0809f640(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/unk_12.inc");
+INCASM("asm/projectile/unk_12_pre.inc");
+
+void FUN_0809f7c8(struct Projectile* p) {
+  (p->s).mode[1] = 1;
+  (p->s).mode[2] = 0;
+}
+
+INCASM("asm/projectile/unk_12_post.inc");
 
 // --------------------------------------------
 

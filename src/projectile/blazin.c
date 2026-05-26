@@ -265,7 +265,14 @@ static void FUN_0809e7b4(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/blazin.inc");
+INCASM("asm/projectile/blazin_pre.inc");
+
+void FUN_0809edfc(struct Projectile* p) {
+  (p->s).mode[1] = 1;
+  (p->s).mode[2] = 0;
+}
+
+INCASM("asm/projectile/blazin_post.inc");
 
 // --------------------------------------------
 

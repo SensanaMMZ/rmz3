@@ -538,11 +538,3 @@ _0806C800: .4byte 0x0000190E
 _0806C804: .4byte gMission
 _0806C808: .4byte 0x0000270E
 _0806C80C: .4byte gEnemyFnTable
-
-	thumb_func_start Lamplort_Disappear
-Lamplort_Disappear: @ 0x0806C810
-	push {lr}
-	bl DeleteEnemy
-	pop {r0}
-	bx r0
-	.align 2, 0

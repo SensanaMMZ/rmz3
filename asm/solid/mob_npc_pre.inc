@@ -2979,10 +2979,3 @@ FUN_080dadfc: @ 0x080DADFC
 	.align 2, 0
 _080DAE70: .4byte sMotions
 _080DAE74: .4byte sCollisions+48
-
-	thumb_func_start getCielComputerResearchTextID
-getCielComputerResearchTextID: @ 0x080DAE78
-	movs r0, #0xa3
-	lsls r0, r0, #2
-	bx lr
-	.align 2, 0

@@ -203,7 +203,13 @@ _0806C38C: .4byte gEnemyFnTable\n\
 
 // --------------------------------------------
 
-INCASM("asm/enemy/lamplort_p1.inc");
+INCASM("asm/enemy/lamplort_p1_pre.inc");
+
+void Lamplort_Disappear(struct Enemy* p) {
+  DeleteEnemy((struct Entity*)p);
+}
+
+INCASM("asm/enemy/lamplort_p1_post.inc");
 
 bool8 FUN_0806c81c(struct Enemy* p) { return TRUE; }
 

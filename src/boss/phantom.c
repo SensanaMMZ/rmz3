@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "motion.h"
 
 void FUN_080c4be0(s32 x, s32 y);
 
@@ -24,7 +25,13 @@ INCASM("asm/boss/phantom_p1.inc");
 
 void nop_0805f930(struct Boss* p) {}
 
-INCASM("asm/boss/phantom_p2.inc");
+INCASM("asm/boss/phantom_p2_pre.inc");
+
+void phantom_080607e4(struct Entity* p) {
+  UpdateMotionGraphic(p);
+}
+
+INCASM("asm/boss/phantom_p2_post.inc");
 
 void Phantom_Init(struct Boss* p);
 void Phantom_Update(struct Boss* p);
