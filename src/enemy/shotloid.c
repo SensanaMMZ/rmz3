@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/shotloid.inc");
+INCASM("asm/enemy/shotloid_pre.inc");
+
+void FUN_08093de0(struct Enemy* p) {}
+
+INCASM("asm/enemy/shotloid_post.inc");
 
 void Shotloid_Init(struct Enemy* p);
 void Shotloid_Update(struct Enemy* p);

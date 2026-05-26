@@ -2,7 +2,15 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/minigame_harpuia.inc");
+INCASM("asm/enemy/minigame_harpuia_p1.inc");
+
+void FUN_0809b40c(struct Enemy* p) {}
+
+INCASM("asm/enemy/minigame_harpuia_p2.inc");
+
+void FUN_0809b414(struct Enemy* p) {}
+
+INCASM("asm/enemy/minigame_harpuia_p3.inc");
 
 void HarpuiaMinigameEnemy_Init(struct Enemy* p);
 void HarpuiaMinigameEnemy_Update(struct Enemy* p);

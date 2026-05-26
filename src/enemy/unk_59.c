@@ -3,7 +3,11 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/enemy/unk_59.inc");
+INCASM("asm/enemy/unk_59_pre.inc");
+
+void FUN_08091810(struct Enemy* p) {}
+
+INCASM("asm/enemy/unk_59_post.inc");
 
 void Enemy59_Init(struct Enemy* p);
 void Enemy59_Update(struct Enemy* p);
