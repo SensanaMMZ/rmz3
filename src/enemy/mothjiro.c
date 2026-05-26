@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[3];
+
 void Mothjiro_Init(struct Enemy* p);
 void Mothjiro_Update(struct Enemy* p);
 void Mothjiro_Die(struct Enemy* p);
@@ -53,7 +55,12 @@ INCASM("asm/enemy/mothjiro_p5.inc");
 
 bool8 nop_08088a1c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/mothjiro_p6.inc");
+void mothjiro_08088a20(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+}
 
 bool8 nop_08088a44(struct Enemy* p) { return TRUE; }
 

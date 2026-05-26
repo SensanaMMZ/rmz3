@@ -1,3 +1,4 @@
+#include "blink.h"
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
@@ -45,7 +46,11 @@ INCASM("asm/solid/light_switch_pre.inc");
 
 void Solid32_Die(struct Solid* p) {}
 
-INCASM("asm/solid/light_switch_post.inc");
+void Solid32_Disappear(struct Solid* p) {
+  ClearBlink(0xbd);
+  ClearBlink(0xbe);
+  DeleteSolid((Object*)p);
+}
 
 static const struct Collision sCollision = {
   kind : DRP,
