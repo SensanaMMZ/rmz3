@@ -50,7 +50,15 @@ void CreateLocomoIFPlatform(struct Boss* locomoif) {
   }
 }
 
-INCASM("asm/solid/locomoif_platform.inc");
+INCASM("asm/solid/locomoif_platform_part1.inc");
+
+void nop_080ce58c(struct Solid* p) {}
+
+INCASM("asm/solid/locomoif_platform_part2.inc");
+
+void nop_080ce70c(struct Solid* p) {}
+
+INCASM("asm/solid/locomoif_platform_part3.inc");
 
 // --------------------------------------------
 
