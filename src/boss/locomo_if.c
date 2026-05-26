@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "motion.h"
 
 void nop_0805474c(struct Boss* p) {}
 
@@ -8,7 +9,25 @@ INCASM("asm/boss/locomo_if_p1.inc");
 
 void nop_08054ad8(struct Boss* p) {}
 
-INCASM("asm/boss/locomo_if_p2.inc");
+void FUN_08054adc(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x1e;
+      SetMotion(&p->s, MOTION(0x54, 0));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).work[2]--;
+      if ((p->s).work[2] == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/boss/locomo_if_p2_post.inc");
 
 void LocomoIF_Init(struct Boss* p);
 void LocomoIF_Update(struct Boss* p);

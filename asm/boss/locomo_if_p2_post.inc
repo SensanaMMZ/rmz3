@@ -4,45 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08054adc
-FUN_08054adc: @ 0x08054ADC
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _08054AEC
-	cmp r0, #1
-	beq _08054B00
-	b _08054B1A
-_08054AEC:
-	movs r0, #0x1e
-	strb r0, [r4, #0x12]
-	movs r1, #0xa8
-	lsls r1, r1, #7
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_08054B00:
-	ldrb r0, [r4, #0x12]
-	subs r0, #1
-	strb r0, [r4, #0x12]
-	lsls r0, r0, #0x18
-	lsrs r1, r0, #0x18
-	cmp r1, #0
-	bne _08054B14
-	movs r0, #2
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_08054B14:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_08054B1A:
-	pop {r4}
-	pop {r0}
-	bx r0
-
 	thumb_func_start FUN_08054b20
 FUN_08054b20: @ 0x08054B20
 	push {r4, lr}
@@ -894,3 +855,4 @@ _0805531C:
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
+
