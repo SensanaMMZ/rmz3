@@ -98,17 +98,25 @@ else
   echo "      Edit $OUTDIR/base.c to replace the asm stub with C before permuting."
 fi
 
-# Inline the .inc contents into target.s.
-{
-  echo '	.syntax unified'
-  echo '	.text'
-  echo '	.thumb'
-  echo '	.thumb_func'
-  echo "	.global $FN"
-  echo "	.type $FN, %function"
-  echo "$FN:"
-  cat "$REPO/$INC"
-} > "$OUTDIR/target.s"
+# Inline the .inc contents into target.s. Two .inc shapes:
+#  - Bare function body (asm/unused/*, asm/wip/*) — needs our prologue.
+#  - Full .S-style file with `.include macros, .syntax unified, .text,
+#    thumb_func_start FN, FN:` — already has prologue + symbol def.
+# Detect the latter via `thumb_func_start $FN` and skip our wrapper.
+if grep -q "thumb_func_start[[:space:]]*$FN" "$REPO/$INC"; then
+  cat "$REPO/$INC" > "$OUTDIR/target.s"
+else
+  {
+    echo '	.syntax unified'
+    echo '	.text'
+    echo '	.thumb'
+    echo '	.thumb_func'
+    echo "	.global $FN"
+    echo "	.type $FN, %function"
+    echo "$FN:"
+    cat "$REPO/$INC"
+  } > "$OUTDIR/target.s"
+fi
 
 /opt/devkitpro/devkitARM/bin/arm-none-eabi-as \
   -mcpu=arm7tdmi -march=armv4t -mthumb -mthumb-interwork \
