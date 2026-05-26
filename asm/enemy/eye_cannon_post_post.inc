@@ -4,72 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08084934
-FUN_08084934: @ 0x08084934
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	adds r5, r4, #0
-	adds r5, #0xb4
-	ldr r0, [r5]
-	cmp r0, #0
-	beq _0808494A
-	bl isKilled
-	cmp r0, #0
-	beq _0808496A
-_0808494A:
-	movs r0, #0
-	str r0, [r5]
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _08084970 @ =0x08368328
-	bl SetDDP
-	adds r0, r4, #0
-	bl IsFrozen
-	adds r1, r0, #0
-	cmp r1, #0
-	bne _0808496A
-	movs r0, #1
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_0808496A:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08084970: .4byte 0x08368328
-
-	thumb_func_start FUN_08084974
-FUN_08084974: @ 0x08084974
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _08084984
-	cmp r0, #1
-	beq _0808499E
-	b _080849A4
-_08084984:
-	movs r1, #0xcc
-	lsls r1, r1, #7
-	adds r0, r4, #0
-	bl SetMotion
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _080849AC @ =0x08368340
-	bl SetDDP
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_0808499E:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_080849A4:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080849AC: .4byte 0x08368340
-
 	thumb_func_start FUN_080849b0
 FUN_080849b0: @ 0x080849B0
 	push {r4, lr}
@@ -607,4 +541,5 @@ _08084DB8: .4byte 0x0000270E
 _08084DBC: .4byte gEnemyFnTable
 _08084DC0: .4byte gCurStory
 _08084DC4: .4byte 0x08368358
+
 
