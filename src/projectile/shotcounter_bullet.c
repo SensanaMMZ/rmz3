@@ -161,6 +161,8 @@ void nop_0809ceac(struct Projectile* p) {}
 
 INCASM("asm/projectile/shotcounter_bullet.inc");
 
+void FUN_0809cf98(struct Projectile* p) {}
+
 static const struct Collision sCollisions[2] = {
     {
       kind : DDP,
