@@ -23,12 +23,15 @@ for d in "$HERE"/*/; do
   echo "=== $fn  (budget: ${BUDGET}s) ==="
   LOG="$HERE/logs/$fn.log"
   timeout "$BUDGET" "$PY" "$PERM" "$d" -j2 --best-only --stop-on-zero >"$LOG" 2>&1 || true
-  # Best score seen — last 'score = N' line in the log.
-  best=$(grep -oE 'score = [0-9]+' "$LOG" | tail -1 || echo "score = ?")
-  match=$(grep -c "score = 0\b" "$LOG" 2>/dev/null || echo 0)
-  if [ "$match" -gt 0 ]; then
-    echo "  MATCH found! see $LOG and $d/output-*.c"
+  # Best score = lowest output-N-* dir produced by permuter (these are
+  # only created when a new best is found, so the smallest N is the
+  # overall best score reached).
+  best=$(ls "$d" 2>/dev/null | grep -oE 'output-[0-9]+-' | grep -oE '[0-9]+' | sort -n | head -1)
+  if [ -z "$best" ]; then
+    echo "  no improvement over baseline — see $LOG"
+  elif [ "$best" = "0" ]; then
+    echo "  MATCH found! see $d/output-0-*/source.c"
   else
-    echo "  no match. best $best — see $LOG"
+    echo "  best score = $best — see $LOG and $d/output-$best-*/"
   fi
 done
