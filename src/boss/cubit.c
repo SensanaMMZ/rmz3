@@ -1,6 +1,8 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "motion.h"
+#include "script.h"
 
 static const struct Collision sCollisions[];
 
@@ -37,7 +39,22 @@ INCASM("asm/boss/cubit_p1.inc");
 
 bool8 FUN_08052b48(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/cubit_p2.inc");
+void cubitMode0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags |= 1;
+      SetMotion(&p->s, MOTION(0xb0, 2));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_08052b98(struct Boss* p) { return TRUE; }
 
