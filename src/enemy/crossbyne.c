@@ -66,7 +66,14 @@ INCASM("asm/enemy/crossbyne_p2.inc");
 
 void FUN_0807cf5c(struct Enemy* p) {}
 
-INCASM("asm/enemy/crossbyne_p3_pre.inc");
+void FUN_0807cf60(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void FUN_0807cf88(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
