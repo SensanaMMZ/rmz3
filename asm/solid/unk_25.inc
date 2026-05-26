@@ -66,8 +66,3 @@ _080D8B30:
 	bx r0
 	.align 2, 0
 _080D8B3C: .4byte 0xFFFFD000
-
-	thumb_func_start Solid25_Die
-Solid25_Die: @ 0x080D8B40
-	bx lr
-	.align 2, 0

@@ -38,3 +38,5 @@ static void Solid25_Init(struct Solid* p) {
 }
 
 INCASM("asm/solid/unk_25.inc");
+
+void Solid25_Die(struct Solid* p) {}
