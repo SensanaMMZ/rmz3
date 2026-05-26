@@ -2,7 +2,10 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "motion.h"
 #include "overworld.h"
+#include "script.h"
+#include "stagerun.h"
 
 static const struct Collision sCollisions[24];
 
@@ -306,7 +309,22 @@ INCASM("asm/boss/volteel_p1.inc");
 
 bool8 nop_080438a4(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p2.inc");
+void volteelMode0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags |= 1;
+      SetMotion(&p->s, MOTION(0xa5, 0));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_080438f0(struct Boss* p) { return TRUE; }
 
@@ -314,7 +332,21 @@ INCASM("asm/boss/volteel_p3.inc");
 
 bool8 FUN_08043988(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p4.inc");
+void volteelMode2(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xa5, 0));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (!(gStageRun.vm.active & 1)) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 bool8 nop_080439d0(struct Boss* p) { return TRUE; }
 
