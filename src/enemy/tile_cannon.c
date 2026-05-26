@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[9];
+
 INCASM("asm/enemy/tile_cannon_p1.inc");
 
 void FUN_08078170(struct Enemy* p) {}
@@ -10,7 +12,16 @@ INCASM("asm/enemy/tile_cannon_p2.inc");
 
 void FUN_0807847c(struct Enemy* p) {}
 
-INCASM("asm/enemy/tile_cannon_p3.inc");
+INCASM("asm/enemy/tile_cannon_p3_pre.inc");
+
+void FUN_080784b4(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[8]);
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/enemy/tile_cannon_p3_post.inc");
 
 void TileCannon_Init(struct Enemy* p);
 void TileCannon_Update(struct Enemy* p);

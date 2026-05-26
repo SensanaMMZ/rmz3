@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[5];
+
 void Crossbyne_Init(struct Enemy* p);
 void Crossbyne_Update(struct Enemy* p);
 void Crossbyne_Die(struct Enemy* p);
@@ -64,7 +66,16 @@ INCASM("asm/enemy/crossbyne_p2.inc");
 
 void FUN_0807cf5c(struct Enemy* p) {}
 
-INCASM("asm/enemy/crossbyne_p3.inc");
+INCASM("asm/enemy/crossbyne_p3_pre.inc");
+
+void FUN_0807cf88(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/enemy/crossbyne_p3_post.inc");
 
 // --------------------------------------------
 

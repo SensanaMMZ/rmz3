@@ -72,7 +72,16 @@ INCASM("asm/enemy/mothjiro_p7_p2.inc");
 
 bool8 nop_08088a4c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/mothjiro_p8.inc");
+INCASM("asm/enemy/mothjiro_p8_pre.inc");
+
+void mothjiro_08088a50(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/enemy/mothjiro_p8_post.inc");
 
 // --------------------------------------------
 

@@ -4,27 +4,6 @@
 
 	.text
 
-	thumb_func_start mothjiro_08088a50
-mothjiro_08088a50: @ 0x08088A50
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	bne _08088A6A
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _08088A70 @ =0x083687E0
-	bl SetDDP
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_08088A6A:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08088A70: .4byte 0x083687E0
-
 	thumb_func_start mothjiro_08088a74
 mothjiro_08088a74: @ 0x08088A74
 	push {r4, r5, lr}
@@ -142,3 +121,4 @@ _08088B46:
 	pop {r0}
 	bx r0
 	.align 2, 0
+

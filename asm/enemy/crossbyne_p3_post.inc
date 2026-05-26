@@ -4,51 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0807cf60
-FUN_0807cf60: @ 0x0807CF60
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	adds r5, r4, #0
-	adds r5, #0xb4
-	ldr r0, [r5]
-	cmp r0, #0
-	beq _0807CF76
-	bl isKilled
-	cmp r0, #0
-	beq _0807CF80
-_0807CF76:
-	movs r1, #0
-	str r1, [r5]
-	movs r0, #2
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_0807CF80:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-
-	thumb_func_start FUN_0807cf88
-FUN_0807cf88: @ 0x0807CF88
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	bne _0807CFA2
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _0807CFA8 @ =0x08367BCC
-	bl SetDDP
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_0807CFA2:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0807CFA8: .4byte 0x08367BCC
-
 	thumb_func_start FUN_0807cfac
 FUN_0807cfac: @ 0x0807CFAC
 	push {r4, lr}
@@ -881,3 +836,4 @@ FUN_0807d5c4: @ 0x0807D5C4
 	bx r0
 	.align 2, 0
 _0807D60C: .4byte gEnemyFnTable
+

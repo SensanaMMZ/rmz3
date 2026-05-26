@@ -4,56 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08078480
-FUN_08078480: @ 0x08078480
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	adds r5, r4, #0
-	adds r5, #0xb4
-	ldr r0, [r5]
-	cmp r0, #0
-	beq _08078496
-	bl isKilled
-	cmp r0, #0
-	beq _080784AA
-_08078496:
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _080784B0 @ =0x08367508
-	bl SetDDP
-	movs r1, #0
-	str r1, [r5]
-	movs r0, #7
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_080784AA:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080784B0: .4byte 0x08367508
-
-	thumb_func_start FUN_080784b4
-FUN_080784b4: @ 0x080784B4
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	bne _080784CE
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _080784D4 @ =0x08367520
-	bl SetDDP
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_080784CE:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080784D4: .4byte 0x08367520
-
 	thumb_func_start FUN_080784d8
 FUN_080784d8: @ 0x080784D8
 	push {r4, r5, lr}
@@ -533,3 +483,4 @@ FUN_08078908:
 	.byte 0x89, 0x18, 0x8E, 0xF7, 0x4F, 0xFC, 0x20, 0x1C, 0x73, 0x30, 0x00, 0x78, 0x03, 0x28, 0x05, 0xD1
 	.byte 0x00, 0x20, 0x01, 0x21, 0x61, 0x73, 0xA0, 0x73, 0x3C, 0x20, 0xA0, 0x74, 0x10, 0xBC, 0x01, 0xBC
 	.byte 0x00, 0x47, 0x00, 0x00, 0x02, 0x2F, 0x00, 0x00, 0x50, 0x75, 0x36, 0x08, 0x60, 0x74, 0x36, 0x08
+

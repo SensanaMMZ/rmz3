@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[4];
+
 INCASM("asm/enemy/mellnet_pre_p1.inc");
 
 void FUN_0807d720(struct Enemy* p) {}
@@ -10,7 +12,16 @@ INCASM("asm/enemy/mellnet_pre_p2.inc");
 
 void FUN_0807d990(struct Enemy* p) {}
 
-INCASM("asm/enemy/mellnet_post.inc");
+INCASM("asm/enemy/mellnet_post_pre.inc");
+
+void FUN_0807da10(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/enemy/mellnet_post_post.inc");
 
 void Mellnet_Init(struct Enemy* p);
 void Mellnet_Update(struct Enemy* p);

@@ -4,27 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08086604
-FUN_08086604: @ 0x08086604
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	bne _0808661E
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _08086624 @ =0x08368564
-	bl SetDDP
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_0808661E:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08086624: .4byte 0x08368564
-
 	thumb_func_start pBomber_08086628
 pBomber_08086628: @ 0x08086628
 	push {r4, lr}
@@ -96,3 +75,4 @@ _0808669E:
 	pop {r0}
 	bx r0
 	.align 2, 0
+

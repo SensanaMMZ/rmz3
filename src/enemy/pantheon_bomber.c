@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[5];
+
 INCASM("asm/enemy/pantheon_bomber_p1.inc");
 
 bool8 nop_08086338(struct Enemy* p) { return TRUE; }
@@ -18,7 +20,12 @@ INCASM("asm/enemy/pantheon_bomber_p4.inc");
 
 bool8 nop_080865d0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_bomber_p5.inc");
+void FUN_080865d4(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+}
 
 bool8 nop_080865f8(struct Enemy* p) { return TRUE; }
 
@@ -30,7 +37,16 @@ INCASM("asm/enemy/pantheon_bomber_p6_p2.inc");
 
 bool8 nop_08086600(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_bomber_p7.inc");
+INCASM("asm/enemy/pantheon_bomber_p7_pre.inc");
+
+void FUN_08086604(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/enemy/pantheon_bomber_p7_post.inc");
 
 void PantheonBomber_Init(struct Enemy* p);
 void PantheonBomber_Update(struct Enemy* p);
