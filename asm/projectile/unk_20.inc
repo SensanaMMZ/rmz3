@@ -1,13 +1,8 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-	
-	.text
 
-	thumb_func_start nop_080a5048
-nop_080a5048: @ 0x080A5048
-	bx lr
-	.align 2, 0
+	.text
 
 	thumb_func_start Projectile20_Init
 Projectile20_Init: @ 0x080A504C
