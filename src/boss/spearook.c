@@ -2,7 +2,18 @@
 #include "collision.h"
 #include "global.h"
 
-INCASM("asm/boss/spearook_p1.inc");
+INCASM("asm/boss/spearook_p1_pre.inc");
+
+void FUN_08062268(struct Boss* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/boss/spearook_p1_post.inc");
 
 void nop_0806316c(struct Boss* p) {}
 

@@ -4,38 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0808f1a4
-FUN_0808f1a4: @ 0x0808F1A4
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	bne _0808F1BE
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _0808F1DC @ =0x083693A0
-	bl SetDDP
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_0808F1BE:
-	adds r5, r4, #0
-	adds r5, #0xbc
-	ldr r0, [r5]
-	bl isKilled
-	cmp r0, #0
-	beq _0808F1D4
-	movs r0, #0
-	str r0, [r5]
-	strb r0, [r4, #0xd]
-	strb r0, [r4, #0xe]
-_0808F1D4:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0808F1DC: .4byte 0x083693A0
-
 	thumb_func_start FUN_0808f1e0
 FUN_0808f1e0: @ 0x0808F1E0
 	push {r4, r5, r6, lr}
@@ -125,3 +93,4 @@ _0808F276:
 	pop {r0}
 	bx r0
 	.align 2, 0
+

@@ -73,7 +73,21 @@ INCASM("asm/enemy/claveker_p6_p2.inc");
 
 bool8 FUN_0808f1a0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/claveker_p7.inc");
+void FUN_0808f1a4(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    *slot = NULL;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/claveker_p7_post.inc");
 
 // --------------------------------------------
 

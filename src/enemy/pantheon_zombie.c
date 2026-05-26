@@ -6,7 +6,18 @@ INCASM("asm/enemy/pantheon_zombie_p1.inc");
 
 void nop_0807ff3c(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_zombie_p2.inc");
+INCASM("asm/enemy/pantheon_zombie_p2_pre.inc");
+
+void FUN_0807ffb0(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/pantheon_zombie_p2_post.inc");
 
 void PantheonZombie_Init(struct Enemy* p);
 void PantheonZombie_Update(struct Enemy* p);
