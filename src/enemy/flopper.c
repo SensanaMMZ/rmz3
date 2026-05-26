@@ -74,7 +74,11 @@ static void Flopper_Update(struct FlopperObject* p) {
   (sUpdates[(p->s).mode[1]])((void*)p);
 }
 
-INCASM("asm/enemy/flopper.inc");
+INCASM("asm/enemy/flopper_p1.inc");
+
+void Flopper_onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {}
+
+INCASM("asm/enemy/flopper_p2.inc");
 
 static const struct Collision sCollisions[2] = {
     {
