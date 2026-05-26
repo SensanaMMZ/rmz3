@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[5];
+
 INCASM("asm/enemy/sharkseal_x_p1.inc");
 
 bool8 FUN_080707d0(struct Enemy* p) { return TRUE; }
@@ -30,7 +32,20 @@ INCASM("asm/enemy/sharkseal_x_p6.inc");
 
 bool8 FUN_08070f3c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/sharkseal_x_p7.inc");
+void sharksealxMode5(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[4]);
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xc0);
+  if (isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[0]);
+    *slot = NULL;
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 FUN_08070f8c(struct Enemy* p) { return TRUE; }
 
