@@ -238,7 +238,17 @@ void ExitStageLandscape(void) {
   gVideoRegBuffer.dispcnt &= ~(DISPCNT_BG1_ON | DISPCNT_BG2_ON | DISPCNT_BG3_ON | DISPCNT_OBJ_ON | DISPCNT_WIN0_ON);
 }
 
-NAKED static u16 getMetatileID(s32 x, s32 y) { INCCODE("asm/unused/getMetatileID.inc"); }  // (x, y)のタイルブロックのIDを入手する
+static s16 getMetatileID(s32 x, s32 y) {  // (x, y)のタイルブロックのIDを入手する
+  int new_var;
+  const s32 mx = x >> 12;
+  const s32 my = y >> 12;
+  u16* m;
+  if (((((u32)mx) > 0x770) || (my < 0)) || (my > 0x4F5)) {
+    return -1;
+  }
+  new_var = 2;
+  return ((s16*)gOverworld.terrain.tilemap)[((my * gOverworld.terrain.tilemap[0]) + mx) + new_var];
+}
 
 /*
   (x, y)のタイルブロックのBlockAttrを取得する
