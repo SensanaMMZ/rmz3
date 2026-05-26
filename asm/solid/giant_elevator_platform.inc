@@ -225,26 +225,3 @@ _080DEAD8: .4byte 0x00002001
 _080DEADC: .4byte gStageRun+232
 _080DEAE0: .4byte 0xFFFF8000
 _080DEAE4: .4byte gSolidFnTable
-
-	thumb_func_start Solid46_Die
-Solid46_Die: @ 0x080DEAE8
-	ldrb r2, [r0, #0xa]
-	movs r1, #0xfe
-	ands r1, r2
-	strb r1, [r0, #0xa]
-	ldrb r2, [r0, #0xb]
-	movs r1, #0xf7
-	ands r1, r2
-	strb r1, [r0, #0xb]
-	ldr r2, _080DEB0C @ =gSolidFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_080DEB0C: .4byte gSolidFnTable

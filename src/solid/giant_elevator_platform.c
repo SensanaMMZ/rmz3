@@ -62,5 +62,11 @@ static void Solid46_Init(struct Solid* p) {
 
 INCASM("asm/solid/giant_elevator_platform.inc");
 
+void Solid46_Die(struct Solid* p) {
+  (p->s).flags &= ~DISPLAY;
+  (p->s).flags2 &= ~ENTITY_HAZARD;
+  SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+}
+
 // 0x083717c0
 static const struct Rect sSize = {PIXEL(0), PIXEL(8), PIXEL(64), PIXEL(16)};
