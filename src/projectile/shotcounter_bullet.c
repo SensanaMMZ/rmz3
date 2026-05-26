@@ -151,6 +151,12 @@ static void ShotcounterBullet_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
 }
 
+void ShotcounterBullet_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
 INCASM("asm/projectile/shotcounter_bullet.inc");
 
 static const struct Collision sCollisions[2] = {
