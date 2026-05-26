@@ -1937,17 +1937,3 @@ _0809114C: .4byte 0xFFFFFE00
 	thumb_func_start FUN_08091150
 FUN_08091150:
 	.byte 0x01, 0x20, 0x70, 0x47
-
-	thumb_func_start FUN_08091154
-FUN_08091154: @ 0x08091154
-	push {lr}
-	adds r1, r0, #0
-	ldrb r0, [r1, #0xe]
-	cmp r0, #0
-	bne _08091162
-	movs r0, #1
-	strb r0, [r1, #0xe]
-_08091162:
-	pop {r0}
-	bx r0
-	.align 2, 0

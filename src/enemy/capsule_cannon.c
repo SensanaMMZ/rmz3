@@ -51,7 +51,11 @@ INCASM("asm/enemy/capsule_cannon_pre_p2.inc");
 
 bool8 FUN_08085c14(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/capsule_cannon_pre_p3.inc");
+void FUN_08085c18(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).mode[2] = 1;
+  }
+}
 
 bool8 FUN_08085c2c(struct Enemy* p) { return TRUE; }
 
@@ -61,7 +65,15 @@ void FUN_08085c30(struct Enemy* p) {}
 
 bool8 FUN_08085c34(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/capsule_cannon_post_post.inc");
+INCASM("asm/enemy/capsule_cannon_post_post_pre.inc");
+
+void FUN_08085c38(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/enemy/capsule_cannon_post_post_post.inc");
 
 bool8 FUN_08085a08(struct Enemy* p);
 bool8 FUN_08085a10(struct Enemy* p);

@@ -4,20 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08085c38
-FUN_08085c38: @ 0x08085C38
-	push {lr}
-	adds r1, r0, #0
-	ldrb r0, [r1, #0xe]
-	cmp r0, #0
-	bne _08085C46
-	movs r0, #1
-	strb r0, [r1, #0xe]
-_08085C46:
-	pop {r0}
-	bx r0
-	.align 2, 0
-
 	thumb_func_start FUN_08085c4c
 FUN_08085c4c: @ 0x08085C4C
 	push {r4, r5, lr}
@@ -119,5 +105,6 @@ _08085D06:
 	pop {r0}
 	bx r0
 	.align 2, 0
+
 
 

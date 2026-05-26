@@ -2,7 +2,15 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/petatria_p1.inc");
+INCASM("asm/enemy/petatria_p1_pre.inc");
+
+void FUN_08091154(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/enemy/petatria_p1_post.inc");
 
 bool8 FUN_08091168(struct Enemy* p) { return TRUE; }
 
@@ -14,7 +22,15 @@ INCASM("asm/enemy/petatria_p2_p2.inc");
 
 bool8 FUN_08091170(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/petatria_p3.inc");
+INCASM("asm/enemy/petatria_p3_pre.inc");
+
+void FUN_08091174(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/enemy/petatria_p3_post.inc");
 
 bool8 FUN_08091188(struct Enemy* p) { return TRUE; }
 

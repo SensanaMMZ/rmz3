@@ -769,7 +769,11 @@ INCASM("asm/boss/blazin_p8.inc");
 
 bool8 FUN_0803f9a8(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p9.inc");
+void blazinMode8(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).mode[2] = 1;
+  }
+}
 
 bool8 FUN_0803f9c0(struct Boss* _) { return TRUE; }
 
