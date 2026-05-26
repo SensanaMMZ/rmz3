@@ -21,7 +21,16 @@ void FUN_0805ecc8(struct Entity* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1.inc");
+void FUN_080608c8(struct Boss* p);
+
+INCASM("asm/boss/phantom_p1_pre.inc");
+
+void FUN_0805f784(struct Boss* p) {
+  (p->s).mode[3] = 1;
+  FUN_080608c8(p);
+}
+
+INCASM("asm/boss/phantom_p1_post.inc");
 
 void nop_0805f930(struct Boss* p) {}
 
