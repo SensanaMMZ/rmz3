@@ -4,11 +4,6 @@
 
 	.text
 
-	thumb_func_start nop_0809ceac
-nop_0809ceac: @ 0x0809CEAC
-	bx lr
-	.align 2, 0
-
 	thumb_func_start FUN_0809ceb0
 FUN_0809ceb0: @ 0x0809CEB0
 	push {r4, lr}

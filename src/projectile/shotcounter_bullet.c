@@ -157,6 +157,8 @@ void ShotcounterBullet_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
+void nop_0809ceac(struct Projectile* p) {}
+
 INCASM("asm/projectile/shotcounter_bullet.inc");
 
 static const struct Collision sCollisions[2] = {
