@@ -4,11 +4,6 @@
 	
 	.text
 
-	thumb_func_start nop_0805474c
-nop_0805474c: @ 0x0805474C
-	bx lr
-	.align 2, 0
-
 	thumb_func_start tryKillLocomoIF
 tryKillLocomoIF: @ 0x08054750
 	push {lr}
