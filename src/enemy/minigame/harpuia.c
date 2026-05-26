@@ -2,15 +2,23 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/minigame_harpuia_p1.inc");
+INCASM("asm/enemy/minigame_harpuia_p1_p1.inc");
+
+bool8 FUN_0809b350(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/minigame_harpuia_p1_p2.inc");
+
+bool8 FUN_0809b408(struct Enemy* p) { return TRUE; }
 
 void FUN_0809b40c(struct Enemy* p) {}
 
-INCASM("asm/enemy/minigame_harpuia_p2.inc");
+bool8 FUN_0809b410(struct Enemy* p) { return TRUE; }
 
 void FUN_0809b414(struct Enemy* p) {}
 
-INCASM("asm/enemy/minigame_harpuia_p3.inc");
+bool8 FUN_0809b418(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/minigame_harpuia_p3_post.inc");
 
 void HarpuiaMinigameEnemy_Init(struct Enemy* p);
 void HarpuiaMinigameEnemy_Update(struct Enemy* p);
@@ -28,19 +36,19 @@ const EnemyRoutine gHarpuiaMinigameEnemyRoutine = {
 
 // --------------------------------------------
 
-void FUN_0809b350(struct Enemy* p);
-void FUN_0809b408(struct Enemy* p);
-void FUN_0809b410(struct Enemy* p);
-void FUN_0809b418(struct Enemy* p);
+bool8 FUN_0809b350(struct Enemy* p);
+bool8 FUN_0809b408(struct Enemy* p);
+bool8 FUN_0809b410(struct Enemy* p);
+bool8 FUN_0809b418(struct Enemy* p);
 void FUN_0809b4d8(struct Enemy* p);
 void FUN_0809b950(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[6] = {
-    FUN_0809b350,
-    FUN_0809b408,
-    FUN_0809b410,
-    FUN_0809b418,
+    (EnemyFunc)FUN_0809b350,
+    (EnemyFunc)FUN_0809b408,
+    (EnemyFunc)FUN_0809b410,
+    (EnemyFunc)FUN_0809b418,
     FUN_0809b4d8,
     FUN_0809b950,
 };

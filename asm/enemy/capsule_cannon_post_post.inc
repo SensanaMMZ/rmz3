@@ -4,11 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08085c34
-FUN_08085c34:
-  movs r0, #1
-	bx lr
-
 	thumb_func_start FUN_08085c38
 FUN_08085c38: @ 0x08085C38
 	push {lr}
@@ -124,4 +119,5 @@ _08085D06:
 	pop {r0}
 	bx r0
 	.align 2, 0
+
 

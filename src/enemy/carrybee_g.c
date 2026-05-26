@@ -47,7 +47,19 @@ struct Enemy* FUN_0808a8b0(struct Entity* e) {
   return p;
 }
 
-INCASM("asm/enemy/carrybee_g.inc");
+INCASM("asm/enemy/carrybee_g_p1.inc");
+
+bool8 FUN_0808b108(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/carrybee_g_p2.inc");
+
+bool8 FUN_0808b2b0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/carrybee_g_p3.inc");
+
+bool8 FUN_0808b418(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/carrybee_g_p4.inc");
 
 bool8 FUN_0808af78(struct Enemy* p);
 bool8 FUN_0808b008(struct Enemy* p);
