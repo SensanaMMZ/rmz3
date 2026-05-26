@@ -4,40 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0807b1e0
-FUN_0807b1e0: @ 0x0807B1E0
-	push {lr}
-	adds r2, r0, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #0x80
-	lsls r1, r1, #2
-	ands r0, r1
-	cmp r0, #0
-	bne _0807B1F6
-	movs r0, #0
-	b _0807B214
-_0807B1F6:
-	ldr r1, _0807B218 @ =gEnemyFnTable
-	ldrb r0, [r2, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r2, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r2, #0x14]
-	ldrb r0, [r2, #0x10]
-	strb r0, [r2, #0xd]
-	adds r0, r2, #0
-	bl WormerSnowBall_Die
-	movs r0, #1
-_0807B214:
-	pop {r1}
-	bx r1
-	.align 2, 0
-_0807B218: .4byte gEnemyFnTable
-
 	thumb_func_start WormerSnowBall_Init
 WormerSnowBall_Init: @ 0x0807B21C
 	push {r4, r5, r6, lr}
@@ -155,3 +121,4 @@ WormerSnowBall_Die: @ 0x0807B2F0
 	bx r0
 	.align 2, 0
 _0807B304: .4byte 0x08367808
+

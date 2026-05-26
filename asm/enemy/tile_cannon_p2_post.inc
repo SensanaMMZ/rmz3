@@ -4,28 +4,6 @@
 
 	.text
 
-	thumb_func_start tilecannon_08078174
-tilecannon_08078174: @ 0x08078174
-	push {lr}
-	adds r2, r0, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #0x80
-	lsls r1, r1, #2
-	ands r0, r1
-	cmp r0, #0
-	bne _0807818A
-	movs r0, #0
-	b _08078192
-_0807818A:
-	adds r0, r2, #0
-	bl TileCannon_Die
-	movs r0, #1
-_08078192:
-	pop {r1}
-	bx r1
-	.align 2, 0
-
 	thumb_func_start tilecannon_08078198
 tilecannon_08078198: @ 0x08078198
 	push {r4, lr}
@@ -391,3 +369,4 @@ _0807846C: .4byte 0x08367544
 _08078470: .4byte gMission
 _08078474: .4byte 0x0000270E
 _08078478: .4byte gEnemyFnTable
+

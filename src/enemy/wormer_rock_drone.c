@@ -6,7 +6,21 @@ INCASM("asm/enemy/wormer_rock_drone_p1.inc");
 
 void nop_08076ee0(struct Enemy* p) {}
 
-INCASM("asm/enemy/wormer_rock_drone_p2.inc");
+void WormerRockDrone_Die(struct Enemy* p);
+
+INCASM("asm/enemy/wormer_rock_drone_p2_pre.inc");
+
+static bool8 FUN_08076ee4(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    (p->s).mode[1] = 0;
+    WormerRockDrone_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/wormer_rock_drone_p2_post.inc");
 
 void FUN_08076fe4(struct Enemy* p) {}
 

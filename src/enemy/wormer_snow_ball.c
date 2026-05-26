@@ -6,7 +6,21 @@ INCASM("asm/enemy/wormer_snow_ball_p1.inc");
 
 void nop_0807b1dc(struct Enemy* p) {}
 
-INCASM("asm/enemy/wormer_snow_ball_p2.inc");
+void WormerSnowBall_Die(struct Enemy* p);
+
+INCASM("asm/enemy/wormer_snow_ball_p2_pre.inc");
+
+static bool8 FUN_0807b1e0(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    (p->s).mode[1] = (p->s).work[0];
+    WormerSnowBall_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/wormer_snow_ball_p2_post.inc");
 
 void FUN_0807b308(struct Enemy* p) {}
 

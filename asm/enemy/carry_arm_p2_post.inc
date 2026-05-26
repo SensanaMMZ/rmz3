@@ -4,40 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0807156c
-FUN_0807156c: @ 0x0807156C
-	push {lr}
-	adds r2, r0, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #0x80
-	lsls r1, r1, #2
-	ands r0, r1
-	cmp r0, #0
-	bne _08071582
-	movs r0, #0
-	b _080715A0
-_08071582:
-	ldr r1, _080715A4 @ =gEnemyFnTable
-	ldrb r0, [r2, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r2, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r2, #0x14]
-	ldrb r0, [r2, #0x10]
-	strb r0, [r2, #0xd]
-	adds r0, r2, #0
-	bl CarryArm_Die
-	movs r0, #1
-_080715A0:
-	pop {r1}
-	bx r1
-	.align 2, 0
-_080715A4: .4byte gEnemyFnTable
-
 	thumb_func_start CarryArm_Init
 CarryArm_Init: @ 0x080715A8
 	push {r4, r5, r6, lr}
@@ -163,3 +129,4 @@ CarryArm_Die: @ 0x08071690
 	bx r0
 	.align 2, 0
 _080716A4: .4byte 0x08366B78
+

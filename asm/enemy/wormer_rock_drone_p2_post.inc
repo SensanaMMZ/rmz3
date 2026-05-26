@@ -4,40 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08076ee4
-FUN_08076ee4: @ 0x08076EE4
-	push {lr}
-	adds r2, r0, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #0x80
-	lsls r1, r1, #2
-	ands r0, r1
-	cmp r0, #0
-	bne _08076EFA
-	movs r0, #0
-	b _08076F18
-_08076EFA:
-	ldr r1, _08076F1C @ =gEnemyFnTable
-	ldrb r0, [r2, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r2, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r2, #0x14]
-	movs r0, #0
-	strb r0, [r2, #0xd]
-	adds r0, r2, #0
-	bl WormerRockDrone_Die
-	movs r0, #1
-_08076F18:
-	pop {r1}
-	bx r1
-	.align 2, 0
-_08076F1C: .4byte gEnemyFnTable
-
 	thumb_func_start WormerRockDrone_Init
 WormerRockDrone_Init: @ 0x08076F20
 	push {r4, r5, lr}
@@ -133,3 +99,4 @@ WormerRockDrone_Die: @ 0x08076FCC
 	bx r0
 	.align 2, 0
 _08076FE0: .4byte 0x0836721C
+

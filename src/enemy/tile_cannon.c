@@ -8,7 +8,19 @@ INCASM("asm/enemy/tile_cannon_p1.inc");
 
 void FUN_08078170(struct Enemy* p) {}
 
-INCASM("asm/enemy/tile_cannon_p2.inc");
+void TileCannon_Die(struct Enemy* p);
+
+INCASM("asm/enemy/tile_cannon_p2_pre.inc");
+
+static bool8 tilecannon_08078174(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    TileCannon_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/tile_cannon_p2_post.inc");
 
 void FUN_0807847c(struct Enemy* p) {}
 

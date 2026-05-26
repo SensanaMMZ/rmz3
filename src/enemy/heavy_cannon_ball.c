@@ -2,7 +2,20 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/heavy_cannon_ball_p1.inc");
+void HeavyCannon_Die(struct Enemy* p);
+
+INCASM("asm/enemy/heavy_cannon_ball_p1_pre.inc");
+
+static bool8 FUN_0807ab30(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    HeavyCannon_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/heavy_cannon_ball_p1_post.inc");
 
 void FUN_0807acd0(struct Enemy* p) {}
 

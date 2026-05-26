@@ -6,7 +6,19 @@ INCASM("asm/enemy/carry_arm_p1.inc");
 
 void nop_08071568(struct Enemy* p) {}
 
-INCASM("asm/enemy/carry_arm_p2.inc");
+void CarryArm_Die(struct Enemy* p);
+
+static bool8 FUN_0807156c(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    (p->s).mode[1] = (p->s).work[0];
+    CarryArm_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/carry_arm_p2_post.inc");
 
 void FUN_080716a8(struct Enemy* p) {}
 
