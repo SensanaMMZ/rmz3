@@ -35,7 +35,10 @@ static void unused_080046ac(u16* param_1) {
   param_1[5] = (val2 >> 1);
 }
 
-NAKED static void unused_080046c8(void) { INCCODE("asm/unused/unused_080046c8.inc"); }
+static void unused_080046c8(u16* p, u16 a, u16 b) {
+  p[4] = a;
+  p[5] = b;
+}
 
 void CreateDrawPivot(struct DrawPivot* dp, struct Pivot* p, void* _ UNUSED) {
   if (p != NULL) {
