@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[8];
+
 static void Lamplort_Init(struct Enemy* p);
 void Lamplort_Update(struct Enemy* p);
 void Lamplort_Die(struct Enemy* p);
@@ -245,7 +247,21 @@ INCASM("asm/enemy/lamplort_p8.inc");
 
 bool8 true_0806cd48(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p9.inc");
+void FUN_0806cd4c(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[7]);
+    *(u32*)((u8*)(p->s).unk_2c + 0xb4) |= 2;
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xc0);
+  if (isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[0]);
+    *slot = NULL;
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 FUN_0806cda4(struct Enemy* p) { return TRUE; }
 
