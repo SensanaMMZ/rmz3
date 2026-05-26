@@ -33,37 +33,85 @@ struct Boss* CreateCubit(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/boss/cubit.inc");
+INCASM("asm/boss/cubit_p1.inc");
+
+bool8 FUN_08052b48(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p2.inc");
+
+bool8 FUN_08052b98(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p3.inc");
+
+bool8 FUN_08052c30(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p4.inc");
+
+bool8 FUN_08052c78(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p5.inc");
+
+bool8 FUN_08052f08(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p6.inc");
+
+bool8 FUN_080533bc(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p7.inc");
+
+bool8 nop_08053460(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p8.inc");
+
+bool8 FUN_08053724(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p9.inc");
+
+bool8 FUN_08053a08(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p10.inc");
+
+bool8 FUN_08053d08(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p11.inc");
+
+bool8 FUN_080542c8(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p12.inc");
+
+bool8 FUN_0805433c(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/cubit_p13.inc");
 
 // --------------------------------------------
 
-void FUN_08052b48(struct Boss* p);
-void FUN_08052b98(struct Boss* p);
-void FUN_08052c30(struct Boss* p);
-void FUN_08052c78(struct Boss* p);
-void FUN_08052f08(struct Boss* p);
-void FUN_080533bc(struct Boss* p);
-void nop_08053460(struct Boss* p);
-void FUN_08053724(struct Boss* p);
-void FUN_08053a08(struct Boss* p);
-void FUN_08053d08(struct Boss* p);
-void FUN_080542c8(struct Boss* p);
-void FUN_0805433c(struct Boss* p);
+bool8 FUN_08052b48(struct Boss* p);
+bool8 FUN_08052b98(struct Boss* p);
+bool8 FUN_08052c30(struct Boss* p);
+bool8 FUN_08052c78(struct Boss* p);
+bool8 FUN_08052f08(struct Boss* p);
+bool8 FUN_080533bc(struct Boss* p);
+bool8 nop_08053460(struct Boss* p);
+bool8 FUN_08053724(struct Boss* p);
+bool8 FUN_08053a08(struct Boss* p);
+bool8 FUN_08053d08(struct Boss* p);
+bool8 FUN_080542c8(struct Boss* p);
+bool8 FUN_0805433c(struct Boss* p);
 
 // clang-format off
 static const BossFunc sUpdates1[12] = {
-    FUN_08052b48,
-    FUN_08052b98,
-    FUN_08052c30,
-    FUN_08052c78,
-    FUN_08052f08,
-    FUN_080533bc,
-    nop_08053460,
-    FUN_08053724,
-    FUN_08053a08,
-    FUN_08053d08,
-    FUN_080542c8,
-    FUN_0805433c,
+    (BossFunc)FUN_08052b48,
+    (BossFunc)FUN_08052b98,
+    (BossFunc)FUN_08052c30,
+    (BossFunc)FUN_08052c78,
+    (BossFunc)FUN_08052f08,
+    (BossFunc)FUN_080533bc,
+    (BossFunc)nop_08053460,
+    (BossFunc)FUN_08053724,
+    (BossFunc)FUN_08053a08,
+    (BossFunc)FUN_08053d08,
+    (BossFunc)FUN_080542c8,
+    (BossFunc)FUN_0805433c,
 };
 // clang-format on
 

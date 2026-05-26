@@ -302,7 +302,59 @@ static void Volteel_Die(struct Boss* p) {
   (seq[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/volteel.inc");
+INCASM("asm/boss/volteel_p1.inc");
+
+bool8 nop_080438a4(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p2.inc");
+
+bool8 FUN_080438f0(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p3.inc");
+
+bool8 FUN_08043988(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p4.inc");
+
+bool8 nop_080439d0(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p5.inc");
+
+bool8 nop_08043db0(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p6.inc");
+
+bool8 FUN_080440c0(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p7.inc");
+
+bool8 FUN_080449f0(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p8.inc");
+
+bool8 FUN_08044cb4(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p9.inc");
+
+bool8 FUN_08044f00(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p10.inc");
+
+bool8 FUN_080450bc(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p11.inc");
+
+bool8 FUN_08045464(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p12.inc");
+
+bool8 FUN_08045570(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p13.inc");
+
+bool8 FUN_08045610(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/volteel_p14.inc");
 
 // --------------------------------------------
 

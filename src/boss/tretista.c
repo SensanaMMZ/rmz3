@@ -173,18 +173,18 @@ _0804D750: .4byte gBossFnTable\n\
    .syntax divided\n");
 }
 
-void FUN_0804dc8c(struct Boss* p);
-void FUN_0804df70(struct Boss* p);
-void FUN_0804e01c(struct Boss* p);
-void FUN_0804e08c(struct Boss* p);
-void FUN_0804e3f0(struct Boss* p);
-void FUN_0804e544(struct Boss* p);
-void FUN_0804eb38(struct Boss* p);
-void FUN_0804f2b4(struct Boss* p);
-void FUN_0804f5c0(struct Boss* p);
-void FUN_0804f7d8(struct Boss* p);
-void FUN_0804fc6c(struct Boss* p);
-void FUN_0804e8f4(struct Boss* p);
+bool8 FUN_0804dc8c(struct Boss* p);
+bool8 FUN_0804df70(struct Boss* p);
+bool8 FUN_0804e01c(struct Boss* p);
+bool8 FUN_0804e08c(struct Boss* p);
+bool8 FUN_0804e3f0(struct Boss* p);
+bool8 FUN_0804e544(struct Boss* p);
+bool8 FUN_0804eb38(struct Boss* p);
+bool8 FUN_0804f2b4(struct Boss* p);
+bool8 FUN_0804f5c0(struct Boss* p);
+bool8 FUN_0804f7d8(struct Boss* p);
+bool8 FUN_0804fc6c(struct Boss* p);
+bool8 FUN_0804e8f4(struct Boss* p);
 
 void tretista_0804dc90(struct Boss* p);
 void tretista_0804df74(struct Boss* p);
@@ -202,18 +202,18 @@ void FUN_0804e8f8(struct Boss* p);
 static void Tretista_Update(struct Boss* p) {
   // clang-format off
   static const BossFunc sUpdates1[12] = {
-      FUN_0804dc8c,
-      FUN_0804df70,
-      FUN_0804e01c,
-      FUN_0804e08c,
-      FUN_0804e3f0,
-      FUN_0804e544,
-      FUN_0804eb38,
-      FUN_0804f2b4,
-      FUN_0804f5c0,
-      FUN_0804f7d8,
-      FUN_0804fc6c,
-      FUN_0804e8f4,
+      (BossFunc)FUN_0804dc8c,
+      (BossFunc)FUN_0804df70,
+      (BossFunc)FUN_0804e01c,
+      (BossFunc)FUN_0804e08c,
+      (BossFunc)FUN_0804e3f0,
+      (BossFunc)FUN_0804e544,
+      (BossFunc)FUN_0804eb38,
+      (BossFunc)FUN_0804f2b4,
+      (BossFunc)FUN_0804f5c0,
+      (BossFunc)FUN_0804f7d8,
+      (BossFunc)FUN_0804fc6c,
+      (BossFunc)FUN_0804e8f4,
   };
   // clang-format on
 
@@ -263,7 +263,55 @@ static void Tretista_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/tretista.inc");
+INCASM("asm/boss/tretista_p1.inc");
+
+bool8 FUN_0804dc8c(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p2.inc");
+
+bool8 FUN_0804df70(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p3.inc");
+
+bool8 FUN_0804e01c(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p4.inc");
+
+bool8 FUN_0804e08c(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p5.inc");
+
+bool8 FUN_0804e3f0(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p6.inc");
+
+bool8 FUN_0804e544(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p7.inc");
+
+bool8 FUN_0804e8f4(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p8.inc");
+
+bool8 FUN_0804eb38(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p9.inc");
+
+bool8 FUN_0804f2b4(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p10.inc");
+
+bool8 FUN_0804f5c0(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p11.inc");
+
+bool8 FUN_0804f7d8(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p12.inc");
+
+bool8 FUN_0804fc6c(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/tretista_p13.inc");
 
 // 0x083633b0
 static const struct Collision sCollisions[13] = {

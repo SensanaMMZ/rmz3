@@ -737,7 +737,51 @@ _0803EE28: .4byte gStageRun\n\
 
 static bool8 nop_0803ee2c(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin.inc");
+INCASM("asm/boss/blazin_p1.inc");
+
+bool8 FUN_0803ee8c(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p2.inc");
+
+bool8 FUN_0803ef64(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p3.inc");
+
+bool8 true_0803efc4(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p4.inc");
+
+bool8 nop_0803f280(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p5.inc");
+
+bool8 FUN_0803f3fc(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p6.inc");
+
+bool8 nop_0803f538(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p7.inc");
+
+bool8 nop_0803f710(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p8.inc");
+
+bool8 FUN_0803f9a8(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p9.inc");
+
+bool8 FUN_0803f9c0(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p10.inc");
+
+bool8 FUN_0803fc70(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p11.inc");
+
+bool8 FUN_0803fd58(struct Boss* _) { return TRUE; }
+
+INCASM("asm/boss/blazin_p12.inc");
 
 // 0x080403c4
 NON_MATCH static void setBlazinDirection(struct Entity* p) {

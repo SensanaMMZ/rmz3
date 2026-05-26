@@ -203,31 +203,75 @@ _0806C38C: .4byte gEnemyFnTable\n\
 
 // --------------------------------------------
 
-INCASM("asm/enemy/lamplort.inc");
+INCASM("asm/enemy/lamplort_p1.inc");
 
-void FUN_0806c81c(struct Enemy* p);
-void FUN_0806c824(struct Enemy* p);
-void FUN_0806c8c8(struct Enemy* p);
-void FUN_0806c9c0(struct Enemy* p);
-void true_0806cac4(struct Enemy* p);
-void FUN_0806cb58(struct Enemy* p);
-void FUN_0806cc00(struct Enemy* p);
-void true_0806cd48(struct Enemy* p);
-void FUN_0806cda4(struct Enemy* p);
-void FUN_0806cdac(struct Enemy* p);
+bool8 FUN_0806c81c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p2.inc");
+
+bool8 FUN_0806c824(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p3.inc");
+
+bool8 FUN_0806c8c8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p4.inc");
+
+bool8 FUN_0806c9c0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p5.inc");
+
+bool8 true_0806cac4(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p6.inc");
+
+bool8 FUN_0806cb58(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p7.inc");
+
+bool8 FUN_0806cc00(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p8.inc");
+
+bool8 true_0806cd48(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p9.inc");
+
+bool8 FUN_0806cda4(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p10.inc");
+
+bool8 FUN_0806cdac(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p11.inc");
+
+bool8 FUN_0806ce5c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/lamplort_p12.inc");
+
+bool8 FUN_0806c81c(struct Enemy* p);
+bool8 FUN_0806c824(struct Enemy* p);
+bool8 FUN_0806c8c8(struct Enemy* p);
+bool8 FUN_0806c9c0(struct Enemy* p);
+bool8 true_0806cac4(struct Enemy* p);
+bool8 FUN_0806cb58(struct Enemy* p);
+bool8 FUN_0806cc00(struct Enemy* p);
+bool8 true_0806cd48(struct Enemy* p);
+bool8 FUN_0806cda4(struct Enemy* p);
+bool8 FUN_0806cdac(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[10] = {
-    FUN_0806c81c,
-    FUN_0806c824,
-    FUN_0806c8c8,
-    FUN_0806c9c0,
-    true_0806cac4,
-    FUN_0806cb58,
-    FUN_0806cc00,
-    true_0806cd48,
-    FUN_0806cda4,
-    FUN_0806cdac,
+    (EnemyFunc)FUN_0806c81c,
+    (EnemyFunc)FUN_0806c824,
+    (EnemyFunc)FUN_0806c8c8,
+    (EnemyFunc)FUN_0806c9c0,
+    (EnemyFunc)true_0806cac4,
+    (EnemyFunc)FUN_0806cb58,
+    (EnemyFunc)FUN_0806cc00,
+    (EnemyFunc)true_0806cd48,
+    (EnemyFunc)FUN_0806cda4,
+    (EnemyFunc)FUN_0806cdac,
 };
 // clang-format on
 

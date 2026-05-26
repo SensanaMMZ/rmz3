@@ -35,15 +35,39 @@ struct Entity* CreateOmegaGold(struct Coord* c, u8 n) {
 
 // --------------------------------------------
 
-INCASM("asm/boss/omega_gold.inc");
+INCASM("asm/boss/omega_gold_p1.inc");
 
-void FUN_0805b41c(struct Boss* p);
-void FUN_0805b45c(struct Boss* p);
-void FUN_0805b4a4(struct Boss* p);
+bool8 FUN_0805b41c(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_gold_p2.inc");
+
+bool8 FUN_0805b45c(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_gold_p3.inc");
+
+bool8 FUN_0805b4a4(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_gold_p4.inc");
+
+bool8 nop_0805b5dc(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_gold_p5.inc");
+
+bool8 nop_0805b740(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_gold_p6.inc");
+
+bool8 nop_0805b7ec(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_gold_p7.inc");
+
+bool8 FUN_0805b41c(struct Boss* p);
+bool8 FUN_0805b45c(struct Boss* p);
+bool8 FUN_0805b4a4(struct Boss* p);
 void changeGoldOmega1Mode(struct Boss* p);
-void nop_0805b5dc(struct Boss* p);
-void nop_0805b740(struct Boss* p);
-void nop_0805b7ec(struct Boss* p);
+bool8 nop_0805b5dc(struct Boss* p);
+bool8 nop_0805b740(struct Boss* p);
+bool8 nop_0805b7ec(struct Boss* p);
 static bool32 nop_0805b874(void* _ UNUSED);
 
 // clang-format off

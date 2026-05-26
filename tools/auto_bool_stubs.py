@@ -26,7 +26,7 @@ if not fns:
     sys.exit("need at least one fn")
 
 # Verify the .c has exactly one INCASM matching the .inc
-c_text = c_path.read_text()
+c_text = c_path.read_text(encoding="utf-8")
 inc_rel = str(inc_path).replace("\\", "/")
 incasm_re = re.compile(r'INCASM\("(' + re.escape(inc_rel) + r')"\);')
 matches = incasm_re.findall(c_text)
@@ -96,6 +96,6 @@ def add_cast_in_tables(text, fn, c_path_name):
 for fn in fns:
     new_c = add_cast_in_tables(new_c, fn, c_path.name)
 
-c_path.write_text(new_c)
+c_path.write_text(new_c, encoding="utf-8")
 print(f"patched {c_path}")
 print(f"  inc parts: {len(parts)}")

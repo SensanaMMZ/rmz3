@@ -227,15 +227,15 @@ _08060CA0: .4byte gBossFnTable\n\
  .syntax divided\n");
 }
 
-void FUN_08060f98(struct Boss* p);
-void FUN_08060fd8(struct Boss* p);
-void FUN_08061064(struct Boss* p);
-void FUN_080610a8(struct Boss* p);
-void FUN_08061230(struct Boss* p);
-void FUN_080612d4(struct Boss* p);
-void FUN_080613b8(struct Boss* p);
-void FUN_080614a4(struct Boss* p);
-void FUN_080615d8(struct Boss* p);
+bool8 FUN_08060f98(struct Boss* p);
+bool8 FUN_08060fd8(struct Boss* p);
+bool8 FUN_08061064(struct Boss* p);
+bool8 FUN_080610a8(struct Boss* p);
+bool8 FUN_08061230(struct Boss* p);
+bool8 FUN_080612d4(struct Boss* p);
+bool8 FUN_080613b8(struct Boss* p);
+bool8 FUN_080614a4(struct Boss* p);
+bool8 FUN_080615d8(struct Boss* p);
 
 void FUN_08060f9c(struct Boss* p);
 void FUN_08060fdc(struct Boss* p);
@@ -250,15 +250,15 @@ void FUN_080615dc(struct Boss* p);
 static void OmegaZX_Update(struct Boss* p) {
   // clang-format off
   static const BossFunc sUpdates1[9] = {
-      FUN_08060f98,
-      FUN_08060fd8,
-      FUN_08061064,
-      FUN_080610a8,
-      FUN_08061230,
-      FUN_080612d4,
-      FUN_080613b8,
-      FUN_080614a4,
-      FUN_080615d8,
+      (BossFunc)FUN_08060f98,
+      (BossFunc)FUN_08060fd8,
+      (BossFunc)FUN_08061064,
+      (BossFunc)FUN_080610a8,
+      (BossFunc)FUN_08061230,
+      (BossFunc)FUN_080612d4,
+      (BossFunc)FUN_080613b8,
+      (BossFunc)FUN_080614a4,
+      (BossFunc)FUN_080615d8,
   };
   // clang-format on
 
@@ -347,7 +347,43 @@ static void FUN_08060d60(Object* p) {
   }
 }
 
-INCASM("asm/boss/omega_zx.inc");
+INCASM("asm/boss/omega_zx_p1.inc");
+
+bool8 FUN_08060f98(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_zx_p2.inc");
+
+bool8 FUN_08060fd8(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_zx_p3.inc");
+
+bool8 FUN_08061064(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_zx_p4.inc");
+
+bool8 FUN_080610a8(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_zx_p5.inc");
+
+bool8 FUN_08061230(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_zx_p6.inc");
+
+bool8 FUN_080612d4(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_zx_p7.inc");
+
+bool8 FUN_080613b8(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_zx_p8.inc");
+
+bool8 FUN_080614a4(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_zx_p9.inc");
+
+bool8 FUN_080615d8(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/omega_zx_p10.inc");
 
 // 0x083655d4
 static const struct Collision sCollisions[3] = {

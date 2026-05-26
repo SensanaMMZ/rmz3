@@ -31,25 +31,49 @@ struct Enemy* CreateClaveker(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/claveker.inc");
+INCASM("asm/enemy/claveker_p1.inc");
+
+bool8 FUN_0808eb20(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/claveker_p2.inc");
+
+bool8 FUN_0808ebb0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/claveker_p3.inc");
+
+bool8 FUN_0808effc(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/claveker_p4.inc");
+
+bool8 FUN_0808f158(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/claveker_p5.inc");
+
+bool8 FUN_0808f198(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/claveker_p6.inc");
+
+bool8 FUN_0808f1a0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/claveker_p7.inc");
 
 // --------------------------------------------
 
-void FUN_0808eb20(struct Enemy* p);
-void FUN_0808ebb0(struct Enemy* p);
-void FUN_0808effc(struct Enemy* p);
-void FUN_0808f158(struct Enemy* p);
-void FUN_0808f198(struct Enemy* p);
-void FUN_0808f1a0(struct Enemy* p);
+bool8 FUN_0808eb20(struct Enemy* p);
+bool8 FUN_0808ebb0(struct Enemy* p);
+bool8 FUN_0808effc(struct Enemy* p);
+bool8 FUN_0808f158(struct Enemy* p);
+bool8 FUN_0808f198(struct Enemy* p);
+bool8 FUN_0808f1a0(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[6] = {
-    FUN_0808eb20,
-    FUN_0808ebb0,
-    FUN_0808effc,
-    FUN_0808f158,
-    FUN_0808f198,
-    FUN_0808f1a0,
+    (EnemyFunc)FUN_0808eb20,
+    (EnemyFunc)FUN_0808ebb0,
+    (EnemyFunc)FUN_0808effc,
+    (EnemyFunc)FUN_0808f158,
+    (EnemyFunc)FUN_0808f198,
+    (EnemyFunc)FUN_0808f1a0,
 };
 // clang-format on
 

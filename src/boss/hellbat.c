@@ -179,14 +179,14 @@ static bool32 nop_0804b520(struct Boss* p);
 static bool32 nop_0804b56c(struct Boss* p);
 static bool32 nop_0804b5e8(struct Boss* p);
 static bool32 nop_0804b6b4(struct Boss* p);
-void FUN_0804b900(struct Boss* p);
-void FUN_0804ba40(struct Boss* p);
-void FUN_0804bcf4(struct Boss* p);
-void FUN_0804bee0(struct Boss* p);
-void FUN_0804c220(struct Boss* p);
-void FUN_0804c554(struct Boss* p);
-void nop_0804c9ec(struct Boss* p);
-void FUN_0804caa0(struct Boss* p);
+bool8 FUN_0804b900(struct Boss* p);
+bool8 FUN_0804ba40(struct Boss* p);
+bool8 FUN_0804bcf4(struct Boss* p);
+bool8 FUN_0804bee0(struct Boss* p);
+bool8 FUN_0804c220(struct Boss* p);
+bool8 FUN_0804c554(struct Boss* p);
+bool8 nop_0804c9ec(struct Boss* p);
+bool8 FUN_0804caa0(struct Boss* p);
 
 static void hellbatMode0(struct Boss* p);
 static void hellbatMode1(struct Boss* p);
@@ -208,14 +208,14 @@ static void Hellbat_Update(struct Boss* p) {
       (BossFunc)nop_0804b56c,
       (BossFunc)nop_0804b5e8,
       (BossFunc)nop_0804b6b4,
-      FUN_0804b900,
-      FUN_0804ba40,
-      FUN_0804bcf4,
-      FUN_0804bee0,
-      FUN_0804c220,
-      FUN_0804c554,
-      nop_0804c9ec,
-      FUN_0804caa0,
+      (BossFunc)FUN_0804b900,
+      (BossFunc)FUN_0804ba40,
+      (BossFunc)FUN_0804bcf4,
+      (BossFunc)FUN_0804bee0,
+      (BossFunc)FUN_0804c220,
+      (BossFunc)FUN_0804c554,
+      (BossFunc)nop_0804c9ec,
+      (BossFunc)FUN_0804caa0,
   };
   // clang-format on
 
@@ -789,7 +789,39 @@ static bool32 nop_0804b6b4(struct Boss* p) {
   return TRUE;
 }
 
-INCASM("asm/boss/hellbat.inc");
+INCASM("asm/boss/hellbat_p1.inc");
+
+bool8 FUN_0804b900(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/hellbat_p2.inc");
+
+bool8 FUN_0804ba40(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/hellbat_p3.inc");
+
+bool8 FUN_0804bcf4(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/hellbat_p4.inc");
+
+bool8 FUN_0804bee0(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/hellbat_p5.inc");
+
+bool8 FUN_0804c220(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/hellbat_p6.inc");
+
+bool8 FUN_0804c554(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/hellbat_p7.inc");
+
+bool8 nop_0804c9ec(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/hellbat_p8.inc");
+
+bool8 FUN_0804caa0(struct Boss* p) { return TRUE; }
+
+INCASM("asm/boss/hellbat_p9.inc");
 
 // 0x08362f50
 static const struct Collision sCollisions[29] = {

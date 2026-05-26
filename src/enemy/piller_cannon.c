@@ -35,29 +35,65 @@ struct Enemy* CreatePillerCannon(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/piller_cannon.inc");
+INCASM("asm/enemy/piller_cannon_p1.inc");
 
-void FUN_0806860c(struct Enemy* p);
-void FUN_08068614(struct Enemy* p);
-void FUN_080686b0(struct Enemy* p);
-void FUN_08068780(struct Enemy* p);
-void FUN_08068ad8(struct Enemy* p);
-void FUN_08068c84(struct Enemy* p);
-void FUN_08068e60(struct Enemy* p);
-void FUN_08068eb0(struct Enemy* p);
-void FUN_08068eb8(struct Enemy* p);
+bool8 FUN_0806860c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/piller_cannon_p2.inc");
+
+bool8 FUN_08068614(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/piller_cannon_p3.inc");
+
+bool8 FUN_080686b0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/piller_cannon_p4.inc");
+
+bool8 FUN_08068780(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/piller_cannon_p5.inc");
+
+bool8 FUN_08068ad8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/piller_cannon_p6.inc");
+
+bool8 FUN_08068c84(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/piller_cannon_p7.inc");
+
+bool8 FUN_08068e60(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/piller_cannon_p8.inc");
+
+bool8 FUN_08068eb0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/piller_cannon_p9.inc");
+
+bool8 FUN_08068eb8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/piller_cannon_p10.inc");
+
+bool8 FUN_0806860c(struct Enemy* p);
+bool8 FUN_08068614(struct Enemy* p);
+bool8 FUN_080686b0(struct Enemy* p);
+bool8 FUN_08068780(struct Enemy* p);
+bool8 FUN_08068ad8(struct Enemy* p);
+bool8 FUN_08068c84(struct Enemy* p);
+bool8 FUN_08068e60(struct Enemy* p);
+bool8 FUN_08068eb0(struct Enemy* p);
+bool8 FUN_08068eb8(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[9] = {
-    FUN_0806860c,
-    FUN_08068614,
-    FUN_080686b0,
-    FUN_08068780,
-    FUN_08068ad8,
-    FUN_08068c84,
-    FUN_08068e60,
-    FUN_08068eb0,
-    FUN_08068eb8,
+    (EnemyFunc)FUN_0806860c,
+    (EnemyFunc)FUN_08068614,
+    (EnemyFunc)FUN_080686b0,
+    (EnemyFunc)FUN_08068780,
+    (EnemyFunc)FUN_08068ad8,
+    (EnemyFunc)FUN_08068c84,
+    (EnemyFunc)FUN_08068e60,
+    (EnemyFunc)FUN_08068eb0,
+    (EnemyFunc)FUN_08068eb8,
 };
 // clang-format on
 
