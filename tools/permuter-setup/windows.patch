@@ -1,0 +1,50 @@
+diff --git a/src/compiler.py b/src/compiler.py
+index 7bb5080..7fb4d43 100644
+--- a/src/compiler.py
++++ b/src/compiler.py
+@@ -1,4 +1,5 @@
+-from typing import Optional
++from typing import Optional, List
++import os
+ import tempfile
+ import subprocess
+ import shutil
+@@ -6,6 +7,14 @@ import shutil
+ from .helpers import try_remove
+ 
+ 
++def _compile_argv(compile_cmd: str, c_name: str, o_name: str) -> List[str]:
++    """On Windows the shebang in compile.sh isn't honored by CreateProcess —
++    wrap the call in bash explicitly. On POSIX, execve handles it."""
++    if os.name == "nt" and compile_cmd.endswith(".sh"):
++        return ["C:/devkitPro/msys2/usr/bin/bash.exe", compile_cmd, c_name, "-o", o_name]
++    return [compile_cmd, c_name, "-o", o_name]
++
++
+ class Compiler:
+     def __init__(
+         self, compile_cmd: str, *, show_errors: bool, debug_mode: bool
+@@ -41,7 +50,7 @@ class Compiler:
+         try:
+             stderr = 2 if show_errors else subprocess.DEVNULL
+             subprocess.check_call(
+-                [self.compile_cmd, c_name, "-o", o_name],
++                _compile_argv(self.compile_cmd, c_name, o_name),
+                 stdout=stderr,
+                 stderr=stderr,
+             )
+diff --git a/src/main.py b/src/main.py
+index d2317a8..3884bf3 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -325,7 +325,9 @@ def run_inner(options: Options, heartbeat: Callable[[], None]) -> List[int]:
+             if not os.path.isfile(fname):
+                 print(f"Missing file {fname}", file=sys.stderr)
+                 sys.exit(1)
+-        if not os.stat(compile_cmd).st_mode & 0o100:
++        if os.name != "nt" and not os.stat(compile_cmd).st_mode & 0o100:
++            # On Windows, os.stat doesn't expose POSIX exec bits — skip the
++            # check there. The script will run via bash regardless.
+             print(f"{compile_cmd} must be marked executable.", file=sys.stderr)
+             sys.exit(1)
+ 

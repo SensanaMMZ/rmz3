@@ -22,6 +22,10 @@ tools/decomp-permuter/
 tools/*/*.exe
 
 
+# Permuter setup: keep the scripts + candidates, ignore generated dirs.
+tools/permuter-setup/*/
+!tools/permuter-setup/candidates/
+
 sound/songs/midi/*.s
 
 graphics/**/*.gbapal
