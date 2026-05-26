@@ -2,7 +2,9 @@
 #include "collision.h"
 #include "gfx.h"
 #include "global.h"
+#include "motion.h"
 #include "overworld.h"
+#include "script.h"
 #include "sound.h"
 #include "zero.h"
 
@@ -737,7 +739,22 @@ _0803EE28: .4byte gStageRun\n\
 
 static bool8 nop_0803ee2c(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p1.inc");
+void blazinMode0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags |= 1;
+      SetMotion(&p->s, (motion_t)((*(u16*)((u8*)p + 0xc8) + 0x15) | 0xA200));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_0803ee8c(struct Boss* _) { return TRUE; }
 
