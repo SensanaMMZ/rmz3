@@ -2,7 +2,47 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/cattatank.inc");
+INCASM("asm/enemy/cattatank_p1.inc");
+
+bool8 nop_08099090(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p2.inc");
+
+bool8 nop_080990d4(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p3.inc");
+
+bool8 nop_0809925c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p4.inc");
+
+bool8 nop_080994e8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p5.inc");
+
+bool8 nop_0809973c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p6.inc");
+
+bool8 nop_08099950(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p7.inc");
+
+bool8 nop_08099a94(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p8.inc");
+
+bool8 nop_08099ce0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p9.inc");
+
+bool8 nop_08099d7c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p10.inc");
+
+bool8 nop_08099d84(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/cattatank_p11.inc");
 
 void Cattatank_Init(struct Enemy* p);
 void Cattatank_Update(struct Enemy* p);
@@ -20,29 +60,29 @@ const EnemyRoutine gCattatankRoutine = {
 
 // --------------------------------------------
 
-void nop_08099090(struct Enemy* p);
-void nop_080990d4(struct Enemy* p);
-void nop_0809925c(struct Enemy* p);
-void nop_080994e8(struct Enemy* p);
-void nop_0809973c(struct Enemy* p);
-void nop_08099950(struct Enemy* p);
-void nop_08099a94(struct Enemy* p);
-void nop_08099ce0(struct Enemy* p);
-void nop_08099d7c(struct Enemy* p);
-void nop_08099d84(struct Enemy* p);
+bool8 nop_08099090(struct Enemy* p);
+bool8 nop_080990d4(struct Enemy* p);
+bool8 nop_0809925c(struct Enemy* p);
+bool8 nop_080994e8(struct Enemy* p);
+bool8 nop_0809973c(struct Enemy* p);
+bool8 nop_08099950(struct Enemy* p);
+bool8 nop_08099a94(struct Enemy* p);
+bool8 nop_08099ce0(struct Enemy* p);
+bool8 nop_08099d7c(struct Enemy* p);
+bool8 nop_08099d84(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[10] = {
-    nop_08099090,
-    nop_080990d4,
-    nop_0809925c,
-    nop_080994e8,
-    nop_0809973c,
-    nop_08099950,
-    nop_08099a94,
-    nop_08099ce0,
-    nop_08099d7c,
-    nop_08099d84,
+    (EnemyFunc)nop_08099090,
+    (EnemyFunc)nop_080990d4,
+    (EnemyFunc)nop_0809925c,
+    (EnemyFunc)nop_080994e8,
+    (EnemyFunc)nop_0809973c,
+    (EnemyFunc)nop_08099950,
+    (EnemyFunc)nop_08099a94,
+    (EnemyFunc)nop_08099ce0,
+    (EnemyFunc)nop_08099d7c,
+    (EnemyFunc)nop_08099d84,
 };
 // clang-format on
 

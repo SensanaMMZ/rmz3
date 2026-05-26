@@ -33,27 +33,55 @@ struct Enemy* CreateMothjiro(struct Coord* c, u8 r1) {
   return p;
 }
 
-INCASM("asm/enemy/mothjiro.inc");
+INCASM("asm/enemy/mothjiro_p1.inc");
+
+bool8 nop_080881d8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/mothjiro_p2.inc");
+
+bool8 nop_080884a0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/mothjiro_p3.inc");
+
+bool8 nop_080885f8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/mothjiro_p4.inc");
+
+bool8 nop_0808889c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/mothjiro_p5.inc");
+
+bool8 nop_08088a1c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/mothjiro_p6.inc");
+
+bool8 nop_08088a44(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/mothjiro_p7.inc");
+
+bool8 nop_08088a4c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/mothjiro_p8.inc");
 
 // --------------------------------------------
 
-void nop_080881d8(struct Enemy* p);
-void nop_080884a0(struct Enemy* p);
-void nop_080885f8(struct Enemy* p);
-void nop_0808889c(struct Enemy* p);
-void nop_08088a1c(struct Enemy* p);
-void nop_08088a44(struct Enemy* p);
-void nop_08088a4c(struct Enemy* p);
+bool8 nop_080881d8(struct Enemy* p);
+bool8 nop_080884a0(struct Enemy* p);
+bool8 nop_080885f8(struct Enemy* p);
+bool8 nop_0808889c(struct Enemy* p);
+bool8 nop_08088a1c(struct Enemy* p);
+bool8 nop_08088a44(struct Enemy* p);
+bool8 nop_08088a4c(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[7] = {
-    nop_080881d8,
-    nop_080884a0,
-    nop_080885f8,
-    nop_0808889c,
-    nop_08088a1c,
-    nop_08088a44,
-    nop_08088a4c,
+    (EnemyFunc)nop_080881d8,
+    (EnemyFunc)nop_080884a0,
+    (EnemyFunc)nop_080885f8,
+    (EnemyFunc)nop_0808889c,
+    (EnemyFunc)nop_08088a1c,
+    (EnemyFunc)nop_08088a44,
+    (EnemyFunc)nop_08088a4c,
 };
 // clang-format on
 

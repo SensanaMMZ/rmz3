@@ -2,7 +2,31 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/pantheon_bomber.inc");
+INCASM("asm/enemy/pantheon_bomber_p1.inc");
+
+bool8 nop_08086338(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_bomber_p2.inc");
+
+bool8 nop_080863a0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_bomber_p3.inc");
+
+bool8 nop_08086414(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_bomber_p4.inc");
+
+bool8 nop_080865d0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_bomber_p5.inc");
+
+bool8 nop_080865f8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_bomber_p6.inc");
+
+bool8 nop_08086600(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_bomber_p7.inc");
 
 void PantheonBomber_Init(struct Enemy* p);
 void PantheonBomber_Update(struct Enemy* p);
@@ -18,21 +42,21 @@ const EnemyRoutine gPantheonBomberRoutine = {
 };
 // clang-format on
 
-void nop_08086338(struct Enemy* p);
-void nop_080863a0(struct Enemy* p);
-void nop_08086414(struct Enemy* p);
-void nop_080865d0(struct Enemy* p);
-void nop_080865f8(struct Enemy* p);
-void nop_08086600(struct Enemy* p);
+bool8 nop_08086338(struct Enemy* p);
+bool8 nop_080863a0(struct Enemy* p);
+bool8 nop_08086414(struct Enemy* p);
+bool8 nop_080865d0(struct Enemy* p);
+bool8 nop_080865f8(struct Enemy* p);
+bool8 nop_08086600(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[6] = {
-    nop_08086338,
-    nop_080863a0,
-    nop_08086414,
-    nop_080865d0,
-    nop_080865f8,
-    nop_08086600,
+    (EnemyFunc)nop_08086338,
+    (EnemyFunc)nop_080863a0,
+    (EnemyFunc)nop_08086414,
+    (EnemyFunc)nop_080865d0,
+    (EnemyFunc)nop_080865f8,
+    (EnemyFunc)nop_08086600,
 };
 // clang-format on
 

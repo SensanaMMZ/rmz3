@@ -2,7 +2,23 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/puffy.inc");
+INCASM("asm/enemy/puffy_p1.inc");
+
+bool8 nop_0807c968(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/puffy_p2.inc");
+
+bool8 nop_0807ca98(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/puffy_p3.inc");
+
+bool8 nop_0807cac8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/puffy_p4.inc");
+
+bool8 nop_0807cad0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/puffy_p5.inc");
 
 void Puffy_Init(struct Enemy* p);
 void Puffy_Update(struct Enemy* p);
@@ -18,16 +34,16 @@ const EnemyRoutine gPuffyRoutine = {
 };
 // clang-format on
 
-void nop_0807c968(struct Enemy* p);
-void nop_0807ca98(struct Enemy* p);
-void nop_0807cac8(struct Enemy* p);
-void nop_0807cad0(struct Enemy* p);
+bool8 nop_0807c968(struct Enemy* p);
+bool8 nop_0807ca98(struct Enemy* p);
+bool8 nop_0807cac8(struct Enemy* p);
+bool8 nop_0807cad0(struct Enemy* p);
 
 static const EnemyFunc PTR_ARRAY_08367aec[4] = {
-    nop_0807c968,
-    nop_0807ca98,
-    nop_0807cac8,
-    nop_0807cad0,
+    (EnemyFunc)nop_0807c968,
+    (EnemyFunc)nop_0807ca98,
+    (EnemyFunc)nop_0807cac8,
+    (EnemyFunc)nop_0807cad0,
 };
 
 void FUN_0807c96c(struct Enemy* p);

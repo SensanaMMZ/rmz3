@@ -31,21 +31,41 @@ struct Enemy* CreateBeetank(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/beetank.inc");
+INCASM("asm/enemy/beetank_p1.inc");
 
-void nop_0807bc8c(struct Enemy* p);
-void nop_0807bd3c(struct Enemy* p);
-void nop_0807bde4(struct Enemy* p);
-void FUN_0807be14(struct Enemy* p);
-void FUN_0807be1c(struct Enemy* p);
+bool8 nop_0807bc8c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/beetank_p2.inc");
+
+bool8 nop_0807bd3c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/beetank_p3.inc");
+
+bool8 nop_0807bde4(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/beetank_p4.inc");
+
+bool8 FUN_0807be14(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/beetank_p5.inc");
+
+bool8 FUN_0807be1c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/beetank_p6.inc");
+
+bool8 nop_0807bc8c(struct Enemy* p);
+bool8 nop_0807bd3c(struct Enemy* p);
+bool8 nop_0807bde4(struct Enemy* p);
+bool8 FUN_0807be14(struct Enemy* p);
+bool8 FUN_0807be1c(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[5] = {
-    nop_0807bc8c,
-    nop_0807bd3c,
-    nop_0807bde4,
-    FUN_0807be14,
-    FUN_0807be1c,
+    (EnemyFunc)nop_0807bc8c,
+    (EnemyFunc)nop_0807bd3c,
+    (EnemyFunc)nop_0807bde4,
+    (EnemyFunc)FUN_0807be14,
+    (EnemyFunc)FUN_0807be1c,
 };
 // clang-format on
 

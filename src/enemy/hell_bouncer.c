@@ -2,7 +2,19 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/hell_bouncer.inc");
+INCASM("asm/enemy/hell_bouncer_p1.inc");
+
+bool8 FUN_0807e5f0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/hell_bouncer_p2.inc");
+
+bool8 FUN_0807ead8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/hell_bouncer_p3.inc");
+
+bool8 FUN_0807f644(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/hell_bouncer_p4.inc");
 
 void HellBouncer_Init(struct Enemy* p);
 void HellBouncer_Update(struct Enemy* p);
@@ -18,14 +30,14 @@ const EnemyRoutine gHellBouncerRoutine = {
 };
 // clang-format on
 
-void FUN_0807e5f0(struct Enemy* p);
-void FUN_0807ead8(struct Enemy* p);
-void FUN_0807f644(struct Enemy* p);
+bool8 FUN_0807e5f0(struct Enemy* p);
+bool8 FUN_0807ead8(struct Enemy* p);
+bool8 FUN_0807f644(struct Enemy* p);
 
 static const EnemyFunc sUpdates1[3] = {
-    FUN_0807e5f0,
-    FUN_0807ead8,
-    FUN_0807f644,
+    (EnemyFunc)FUN_0807e5f0,
+    (EnemyFunc)FUN_0807ead8,
+    (EnemyFunc)FUN_0807f644,
 };
 
 void FUN_0807e5f4(struct Enemy* p);

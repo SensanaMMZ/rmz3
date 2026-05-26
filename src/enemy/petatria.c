@@ -2,7 +2,19 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/petatria.inc");
+INCASM("asm/enemy/petatria_p1.inc");
+
+bool8 FUN_08091168(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/petatria_p2.inc");
+
+bool8 FUN_08091170(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/petatria_p3.inc");
+
+bool8 FUN_08091188(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/petatria_p4.inc");
 
 void Petatria_Init(struct Enemy* p);
 void Petatria_Update(struct Enemy* p);
@@ -26,8 +38,8 @@ void FUN_08090da4(struct Enemy* p);
 void FUN_08090edc(struct Enemy* p);
 void FUN_08091068(struct Enemy* p);
 void FUN_08091150(struct Enemy* p);
-void FUN_08091168(struct Enemy* p);
-void FUN_08091170(struct Enemy* p);
+bool8 FUN_08091168(struct Enemy* p);
+bool8 FUN_08091170(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[10] = {
@@ -39,8 +51,8 @@ static const EnemyFunc sUpdates1[10] = {
     FUN_08090edc,
     FUN_08091068,
     FUN_08091150,
-    FUN_08091168,
-    FUN_08091170,
+    (EnemyFunc)FUN_08091168,
+    (EnemyFunc)FUN_08091170,
 };
 // clang-format on
 

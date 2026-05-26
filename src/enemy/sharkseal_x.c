@@ -2,7 +2,43 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/sharkseal_x.inc");
+INCASM("asm/enemy/sharkseal_x_p1.inc");
+
+bool8 FUN_080707d0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/sharkseal_x_p2.inc");
+
+bool8 FUN_080707d8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/sharkseal_x_p3.inc");
+
+bool8 FUN_080708dc(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/sharkseal_x_p4.inc");
+
+bool8 FUN_08070990(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/sharkseal_x_p5.inc");
+
+bool8 FUN_08070c68(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/sharkseal_x_p6.inc");
+
+bool8 FUN_08070f3c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/sharkseal_x_p7.inc");
+
+bool8 FUN_08070f8c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/sharkseal_x_p8.inc");
+
+bool8 FUN_08070f94(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/sharkseal_x_p9.inc");
+
+bool8 nop_080711d4(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/sharkseal_x_p10.inc");
 
 void SharksealX_Init(struct Enemy* p);
 void SharksealX_Update(struct Enemy* p);
@@ -18,25 +54,25 @@ const EnemyRoutine gSharksealXRoutine = {
 };
 // clang-format on
 
-void FUN_080707d0(struct Enemy* p);
-void FUN_080707d8(struct Enemy* p);
-void FUN_080708dc(struct Enemy* p);
-void FUN_08070990(struct Enemy* p);
-void FUN_08070c68(struct Enemy* p);
-void FUN_08070f3c(struct Enemy* p);
-void FUN_08070f8c(struct Enemy* p);
-void FUN_08070f94(struct Enemy* p);
+bool8 FUN_080707d0(struct Enemy* p);
+bool8 FUN_080707d8(struct Enemy* p);
+bool8 FUN_080708dc(struct Enemy* p);
+bool8 FUN_08070990(struct Enemy* p);
+bool8 FUN_08070c68(struct Enemy* p);
+bool8 FUN_08070f3c(struct Enemy* p);
+bool8 FUN_08070f8c(struct Enemy* p);
+bool8 FUN_08070f94(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc PTR_ARRAY_08366a04[8] = {
-    FUN_080707d0,
-    FUN_080707d8,
-    FUN_080708dc,
-    FUN_08070990,
-    FUN_08070c68,
-    FUN_08070f3c,
-    FUN_08070f8c,
-    FUN_08070f94,
+    (EnemyFunc)FUN_080707d0,
+    (EnemyFunc)FUN_080707d8,
+    (EnemyFunc)FUN_080708dc,
+    (EnemyFunc)FUN_08070990,
+    (EnemyFunc)FUN_08070c68,
+    (EnemyFunc)FUN_08070f3c,
+    (EnemyFunc)FUN_08070f8c,
+    (EnemyFunc)FUN_08070f94,
 };
 // clang-format on
 

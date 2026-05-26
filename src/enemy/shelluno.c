@@ -2,7 +2,31 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/shelluno.inc");
+INCASM("asm/enemy/shelluno_p1.inc");
+
+bool8 nop_0807939c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/shelluno_p2.inc");
+
+bool8 FUN_0807a018(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/shelluno_p3.inc");
+
+bool8 FUN_0807a064(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/shelluno_p4.inc");
+
+bool8 FUN_0807a06c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/shelluno_p5.inc");
+
+bool8 FUN_0807a0fc(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/shelluno_p6.inc");
+
+bool8 FUN_0807a3e8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/shelluno_p7.inc");
 
 void Shelluno_Init(struct Enemy* p);
 void Shelluno_Update(struct Enemy* p);
@@ -18,21 +42,21 @@ const EnemyRoutine gShellunoRoutine = {
 };
 // clang-format on
 
-void nop_0807939c(struct Enemy* p);
+bool8 nop_0807939c(struct Enemy* p);
 void FUN_080795b8(struct Enemy* p);
-void FUN_0807a018(struct Enemy* p);
-void FUN_0807a064(struct Enemy* p);
-void FUN_0807a06c(struct Enemy* p);
-void FUN_0807a0fc(struct Enemy* p);
+bool8 FUN_0807a018(struct Enemy* p);
+bool8 FUN_0807a064(struct Enemy* p);
+bool8 FUN_0807a06c(struct Enemy* p);
+bool8 FUN_0807a0fc(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[6] = {
-    nop_0807939c,
+    (EnemyFunc)nop_0807939c,
     FUN_080795b8,
-    FUN_0807a018,
-    FUN_0807a064,
-    FUN_0807a06c,
-    FUN_0807a0fc,
+    (EnemyFunc)FUN_0807a018,
+    (EnemyFunc)FUN_0807a064,
+    (EnemyFunc)FUN_0807a06c,
+    (EnemyFunc)FUN_0807a0fc,
 };
 // clang-format on
 

@@ -2,7 +2,43 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/pantheon_aqua.inc");
+INCASM("asm/enemy/pantheon_aqua_p1.inc");
+
+bool8 nop_080726a8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_aqua_p2.inc");
+
+bool8 FUN_08072800(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_aqua_p3.inc");
+
+bool8 FUN_080729e8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_aqua_p4.inc");
+
+bool8 FUN_08072e40(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_aqua_p5.inc");
+
+bool8 FUN_08072fac(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_aqua_p6.inc");
+
+bool8 FUN_08072ff8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_aqua_p7.inc");
+
+bool8 FUN_08073000(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_aqua_p8.inc");
+
+bool8 FUN_080730cc(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_aqua_p9.inc");
+
+bool8 FUN_08073368(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/pantheon_aqua_p10.inc");
 
 void PantheonAqua_Init(struct Enemy* p);
 void PantheonAqua_Update(struct Enemy* p);
@@ -18,25 +54,25 @@ const EnemyRoutine gPantheonAquaRoutine = {
 };
 // clang-format on
 
-void nop_080726a8(struct Enemy* p);
-void FUN_08072800(struct Enemy* p);
-void FUN_080729e8(struct Enemy* p);
-void FUN_08072e40(struct Enemy* p);
-void FUN_08072fac(struct Enemy* p);
-void FUN_08072ff8(struct Enemy* p);
-void FUN_08073000(struct Enemy* p);
-void FUN_080730cc(struct Enemy* p);
+bool8 nop_080726a8(struct Enemy* p);
+bool8 FUN_08072800(struct Enemy* p);
+bool8 FUN_080729e8(struct Enemy* p);
+bool8 FUN_08072e40(struct Enemy* p);
+bool8 FUN_08072fac(struct Enemy* p);
+bool8 FUN_08072ff8(struct Enemy* p);
+bool8 FUN_08073000(struct Enemy* p);
+bool8 FUN_080730cc(struct Enemy* p);
 
 // clang-format off
 const EnemyFunc PTR_ARRAY_08366bd0[8] = {
-    nop_080726a8,
-    FUN_08072800,
-    FUN_080729e8,
-    FUN_08072e40,
-    FUN_08072fac,
-    FUN_08072ff8,
-    FUN_08073000,
-    FUN_080730cc,
+    (EnemyFunc)nop_080726a8,
+    (EnemyFunc)FUN_08072800,
+    (EnemyFunc)FUN_080729e8,
+    (EnemyFunc)FUN_08072e40,
+    (EnemyFunc)FUN_08072fac,
+    (EnemyFunc)FUN_08072ff8,
+    (EnemyFunc)FUN_08073000,
+    (EnemyFunc)FUN_080730cc,
 };
 // clang-format on
 

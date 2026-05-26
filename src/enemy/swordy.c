@@ -2,7 +2,23 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/swordy.inc");
+INCASM("asm/enemy/swordy_p1.inc");
+
+bool8 FUN_0807c230(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/swordy_p2.inc");
+
+bool8 FUN_0807c47c(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/swordy_p3.inc");
+
+bool8 FUN_0807c4ac(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/swordy_p4.inc");
+
+bool8 FUN_0807c4b4(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/swordy_p5.inc");
 
 void Swordy_Init(struct Enemy* p);
 void Swordy_Update(struct Enemy* p);
@@ -18,16 +34,16 @@ const EnemyRoutine gSwordyRoutine = {
 };
 // clang-format on
 
-void FUN_0807c230(struct Enemy* p);
-void FUN_0807c47c(struct Enemy* p);
-void FUN_0807c4ac(struct Enemy* p);
-void FUN_0807c4b4(struct Enemy* p);
+bool8 FUN_0807c230(struct Enemy* p);
+bool8 FUN_0807c47c(struct Enemy* p);
+bool8 FUN_0807c4ac(struct Enemy* p);
+bool8 FUN_0807c4b4(struct Enemy* p);
 
 static const EnemyFunc PTR_ARRAY_08367a38[4] = {
-    FUN_0807c230,
-    FUN_0807c47c,
-    FUN_0807c4ac,
-    FUN_0807c4b4,
+    (EnemyFunc)FUN_0807c230,
+    (EnemyFunc)FUN_0807c47c,
+    (EnemyFunc)FUN_0807c4ac,
+    (EnemyFunc)FUN_0807c4b4,
 };
 
 void FUN_0807c234(struct Enemy* p);
