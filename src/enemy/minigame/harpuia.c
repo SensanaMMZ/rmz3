@@ -18,7 +18,15 @@ void FUN_0809b414(struct Enemy* p) {}
 
 bool8 FUN_0809b418(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/minigame_harpuia_p3_post.inc");
+INCASM("asm/enemy/minigame_harpuia_p3_post_p1.inc");
+
+bool8 FUN_0809b4d8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/minigame_harpuia_p3_post_p2.inc");
+
+bool8 FUN_0809b950(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/minigame_harpuia_p3_post_p3.inc");
 
 void HarpuiaMinigameEnemy_Init(struct Enemy* p);
 void HarpuiaMinigameEnemy_Update(struct Enemy* p);
@@ -40,8 +48,8 @@ bool8 FUN_0809b350(struct Enemy* p);
 bool8 FUN_0809b408(struct Enemy* p);
 bool8 FUN_0809b410(struct Enemy* p);
 bool8 FUN_0809b418(struct Enemy* p);
-void FUN_0809b4d8(struct Enemy* p);
-void FUN_0809b950(struct Enemy* p);
+bool8 FUN_0809b4d8(struct Enemy* p);
+bool8 FUN_0809b950(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[6] = {
@@ -49,8 +57,8 @@ static const EnemyFunc sUpdates1[6] = {
     (EnemyFunc)FUN_0809b408,
     (EnemyFunc)FUN_0809b410,
     (EnemyFunc)FUN_0809b418,
-    FUN_0809b4d8,
-    FUN_0809b950,
+    (EnemyFunc)FUN_0809b4d8,
+    (EnemyFunc)FUN_0809b950,
 };
 // clang-format on
 
