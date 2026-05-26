@@ -87,6 +87,7 @@ endif
 AS := $(TOOL)/arm-none-eabi-as
 LD = $(TOOL)/arm-none-eabi-ld
 OBJCOPY = $(TOOL)/arm-none-eabi-objcopy
+CPP := cpp
 
 include make_tools.mk
 
@@ -100,7 +101,7 @@ ifeq ($(MODERN),1)
 	CFLAGS += $(ARCH) $(CPPFLAGS) -Wno-pointer-to-int-cast -fno-toplevel-reorder -fno-aggressive-loop-optimizations -Wno-address-of-packed-member
 	LIBPATH := -L $(shell dirname $(shell $(AGBCC) --print-file-name=libgcc.a)) -L $(shell dirname $(shell $(AGBCC) --print-file-name=libc.a))
 else
-	CPPFLAGS := -I tools/agbcc -I tools/agbcc/include -iquote include -nostdinc -DMODERN=$(MODERN)
+	CPPFLAGS := -I tools/agbcc -I tools/agbcc/include -iquote include -nostdinc -std=gnu89 -DMODERN=$(MODERN)
 	CFLAGS += -fhex-asm
 	LIBPATH := -L ../../tools/agbcc/lib
 endif
@@ -210,7 +211,7 @@ ifeq ($(MODERN),1)
 	@$(AGBCC) $(CFLAGS) $< -c -o $@
 else
 	$(CPP) $(CPPFLAGS) $< | $(AGBCC) $(CFLAGS) -o $(BUILD_DIR)/$(subst .c,.s,$<)
-	@echo ".text\n\t.align\t2, 0\n" >> $(BUILD_DIR)/$(subst .c,.s,$<)
+	@printf '.text\n\t.align\t2, 0\n' >> $(BUILD_DIR)/$(subst .c,.s,$<)
 	$(AS) $(ASFLAGS) $(BUILD_DIR)/$(subst .c,.s,$<) -o $@ 
 endif
 

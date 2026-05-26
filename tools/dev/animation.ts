@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-read
 
 import { Command } from '@cliffy/command';
-import { join } from '@std/path';
+import { join } from '@std/path/posix';
 
 /**
  * sprite.json から anim.s を生成するスクリプト

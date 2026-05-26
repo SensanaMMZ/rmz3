@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --allow-read --allow-write
 
-import { join } from '@std/path';
+import { join } from '@std/path/posix';
 import { Command } from '@cliffy/command';
 import { camelToSnakeCase } from '../common/index.ts';
 

@@ -17,6 +17,10 @@ sprites/**/sequence.inc
 data/tilesets/*/header.s
 graphics/**/header.s
 tools/mgba
+tools/asm-differ/
+tools/decomp-permuter/
+tools/*/*.exe
+
 
 sound/songs/midi/*.s
 

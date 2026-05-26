@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-read
 
 import { Command } from '@cliffy/command';
-import { basename, dirname, extname, join } from '@std/path';
+import { basename, dirname, extname, join } from '@std/path/posix';
 import { existsSync } from '@std/fs';
 import { GraphicHeader, SEPARATOR } from '../common/index.ts';
 
