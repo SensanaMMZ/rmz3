@@ -33,40 +33,61 @@ struct Enemy* FUN_08082b58(struct Coord* c, bool8 isLeftHand, struct Boss* omega
   return p;
 }
 
-INCASM("asm/enemy/omega_gold_hand.inc");
+INCASM("asm/enemy/omega_gold_hand_p1.inc");
+
+bool8 FUN_08083284(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_hand_p2.inc");
+
+bool8 FUN_080833c8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_hand_p3.inc");
+
+bool8 FUN_080835b4(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_hand_p4.inc");
+
+bool8 FUN_08083640(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_hand_p5.inc");
+
+bool8 FUN_08083e14(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_hand_p6.inc");
+
+bool8 FUN_08083ff0(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_hand_p7.inc");
+
+bool8 FUN_080846fc(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_hand_p8.inc");
 
 void FUN_08084700(struct Enemy* p) {}
 
-void FUN_08083284(struct Enemy* p);
-void FUN_080833c8(struct Enemy* p);
 void FUN_0808340c(struct Enemy* p);
-void FUN_080835b4(struct Enemy* p);
-void FUN_08083640(struct Enemy* p);
-void FUN_08083e14(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc PTR_ARRAY_08368188[6] = {
-    FUN_08083284,
-    FUN_080833c8,
+    (EnemyFunc)FUN_08083284,
+    (EnemyFunc)FUN_080833c8,
     FUN_0808340c,
-    FUN_080835b4,
-    FUN_08083640,
-    FUN_08083e14,
+    (EnemyFunc)FUN_080835b4,
+    (EnemyFunc)FUN_08083640,
+    (EnemyFunc)FUN_08083e14,
 };
 // clang-format on
 
 void FUN_08083eb0(struct Enemy* p);
-void FUN_08083ff0(struct Enemy* p);
-void FUN_080846fc(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc PTR_ARRAY_083681a0[6] = {
-    FUN_080846fc,
-    FUN_080846fc,
+    (EnemyFunc)FUN_080846fc,
+    (EnemyFunc)FUN_080846fc,
     FUN_08083eb0,
-    FUN_080846fc,
-    FUN_08083ff0,
-    FUN_080846fc,
+    (EnemyFunc)FUN_080846fc,
+    (EnemyFunc)FUN_08083ff0,
+    (EnemyFunc)FUN_080846fc,
 };
 // clang-format on
 
