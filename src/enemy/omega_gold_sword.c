@@ -34,7 +34,19 @@ struct Enemy* CreateOmegaGoldSword(struct Coord* c, u8 r1, struct Entity* e) {
   return p;
 }
 
-INCASM("asm/enemy/omega_gold_sword.inc");
+INCASM("asm/enemy/omega_gold_sword_p1.inc");
+
+bool8 FUN_0808bb84(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_sword_p2.inc");
+
+bool8 FUN_0808bbe4(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_sword_p3.inc");
+
+bool8 FUN_0808c330(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/omega_gold_sword_p4.inc");
 
 // --------------------------------------------
 
