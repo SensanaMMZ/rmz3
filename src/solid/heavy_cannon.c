@@ -45,7 +45,14 @@ INCASM("asm/solid/heavy_cannon_pre.inc");
 
 void nop_080cbea4(struct Solid* p) {}
 
-INCASM("asm/solid/heavy_cannon_post.inc");
+INCASM("asm/solid/heavy_cannon_post_pre.inc");
+
+void FUN_080cc284(struct Solid* p) {
+  (p->s).flags2 &= ~ENTITY_HAZARD;
+  DeleteSolid((Object*)p);
+}
+
+INCASM("asm/solid/heavy_cannon_post_post.inc");
 
 // --------------------------------------------
 
