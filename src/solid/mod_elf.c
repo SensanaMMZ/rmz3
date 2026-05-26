@@ -12,9 +12,12 @@ static const struct Collision sCollision;
 
 INCASM("asm/solid/mod_elf.inc");
 
+void ModElf_Die(struct Solid* p) {
+  SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+}
+
 void ModElf_Init(struct Solid* p);
 void ModElf_Update(struct Solid* p);
-void ModElf_Die(struct Solid* p);
 
 // clang-format off
 const SolidRoutine gModElfRoutine = {

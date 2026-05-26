@@ -244,18 +244,3 @@ _080DFADE:
 	.align 2, 0
 _080DFAE4: .4byte gTextWindow+8
 _080DFAE8: .4byte gInChat
-
-	thumb_func_start ModElf_Die
-ModElf_Die: @ 0x080DFAEC
-	ldr r2, _080DFB00 @ =gSolidFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_080DFB00: .4byte gSolidFnTable
