@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/gallisni.inc");
+INCASM("asm/enemy/gallisni_p1.inc");
+
+void nop_0808737c(struct Enemy* p) {}
+
+INCASM("asm/enemy/gallisni_p2.inc");
 
 void Gallisni_Init(struct Enemy* p);
 void Gallisni_Update(struct Enemy* p);

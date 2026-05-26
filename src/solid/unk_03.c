@@ -41,7 +41,11 @@ struct Solid* CreateLeafBurn(u8 r0) {
   return p;
 }
 
-INCASM("asm/solid/unk_03.inc");
+INCASM("asm/solid/unk_03_p1.inc");
+
+void Solid3_Die(struct Solid* p) {}
+
+INCASM("asm/solid/unk_03_p2.inc");
 
 // --------------------------------------------
 

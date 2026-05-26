@@ -67,7 +67,11 @@ INCASM("asm/enemy/carrybee_g_p3.inc");
 
 bool8 FUN_0808b418(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/carrybee_g_p4.inc");
+INCASM("asm/enemy/carrybee_g_p4_p1.inc");
+
+void nop_0808b534(struct Enemy* p) {}
+
+INCASM("asm/enemy/carrybee_g_p4_p2.inc");
 
 bool8 FUN_0808af78(struct Enemy* p);
 bool8 FUN_0808b008(struct Enemy* p);

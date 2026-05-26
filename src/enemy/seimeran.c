@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/seimeran.inc");
+INCASM("asm/enemy/seimeran_p1.inc");
+
+void FUN_0808f728(struct Enemy* p) {}
+
+INCASM("asm/enemy/seimeran_p2.inc");
 
 void Seimeran_Init(struct Enemy* p);
 void Seimeran_Update(struct Enemy* p);

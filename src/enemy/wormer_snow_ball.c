@@ -2,7 +2,15 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/wormer_snow_ball.inc");
+INCASM("asm/enemy/wormer_snow_ball_p1.inc");
+
+void nop_0807b1dc(struct Enemy* p) {}
+
+INCASM("asm/enemy/wormer_snow_ball_p2.inc");
+
+void FUN_0807b308(struct Enemy* p) {}
+
+INCASM("asm/enemy/wormer_snow_ball_p3.inc");
 
 void WormerSnowBall_Init(struct Enemy* p);
 void WormerSnowBall_Update(struct Enemy* p);

@@ -2,7 +2,11 @@
 #include "collision.h"
 #include "global.h"
 
-INCASM("asm/boss/anubis.inc");
+INCASM("asm/boss/anubis_p1.inc");
+
+void nop_080503c8(struct Boss* p) {}
+
+INCASM("asm/boss/anubis_p2.inc");
 
 void Anubis_Init(struct Boss* p);
 void Anubis_Update(struct Boss* p);

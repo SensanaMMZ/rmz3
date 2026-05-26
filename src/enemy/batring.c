@@ -1139,7 +1139,11 @@ INCASM("asm/enemy/batring_p4.inc");
 
 bool8 FUN_08067f6c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/batring_p5.inc");
+INCASM("asm/enemy/batring_p5_p1.inc");
+
+void nop_08067f70(struct Enemy* p) {}
+
+INCASM("asm/enemy/batring_p5_p2.inc");
 
 bool8 FUN_08067f74(struct Enemy* p) { return TRUE; }
 

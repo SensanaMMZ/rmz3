@@ -51,7 +51,11 @@ INCASM("asm/enemy/claveker_p5.inc");
 
 bool8 FUN_0808f198(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/claveker_p6.inc");
+INCASM("asm/enemy/claveker_p6_p1.inc");
+
+void FUN_0808f19c(struct Enemy* p) {}
+
+INCASM("asm/enemy/claveker_p6_p2.inc");
 
 bool8 FUN_0808f1a0(struct Enemy* p) { return TRUE; }
 

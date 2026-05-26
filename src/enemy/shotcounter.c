@@ -781,7 +781,11 @@ INCASM("asm/enemy/shotcounter_p3.inc");
 
 bool8 FUN_08066ad0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shotcounter_p4.inc");
+INCASM("asm/enemy/shotcounter_p4_p1.inc");
+
+void FUN_08066ad4(struct Enemy* p) {}
+
+INCASM("asm/enemy/shotcounter_p4_p2.inc");
 
 bool8 FUN_08066ad8(struct Enemy* p) { return TRUE; }
 
@@ -789,7 +793,11 @@ INCASM("asm/enemy/shotcounter_p5.inc");
 
 bool8 FUN_08066b30(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shotcounter_p6.inc");
+INCASM("asm/enemy/shotcounter_p6_p1.inc");
+
+void FUN_08066b34(struct Enemy* p) {}
+
+INCASM("asm/enemy/shotcounter_p6_p2.inc");
 
 bool8 FUN_08066b38(struct Enemy* p) { return TRUE; }
 

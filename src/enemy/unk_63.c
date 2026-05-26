@@ -2,7 +2,15 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/unk_63.inc");
+INCASM("asm/enemy/unk_63_p1.inc");
+
+void nop_08094ad8(struct Enemy* p) {}
+
+INCASM("asm/enemy/unk_63_p2.inc");
+
+void nop_08094bcc(struct Enemy* p) {}
+
+INCASM("asm/enemy/unk_63_p3.inc");
 
 void Enemy63_Init(struct Enemy* p);
 void Enemy63_Update(struct Enemy* p);

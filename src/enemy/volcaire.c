@@ -180,7 +180,11 @@ _080772F2:\n\
  .syntax divided\n");
 }
 
-INCASM("asm/enemy/volcaire.inc");
+INCASM("asm/enemy/volcaire_p1.inc");
+
+void nop_08077608(struct Enemy* p) {}
+
+INCASM("asm/enemy/volcaire_p2.inc");
 
 // --------------------------------------------
 

@@ -35,7 +35,11 @@ INCASM("asm/enemy/capsule_cannon_pre_p1_p1.inc");
 
 bool8 FUN_08085a08(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/capsule_cannon_pre_p1_p2.inc");
+INCASM("asm/enemy/capsule_cannon_pre_p1_p2_p1.inc");
+
+void nop_08085a0c(struct Enemy* p) {}
+
+INCASM("asm/enemy/capsule_cannon_pre_p1_p2_p2.inc");
 
 bool8 FUN_08085a10(struct Enemy* p) { return TRUE; }
 

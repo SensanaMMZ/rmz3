@@ -4,7 +4,11 @@
 
 // エネルギー再生施設の炉心(スイッチ押し込み部屋)
 
-INCASM("asm/boss/reactor_core.inc");
+INCASM("asm/boss/reactor_core_p1.inc");
+
+void nop_08061a74(struct Boss* p) {}
+
+INCASM("asm/boss/reactor_core_p2.inc");
 
 void ReactorCore_Init(struct Boss* p);
 void ReactorCore_Update(struct Boss* p);

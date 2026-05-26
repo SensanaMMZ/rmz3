@@ -4,7 +4,11 @@
 #include "global.h"
 #include "overworld.h"
 
-INCASM("asm/boss/baby_elf.inc");
+INCASM("asm/boss/baby_elf_p1.inc");
+
+void nop_08046150(struct Boss* p) {}
+
+INCASM("asm/boss/baby_elf_p2.inc");
 
 void BabyElf_Init(struct Boss* p);
 void BabyElf_Update(struct Boss* p);

@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/shotloid_pre.inc");
+INCASM("asm/enemy/shotloid_pre_p1.inc");
+
+void nop_08093af8(struct Enemy* p) {}
+
+INCASM("asm/enemy/shotloid_pre_p2.inc");
 
 void FUN_08093de0(struct Enemy* p) {}
 

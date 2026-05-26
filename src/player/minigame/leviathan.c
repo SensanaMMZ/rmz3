@@ -86,7 +86,11 @@ static void Leviathan_Init(struct Zero* z) {
   Leviathan_Update(z);
 }
 
-INCASM("asm/player/leviathan.inc");
+INCASM("asm/player/leviathan_p1.inc");
+
+void nop_08036044(struct Zero* z) {}
+
+INCASM("asm/player/leviathan_p2.inc");
 
 // --------------------------------------------
 

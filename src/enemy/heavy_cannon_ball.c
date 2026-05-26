@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/heavy_cannon_ball.inc");
+INCASM("asm/enemy/heavy_cannon_ball_p1.inc");
+
+void FUN_0807acd0(struct Enemy* p) {}
+
+INCASM("asm/enemy/heavy_cannon_ball_p2.inc");
 
 void HeavyCannon_Init(struct Enemy* p);
 void HeavyCannon_Update(struct Enemy* p);

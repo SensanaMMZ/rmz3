@@ -2,7 +2,15 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/deathtanz_rock.inc");
+INCASM("asm/enemy/deathtanz_rock_p1.inc");
+
+void nop_0807a5bc(struct Enemy* p) {}
+
+INCASM("asm/enemy/deathtanz_rock_p2.inc");
+
+void nop_0807a6f8(struct Enemy* p) {}
+
+INCASM("asm/enemy/deathtanz_rock_p3.inc");
 
 void DeathtanzRock_Init(struct Enemy* p);
 void DeathtanzRock_Update(struct Enemy* p);

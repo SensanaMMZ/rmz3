@@ -38,7 +38,11 @@ INCASM("asm/enemy/cattatank_p9.inc");
 
 bool8 nop_08099d7c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/cattatank_p10.inc");
+INCASM("asm/enemy/cattatank_p10_p1.inc");
+
+void nop_08099d80(struct Enemy* p) {}
+
+INCASM("asm/enemy/cattatank_p10_p2.inc");
 
 bool8 nop_08099d84(struct Enemy* p) { return TRUE; }
 

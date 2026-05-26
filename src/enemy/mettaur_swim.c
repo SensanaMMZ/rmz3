@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/mettaur_swim.inc");
+INCASM("asm/enemy/mettaur_swim_p1.inc");
+
+void nop_08089268(struct Enemy* p) {}
+
+INCASM("asm/enemy/mettaur_swim_p2.inc");
 
 void MettaurSwim_Init(struct Enemy* p);
 void MettaurSwim_Update(struct Enemy* p);

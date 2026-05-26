@@ -64,7 +64,11 @@ static void MgNinjaStar_Init(struct Solid* p) {
   MgNinjaStar_Update(p);
 }
 
-INCASM("asm/solid/minigame_ninjastar.inc");
+INCASM("asm/solid/minigame_ninjastar_p1.inc");
+
+void nop_080d9304(struct Solid* p) {}
+
+INCASM("asm/solid/minigame_ninjastar_p2.inc");
 
 // --------------------------------------------
 

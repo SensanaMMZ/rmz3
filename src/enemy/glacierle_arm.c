@@ -2,7 +2,15 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/glacierle_arm.inc");
+INCASM("asm/enemy/glacierle_arm_p1.inc");
+
+void nop_080828dc(struct Enemy* p) {}
+
+INCASM("asm/enemy/glacierle_arm_p2.inc");
+
+void nop_08082a1c(struct Enemy* p) {}
+
+INCASM("asm/enemy/glacierle_arm_p3.inc");
 
 void GlacierleAtkArm_Init(struct Enemy* p);
 void GlacierleAtkArm_Update(struct Enemy* p);

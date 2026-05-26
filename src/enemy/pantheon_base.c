@@ -2,7 +2,15 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/pantheon_base.inc");
+INCASM("asm/enemy/pantheon_base_p1.inc");
+
+void nop_0808a140(struct Enemy* p) {}
+
+INCASM("asm/enemy/pantheon_base_p2.inc");
+
+void nop_0808a3f4(struct Enemy* p) {}
+
+INCASM("asm/enemy/pantheon_base_p3.inc");
 
 void PantheonBase_Init(struct Enemy* p);
 void PantheonBase_Update(struct Enemy* p);

@@ -42,7 +42,11 @@ static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struc
   return;
 }
 
-INCASM("asm/solid/iron_star.inc");
+INCASM("asm/solid/iron_star_p1.inc");
+
+void nop_080cbcc0(struct Solid* p) {}
+
+INCASM("asm/solid/iron_star_p2.inc");
 
 // --------------------------------------------
 

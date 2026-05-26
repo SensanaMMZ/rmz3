@@ -14,7 +14,11 @@ INCASM("asm/enemy/hell_bouncer_p3.inc");
 
 bool8 FUN_0807f644(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/hell_bouncer_p4.inc");
+INCASM("asm/enemy/hell_bouncer_p4_p1.inc");
+
+void nop_0807fd1c(struct Enemy* p) {}
+
+INCASM("asm/enemy/hell_bouncer_p4_p2.inc");
 
 void HellBouncer_Init(struct Enemy* p);
 void HellBouncer_Update(struct Enemy* p);

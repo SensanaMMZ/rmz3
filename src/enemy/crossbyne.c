@@ -56,7 +56,15 @@ static void FUN_0807cc50(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/enemy/crossbyne.inc");
+INCASM("asm/enemy/crossbyne_p1.inc");
+
+void nop_0807cd70(struct Enemy* p) {}
+
+INCASM("asm/enemy/crossbyne_p2.inc");
+
+void FUN_0807cf5c(struct Enemy* p) {}
+
+INCASM("asm/enemy/crossbyne_p3.inc");
 
 // --------------------------------------------
 

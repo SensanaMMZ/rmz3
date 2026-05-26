@@ -44,7 +44,11 @@ struct Entity* CreateMegamilpaNode(u8 idx) {
 
 // --------------------------------------------
 
-INCASM("asm/enemy/megamilpa_node.inc");
+INCASM("asm/enemy/megamilpa_node_p1.inc");
+
+void nop_08065928(struct Enemy* p) {}
+
+INCASM("asm/enemy/megamilpa_node_p2.inc");
 
 void nop_08065928(struct Enemy* p);
 

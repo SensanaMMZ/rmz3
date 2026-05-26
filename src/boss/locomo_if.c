@@ -4,7 +4,11 @@
 
 void nop_0805474c(struct Boss* p) {}
 
-INCASM("asm/boss/locomo_if.inc");
+INCASM("asm/boss/locomo_if_p1.inc");
+
+void nop_08054ad8(struct Boss* p) {}
+
+INCASM("asm/boss/locomo_if_p2.inc");
 
 void LocomoIF_Init(struct Boss* p);
 void LocomoIF_Update(struct Boss* p);

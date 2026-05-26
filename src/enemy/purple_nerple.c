@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/purple_nerple.inc");
+INCASM("asm/enemy/purple_nerple_p1.inc");
+
+void FUN_08076140(struct Enemy* p) {}
+
+INCASM("asm/enemy/purple_nerple_p2.inc");
 
 void PurpleNerple_Init(struct Enemy* p);
 void PurpleNerple_Update(struct Enemy* p);

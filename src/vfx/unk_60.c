@@ -1,7 +1,11 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_60.inc");
+INCASM("asm/vfx/unk_60_p1.inc");
+
+void nop_080c2d44(struct VFX* vfx) {}
+
+INCASM("asm/vfx/unk_60_p2.inc");
 
 void VFX60_Init(struct VFX* vfx);
 void VFX60_Update(struct VFX* vfx);

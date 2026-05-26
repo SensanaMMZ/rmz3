@@ -2,7 +2,15 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/tile_cannon.inc");
+INCASM("asm/enemy/tile_cannon_p1.inc");
+
+void FUN_08078170(struct Enemy* p) {}
+
+INCASM("asm/enemy/tile_cannon_p2.inc");
+
+void FUN_0807847c(struct Enemy* p) {}
+
+INCASM("asm/enemy/tile_cannon_p3.inc");
 
 void TileCannon_Init(struct Enemy* p);
 void TileCannon_Update(struct Enemy* p);

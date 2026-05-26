@@ -207,7 +207,11 @@ INCASM("asm/enemy/lamplort_p1.inc");
 
 bool8 FUN_0806c81c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p2.inc");
+INCASM("asm/enemy/lamplort_p2_p1.inc");
+
+void FUN_0806c820(struct Enemy* p) {}
+
+INCASM("asm/enemy/lamplort_p2_p2.inc");
 
 bool8 FUN_0806c824(struct Enemy* p) { return TRUE; }
 
@@ -239,7 +243,11 @@ INCASM("asm/enemy/lamplort_p9.inc");
 
 bool8 FUN_0806cda4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p10.inc");
+INCASM("asm/enemy/lamplort_p10_p1.inc");
+
+void FUN_0806cda8(struct Enemy* p) {}
+
+INCASM("asm/enemy/lamplort_p10_p2.inc");
 
 bool8 FUN_0806cdac(struct Enemy* p) { return TRUE; }
 

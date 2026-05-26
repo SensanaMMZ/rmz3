@@ -2,7 +2,11 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_22.inc");
+INCASM("asm/vfx/unk_22_p1.inc");
+
+void nop_080b7d48(struct VFX* p) {}
+
+INCASM("asm/vfx/unk_22_p2.inc");
 
 static const VFXFunc sUpdates[3];
 

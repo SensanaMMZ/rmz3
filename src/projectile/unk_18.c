@@ -2,7 +2,11 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_18.inc");
+INCASM("asm/projectile/unk_18_p1.inc");
+
+void FUN_080a2fa4(struct Enemy* p) {}
+
+INCASM("asm/projectile/unk_18_p2.inc");
 
 static const struct Collision sCollisions[4];
 static const u8 sInitModes[4];

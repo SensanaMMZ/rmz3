@@ -279,7 +279,11 @@ static void FUN_080af32c(struct Projectile* p) {
   (PTR_ARRAY_0836d418[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/phantom.inc");
+INCASM("asm/projectile/phantom_p1.inc");
+
+void nop_080af9ac(struct Projectile* p) {}
+
+INCASM("asm/projectile/phantom_p2.inc");
 
 void FUN_080af518(struct Projectile* p);
 void FUN_080af5cc(struct Projectile* p);

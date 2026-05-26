@@ -20,7 +20,11 @@ void FUN_0805ecc8(struct Entity* p) {
   }
 }
 
-INCASM("asm/boss/phantom.inc");
+INCASM("asm/boss/phantom_p1.inc");
+
+void nop_0805f930(struct Boss* p) {}
+
+INCASM("asm/boss/phantom_p2.inc");
 
 void Phantom_Init(struct Boss* p);
 void Phantom_Update(struct Boss* p);

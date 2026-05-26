@@ -5,7 +5,11 @@
 
 // 水没した図書館関連の何か
 
-INCASM("asm/solid/unk_27.inc");
+INCASM("asm/solid/unk_27_p1.inc");
+
+void Solid27_Die(struct Solid* p) {}
+
+INCASM("asm/solid/unk_27_p2.inc");
 
 void Solid27_Init(struct Solid* p);
 void Solid27_Update(struct Solid* p);

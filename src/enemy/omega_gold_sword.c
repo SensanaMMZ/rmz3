@@ -50,7 +50,11 @@ INCASM("asm/enemy/omega_gold_sword_p3_p2.inc");
 
 bool8 FUN_0808c330(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_gold_sword_p4.inc");
+INCASM("asm/enemy/omega_gold_sword_p4_p1.inc");
+
+void nop_0808c384(struct Enemy* p) {}
+
+INCASM("asm/enemy/omega_gold_sword_p4_p2.inc");
 
 // --------------------------------------------
 

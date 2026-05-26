@@ -113,7 +113,15 @@ static void Solid7_Init(struct LavaGeyserObject* p) {
   Solid7_Update((void*)p);
 }
 
-INCASM("asm/solid/lava_geyser.inc");
+INCASM("asm/solid/lava_geyser_p1.inc");
+
+void Solid7_Die(struct Solid* p) {}
+
+INCASM("asm/solid/lava_geyser_p2.inc");
+
+void nop_080cc930(struct Solid* p) {}
+
+INCASM("asm/solid/lava_geyser_p3.inc");
 
 // --------------------------------------------
 

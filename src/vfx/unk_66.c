@@ -31,7 +31,11 @@ struct VFX* FUN_080c4450(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/vfx/unk_66.inc");
+INCASM("asm/vfx/unk_66_p1.inc");
+
+void nop_080c4668(struct VFX* p) {}
+
+INCASM("asm/vfx/unk_66_p2.inc");
 
 // --------------------------------------------
 

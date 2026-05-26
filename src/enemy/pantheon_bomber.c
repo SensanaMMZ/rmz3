@@ -22,7 +22,11 @@ INCASM("asm/enemy/pantheon_bomber_p5.inc");
 
 bool8 nop_080865f8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_bomber_p6.inc");
+INCASM("asm/enemy/pantheon_bomber_p6_p1.inc");
+
+void nop_080865fc(struct Enemy* p) {}
+
+INCASM("asm/enemy/pantheon_bomber_p6_p2.inc");
 
 bool8 nop_08086600(struct Enemy* p) { return TRUE; }
 

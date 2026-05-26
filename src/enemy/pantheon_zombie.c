@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/pantheon_zombie.inc");
+INCASM("asm/enemy/pantheon_zombie_p1.inc");
+
+void nop_0807ff3c(struct Enemy* p) {}
+
+INCASM("asm/enemy/pantheon_zombie_p2.inc");
 
 void PantheonZombie_Init(struct Enemy* p);
 void PantheonZombie_Update(struct Enemy* p);

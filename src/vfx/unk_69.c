@@ -80,7 +80,11 @@ struct VFX* FUN_080c4f60(struct Entity* e, struct Coord* c1, struct Coord* c2, u
   return p;
 }
 
-INCASM("asm/vfx/unk_69.inc");
+INCASM("asm/vfx/unk_69_p1.inc");
+
+void nop_080c552c(struct VFX* p) {}
+
+INCASM("asm/vfx/unk_69_p2.inc");
 
 // --------------------------------------------
 

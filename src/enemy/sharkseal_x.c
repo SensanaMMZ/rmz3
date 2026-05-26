@@ -6,7 +6,11 @@ INCASM("asm/enemy/sharkseal_x_p1.inc");
 
 bool8 FUN_080707d0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/sharkseal_x_p2.inc");
+INCASM("asm/enemy/sharkseal_x_p2_p1.inc");
+
+void nop_080707d4(struct Enemy* p) {}
+
+INCASM("asm/enemy/sharkseal_x_p2_p2.inc");
 
 bool8 FUN_080707d8(struct Enemy* p) { return TRUE; }
 
@@ -30,7 +34,11 @@ INCASM("asm/enemy/sharkseal_x_p7.inc");
 
 bool8 FUN_08070f8c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/sharkseal_x_p8.inc");
+INCASM("asm/enemy/sharkseal_x_p8_p1.inc");
+
+void nop_08070f90(struct Enemy* p) {}
+
+INCASM("asm/enemy/sharkseal_x_p8_p2.inc");
 
 bool8 FUN_08070f94(struct Enemy* p) { return TRUE; }
 

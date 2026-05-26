@@ -6,7 +6,11 @@ INCASM("asm/enemy/petatria_p1.inc");
 
 bool8 FUN_08091168(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/petatria_p2.inc");
+INCASM("asm/enemy/petatria_p2_p1.inc");
+
+void FUN_0809116c(struct Enemy* p) {}
+
+INCASM("asm/enemy/petatria_p2_p2.inc");
 
 bool8 FUN_08091170(struct Enemy* p) { return TRUE; }
 
@@ -14,7 +18,11 @@ INCASM("asm/enemy/petatria_p3.inc");
 
 bool8 FUN_08091188(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/petatria_p4.inc");
+INCASM("asm/enemy/petatria_p4_p1.inc");
+
+void nop_0809127c(struct Enemy* p) {}
+
+INCASM("asm/enemy/petatria_p4_p2.inc");
 
 void Petatria_Init(struct Enemy* p);
 void Petatria_Update(struct Enemy* p);

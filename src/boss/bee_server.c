@@ -31,7 +31,11 @@ static bool8 tryKillBeeServer(struct Boss* p) {
   return FALSE;
 }
 
-INCASM("asm/boss/bee_server.inc");
+INCASM("asm/boss/bee_server_p1.inc");
+
+void nop_0804d0a0(struct Boss* p) {}
+
+INCASM("asm/boss/bee_server_p2.inc");
 
 // --------------------------------------------
 
