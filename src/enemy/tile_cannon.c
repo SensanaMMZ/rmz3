@@ -24,7 +24,15 @@ INCASM("asm/enemy/tile_cannon_p2_post.inc");
 
 void FUN_0807847c(struct Enemy* p) {}
 
-INCASM("asm/enemy/tile_cannon_p3_pre.inc");
+void FUN_08078480(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[7]);
+    *slot = NULL;
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void FUN_080784b4(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {

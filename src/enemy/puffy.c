@@ -10,7 +10,16 @@ INCASM("asm/enemy/puffy_p2.inc");
 
 bool8 nop_0807ca98(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/puffy_p3.inc");
+void FUN_0807ca9c(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) (p->s).mode[2] = 1;
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    *slot = NULL;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 nop_0807cac8(struct Enemy* p) { return TRUE; }
 

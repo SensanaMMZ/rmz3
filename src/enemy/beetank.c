@@ -43,7 +43,16 @@ INCASM("asm/enemy/beetank_p3.inc");
 
 bool8 nop_0807bde4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/beetank_p4.inc");
+void FUN_0807bde8(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) (p->s).mode[2] = 1;
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    *slot = NULL;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 FUN_0807be14(struct Enemy* p) { return TRUE; }
 
