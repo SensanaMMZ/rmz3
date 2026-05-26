@@ -35,6 +35,8 @@ struct Enemy* FUN_08082b58(struct Coord* c, bool8 isLeftHand, struct Boss* omega
 
 INCASM("asm/enemy/omega_gold_hand.inc");
 
+void FUN_08084700(struct Enemy* p) {}
+
 void FUN_08083284(struct Enemy* p);
 void FUN_080833c8(struct Enemy* p);
 void FUN_0808340c(struct Enemy* p);
