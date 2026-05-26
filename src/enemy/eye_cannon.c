@@ -31,7 +31,11 @@ static bool8 FUN_08084708(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/eye_cannon.inc");
+INCASM("asm/enemy/eye_cannon_pre.inc");
+
+void FUN_08084930(struct Enemy* p) {}
+
+INCASM("asm/enemy/eye_cannon_post.inc");
 
 void FUN_08084934(struct Enemy* p);
 void FUN_08084930(struct Enemy* p);

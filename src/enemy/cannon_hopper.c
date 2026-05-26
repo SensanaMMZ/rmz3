@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/cannon_hopper.inc");
+INCASM("asm/enemy/cannon_hopper_pre.inc");
+
+void FUN_080978e0(struct Enemy* p) {}
+
+INCASM("asm/enemy/cannon_hopper_post.inc");
 
 void CannonHopper_Init(struct Enemy* p);
 void CannonHopper_Update(struct Enemy* p);

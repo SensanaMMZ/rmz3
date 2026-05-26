@@ -31,7 +31,11 @@ struct Enemy* CreateCapsuleCannon(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/capsule_cannon.inc");
+INCASM("asm/enemy/capsule_cannon_pre.inc");
+
+void FUN_08085c30(struct Enemy* p) {}
+
+INCASM("asm/enemy/capsule_cannon_post.inc");
 
 void FUN_08085a08(struct Enemy* p);
 void FUN_08085a10(struct Enemy* p);

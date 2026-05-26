@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/deathlock.inc");
+INCASM("asm/enemy/deathlock_pre.inc");
+
+void FUN_0808d6f4(struct Enemy* p) {}
+
+INCASM("asm/enemy/deathlock_post.inc");
 
 void Deathlock_Init(struct Enemy* p);
 void Deathlock_Update(struct Enemy* p);

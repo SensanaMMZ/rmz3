@@ -32,7 +32,11 @@ static void CreateGeneratorCannon(s32 x, s32 y, u8 n) {
 
 static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) { return; }
 
-INCASM("asm/enemy/generator_cannon.inc");
+INCASM("asm/enemy/generator_cannon_pre.inc");
+
+void FUN_0808c760(struct Enemy* p) {}
+
+INCASM("asm/enemy/generator_cannon_post.inc");
 
 void FUN_0808c760(struct Enemy* p);
 void FUN_0808c764(struct Enemy* p);

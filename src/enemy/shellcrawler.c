@@ -2,7 +2,11 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/shellcrawler.inc");
+INCASM("asm/enemy/shellcrawler_pre.inc");
+
+void FUN_080964bc(struct Enemy* p) {}
+
+INCASM("asm/enemy/shellcrawler_post.inc");
 
 void Shellcrawler_Init(struct Enemy* p);
 void Shellcrawler_Update(struct Enemy* p);
