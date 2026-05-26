@@ -41,7 +41,11 @@ static bool8 FUN_080cbdc0(Object* p) {
   return FALSE;
 }
 
-INCASM("asm/solid/heavy_cannon.inc");
+INCASM("asm/solid/heavy_cannon_pre.inc");
+
+void nop_080cbea4(struct Solid* p) {}
+
+INCASM("asm/solid/heavy_cannon_post.inc");
 
 // --------------------------------------------
 
