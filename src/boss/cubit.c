@@ -3,6 +3,7 @@
 #include "global.h"
 #include "motion.h"
 #include "script.h"
+#include "stagerun.h"
 
 static const struct Collision sCollisions[];
 
@@ -62,7 +63,21 @@ INCASM("asm/boss/cubit_p3.inc");
 
 bool8 FUN_08052c30(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/cubit_p4.inc");
+void cubitMode2(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xb0, 2));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (!(gStageRun.vm.active & 1)) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 bool8 FUN_08052c78(struct Boss* p) { return TRUE; }
 
