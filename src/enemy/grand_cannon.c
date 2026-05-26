@@ -278,7 +278,16 @@ static void grandCannon_080693b4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/grand_cannon.inc");
+INCASM("asm/enemy/grand_cannon_pre.inc");
+
+void grandcannon_08069608(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/enemy/grand_cannon_post.inc");
 
 // --------------------------------------------
 
