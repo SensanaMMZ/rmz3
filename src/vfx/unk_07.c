@@ -278,4 +278,24 @@ static void FUN_080b491c(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-NAKED static void unused_080b4960(s32 x, s32 y, bool8 n) { INCCODE("asm/unused/unused_080b4960.inc"); }
+static void unused_080b4960(s32 x, s32 y, bool8 n) {
+  s32 dx;
+  register s32 sx asm("r4");
+  register s32 r asm("r5");
+  register s32 d asm("r1");
+  register s32 ret asm("r0");
+  if (n) {
+    dx = 0x2000;
+  } else {
+    r = -0x2000;
+    dx = r;
+  }
+  sx = x + dx;
+  r = FUN_08009f6c(sx, y);
+  d = r - y;
+  if (d < 0) {
+    d = -d;
+  }
+  ret = 0xF00;
+  asm volatile("" : "+r"(d), "+r"(ret) : "r"(r), "r"(sx));
+}
