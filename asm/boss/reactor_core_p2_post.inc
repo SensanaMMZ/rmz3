@@ -4,32 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08061a78
-FUN_08061a78: @ 0x08061A78
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _08061A88
-	cmp r0, #1
-	beq _08061A98
-	b _08061A9E
-_08061A88:
-	movs r1, #0x8b
-	lsls r1, r1, #8
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_08061A98:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_08061A9E:
-	pop {r4}
-	pop {r0}
-	bx r0
-
 	thumb_func_start FUN_08061aa4
 FUN_08061aa4: @ 0x08061AA4
 	push {lr}
@@ -137,3 +111,4 @@ _08061B58:
 	.align 2, 0
 _08061B60: .4byte gStageRun
 _08061B64: .4byte 0x0000FFFE
+

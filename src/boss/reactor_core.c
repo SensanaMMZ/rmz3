@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "motion.h"
 
 // エネルギー再生施設の炉心(スイッチ押し込み部屋)
 
@@ -8,7 +9,19 @@ INCASM("asm/boss/reactor_core_p1.inc");
 
 void nop_08061a74(struct Boss* p) {}
 
-INCASM("asm/boss/reactor_core_p2.inc");
+void FUN_08061a78(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x8b, 0));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/boss/reactor_core_p2_post.inc");
 
 void ReactorCore_Init(struct Boss* p);
 void ReactorCore_Update(struct Boss* p);
