@@ -1,11 +1,23 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_64.inc");
+static const VFXFunc sUpdates[9];
+
+INCASM("asm/vfx/unk_64_p1.inc");
+
+void Ghost64_Update(struct VFX* p) {
+  (sUpdates[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/vfx/unk_64_p2.inc");
+
+void Ghost64_Die(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_64_p3.inc");
 
 void Ghost64_Init(struct VFX* p);
-void Ghost64_Update(struct VFX* p);
-void Ghost64_Die(struct VFX* p);
 
 // clang-format off
 const VFXRoutine gGhost64Routine = {

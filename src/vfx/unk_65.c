@@ -1,11 +1,23 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_65.inc");
+static const VFXFunc sUpdates[1];
+
+INCASM("asm/vfx/unk_65_p1.inc");
+
+void Ghost65_Update(struct VFX* vfx) {
+  (sUpdates[(vfx->s).mode[1]])(vfx);
+}
+
+INCASM("asm/vfx/unk_65_p2.inc");
+
+void Ghost65_Die(struct VFX* vfx) {
+  SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_65_p3.inc");
 
 void Ghost65_Init(struct VFX* vfx);
-void Ghost65_Update(struct VFX* vfx);
-void Ghost65_Die(struct VFX* vfx);
 
 // clang-format off
 const VFXRoutine gGhost65Routine = {

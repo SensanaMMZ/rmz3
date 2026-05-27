@@ -80,7 +80,15 @@ struct VFX* FUN_080c4f60(struct Entity* e, struct Coord* c1, struct Coord* c2, u
   return p;
 }
 
-INCASM("asm/vfx/unk_69_p1.inc");
+extern const VFXFunc sGhost69Updates[7];
+
+INCASM("asm/vfx/unk_69_p1_pre.inc");
+
+void Ghost69_Update(struct VFX* p) {
+  (sGhost69Updates[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/vfx/unk_69_p1_post.inc");
 
 void nop_080c552c(struct VFX* p) {}
 

@@ -68,7 +68,22 @@ static void Ghost70_Init(struct VFX* p) {
   (sInitializers[(p->s).work[0]])(p);
 }
 
-INCASM("asm/vfx/unk_70.inc");
+extern const VFXFunc sGhost70Updates[6];
+extern const VFXFunc sGhost70Deinitializers[6];
+
+INCASM("asm/vfx/unk_70_p1.inc");
+
+void Ghost70_Update(struct VFX* p) {
+  (sGhost70Updates[(p->s).work[0]])(p);
+}
+
+INCASM("asm/vfx/unk_70_p2.inc");
+
+void Ghost70_Die(struct VFX* p) {
+  (sGhost70Deinitializers[(p->s).work[0]])(p);
+}
+
+INCASM("asm/vfx/unk_70_p3.inc");
 
 // --------------------------------------------
 

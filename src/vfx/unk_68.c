@@ -47,4 +47,10 @@ void FUN_080c4be0(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/vfx/unk_68.inc");
+INCASM("asm/vfx/unk_68_pre.inc");
+
+void Ghost68_Update(struct VFX* p) {
+  (sGhost68Updates[(p->s).work[0]])(p);
+}
+
+INCASM("asm/vfx/unk_68_post.inc");

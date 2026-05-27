@@ -1,36 +1,8 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-	
+
 	.text
-
-	thumb_func_start Ghost70_Update
-Ghost70_Update: @ 0x080C56FC
-	push {lr}
-	ldr r2, _080C5710 @ =0x0836F73C
-	ldrb r1, [r0, #0x10]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C5710: .4byte sGhost70Updates
-
-	thumb_func_start Ghost70_Die
-Ghost70_Die: @ 0x080C5714
-	push {lr}
-	ldr r2, _080C5728 @ =0x0836F754
-	ldrb r1, [r0, #0x10]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C5728: .4byte sGhost70Deinitializers
 
 	thumb_func_start FUN_080c572c
 FUN_080c572c: @ 0x080C572C
