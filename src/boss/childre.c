@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "motion.h"
 #include "stagerun.h"
 
 static const u8 sInitModes[4];
@@ -309,7 +310,26 @@ static void nop_08040788(struct Boss* p) {
   return;
 }
 
-INCASM("asm/boss/childre.inc");
+INCASM("asm/boss/childre_pre.inc");
+
+void childreEndEarShot(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0xa4, 0x16));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/childre_post.inc");
 
 // --------------------------------------------
 
