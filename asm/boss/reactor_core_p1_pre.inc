@@ -336,38 +336,3 @@ _08061A14:
 	.align 2, 0
 _08061A24: .4byte 0x0836569C
 _08061A28: .4byte 0x083656A4
-
-	thumb_func_start ReactorCore_Die
-ReactorCore_Die: @ 0x08061A2C
-	push {r4, lr}
-	adds r4, r0, #0
-	movs r0, #0xcb
-	bl UpdateBlinkMotionState
-	movs r0, #0xcc
-	bl UpdateBlinkMotionState
-	ldr r1, _08061A54 @ =0x083656AC
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08061A54: .4byte 0x083656AC
-
-	thumb_func_start ReactorCore_Disappear
-ReactorCore_Disappear: @ 0x08061A58
-	push {r4, lr}
-	adds r4, r0, #0
-	movs r0, #0xcb
-	bl ClearBlink
-	movs r0, #0xcc
-	bl ClearBlink
-	adds r0, r4, #0
-	bl DeleteBoss
-	pop {r4}
-	pop {r0}
-	bx r0

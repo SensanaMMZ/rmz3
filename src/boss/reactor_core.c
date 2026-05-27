@@ -1,11 +1,22 @@
+#include "blink.h"
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
 #include "motion.h"
 
+static const BossFunc sDeads[1];
+
 // エネルギー再生施設の炉心(スイッチ押し込み部屋)
 
-INCASM("asm/boss/reactor_core_p1.inc");
+INCASM("asm/boss/reactor_core_p1_pre.inc");
+
+void ReactorCore_Die(struct Boss* p) {
+  UpdateBlinkMotionState(0xcb);
+  UpdateBlinkMotionState(0xcc);
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/reactor_core_p1_post.inc");
 
 void nop_08061a74(struct Boss* p) {}
 
