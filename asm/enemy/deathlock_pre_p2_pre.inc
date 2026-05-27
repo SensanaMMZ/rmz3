@@ -510,17 +510,3 @@ _0808D6CE:
 	.align 2, 0
 _0808D6D4: .4byte 0x08369148
 _0808D6D8: .4byte 0x08369168
-
-	thumb_func_start Deathlock_Die
-Deathlock_Die: @ 0x0808D6DC
-	push {lr}
-	ldr r2, _0808D6F0 @ =0x08369188
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0808D6F0: .4byte 0x08369188

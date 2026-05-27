@@ -3,7 +3,15 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/enemy/unk_59_pre.inc");
+static const EnemyFunc sDeads[4];
+
+INCASM("asm/enemy/unk_59_pre_pre.inc");
+
+void Enemy59_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/unk_59_pre_post.inc");
 
 void FUN_08091810(struct Enemy* p) {}
 

@@ -115,18 +115,3 @@ _08071682:
 	.align 2, 0
 _08071688: .4byte 0x08366B48
 _0807168C: .4byte 0x08366B60
-
-	thumb_func_start CarryArm_Die
-CarryArm_Die: @ 0x08071690
-	push {lr}
-	ldr r2, _080716A4 @ =0x08366B78
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080716A4: .4byte 0x08366B78
-

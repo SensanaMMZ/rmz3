@@ -5,11 +5,19 @@
 
 static const struct Collision sCollisions[25];
 
+static const EnemyFunc sDeads[2];
+
 INCASM("asm/enemy/pantheon_base_p1.inc");
 
 void nop_0808a140(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_base_p2.inc");
+INCASM("asm/enemy/pantheon_base_p2_pre.inc");
+
+void PantheonBase_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/pantheon_base_p2_post.inc");
 
 void nop_0808a3f4(struct Enemy* p) {}
 

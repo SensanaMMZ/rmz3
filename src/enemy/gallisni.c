@@ -5,7 +5,15 @@
 
 static const struct Collision sCollisions[5];
 
-INCASM("asm/enemy/gallisni_p1.inc");
+static const EnemyFunc sDeads[3];
+
+INCASM("asm/enemy/gallisni_p1_pre.inc");
+
+void Gallisni_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/gallisni_p1_post.inc");
 
 void nop_0808737c(struct Enemy* p) {}
 

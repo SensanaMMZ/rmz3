@@ -236,17 +236,3 @@ _08084908:
 	.align 2, 0
 _08084910: .4byte 0x083682DC
 _08084914: .4byte 0x083682F4
-
-	thumb_func_start EyeCannon_Die
-EyeCannon_Die: @ 0x08084918
-	push {lr}
-	ldr r2, _0808492C @ =0x0836830C
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0808492C: .4byte 0x0836830C

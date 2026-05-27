@@ -36,7 +36,15 @@ struct Enemy* CreateOmegaGoldSword(struct Coord* c, u8 r1, struct Entity* e) {
   return p;
 }
 
-INCASM("asm/enemy/omega_gold_sword_p1.inc");
+static const EnemyFunc sDeads[2];
+
+INCASM("asm/enemy/omega_gold_sword_p1_pre.inc");
+
+void OmegaGoldSword_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/omega_gold_sword_p1_post.inc");
 
 bool8 FUN_0808bb84(struct Enemy* p) { return TRUE; }
 

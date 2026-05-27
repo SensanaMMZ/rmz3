@@ -2,11 +2,19 @@
 #include "enemy.h"
 #include "global.h"
 
+static const EnemyFunc sDeads[4];
+
 INCASM("asm/enemy/deathlock_pre_p1.inc");
 
 void nop_0808d2f4(struct Enemy* p) {}
 
-INCASM("asm/enemy/deathlock_pre_p2.inc");
+INCASM("asm/enemy/deathlock_pre_p2_pre.inc");
+
+void Deathlock_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/deathlock_pre_p2_post.inc");
 
 void FUN_0808d6f4(struct Enemy* p) {}
 

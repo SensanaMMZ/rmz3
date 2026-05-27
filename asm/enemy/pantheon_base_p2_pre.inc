@@ -342,17 +342,3 @@ _0808A3CE:
 	.align 2, 0
 _0808A3D4: .4byte 0x0836896C
 _0808A3D8: .4byte 0x08368974
-
-	thumb_func_start PantheonBase_Die
-PantheonBase_Die: @ 0x0808A3DC
-	push {lr}
-	ldr r2, _0808A3F0 @ =0x0836897C
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0808A3F0: .4byte 0x0836897C

@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+const EnemyFunc PTR_ARRAY_08366b78[2];
+
 INCASM("asm/enemy/carry_arm_p1.inc");
 
 void nop_08071568(struct Enemy* p) {}
@@ -18,7 +20,13 @@ static bool8 FUN_0807156c(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/carry_arm_p2_post.inc");
+INCASM("asm/enemy/carry_arm_p2_post_pre.inc");
+
+void CarryArm_Die(struct Enemy* p) {
+  (PTR_ARRAY_08366b78[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/carry_arm_p2_post_post.inc");
 
 void FUN_080716a8(struct Enemy* p) {}
 

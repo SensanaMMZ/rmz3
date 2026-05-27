@@ -85,18 +85,3 @@ _08076FBE:
 	.align 2, 0
 _08076FC4: .4byte 0x08367214
 _08076FC8: .4byte 0x08367218
-
-	thumb_func_start WormerRockDrone_Die
-WormerRockDrone_Die: @ 0x08076FCC
-	push {lr}
-	ldr r2, _08076FE0 @ =0x0836721C
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08076FE0: .4byte 0x0836721C
-

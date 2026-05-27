@@ -86,7 +86,15 @@ static void Enemy60_Init(struct Enemy60* p) {
   Enemy60_Update((void*)p);
 }
 
-INCASM("asm/enemy/unk_60.inc");
+static const EnemyFunc sDeads[2];
+
+INCASM("asm/enemy/unk_60_pre.inc");
+
+void Enemy60_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/unk_60_post.inc");
 
 void FUN_08092980(struct Enemy* p);
 void FUN_080929c8(struct Enemy* p);

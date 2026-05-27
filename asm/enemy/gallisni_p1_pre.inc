@@ -495,17 +495,3 @@ _08087356:
 	.align 2, 0
 _0808735C: .4byte 0x0836868C
 _08087360: .4byte 0x083686AC
-
-	thumb_func_start Gallisni_Die
-Gallisni_Die: @ 0x08087364
-	push {lr}
-	ldr r2, _08087378 @ =0x083686CC
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08087378: .4byte 0x083686CC

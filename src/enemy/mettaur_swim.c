@@ -5,7 +5,15 @@
 
 static const struct Collision sCollisions[8];
 
-INCASM("asm/enemy/mettaur_swim_p1.inc");
+static const EnemyFunc sDeads[3];
+
+INCASM("asm/enemy/mettaur_swim_p1_pre.inc");
+
+void MettaurSwim_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/mettaur_swim_p1_post.inc");
 
 void nop_08089268(struct Enemy* p) {}
 

@@ -35,7 +35,15 @@ static bool8 FUN_08084708(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/eye_cannon_pre.inc");
+static const EnemyFunc sDeads[1];
+
+INCASM("asm/enemy/eye_cannon_pre_pre.inc");
+
+void EyeCannon_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/eye_cannon_pre_post.inc");
 
 void FUN_08084930(struct Enemy* p) {}
 

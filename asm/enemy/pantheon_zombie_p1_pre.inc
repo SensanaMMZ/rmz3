@@ -269,17 +269,3 @@ _0807FF16:
 	.align 2, 0
 _0807FF1C: .4byte 0x08367E84
 _0807FF20: .4byte 0x08367EA4
-
-	thumb_func_start PantheonZombie_Die
-PantheonZombie_Die: @ 0x0807FF24
-	push {lr}
-	ldr r2, _0807FF38 @ =0x08367EC4
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0807FF38: .4byte 0x08367EC4

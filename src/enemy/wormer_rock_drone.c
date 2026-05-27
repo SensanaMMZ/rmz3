@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const EnemyFunc sDeads[1];
+
 INCASM("asm/enemy/wormer_rock_drone_p1.inc");
 
 void nop_08076ee0(struct Enemy* p) {}
@@ -20,7 +22,13 @@ static bool8 FUN_08076ee4(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/wormer_rock_drone_p2_post.inc");
+INCASM("asm/enemy/wormer_rock_drone_p2_post_pre.inc");
+
+void WormerRockDrone_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/wormer_rock_drone_p2_post_post.inc");
 
 void FUN_08076fe4(struct Enemy* p) {}
 

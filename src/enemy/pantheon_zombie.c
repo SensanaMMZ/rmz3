@@ -5,7 +5,15 @@
 
 static const struct Collision sCollisions[8];
 
-INCASM("asm/enemy/pantheon_zombie_p1.inc");
+static const EnemyFunc sDeads[3];
+
+INCASM("asm/enemy/pantheon_zombie_p1_pre.inc");
+
+void PantheonZombie_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/pantheon_zombie_p1_post.inc");
 
 void nop_0807ff3c(struct Enemy* p) {}
 

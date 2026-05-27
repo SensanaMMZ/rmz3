@@ -33,7 +33,15 @@ struct Enemy* FUN_08082b58(struct Coord* c, bool8 isLeftHand, struct Boss* omega
   return p;
 }
 
-INCASM("asm/enemy/omega_gold_hand_p1.inc");
+static const EnemyFunc PTR_ARRAY_08368218[2];
+
+INCASM("asm/enemy/omega_gold_hand_p1_pre.inc");
+
+void OmegaGoldHand_Die(struct Enemy* p) {
+  (PTR_ARRAY_08368218[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/omega_gold_hand_p1_post.inc");
 
 bool8 FUN_08083284(struct Enemy* p) { return TRUE; }
 

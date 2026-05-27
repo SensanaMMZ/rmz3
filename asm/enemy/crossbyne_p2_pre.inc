@@ -239,17 +239,3 @@ _0807CF34:
 	.align 2, 0
 _0807CF3C: .4byte 0x08367B58
 _0807CF40: .4byte 0x08367B74
-
-	thumb_func_start Crossbyne_Die
-Crossbyne_Die: @ 0x0807CF44
-	push {lr}
-	ldr r2, _0807CF58 @ =0x08367B90
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0807CF58: .4byte 0x08367B90
