@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[];
+
 struct EnemyLemmingles {
   OBJECT_HDR;
   // props (16bytes, offset: 0xB4..)
@@ -61,7 +63,26 @@ void FUN_0806e970(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/lemmingles_p2_p2.inc");
+INCASM("asm/enemy/lemmingles_p2_p2_p1.inc");
+
+void FUN_0806e990(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    SetDDP(&p->body, (p->s).work[0] > 1 ? &sCollisions[3] : &sCollisions[1]);
+    if (!IsFrozen(&p->s)) {
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 1;
+      *((u8*)p + 0xbd) = 0;
+    }
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/lemmingles_p2_p2_p2.inc");
 
 // --------------------------------------------
 

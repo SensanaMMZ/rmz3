@@ -23,7 +23,25 @@ void FUN_0807d994(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mellnet_post_pre_p2.inc");
+INCASM("asm/enemy/mellnet_post_pre_p2_p1.inc");
+
+void FUN_0807d9b4(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[1]);
+    *slot = NULL;
+    if (!IsFrozen(&p->s)) {
+      (p->s).mode[1] = 4;
+      (p->s).mode[2] = 0;
+    }
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/mellnet_post_pre_p2_p2.inc");
 
 void FUN_0807da10(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
