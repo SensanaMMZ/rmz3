@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "metatile.h"
 #include "motion.h"
 #include "vfx.h"
 
@@ -385,7 +386,25 @@ void FUN_080739ac(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/childre_obj_post.inc");
+void FUN_08073a0c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x24, 1) + (p->s).work[1]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = (p->s).work[0];
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/childre_obj_post_post.inc");
 
 // --------------------------------------------
 
