@@ -1,12 +1,38 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
+
+static const struct Collision sCollisions[5];
 
 INCASM("asm/enemy/gallisni_p1.inc");
 
 void nop_0808737c(struct Enemy* p) {}
 
-INCASM("asm/enemy/gallisni_p2.inc");
+INCASM("asm/enemy/gallisni_p2_pre.inc");
+
+void FUN_080874ac(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x18;
+      SetDDP(&p->body, &sCollisions[0]);
+      SetMotion(&p->s, MOTION(0x67, 2));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (p->props[4] != 0) p->props[4]--;
+      if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+        if (p->props[4] == 0) {
+          (p->s).mode[1] = 1;
+          (p->s).mode[2] = 0;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/gallisni_p2_post.inc");
 
 void Gallisni_Init(struct Enemy* p);
 void Gallisni_Update(struct Enemy* p);

@@ -1,12 +1,31 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
 
 INCASM("asm/enemy/shellcrawler_pre.inc");
 
 void FUN_080964bc(struct Enemy* p) {}
 
-INCASM("asm/enemy/shellcrawler_post.inc");
+INCASM("asm/enemy/shellcrawler_post_pre.inc");
+
+void FUN_0809660c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xdb, 3));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = (p->s).motion.state;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/shellcrawler_post_post.inc");
 
 void Shellcrawler_Init(struct Enemy* p);
 void Shellcrawler_Update(struct Enemy* p);

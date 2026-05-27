@@ -1,8 +1,10 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
 
 static const struct Collision sCollisions[4];
+static const motion_t sMotions[18];
 
 INCASM("asm/enemy/mellnet_pre_p1.inc");
 
@@ -21,7 +23,26 @@ void FUN_0807da10(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mellnet_post_post.inc");
+INCASM("asm/enemy/mellnet_post_post_pre.inc");
+
+void FUN_0807da34(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x1e;
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, sMotions[((p->s).flags & 0x10) ? 1 : 0]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+  }
+}
+
+INCASM("asm/enemy/mellnet_post_post_post.inc");
 
 void Mellnet_Init(struct Enemy* p);
 void Mellnet_Update(struct Enemy* p);

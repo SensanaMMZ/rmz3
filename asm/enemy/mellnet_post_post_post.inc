@@ -4,62 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0807da34
-FUN_0807da34: @ 0x0807DA34
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _0807DA44
-	cmp r0, #1
-	beq _0807DA76
-	b _0807DA90
-_0807DA44:
-	movs r0, #0x1e
-	strb r0, [r4, #0x12]
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _0807DA98 @ =0x08367CF4
-	bl SetDDP
-	ldr r2, _0807DA9C @ =0x08367D46
-	ldrb r1, [r4, #0xa]
-	movs r0, #0x10
-	ands r0, r1
-	lsls r0, r0, #0x18
-	lsrs r0, r0, #0x18
-	rsbs r0, r0, #0
-	asrs r0, r0, #0x1f
-	movs r1, #2
-	ands r0, r1
-	adds r0, r0, r2
-	ldrh r1, [r0]
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_0807DA76:
-	ldrb r0, [r4, #0x12]
-	subs r0, #1
-	strb r0, [r4, #0x12]
-	lsls r0, r0, #0x18
-	lsrs r1, r0, #0x18
-	cmp r1, #0
-	bne _0807DA8A
-	movs r0, #3
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_0807DA8A:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_0807DA90:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0807DA98: .4byte 0x08367CF4
-_0807DA9C: .4byte 0x08367D46
-
 	thumb_func_start FUN_0807daa0
 FUN_0807daa0: @ 0x0807DAA0
 	push {r4, lr}
@@ -894,5 +838,6 @@ _0807E276:
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
+
 
 

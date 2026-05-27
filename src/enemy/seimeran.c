@@ -1,12 +1,53 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
+
+static const struct Collision sCollisions[15];
 
 INCASM("asm/enemy/seimeran_p1.inc");
 
 void FUN_0808f728(struct Enemy* p) {}
 
-INCASM("asm/enemy/seimeran_p2.inc");
+INCASM("asm/enemy/seimeran_p2_p1.inc");
+
+void FUN_0808f8e0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[11]);
+      (p->s).work[2] = 0xa0;
+      SetMotion(&p->s, MOTION(0x77, 0));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+  }
+}
+
+INCASM("asm/enemy/seimeran_p2_p2.inc");
+
+void FUN_0808fa24(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x103);
+      SetMotion(&p->s, MOTION(0x77, 4));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/seimeran_p2_p3.inc");
 
 void Seimeran_Init(struct Enemy* p);
 void Seimeran_Update(struct Enemy* p);

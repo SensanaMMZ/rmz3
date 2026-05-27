@@ -4,49 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0807cfac
-FUN_0807cfac: @ 0x0807CFAC
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _0807CFBC
-	cmp r0, #1
-	beq _0807CFD8
-	b _0807CFF0
-_0807CFBC:
-	ldr r0, _0807CFF8 @ =0x0000012B
-	bl PlaySound
-	ldr r1, _0807CFFC @ =0x08367C40
-	ldrb r0, [r4, #0x10]
-	lsls r0, r0, #1
-	adds r0, r0, r1
-	ldrh r1, [r0]
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_0807CFD8:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-	adds r0, r4, #0
-	adds r0, #0x73
-	ldrb r0, [r0]
-	cmp r0, #3
-	bne _0807CFF0
-	movs r1, #0
-	movs r0, #2
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_0807CFF0:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0807CFF8: .4byte 0x0000012B
-_0807CFFC: .4byte 0x08367C40
-
 	thumb_func_start FUN_0807d000
 FUN_0807d000: @ 0x0807D000
 	push {r4, lr}
@@ -836,4 +793,5 @@ FUN_0807d5c4: @ 0x0807D5C4
 	bx r0
 	.align 2, 0
 _0807D60C: .4byte gEnemyFnTable
+
 

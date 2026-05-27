@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
+#include "script.h"
 
 void OmegaGoldSword_Init(struct Enemy* p);
 void OmegaGoldSword_Update(struct Enemy* p);
@@ -38,7 +40,24 @@ INCASM("asm/enemy/omega_gold_sword_p1.inc");
 
 bool8 FUN_0808bb84(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_gold_sword_p2.inc");
+void FUN_0808bb88(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags |= 1;
+      SetMotion(&p->s, MOTION(0x65, 0));
+      (p->s).coord.y = ((struct Enemy*)(p->s).unk_28)->s.coord.y - 0x4000;
+      (p->s).coord.x = ((struct Enemy*)(p->s).unk_28)->s.coord.x;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (((struct Enemy*)(p->s).unk_28)->s.scriptEntity->flags & 1) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_0808bbe4(struct Enemy* p) { return TRUE; }
 
