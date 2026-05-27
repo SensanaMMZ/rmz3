@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
 #include "vfx.h"
 
 static const struct Collision sCollisions[2 * 4];
@@ -365,7 +366,26 @@ static void nop_080739a8(struct Enemy* p) {
   return;
 }
 
-INCASM("asm/enemy/childre_obj.inc");
+void FUN_080739ac(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x40;
+      SetMotion(&p->s, MOTION(0x24, 0));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).work[2]--;
+      if ((p->s).work[2] == 0) {
+        ExplodeSplitMine((p->s).coord.x, (p->s).coord.y);
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = (p->s).work[0];
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/childre_obj_post.inc");
 
 // --------------------------------------------
 

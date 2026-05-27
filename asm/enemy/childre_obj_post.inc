@@ -1,59 +1,8 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-	
-	.text
 
-	thumb_func_start FUN_080739ac
-FUN_080739ac: @ 0x080739AC
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _080739BC
-	cmp r0, #1
-	beq _080739D0
-	b _08073A00
-_080739BC:
-	movs r0, #0x40
-	strb r0, [r4, #0x12]
-	movs r1, #0x90
-	lsls r1, r1, #6
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_080739D0:
-	ldrb r0, [r4, #0x12]
-	subs r0, #1
-	strb r0, [r4, #0x12]
-	lsls r0, r0, #0x18
-	cmp r0, #0
-	bne _080739FA
-	ldr r0, [r4, #0x54]
-	ldr r1, [r4, #0x58]
-	bl ExplodeSplitMine
-	ldr r1, _08073A08 @ =gEnemyFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r4, #0x14]
-	ldrb r0, [r4, #0x10]
-	strb r0, [r4, #0xd]
-_080739FA:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_08073A00:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08073A08: .4byte gEnemyFnTable
+	.text
 
 	thumb_func_start FUN_08073a0c
 FUN_08073a0c: @ 0x08073A0C
@@ -646,3 +595,4 @@ FUN_08073e60: @ 0x08073E60
 	bx r0
 	.align 2, 0
 _08073EA4: .4byte gEnemyFnTable
+
