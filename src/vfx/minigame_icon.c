@@ -31,7 +31,15 @@ struct VFX* CreateMinigameIcon_1(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/vfx/minigame_icon_pre.inc");
+static const VFXFunc sUpdates[5];
+
+INCASM("asm/vfx/minigame_icon_pre_pre.inc");
+
+void Ghost77_Update(struct VFX* p) {
+  (sUpdates[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/vfx/minigame_icon_pre_post.inc");
 
 void Ghost77_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;

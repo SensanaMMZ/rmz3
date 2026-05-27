@@ -3,7 +3,15 @@
 
 // ヘルバットシルトのレーザーに関係?
 
-INCASM("asm/vfx/unk_41_pre.inc");
+extern const VFXFunc PTR_ARRAY_0836eef8[4];
+
+INCASM("asm/vfx/unk_41_pre_pre.inc");
+
+void VFX41_Update(struct VFX* vfx) {
+  (PTR_ARRAY_0836eef8[(vfx->s).mode[1]])(vfx);
+}
+
+INCASM("asm/vfx/unk_41_pre_post.inc");
 
 void VFX41_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;

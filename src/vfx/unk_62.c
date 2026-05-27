@@ -2,8 +2,15 @@
 #include "vfx.h"
 
 static const motion_t sMotions[3];
+static const VFXFunc sUpdates[1];
 
-INCASM("asm/vfx/unk_62_pre.inc");
+INCASM("asm/vfx/unk_62_pre_pre.inc");
+
+void VFX62_Update(struct VFX* vfx) {
+  (sUpdates[(vfx->s).work[0]])(vfx);
+}
+
+INCASM("asm/vfx/unk_62_pre_post.inc");
 
 void VFX62_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;

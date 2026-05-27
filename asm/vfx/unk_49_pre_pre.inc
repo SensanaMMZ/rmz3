@@ -195,17 +195,3 @@ VFX49_Init: @ 0x080C0388
 	.align 2, 0
 _080C03C8: .4byte gVFXFnTable
 _080C03CC: .4byte 0x0836F160
-
-	thumb_func_start VFX49_Update
-VFX49_Update: @ 0x080C03D0
-	push {lr}
-	ldr r2, _080C03E4 @ =0x0836F150
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C03E4: .4byte 0x0836F150

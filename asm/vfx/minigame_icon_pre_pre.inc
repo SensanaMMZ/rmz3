@@ -317,17 +317,3 @@ _080C83F4:
 	bx r0
 	.align 2, 0
 _080C8400: .4byte gVFXFnTable
-
-	thumb_func_start Ghost77_Update
-Ghost77_Update: @ 0x080C8404
-	push {lr}
-	ldr r2, _080C8418 @ =0x0836F984
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C8418: .4byte 0x0836F984

@@ -78,17 +78,3 @@ VFX51_Init: @ 0x080C0AF0
 	.align 2, 0
 _080C0B30: .4byte gVFXFnTable
 _080C0B34: .4byte 0x0836F1A0
-
-	thumb_func_start VFX51_Update
-VFX51_Update: @ 0x080C0B38
-	push {lr}
-	ldr r2, _080C0B4C @ =0x0836F19C
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C0B4C: .4byte 0x0836F19C

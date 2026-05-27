@@ -251,17 +251,3 @@ VFX37_Init: @ 0x080BC848
 	.align 2, 0
 _080BC888: .4byte gVFXFnTable
 _080BC88C: .4byte 0x0836EDF0
-
-	thumb_func_start VFX37_Update
-VFX37_Update: @ 0x080BC890
-	push {lr}
-	ldr r2, _080BC8A4 @ =0x0836EDD4
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080BC8A4: .4byte 0x0836EDD4

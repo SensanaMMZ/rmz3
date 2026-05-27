@@ -80,7 +80,15 @@ void FUN_080bc660(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/vfx/unk_37_pre.inc");
+extern const VFXFunc PTR_ARRAY_0836edd4[7];
+
+INCASM("asm/vfx/unk_37_pre_pre.inc");
+
+void VFX37_Update(struct VFX* vfx) {
+  (PTR_ARRAY_0836edd4[(vfx->s).mode[1]])(vfx);
+}
+
+INCASM("asm/vfx/unk_37_pre_post.inc");
 
 void VFX37_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);

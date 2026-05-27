@@ -3,7 +3,15 @@
 
 // キュービットフォクスター の炎に関係
 
-INCASM("asm/vfx/unk_50_pre.inc");
+static const VFXFunc sUpdates[2];
+
+INCASM("asm/vfx/unk_50_pre_pre.inc");
+
+void VFX50_Update(struct VFX* vfx) {
+  (sUpdates[(vfx->s).mode[1]])(vfx);
+}
+
+INCASM("asm/vfx/unk_50_pre_post.inc");
 
 void VFX50_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;

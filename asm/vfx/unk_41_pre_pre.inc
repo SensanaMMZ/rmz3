@@ -330,17 +330,3 @@ _080BDFD8:
 	bx r0
 	.align 2, 0
 _080BDFE4: .4byte gVFXFnTable
-
-	thumb_func_start VFX41_Update
-VFX41_Update: @ 0x080BDFE8
-	push {lr}
-	ldr r2, _080BDFFC @ =0x0836EEF8
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080BDFFC: .4byte 0x0836EEF8
