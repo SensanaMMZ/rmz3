@@ -40,7 +40,15 @@ struct Entity* CreateElf0(struct Zero* z, u8 breed, u8 availability, u8 _) {
   return (struct Entity*)p;
 }
 
-INCASM("asm/cyberelf/unk_0.inc");
+INCASM("asm/cyberelf/unk_0_pre.inc");
+
+void Elf0_Die(struct Elf* p) {
+  gPause = 0;
+  (p->s).flags &= ~DISPLAY;
+  SET_ELF_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/cyberelf/unk_0_post.inc");
 
 // --------------------------------------------
 
