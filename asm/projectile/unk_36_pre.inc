@@ -612,29 +612,3 @@ _080ADA28:
 	.align 2, 0
 _080ADA48: .4byte 0xFFFFF600
 _080ADA4C: .4byte gProjectileFnTable
-
-	thumb_func_start FUN_080ada50
-FUN_080ada50: @ 0x080ADA50
-	push {r4, lr}
-	adds r4, r0, #0
-	bl UpdateMotionGraphic
-	adds r0, r4, #0
-	adds r0, #0x73
-	ldrb r0, [r0]
-	cmp r0, #3
-	bne _080ADA74
-	ldr r1, _080ADA7C @ =gProjectileFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r4, #0x14]
-_080ADA74:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080ADA7C: .4byte gProjectileFnTable

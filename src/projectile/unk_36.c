@@ -4,7 +4,16 @@
 
 // Hanumachine
 
-INCASM("asm/projectile/unk_36.inc");
+INCASM("asm/projectile/unk_36_pre.inc");
+
+void FUN_080ada50(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).motion.state == 3) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/projectile/unk_36_post.inc");
 
 void Projectile36_Init(struct Projectile* p);
 void Projectile36_Update(struct Projectile* p);
