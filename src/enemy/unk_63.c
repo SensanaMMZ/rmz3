@@ -6,7 +6,13 @@ INCASM("asm/enemy/unk_63_p1.inc");
 
 void nop_08094ad8(struct Enemy* p) {}
 
-INCASM("asm/enemy/unk_63_p2.inc");
+INCASM("asm/enemy/unk_63_p2_pre.inc");
+
+void Enemy63_Die(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/unk_63_p2_post.inc");
 
 void nop_08094bcc(struct Enemy* p) {}
 

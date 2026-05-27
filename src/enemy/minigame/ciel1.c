@@ -2,7 +2,13 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/minigame_ciel1.inc");
+INCASM("asm/enemy/minigame_ciel1_pre.inc");
+
+void CielMinigameEnemy_Die(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/minigame_ciel1_post.inc");
 
 void CielMinigameEnemy_Init(struct Enemy* p);
 void CielMinigameEnemy_Update(struct Enemy* p);

@@ -106,18 +106,3 @@ Enemy63_Update: @ 0x08094B80
 	.align 2, 0
 _08094BAC: .4byte 0x08369EDC
 _08094BB0: .4byte 0x08369EEC
-
-	thumb_func_start Enemy63_Die
-Enemy63_Die: @ 0x08094BB4
-	ldr r2, _08094BC8 @ =gEnemyFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_08094BC8: .4byte gEnemyFnTable
