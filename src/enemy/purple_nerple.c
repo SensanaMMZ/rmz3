@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[];
+
 INCASM("asm/enemy/purple_nerple_p1.inc");
 
 void FUN_08076140(struct Enemy* p) {}
@@ -19,7 +21,47 @@ void FUN_08076144(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/purple_nerple_p2_p2.inc");
+INCASM("asm/enemy/purple_nerple_p2_p2_p1.inc");
+
+void FUN_08076178(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 8;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/purple_nerple_p2_p2_p2.inc");
+
+void FUN_08076198(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 8;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/purple_nerple_p2_p2_p3.inc");
+
+void FUN_080761b8(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    SetDDP(&p->body, &sCollisions[1]);
+    if (!IsFrozen(&p->s)) {
+      if (p->props[4] != 0) {
+        (p->s).mode[1] = 4;
+      } else {
+        (p->s).mode[1] = 2;
+      }
+      (p->s).mode[2] = 0;
+    }
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 8;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/purple_nerple_p2_p2_p4.inc");
 
 void PurpleNerple_Init(struct Enemy* p);
 void PurpleNerple_Update(struct Enemy* p);
