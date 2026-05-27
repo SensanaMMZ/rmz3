@@ -36,8 +36,25 @@ static bool8 FUN_08084708(struct Enemy* p) {
 }
 
 static const EnemyFunc sDeads[1];
+static const EnemyFunc sUpdates1[6];
+static const EnemyFunc sUpdates2[6];
 
-INCASM("asm/enemy/eye_cannon_pre_pre.inc");
+void FUN_080847b8(struct Enemy* p);
+bool8 FUN_08084744(struct Enemy* p);
+
+INCASM("asm/enemy/eye_cannon_pre_pre_p1.inc");
+
+void EyeCannon_Update(struct Enemy* p) {
+  if (!FUN_08084708(p)) {
+    FUN_080847b8(p);
+    if (!FUN_08084744(p)) {
+      (sUpdates1[(p->s).mode[1]])(p);
+      (sUpdates2[(p->s).mode[1]])(p);
+    }
+  }
+}
+
+INCASM("asm/enemy/eye_cannon_pre_pre_p2.inc");
 
 void EyeCannon_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
@@ -47,7 +64,21 @@ INCASM("asm/enemy/eye_cannon_pre_post.inc");
 
 void FUN_08084930(struct Enemy* p) {}
 
-INCASM("asm/enemy/eye_cannon_post_pre.inc");
+INCASM("asm/enemy/eye_cannon_post_pre_p1.inc");
+
+void FUN_08084934(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    SetDDP(&p->body, &sCollisions[1]);
+    if (!IsFrozen(&p->s)) {
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/eye_cannon_post_pre_p2.inc");
 
 void FUN_08084974(struct Enemy* p) {
   switch ((p->s).mode[2]) {
