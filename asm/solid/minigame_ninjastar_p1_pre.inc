@@ -76,18 +76,3 @@ _080D92DE:
 	.align 2, 0
 _080D92E4: .4byte 0x08371180
 _080D92E8: .4byte 0x08371188
-
-	thumb_func_start MgNinjaStar_Die
-MgNinjaStar_Die: @ 0x080D92EC
-	ldr r2, _080D9300 @ =gSolidFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_080D9300: .4byte gSolidFnTable

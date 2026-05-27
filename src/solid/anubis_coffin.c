@@ -44,7 +44,13 @@ INCASM("asm/solid/anubis_coffin_pre.inc");
 
 void nop_080cde6c(struct Solid* p) {}
 
-INCASM("asm/solid/anubis_coffin_post_p1.inc");
+INCASM("asm/solid/anubis_coffin_post_p1_pre.inc");
+
+void AnubisCoffin_Die(struct Solid* p) {
+  SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/solid/anubis_coffin_post_p1_post.inc");
 
 void FUN_080cdf34(struct Solid* p) {}
 

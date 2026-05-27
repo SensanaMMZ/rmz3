@@ -2,7 +2,13 @@
 #include "global.h"
 #include "solid.h"
 
-INCASM("asm/solid/ciel_mg_obj.inc");
+INCASM("asm/solid/ciel_mg_obj_pre.inc");
+
+void CielMinigameObj_Die(struct Solid* p) {
+  SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/solid/ciel_mg_obj_post.inc");
 
 // シエルのミニゲームで使う様々なオブジェクト
 

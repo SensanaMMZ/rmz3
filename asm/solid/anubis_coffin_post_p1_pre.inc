@@ -82,18 +82,3 @@ AnubisCoffin_Update: @ 0x080CDEE8
 	.align 2, 0
 _080CDF14: .4byte 0x083701F0
 _080CDF18: .4byte 0x083701FC
-
-	thumb_func_start AnubisCoffin_Die
-AnubisCoffin_Die: @ 0x080CDF1C
-	ldr r2, _080CDF30 @ =gSolidFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_080CDF30: .4byte gSolidFnTable

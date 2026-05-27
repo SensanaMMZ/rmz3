@@ -61,7 +61,13 @@ void FUN_080ce538(struct Solid* p) {
 
 void nop_080ce58c(struct Solid* p) {}
 
-INCASM("asm/solid/locomoif_platform_part2.inc");
+INCASM("asm/solid/locomoif_platform_part2_pre.inc");
+
+void LocomoIFPlatform_Die(struct Solid* p) {
+  SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/solid/locomoif_platform_part2_post.inc");
 
 void nop_080ce70c(struct Solid* p) {}
 
