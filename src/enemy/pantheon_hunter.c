@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
 #include "vfx.h"
 
 struct PantheonHunterObject {
@@ -582,7 +583,17 @@ INCASM("asm/enemy/pantheon_hunter_p1.inc");
 
 void nop_08064ca8(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_hunter_p2.inc");
+INCASM("asm/enemy/pantheon_hunter_p2_pre.inc");
+
+void FUN_08064e0c(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, MOTION(0x13, 3));
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+}
+
+INCASM("asm/enemy/pantheon_hunter_p2_post.inc");
 
 void nop_08064e34(struct Enemy* p) {}
 

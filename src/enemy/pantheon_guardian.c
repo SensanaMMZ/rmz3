@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "mod.h"
+#include "motion.h"
 #include "story.h"
 #include "zero.h"
 
@@ -73,7 +74,18 @@ NON_MATCH static void PantheonGuardian_Init(struct PantheonGuardianObject* p) {
 #endif
 }
 
-INCASM("asm/enemy/pantheon_guardian.inc");
+INCASM("asm/enemy/pantheon_guardian_pre.inc");
+
+void FUN_08064444(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, MOTION(0x14, 4));
+    SetDDP(&p->body, &sCollisions[0]);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+}
+
+INCASM("asm/enemy/pantheon_guardian_post.inc");
 
 void FUN_08063da0(struct Enemy* p);
 void doNothing_08063e10(struct Enemy* p);

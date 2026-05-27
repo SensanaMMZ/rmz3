@@ -9,7 +9,18 @@ INCASM("asm/enemy/gallisni_p1.inc");
 
 void nop_0808737c(struct Enemy* p) {}
 
-INCASM("asm/enemy/gallisni_p2_pre.inc");
+INCASM("asm/enemy/gallisni_p2_pre_pre.inc");
+
+void FUN_080873fc(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, MOTION(0x67, 3));
+    UpdateMotionGraphic(&p->s);
+    SetDDP(&p->body, &sCollisions[3]);
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/enemy/gallisni_p2_pre_post.inc");
 
 void FUN_080874ac(struct Enemy* p) {
   switch ((p->s).mode[2]) {
