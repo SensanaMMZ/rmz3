@@ -26,7 +26,25 @@ void FUN_08087380(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p2_pre_pre_p2.inc");
+INCASM("asm/enemy/gallisni_p2_pre_pre_p2_p1.inc");
+
+void FUN_080873a0(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    SetDDP(&p->body, &sCollisions[2]);
+    if (!IsFrozen(&p->s)) {
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+    }
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/gallisni_p2_pre_pre_p2_p2.inc");
 
 void FUN_080873fc(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
