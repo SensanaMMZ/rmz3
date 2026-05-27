@@ -21,7 +21,21 @@ INCASM("asm/enemy/pantheon_base_p2_post.inc");
 
 void nop_0808a3f4(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_base_p3_pre.inc");
+INCASM("asm/enemy/pantheon_base_p3_pre_p1.inc");
+
+void pBase_0808a3f8(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    SetDDP(&p->body, &sCollisions[0]);
+    if (!IsFrozen(&p->s)) {
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_base_p3_pre_p2.inc");
 
 void pBase_0808a438(struct Enemy* p) {
   struct Entity* parent = (p->s).unk_28;
