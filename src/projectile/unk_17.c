@@ -1,8 +1,26 @@
 #include "collision.h"
 #include "global.h"
+#include "motion.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_17.inc");
+INCASM("asm/projectile/unk_17_pre.inc");
+
+void FUN_080a2d9c(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x42, 4));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
+
+INCASM("asm/projectile/unk_17_post.inc");
 
 void Projectile17_Init(struct Projectile* p);
 void Projectile17_Update(struct Projectile* p);

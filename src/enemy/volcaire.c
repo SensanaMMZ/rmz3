@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
 
 struct Volcaire {
   OBJECT_HDR;
@@ -184,7 +185,25 @@ INCASM("asm/enemy/volcaire_p1.inc");
 
 void nop_08077608(struct Enemy* p) {}
 
-INCASM("asm/enemy/volcaire_p2.inc");
+INCASM("asm/enemy/volcaire_p2_pre.inc");
+
+void FUN_08077af8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x2e, 5));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/volcaire_p2_post.inc");
 
 // --------------------------------------------
 
