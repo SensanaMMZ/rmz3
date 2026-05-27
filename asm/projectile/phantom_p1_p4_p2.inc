@@ -4,22 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080af8c8
-FUN_080af8c8: @ 0x080AF8C8
-	push {r4, lr}
-	adds r4, r0, #0
-	ldr r1, _080AF8E4 @ =0x00008605
-	bl SetMotion
-	movs r0, #1
-	strb r0, [r4, #0xd]
-	adds r0, r4, #0
-	bl FUN_080af8e8
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080AF8E4: .4byte 0x00008605
-
 	thumb_func_start FUN_080af8e8
 FUN_080af8e8: @ 0x080AF8E8
 	push {r4, r5, r6, lr}
