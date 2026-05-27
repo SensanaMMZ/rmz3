@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "mission.h"
 #include "weapon.h"
 
 static const struct Collision sCollisions[2] = {
@@ -69,7 +70,17 @@ void BlizzardArrow_Die(struct Weapon* p) {
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/weapon/blizzard_arrow_post.inc");
+void hitBlizzardArrow(struct Body* body) {
+  if (body->hitboxFlags & BODY_STATUS_B2) {
+    struct CollidableEntity* p = body->parent;
+    if (gMission.weaponCount[WEAPON_BUSTER] <= 0xFFFE) {
+      gMission.weaponCount[WEAPON_BUSTER]++;
+    }
+    if (!(body->enemy->status & BODY_STATUS_DEAD) || (p->s).work[0] == 0) {
+      (p->s).work[3] = 1;
+    }
+  }
+}
 
 // --------------------------------------------
 
