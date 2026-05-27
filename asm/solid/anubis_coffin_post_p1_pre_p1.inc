@@ -57,28 +57,3 @@ _080CDED8: .4byte gSolidFnTable
 _080CDEDC: .4byte 0x08370240
 _080CDEE0: .4byte 0x08370208
 _080CDEE4: .4byte nop_080cde6c
-
-	thumb_func_start AnubisCoffin_Update
-AnubisCoffin_Update: @ 0x080CDEE8
-	push {r4, lr}
-	adds r4, r0, #0
-	ldr r1, _080CDF14 @ =0x083701F0
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	ldr r1, _080CDF18 @ =0x083701FC
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080CDF14: .4byte 0x083701F0
-_080CDF18: .4byte 0x083701FC
