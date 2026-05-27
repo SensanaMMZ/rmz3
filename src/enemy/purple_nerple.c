@@ -6,7 +6,20 @@ INCASM("asm/enemy/purple_nerple_p1.inc");
 
 void FUN_08076140(struct Enemy* p) {}
 
-INCASM("asm/enemy/purple_nerple_p2.inc");
+INCASM("asm/enemy/purple_nerple_p2_p1.inc");
+
+void FUN_08076144(struct Enemy* p) {
+  if (p->props[4] != 0) {
+    (p->s).mode[1] = 4;
+    (p->s).mode[2] = 0;
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 8;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/purple_nerple_p2_p2.inc");
 
 void PurpleNerple_Init(struct Enemy* p);
 void PurpleNerple_Update(struct Enemy* p);
