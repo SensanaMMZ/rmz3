@@ -2,7 +2,14 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/hanumachine_obj.inc");
+INCASM("asm/enemy/hanumachine_obj_pre.inc");
+
+void HanumachineObj_Die(struct Enemy* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/hanumachine_obj_post.inc");
 
 void HanumachineObj_Init(struct Enemy* p);
 void HanumachineObj_Update(struct Enemy* p);

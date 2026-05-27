@@ -86,7 +86,13 @@ static void Leviathan_Init(struct Zero* z) {
   Leviathan_Update(z);
 }
 
-INCASM("asm/player/leviathan_p1.inc");
+INCASM("asm/player/leviathan_p1_pre.inc");
+
+void Leviathan_Die(struct Zero* z) {
+  SET_PLAYER_ROUTINE(z, ENTITY_EXIT);
+}
+
+INCASM("asm/player/leviathan_p1_post.inc");
 
 void nop_08036044(struct Zero* z) {}
 

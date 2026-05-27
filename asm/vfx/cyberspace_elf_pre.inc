@@ -177,28 +177,3 @@ _080C74E0:
 	bx r0
 	.align 2, 0
 _080C74E8: .4byte gVFXFnTable
-
-	thumb_func_start CyberSpaceElf_Die
-CyberSpaceElf_Die: @ 0x080C74EC
-	push {r4, lr}
-	adds r4, r0, #0
-	adds r0, #0x54
-	ldrb r2, [r4, #0x11]
-	movs r1, #1
-	bl FUN_080bfd98
-	ldr r1, _080C7514 @ =gVFXFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #4
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #0x10]
-	str r0, [r4, #0x14]
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C7514: .4byte gVFXFnTable
-
-

@@ -51,4 +51,13 @@ static void CyberSpaceElf_Init(struct VFX* p) {
   CyberSpaceElf_Update(p);
 }
 
-INCASM("asm/vfx/cyberspace_elf.inc");
+void FUN_080bfd98(struct Coord* c, u8 r1, u8 r2);
+
+INCASM("asm/vfx/cyberspace_elf_pre.inc");
+
+void CyberSpaceElf_Die(struct VFX* vfx) {
+  FUN_080bfd98(&(vfx->s).coord, 1, (vfx->s).work[1]);
+  SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/cyberspace_elf_post.inc");
