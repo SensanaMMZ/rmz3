@@ -6,7 +6,15 @@
 
 static const ProjectileFunc sUpdates[4];
 
-INCASM("asm/projectile/unk_36_pre_pre.inc");
+static const ProjectileFunc sInitializers[4];
+
+INCASM("asm/projectile/unk_36_pre_pre_pre.inc");
+
+void Projectile36_Init(struct Projectile* p) {
+  (sInitializers[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_36_pre_pre_post.inc");
 
 void Projectile36_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]])(p);

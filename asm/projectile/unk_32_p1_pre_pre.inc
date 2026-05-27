@@ -539,17 +539,3 @@ _080AAE7A:
 	bx r1
 	.align 2, 0
 _080AAE80: .4byte gProjectileFnTable
-
-	thumb_func_start Projectile32_Init
-Projectile32_Init: @ 0x080AAE84
-	push {lr}
-	ldr r2, _080AAE98 @ =0x0836C3C0
-	ldrb r1, [r0, #0x10]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080AAE98: .4byte 0x0836C3C0

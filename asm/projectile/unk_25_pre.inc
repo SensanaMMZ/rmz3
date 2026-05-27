@@ -4,29 +4,29 @@
 	
 	.text
 
-	thumb_func_start createCopyXSonicBoom
-createCopyXSonicBoom: @ 0x080A8118
+	thumb_func_start FUN_080a83e4
+FUN_080a83e4: @ 0x080A83E4
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	lsls r1, r1, #0x18
 	lsrs r6, r1, #0x18
 	lsls r2, r2, #0x18
 	lsrs r5, r2, #0x18
-	ldr r0, _080A8168 @ =gProjectileHeaderPtr
+	ldr r0, _080A8434 @ =gProjectileHeaderPtr
 	ldr r0, [r0]
 	bl AllocEntityFirst
 	adds r3, r0, #0
 	cmp r3, #0
-	beq _080A8160
+	beq _080A842C
 	adds r1, r3, #0
 	adds r1, #0x25
 	movs r2, #0
 	movs r0, #8
 	strb r0, [r1]
-	ldr r1, _080A816C @ =gProjectileFnTable
-	movs r0, #0x18
+	ldr r1, _080A8438 @ =gProjectileFnTable
+	movs r0, #0x19
 	strb r0, [r3, #9]
-	ldr r0, [r1, #0x60]
+	ldr r0, [r1, #0x64]
 	ldr r0, [r0]
 	str r0, [r3, #0x14]
 	movs r0, #0
@@ -41,24 +41,10 @@ createCopyXSonicBoom: @ 0x080A8118
 	ldr r1, [r4, #0x58]
 	str r0, [r3, #0x54]
 	str r1, [r3, #0x58]
-_080A8160:
+_080A842C:
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080A8168: .4byte gProjectileHeaderPtr
-_080A816C: .4byte gProjectileFnTable
-
-	thumb_func_start CopyXProjectile_Init
-CopyXProjectile_Init: @ 0x080A8170
-	push {lr}
-	ldr r2, _080A8184 @ =0x0836BEE4
-	ldrb r1, [r0, #0x10]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080A8184: .4byte 0x0836BEE4
+_080A8434: .4byte gProjectileHeaderPtr
+_080A8438: .4byte gProjectileFnTable

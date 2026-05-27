@@ -4,30 +4,29 @@
 	
 	.text
 
-	thumb_func_start hanu_080ad598
-hanu_080ad598: @ 0x080AD598
+	thumb_func_start FUN_080a88a4
+FUN_080a88a4: @ 0x080A88A4
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	lsls r1, r1, #0x18
 	lsrs r6, r1, #0x18
 	lsls r2, r2, #0x18
 	lsrs r5, r2, #0x18
-	ldr r0, _080AD5E8 @ =gProjectileHeaderPtr
+	ldr r0, _080A88F4 @ =gProjectileHeaderPtr
 	ldr r0, [r0]
 	bl AllocEntityFirst
 	adds r3, r0, #0
 	cmp r3, #0
-	beq _080AD5E2
+	beq _080A88EC
 	adds r1, r3, #0
 	adds r1, #0x25
 	movs r2, #0
 	movs r0, #8
 	strb r0, [r1]
-	ldr r0, _080AD5EC @ =gProjectileFnTable
-	movs r1, #0x24
-	strb r1, [r3, #9]
-	adds r0, #0x90
-	ldr r0, [r0]
+	ldr r1, _080A88F8 @ =gProjectileFnTable
+	movs r0, #0x1a
+	strb r0, [r3, #9]
+	ldr r0, [r1, #0x68]
 	ldr r0, [r0]
 	str r0, [r3, #0x14]
 	movs r0, #0
@@ -42,38 +41,37 @@ hanu_080ad598: @ 0x080AD598
 	ldr r1, [r4, #0x58]
 	str r0, [r3, #0x54]
 	str r1, [r3, #0x58]
-_080AD5E2:
+_080A88EC:
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080AD5E8: .4byte gProjectileHeaderPtr
-_080AD5EC: .4byte gProjectileFnTable
+_080A88F4: .4byte gProjectileHeaderPtr
+_080A88F8: .4byte gProjectileFnTable
 
-	thumb_func_start FUN_080ad5f0
-FUN_080ad5f0: @ 0x080AD5F0
+	thumb_func_start FUN_080a88fc
+FUN_080a88fc: @ 0x080A88FC
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	lsls r1, r1, #0x18
 	lsrs r6, r1, #0x18
 	lsls r2, r2, #0x18
 	lsrs r5, r2, #0x18
-	ldr r0, _080AD640 @ =gProjectileHeaderPtr
+	ldr r0, _080A894C @ =gProjectileHeaderPtr
 	ldr r0, [r0]
-	bl AllocEntityFirst
+	bl AllocEntityLast
 	adds r3, r0, #0
 	cmp r3, #0
-	beq _080AD63A
+	beq _080A8944
 	adds r1, r3, #0
 	adds r1, #0x25
 	movs r2, #0
 	movs r0, #8
 	strb r0, [r1]
-	ldr r0, _080AD644 @ =gProjectileFnTable
-	movs r1, #0x24
-	strb r1, [r3, #9]
-	adds r0, #0x90
-	ldr r0, [r0]
+	ldr r1, _080A8950 @ =gProjectileFnTable
+	movs r0, #0x1a
+	strb r0, [r3, #9]
+	ldr r0, [r1, #0x68]
 	ldr r0, [r0]
 	str r0, [r3, #0x14]
 	movs r0, #0
@@ -88,24 +86,10 @@ FUN_080ad5f0: @ 0x080AD5F0
 	ldr r1, [r4, #0x58]
 	str r0, [r3, #0x54]
 	str r1, [r3, #0x58]
-_080AD63A:
+_080A8944:
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080AD640: .4byte gProjectileHeaderPtr
-_080AD644: .4byte gProjectileFnTable
-
-	thumb_func_start Projectile36_Init
-Projectile36_Init: @ 0x080AD648
-	push {lr}
-	ldr r2, _080AD65C @ =0x0836C8C0
-	ldrb r1, [r0, #0x10]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080AD65C: .4byte 0x0836C8C0
+_080A894C: .4byte gProjectileHeaderPtr
+_080A8950: .4byte gProjectileFnTable

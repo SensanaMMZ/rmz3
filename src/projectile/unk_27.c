@@ -6,7 +6,15 @@ void CreateVFX53(struct Entity* e, u8 n);
 
 static const ProjectileFunc PTR_ARRAY_0836c0ec[7];
 
-INCASM("asm/projectile/unk_27_pre_pre.inc");
+static const ProjectileFunc PTR_ARRAY_0836c0d0[7];
+
+INCASM("asm/projectile/unk_27_pre_pre_pre.inc");
+
+void Projectile27_Init(struct Projectile* p) {
+  (PTR_ARRAY_0836c0d0[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_27_pre_pre_post.inc");
 
 void Projectile27_Update(struct Projectile* p) {
   (PTR_ARRAY_0836c0ec[(p->s).work[0]])(p);

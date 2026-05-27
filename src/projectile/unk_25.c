@@ -2,7 +2,15 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_25.inc");
+static const ProjectileFunc PTR_ARRAY_0836bf68[4];
+
+INCASM("asm/projectile/unk_25_pre.inc");
+
+void Projectile25_Init(struct Projectile* p) {
+  (PTR_ARRAY_0836bf68[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_25_post.inc");
 
 void Projectile25_Init(struct Projectile* p);
 void Projectile25_Update(struct Projectile* p);

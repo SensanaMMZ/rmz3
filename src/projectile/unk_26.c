@@ -4,7 +4,15 @@
 
 static const ProjectileFunc PTR_ARRAY_0836c034[6];
 
-INCASM("asm/projectile/unk_26_pre.inc");
+static const ProjectileFunc PTR_ARRAY_0836c01c[6];
+
+INCASM("asm/projectile/unk_26_pre_pre.inc");
+
+void Projectile26_Init(struct Projectile* p) {
+  (PTR_ARRAY_0836c01c[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_26_pre_post.inc");
 
 void Projectile26_Update(struct Projectile* p) {
   (PTR_ARRAY_0836c034[(p->s).work[0]])(p);

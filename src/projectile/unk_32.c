@@ -4,13 +4,28 @@
 
 static const ProjectileFunc sUpdates[9];
 
-INCASM("asm/projectile/unk_32_p1_pre.inc");
+static const ProjectileFunc sInitializers[9];
+static const ProjectileFunc PTR_ARRAY_0836c408[9];
+
+INCASM("asm/projectile/unk_32_p1_pre_pre.inc");
+
+void Projectile32_Init(struct Projectile* p) {
+  (sInitializers[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_32_p1_pre_post.inc");
 
 void Projectile32_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_32_p1_post.inc");
+INCASM("asm/projectile/unk_32_p1_post_pre.inc");
+
+void Projectile32_Die(struct Projectile* p) {
+  (PTR_ARRAY_0836c408[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_32_p1_post_post.inc");
 
 void nop_080aaecc(struct Projectile* p) {}
 
