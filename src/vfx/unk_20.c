@@ -31,7 +31,14 @@ struct VFX* CreateGhost20(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/vfx/unk_20_p1.inc");
+INCASM("asm/vfx/unk_20_p1_pre.inc");
+
+void Ghost20_Die(struct VFX* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_20_p1_post.inc");
 
 void FUN_080b73d0(struct VFX* p) {}
 

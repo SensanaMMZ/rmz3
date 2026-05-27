@@ -4,8 +4,8 @@
 	
 	.text
 
-	thumb_func_start FUN_080b721c
-FUN_080b721c: @ 0x080B721C
+	thumb_func_start CreateVFX60
+CreateVFX60: @ 0x080C2BAC
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -15,20 +15,21 @@ FUN_080b721c: @ 0x080B721C
 	lsrs r6, r1, #0x18
 	lsls r2, r2, #0x10
 	lsrs r7, r2, #0x10
-	ldr r0, _080B727C @ =gVFXHeaderPtr
+	ldr r0, _080C2C10 @ =gVFXHeaderPtr
 	ldr r0, [r0]
 	bl AllocEntityFirst
 	adds r4, r0, #0
 	cmp r4, #0
-	beq _080B7270
+	beq _080C2C02
 	adds r0, #0x25
 	movs r3, #0
 	movs r2, #1
 	strb r2, [r0]
-	ldr r1, _080B7280 @ =gVFXFnTable
-	movs r0, #0x14
-	strb r0, [r4, #9]
-	ldr r0, [r1, #0x50]
+	ldr r0, _080C2C14 @ =gVFXFnTable
+	movs r1, #0x3c
+	strb r1, [r4, #9]
+	adds r0, #0xf0
+	ldr r0, [r0]
 	ldr r0, [r0]
 	str r0, [r4, #0x14]
 	movs r0, #0
@@ -47,7 +48,7 @@ FUN_080b721c: @ 0x080B721C
 	strh r7, [r0]
 	mov r0, r8
 	str r0, [r4, #0x78]
-_080B7270:
+_080C2C02:
 	adds r0, r4, #0
 	pop {r3}
 	mov r8, r3
@@ -55,11 +56,11 @@ _080B7270:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080B727C: .4byte gVFXHeaderPtr
-_080B7280: .4byte gVFXFnTable
+_080C2C10: .4byte gVFXHeaderPtr
+_080C2C14: .4byte gVFXFnTable
 
-	thumb_func_start Ghost20_Init
-Ghost20_Init: @ 0x080B7284
+	thumb_func_start VFX60_Init
+VFX60_Init: @ 0x080C2C18
 	push {r4, lr}
 	adds r4, r0, #0
 	bl InitNonAffineMotion
@@ -74,7 +75,7 @@ Ghost20_Init: @ 0x080B7284
 	strb r2, [r4, #0xa]
 	ldrb r1, [r4, #0x10]
 	cmp r1, #0
-	bne _080B72C4
+	bne _080C2C54
 	movs r0, #0xef
 	ands r2, r0
 	strb r2, [r4, #0xa]
@@ -88,10 +89,8 @@ Ghost20_Init: @ 0x080B7284
 	rsbs r0, r0, #0
 	ands r0, r1
 	strb r0, [r2]
-	movs r0, #0xc0
-	rsbs r0, r0, #0
-	b _080B72E6
-_080B72C4:
+	b _080C2C74
+_080C2C54:
 	movs r1, #1
 	movs r0, #0x10
 	orrs r2, r0
@@ -108,35 +107,24 @@ _080B72C4:
 	ands r0, r1
 	orrs r0, r2
 	strb r0, [r3]
+_080C2C74:
+	ldrb r0, [r4, #0x10]
+	cmp r0, #0
+	bne _080C2C80
 	movs r0, #0xc0
-_080B72E6:
+	rsbs r0, r0, #0
+	b _080C2C82
+_080C2C80:
+	movs r0, #0xc0
+_080C2C82:
 	str r0, [r4, #0x5c]
 	movs r3, #0
 	str r3, [r4, #0x60]
-	ldrb r0, [r4, #0x11]
-	cmp r0, #0
-	bne _080B7310
-	movs r0, #0xff
-	strb r0, [r4, #0x12]
-	ldr r1, _080B730C @ =gVFXFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #1
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #4]
-	str r0, [r4, #0x14]
-	strb r1, [r4, #0xd]
-	b _080B7342
-	.align 2, 0
-_080B730C: .4byte gVFXFnTable
-_080B7310:
-	ldr r2, _080B7354 @ =RNG_0202f388
+	ldr r2, _080C2CC8 @ =RNG_0202f388
 	ldr r1, [r2]
-	ldr r0, _080B7358 @ =0x000343FD
+	ldr r0, _080C2CCC @ =0x000343FD
 	muls r0, r1, r0
-	ldr r1, _080B735C @ =0x00269EC3
+	ldr r1, _080C2CD0 @ =0x00269EC3
 	adds r0, r0, r1
 	lsls r0, r0, #1
 	lsrs r1, r0, #1
@@ -146,7 +134,7 @@ _080B7310:
 	ands r0, r1
 	adds r0, #0x7f
 	strb r0, [r4, #0x12]
-	ldr r1, _080B7360 @ =gVFXFnTable
+	ldr r1, _080C2CD4 @ =gVFXFnTable
 	ldrb r0, [r4, #9]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -155,33 +143,31 @@ _080B7310:
 	ldr r0, [r0]
 	ldr r0, [r0, #4]
 	str r0, [r4, #0x14]
-	movs r0, #2
-	strb r0, [r4, #0xd]
-_080B7342:
+	strb r1, [r4, #0xd]
 	strb r3, [r4, #0xe]
 	strb r3, [r4, #0xf]
 	adds r0, r4, #0
-	bl Ghost20_Update
+	bl VFX60_Update
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080B7354: .4byte RNG_0202f388
-_080B7358: .4byte 0x000343FD
-_080B735C: .4byte 0x00269EC3
-_080B7360: .4byte gVFXFnTable
+_080C2CC8: .4byte RNG_0202f388
+_080C2CCC: .4byte 0x000343FD
+_080C2CD0: .4byte 0x00269EC3
+_080C2CD4: .4byte gVFXFnTable
 
-	thumb_func_start Ghost20_Update
-Ghost20_Update: @ 0x080B7364
+	thumb_func_start VFX60_Update
+VFX60_Update: @ 0x080C2CD8
 	push {lr}
 	adds r2, r0, #0
-	ldr r0, _080B7390 @ =gCurStory
+	ldr r0, _080C2D04 @ =gCurStory
 	ldrb r1, [r0, #8]
 	movs r0, #0x40
 	ands r0, r1
 	cmp r0, #0
-	beq _080B7398
-	ldr r1, _080B7394 @ =gVFXFnTable
+	beq _080C2D0C
+	ldr r1, _080C2D08 @ =gVFXFnTable
 	ldrb r0, [r2, #9]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -191,40 +177,21 @@ Ghost20_Update: @ 0x080B7364
 	ldr r0, [r0, #8]
 	str r0, [r2, #0x14]
 	adds r0, r2, #0
-	bl Ghost20_Die
-	b _080B73A8
+	bl VFX60_Die
+	b _080C2D1C
 	.align 2, 0
-_080B7390: .4byte gCurStory
-_080B7394: .4byte gVFXFnTable
-_080B7398:
-	ldr r0, _080B73AC @ =0x0836E8CC
+_080C2D04: .4byte gCurStory
+_080C2D08: .4byte gVFXFnTable
+_080C2D0C:
+	ldr r0, _080C2D20 @ =0x0836F39C
 	ldrb r1, [r2, #0xd]
 	lsls r1, r1, #2
 	adds r1, r1, r0
 	ldr r1, [r1]
 	adds r0, r2, #0
 	bl _call_via_r1
-_080B73A8:
+_080C2D1C:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080B73AC: .4byte 0x0836E8CC
-
-	thumb_func_start Ghost20_Die
-Ghost20_Die: @ 0x080B73B0
-	ldrb r2, [r0, #0xa]
-	movs r1, #0xfe
-	ands r1, r2
-	strb r1, [r0, #0xa]
-	ldr r2, _080B73CC @ =gVFXFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_080B73CC: .4byte gVFXFnTable
+_080C2D20: .4byte 0x0836F39C

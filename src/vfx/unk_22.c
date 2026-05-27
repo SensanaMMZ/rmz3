@@ -2,7 +2,14 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_22_p1.inc");
+INCASM("asm/vfx/unk_22_p1_pre.inc");
+
+void Ghost22_Die(struct VFX* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_22_p1_post.inc");
 
 void nop_080b7d48(struct VFX* p) {}
 

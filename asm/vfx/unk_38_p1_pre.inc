@@ -260,22 +260,3 @@ _080BD154:
 	bx r0
 	.align 2, 0
 _080BD158: .4byte 0x0836EE24
-
-	thumb_func_start VFX38_Die
-VFX38_Die: @ 0x080BD15C
-	ldrb r2, [r0, #0xa]
-	movs r1, #0xfe
-	ands r1, r2
-	strb r1, [r0, #0xa]
-	ldr r2, _080BD178 @ =gVFXFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_080BD178: .4byte gVFXFnTable

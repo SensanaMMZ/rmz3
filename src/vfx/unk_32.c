@@ -171,7 +171,14 @@ static void Ghost32_Init(struct VFX* p) {
   Ghost32_Update(p);
 }
 
-INCASM("asm/vfx/unk_32.inc");
+INCASM("asm/vfx/unk_32_pre.inc");
+
+void Ghost32_Die(struct VFX* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_32_post.inc");
 
 void FUN_080bade8(struct VFX* p);
 void FUN_080bb048(struct VFX* p);
