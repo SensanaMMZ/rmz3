@@ -18,7 +18,16 @@ INCASM("asm/enemy/deathlock_pre_p2_post.inc");
 
 void FUN_0808d6f4(struct Enemy* p) {}
 
-INCASM("asm/enemy/deathlock_post.inc");
+INCASM("asm/enemy/deathlock_post_p1.inc");
+
+void FUN_0808d76c(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/deathlock_post_p2.inc");
 
 void Deathlock_Init(struct Enemy* p);
 void Deathlock_Update(struct Enemy* p);

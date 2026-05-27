@@ -7,7 +7,25 @@ INCASM("asm/enemy/cannon_hopper_pre.inc");
 
 void FUN_080978e0(struct Enemy* p) {}
 
-INCASM("asm/enemy/cannon_hopper_post_pre.inc");
+INCASM("asm/enemy/cannon_hopper_post_pre_p1.inc");
+
+void FUN_080978e4(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/cannon_hopper_post_pre_p2.inc");
+
+void FUN_08097904(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/cannon_hopper_post_pre_p3.inc");
 
 void FUN_08097cc8(struct Enemy* p) {
   switch ((p->s).mode[2]) {
