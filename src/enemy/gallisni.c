@@ -17,7 +17,16 @@ INCASM("asm/enemy/gallisni_p1_post.inc");
 
 void nop_0808737c(struct Enemy* p) {}
 
-INCASM("asm/enemy/gallisni_p2_pre_pre.inc");
+INCASM("asm/enemy/gallisni_p2_pre_pre_p1.inc");
+
+void FUN_08087380(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/gallisni_p2_pre_pre_p2.inc");
 
 void FUN_080873fc(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
