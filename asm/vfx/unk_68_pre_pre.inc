@@ -87,22 +87,3 @@ _080C4CB8:
 _080C4CC4: .4byte gVFXHeaderPtr
 _080C4CC8: .4byte gVFXFnTable
 _080C4CCC: .4byte gSineTable
-
-	thumb_func_start Ghost68_Init
-Ghost68_Init: @ 0x080C4CD0
-	push {r4, lr}
-	adds r4, r0, #0
-	ldr r1, _080C4CF0 @ =0x0836F6BC
-	ldrb r0, [r4, #0x10]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	adds r0, r4, #0
-	bl Ghost68_Update
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C4CF0: .4byte sGhost68Initializers

@@ -55,17 +55,3 @@ _080C350A:
 	.align 2, 0
 _080C351C: .4byte 0x0836D9F8
 _080C3520: .4byte gVFXHeaderPtr
-
-	thumb_func_start VFX62_Init
-VFX62_Init: @ 0x080C3524
-	push {lr}
-	ldr r2, _080C3538 @ =0x0836F4B0
-	ldrb r1, [r0, #0x10]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C3538: .4byte 0x0836F4B0

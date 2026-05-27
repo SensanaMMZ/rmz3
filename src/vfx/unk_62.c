@@ -2,9 +2,16 @@
 #include "vfx.h"
 
 static const motion_t sMotions[3];
+static const VFXFunc sInitializers[1];
 static const VFXFunc sUpdates[1];
 
-INCASM("asm/vfx/unk_62_pre_pre.inc");
+INCASM("asm/vfx/unk_62_pre_pre_pre.inc");
+
+void VFX62_Init(struct VFX* vfx) {
+  (sInitializers[(vfx->s).work[0]])(vfx);
+}
+
+INCASM("asm/vfx/unk_62_pre_pre_post.inc");
 
 void VFX62_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).work[0]])(vfx);

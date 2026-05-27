@@ -1,6 +1,8 @@
 #include "global.h"
 #include "vfx.h"
 
+static const VFXFunc sInitializers[2];
+
 void Ghost73_Init(struct VFX* p);
 void Ghost73_Update(struct VFX* p);
 void Ghost73_Die(struct VFX* p);
@@ -28,7 +30,13 @@ struct VFX* FUN_080c6e24(struct Entity* e) {
   return p;
 }
 
-INCASM("asm/vfx/unk_73.inc");
+INCASM("asm/vfx/unk_73_pre.inc");
+
+void Ghost73_Init(struct VFX* p) {
+  (sInitializers[(p->s).work[0]])(p);
+}
+
+INCASM("asm/vfx/unk_73_post.inc");
 
 // --------------------------------------------
 
