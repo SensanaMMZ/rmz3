@@ -81,28 +81,3 @@ _08094B70: .4byte 0x08369F54
 _08094B74: .4byte 0x08369EFC
 _08094B78: .4byte nop_08094ad8
 _08094B7C: .4byte 0x08369F5A
-
-	thumb_func_start Enemy63_Update
-Enemy63_Update: @ 0x08094B80
-	push {r4, lr}
-	adds r4, r0, #0
-	ldr r1, _08094BAC @ =0x08369EDC
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	ldr r1, _08094BB0 @ =0x08369EEC
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08094BAC: .4byte 0x08369EDC
-_08094BB0: .4byte 0x08369EEC

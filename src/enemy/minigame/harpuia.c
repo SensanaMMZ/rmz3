@@ -2,7 +2,17 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/minigame_harpuia_p1_p1.inc");
+static const EnemyFunc sUpdates1[6];
+static const EnemyFunc sUpdates2[6];
+
+INCASM("asm/enemy/minigame_harpuia_p1_p1_p1.inc");
+
+void HarpuiaMinigameEnemy_Update(struct Enemy* p) {
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/minigame_harpuia_p1_p1_p2.inc");
 
 bool8 FUN_0809b350(struct Enemy* p) { return TRUE; }
 

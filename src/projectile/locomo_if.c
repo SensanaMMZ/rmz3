@@ -4,11 +4,21 @@
 
 // LocomoIF
 
+static const ProjectileFunc sUpdates1[];
+static const ProjectileFunc sUpdates2[];
+
 INCASM("asm/projectile/locomo_if_pre_p1.inc");
 
 void FUN_080a7d00(struct Enemy* p) {}
 
-INCASM("asm/projectile/locomo_if_pre_p2.inc");
+INCASM("asm/projectile/locomo_if_pre_p2_p1.inc");
+
+void Projectile23_Update(struct Projectile* p) {
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/locomo_if_pre_p2_p2.inc");
 
 void FUN_080a7de8(struct Projectile* p) {}
 

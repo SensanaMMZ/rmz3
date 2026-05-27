@@ -2,11 +2,21 @@
 #include "global.h"
 #include "projectile.h"
 
+static const ProjectileFunc sUpdates1[1];
+static const ProjectileFunc sUpdates2[1];
+
 INCASM("asm/projectile/unk_30_pre_p1.inc");
 
 void nop_080aa638(struct Enemy* p) {}
 
-INCASM("asm/projectile/unk_30_pre_p2.inc");
+INCASM("asm/projectile/unk_30_pre_p2_p1.inc");
+
+void Projectile30_Update(struct Projectile* p) {
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/unk_30_pre_p2_p2.inc");
 
 void FUN_080aa710(struct Projectile* p) {}
 

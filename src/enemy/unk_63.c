@@ -2,11 +2,21 @@
 #include "enemy.h"
 #include "global.h"
 
+static const EnemyFunc sUpdates1[4];
+static const EnemyFunc sUpdates2[4];
+
 INCASM("asm/enemy/unk_63_p1.inc");
 
 void nop_08094ad8(struct Enemy* p) {}
 
-INCASM("asm/enemy/unk_63_p2_pre.inc");
+INCASM("asm/enemy/unk_63_p2_pre_p1.inc");
+
+void Enemy63_Update(struct Enemy* p) {
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/unk_63_p2_pre_p2.inc");
 
 void Enemy63_Die(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
