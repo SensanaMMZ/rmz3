@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
+
+static const struct Collision sCollisions[25];
 
 INCASM("asm/enemy/pantheon_base_p1.inc");
 
@@ -10,7 +13,25 @@ INCASM("asm/enemy/pantheon_base_p2.inc");
 
 void nop_0808a3f4(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_base_p3.inc");
+INCASM("asm/enemy/pantheon_base_p3_pre.inc");
+
+void pBase_0808a438(struct Enemy* p) {
+  struct Entity* parent = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x6d, 0));
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x = parent->coord.x;
+      (p->s).coord.y = parent->coord.y;
+      break;
+  }
+}
+
+INCASM("asm/enemy/pantheon_base_p3_post.inc");
 
 void PantheonBase_Init(struct Enemy* p);
 void PantheonBase_Update(struct Enemy* p);

@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "motion.h"
 #include "overworld.h"
 
 static const struct Collision sCollisions[15];
@@ -36,7 +37,46 @@ INCASM("asm/boss/wormer_p1.inc");
 
 void nop_08042890(struct Boss* p) {}
 
-INCASM("asm/boss/wormer_p2.inc");
+INCASM("asm/boss/wormer_p2_p1.inc");
+
+void FUN_08042d4c(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[5 + 7 * (p->s).work[0]]);
+      SetMotion(&p->s, MOTION(0x2b, 7));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/wormer_p2_p2.inc");
+
+void FUN_08042f9c(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x2b, 3));
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[7 + 7 * (p->s).work[0]]);
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/wormer_p2_p3.inc");
 
 // --------------------------------------------
 
