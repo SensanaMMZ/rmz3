@@ -2,7 +2,29 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_46.inc");
+static const ProjectileFunc PTR_ARRAY_0836d8b0[3];
+static const ProjectileFunc PTR_ARRAY_0836d8bc[3];
+static const ProjectileFunc PTR_ARRAY_0836d8c8[3];
+
+INCASM("asm/projectile/unk_46_p1.inc");
+
+void FUN_080b22c8(struct Projectile* p) {
+  (PTR_ARRAY_0836d8b0[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_46_p2.inc");
+
+void FUN_080b22e0(struct Projectile* p) {
+  (PTR_ARRAY_0836d8bc[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_46_p3.inc");
+
+void FUN_080b22f8(struct Projectile* p) {
+  (PTR_ARRAY_0836d8c8[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_46_p4.inc");
 
 void FUN_080b22c8(struct Projectile* p);
 void FUN_080b22e0(struct Projectile* p);

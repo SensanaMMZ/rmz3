@@ -4,20 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080af9b0
-FUN_080af9b0: @ 0x080AF9B0
-	push {lr}
-	ldr r2, _080AF9C4 @ =0x0836D44C
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080AF9C4: .4byte 0x0836D44C
-
 	thumb_func_start FUN_080af9c8
 FUN_080af9c8: @ 0x080AF9C8
 	push {r4, lr}

@@ -279,11 +279,40 @@ static void FUN_080af32c(struct Projectile* p) {
   (PTR_ARRAY_0836d418[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/phantom_p1.inc");
+static const ProjectileFunc PTR_ARRAY_0836d430[2];
+static const ProjectileFunc PTR_ARRAY_0836d438[2];
+static const ProjectileFunc PTR_ARRAY_0836d440[3];
+static const ProjectileFunc PTR_ARRAY_0836d44c[2];
+
+INCASM("asm/projectile/phantom_p1_p1.inc");
+
+void FUN_080af61c(struct Projectile* p) {
+  (PTR_ARRAY_0836d430[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/phantom_p1_p2.inc");
+
+void FUN_080af748(struct Projectile* p) {
+  (PTR_ARRAY_0836d438[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/phantom_p1_p3.inc");
+
+void FUN_080af8b0(struct Projectile* p) {
+  (PTR_ARRAY_0836d440[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/phantom_p1_p4.inc");
 
 void nop_080af9ac(struct Projectile* p) {}
 
-INCASM("asm/projectile/phantom_p2.inc");
+INCASM("asm/projectile/phantom_p2_p1.inc");
+
+void FUN_080af9b0(struct Projectile* p) {
+  (PTR_ARRAY_0836d44c[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/phantom_p2_p2.inc");
 
 void FUN_080af518(struct Projectile* p);
 void FUN_080af5cc(struct Projectile* p);

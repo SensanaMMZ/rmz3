@@ -4,7 +4,15 @@
 
 // MinigameCopyX?
 
-INCASM("asm/projectile/unk_45.inc");
+static const ProjectileFunc PTR_ARRAY_0836d7cc[4];
+
+INCASM("asm/projectile/unk_45_p1.inc");
+
+void FUN_080b1b28(struct Projectile* p) {
+  (PTR_ARRAY_0836d7cc[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/unk_45_p2.inc");
 
 void FUN_080b1a48(struct Projectile* p);
 void FUN_080b1b28(struct Projectile* p);
