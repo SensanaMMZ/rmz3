@@ -1,4 +1,5 @@
 #include "global.h"
+#include "mission.h"
 #include "weapon.h"
 
 #define PROP (w->props.common)
@@ -66,6 +67,12 @@ void ShieldSweep_Die(struct Weapon* p) {
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/weapon/shield_sweep_post.inc");
+void incrementShieldHitCount_0803c40c(struct Body* body) {
+  if (body->hitboxFlags & BODY_STATUS_B2) {
+    if (gMission.weaponCount[WEAPON_SHIELD] <= 0xFFFE) {
+      gMission.weaponCount[WEAPON_SHIELD]++;
+    }
+  }
+}
 
 #undef PROP

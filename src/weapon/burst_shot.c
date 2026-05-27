@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "mission.h"
 #include "weapon.h"
 
 // A firework of Burst shot
@@ -79,7 +80,13 @@ void BurstShot_Die(struct Weapon* p) {
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/weapon/burst_shot_post.inc");
+void FUN_0803b73c(struct Body* body) {
+  if (body->hitboxFlags & BODY_STATUS_B2) {
+    if (gMission.weaponCount[WEAPON_BUSTER] <= 0xFFFE) {
+      gMission.weaponCount[WEAPON_BUSTER]++;
+    }
+  }
+}
 
 static const motion_t sMotions[3] = {
     MOTION(DM083_BURST_SHOT_FIREWORK, 0x00),

@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "mission.h"
 #include "weapon.h"
 
 // ザンエイダン
@@ -132,4 +133,10 @@ void ThrowBlade_Die(struct Weapon* p) {
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/weapon/throw_blade_post.inc");
+void zsaber_0803c0f4(struct Body* body) {
+  if (body->hitboxFlags & BODY_STATUS_B2) {
+    if (gMission.weaponCount[WEAPON_SABER] <= 0xFFFE) {
+      gMission.weaponCount[WEAPON_SABER]++;
+    }
+  }
+}

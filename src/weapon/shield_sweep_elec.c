@@ -1,4 +1,5 @@
 #include "global.h"
+#include "mission.h"
 #include "weapon.h"
 
 // クロールシールドの電気びりびり
@@ -85,4 +86,12 @@ void ElecShieldSweep_Die(struct Weapon* p) {
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/weapon/shield_sweep_elec_post.inc");
+void incrementShieldHitCount(struct Body* body) {
+  if (body->hitboxFlags & BODY_STATUS_B2) {
+    struct CollidableEntity* p = body->parent;
+    if (gMission.weaponCount[WEAPON_SHIELD] <= 0xFFFE) {
+      gMission.weaponCount[WEAPON_SHIELD]++;
+    }
+    (p->s).work[1] = 1;
+  }
+}
