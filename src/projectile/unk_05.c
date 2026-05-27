@@ -35,7 +35,13 @@ struct Projectile* FUN_0809d8a0(struct Coord* c, s32 prevX, s32 prevY, struct En
   return p;
 }
 
-INCASM("asm/projectile/unk_05.inc");
+INCASM("asm/projectile/unk_05_pre.inc");
+
+void Projectile5_Update(struct Projectile* p) {
+  (sUpdates[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/unk_05_post.inc");
 
 void FUN_0809da14(struct Projectile* p);
 void FUN_0809daa0(struct Projectile* p);

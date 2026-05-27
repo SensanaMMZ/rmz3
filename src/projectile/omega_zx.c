@@ -78,7 +78,15 @@ struct Projectile* FUN_080aff88(struct Entity* parent, struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/projectile/omega_zx.inc");
+static const ProjectileFunc sUpdates[9];
+
+INCASM("asm/projectile/omega_zx_pre.inc");
+
+void OmegaZXProjectile_Update(struct Projectile* p) {
+  (sUpdates[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/omega_zx_post.inc");
 
 void FUN_080b0168(struct Projectile* p);
 void FUN_080b0214(struct Projectile* p);

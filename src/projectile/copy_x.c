@@ -2,7 +2,15 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/copy_x.inc");
+static const ProjectileFunc sUpdates[2];
+
+INCASM("asm/projectile/copy_x_pre.inc");
+
+void CopyXProjectile_Update(struct Projectile* p) {
+  (sUpdates[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/copy_x_post.inc");
 
 void CopyXProjectile_Init(struct Projectile* p);
 void CopyXProjectile_Update(struct Projectile* p);

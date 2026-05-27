@@ -4,7 +4,15 @@
 
 // Hanumachine
 
-INCASM("asm/projectile/unk_36_pre.inc");
+static const ProjectileFunc sUpdates[4];
+
+INCASM("asm/projectile/unk_36_pre_pre.inc");
+
+void Projectile36_Update(struct Projectile* p) {
+  (sUpdates[(p->s).work[0]])(p);
+}
+
+INCASM("asm/projectile/unk_36_pre_post.inc");
 
 void FUN_080ada50(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);

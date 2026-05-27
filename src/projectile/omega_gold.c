@@ -2,7 +2,15 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/omega_gold.inc");
+static const ProjectileFunc sUpdates[3];
+
+INCASM("asm/projectile/omega_gold_pre.inc");
+
+void OmegaGoldProjectile_Update(struct Projectile* p) {
+  (sUpdates[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/omega_gold_post.inc");
 
 void OmegaGoldProjectile_Init(struct Projectile* p);
 void OmegaGoldProjectile_Update(struct Projectile* p);
