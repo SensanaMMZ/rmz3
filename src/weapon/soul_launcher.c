@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "mission.h"
 #include "weapon.h"
 
 // props (56bytes, offset: 0xB4..)
@@ -58,7 +59,19 @@ void SoulLauncher_Die(struct Weapon* p) {
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/weapon/soul_launcher_post.inc");
+void FUN_0803b4b0(struct Body* body) {
+  if (body->hitboxFlags & BODY_STATUS_B2) {
+    struct Weapon* w = (struct Weapon*)body->parent;
+    if (gMission.weaponCount[WEAPON_ROD] <= 0xFFFE) {
+      gMission.weaponCount[WEAPON_ROD]++;
+    }
+    if ((w->s).work[1] == 0) {
+      ((struct SoulLauncherProps*)w->props.raw)->unk_c0 = 1;
+    }
+  }
+}
+
+INCASM("asm/weapon/soul_launcher_post_p2.inc");
 
 static const struct Collision sCollisions[2] = {
     {
