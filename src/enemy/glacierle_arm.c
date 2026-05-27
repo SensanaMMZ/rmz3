@@ -3,11 +3,21 @@
 #include "global.h"
 #include "motion.h"
 
+static const EnemyFunc sUpdates1[3];
+static const EnemyFunc sUpdates2[3];
+
 INCASM("asm/enemy/glacierle_arm_p1.inc");
 
 void nop_080828dc(struct Enemy* p) {}
 
-INCASM("asm/enemy/glacierle_arm_p2.inc");
+INCASM("asm/enemy/glacierle_arm_p2_p1.inc");
+
+void GlacierleAtkArm_Update(struct Enemy* p) {
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/glacierle_arm_p2_p2.inc");
 
 void nop_08082a1c(struct Enemy* p) {}
 
