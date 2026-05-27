@@ -74,7 +74,16 @@ NON_MATCH static void PantheonGuardian_Init(struct PantheonGuardianObject* p) {
 #endif
 }
 
-INCASM("asm/enemy/pantheon_guardian_pre.inc");
+INCASM("asm/enemy/pantheon_guardian_pre_p1.inc");
+
+void doNothing_08063e10(struct Enemy* p) {
+  if (IsFrozen(&p->s)) {
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/pantheon_guardian_pre_p2.inc");
 
 void FUN_08064444(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
