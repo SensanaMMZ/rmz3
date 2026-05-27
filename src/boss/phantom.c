@@ -34,7 +34,24 @@ INCASM("asm/boss/phantom_p1_post.inc");
 
 void nop_0805f930(struct Boss* p) {}
 
-INCASM("asm/boss/phantom_p2_pre.inc");
+INCASM("asm/boss/phantom_p2_pre_pre.inc");
+
+void FUN_080603d0(struct Boss* p) {
+  switch ((p->s).mode[3]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xbc, 0x16));
+      (p->s).mode[3]++;
+      break;
+    case 1:
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[3] = 0;
+        (p->s).mode[2]++;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/phantom_p2_pre_post.inc");
 
 void phantom_080607e4(struct Entity* p) {
   UpdateMotionGraphic(p);

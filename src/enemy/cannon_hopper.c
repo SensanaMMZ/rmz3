@@ -1,12 +1,33 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
 
 INCASM("asm/enemy/cannon_hopper_pre.inc");
 
 void FUN_080978e0(struct Enemy* p) {}
 
-INCASM("asm/enemy/cannon_hopper_post.inc");
+INCASM("asm/enemy/cannon_hopper_post_pre.inc");
+
+void FUN_08097cc8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xdc, 3));
+      (p->s).work[2] = 0xc;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).work[2]--;
+      if ((p->s).work[2] == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/cannon_hopper_post_post.inc");
 
 void CannonHopper_Init(struct Enemy* p);
 void CannonHopper_Update(struct Enemy* p);

@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "sound.h"
 
 static const struct Collision sCollisions[3];
 
@@ -53,7 +54,26 @@ void FUN_08084974(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/eye_cannon_post_post.inc");
+INCASM("asm/enemy/eye_cannon_post_post_pre.inc");
+
+void FUN_08084cbc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x8f << 1);
+      SetMotion(&p->s, MOTION(0x66, 3));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = (p->s).motion.state;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/eye_cannon_post_post_post.inc");
 
 void FUN_08084934(struct Enemy* p);
 void FUN_08084930(struct Enemy* p);

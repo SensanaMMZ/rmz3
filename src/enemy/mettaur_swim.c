@@ -1,12 +1,34 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
+
+static const struct Collision sCollisions[8];
 
 INCASM("asm/enemy/mettaur_swim_p1.inc");
 
 void nop_08089268(struct Enemy* p) {}
 
-INCASM("asm/enemy/mettaur_swim_p2.inc");
+INCASM("asm/enemy/mettaur_swim_p2_pre.inc");
+
+void FUN_08089e60(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[0]);
+      SetMotion(&p->s, MOTION(0xdd, 0xc));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 9;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/mettaur_swim_p2_post.inc");
 
 void MettaurSwim_Init(struct Enemy* p);
 void MettaurSwim_Update(struct Enemy* p);

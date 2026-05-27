@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "entity.h"
 #include "global.h"
+#include "motion.h"
 
 struct OmegaWhiteHandObject {
   OBJECT_HDR;
@@ -181,7 +182,41 @@ INCASM("asm/enemy/omega_white_hand_p2.inc");
 
 bool8 FUN_0806ae90(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_white_hand_p3.inc");
+void FUN_0806ae94(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags |= 1;
+      (p->s).coord.y = ((struct Enemy*)(p->s).unk_28)->s.coord.y;
+      (p->s).coord.x = ((struct Enemy*)(p->s).unk_28)->s.coord.x;
+      SetMotion(&p->s, MOTION(0x9, 0));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
+void FUN_0806aedc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags |= 1;
+      (p->s).coord.y = ((struct Enemy*)(p->s).unk_28)->s.coord.y;
+      (p->s).coord.x = ((struct Enemy*)(p->s).unk_28)->s.coord.x;
+      SetMotion(&p->s, MOTION(0x9, 1));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
+INCASM("asm/enemy/omega_white_hand_p3_p3.inc");
 
 bool8 FUN_0806b094(struct Enemy* p) { return TRUE; }
 
