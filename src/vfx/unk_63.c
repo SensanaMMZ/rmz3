@@ -1,7 +1,14 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_63.inc");
+INCASM("asm/vfx/unk_63_pre.inc");
+
+void VFX63_Die(struct VFX* vfx) {
+  (vfx->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_63_post.inc");
 
 void VFX63_Init(struct VFX* vfx);
 void VFX63_Update(struct VFX* vfx);

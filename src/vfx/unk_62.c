@@ -3,7 +3,14 @@
 
 static const motion_t sMotions[3];
 
-INCASM("asm/vfx/unk_62.inc");
+INCASM("asm/vfx/unk_62_pre.inc");
+
+void VFX62_Die(struct VFX* vfx) {
+  (vfx->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_62_post.inc");
 
 void VFX62_Init(struct VFX* vfx);
 void VFX62_Update(struct VFX* vfx);

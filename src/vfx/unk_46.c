@@ -102,7 +102,14 @@ struct Entity* FUN_080bed5c(struct Entity* e, struct Coord* c, u8 kind, u8 param
   return (void*)p;
 }
 
-INCASM("asm/vfx/unk_46.inc");
+INCASM("asm/vfx/unk_46_pre.inc");
+
+void VFX46_Die(struct VFX* vfx) {
+  (vfx->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_46_post.inc");
 
 void FUN_080bef44(struct VFX* vfx);
 void FUN_080bf0a0(struct VFX* vfx);

@@ -59,4 +59,11 @@ static const EntityFunc sUpdates[1] = {
     FUN_080be974,
 };
 
-INCASM("asm/vfx/unk_44.inc");
+INCASM("asm/vfx/unk_44_pre.inc");
+
+void VFX44_Die(struct VFX* vfx) {
+  (vfx->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_44_post.inc");
