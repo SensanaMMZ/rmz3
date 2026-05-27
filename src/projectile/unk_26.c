@@ -2,10 +2,18 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_26.inc");
+static const ProjectileFunc PTR_ARRAY_0836c034[6];
+
+INCASM("asm/projectile/unk_26_pre.inc");
+
+void Projectile26_Update(struct Projectile* p) {
+  (PTR_ARRAY_0836c034[(p->s).work[0]])(p);
+  UpdateMotionGraphic(&p->s);
+}
+
+INCASM("asm/projectile/unk_26_post.inc");
 
 void Projectile26_Init(struct Projectile* p);
-void Projectile26_Update(struct Projectile* p);
 void Projectile26_Die(struct Projectile* p);
 
 // clang-format off
