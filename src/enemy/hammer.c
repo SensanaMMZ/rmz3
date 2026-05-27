@@ -298,7 +298,11 @@ static void FUN_080755f4(struct Enemy* p) {
 
 static bool8 FUN_08075628(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/hammer.inc");
+INCASM("asm/enemy/hammer_p1.inc");
+
+bool8 FUN_080756e8(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/hammer_p2.inc");
 
 // --------------------------------------------
 
