@@ -14,7 +14,16 @@ INCASM("asm/enemy/mellnet_pre_p2.inc");
 
 void FUN_0807d990(struct Enemy* p) {}
 
-INCASM("asm/enemy/mellnet_post_pre.inc");
+INCASM("asm/enemy/mellnet_post_pre_p1.inc");
+
+void FUN_0807d994(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/mellnet_post_pre_p2.inc");
 
 void FUN_0807da10(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {

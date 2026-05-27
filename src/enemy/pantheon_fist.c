@@ -10,7 +10,16 @@ INCASM("asm/enemy/pantheon_fist_pre_p2.inc");
 
 void FUN_080953ac(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_fist_post.inc");
+INCASM("asm/enemy/pantheon_fist_post_p1.inc");
+
+void FUN_080953b0(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/pantheon_fist_post_p2.inc");
 
 void PantheonFist_Init(struct Enemy* p);
 void PantheonFist_Update(struct Enemy* p);

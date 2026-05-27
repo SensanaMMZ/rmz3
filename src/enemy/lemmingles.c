@@ -52,7 +52,16 @@ INCASM("asm/enemy/lemmingles_p1.inc");
 
 void nop_0806e96c(struct Enemy* p) {}
 
-INCASM("asm/enemy/lemmingles_p2.inc");
+INCASM("asm/enemy/lemmingles_p2_p1.inc");
+
+void FUN_0806e970(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/lemmingles_p2_p2.inc");
 
 // --------------------------------------------
 

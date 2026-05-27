@@ -36,7 +36,16 @@ INCASM("asm/enemy/generator_cannon_pre.inc");
 
 void FUN_0808c760(struct Enemy* p) {}
 
-INCASM("asm/enemy/generator_cannon_post.inc");
+INCASM("asm/enemy/generator_cannon_post_p1.inc");
+
+void FUN_0808c764(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/generator_cannon_post_p2.inc");
 
 void FUN_0808c760(struct Enemy* p);
 void FUN_0808c764(struct Enemy* p);

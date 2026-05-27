@@ -4,26 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0808c764
-FUN_0808c764: @ 0x0808C764
-	push {lr}
-	adds r2, r0, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	ldr r1, _0808C780 @ =0x00020001
-	ands r0, r1
-	cmp r0, r1
-	bne _0808C77C
-	movs r1, #0
-	movs r0, #7
-	strb r0, [r2, #0xd]
-	strb r1, [r2, #0xe]
-_0808C77C:
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0808C780: .4byte 0x00020001
-
 	thumb_func_start FUN_0808c784
 FUN_0808c784: @ 0x0808C784
 	push {r4, r5, lr}
@@ -1197,4 +1177,3 @@ _0808D0A4:
 	bx r0
 	.align 2, 0
 _0808D0AC: .4byte 0x08369130
-
