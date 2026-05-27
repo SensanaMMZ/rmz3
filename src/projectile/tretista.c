@@ -2,7 +2,15 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/tretista.inc");
+static const ProjectileFunc* const PTR_ARRAY_0836b4e4[4];
+
+INCASM("asm/projectile/tretista_pre.inc");
+
+void TretistaProjectile_Update(struct Projectile* p) {
+  (PTR_ARRAY_0836b4e4[(p->s).work[0]][(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/tretista_post.inc");
 
 void TretistaProjectile_Init(struct Projectile* p);
 void TretistaProjectile_Update(struct Projectile* p);

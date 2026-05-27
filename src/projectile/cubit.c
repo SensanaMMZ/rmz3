@@ -2,7 +2,15 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/cubit_pre.inc");
+static const ProjectileFunc* const sUpdates[4];
+
+INCASM("asm/projectile/cubit_pre_pre.inc");
+
+void CubitProjectile_Update(struct Projectile* p) {
+  (sUpdates[(p->s).work[0]][(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/cubit_pre_post.inc");
 
 void FUN_080a7a70(struct Projectile* p) {
   (p->s).mode[1] = 1;
