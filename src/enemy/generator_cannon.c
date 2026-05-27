@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[];
+
 void GeneratorCannon_Init(struct Enemy* p);
 void GeneratorCannon_Update(struct Enemy* p);
 void GeneratorCannon_Die(struct Enemy* p);
@@ -45,7 +47,25 @@ void FUN_0808c764(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/generator_cannon_post_p2.inc");
+INCASM("asm/enemy/generator_cannon_post_p2_p1.inc");
+
+void FUN_0808c784(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    SetDDP(&p->body, &sCollisions[1]);
+    if (!IsFrozen(&p->s)) {
+      (p->s).mode[1] = 6;
+      (p->s).mode[2] = 0;
+    }
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/generator_cannon_post_p2_p2.inc");
 
 void FUN_0808c760(struct Enemy* p);
 void FUN_0808c764(struct Enemy* p);

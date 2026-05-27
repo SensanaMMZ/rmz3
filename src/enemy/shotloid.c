@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[];
+
 INCASM("asm/enemy/shotloid_pre_p1.inc");
 
 void nop_08093af8(struct Enemy* p) {}
@@ -19,7 +21,25 @@ void FUN_08093de4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shotloid_post_p2.inc");
+INCASM("asm/enemy/shotloid_post_p2_p1.inc");
+
+void FUN_08093e04(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    SetDDP(&p->body, &sCollisions[0]);
+    if (!IsFrozen(&p->s)) {
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+    }
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/shotloid_post_p2_p2.inc");
 
 void Shotloid_Init(struct Enemy* p);
 void Shotloid_Update(struct Enemy* p);

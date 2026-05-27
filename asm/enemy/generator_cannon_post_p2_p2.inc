@@ -4,53 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0808c784
-FUN_0808c784: @ 0x0808C784
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	adds r5, r4, #0
-	adds r5, #0xb4
-	ldr r0, [r5]
-	cmp r0, #0
-	beq _0808C79A
-	bl isKilled
-	cmp r0, #0
-	beq _0808C7BA
-_0808C79A:
-	movs r0, #0
-	str r0, [r5]
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _0808C7D8 @ =0x08368F70
-	bl SetDDP
-	adds r0, r4, #0
-	bl IsFrozen
-	adds r1, r0, #0
-	cmp r1, #0
-	bne _0808C7BA
-	movs r0, #6
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_0808C7BA:
-	adds r0, r4, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	ldr r1, _0808C7DC @ =0x00020001
-	ands r0, r1
-	cmp r0, r1
-	bne _0808C7D0
-	movs r1, #0
-	movs r0, #7
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_0808C7D0:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0808C7D8: .4byte 0x08368F70
-_0808C7DC: .4byte 0x00020001
-
 	thumb_func_start generatorcannon_0808c7e0
 generatorcannon_0808c7e0: @ 0x0808C7E0
 	push {r4, r5, lr}

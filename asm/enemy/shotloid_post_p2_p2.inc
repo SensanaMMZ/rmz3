@@ -4,53 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08093e04
-FUN_08093e04: @ 0x08093E04
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	adds r5, r4, #0
-	adds r5, #0xb4
-	ldr r0, [r5]
-	cmp r0, #0
-	beq _08093E1A
-	bl isKilled
-	cmp r0, #0
-	beq _08093E3A
-_08093E1A:
-	movs r0, #0
-	str r0, [r5]
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _08093E58 @ =0x08369E6C
-	bl SetDDP
-	adds r0, r4, #0
-	bl IsFrozen
-	adds r1, r0, #0
-	cmp r1, #0
-	bne _08093E3A
-	movs r0, #1
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_08093E3A:
-	adds r0, r4, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	ldr r1, _08093E5C @ =0x00020001
-	ands r0, r1
-	cmp r0, r1
-	bne _08093E50
-	movs r1, #0
-	movs r0, #7
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_08093E50:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08093E58: .4byte 0x08369E6C
-_08093E5C: .4byte 0x00020001
-
 	thumb_func_start FUN_08093e60
 FUN_08093e60: @ 0x08093E60
 	push {r4, r5, lr}
