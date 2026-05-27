@@ -25,18 +25,145 @@ void FUN_080608c8(struct Boss* p);
 
 static const BossFunc sDeads[1];
 
-INCASM("asm/boss/phantom_p1_pre.inc");
+static const BossFunc PTR_ARRAY_08365418[7];
+static const BossFunc PTR_ARRAY_08365434[2];
+static const BossFunc PTR_ARRAY_0836544c[2];
+static const BossFunc PTR_ARRAY_08365454[2];
+static const BossFunc PTR_ARRAY_0836545c[2];
+static const BossFunc PTR_ARRAY_08365464[6];
+static const BossFunc PTR_ARRAY_0836547c[6];
+static const BossFunc PTR_ARRAY_08365494[5];
+static const BossFunc PTR_ARRAY_083654a8[4];
+static const BossFunc PTR_ARRAY_083654b8[3];
+static const BossFunc PTR_ARRAY_083654c4[5];
+static const BossFunc PTR_ARRAY_083654d8[5];
+static const BossFunc PTR_ARRAY_083654ec[6];
+static const BossFunc PTR_ARRAY_08365504[7];
+static const BossFunc PTR_ARRAY_08365520[3];
+static const BossFunc PTR_ARRAY_0836552c[6];
+static const BossFunc PTR_ARRAY_08365544[5];
+static const BossFunc PTR_ARRAY_08365558[4];
+
+INCASM("asm/boss/phantom_p1_pre_p1.inc");
+
+void callPhantomBossModeTable(struct Boss* p) {
+  (PTR_ARRAY_08365418[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p2.inc");
+
+void phantom_0805efa4(struct Boss* p) {
+  (PTR_ARRAY_08365434[(p->s).mode[2]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p3.inc");
+
+void FUN_0805f180(struct Boss* p) {
+  (PTR_ARRAY_0836544c[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p4.inc");
+
+void FUN_0805f26c(struct Boss* p) {
+  (PTR_ARRAY_08365454[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p5.inc");
+
+void FUN_0805f338(struct Boss* p) {
+  (PTR_ARRAY_0836545c[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p6.inc");
+
+void FUN_0805f3d0(struct Boss* p) {
+  (PTR_ARRAY_08365464[(p->s).mode[2]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p7.inc");
+
+void FUN_0805f54c(struct Boss* p) {
+  (PTR_ARRAY_0836547c[(p->s).mode[2]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p8.inc");
+
+void FUN_0805f564(struct Boss* p) {
+  (PTR_ARRAY_08365494[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p9.inc");
+
+void FUN_0805f6b0(struct Boss* p) {
+  (PTR_ARRAY_083654a8[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p10.inc");
+
+void FUN_0805f76c(struct Boss* p) {
+  (PTR_ARRAY_083654b8[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p11.inc");
 
 void FUN_0805f784(struct Boss* p) {
   (p->s).mode[3] = 1;
   FUN_080608c8(p);
 }
 
-INCASM("asm/boss/phantom_p1_post.inc");
+INCASM("asm/boss/phantom_p1_post_p1.inc");
+
+void FUN_0805f820(struct Boss* p) {
+  (PTR_ARRAY_083654c4[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p1_post_p2.inc");
 
 void nop_0805f930(struct Boss* p) {}
 
-INCASM("asm/boss/phantom_p2_pre_pre.inc");
+INCASM("asm/boss/phantom_p2_pre_pre_p1.inc");
+
+void FUN_0805f934(struct Boss* p) {
+  (PTR_ARRAY_083654d8[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p2.inc");
+
+void FUN_0805fa10(struct Boss* p) {
+  (PTR_ARRAY_083654ec[(p->s).mode[2]])(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p3.inc");
+
+void FUN_0805fa44(struct Boss* p) {
+  (PTR_ARRAY_08365504[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p4.inc");
+
+void FUN_0805fd5c(struct Boss* p) {
+  (PTR_ARRAY_08365520[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p5.inc");
+
+void FUN_0805ff64(struct Boss* p) {
+  (PTR_ARRAY_0836552c[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p6.inc");
+
+void FUN_080600fc(struct Boss* p) {
+  (PTR_ARRAY_08365544[(p->s).mode[3]])(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p7.inc");
+
+void FUN_080603b8(struct Boss* p) {
+  (PTR_ARRAY_08365558[(p->s).mode[2]])(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p8.inc");
 
 void FUN_080603d0(struct Boss* p) {
   switch ((p->s).mode[3]) {
