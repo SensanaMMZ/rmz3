@@ -2,7 +2,14 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_67.inc");
+INCASM("asm/vfx/unk_67_pre.inc");
+
+void Ghost67_Die(struct VFX* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_67_post.inc");
 
 void Ghost67_Init(struct VFX* p);
 void Ghost67_Update(struct VFX* p);

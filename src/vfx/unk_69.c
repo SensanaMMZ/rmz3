@@ -88,7 +88,14 @@ void Ghost69_Update(struct VFX* p) {
   (sGhost69Updates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/vfx/unk_69_p1_post.inc");
+INCASM("asm/vfx/unk_69_p1_post_pre.inc");
+
+void Ghost69_Die(struct VFX* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_69_p1_post_post.inc");
 
 void nop_080c552c(struct VFX* p) {}
 

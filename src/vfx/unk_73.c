@@ -36,7 +36,14 @@ void Ghost73_Init(struct VFX* p) {
   (sInitializers[(p->s).work[0]])(p);
 }
 
-INCASM("asm/vfx/unk_73_post.inc");
+INCASM("asm/vfx/unk_73_post_pre.inc");
+
+void Ghost73_Die(struct VFX* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_73_post_post.inc");
 
 // --------------------------------------------
 

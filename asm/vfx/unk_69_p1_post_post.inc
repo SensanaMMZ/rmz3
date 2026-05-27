@@ -4,25 +4,6 @@
 
 	.text
 
-	thumb_func_start Ghost69_Die
-Ghost69_Die: @ 0x080C5124
-	ldrb r2, [r0, #0xa]
-	movs r1, #0xfe
-	ands r1, r2
-	strb r1, [r0, #0xa]
-	ldr r2, _080C5140 @ =gVFXFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_080C5140: .4byte gVFXFnTable
-
 	thumb_func_start FUN_080c5144
 FUN_080c5144: @ 0x080C5144
 	push {r4, r5, lr}
@@ -537,4 +518,5 @@ _080C551C: .4byte 0x0000B801
 _080C5520: .4byte 0xFFFFCA00
 _080C5524: .4byte gSineTable
 _080C5528: .4byte gVFXFnTable
+
 

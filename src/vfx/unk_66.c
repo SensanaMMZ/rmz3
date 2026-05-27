@@ -31,7 +31,14 @@ struct VFX* FUN_080c4450(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/vfx/unk_66_p1.inc");
+INCASM("asm/vfx/unk_66_p1_pre.inc");
+
+void Ghost66_Die(struct VFX* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_66_p1_post.inc");
 
 void nop_080c4668(struct VFX* p) {}
 
