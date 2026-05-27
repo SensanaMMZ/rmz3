@@ -34,7 +34,14 @@ struct Elf *CreateElf3(struct Entity *r0, void *r1) {
   return p;
 }
 
-INCASM("asm/cyberelf/unk_3.inc");
+INCASM("asm/cyberelf/unk_3_pre.inc");
+
+void Elf3_Die(struct Elf* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_ELF_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/cyberelf/unk_3_post.inc");
 
 const struct Collision sElf3Collisions[2] = {
     {
