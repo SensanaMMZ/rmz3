@@ -69,7 +69,13 @@ static void Solid37_Die(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/unk_37.inc");
+INCASM("asm/solid/unk_37_pre.inc");
+
+void FUN_080dc8e8(struct Solid* p) {
+  SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/solid/unk_37_post.inc");
 
 static const struct Collision sCollisions[2] = {
     {
