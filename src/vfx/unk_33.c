@@ -1,7 +1,13 @@
 #include "global.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_33.inc");
+INCASM("asm/vfx/unk_33_pre.inc");
+
+void Ghost33_Die(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_33_post.inc");
 
 void Ghost33_Init(struct VFX* p);
 void Ghost33_Update(struct VFX* p);

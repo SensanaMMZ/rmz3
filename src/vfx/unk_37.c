@@ -80,7 +80,13 @@ void FUN_080bc660(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/vfx/unk_37.inc");
+INCASM("asm/vfx/unk_37_pre.inc");
+
+void VFX37_Die(struct VFX* vfx) {
+  SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_37_post.inc");
 
 // --------------------------------------------
 
