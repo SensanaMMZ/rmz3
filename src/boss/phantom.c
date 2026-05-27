@@ -241,7 +241,14 @@ void Phantom_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_post_post.inc");
+INCASM("asm/boss/phantom_p2_pre_post_post_p1.inc");
+
+void FUN_080607a0(struct Boss* p, s32 idx) {
+  *((u8*)p + 0xb4) = idx;
+  SetMotion(&p->s, sMotions[idx]);
+}
+
+INCASM("asm/boss/phantom_p2_pre_post_post_p2.inc");
 
 void phantom_080607e4(struct Entity* p) {
   UpdateMotionGraphic(p);
