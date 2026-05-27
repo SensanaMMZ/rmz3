@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
+
+static const struct Collision sCollisions[8];
 
 INCASM("asm/enemy/pantheon_zombie_p1.inc");
 
@@ -17,7 +20,30 @@ void FUN_0807ffb0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_zombie_p2_post.inc");
+INCASM("asm/enemy/pantheon_zombie_p2_post_pre.inc");
+
+void FUN_08080610(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0x10;
+      SetMotion(&p->s, MOTION(0x4c, 2));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      if (p->props[4] != 0) {
+        (p->s).coord.y += 0x20;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/pantheon_zombie_p2_post_post.inc");
 
 void PantheonZombie_Init(struct Enemy* p);
 void PantheonZombie_Update(struct Enemy* p);

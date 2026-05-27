@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "motion.h"
 
 INCASM("asm/enemy/glacierle_arm_p1.inc");
 
@@ -10,7 +11,24 @@ INCASM("asm/enemy/glacierle_arm_p2.inc");
 
 void nop_08082a1c(struct Enemy* p) {}
 
-INCASM("asm/enemy/glacierle_arm_p3.inc");
+INCASM("asm/enemy/glacierle_arm_p3_pre.inc");
+
+void FUN_08082aa0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      InitNonAffineMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x59, 1));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+  }
+  if ((*(struct Entity**)&p->props[8])->mode[0] > 1) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/enemy/glacierle_arm_p3_post.inc");
 
 void GlacierleAtkArm_Init(struct Enemy* p);
 void GlacierleAtkArm_Update(struct Enemy* p);
