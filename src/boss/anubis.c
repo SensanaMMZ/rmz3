@@ -2,7 +2,15 @@
 #include "collision.h"
 #include "global.h"
 
-INCASM("asm/boss/anubis_p1.inc");
+static const BossFunc sDeads[2];
+
+INCASM("asm/boss/anubis_p1_pre.inc");
+
+void Anubis_Die(struct Boss* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/anubis_p1_post.inc");
 
 void nop_080503c8(struct Boss* p) {}
 

@@ -401,17 +401,3 @@ _0805039C:
 _080503A4: .4byte pZero2
 _080503A8: .4byte 0x0836350C
 _080503AC: .4byte 0x08363538
-
-	thumb_func_start Anubis_Die
-Anubis_Die: @ 0x080503B0
-	push {lr}
-	ldr r2, _080503C4 @ =0x08363564
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080503C4: .4byte 0x08363564

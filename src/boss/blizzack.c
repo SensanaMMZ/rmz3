@@ -31,7 +31,15 @@ void CreateBlizzack(struct Coord* c) {
 
 // --------------------------------------------
 
-INCASM("asm/boss/blizzack.inc");
+static const BossFunc sDeads[3];
+
+INCASM("asm/boss/blizzack_pre.inc");
+
+void Blizzack_Die(struct Boss* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/blizzack_post.inc");
 
 void blizzackMode0(struct Boss* p);
 void blizzackMode1(struct Boss* p);

@@ -417,17 +417,3 @@ _08054AAE:
 _08054AB4: .4byte 0x08363B44
 _08054AB8: .4byte 0x08363ABC
 _08054ABC: .4byte 0x08363AD8
-
-	thumb_func_start LocomoIF_Die
-LocomoIF_Die: @ 0x08054AC0
-	push {lr}
-	ldr r2, _08054AD4 @ =0x08363AF4
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08054AD4: .4byte 0x08363AF4

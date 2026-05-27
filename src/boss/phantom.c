@@ -23,6 +23,8 @@ void FUN_0805ecc8(struct Entity* p) {
 
 void FUN_080608c8(struct Boss* p);
 
+static const BossFunc sDeads[1];
+
 INCASM("asm/boss/phantom_p1_pre.inc");
 
 void FUN_0805f784(struct Boss* p) {
@@ -51,7 +53,13 @@ void FUN_080603d0(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_post.inc");
+INCASM("asm/boss/phantom_p2_pre_post_pre.inc");
+
+void Phantom_Die(struct Boss* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_post_post.inc");
 
 void phantom_080607e4(struct Entity* p) {
   UpdateMotionGraphic(p);

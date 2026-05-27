@@ -262,17 +262,3 @@ _0804D078:
 	.align 2, 0
 _0804D080: .4byte 0x08363234
 _0804D084: .4byte 0x08363244
-
-	thumb_func_start BeeServer_Die
-BeeServer_Die: @ 0x0804D088
-	push {lr}
-	ldr r2, _0804D09C @ =0x08363254
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0804D09C: .4byte 0x08363254

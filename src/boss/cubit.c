@@ -36,7 +36,15 @@ struct Boss* CreateCubit(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/boss/cubit_p1.inc");
+static const BossFunc sDeads[2];
+
+INCASM("asm/boss/cubit_p1_pre.inc");
+
+void Cubit_Die(struct Boss* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/cubit_p1_post.inc");
 
 bool8 FUN_08052b48(struct Boss* p) { return TRUE; }
 

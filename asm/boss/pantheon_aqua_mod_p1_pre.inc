@@ -344,17 +344,3 @@ _080515FA:
 	.align 2, 0
 _08051600: .4byte 0x08363600
 _08051604: .4byte 0x08363624
-
-	thumb_func_start PantheonAquaMod_Die
-PantheonAquaMod_Die: @ 0x08051608
-	push {lr}
-	ldr r2, _0805161C @ =0x08363648
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0805161C: .4byte 0x08363648

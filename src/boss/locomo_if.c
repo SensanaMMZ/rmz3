@@ -5,7 +5,15 @@
 
 void nop_0805474c(struct Boss* p) {}
 
-INCASM("asm/boss/locomo_if_p1.inc");
+static const BossFunc sDeads[1];
+
+INCASM("asm/boss/locomo_if_p1_pre.inc");
+
+void LocomoIF_Die(struct Boss* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/locomo_if_p1_post.inc");
 
 void nop_08054ad8(struct Boss* p) {}
 

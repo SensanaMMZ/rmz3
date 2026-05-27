@@ -35,7 +35,15 @@ struct Entity* CreateOmegaGold(struct Coord* c, u8 n) {
 
 // --------------------------------------------
 
-INCASM("asm/boss/omega_gold_p1.inc");
+static const BossFunc sDeads[2];
+
+INCASM("asm/boss/omega_gold_p1_pre.inc");
+
+void OmegaGold_Die(struct Boss* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/omega_gold_p1_post.inc");
 
 bool8 FUN_0805b41c(struct Boss* p) { return TRUE; }
 
