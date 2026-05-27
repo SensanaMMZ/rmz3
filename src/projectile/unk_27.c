@@ -2,7 +2,17 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_27.inc");
+void CreateVFX53(struct Entity* e, u8 n);
+
+INCASM("asm/projectile/unk_27_pre.inc");
+
+void FUN_080a9a74(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  CreateVFX53(&p->s, (p->s).work[1]);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+}
+
+INCASM("asm/projectile/unk_27_post.inc");
 
 void Projectile27_Init(struct Projectile* p);
 void Projectile27_Update(struct Projectile* p);

@@ -1282,26 +1282,3 @@ FUN_080a9a30: @ 0x080A9A30
 	.align 2, 0
 _080A9A6C: .4byte 0x00005C04
 _080A9A70: .4byte gProjectileFnTable
-
-	thumb_func_start FUN_080a9a74
-FUN_080a9a74: @ 0x080A9A74
-	push {r4, lr}
-	adds r4, r0, #0
-	bl UpdateMotionGraphic
-	ldrb r1, [r4, #0x11]
-	adds r0, r4, #0
-	bl CreateVFX53
-	ldr r1, _080A9A9C @ =gProjectileFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r4, #0x14]
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080A9A9C: .4byte gProjectileFnTable
