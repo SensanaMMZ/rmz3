@@ -32,3 +32,6 @@ graphics/**/*.gbapal
 sprites/**/*.gbapal
 data/tilesets/**/header.json
 graphics/**/header.json
+expected/
+baseimg.gba
+__pycache__/
