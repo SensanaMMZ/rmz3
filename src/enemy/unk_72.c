@@ -2,7 +2,15 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/unk_72.inc");
+static const EnemyFunc sUpdates[2];
+
+INCASM("asm/enemy/unk_72_pre.inc");
+
+void Enemy72_Update(struct Enemy* p) {
+  (sUpdates[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/unk_72_post.inc");
 
 void Enemy72_Init(struct Enemy* p);
 void Enemy72_Update(struct Enemy* p);

@@ -2,7 +2,15 @@
 #include "collision.h"
 #include "global.h"
 
-INCASM("asm/boss/spearook_p1_pre.inc");
+static const BossFunc sDeads[5];
+
+INCASM("asm/boss/spearook_p1_pre_pre.inc");
+
+void Spearook_Die(struct Boss* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/spearook_p1_pre_post.inc");
 
 void FUN_08062268(struct Boss* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);

@@ -2,11 +2,19 @@
 #include "enemy.h"
 #include "global.h"
 
+static const EnemyFunc sDeads[4];
+
 INCASM("asm/enemy/minigame_leviathan_p1.inc");
 
 void nop_0809a0b4(struct Enemy* p) {}
 
-INCASM("asm/enemy/minigame_leviathan_p2.inc");
+INCASM("asm/enemy/minigame_leviathan_p2_pre.inc");
+
+void LeviathanMinigameEnemy_Die(struct Enemy* p) {
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/minigame_leviathan_p2_post.inc");
 
 void nop_0809a1ec(struct Enemy* p) {}
 

@@ -142,17 +142,3 @@ _0809A1C6:
 	.align 2, 0
 _0809A1CC: .4byte 0x0836A68C
 _0809A1D0: .4byte 0x0836A6A8
-
-	thumb_func_start LeviathanMinigameEnemy_Die
-LeviathanMinigameEnemy_Die: @ 0x0809A1D4
-	push {lr}
-	ldr r2, _0809A1E8 @ =0x0836A6C4
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0809A1E8: .4byte 0x0836A6C4

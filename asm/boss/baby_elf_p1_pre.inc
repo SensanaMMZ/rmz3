@@ -747,21 +747,3 @@ _0804611C:
 	.align 2, 0
 _08046124: .4byte 0x083625BC
 _08046128: .4byte 0x08362608
-
-	thumb_func_start BabyElf_Die
-BabyElf_Die: @ 0x0804612C
-	push {r4, lr}
-	adds r4, r0, #0
-	bl FUN_08045b68
-	ldr r1, _0804614C @ =0x08362654
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0804614C: .4byte 0x08362654

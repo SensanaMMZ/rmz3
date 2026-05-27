@@ -4,7 +4,18 @@
 #include "global.h"
 #include "overworld.h"
 
-INCASM("asm/boss/baby_elf_p1.inc");
+static const BossFunc sDeinitializers[2];
+
+void FUN_08045b68(struct Boss* p);
+
+INCASM("asm/boss/baby_elf_p1_pre.inc");
+
+void BabyElf_Die(struct Boss* p) {
+  FUN_08045b68(p);
+  (sDeinitializers[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/baby_elf_p1_post.inc");
 
 void nop_08046150(struct Boss* p) {}
 

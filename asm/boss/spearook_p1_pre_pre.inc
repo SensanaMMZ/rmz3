@@ -910,21 +910,3 @@ _08062246:
 	pop {r4, r5}
 	pop {r0}
 	bx r0
-
-	thumb_func_start Spearook_Die
-Spearook_Die: @ 0x0806224C
-	push {lr}
-	ldr r2, _08062260 @ =0x08365770
-	ldrb r1, [r0, #0xd]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	ldr r1, [r1]
-	bl _call_via_r1
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08062260: .4byte 0x08365770
-
-	thumb_func_start FUN_08062264
-FUN_08062264:
-	.byte 0x70, 0x47, 0x00, 0x00
