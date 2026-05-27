@@ -16,7 +16,11 @@ void ReactorCore_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/reactor_core_p1_post.inc");
+void ReactorCore_Disappear(struct Boss* p) {
+  ClearBlink(0xcb);
+  ClearBlink(0xcc);
+  DeleteBoss(p);
+}
 
 void nop_08061a74(struct Boss* p) {}
 
