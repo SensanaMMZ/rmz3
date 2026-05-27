@@ -2,11 +2,21 @@
 #include "global.h"
 #include "projectile.h"
 
+static const ProjectileFunc PTR_ARRAY_0836b434[5];
+static const ProjectileFunc PTR_ARRAY_0836b448[5];
+
 INCASM("asm/projectile/unk_18_p1.inc");
 
 void FUN_080a2fa4(struct Enemy* p) {}
 
-INCASM("asm/projectile/unk_18_p2.inc");
+INCASM("asm/projectile/unk_18_p2_p1.inc");
+
+void Projectile18_Update(struct Projectile* p) {
+  (PTR_ARRAY_0836b434[(p->s).mode[1]])(p);
+  (PTR_ARRAY_0836b448[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/unk_18_p2_p2.inc");
 
 static const struct Collision sCollisions[4];
 static const u8 sInitModes[4];
