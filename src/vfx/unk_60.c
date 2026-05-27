@@ -1,7 +1,22 @@
 #include "global.h"
+#include "story.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_60_p1_pre.inc");
+static const VFXFunc sUpdates[2];
+void VFX60_Die(struct VFX* p);
+
+INCASM("asm/vfx/unk_60_p1_pre_pre.inc");
+
+void VFX60_Update(struct VFX* vfx) {
+  if (IS_METTAUR) {
+    SET_VFX_ROUTINE(vfx, ENTITY_DIE);
+    VFX60_Die(vfx);
+  } else {
+    (sUpdates[(vfx->s).mode[1]])(vfx);
+  }
+}
+
+INCASM("asm/vfx/unk_60_p1_pre_post.inc");
 
 void VFX60_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;

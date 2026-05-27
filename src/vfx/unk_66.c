@@ -1,5 +1,6 @@
 #include "entity.h"
 #include "global.h"
+#include "story.h"
 #include "vfx.h"
 
 void Ghost66_Init(struct VFX* p);
@@ -31,7 +32,21 @@ struct VFX* FUN_080c4450(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/vfx/unk_66_p1_pre.inc");
+static const VFXFunc sUpdates[3];
+void Ghost66_Die(struct VFX* p);
+
+INCASM("asm/vfx/unk_66_p1_pre_pre.inc");
+
+void Ghost66_Update(struct VFX* p) {
+  if (IS_METTAUR) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    Ghost66_Die(p);
+  } else {
+    (sUpdates[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/vfx/unk_66_p1_pre_post.inc");
 
 void Ghost66_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;

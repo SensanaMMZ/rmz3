@@ -1,7 +1,22 @@
 #include "global.h"
+#include "story.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_38_p1_pre.inc");
+void VFX38_Die(struct VFX* vfx);
+extern const VFXFunc PTR_ARRAY_0836ee24[3];
+
+INCASM("asm/vfx/unk_38_p1_pre_pre.inc");
+
+void VFX38_Update(struct VFX* vfx) {
+  if (IS_METTAUR) {
+    SET_VFX_ROUTINE(vfx, ENTITY_DIE);
+    VFX38_Die(vfx);
+  } else {
+    (PTR_ARRAY_0836ee24[(vfx->s).mode[1]])(vfx);
+  }
+}
+
+INCASM("asm/vfx/unk_38_p1_pre_post.inc");
 
 void VFX38_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;

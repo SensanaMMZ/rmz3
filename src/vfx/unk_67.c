@@ -1,8 +1,23 @@
 #include "entity.h"
 #include "global.h"
+#include "story.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_67_pre.inc");
+void Ghost67_Die(struct VFX* p);
+extern const VFXFunc sGhost67Updates[1];
+
+INCASM("asm/vfx/unk_67_pre_pre.inc");
+
+void Ghost67_Update(struct VFX* p) {
+  if (IS_METTAUR) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    Ghost67_Die(p);
+  } else {
+    (sGhost67Updates[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/vfx/unk_67_pre_post.inc");
 
 void Ghost67_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;

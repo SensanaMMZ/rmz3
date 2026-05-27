@@ -1,4 +1,5 @@
 #include "global.h"
+#include "story.h"
 #include "vfx.h"
 
 static void Ghost32_Init(struct VFX* p);
@@ -171,7 +172,21 @@ static void Ghost32_Init(struct VFX* p) {
   Ghost32_Update(p);
 }
 
-INCASM("asm/vfx/unk_32_pre.inc");
+static const VFXFunc sUpdates[8];
+void Ghost32_Die(struct VFX* p);
+
+INCASM("asm/vfx/unk_32_pre_pre.inc");
+
+void Ghost32_Update(struct VFX* p) {
+  if (IS_METTAUR) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    Ghost32_Die(p);
+  } else {
+    (sUpdates[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/vfx/unk_32_pre_post.inc");
 
 void Ghost32_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;

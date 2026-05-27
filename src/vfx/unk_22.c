@@ -1,8 +1,23 @@
 #include "entity.h"
 #include "global.h"
+#include "story.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_22_p1_pre.inc");
+static const VFXFunc sUpdates[];
+void Ghost22_Die(struct VFX* p);
+
+INCASM("asm/vfx/unk_22_p1_pre_pre.inc");
+
+void Ghost22_Update(struct VFX* p) {
+  if (IS_METTAUR) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    Ghost22_Die(p);
+  } else {
+    (sUpdates[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/vfx/unk_22_p1_pre_post.inc");
 
 void Ghost22_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;
