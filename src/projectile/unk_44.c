@@ -2,7 +2,17 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_44_pre.inc");
+static const ProjectileFunc PTR_ARRAY_0836d794[1];
+static const ProjectileFunc PTR_ARRAY_0836d798[1];
+
+INCASM("asm/projectile/unk_44_pre_p1.inc");
+
+void FUN_080b1764(struct Projectile* p) {
+  (PTR_ARRAY_0836d794[(p->s).mode[1]])(p);
+  (PTR_ARRAY_0836d798[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/unk_44_pre_p2.inc");
 
 void FUN_080b17d8(struct Projectile* p) {}
 
@@ -25,12 +35,8 @@ const ProjectileRoutine gProjectile44Routine = {
 void FUN_080b17d8(struct Projectile* p);
 void FUN_080b17dc(struct Projectile* p);
 
-// clang-format off
-static const ProjectileFunc PTR_ARRAY_0836d794[2] = {
-    FUN_080b17d8,
-    FUN_080b17dc,
-};
-// clang-format on
+static const ProjectileFunc PTR_ARRAY_0836d794[1] = {FUN_080b17d8};
+static const ProjectileFunc PTR_ARRAY_0836d798[1] = {FUN_080b17dc};
 
 static const struct Collision Collision_0836d79c = {
   kind : DDP,
