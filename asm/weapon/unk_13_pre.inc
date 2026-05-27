@@ -290,22 +290,3 @@ _0803C784:
 	bx r0
 	.align 2, 0
 _0803C78C: .4byte gWeaponFnTable
-
-	thumb_func_start Weapon13_Die
-Weapon13_Die: @ 0x0803C790
-	ldrb r2, [r0, #0xa]
-	movs r1, #0xfe
-	ands r1, r2
-	strb r1, [r0, #0xa]
-	ldr r2, _0803C7AC @ =gWeaponFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_0803C7AC: .4byte gWeaponFnTable

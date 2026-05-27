@@ -72,7 +72,14 @@ struct Weapon* CreateBurstShot(struct Zero* z, struct Weapon* p, u8 n, s32 x, s3
   return w;
 }
 
-INCASM("asm/weapon/burst_shot.inc");
+INCASM("asm/weapon/burst_shot_pre.inc");
+
+void BurstShot_Die(struct Weapon* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/weapon/burst_shot_post.inc");
 
 static const motion_t sMotions[3] = {
     MOTION(DM083_BURST_SHOT_FIREWORK, 0x00),

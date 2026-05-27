@@ -62,7 +62,14 @@ void MenuExit_BlizzardArrow(struct Weapon* w) {
   }
 }
 
-INCASM("asm/weapon/blizzard_arrow.inc");
+INCASM("asm/weapon/blizzard_arrow_pre.inc");
+
+void BlizzardArrow_Die(struct Weapon* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/weapon/blizzard_arrow_post.inc");
 
 // --------------------------------------------
 

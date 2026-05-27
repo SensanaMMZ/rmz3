@@ -51,7 +51,14 @@ struct Weapon* CreateSoulLauncher(struct Zero* z, u8 r1, u8 r2) {
   return w;
 }
 
-INCASM("asm/weapon/soul_launcher.inc");
+INCASM("asm/weapon/soul_launcher_pre.inc");
+
+void SoulLauncher_Die(struct Weapon* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/weapon/soul_launcher_post.inc");
 
 static const struct Collision sCollisions[2] = {
     {

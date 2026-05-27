@@ -59,6 +59,13 @@ struct Weapon* CreateShieldSweep(struct Zero* z, struct Entity* p, u8 n) {
   return w;
 }
 
-INCASM("asm/weapon/shield_sweep.inc");
+INCASM("asm/weapon/shield_sweep_pre.inc");
+
+void ShieldSweep_Die(struct Weapon* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/weapon/shield_sweep_post.inc");
 
 #undef PROP

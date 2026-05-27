@@ -78,4 +78,11 @@ struct Weapon* CreateShieldSweepElec(struct Zero* z, s32 x, s32 y) {
   return w;
 }
 
-INCASM("asm/weapon/shield_sweep_elec.inc");
+INCASM("asm/weapon/shield_sweep_elec_pre.inc");
+
+void ElecShieldSweep_Die(struct Weapon* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/weapon/shield_sweep_elec_post.inc");

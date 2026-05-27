@@ -1857,6 +1857,13 @@ NON_MATCH static void Rod_Init(struct Weapon* w) {
 #endif
 }
 
-INCASM("asm/weapon/rod.inc");
+INCASM("asm/weapon/rod_pre.inc");
+
+void Rod_Die(struct Weapon* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/weapon/rod_post.inc");
 
 #undef PROP

@@ -125,4 +125,11 @@ struct Weapon* CreateThrowBlade(struct Zero* z, struct Weapon* saber, bool8 isIc
   return w;
 }
 
-INCASM("asm/weapon/throw_blade.inc");
+INCASM("asm/weapon/throw_blade_pre.inc");
+
+void ThrowBlade_Die(struct Weapon* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/weapon/throw_blade_post.inc");
