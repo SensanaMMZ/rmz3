@@ -1,49 +1,8 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-	
-	.text
 
-	thumb_func_start copyx_080aa24c
-copyx_080aa24c: @ 0x080AA24C
-	push {r4, r5, r6, lr}
-	adds r6, r0, #0
-	lsls r1, r1, #0x18
-	lsrs r5, r1, #0x18
-	lsls r2, r2, #0x18
-	lsrs r4, r2, #0x18
-	ldr r0, _080AA294 @ =gProjectileHeaderPtr
-	ldr r0, [r0]
-	bl AllocEntityFirst
-	adds r3, r0, #0
-	cmp r3, #0
-	beq _080AA28C
-	adds r1, r3, #0
-	adds r1, #0x25
-	movs r2, #0
-	movs r0, #8
-	strb r0, [r1]
-	ldr r1, _080AA298 @ =gProjectileFnTable
-	movs r0, #0x1d
-	strb r0, [r3, #9]
-	ldr r0, [r1, #0x74]
-	ldr r0, [r0]
-	str r0, [r3, #0x14]
-	movs r0, #0
-	strh r2, [r3, #0x20]
-	adds r1, r3, #0
-	adds r1, #0x22
-	strb r0, [r1]
-	str r6, [r3, #0x28]
-	strb r5, [r3, #0x10]
-	strb r4, [r3, #0x11]
-_080AA28C:
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080AA294: .4byte gProjectileHeaderPtr
-_080AA298: .4byte gProjectileFnTable
+	.text
 
 	thumb_func_start Projectile29_Init
 Projectile29_Init: @ 0x080AA29C

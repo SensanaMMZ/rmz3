@@ -1,94 +1,8 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-	
+
 	.text
-
-	thumb_func_start FUN_080ada80
-FUN_080ada80: @ 0x080ADA80
-	push {r4, r5, lr}
-	adds r5, r0, #0
-	lsls r1, r1, #0x18
-	lsrs r4, r1, #0x18
-	ldr r0, _080ADAC8 @ =gProjectileHeaderPtr
-	ldr r0, [r0]
-	bl AllocEntityFirst
-	adds r3, r0, #0
-	cmp r3, #0
-	beq _080ADAC0
-	adds r1, r3, #0
-	adds r1, #0x25
-	movs r2, #0
-	movs r0, #8
-	strb r0, [r1]
-	ldr r0, _080ADACC @ =gProjectileFnTable
-	movs r1, #0x25
-	strb r1, [r3, #9]
-	adds r0, #0x94
-	ldr r0, [r0]
-	ldr r0, [r0]
-	str r0, [r3, #0x14]
-	movs r0, #0
-	strh r2, [r3, #0x20]
-	adds r1, r3, #0
-	adds r1, #0x22
-	strb r0, [r1]
-	strb r4, [r3, #0x10]
-	movs r0, #1
-	strb r0, [r3, #0x11]
-	str r5, [r3, #0x28]
-_080ADAC0:
-	adds r0, r3, #0
-	pop {r4, r5}
-	pop {r1}
-	bx r1
-	.align 2, 0
-_080ADAC8: .4byte gProjectileHeaderPtr
-_080ADACC: .4byte gProjectileFnTable
-
-	thumb_func_start FUN_080adad0
-FUN_080adad0: @ 0x080ADAD0
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	lsls r1, r1, #0x18
-	lsrs r5, r1, #0x18
-	ldr r0, _080ADB1C @ =gProjectileHeaderPtr
-	ldr r0, [r0]
-	bl AllocEntityFirst
-	adds r3, r0, #0
-	cmp r3, #0
-	beq _080ADB14
-	adds r1, r3, #0
-	adds r1, #0x25
-	movs r2, #0
-	movs r0, #8
-	strb r0, [r1]
-	ldr r0, _080ADB20 @ =gProjectileFnTable
-	movs r1, #0x25
-	strb r1, [r3, #9]
-	adds r0, #0x94
-	ldr r0, [r0]
-	ldr r0, [r0]
-	str r0, [r3, #0x14]
-	movs r0, #0
-	strh r2, [r3, #0x20]
-	adds r1, r3, #0
-	adds r1, #0x22
-	strb r0, [r1]
-	strb r5, [r3, #0x10]
-	strb r0, [r3, #0x11]
-	ldr r0, [r4]
-	str r0, [r3, #0x54]
-	ldr r0, [r4, #4]
-	str r0, [r3, #0x58]
-_080ADB14:
-	adds r0, r3, #0
-	pop {r4, r5}
-	pop {r1}
-	bx r1
-	.align 2, 0
-_080ADB1C: .4byte gProjectileHeaderPtr
-_080ADB20: .4byte gProjectileFnTable
 
 	thumb_func_start Projectile37_Init
 Projectile37_Init: @ 0x080ADB24
@@ -988,4 +902,3 @@ _080AE1F6:
 	pop {r4, r5}
 	pop {r0}
 	bx r0
-

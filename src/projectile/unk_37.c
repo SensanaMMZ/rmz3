@@ -2,7 +2,36 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_37.inc");
+struct Projectile* FUN_080ada80(struct Entity* e, u8 a1) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 37);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = 1;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080adad0(struct Coord* c, u8 a1) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 37);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = 0;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/unk_37_p3.inc");
 
 void Projectile37_Init(struct Projectile* p);
 void Projectile37_Update(struct Projectile* p);

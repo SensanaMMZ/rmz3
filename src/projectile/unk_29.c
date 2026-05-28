@@ -2,7 +2,20 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_29.inc");
+void copyx_080aa24c(struct Entity* e, u8 a1, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 29);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).unk_28 = e;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = a2;
+  }
+}
+
+INCASM("asm/projectile/unk_29_p2.inc");
 
 void Projectile29_Die(struct Projectile* p) {
   (p->s).flags &= ~DISPLAY;
