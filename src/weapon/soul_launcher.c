@@ -71,7 +71,13 @@ void FUN_0803b4b0(struct Body* body) {
   }
 }
 
-INCASM("asm/weapon/soul_launcher_post_p2.inc");
+metatile_attr_t FUN_0803b4e8(s32 x, s32 y) {
+  metatile_attr_t result = FUN_080098a4(x, y);
+  if (result == 0x800F) {
+    result = 0;
+  }
+  return result;
+}
 
 static const struct Collision sCollisions[2] = {
     {
