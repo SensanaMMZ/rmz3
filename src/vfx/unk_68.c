@@ -1,5 +1,6 @@
 #include "entity.h"
 #include "global.h"
+#include "trig.h"
 #include "vfx.h"
 
 // ファントム(ボス)関連?
@@ -47,7 +48,23 @@ void FUN_080c4be0(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/vfx/unk_68_pre_pre.inc");
+struct Projectile* FUN_080afda4(struct VFX* p);
+
+void FUN_080c4c2c(s32 x, s32 y, s32 speed, u8 angle) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_068);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).d.x = (COS(angle) * speed) / 0x100;
+    (p->s).d.y = (SIN(angle) * speed) / 0x100;
+    (p->s).unk_2c = (struct Entity*)FUN_080afda4(p);
+  }
+}
 
 void Ghost68_Init(struct VFX* p) {
   (sGhost68Initializers[(p->s).work[0]])(p);
