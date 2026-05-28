@@ -3,7 +3,50 @@
 
 static const VFXFunc sUpdates[9];
 
-INCASM("asm/vfx/unk_58_pre_pre.inc");
+struct VFX* FUN_080c1b98(struct Coord* c, u8 mode) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_058);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = mode;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+  }
+  return p;
+}
+
+struct VFX* FUN_080c1bec(struct Coord* c, u8 mode, struct Entity* e) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_058);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = mode;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct VFX* FUN_080c1c44(struct Coord* c) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_058);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 4;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_58_pre_pre_p4.inc");
 
 void VFX58_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
