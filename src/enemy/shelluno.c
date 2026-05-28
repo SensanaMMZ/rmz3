@@ -2,7 +2,22 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/shelluno_p1.inc");
+struct Enemy* CreateShelluno(struct Coord* c, u8 mode) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_SHELLUNO);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord = *c;
+    (p->s).work[0] = mode;
+  }
+  return p;
+}
+
+INCASM("asm/enemy/shelluno_p1_p2.inc");
 
 bool8 nop_0807939c(struct Enemy* p) { return TRUE; }
 
