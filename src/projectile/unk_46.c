@@ -24,7 +24,25 @@ void FUN_080b22f8(struct Projectile* p) {
   (PTR_ARRAY_0836d8c8[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_46_p4.inc");
+INCASM("asm/projectile/unk_46_p4_p1.inc");
+
+void FUN_080b274c(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_46_p4_p2.inc");
+
+void FUN_080b2764(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_46_p4_p3.inc");
+
+void FUN_080b277c(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_46_p4_p4.inc");
 
 void FUN_080b22c8(struct Projectile* p);
 void FUN_080b22e0(struct Projectile* p);
