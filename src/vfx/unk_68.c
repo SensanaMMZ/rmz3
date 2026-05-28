@@ -68,4 +68,20 @@ void Ghost68_Die(struct VFX* p) {
 
 INCASM("asm/vfx/unk_68_post_p1.inc");
 
-INCASM("asm/vfx/unk_68_post_p2.inc");
+INCASM("asm/vfx/unk_68_post_p2_p1.inc");
+
+void FUN_080c4d30(struct VFX* p) {
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+}
+
+INCASM("asm/vfx/unk_68_post_p2_p2.inc");
+
+void FUN_080c4db8(struct VFX* p) {
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+}
+
+INCASM("asm/vfx/unk_68_post_p2_p3.inc");
