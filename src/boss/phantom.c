@@ -286,7 +286,15 @@ void FUN_0805f97c(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p2_p1_p3.inc");
+void FUN_0805f9a0(struct Boss* p) {
+  if ((p->body).status & 4) {
+    (p->s).d.y = -PIXEL(3);
+    FUN_080607a0(p, 0xd);
+    (p->s).mode[3] = 3;
+  } else if (FUN_08060924(p)) {
+    (p->s).mode[3] = 4;
+  }
+}
 
 void FUN_0805f9dc(struct Boss* p) {
   if (FUN_08060924(p)) {
