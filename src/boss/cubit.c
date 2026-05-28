@@ -117,7 +117,28 @@ INCASM("asm/boss/cubit_p11.inc");
 
 bool8 FUN_080542c8(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/cubit_p12.inc");
+void cubitMode10(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      (p->s).angle = 0;
+      (p->s).spr.mag.x = 0x100;
+      (p->s).spr.mag.y = 0x100;
+      PlaySound(0xd1);
+      SetMotion(&p->s, MOTION(0xb0, 0x1e));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+  }
+  if (isKilled(*(struct Entity**)((u8*)&(p->props) + 12))) {
+    *(struct Entity**)((u8*)&(p->props) + 12) = NULL;
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0xff;
+  }
+}
 
 bool8 FUN_0805433c(struct Boss* p) { return TRUE; }
 
