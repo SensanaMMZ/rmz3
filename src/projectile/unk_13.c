@@ -5,12 +5,24 @@
 
 static const ProjectileFunc sUpdates1[7];
 static const ProjectileFunc sUpdates2[7];
+static const struct Collision sCollisions[5];
+static const u8 u8_0836b0c8[6];
+
+void Projectile13_Update(struct Projectile* p);
 
 INCASM("asm/projectile/unk_13_p1.inc");
 
 void nop_0809faf0(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_13_p2_p1.inc");
+void Projectile13_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_0836b0c8[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 1, (void*)nop_0809faf0);
+  Projectile13_Update(p);
+}
 
 void Projectile13_Update(struct Projectile* p) {
   (sUpdates1[(p->s).mode[1]])(p);
