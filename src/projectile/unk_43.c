@@ -3,6 +3,10 @@
 #include "projectile.h"
 #include "vfx.h"
 
+static const u8 u8_ARRAY_0836d77c[4];
+
+void Projectile43_Update(struct Projectile* p);
+
 INCASM("asm/projectile/unk_43_pre_p1.inc");
 
 void Projectile42_Die(struct Projectile* p) {
@@ -35,7 +39,30 @@ void FUN_080b13dc(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_43_post_p2.inc");
+void FUN_080b145c(struct Coord* c, s32 dx) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 43);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).d.x = dx;
+    (p->s).work[2] = dx > 0 ? 1 : 0;
+    (p->s).work[0] = 0;
+  }
+}
+
+void Projectile43_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_0836d77c[(p->s).work[0]];
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  Projectile43_Update(p);
+}
+
+INCASM("asm/projectile/unk_43_post_p2_p3.inc");
 
 void Projectile43_Init(struct Projectile* p);
 void Projectile43_Update(struct Projectile* p);
