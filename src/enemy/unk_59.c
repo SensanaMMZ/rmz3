@@ -5,7 +5,26 @@
 
 static const EnemyFunc sDeads[4];
 
-INCASM("asm/enemy/unk_59_pre_pre.inc");
+INCASM("asm/enemy/unk_59_pre_pre_p1.inc");
+
+void FUN_0809142c(struct Entity* e, u8 a2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_59);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord.x = e->coord.x;
+    (p->s).coord.y = e->coord.y - PIXEL(10);
+    (p->s).work[0] = 12;
+    (p->s).work[2] = a2;
+    (p->s).unk_28 = e;
+  }
+}
+
+INCASM("asm/enemy/unk_59_pre_pre_p2.inc");
 
 void Enemy59_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
