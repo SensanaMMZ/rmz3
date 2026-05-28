@@ -83,7 +83,17 @@ void doNothing_08063e10(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_guardian_pre_p2.inc");
+INCASM("asm/enemy/pantheon_guardian_pre_p2_p1.inc");
+
+void FUN_08063f28(struct Enemy* p) {
+  if ((p->s).mode[1] == 8) return;
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 8;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/pantheon_guardian_pre_p2_p2.inc");
 
 void FUN_08064444(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
