@@ -38,7 +38,17 @@ struct Entity* CreateElf7(struct Zero* z, u8 breed, u8 availability, u8 _) {
   return (struct Entity*)p;
 }
 
-INCASM("asm/cyberelf/unk_7.inc");
+INCASM("asm/cyberelf/unk_7_p1.inc");
+
+void FUN_080e3f54(struct Elf* p) {
+  u32 w = ((struct CyberElf7*)p)->unk_b8[4] - 1;
+  ((struct CyberElf7*)p)->unk_b8[4] = w;
+  if (w == 0) {
+    (p->s).mode[1]++;
+  }
+}
+
+INCASM("asm/cyberelf/unk_7_p2.inc");
 
 void FUN_080e3f24(struct Elf* p);
 void FUN_080e3f54(struct Elf* p);
