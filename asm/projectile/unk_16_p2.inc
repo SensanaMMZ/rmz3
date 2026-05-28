@@ -1,55 +1,8 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-	
-	.text
 
-	thumb_func_start FUN_080a244c
-FUN_080a244c: @ 0x080A244C
-	push {r4, r5, r6, lr}
-	adds r4, r0, #0
-	adds r5, r1, #0
-	lsls r2, r2, #0x18
-	lsrs r6, r2, #0x18
-	ldr r0, _080A24A0 @ =gProjectileHeaderPtr
-	ldr r0, [r0]
-	bl AllocEntityFirst
-	adds r3, r0, #0
-	cmp r3, #0
-	beq _080A2496
-	adds r1, r3, #0
-	adds r1, #0x25
-	movs r2, #0
-	movs r0, #8
-	strb r0, [r1]
-	ldr r1, _080A24A4 @ =gProjectileFnTable
-	movs r0, #0x10
-	strb r0, [r3, #9]
-	ldr r0, [r1, #0x40]
-	ldr r0, [r0]
-	str r0, [r3, #0x14]
-	movs r0, #0
-	strh r2, [r3, #0x20]
-	adds r1, r3, #0
-	adds r1, #0x22
-	strb r0, [r1]
-	strb r6, [r3, #0x10]
-	ldr r0, [r4]
-	str r0, [r3, #0x54]
-	ldr r0, [r4, #4]
-	str r0, [r3, #0x58]
-	ldr r0, [r5]
-	str r0, [r3, #0x64]
-	ldr r0, [r5, #4]
-	str r0, [r3, #0x68]
-_080A2496:
-	adds r0, r3, #0
-	pop {r4, r5, r6}
-	pop {r1}
-	bx r1
-	.align 2, 0
-_080A24A0: .4byte gProjectileHeaderPtr
-_080A24A4: .4byte gProjectileFnTable
+	.text
 
 	thumb_func_start Projectile16_Init
 Projectile16_Init: @ 0x080A24A8

@@ -5,7 +5,20 @@
 static const ProjectileFunc sUpdates1[1];
 static const ProjectileFunc sUpdates2[1];
 
-INCASM("asm/projectile/unk_30_pre_p1.inc");
+void FUN_080aa5e8(s32 x, s32 y, s32 dx, s32 dy) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 30);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).d.x = dx;
+    (p->s).d.y = dy;
+  }
+}
 
 void nop_080aa638(struct Enemy* p) {}
 

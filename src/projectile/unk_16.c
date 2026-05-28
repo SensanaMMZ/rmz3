@@ -2,7 +2,23 @@
 #include "global.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_16.inc");
+struct Projectile* FUN_080a244c(struct Coord* c1, struct Coord* c2, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 16);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a2;
+    (p->s).coord.x = c1->x;
+    (p->s).coord.y = c1->y;
+    (p->s).unk_coord.x = c2->x;
+    (p->s).unk_coord.y = c2->y;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/unk_16_p2.inc");
 
 void Projectile16_Init(struct Projectile* p);
 void Projectile16_Update(struct Projectile* p);
