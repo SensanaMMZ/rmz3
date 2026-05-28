@@ -57,7 +57,30 @@ INCASM("asm/enemy/glacierle_arm_p2_p2.inc");
 
 void nop_08082a1c(struct Enemy* p) {}
 
-INCASM("asm/enemy/glacierle_arm_p3_pre.inc");
+void FUN_08082a20(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 savedAngle = (p->s).angle;
+      InitRotatableMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x59, 0));
+      (p->s).angle = savedAngle;
+      if (p->props[1] == 0) {
+        UpdateMotionGraphic(&p->s);
+      }
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1:
+      if (p->props[1] != 0) {
+        UpdateMotionGraphic(&p->s);
+      }
+      break;
+  }
+  if (((struct Entity*)(p->s).unk_28)->mode[0] > 1) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void FUN_08082aa0(struct Enemy* p) {
   switch ((p->s).mode[2]) {
@@ -74,7 +97,23 @@ void FUN_08082aa0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/glacierle_arm_p3_post.inc");
+void FUN_08082af8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 savedAngle = (p->s).angle;
+      InitRotatableMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x59, 2));
+      (p->s).angle = savedAngle;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+  }
+  if ((*(struct Entity**)&p->props[8])->mode[0] > 1) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void GlacierleAtkArm_Init(struct Enemy* p);
 void GlacierleAtkArm_Update(struct Enemy* p);
