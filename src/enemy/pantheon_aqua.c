@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[];
+
 struct Enemy* CreatePantheonAqua(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
   if (p != NULL) {
@@ -37,7 +39,18 @@ INCASM("asm/enemy/pantheon_aqua_p5.inc");
 
 bool8 FUN_08072fac(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_aqua_p6.inc");
+void FUN_08072fb0(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[1]);
+    (p->s).mode[2]++;
+  }
+  if (isKilled(*(struct Entity**)((u8*)p + 0xbc))) {
+    SetDDP(&p->body, &sCollisions[0]);
+    *(struct Entity**)((u8*)p + 0xbc) = NULL;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 FUN_08072ff8(struct Enemy* p) { return TRUE; }
 
