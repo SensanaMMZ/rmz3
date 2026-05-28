@@ -104,13 +104,28 @@ struct Entity* FUN_080bed5c(struct Entity* e, struct Coord* c, u8 kind, u8 param
 
 static const VFXFunc sUpdates[4];
 
-INCASM("asm/vfx/unk_46_pre_pre.inc");
+struct Entity* FUN_080bedc0(struct Entity* e, struct Coord* c, u8 kind, u8 param_4) {
+  struct VFX46* p = (struct VFX46*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_046);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = kind;
+    p->unk_7c = param_4;
+    (p->s).work[1] = 3;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = (void*)e;
+  }
+  return (void*)p;
+}
+
+INCASM("asm/vfx/unk_46_pre_pre_p2.inc");
 
 void VFX46_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
 }
-
-INCASM("asm/vfx/unk_46_pre_post.inc");
 
 void VFX46_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;
