@@ -1586,7 +1586,23 @@ _080D1744: .4byte gSolidFnTable\n\
  .syntax divided\n");
 }
 
-INCASM("asm/solid/actor.inc");
+INCASM("asm/solid/actor_p1.inc");
+
+void Actor48_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      wDynamicGraphicTilenums[0xb3] = 0x200;
+      wDynamicMotionPalIDs[0xb3] = 4;
+      SetMotion(&p->s, 0xb31d);
+      (p->s).mode[1]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/solid/actor_p2.inc");
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
