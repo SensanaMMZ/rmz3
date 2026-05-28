@@ -5,7 +5,21 @@
 static const struct Collision sCollisions[];
 static const struct Coord sElementCoord;
 
-INCASM("asm/boss/hanumachine.inc");
+INCASM("asm/boss/hanumachine_p1.inc");
+
+void FUN_0805c3cc(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, 0xB50B);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/boss/hanumachine_p2.inc");
 
 void Hanumachine_Init(struct Boss* p);
 void Hanumachine_Update(struct Boss* p);
