@@ -5,6 +5,10 @@
 
 static const EnemyFunc sUpdates1[3];
 static const EnemyFunc sUpdates2[3];
+static const struct Collision sCollisions[2];
+static const u8 sInitModes[3];
+
+void GlacierleAtkArm_Update(struct Enemy* p);
 
 struct Enemy* createGlacierleAtkHand(struct Entity* e) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -33,7 +37,16 @@ INCASM("asm/enemy/glacierle_arm_p1_p2.inc");
 
 void nop_080828dc(struct Enemy* p) {}
 
-INCASM("asm/enemy/glacierle_arm_p2_p1.inc");
+void GlacierleAtkArm_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  if ((p->s).work[0] == 0) {
+    INIT_BODY(p, sCollisions, 1, (void*)nop_080828dc);
+  }
+  GlacierleAtkArm_Update(p);
+}
 
 void GlacierleAtkArm_Update(struct Enemy* p) {
   (sUpdates1[(p->s).mode[1]])(p);
