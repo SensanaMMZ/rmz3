@@ -4,6 +4,8 @@
 #include "vfx.h"
 #include "zero.h"
 
+static const struct Collision sCollisions[14];
+
 bool8 batring_08068130(struct Enemy* p);
 
 static const struct Coord sElementCoord;
@@ -1135,7 +1137,19 @@ INCASM("asm/enemy/batring_p3.inc");
 
 bool8 FUN_08067f18(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/batring_p4.inc");
+void FUN_08067f1c(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[3]);
+    (p->s).mode[2]++;
+  }
+  if (isKilled(*(struct Entity**)((u8*)p + 0xbc))) {
+    SetDDP(&p->body, &sCollisions[2]);
+    *(struct Entity**)((u8*)p + 0xbc) = NULL;
+    *(u8*)((u8*)p + 0xc0) = 0;
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 FUN_08067f6c(struct Enemy* p) { return TRUE; }
 
