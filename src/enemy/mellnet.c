@@ -6,7 +6,21 @@
 static const struct Collision sCollisions[4];
 static const motion_t sMotions[18];
 
-INCASM("asm/enemy/mellnet_pre_p1.inc");
+void FUN_0807d6c0(s32 x, s32 y, u8 a2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_MELLNET);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 1;
+    (p->s).work[2] = a2;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+}
 
 void FUN_0807d720(struct Enemy* p) {}
 

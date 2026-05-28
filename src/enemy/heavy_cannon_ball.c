@@ -4,7 +4,23 @@
 
 void HeavyCannon_Die(struct Enemy* p);
 
-INCASM("asm/enemy/heavy_cannon_ball_p1_pre.inc");
+void CreateHeavyCannonBall(s32 x, s32 y, u8 a2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_HEAVY_CANNON_BALL);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 0;
+    (p->s).work[2] = a2;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+}
+
+INCASM("asm/enemy/heavy_cannon_ball_p1_pre_p2.inc");
 
 static bool8 FUN_0807ab30(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_DEAD) {
