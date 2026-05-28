@@ -1,7 +1,22 @@
 #include "global.h"
+#include "story.h"
 #include "vfx.h"
 
-INCASM("asm/vfx/unk_33_pre.inc");
+static const VFXFunc sUpdates[4];
+
+INCASM("asm/vfx/unk_33_pre_p1.inc");
+
+void Ghost33_Update(struct VFX* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (sUpdates[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/vfx/unk_33_pre_p2.inc");
 
 void Ghost33_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);

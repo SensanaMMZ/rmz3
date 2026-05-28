@@ -1,7 +1,9 @@
 #include "global.h"
+#include "story.h"
 #include "vfx.h"
 
 static const VFXFunc sInitializers[2];
+static const VFXFunc sUpdates[2];
 
 void Ghost73_Init(struct VFX* p);
 void Ghost73_Update(struct VFX* p);
@@ -36,7 +38,19 @@ void Ghost73_Init(struct VFX* p) {
   (sInitializers[(p->s).work[0]])(p);
 }
 
-INCASM("asm/vfx/unk_73_post_pre.inc");
+INCASM("asm/vfx/unk_73_post_pre_p1.inc");
+
+void Ghost73_Update(struct VFX* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (sUpdates[(p->s).work[0]])(p);
+}
+
+INCASM("asm/vfx/unk_73_post_pre_p2.inc");
 
 void Ghost73_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;
