@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "vfx.h"
 
 static const ProjectileFunc PTR_ARRAY_0836b434[5];
 static const ProjectileFunc PTR_ARRAY_0836b448[5];
@@ -16,7 +17,13 @@ void Projectile18_Update(struct Projectile* p) {
   (PTR_ARRAY_0836b448[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/unk_18_p2_p2.inc");
+void Projectile18_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  CreateSmoke(3, &(p->s).coord);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_18_p2_p2_p2.inc");
 
 static const struct Collision sCollisions[4];
 static const u8 sInitModes[4];

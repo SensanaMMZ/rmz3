@@ -1,10 +1,19 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "vfx.h"
 
 static void nop_080a5048(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_20_pre.inc");
+INCASM("asm/projectile/unk_20_pre_p1.inc");
+
+void Projectile20_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  CreateSmoke(3, &(p->s).coord);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_20_pre_p2.inc");
 
 void FUN_080a5144(struct Projectile* p) {}
 

@@ -1,8 +1,16 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "vfx.h"
 
-INCASM("asm/projectile/unk_43_pre.inc");
+INCASM("asm/projectile/unk_43_pre_p1.inc");
+
+void Projectile42_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  CreateSmoke(1, &(p->s).coord);
+  PlaySound(0x2a);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
 
 void FUN_080b13d8(struct Projectile* p) {}
 

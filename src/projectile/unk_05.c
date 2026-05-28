@@ -69,7 +69,13 @@ void Projectile5_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/unk_05_post.inc");
+void Projectile5_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_05_post_p2.inc");
 
 void FUN_0809da14(struct Projectile* p);
 void FUN_0809daa0(struct Projectile* p);

@@ -46,7 +46,12 @@ void Projectile27_Update(struct Projectile* p) {
   (PTR_ARRAY_0836c0ec[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_27_pre_post.inc");
+void Projectile27_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_27_pre_post_p2.inc");
 
 void FUN_080a9a74(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);

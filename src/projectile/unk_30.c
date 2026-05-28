@@ -29,7 +29,10 @@ void Projectile30_Update(struct Projectile* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/unk_30_pre_p2_p2.inc");
+void Projectile30_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
 
 void FUN_080aa710(struct Projectile* p) {}
 

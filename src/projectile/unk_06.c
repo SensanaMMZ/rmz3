@@ -48,7 +48,15 @@ static void Projectile6_Init(struct Projectile* p) {
   Projectile6_Update(p);
 }
 
-INCASM("asm/projectile/unk_06.inc");
+INCASM("asm/projectile/unk_06_p1.inc");
+
+void Projectile6_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_06_p2.inc");
 
 void FUN_0809dd60(struct Projectile* p);
 void FUN_0809de04(struct Projectile* p);

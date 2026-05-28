@@ -70,7 +70,13 @@ void TretistaProjectile_Update(struct Projectile* p) {
   (PTR_ARRAY_0836b4e4[(p->s).work[0]][(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/tretista_post.inc");
+void TretistaProjectile_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/tretista_post_p2.inc");
 
 void TretistaProjectile_Init(struct Projectile* p);
 void TretistaProjectile_Update(struct Projectile* p);

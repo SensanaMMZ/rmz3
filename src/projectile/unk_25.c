@@ -22,7 +22,14 @@ void Projectile25_Init(struct Projectile* p) {
   (PTR_ARRAY_0836bf68[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_25_post.inc");
+INCASM("asm/projectile/unk_25_post_p1.inc");
+
+void Projectile25_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_25_post_p2.inc");
 
 void Projectile25_Init(struct Projectile* p);
 void Projectile25_Update(struct Projectile* p);

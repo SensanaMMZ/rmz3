@@ -31,7 +31,15 @@ struct Projectile* FUN_080adad0(struct Coord* c, u8 a1) {
   return p;
 }
 
-INCASM("asm/projectile/unk_37_p3.inc");
+INCASM("asm/projectile/unk_37_p3_p1.inc");
+
+void Projectile37_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_37_p3_p2.inc");
 
 void Projectile37_Init(struct Projectile* p);
 void Projectile37_Update(struct Projectile* p);

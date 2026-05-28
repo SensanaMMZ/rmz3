@@ -51,7 +51,15 @@ struct Projectile* FUN_080a2838(struct Entity* e, struct Coord* c1, struct Coord
   return p;
 }
 
-INCASM("asm/projectile/unk_17_pre_p4.inc");
+INCASM("asm/projectile/unk_17_pre_p4_p1.inc");
+
+void Projectile17_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_17_pre_p4_p2.inc");
 
 void FUN_080a2d9c(struct Projectile* p) {
   switch ((p->s).mode[2]) {

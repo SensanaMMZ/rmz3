@@ -94,7 +94,13 @@ void Projectile34_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/unk_34_post.inc");
+void Projectile34_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_34_post_p2.inc");
 
 void Projectile34_Init(struct Projectile* p);
 void Projectile34_Update(struct Projectile* p);

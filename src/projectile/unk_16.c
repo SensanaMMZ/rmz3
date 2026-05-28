@@ -18,7 +18,15 @@ struct Projectile* FUN_080a244c(struct Coord* c1, struct Coord* c2, u8 a2) {
   return p;
 }
 
-INCASM("asm/projectile/unk_16_p2.inc");
+INCASM("asm/projectile/unk_16_p2_p1.inc");
+
+void Projectile16_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_16_p2_p2.inc");
 
 void Projectile16_Init(struct Projectile* p);
 void Projectile16_Update(struct Projectile* p);
