@@ -2,7 +2,12 @@
 #include "enemy.h"
 #include "global.h"
 
+static const struct Collision sCollisions[3];
+static const u8 sInitModes[2];
+
 void HeavyCannon_Die(struct Enemy* p);
+void HeavyCannon_Update(struct Enemy* p);
+void FUN_0807aae8(struct Body* body, struct Coord* r1, struct Coord* r2);
 
 void CreateHeavyCannonBall(s32 x, s32 y, u8 a2) {
   struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
@@ -31,7 +36,18 @@ static bool8 FUN_0807ab30(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/heavy_cannon_ball_p1_post.inc");
+void HeavyCannon_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 10, FUN_0807aae8);
+  (p->s).taskCol = 30;
+  HeavyCannon_Update(p);
+}
+
+INCASM("asm/enemy/heavy_cannon_ball_p1_post_p2.inc");
 
 void FUN_0807acd0(struct Enemy* p) {}
 
