@@ -1,10 +1,27 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "trig.h"
 
 static const EnemyFunc sDeads[1];
 
-INCASM("asm/enemy/wormer_rock_drone_p1.inc");
+void CreateWormerRockDrone(s32 x, s32 y, u8 angle, u8 w2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_WORMER_ROCK_DRONE);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 0;
+    (p->s).work[2] = w2;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).d.x = COS(angle);
+    (p->s).d.y = SIN(angle);
+  }
+}
 
 void nop_08076ee0(struct Enemy* p) {}
 
