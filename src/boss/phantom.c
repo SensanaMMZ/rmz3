@@ -7,6 +7,8 @@ void FUN_080c4be0(s32 x, s32 y);
 
 static const motion_t sMotions[];
 
+extern const struct Collision sCollisions[];
+
 void FUN_0805ecc8(struct Entity* p) {
   s32 i;
   for (i = 0; i < 4; i++) {
@@ -165,7 +167,14 @@ void FUN_0805fa10(struct Boss* p) {
   (PTR_ARRAY_083654ec[(p->s).mode[2]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p3.inc");
+INCASM("asm/boss/phantom_p2_pre_pre_p3_p1.inc");
+
+void FUN_0805fa28(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[0]);
+  *(u16*)((u8*)p + 0xe) = 1;
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p3_p2.inc");
 
 void FUN_0805fa44(struct Boss* p) {
   (PTR_ARRAY_08365504[(p->s).mode[3]])(p);
