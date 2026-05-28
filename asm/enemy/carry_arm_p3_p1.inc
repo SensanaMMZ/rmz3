@@ -778,18 +778,3 @@ _08071C48:
 _08071C64: .4byte 0xFFFFF000
 _08071C68: .4byte 0x08366BB2
 _08071C6C: .4byte gEnemyFnTable
-
-	thumb_func_start FUN_08071c70
-FUN_08071c70: @ 0x08071C70
-	ldr r2, _08071C84 @ =gEnemyFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	bx lr
-	.align 2, 0
-_08071C84: .4byte gEnemyFnTable

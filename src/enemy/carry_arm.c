@@ -30,7 +30,13 @@ INCASM("asm/enemy/carry_arm_p2_post_post.inc");
 
 void FUN_080716a8(struct Enemy* p) {}
 
-INCASM("asm/enemy/carry_arm_p3.inc");
+INCASM("asm/enemy/carry_arm_p3_p1.inc");
+
+void FUN_08071c70(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/carry_arm_p3_p2.inc");
 
 void CarryArm_Init(struct Enemy* p);
 void CarryArm_Update(struct Enemy* p);
