@@ -3,7 +3,55 @@
 #include "motion.h"
 #include "projectile.h"
 
-INCASM("asm/projectile/unk_17_pre.inc");
+struct Projectile* FUN_080a2790(struct Coord* c, u8 a1) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 17);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).work[1] = 1;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080a27e4(struct Coord* c, u8 a1) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 17);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).work[1] = 2;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080a2838(struct Entity* e, struct Coord* c1, struct Coord* c2, u8 a3) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 17);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a3;
+    (p->s).coord.x = c1->x;
+    (p->s).coord.y = c1->y;
+    (p->s).unk_coord.x = c2->x;
+    (p->s).unk_coord.y = c2->y;
+    (p->s).work[1] = 0;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/unk_17_pre_p4.inc");
 
 void FUN_080a2d9c(struct Projectile* p) {
   switch ((p->s).mode[2]) {
