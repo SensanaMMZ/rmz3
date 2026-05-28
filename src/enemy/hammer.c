@@ -302,7 +302,20 @@ INCASM("asm/enemy/hammer_p1.inc");
 
 bool8 FUN_080756e8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/hammer_p2.inc");
+INCASM("asm/enemy/hammer_p2_p1.inc");
+
+bool8 FUN_08075a30(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_B3) {
+    if ((s8)p->props[1] == 1) {
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      p->props[1] = 0;
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/hammer_p2_p2.inc");
 
 // --------------------------------------------
 
