@@ -51,7 +51,19 @@ struct Projectile* FUN_0809d904(struct Coord* c, s32 prevX, s32 prevY, struct En
   return p;
 }
 
-INCASM("asm/projectile/unk_05_pre_p2.inc");
+void Projectile5_Init(struct Projectile* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  INIT_BODY(p, sCollisions, 1, NULL);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 0;
+  (p->s).mode[2] = 0;
+  (p->s).mode[3] = 0;
+  Projectile5_Update(p);
+}
+
+INCASM("asm/projectile/unk_05_pre_p2_p2.inc");
 
 void Projectile5_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);

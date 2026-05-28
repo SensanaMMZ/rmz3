@@ -125,7 +125,14 @@ struct Projectile* FUN_080b009c(struct Entity* parent) {
   return p;
 }
 
-INCASM("asm/projectile/omega_zx_pre_p4.inc");
+void OmegaZXProjectile_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = (p->s).work[0];
+  (p->s).mode[2] = 0;
+  (p->s).mode[3] = 0;
+  (p->s).work[2] = 0xFF;
+  OmegaZXProjectile_Update(p);
+}
 
 void OmegaZXProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
