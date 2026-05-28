@@ -6,6 +6,8 @@
 
 static const u8 sInitModes[4];
 
+void IcebonIcedust_Update(struct VFX* p);
+
 void ice_080b996c(struct VFX* p);
 void ice_080b9a0c(struct VFX* p);
 
@@ -37,7 +39,14 @@ void FUN_080b98ac(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/vfx/icebon_icedust_p1_post.inc");
+void IcebonIcedust_Init(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  IcebonIcedust_Update(p);
+}
 
 void IcebonIcedust_Update(struct VFX* p) {
   (sUpdates[(p->s).mode[1]])(p);
