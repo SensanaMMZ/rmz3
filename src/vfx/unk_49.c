@@ -3,7 +3,21 @@
 
 static const VFXFunc sUpdates[4];
 
-INCASM("asm/vfx/unk_49_pre_pre.inc");
+INCASM("asm/vfx/unk_49_pre_pre_p1.inc");
+
+void FUN_080c0340(struct Entity* e) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_049);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 3;
+    (p->s).unk_28 = e;
+  }
+}
+
+INCASM("asm/vfx/unk_49_pre_pre_p2.inc");
 
 void VFX49_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
