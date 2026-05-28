@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "trig.h"
 #include "vfx.h"
 
 static const ProjectileFunc sUpdates1[7];
@@ -10,7 +11,38 @@ static const u8 u8_0836b0c8[6];
 
 void Projectile13_Update(struct Projectile* p);
 
-INCASM("asm/projectile/unk_13_p1.inc");
+void FUN_0809f8ac(struct Entity* e) {
+  s32 i;
+  for (i = 0; i <= 3; i++) {
+    struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+    if (p != NULL) {
+      (p->s).taskCol = 8;
+      INIT_PROJECTILE_ROUTINE(p, 13);
+      (p->s).tileNum = 0;
+      (p->s).palID = 0;
+      (p->s).work[0] = 5;
+      (p->s).work[2] = i;
+      (p->s).unk_28 = e;
+    }
+  }
+}
+
+void FUN_0809f8fc(s32 x, s32 y, u8 angle) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 13);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).d.x = COS(angle) * 2;
+    (p->s).d.y = -(SIN(angle) * 2);
+  }
+}
+
+INCASM("asm/projectile/unk_13_p1_post.inc");
 
 void nop_0809faf0(struct Projectile* p) {}
 
