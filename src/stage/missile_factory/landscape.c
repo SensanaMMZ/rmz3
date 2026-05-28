@@ -313,7 +313,13 @@ static void LayerUpdate_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
   l->unk_10 += 0x10;
 }
 
-INCASM("asm/stage_gfx/missile_factory_p1.inc");
+INCASM("asm/stage_gfx/missile_factory_p1_p1.inc");
+
+void FUN_0800f2e0(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED) {
+  gBlendRegBuffer.bldclt = 0;
+}
+
+INCASM("asm/stage_gfx/missile_factory_p1_p2.inc");
 
 void FUN_0800f54c(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED) {
   ClearBlink(0xcf);
