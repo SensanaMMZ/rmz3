@@ -564,31 +564,3 @@ _080E3F14: .4byte gMission
 _080E3F18: .4byte gUnlockedElfPtr
 _080E3F1C: .4byte 0x00000121
 _080E3F20: .4byte gElfFnTable
-
-	thumb_func_start FUN_080e3f24
-FUN_080e3f24: @ 0x080E3F24
-	push {lr}
-	adds r3, r0, #0
-	adds r2, r3, #0
-	adds r2, #0xc0
-	ldr r0, [r2]
-	adds r0, #0x30
-	str r0, [r2]
-	ldr r1, _080E3F50 @ =0x000027FF
-	cmp r0, r1
-	ble _080E3F4C
-	movs r0, #0xa0
-	lsls r0, r0, #6
-	str r0, [r2]
-	adds r1, r3, #0
-	adds r1, #0xbc
-	movs r0, #1
-	strb r0, [r1]
-	ldrb r0, [r3, #0xd]
-	adds r0, #1
-	strb r0, [r3, #0xd]
-_080E3F4C:
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080E3F50: .4byte 0x000027FF
