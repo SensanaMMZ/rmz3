@@ -77,7 +77,24 @@ INCASM("asm/enemy/omega_gold_sword_p3_p2.inc");
 
 bool8 FUN_0808c330(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_gold_sword_p4_p1.inc");
+void FUN_0808c334(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      EXIT_BODY(p);
+      (p->s).d.x = 0;
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x40) {
+        (p->s).d.y = 0x40;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void nop_0808c384(struct Enemy* p) {}
 
