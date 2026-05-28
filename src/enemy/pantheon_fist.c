@@ -4,7 +4,24 @@
 
 static const struct Collision sCollisions[];
 
-INCASM("asm/enemy/pantheon_fist_pre_p1.inc");
+struct Enemy* createPantheonFistInElevator(s32 x, s32 y, u8 a2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_P_FIST);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    p->props[5] = a2;
+  }
+  return p;
+}
+
+INCASM("asm/enemy/pantheon_fist_pre_p1_p2.inc");
 
 void nop_080950cc(struct Enemy* p) {}
 

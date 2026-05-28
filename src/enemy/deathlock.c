@@ -4,7 +4,38 @@
 
 static const EnemyFunc sDeads[4];
 
-INCASM("asm/enemy/deathlock_pre_p1.inc");
+void FUN_0808d0b0(s32 x, s32 y, u8 mode) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_DEATHLOCK);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = mode;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+}
+
+INCASM("asm/enemy/deathlock_pre_p1_p2.inc");
+
+void FUN_0808d10c(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_DEATHLOCK);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 9;
+    (p->s).unk_28 = e;
+  }
+}
+
+INCASM("asm/enemy/deathlock_pre_p1_p3.inc");
 
 void nop_0808d2f4(struct Enemy* p) {}
 
