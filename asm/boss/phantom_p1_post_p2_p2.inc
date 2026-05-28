@@ -4,24 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0805f838
-FUN_0805f838: @ 0x0805F838
-	push {r4, lr}
-	adds r4, r0, #0
-	adds r0, #0x74
-	ldr r1, _0805F858 @ =0x083653E0
-	bl SetDDP
-	movs r0, #1
-	strb r0, [r4, #0xf]
-	adds r0, r4, #0
-	movs r1, #9
-	bl FUN_080607a0
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0805F858: .4byte 0x083653E0
-
 	thumb_func_start FUN_0805f85c
 FUN_0805f85c: @ 0x0805F85C
 	push {lr}
