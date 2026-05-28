@@ -22,7 +22,22 @@ INCASM("asm/enemy/cattatank_p1_p2.inc");
 
 bool8 nop_08099090(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/cattatank_p2.inc");
+void cattatank_08099094(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags &= ~DISPLAY;
+      (p->s).work[2] = 0x32;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).work[2] != 0) {
+        if (--(p->s).work[2] != 0) break;
+      }
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 nop_080990d4(struct Enemy* p) { return TRUE; }
 

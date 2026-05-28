@@ -94,7 +94,49 @@ void Enemy60_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/unk_60_post.inc");
+INCASM("asm/enemy/unk_60_post_p1.inc");
+
+void FUN_080929c8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
+INCASM("asm/enemy/unk_60_post_p2.inc");
+
+void FUN_08092aac(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
+INCASM("asm/enemy/unk_60_post_p3.inc");
+
+void FUN_08092ba0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
+INCASM("asm/enemy/unk_60_post_p4.inc");
 
 void FUN_08092980(struct Enemy* p);
 void FUN_080929c8(struct Enemy* p);
