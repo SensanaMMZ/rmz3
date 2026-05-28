@@ -80,7 +80,27 @@ struct VFX* FUN_080c825c(struct Entity* e, struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/vfx/minigame_icon_pre_pre_p4.inc");
+struct Unk77Props { u32 unk_0; u8 unk_4[4]; u8 unk_8; };
+
+struct VFX* FUN_080c82b8(struct Entity* e, struct Coord* c, u8 a2, u32 a3, u8 a4) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_MINIGAME_ICON);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 4;
+    (p->s).work[1] = a2;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+    ((struct Unk77Props*)(p->props).raw)->unk_0 = a3;
+    ((struct Unk77Props*)(p->props).raw)->unk_8 = a4;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/minigame_icon_pre_pre_p4_p2.inc");
 
 void Ghost77_Update(struct VFX* p) {
   (sUpdates[(p->s).mode[1]])(p);

@@ -11,7 +11,33 @@ void ice_080b9a0c(struct VFX* p);
 
 static const VFXFunc sUpdates[2];
 
-INCASM("asm/vfx/icebon_icedust_p1.inc");
+void createIcebonIce(s32 x, s32 y) {
+  struct VFX* p = (struct VFX*)AllocEntityLast(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_026);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[0] = 0;
+  }
+}
+
+void FUN_080b98ac(s32 x, s32 y) {
+  struct VFX* p = (struct VFX*)AllocEntityLast(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_026);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[0] = 1;
+  }
+}
+
+INCASM("asm/vfx/icebon_icedust_p1_post.inc");
 
 void IcebonIcedust_Update(struct VFX* p) {
   (sUpdates[(p->s).mode[1]])(p);
