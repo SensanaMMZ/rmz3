@@ -29,6 +29,7 @@ static const BossFunc sDeads[1];
 
 bool8 FUN_08060924(struct Boss* p);
 bool8 FUN_080608e0(struct Boss* p);
+bool8 FUN_08060864(struct Boss* p, s32 dx);
 s8 FUN_08060974(struct Boss* p);
 void FUN_0805f464(struct Boss* p);
 void FUN_080607a0(struct Boss* p, s32 idx);
@@ -130,7 +131,28 @@ void FUN_0805f57c(struct Boss* p) {
   (p->s).unk_2c = (struct Entity*)FUN_080afbb0(&p->s, 0);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p9_p1_p2.inc");
+INCASM("asm/boss/phantom_p1_pre_p9_p1_p2_p1.inc");
+
+void FUN_0805f630(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[12]);
+  FUN_08060864(p, (p->s).d.x);
+  if (FUN_08060924(p)) {
+    (p->s).mode[3] = 3;
+  }
+}
+
+INCASM("asm/boss/phantom_p1_pre_p9_p1_p2_p2.inc");
+
+void FUN_0805f660(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[0]);
+  if (FUN_08060974(p) > 0) {
+    (p->s).mode[3] = 4;
+    FUN_080607a0(p, 0);
+    (p->s).work[2] = 4;
+  }
+}
+
+INCASM("asm/boss/phantom_p1_pre_p9_p1_p2_p3.inc");
 
 void FUN_0805f690(struct Boss* p) {
   u32 w = (p->s).work[2] - 1;
