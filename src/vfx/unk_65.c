@@ -3,7 +3,22 @@
 
 static const VFXFunc sUpdates[1];
 
-INCASM("asm/vfx/unk_65_p1.inc");
+void CreateGhost65(s32 x, s32 y, u8 w1, u8 w2) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_065);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).work[1] = w1;
+    (p->s).work[2] = w2;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+}
+
+INCASM("asm/vfx/unk_65_p1_p2.inc");
 
 void Ghost65_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);

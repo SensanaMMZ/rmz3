@@ -32,7 +32,25 @@ struct VFX* FUN_080c6e24(struct Entity* e) {
   return p;
 }
 
-INCASM("asm/vfx/unk_73_pre.inc");
+void FUN_080c6e70(struct Entity* e, struct Coord* c) {
+  s32 i;
+  for (i = 0; i < 3; i++) {
+    struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+    if (p != NULL) {
+      (p->s).taskCol = 1;
+      INIT_VFX_ROUTINE(p, VFX_UNK_073);
+      (p->s).tileNum = 0;
+      (p->s).palID = 0;
+      (p->s).work[0] = 1;
+      (p->s).work[1] = i;
+      (p->s).unk_28 = e;
+      (p->s).coord.x = c->x;
+      (p->s).coord.y = c->y;
+    }
+  }
+}
+
+INCASM("asm/vfx/unk_73_pre_p2.inc");
 
 void Ghost73_Init(struct VFX* p) {
   (sInitializers[(p->s).work[0]])(p);
