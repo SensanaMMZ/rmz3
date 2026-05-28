@@ -42,7 +42,15 @@ struct Entity* CreateElf1(struct Zero* p, u8 breed, u8 availability, u8 _) {
   return (struct Entity*)e;
 }
 
-INCASM("asm/cyberelf/unk_1.inc");
+INCASM("asm/cyberelf/unk_1_p1.inc");
+
+void FUN_080e23fc(struct Elf* p) {
+  if (((struct CyberElf1*)p)->unk_b8[0] == 0) {
+    (p->s).mode[1]++;
+  }
+}
+
+INCASM("asm/cyberelf/unk_1_p2.inc");
 
 // --------------------------------------------
 
