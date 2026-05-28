@@ -2,7 +2,22 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/petatria_p1_pre_p1.inc");
+struct Enemy* CreatePetatria(struct Coord* c, u8 mode) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_PETATRIA);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord = *c;
+    (p->s).work[0] = mode;
+  }
+  return p;
+}
+
+INCASM("asm/enemy/petatria_p1_pre_p1_p2.inc");
 
 bool8 FUN_080902a8(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_B3) {

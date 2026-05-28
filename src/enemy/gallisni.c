@@ -7,7 +7,23 @@ static const struct Collision sCollisions[5];
 
 static const EnemyFunc sDeads[3];
 
-INCASM("asm/enemy/gallisni_p1_pre.inc");
+void CreateGallisni(s32 x, s32 y, u8 a2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_GALLISNI);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[2] = a2;
+  }
+}
+
+INCASM("asm/enemy/gallisni_p1_pre_p2.inc");
 
 void Gallisni_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
