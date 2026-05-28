@@ -8,7 +8,33 @@ static const ProjectileFunc PTR_ARRAY_0836c0ec[7];
 
 static const ProjectileFunc PTR_ARRAY_0836c0d0[7];
 
-INCASM("asm/projectile/unk_27_pre_pre_pre.inc");
+void FUN_080a9048(struct Entity* e, u8 a1, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 27);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = a2;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+  }
+}
+
+void FUN_080a90a0(struct Entity* e, u8 a1, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 27);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = a2;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+  }
+}
 
 void Projectile27_Init(struct Projectile* p) {
   (PTR_ARRAY_0836c0d0[(p->s).work[0]])(p);
