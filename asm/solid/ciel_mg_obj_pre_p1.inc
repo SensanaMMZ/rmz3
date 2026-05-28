@@ -51,37 +51,3 @@ _080DDD52:
 	.align 2, 0
 _080DDD58: .4byte gSolidHeaderPtr
 _080DDD5C: .4byte gSolidFnTable
-
-	thumb_func_start CielMinigameObj_Init
-CielMinigameObj_Init: @ 0x080DDD60
-	push {lr}
-	adds r1, r0, #0
-	ldrb r0, [r1, #0x10]
-	cmp r0, #0
-	bne _080DDD72
-	adds r0, r1, #0
-	bl FUN_080dddb0
-	b _080DDD78
-_080DDD72:
-	adds r0, r1, #0
-	bl FUN_080dde48
-_080DDD78:
-	pop {r0}
-	bx r0
-
-	thumb_func_start CielMinigameObj_Update
-CielMinigameObj_Update: @ 0x080DDD7C
-	push {lr}
-	adds r1, r0, #0
-	ldrb r0, [r1, #0x10]
-	cmp r0, #0
-	bne _080DDD8E
-	adds r0, r1, #0
-	bl FUN_080ddec0
-	b _080DDD94
-_080DDD8E:
-	adds r0, r1, #0
-	bl FUN_080ddef4
-_080DDD94:
-	pop {r0}
-	bx r0

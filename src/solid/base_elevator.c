@@ -156,7 +156,20 @@ static void rBase_080cfd4c(struct ElevatorObject* p) {
   BaseElevator_Update((void*)p);
 }
 
-INCASM("asm/solid/base_elevator.inc");
+void FUN_080d0224(struct Solid* p);
+void rBaseElevatorScript(struct Solid* p);
+
+INCASM("asm/solid/base_elevator_p1.inc");
+
+void FUN_080d0008(struct Solid* p) {
+  if ((p->s).mode[1] != 0) {
+    FUN_080d0224(p);
+  } else {
+    rBaseElevatorScript(p);
+  }
+}
+
+INCASM("asm/solid/base_elevator_p2.inc");
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
