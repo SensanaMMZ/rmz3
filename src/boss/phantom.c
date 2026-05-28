@@ -207,7 +207,19 @@ void FUN_0805f71c(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p10_p3.inc");
+s8 FUN_080609a4(struct Boss* p);
+void FUN_08060a48(struct Boss* p, s8 a);
+void FUN_0805f76c(struct Boss* p);
+
+void FUN_0805f738(struct Boss* p) {
+  s32 r = (s8)FUN_080609a4(p);
+  if (r > 0) {
+    *(u16*)((u8*)p + 0xe) = 3;
+    (p->props).raw[3] = r;
+    FUN_08060a48(p, (s8)(r + 0x12));
+    FUN_0805f76c(p);
+  }
+}
 
 void FUN_0805f76c(struct Boss* p) {
   (PTR_ARRAY_083654b8[(p->s).mode[3]])(p);
