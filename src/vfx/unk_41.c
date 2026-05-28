@@ -5,13 +5,27 @@
 
 extern const VFXFunc PTR_ARRAY_0836eef8[4];
 
-INCASM("asm/vfx/unk_41_pre_pre.inc");
+struct VFX* FUN_080bdd74(struct Entity* e, struct Coord* c, u8 mode) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_041);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = mode;
+    (p->s).work[1] = 0;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_41_pre_pre_p2.inc");
 
 void VFX41_Update(struct VFX* vfx) {
   (PTR_ARRAY_0836eef8[(vfx->s).mode[1]])(vfx);
 }
-
-INCASM("asm/vfx/unk_41_pre_post.inc");
 
 void VFX41_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;

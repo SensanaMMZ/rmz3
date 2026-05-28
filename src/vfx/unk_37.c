@@ -82,7 +82,22 @@ void FUN_080bc660(s32 x, s32 y) {
 
 extern const VFXFunc PTR_ARRAY_0836edd4[7];
 
-INCASM("asm/vfx/unk_37_pre_pre.inc");
+INCASM("asm/vfx/unk_37_pre_pre_p1.inc");
+
+void FUN_080bc758(s32 x, s32 y) {
+  struct Entity* p = AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    p->taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_037);
+    p->tileNum = 0;
+    p->palID = 0;
+    p->work[0] = 5;
+    p->coord.x = x;
+    p->coord.y = y;
+  }
+}
+
+INCASM("asm/vfx/unk_37_pre_pre_p2.inc");
 
 void VFX37_Update(struct VFX* vfx) {
   (PTR_ARRAY_0836edd4[(vfx->s).mode[1]])(vfx);

@@ -6,7 +6,22 @@
 static const VFXFunc sUpdates[];
 void Ghost22_Die(struct VFX* p);
 
-INCASM("asm/vfx/unk_22_p1_pre_pre.inc");
+struct VFX* FUN_080b7b38(struct Coord* c, u8 mode) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_022);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = mode;
+    (p->s).work[1] = 0;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_22_p1_pre_pre_p2.inc");
 
 void Ghost22_Update(struct VFX* p) {
   if (IS_METTAUR) {
