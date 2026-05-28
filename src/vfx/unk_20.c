@@ -34,7 +34,31 @@ struct VFX* CreateGhost20(struct Coord* c, u8 n) {
 
 extern const VFXFunc sGhost20Updates[3];
 
-INCASM("asm/vfx/unk_20_p1_pre_pre.inc");
+struct Unk20Props {
+  u16 unk_0;
+  u8 pad[2];
+  s32 unk_4;
+  u8 unk_8[8];
+};
+
+struct VFX* FUN_080b721c(struct Coord* c, u8 a1, u16 a2, s32 a3) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_020);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = 1;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    ((struct Unk20Props*)(p->props).raw)->unk_0 = a2;
+    ((struct Unk20Props*)(p->props).raw)->unk_4 = a3;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_20_p1_pre_pre_p2.inc");
 
 void Ghost20_Update(struct VFX* p) {
   if (IS_METTAUR) {
