@@ -83,7 +83,21 @@ void Ghost70_Die(struct VFX* p) {
   (sGhost70Deinitializers[(p->s).work[0]])(p);
 }
 
-INCASM("asm/vfx/unk_70_p3.inc");
+INCASM("asm/vfx/unk_70_p3_p1.inc");
+
+void FUN_080c5764(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_DIE);
+  Ghost70_Die(p);
+}
+
+INCASM("asm/vfx/unk_70_p3_p2.inc");
+
+void FUN_080c5784(struct VFX* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_70_p3_p3.inc");
 
 // --------------------------------------------
 
