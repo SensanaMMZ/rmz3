@@ -313,7 +313,14 @@ static void LayerUpdate_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
   l->unk_10 += 0x10;
 }
 
-INCASM("asm/stage_gfx/missile_factory.inc");
+INCASM("asm/stage_gfx/missile_factory_p1.inc");
+
+void FUN_0800f54c(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED) {
+  ClearBlink(0xcf);
+  ClearBlink(0xd0);
+}
+
+INCASM("asm/stage_gfx/missile_factory_p2.inc");
 
 extern const struct ChunkMap sChunkMap1;
 INCBIN_STATIC(sChunkMap1, "data/stage/missile_factory/layer1.bin");  // ./tools/dumper/bin.ts ./baserom.gba 0x0833e1cc 0x0833e390 ./data/stage/missile_factory/layer1.bin
