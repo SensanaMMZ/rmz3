@@ -146,26 +146,3 @@ _080C50CE:
 	.align 2, 0
 _080C50D8: .4byte gVFXHeaderPtr
 _080C50DC: .4byte gVFXFnTable
-
-	thumb_func_start Ghost69_Init
-Ghost69_Init: @ 0x080C50E0
-	push {lr}
-	ldr r2, _080C5108 @ =gVFXFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #1
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #4]
-	str r1, [r0, #0x14]
-	ldrb r1, [r0, #0x10]
-	movs r2, #0
-	strb r1, [r0, #0xd]
-	strb r2, [r0, #0xe]
-	strb r2, [r0, #0xf]
-	bl Ghost69_Update
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C5108: .4byte gVFXFnTable

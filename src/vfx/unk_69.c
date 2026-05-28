@@ -82,7 +82,17 @@ struct VFX* FUN_080c4f60(struct Entity* e, struct Coord* c1, struct Coord* c2, u
 
 extern const VFXFunc sGhost69Updates[7];
 
-INCASM("asm/vfx/unk_69_p1_pre.inc");
+INCASM("asm/vfx/unk_69_p1_pre_p1.inc");
+
+void Ghost69_Init(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = (p->s).work[0];
+  (p->s).mode[2] = 0;
+  (p->s).mode[3] = 0;
+  Ghost69_Update(p);
+}
+
+INCASM("asm/vfx/unk_69_p1_pre_p2.inc");
 
 void Ghost69_Update(struct VFX* p) {
   (sGhost69Updates[(p->s).mode[1]])(p);
