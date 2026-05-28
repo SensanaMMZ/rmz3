@@ -4,7 +4,37 @@
 
 static const ProjectileFunc* const sUpdates[4];
 
-INCASM("asm/projectile/cubit_pre_pre_p1.inc");
+struct Projectile* FUN_080a5f00(struct Entity* e, u8 a1) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 22);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).unk_28 = e;
+    p->work[2] = 0;
+    p->work[1] = a1;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080a5f54(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 22);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 5;
+    (p->s).coord = *c;
+    p->work[0] = a2;
+    p->work[1] = a3;
+    p->work[2] = 0;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
 
 struct Projectile* FUN_080a5fc4(struct Entity* e) {
   struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
