@@ -6,6 +6,8 @@
 static const EnemyFunc sDeads[1];
 static const struct Collision sCollisions[2];
 static const u8 sInitModes[2];
+static const EnemyFunc sUpdates1[1];
+static const EnemyFunc sUpdates2[1];
 
 void WormerRockDrone_Update(struct Enemy* p);
 
@@ -53,7 +55,12 @@ void WormerRockDrone_Init(struct Enemy* p) {
   WormerRockDrone_Update(p);
 }
 
-INCASM("asm/enemy/wormer_rock_drone_p2_post_pre_p2.inc");
+void WormerRockDrone_Update(struct Enemy* p) {
+  if (!FUN_08076ee4(p)) {
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
 
 void WormerRockDrone_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
