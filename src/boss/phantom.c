@@ -193,7 +193,12 @@ void FUN_0805f6e0(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p10_p2.inc");
+void FUN_0805f6fc(struct Boss* p) {
+  if ((s8)(p->s).motion.duration <= 1) {
+    PlaySound(0xfc);
+    (p->s).mode[3] = 3;
+  }
+}
 
 void FUN_0805f71c(struct Boss* p) {
   if ((p->s).motion.state == 3) {
