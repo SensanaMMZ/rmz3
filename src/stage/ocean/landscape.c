@@ -517,7 +517,13 @@ static void exitOcean(struct Coord* _ UNUSED) {
   }
 }
 
-INCASM("asm/stage_gfx/ocean.inc");
+INCASM("asm/stage_gfx/ocean_p1.inc");
+
+void FUN_0800d5a8(void) {
+  PatchMetatileMap(31, 37, (struct MetatilePatch*)0x0833CDA8);
+}
+
+INCASM("asm/stage_gfx/ocean_p2.inc");
 
 void ocean_0800d110(struct StageLayer* l, const struct Stage* stage);
 void FUN_0800d1c8(struct StageLayer* l, const struct Stage* stage);
