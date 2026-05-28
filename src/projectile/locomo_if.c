@@ -12,7 +12,33 @@ static const u8 u8_ARRAY_0836bec4[2];
 
 void Projectile23_Update(struct Projectile* p);
 
-INCASM("asm/projectile/locomo_if_pre_p1.inc");
+void FUN_080a7c60(s32 x, s32 y, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 23);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[2] = a2;
+  }
+}
+
+void FUN_080a7cb0(s32 x, s32 y, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 23);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[2] = a2;
+  }
+}
 
 void FUN_080a7d00(struct Enemy* p) {}
 
