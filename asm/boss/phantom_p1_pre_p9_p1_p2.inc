@@ -4,27 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0805f57c
-FUN_0805f57c: @ 0x0805F57C
-	push {r4, lr}
-	adds r4, r0, #0
-	adds r0, #0x74
-	ldr r1, _0805F5A4 @ =sCollisions
-	bl SetDDP
-	movs r0, #1
-	strb r0, [r4, #0xf]
-	adds r0, r4, #0
-	bl FUN_080608c8
-	adds r0, r4, #0
-	movs r1, #0
-	bl FUN_080afbb0
-	str r0, [r4, #0x2c]
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0805F5A4: .4byte sCollisions
-
 	thumb_func_start FUN_0805f5a8
 FUN_0805f5a8: @ 0x0805F5A8
 	push {r4, lr}

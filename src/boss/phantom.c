@@ -119,7 +119,18 @@ void FUN_0805f564(struct Boss* p) {
   (PTR_ARRAY_08365494[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p9_p1.inc");
+struct Projectile* FUN_080afbb0(struct Entity* parent, u8 r1);
+
+INCASM("asm/boss/phantom_p1_pre_p9_p1_p1.inc");
+
+void FUN_0805f57c(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[0]);
+  (p->s).mode[3] = 1;
+  FUN_080608c8(p);
+  (p->s).unk_2c = (struct Entity*)FUN_080afbb0(&p->s, 0);
+}
+
+INCASM("asm/boss/phantom_p1_pre_p9_p1_p2.inc");
 
 void FUN_0805f690(struct Boss* p) {
   u32 w = (p->s).work[2] - 1;
