@@ -21,7 +21,27 @@ struct VFX* FUN_080c078c(struct Entity* e, struct Coord* c, u8 arg2) {
   return p;
 }
 
-INCASM("asm/vfx/unk_50_pre_pre_p2.inc");
+struct Unk50Props { u8 unk_0[8]; u8 unk_8; };
+
+struct VFX* FUN_080c07e4(struct Coord* c1, struct Coord* c2, u8 a2, u8 a3) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_050);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a2;
+    ((struct Unk50Props*)(p->props).raw)->unk_8 = a3;
+    (p->s).work[1] = 1;
+    (p->s).coord.x = c1->x;
+    (p->s).coord.y = c1->y;
+    (p->s).unk_coord.x = c2->x;
+    (p->s).unk_coord.y = c2->y;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_50_pre_pre_p2_p2.inc");
 
 void VFX50_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
