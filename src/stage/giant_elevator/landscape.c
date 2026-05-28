@@ -160,7 +160,14 @@ static const StageLayerRoutine sLayerRoutine[9] = {
 };
 // clang-format on
 
-INCASM("asm/stage_gfx/giant_elevator.inc");
+INCASM("asm/stage_gfx/giant_elevator_p1.inc");
+
+void FUN_08014b04(void) {
+  ShiftMetatile(0xb4, 0x72, (const struct MetatileShift*)0x083458BC);
+  SET_FLAG(gCurStory.s.gameflags, FLAG_49);
+}
+
+INCASM("asm/stage_gfx/giant_elevator_p2.inc");
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
