@@ -4,7 +4,67 @@
 
 static const ProjectileFunc* const PTR_ARRAY_0836b4e4[4];
 
-INCASM("asm/projectile/tretista_pre.inc");
+struct Projectile* createTretistaBreathGas(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 19);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).work[1] = a2;
+    (p->s).coord = *c;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* tretista_080a369c(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 19);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).work[1] = a2;
+    (p->s).coord = *c;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* tretista_080a36f4(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 19);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 2;
+    (p->s).work[1] = a2;
+    (p->s).coord = *c;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080a374c(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 19);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 3;
+    (p->s).work[1] = a2;
+    (p->s).coord = *c;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/tretista_pre_p5.inc");
 
 void TretistaProjectile_Update(struct Projectile* p) {
   (PTR_ARRAY_0836b4e4[(p->s).work[0]][(p->s).mode[1]])(p);
