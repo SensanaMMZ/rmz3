@@ -6,7 +6,37 @@
 static const ProjectileFunc sUpdates1[5];
 static const ProjectileFunc sUpdates2[5];
 
-INCASM("asm/projectile/unk_14_p1_p1.inc");
+void FUN_080a0888(s32 x, s32 y, u8 a2, u8 a3) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 14);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 4;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[2] = a2;
+    (p->s).work[3] = a3;
+  }
+}
+
+void FUN_080a08e0(struct Entity* e, s32 x, s32 y, u8 a3) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 14);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[2] = a3;
+    (p->s).unk_28 = e;
+  }
+}
+
+INCASM("asm/projectile/unk_14_p1_p1_p3.inc");
 
 void Projectile14_Update(struct Projectile* p) {
   (sUpdates1[(p->s).mode[1]])(p);
