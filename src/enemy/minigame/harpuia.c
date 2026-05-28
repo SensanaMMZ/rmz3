@@ -5,7 +5,77 @@
 static const EnemyFunc sUpdates1[6];
 static const EnemyFunc sUpdates2[6];
 
-INCASM("asm/enemy/minigame_harpuia_p1_p1_p1.inc");
+struct Enemy* FUN_0809af20(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_HARPUIA_MG);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord = *c;
+    (p->s).work[0] = 0;
+    (p->s).work[1] = a2;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Enemy* FUN_0809af88(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_HARPUIA_MG);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord = *c;
+    (p->s).work[0] = 1;
+    (p->s).work[1] = a2;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Enemy* FUN_0809aff0(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_HARPUIA_MG);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord = *c;
+    (p->s).work[0] = 2;
+    (p->s).work[1] = a2;
+    p->props[0] = a3;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Enemy* FUN_0809b064(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_HARPUIA_MG);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord = *c;
+    (p->s).work[0] = 3;
+    (p->s).work[1] = a2;
+    p->props[0] = a3;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/enemy/minigame_harpuia_p1_p1_p1_p5.inc");
 
 void HarpuiaMinigameEnemy_Update(struct Enemy* p) {
   (sUpdates1[(p->s).mode[1]])(p);

@@ -2,7 +2,23 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/minigame_ciel1_pre.inc");
+struct Enemy* FUN_0809bdd4(struct Entity* e, u8 a1, u8 a2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_CIEL_MG_1);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).unk_28 = e;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = a2;
+  }
+  return p;
+}
+
+INCASM("asm/enemy/minigame_ciel1_pre_p2.inc");
 
 void CielMinigameEnemy_Die(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
