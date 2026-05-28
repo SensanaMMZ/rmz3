@@ -71,7 +71,28 @@ void FUN_080873fc(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p2_pre_post.inc");
+void FUN_08087434(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[0]);
+      (p->s).work[2] = 0x80;
+      (p->s).taskCol = 0xf;
+      SetMotion(&p->s, MOTION(0x67, 1));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).work[2]--;
+      if ((p->s).work[2] == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((s8)(p->s).motion.cmdIdx == 8) {
+        SetDDP(&p->body, &sCollisions[1]);
+      }
+      break;
+  }
+}
 
 void FUN_080874ac(struct Enemy* p) {
   switch ((p->s).mode[2]) {
