@@ -17,7 +17,16 @@ INCASM("asm/enemy/mettaur_swim_p1_post.inc");
 
 void nop_08089268(struct Enemy* p) {}
 
-INCASM("asm/enemy/mettaur_swim_p2_pre.inc");
+INCASM("asm/enemy/mettaur_swim_p2_pre_p1.inc");
+
+void FUN_080892a4(struct Enemy* p) {
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 0xc;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/mettaur_swim_p2_pre_p2.inc");
 
 void FUN_08089e60(struct Enemy* p) {
   switch ((p->s).mode[2]) {
