@@ -5,7 +5,22 @@
 static const ProjectileFunc PTR_ARRAY_0836bb00[3];
 static const ProjectileFunc PTR_ARRAY_0836bb0c[3];
 
-INCASM("asm/projectile/pantheon_aqua_mod_pre_p1.inc");
+void FUN_080a5bb4(s32 x, s32 y) {
+  s32 i;
+  for (i = 0; i < 5; i++) {
+    struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+    if (p != NULL) {
+      (p->s).taskCol = 8;
+      INIT_PROJECTILE_ROUTINE(p, 21);
+      (p->s).tileNum = 0;
+      (p->s).palID = 0;
+      (p->s).work[0] = 0;
+      (p->s).work[2] = i;
+      (p->s).coord.x = x;
+      (p->s).coord.y = y;
+    }
+  }
+}
 
 void nop_080a5c10(struct Enemy* p) {}
 
