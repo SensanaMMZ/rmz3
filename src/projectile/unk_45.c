@@ -6,7 +6,72 @@
 
 static const ProjectileFunc PTR_ARRAY_0836d7cc[4];
 
-INCASM("asm/projectile/unk_45_p1.inc");
+struct Projectile* FUN_080b18d4(struct Coord* c1, struct Coord* c2, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 45);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).work[1] = a2;
+    (p->s).coord.x = c1->x;
+    (p->s).coord.y = c1->y;
+    (p->s).unk_coord.x = c2->x;
+    (p->s).unk_coord.y = c2->y;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080b1934(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 45);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).work[1] = a2;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080b1990(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 45);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 2;
+    (p->s).work[1] = a2;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080b19ec(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 45);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 3;
+    (p->s).work[1] = a2;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/unk_45_p1_p5.inc");
 
 void FUN_080b1b28(struct Projectile* p) {
   (PTR_ARRAY_0836d7cc[(p->s).mode[1]])(p);
