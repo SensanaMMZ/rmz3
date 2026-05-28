@@ -4,7 +4,91 @@
 
 static const ProjectileFunc sUpdates[4];
 
-INCASM("asm/projectile/unk_34_pre.inc");
+struct Projectile* FUN_080ac818(struct Coord* c, s32 prevX, s32 prevY, struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 34);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord = *c;
+    (p->s).work[0] = 0;
+    (p->s).work[1] = 0;
+    (p->prevCoord).x = prevX;
+    (p->prevCoord).y = prevY;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080ac880(struct Coord* c, s32 prevX, s32 prevY, struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 34);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord = *c;
+    (p->s).work[0] = 1;
+    (p->s).work[1] = 0;
+    (p->prevCoord).x = prevX;
+    (p->prevCoord).y = prevY;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080ac8e8(struct Coord* c, s32 prevX, s32 prevY, struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 34);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord = *c;
+    (p->s).work[0] = 0;
+    (p->s).work[1] = 1;
+    (p->prevCoord).x = prevX;
+    (p->prevCoord).y = prevY;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080ac950(struct Coord* c, s32 prevX, s32 prevY, struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 34);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord = *c;
+    (p->s).work[0] = 1;
+    (p->s).work[1] = 1;
+    (p->prevCoord).x = prevX;
+    (p->prevCoord).y = prevY;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080ac9b4(struct Coord* c, s32 prevX, s32 prevY, struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 34);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord = *c;
+    (p->s).work[0] = 2;
+    (p->prevCoord).x = prevX;
+    (p->prevCoord).y = prevY;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/unk_34_pre_p6.inc");
 
 void Projectile34_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);

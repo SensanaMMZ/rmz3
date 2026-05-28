@@ -35,7 +35,23 @@ struct Projectile* FUN_0809d8a0(struct Coord* c, s32 prevX, s32 prevY, struct En
   return p;
 }
 
-INCASM("asm/projectile/unk_05_pre.inc");
+struct Projectile* FUN_0809d904(struct Coord* c, s32 prevX, s32 prevY, struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 5);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord = *c;
+    (p->s).work[0] = 1;
+    (p->prevCoord).x = prevX;
+    (p->prevCoord).y = prevY;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/unk_05_pre_p2.inc");
 
 void Projectile5_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
