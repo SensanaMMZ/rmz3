@@ -32,7 +32,16 @@ INCASM("asm/enemy/wormer_snow_ball_p2_post_post.inc");
 
 void FUN_0807b308(struct Enemy* p) {}
 
-INCASM("asm/enemy/wormer_snow_ball_p3.inc");
+INCASM("asm/enemy/wormer_snow_ball_p3_p1.inc");
+
+void FUN_0807b30c(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_B2) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/wormer_snow_ball_p3_p2.inc");
 
 void WormerSnowBall_Init(struct Enemy* p);
 void WormerSnowBall_Update(struct Enemy* p);

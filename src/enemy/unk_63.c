@@ -26,7 +26,16 @@ INCASM("asm/enemy/unk_63_p2_post.inc");
 
 void nop_08094bcc(struct Enemy* p) {}
 
-INCASM("asm/enemy/unk_63_p3.inc");
+INCASM("asm/enemy/unk_63_p3_p1.inc");
+
+void FUN_08094bd0(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_BINDING) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/unk_63_p3_p2.inc");
 
 void Enemy63_Init(struct Enemy* p);
 void Enemy63_Update(struct Enemy* p);

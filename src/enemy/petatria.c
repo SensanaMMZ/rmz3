@@ -2,7 +2,27 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/petatria_p1_pre.inc");
+INCASM("asm/enemy/petatria_p1_pre_p1.inc");
+
+bool8 FUN_080902a8(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_B3) {
+    (p->s).mode[1] = 4;
+    (p->s).mode[2] = 0;
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/petatria_p1_pre_p2.inc");
+
+bool8 FUN_080906ec(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_B3) {
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = 0;
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/petatria_p1_pre_p3.inc");
 
 void FUN_08091154(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
@@ -54,8 +74,8 @@ const EnemyRoutine gPetatriaRoutine = {
 };
 // clang-format on
 
-void FUN_080902a8(struct Enemy* p);
-void FUN_080906ec(struct Enemy* p);
+bool8 FUN_080902a8(struct Enemy* p);
+bool8 FUN_080906ec(struct Enemy* p);
 void FUN_08090b20(struct Enemy* p);
 void FUN_08090c60(struct Enemy* p);
 void FUN_08090da4(struct Enemy* p);
@@ -67,8 +87,8 @@ bool8 FUN_08091170(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc sUpdates1[10] = {
-    FUN_080902a8,
-    FUN_080906ec,
+    (EnemyFunc)FUN_080902a8,
+    (EnemyFunc)FUN_080906ec,
     FUN_08090b20,
     FUN_08090c60,
     FUN_08090da4,

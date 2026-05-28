@@ -22,7 +22,16 @@ INCASM("asm/projectile/locomo_if_pre_p2_p2.inc");
 
 void FUN_080a7de8(struct Projectile* p) {}
 
-INCASM("asm/projectile/locomo_if_post.inc");
+INCASM("asm/projectile/locomo_if_post_p1.inc");
+
+void FUN_080a7dec(struct Projectile* p) {
+  if ((p->body).status & BODY_STATUS_BINDING) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/projectile/locomo_if_post_p2.inc");
 
 void Projectile23_Init(struct Projectile* p);
 void Projectile23_Update(struct Projectile* p);

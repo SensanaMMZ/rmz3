@@ -4,24 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0807b30c
-FUN_0807b30c: @ 0x0807B30C
-	push {lr}
-	adds r2, r0, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #4
-	ands r0, r1
-	cmp r0, #0
-	beq _0807B324
-	movs r1, #0
-	movs r0, #2
-	strb r0, [r2, #0xd]
-	strb r1, [r2, #0xe]
-_0807B324:
-	pop {r0}
-	bx r0
-
 	thumb_func_start FUN_0807b328
 FUN_0807b328: @ 0x0807B328
 	push {r4, lr}
