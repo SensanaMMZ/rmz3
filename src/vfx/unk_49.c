@@ -3,7 +3,47 @@
 
 static const VFXFunc sUpdates[4];
 
-INCASM("asm/vfx/unk_49_pre_pre_p1.inc");
+void FUN_080c025c(s32 x, s32 y) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_049);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+}
+
+void createLaserSign(struct Entity* e, s32 x, s32 y) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_049);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).unk_28 = e;
+  }
+}
+
+void FUN_080c02f4(s32 x, s32 y) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_049);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 2;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+}
+
+INCASM("asm/vfx/unk_49_pre_pre_p1_p2_p3.inc");
 
 void FUN_080c0340(struct Entity* e) {
   struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
