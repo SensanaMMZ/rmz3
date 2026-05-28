@@ -10,7 +10,22 @@ static const u8 sInitModes[4];
 
 void Projectile18_Update(struct Projectile* p);
 
-INCASM("asm/projectile/unk_18_p1.inc");
+INCASM("asm/projectile/unk_18_p1_p1.inc");
+
+void FUN_080a2ee8(s32 x, s32 y) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 18);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+}
+
+INCASM("asm/projectile/unk_18_p1_p2.inc");
 
 void FUN_080a2fa4(struct Enemy* p) {}
 
