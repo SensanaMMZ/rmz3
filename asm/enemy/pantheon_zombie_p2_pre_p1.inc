@@ -55,21 +55,3 @@ _0807FF8E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-
-	thumb_func_start FUN_0807ff94
-FUN_0807ff94: @ 0x0807FF94
-	push {lr}
-	adds r2, r0, #0
-	adds r0, #0x8c
-	ldr r1, [r0]
-	movs r0, #0x80
-	lsls r0, r0, #4
-	ands r1, r0
-	cmp r1, #0
-	bne _0807FFAC
-	movs r0, #5
-	strb r0, [r2, #0xd]
-	strb r1, [r2, #0xe]
-_0807FFAC:
-	pop {r0}
-	bx r0
