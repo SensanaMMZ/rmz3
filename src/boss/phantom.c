@@ -309,7 +309,12 @@ void FUN_0805fac4(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p4_p2_p1.inc");
+void FUN_0805fadc(struct Boss* p) {
+  FUN_08060864(p, (p->s).d.x);
+  if (FUN_08060924(p)) {
+    (p->s).mode[3] = 3;
+  }
+}
 
 void FUN_0805fafc(struct Boss* p) {
   if (FUN_08060974(p)) {
