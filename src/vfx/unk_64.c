@@ -3,7 +3,21 @@
 
 static const VFXFunc sUpdates[9];
 
-INCASM("asm/vfx/unk_64_p1.inc");
+INCASM("asm/vfx/unk_64_p1_p1.inc");
+
+void oz_080c39a0(struct Entity* e) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_064);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).unk_28 = e;
+    (p->s).work[0] = 0;
+  }
+}
+
+INCASM("asm/vfx/unk_64_p1_p2.inc");
 
 void Ghost64_Update(struct VFX* p) {
   (sUpdates[(p->s).mode[1]])(p);
