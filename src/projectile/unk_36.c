@@ -8,7 +8,33 @@ static const ProjectileFunc sUpdates[4];
 
 static const ProjectileFunc sInitializers[4];
 
-INCASM("asm/projectile/unk_36_pre_pre_pre.inc");
+void hanu_080ad598(struct Entity* e, u8 a1, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 36);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = a2;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+  }
+}
+
+void FUN_080ad5f0(struct Entity* e, u8 a1, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 36);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = a2;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+  }
+}
 
 void Projectile36_Init(struct Projectile* p) {
   (sInitializers[(p->s).work[0]])(p);
