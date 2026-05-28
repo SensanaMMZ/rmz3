@@ -225,7 +225,15 @@ void FUN_0805f838(struct Boss* p) {
   FUN_080607a0(p, 9);
 }
 
-INCASM("asm/boss/phantom_p1_post_p2_p2.inc");
+INCASM("asm/boss/phantom_p1_post_p2_p2_p1.inc");
+
+void FUN_0805f85c(struct Boss* p) {
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[3] = 2;
+  }
+}
+
+INCASM("asm/boss/phantom_p1_post_p2_p2_p2.inc");
 
 void nop_0805f930(struct Boss* p) {}
 
