@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "vfx.h"
 
 static const ProjectileFunc PTR_ARRAY_0836d794[1];
 static const ProjectileFunc PTR_ARRAY_0836d798[1];
@@ -43,7 +44,11 @@ void FUN_080b1764(struct Projectile* p) {
   (PTR_ARRAY_0836d798[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/unk_44_pre_p2.inc");
+void FUN_080b1798(struct Projectile* p) {
+  EXIT_BODY(p);
+  CreateSmoke(3, &(p->s).coord);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
 
 void FUN_080b17d8(struct Projectile* p) {}
 
