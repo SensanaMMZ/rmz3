@@ -80,7 +80,52 @@ struct Projectile* FUN_080aff88(struct Entity* parent, struct Coord* c, u8 n) {
 
 static const ProjectileFunc sUpdates[9];
 
-INCASM("asm/projectile/omega_zx_pre.inc");
+struct Projectile* FUN_080affe4(struct Entity* parent, struct Coord* c, u16 a2, u8 a3) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 41);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 6;
+    (p->s).work[1] = a3;
+    *(u16*)((u8*)p + 0xbc) = a2;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = parent;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080b0048(struct Entity* parent, struct Coord* c) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 41);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 7;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = parent;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080b009c(struct Entity* parent) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 41);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 8;
+    (p->s).unk_28 = parent;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/omega_zx_pre_p4.inc");
 
 void OmegaZXProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);

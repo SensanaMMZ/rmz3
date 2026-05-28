@@ -4,7 +4,39 @@
 
 static const ProjectileFunc sUpdates[3];
 
-INCASM("asm/projectile/omega_gold_pre.inc");
+struct Projectile* createGoldOmega1Laser(s32 a0, u8 a1, s32 a2, struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 33);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    p->work[0] = a1;
+    (p->prevCoord).x = a0;
+    (p->prevCoord).y = a2;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080ac3e8(struct Coord* c, u8 a1, u16 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 33);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).work[1] = a1;
+    (p->prevCoord).y = a2;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/omega_gold_pre_p3.inc");
 
 void OmegaGoldProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
