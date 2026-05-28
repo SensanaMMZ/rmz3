@@ -33,7 +33,54 @@ struct VFX* CreateMinigameIcon_1(struct Coord* c, u8 n) {
 
 static const VFXFunc sUpdates[5];
 
-INCASM("asm/vfx/minigame_icon_pre_pre.inc");
+struct VFX* CreateCopyXIcon(struct Zero* z, struct Coord* c, u8 n) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_MINIGAME_ICON);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).work[1] = n;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = (struct Entity*)z;
+  }
+  return p;
+}
+
+struct VFX* FUN_080c8204(struct Coord* c, u8 n) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_MINIGAME_ICON);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 2;
+    (p->s).work[1] = n;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+  }
+  return p;
+}
+
+struct VFX* FUN_080c825c(struct Entity* e, struct Coord* c, u8 n) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_MINIGAME_ICON);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 3;
+    (p->s).work[1] = n;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/minigame_icon_pre_pre_p4.inc");
 
 void Ghost77_Update(struct VFX* p) {
   (sUpdates[(p->s).mode[1]])(p);
