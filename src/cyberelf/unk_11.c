@@ -4,7 +4,18 @@
 
 // Bee?
 
-INCASM("asm/cyberelf/unk_11.inc");
+INCASM("asm/cyberelf/unk_11_p1.inc");
+
+void Elf11_Die(struct Elf* p) {
+  (p->body).status = 0;
+  (p->body).prevStatus = 0;
+  (p->body).invincibleTime = 0;
+  (p->s).flags &= ~COLLIDABLE;
+  (p->s).flags &= ~DISPLAY;
+  SET_ELF_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/cyberelf/unk_11_p2.inc");
 
 static const ElfFunc sInitializers[4];
 static const ElfFunc sUpdates[4];
