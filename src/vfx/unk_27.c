@@ -154,4 +154,19 @@ void FUN_080b9c08(struct VFX* p) {
   Ghost27_Update(p);
 }
 
-INCASM("asm/vfx/unk_27_p2.inc");
+INCASM("asm/vfx/unk_27_p2_p1.inc");
+
+void FUN_080b9ca4(struct VFX* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0xa00)) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    Ghost27_Die(p);
+  }
+}
+
+INCASM("asm/vfx/unk_27_p2_p2.inc");
