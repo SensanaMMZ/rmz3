@@ -14,7 +14,28 @@ void Projectile42_Die(struct Projectile* p) {
 
 void FUN_080b13d8(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_43_post.inc");
+void FUN_080b13dc(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x8e, 0xc));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) || ((p->body).status & 4)) {
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
+
+INCASM("asm/projectile/unk_43_post_p2.inc");
 
 void Projectile43_Init(struct Projectile* p);
 void Projectile43_Update(struct Projectile* p);
