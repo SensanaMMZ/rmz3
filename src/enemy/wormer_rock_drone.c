@@ -4,6 +4,10 @@
 #include "trig.h"
 
 static const EnemyFunc sDeads[1];
+static const struct Collision sCollisions[2];
+static const u8 sInitModes[2];
+
+void WormerRockDrone_Update(struct Enemy* p);
 
 void CreateWormerRockDrone(s32 x, s32 y, u8 angle, u8 w2) {
   struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
@@ -39,7 +43,17 @@ static bool8 FUN_08076ee4(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/wormer_rock_drone_p2_post_pre.inc");
+void WormerRockDrone_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 6, (void*)nop_08076ee0);
+  WormerRockDrone_Update(p);
+}
+
+INCASM("asm/enemy/wormer_rock_drone_p2_post_pre_p2.inc");
 
 void WormerRockDrone_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
