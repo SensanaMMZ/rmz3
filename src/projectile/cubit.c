@@ -4,7 +4,39 @@
 
 static const ProjectileFunc* const sUpdates[4];
 
-INCASM("asm/projectile/cubit_pre_pre.inc");
+INCASM("asm/projectile/cubit_pre_pre_p1.inc");
+
+struct Projectile* FUN_080a5fc4(struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 22);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    p->work[2] = 0;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/cubit_pre_pre_p2.inc");
+
+struct Projectile* cubit_080a6078(struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 22);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 2;
+    p->work[2] = 0;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/cubit_pre_pre_p3.inc");
 
 void CubitProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]][(p->s).mode[1]])(p);

@@ -4,7 +4,19 @@
 
 static const ProjectileFunc PTR_ARRAY_0836bf68[4];
 
-INCASM("asm/projectile/unk_25_pre.inc");
+void FUN_080a83e4(struct Entity* e, u8 w0, u8 w1) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 25);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = w0;
+    (p->s).work[1] = w1;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+  }
+}
 
 void Projectile25_Init(struct Projectile* p) {
   (PTR_ARRAY_0836bf68[(p->s).work[0]])(p);

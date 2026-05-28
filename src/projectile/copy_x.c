@@ -6,7 +6,19 @@ static const ProjectileFunc sUpdates[2];
 
 static const ProjectileFunc sInitializers[2];
 
-INCASM("asm/projectile/copy_x_pre_pre.inc");
+void createCopyXSonicBoom(struct Entity* e, u8 w0, u8 w1) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 24);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = w0;
+    (p->s).work[1] = w1;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+  }
+}
 
 void CopyXProjectile_Init(struct Projectile* p) {
   (sInitializers[(p->s).work[0]])(p);
