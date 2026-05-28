@@ -180,7 +180,11 @@ void FUN_0805f6b0(struct Boss* p) {
   (PTR_ARRAY_083654a8[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p10_p1.inc");
+void FUN_0805f6c8(struct Boss* p) {
+  if ((s8)(p->s).motion.duration <= 1) {
+    (p->s).mode[3] = 1;
+  }
+}
 
 void FUN_0805f6e0(struct Boss* p) {
   if (((struct Entity*)(p->s).unk_2c)->mode[1] == 1) {
