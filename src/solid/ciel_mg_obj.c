@@ -7,7 +7,20 @@ void FUN_080dde48(struct Solid* p);
 void FUN_080ddec0(struct Solid* p);
 void FUN_080ddef4(struct Solid* p);
 
-INCASM("asm/solid/ciel_mg_obj_pre_p1.inc");
+void createCielMiniObj(struct Entity* e, u8 a1, u8 a2) {
+  struct Solid* p = (struct Solid*)AllocEntityFirst(gSolidHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 30;
+    INIT_SOLID_ROUTINE(p, SOLID_UNK_042);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).unk_28 = e;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = a2;
+  }
+}
 
 void CielMinigameObj_Init(struct Solid* p) {
   if ((p->s).work[0] == 0) {
