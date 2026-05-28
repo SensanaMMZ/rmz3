@@ -76,7 +76,22 @@ void FUN_080c4d30(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_UPDATE);
 }
 
-INCASM("asm/vfx/unk_68_post_p2_p2.inc");
+void FUN_080c4d60(struct VFX* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      SetMotion(&p->s, 0x8700);
+      (p->s).mode[1]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
 
 void FUN_080c4db8(struct VFX* p) {
   (p->s).flags |= DISPLAY;
@@ -84,4 +99,24 @@ void FUN_080c4db8(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_UPDATE);
 }
 
-INCASM("asm/vfx/unk_68_post_p2_p3.inc");
+void FUN_080c4de8(struct VFX* p) {
+  struct Entity* parent = (p->s).unk_2c;
+  switch ((p->s).mode[1]) {
+    case 0:
+      SetMotion(&p->s, 0x8701);
+      (p->s).mode[1]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      parent->coord.x = (p->s).coord.x;
+      parent->coord.y = (p->s).coord.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
