@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "vfx.h"
 
 // LocomoIF
 
@@ -18,7 +19,11 @@ void Projectile23_Update(struct Projectile* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/locomo_if_pre_p2_p2.inc");
+void Projectile23_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  CreateSmoke(3, &(p->s).coord);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
 
 void FUN_080a7de8(struct Projectile* p) {}
 

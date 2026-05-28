@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "vfx.h"
 
 static const ProjectileFunc sUpdates1[5];
 static const ProjectileFunc sUpdates2[5];
@@ -12,7 +13,12 @@ void Projectile14_Update(struct Projectile* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/unk_14_p1_p2.inc");
+void Projectile14_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  CreateSmoke(1, &(p->s).coord);
+  PlaySound(0x2a);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
 
 void nop_080a0b6c(struct Projectile* p) {}
 

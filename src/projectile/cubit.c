@@ -42,7 +42,13 @@ void CubitProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]][(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/cubit_pre_post.inc");
+void CubitProjectile_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/cubit_pre_post_p2.inc");
 
 void FUN_080a7a70(struct Projectile* p) {
   (p->s).mode[1] = 1;

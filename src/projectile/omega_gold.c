@@ -42,7 +42,13 @@ void OmegaGoldProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/omega_gold_post.inc");
+void OmegaGoldProjectile_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/omega_gold_post_p2.inc");
 
 void OmegaGoldProjectile_Init(struct Projectile* p);
 void OmegaGoldProjectile_Update(struct Projectile* p);

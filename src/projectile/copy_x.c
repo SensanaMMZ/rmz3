@@ -30,7 +30,12 @@ void CopyXProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/copy_x_post.inc");
+void CopyXProjectile_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/copy_x_post_p2.inc");
 
 void CopyXProjectile_Init(struct Projectile* p);
 void CopyXProjectile_Update(struct Projectile* p);

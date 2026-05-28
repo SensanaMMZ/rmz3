@@ -4,38 +4,6 @@
 
 	.text
 
-	thumb_func_start OmegaGoldProjectile_Die
-OmegaGoldProjectile_Die: @ 0x080AC520
-	adds r2, r0, #0
-	ldrb r1, [r2, #0xa]
-	movs r0, #0xfe
-	ands r0, r1
-	movs r1, #0
-	strb r0, [r2, #0xa]
-	adds r0, r2, #0
-	adds r0, #0x8c
-	str r1, [r0]
-	adds r0, #4
-	str r1, [r0]
-	adds r0, #4
-	strb r1, [r0]
-	ldrb r1, [r2, #0xa]
-	movs r0, #0xfb
-	ands r0, r1
-	strb r0, [r2, #0xa]
-	ldr r1, _080AC558 @ =gProjectileFnTable
-	ldrb r0, [r2, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #4
-	str r1, [r2, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #0x10]
-	str r0, [r2, #0x14]
-	bx lr
-	.align 2, 0
-_080AC558: .4byte gProjectileFnTable
-
 	thumb_func_start doGoldOmega1Laser1
 doGoldOmega1Laser1: @ 0x080AC55C
 	push {r4, lr}
@@ -386,4 +354,3 @@ _080AC808: .4byte 0x00269EC3
 _080AC80C: .4byte 0x00000C01
 _080AC810: .4byte 0x0836C644
 _080AC814: .4byte gProjectileFnTable
-

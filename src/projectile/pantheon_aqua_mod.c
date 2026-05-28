@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "vfx.h"
 
 static const ProjectileFunc PTR_ARRAY_0836bb00[3];
 static const ProjectileFunc PTR_ARRAY_0836bb0c[3];
@@ -31,7 +32,11 @@ void PantheonAquaModProjectile_Update(struct Projectile* p) {
   (PTR_ARRAY_0836bb0c[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/pantheon_aqua_mod_pre_p2_p2.inc");
+void PantheonAquaModProjectile_Die(struct Projectile* p) {
+  EXIT_BODY(p);
+  CreateSmoke(3, &(p->s).coord);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
 
 void FUN_080a5cf8(struct Projectile* p) {}
 

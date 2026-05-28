@@ -34,7 +34,15 @@ struct Projectile* createPantheonBombBlast(struct Coord* c, u8 a1) {
   return p;
 }
 
-INCASM("asm/projectile/pantheon_bomber_p3.inc");
+INCASM("asm/projectile/pantheon_bomber_p3_p1.inc");
+
+void PantheonBombProjectile_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/pantheon_bomber_p3_p2.inc");
 
 void PantheonBombProjectile_Init(struct Projectile* p);
 void PantheonBombProjectile_Update(struct Projectile* p);

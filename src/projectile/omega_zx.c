@@ -138,7 +138,13 @@ void OmegaZXProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/omega_zx_post.inc");
+void OmegaZXProjectile_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/omega_zx_post_p2.inc");
 
 void FUN_080b0168(struct Projectile* p);
 void FUN_080b0214(struct Projectile* p);
