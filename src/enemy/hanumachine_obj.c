@@ -2,7 +2,23 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/hanumachine_obj_pre.inc");
+void FUN_080866a4(struct Entity* e, u8 mode, u8 xflip) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_HANUMACHINE_OBJ);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).unk_28 = e;
+    SET_XFLIP(&p->s, xflip);
+    (p->s).work[0] = mode;
+    (p->s).work[1] = 0;
+  }
+}
+
+INCASM("asm/enemy/hanumachine_obj_pre_p2.inc");
 
 void HanumachineObj_Die(struct Enemy* p) {
   (p->s).flags &= ~DISPLAY;
