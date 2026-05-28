@@ -20,7 +20,21 @@ struct Projectile* FUN_080a5fc4(struct Entity* e) {
   return p;
 }
 
-INCASM("asm/projectile/cubit_pre_pre_p2.inc");
+struct Projectile* FUN_080a6014(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 22);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 4;
+    (p->s).coord = *c;
+    p->work[1] = a3;
+    p->work[2] = a2;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
 
 struct Projectile* cubit_080a6078(struct Entity* e) {
   struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);

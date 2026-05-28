@@ -22,7 +22,21 @@ void FUN_080b1698(s32 x, s32 y, u8 a2, u8 a3) {
 
 static void nop_080b16f0(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_44_pre_p1_p2.inc");
+static const struct Collision Collision_0836d79c;
+static const u8 u8_ARRAY_0836d7b4[4];
+
+void FUN_080b1764(struct Projectile* p);
+
+void FUN_080b16f4(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_0836d7b4[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, &Collision_0836d79c, 1, (void*)nop_080b16f0);
+  FUN_080b1764(p);
+}
+
 
 void FUN_080b1764(struct Projectile* p) {
   (PTR_ARRAY_0836d794[(p->s).mode[1]])(p);

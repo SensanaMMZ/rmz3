@@ -3,9 +3,24 @@
 #include "projectile.h"
 #include "vfx.h"
 
+static const struct Collision sCollisions[3];
+static const u8 sInitModes[4];
+
+void Projectile20_Update(struct Projectile* p);
+
 static void nop_080a5048(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_20_pre_p1.inc");
+void Projectile20_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 1, (void*)nop_080a5048);
+  Projectile20_Update(p);
+}
+
+INCASM("asm/projectile/unk_20_pre_p1_p2.inc");
 
 void Projectile20_Die(struct Projectile* p) {
   EXIT_BODY(p);

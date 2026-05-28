@@ -5,12 +5,24 @@
 
 static const ProjectileFunc PTR_ARRAY_0836b434[5];
 static const ProjectileFunc PTR_ARRAY_0836b448[5];
+static const struct Collision sCollisions[4];
+static const u8 sInitModes[4];
+
+void Projectile18_Update(struct Projectile* p);
 
 INCASM("asm/projectile/unk_18_p1.inc");
 
 void FUN_080a2fa4(struct Enemy* p) {}
 
-INCASM("asm/projectile/unk_18_p2_p1.inc");
+void Projectile18_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 1, (void*)FUN_080a2fa4);
+  Projectile18_Update(p);
+}
 
 void Projectile18_Update(struct Projectile* p) {
   (PTR_ARRAY_0836b434[(p->s).mode[1]])(p);

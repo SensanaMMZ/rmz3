@@ -4,6 +4,10 @@
 
 static const ProjectileFunc sUpdates1[1];
 static const ProjectileFunc sUpdates2[1];
+static const struct Collision sCollisions[1];
+static const u8 u8_ARRAY_0836c304[2];
+
+void Projectile30_Update(struct Projectile* p);
 
 void FUN_080aa5e8(s32 x, s32 y, s32 dx, s32 dy) {
   struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
@@ -22,7 +26,15 @@ void FUN_080aa5e8(s32 x, s32 y, s32 dx, s32 dy) {
 
 void nop_080aa638(struct Enemy* p) {}
 
-INCASM("asm/projectile/unk_30_pre_p2_p1.inc");
+void Projectile30_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_0836c304[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 1, (void*)nop_080aa638);
+  Projectile30_Update(p);
+}
 
 void Projectile30_Update(struct Projectile* p) {
   (sUpdates1[(p->s).mode[1]])(p);

@@ -7,12 +7,24 @@
 
 static const ProjectileFunc sUpdates1[];
 static const ProjectileFunc sUpdates2[];
+static const struct Collision sCollisions[4];
+static const u8 u8_ARRAY_0836bec4[2];
+
+void Projectile23_Update(struct Projectile* p);
 
 INCASM("asm/projectile/locomo_if_pre_p1.inc");
 
 void FUN_080a7d00(struct Enemy* p) {}
 
-INCASM("asm/projectile/locomo_if_pre_p2_p1.inc");
+void Projectile23_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_0836bec4[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 1, (void*)FUN_080a7d00);
+  Projectile23_Update(p);
+}
 
 void Projectile23_Update(struct Projectile* p) {
   (sUpdates1[(p->s).mode[1]])(p);

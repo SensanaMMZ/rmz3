@@ -5,6 +5,10 @@
 
 static const ProjectileFunc PTR_ARRAY_0836bb00[3];
 static const ProjectileFunc PTR_ARRAY_0836bb0c[3];
+static const struct Collision sCollisions[2];
+static const u8 sInitModes[2];
+
+void PantheonAquaModProjectile_Update(struct Projectile* p);
 
 void FUN_080a5bb4(s32 x, s32 y) {
   s32 i;
@@ -25,7 +29,15 @@ void FUN_080a5bb4(s32 x, s32 y) {
 
 void nop_080a5c10(struct Enemy* p) {}
 
-INCASM("asm/projectile/pantheon_aqua_mod_pre_p2_p1.inc");
+void PantheonAquaModProjectile_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 1, (void*)nop_080a5c10);
+  PantheonAquaModProjectile_Update(p);
+}
 
 void PantheonAquaModProjectile_Update(struct Projectile* p) {
   (PTR_ARRAY_0836bb00[(p->s).mode[1]])(p);
