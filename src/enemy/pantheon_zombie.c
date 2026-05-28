@@ -17,7 +17,33 @@ INCASM("asm/enemy/pantheon_zombie_p1_post.inc");
 
 void nop_0807ff3c(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_zombie_p2_pre_p1.inc");
+INCASM("asm/enemy/pantheon_zombie_p2_pre_p1_p1.inc");
+
+void FUN_0807ff40(struct Enemy* p) {
+  u32 status = (p->body).status;
+  if (status & BODY_STATUS_WHITE) {
+    if (status & BODY_STATUS_RECOILED) {
+      (p->s).mode[1] = 7;
+    } else {
+      (p->s).mode[1] = 6;
+    }
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/pantheon_zombie_p2_pre_p1_p2.inc");
+
+void FUN_0807ff6c(struct Enemy* p) {
+  u32 status = (p->body).status;
+  if (status & BODY_STATUS_WHITE) {
+    if (status & BODY_STATUS_RECOILED) {
+      (p->s).mode[1] = 7;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_zombie_p2_pre_p1_p3.inc");
 
 void FUN_0807ff94(struct Enemy* p) {
   if (!((p->body).status & BODY_STATUS_BINDING)) {

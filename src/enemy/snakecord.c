@@ -2,7 +2,19 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/snakecord.inc");
+INCASM("asm/enemy/snakecord_p1.inc");
+
+void FUN_0807472c(struct Enemy* p) {
+  u32 status = (p->body).status;
+  if (status & BODY_STATUS_WHITE) {
+    if (status & BODY_STATUS_RECOILED) {
+      (p->s).mode[1] = 0xa;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/snakecord_p2.inc");
 
 void Snakecord_Init(struct Enemy* p);
 void Snakecord_Update(struct Enemy* p);
