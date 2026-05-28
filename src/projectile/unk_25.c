@@ -22,7 +22,14 @@ void Projectile25_Init(struct Projectile* p) {
   (PTR_ARRAY_0836bf68[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_25_post_p1.inc");
+void Projectile25_Update(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void Projectile25_Die(struct Projectile* p) {
   EXIT_BODY(p);
