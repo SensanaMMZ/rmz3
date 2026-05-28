@@ -142,7 +142,24 @@ static void Ghost27_Die(struct VFX* p) {
   (sDeinitializers[(p->s).work[0]])(p);
 }
 
-INCASM("asm/vfx/unk_27_p1.inc");
+void FUN_080b9b9c(struct VFX* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, 0x1701);
+  if ((p->s).flags & (1 << 4)) {
+    (p->s).d.x = 0x40;
+    (p->s).unk_coord.x = -2;
+  } else {
+    (p->s).d.x = -0x40;
+    (p->s).unk_coord.x = 2;
+  }
+  (p->s).d.y = 0x40;
+  (p->s).unk_coord.y = -2;
+  (p->s).work[2] = 0x20;
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  Ghost27_Update(p);
+}
 
 void FUN_080b9c08(struct VFX* p) {
   InitNonAffineMotion(&p->s);
