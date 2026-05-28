@@ -99,7 +99,18 @@ void FUN_0805f444(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p7_p1_p2.inc");
+INCASM("asm/boss/phantom_p1_pre_p7_p1_p2_p1.inc");
+
+void FUN_0805f464(struct Boss* p) {
+  FUN_08060924(p);
+  if ((p->s).d.y > 0) {
+    *(u16*)((u8*)p + 0xe) = 4;
+    FUN_080607a0(p, 8);
+    (p->s).work[2] = 0;
+  }
+}
+
+INCASM("asm/boss/phantom_p1_pre_p7_p1_p2_p2.inc");
 
 void FUN_0805f488(struct Boss* p) {
   if ((s8)FUN_08060974(p) < 0) {
@@ -224,7 +235,29 @@ void FUN_0805f934(struct Boss* p) {
   (PTR_ARRAY_083654d8[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p2_p1.inc");
+void FUN_0805f97c(struct Boss* p);
+
+INCASM("asm/boss/phantom_p2_pre_pre_p2_p1_p1.inc");
+
+void FUN_0805f94c(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[2]);
+  (p->s).mode[3] = 1;
+  FUN_080607a0(p, 0xb);
+  (p->s).d.y = -0x500;
+  FUN_0805f97c(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p2_p1_p2.inc");
+
+void FUN_0805f97c(struct Boss* p) {
+  FUN_08060924(p);
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[3] = 2;
+    FUN_080607a0(p, 0xc);
+  }
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p2_p1_p3.inc");
 
 void FUN_0805f9dc(struct Boss* p) {
   if (FUN_08060924(p)) {
