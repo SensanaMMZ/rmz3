@@ -2,7 +2,22 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/unk_61_p1.inc");
+void FUN_080935b4(struct Entity* e, u8 a1, u8 a2) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_61);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 0;
+    (p->s).coord.x = e->coord.x;
+    (p->s).coord.y = FUN_08009f6c(e->coord.x, e->coord.y) - (a2 << 12) - 0x1c00;
+    (p->s).work[2] = a1;
+    (p->s).unk_28 = e;
+  }
+}
 
 void nop_0809362c(struct Enemy* p) {}
 
