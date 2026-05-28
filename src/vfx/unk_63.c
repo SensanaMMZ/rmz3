@@ -5,7 +5,31 @@
 static const VFXFunc sUpdates[1];
 void VFX63_Die(struct VFX* p);
 
-INCASM("asm/vfx/unk_63_pre_pre.inc");
+struct Unk63Props {
+  u16 unk_0;
+  u8 pad[2];
+  s32 unk_4;
+  u8 unk_8[8];
+};
+
+struct VFX* CreateVFX63(struct Coord* c, u8 a1, u16 a2, s32 a3) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_063);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = 0;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    ((struct Unk63Props*)(p->props).raw)->unk_0 = a2;
+    ((struct Unk63Props*)(p->props).raw)->unk_4 = a3;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_63_pre_pre_p2.inc");
 
 void VFX63_Update(struct VFX* vfx) {
   if (IS_METTAUR) {

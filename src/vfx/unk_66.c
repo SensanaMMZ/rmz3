@@ -35,7 +35,31 @@ struct VFX* FUN_080c4450(struct Coord* c, u8 n) {
 static const VFXFunc sUpdates[3];
 void Ghost66_Die(struct VFX* p);
 
-INCASM("asm/vfx/unk_66_p1_pre_pre.inc");
+struct Unk66Props {
+  u16 unk_0;
+  u8 pad[2];
+  s32 unk_4;
+  u8 unk_8[8];
+};
+
+struct VFX* FUN_080c44a8(struct Coord* c, u8 a1, u16 a2, s32 a3) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_066);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = 1;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    ((struct Unk66Props*)(p->props).raw)->unk_0 = a2;
+    ((struct Unk66Props*)(p->props).raw)->unk_4 = a3;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_66_p1_pre_pre_p2.inc");
 
 void Ghost66_Update(struct VFX* p) {
   if (IS_METTAUR) {
