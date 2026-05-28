@@ -1,7 +1,17 @@
 #include "cyberelf.h"
 #include "global.h"
 
-INCASM("asm/cyberelf/unk_10.inc");
+void FUN_080bfce8(struct Coord* c, s32 r1);
+
+INCASM("asm/cyberelf/unk_10_p1.inc");
+
+void Elf10_Die(struct Elf* p) {
+  FUN_080bfce8(&(p->s).coord, 0);
+  (p->s).flags &= ~DISPLAY;
+  SET_ELF_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/cyberelf/unk_10_p2.inc");
 
 void Elf10_Init(struct Elf* p);
 void Elf10_Update(struct Elf* p);
