@@ -48,7 +48,21 @@ void Elf0_Die(struct Elf* p) {
   SET_ELF_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/cyberelf/unk_0_post.inc");
+struct Entity* FUN_080bfce8(struct Coord* c, s32 r1);
+
+INCASM("asm/cyberelf/unk_0_post_p1.inc");
+
+void FUN_080e1fb8(struct Elf* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).unk_2c = FUN_080bfce8(&(p->s).coord, 0);
+    (p->s).mode[2]++;
+  }
+  if (((p->s).unk_2c)->mode[0] > 1) {
+    (p->s).mode[1]++;
+  }
+}
+
+INCASM("asm/cyberelf/unk_0_post_p2.inc");
 
 // --------------------------------------------
 
