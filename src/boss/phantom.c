@@ -284,7 +284,16 @@ void phantom_080607e4(struct Entity* p) {
   UpdateMotionGraphic(p);
 }
 
-INCASM("asm/boss/phantom_p2_post.inc");
+INCASM("asm/boss/phantom_p2_post_p1.inc");
+
+s8 FUN_08060974(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[0]);
+  if ((p->s).motion.state == 2) return -1;
+  if ((p->s).motion.state == 3) return 1;
+  return 0;
+}
+
+INCASM("asm/boss/phantom_p2_post_p2.inc");
 
 void Phantom_Init(struct Boss* p);
 void Phantom_Update(struct Boss* p);
