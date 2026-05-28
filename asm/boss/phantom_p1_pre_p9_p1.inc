@@ -146,22 +146,3 @@ _0805F686:
 	bx r0
 	.align 2, 0
 _0805F68C: .4byte sCollisions
-
-	thumb_func_start FUN_0805f690
-FUN_0805f690: @ 0x0805F690
-	push {lr}
-	adds r1, r0, #0
-	ldrb r0, [r1, #0x12]
-	subs r0, #1
-	strb r0, [r1, #0x12]
-	cmp r0, #0
-	bne _0805F6AA
-	movs r0, #1
-	strh r0, [r1, #0xe]
-	adds r0, r1, #0
-	movs r1, #5
-	bl FUN_080607a0
-_0805F6AA:
-	pop {r0}
-	bx r0
-	.align 2, 0

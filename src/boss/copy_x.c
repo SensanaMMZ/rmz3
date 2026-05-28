@@ -549,7 +549,17 @@ static void copyxMode1(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x.inc");
+INCASM("asm/boss/copy_x_p1.inc");
+
+void copyxNextMode(struct Boss* p) {
+  UpdateMotionGraphic(&p->s);
+  if (--(p->s).work[2] == 0xff) {
+    (p->s).mode[1] = (p->s).mode[3];
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/boss/copy_x_p2.inc");
 
 // 0x08363c18
 static const struct Collision sCollisions[10] = {
