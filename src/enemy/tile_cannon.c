@@ -5,7 +5,20 @@
 
 static const struct Collision sCollisions[9];
 
-INCASM("asm/enemy/tile_cannon_p1_p1.inc");
+bool8 FUN_080780c4(struct Enemy* p) {
+  struct Enemy* parent = (struct Enemy*)(p->s).unk_2c;
+  if ((parent->s).mode[0] > 1) {
+    if ((parent->body).hp == 0) {
+      SetMotion(&p->s, (p->s).work[0] | 0x2f00);
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2] = 0x78;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
 
 struct Enemy* FUN_08078108(struct Entity* e) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
