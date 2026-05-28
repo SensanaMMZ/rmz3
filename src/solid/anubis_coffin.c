@@ -42,12 +42,25 @@ void CreateAnubisCoffins(struct Entity* anubis, bool8 r1) {
 
 extern const SolidFunc sAnubisCoffinUpdates1[3];
 extern const SolidFunc sAnubisCoffinUpdates2[3];
+extern const struct Collision sAnubisCoffinCollisions[2];
+extern const u8 u8_ARRAY_08370240[4];
+
+void AnubisCoffin_Update(struct Solid* p);
 
 INCASM("asm/solid/anubis_coffin_pre.inc");
 
 void nop_080cde6c(struct Solid* p) {}
 
-INCASM("asm/solid/anubis_coffin_post_p1_pre_p1.inc");
+void AnubisCoffin_Init(struct Solid* p) {
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_08370240[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sAnubisCoffinCollisions, 1, (void*)nop_080cde6c);
+  *(u8*)((u8*)p + 0xbc) = 0;
+  AnubisCoffin_Update(p);
+}
 
 void AnubisCoffin_Update(struct Solid* p) {
   (sAnubisCoffinUpdates1[(p->s).mode[1]])(p);
