@@ -32,6 +32,7 @@ bool8 FUN_080608e0(struct Boss* p);
 s8 FUN_08060974(struct Boss* p);
 void FUN_0805f464(struct Boss* p);
 void FUN_080607a0(struct Boss* p, s32 idx);
+void FUN_080607f0(struct Boss* p);
 
 static const BossFunc PTR_ARRAY_08365418[7];
 static const BossFunc PTR_ARRAY_08365434[2];
@@ -284,7 +285,14 @@ void phantom_080607e4(struct Entity* p) {
   UpdateMotionGraphic(p);
 }
 
-INCASM("asm/boss/phantom_p2_post_p1.inc");
+INCASM("asm/boss/phantom_p2_post_p1_p1.inc");
+
+void FUN_080608c8(struct Boss* p) {
+  FUN_080607a0(p, 3);
+  FUN_080607f0(p);
+}
+
+INCASM("asm/boss/phantom_p2_post_p1_p2.inc");
 
 s8 FUN_08060974(struct Boss* p) {
   SetDDP(&p->body, &sCollisions[0]);
