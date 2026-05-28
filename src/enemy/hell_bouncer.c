@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mission.h"
+
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 
 struct Enemy* createHellBouncer(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -19,7 +22,18 @@ struct Enemy* createHellBouncer(struct Entity* e, struct Coord* c, u8 a2, u8 a3)
   return p;
 }
 
-INCASM("asm/enemy/hell_bouncer_p1_p2.inc");
+INCASM("asm/enemy/hell_bouncer_p1_p2_p1.inc");
+
+void HellBouncer_Die(struct Enemy* p) {
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, &(p->s).coord);
+  (p->s).flags &= ~DISPLAY;
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/hell_bouncer_p1_p2_p2.inc");
 
 bool8 FUN_0807e5f0(struct Enemy* p) { return TRUE; }
 

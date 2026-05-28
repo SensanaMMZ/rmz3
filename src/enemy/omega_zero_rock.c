@@ -2,6 +2,9 @@
 #include "enemy.h"
 #include "global.h"
 #include "stagerun.h"
+#include "vfx.h"
+
+static const motion_t sMotions[3];
 
 void OmegaZeroRock_Init(struct Enemy* p);
 void OmegaZeroRock_Update(struct Enemy* p);
@@ -59,7 +62,15 @@ static bool8 FUN_0808b5e8(Object* p) {
 
 // --------------------------------------------
 
-INCASM("asm/enemy/omega_zero_rock_p1.inc");
+INCASM("asm/enemy/omega_zero_rock_p1_p1.inc");
+
+void OmegaZeroRock_Die(struct Enemy* p) {
+  PlaySound(0x41);
+  FUN_080b7ffc((struct Entity*)p, &(p->s).coord, (motion_t*)sMotions, 3);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/omega_zero_rock_p1_p2.inc");
 
 void nop_0808b704(struct Enemy* p) {}
 

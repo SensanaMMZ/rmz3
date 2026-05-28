@@ -82,7 +82,14 @@ void HarpuiaMinigameEnemy_Update(struct Enemy* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/minigame_harpuia_p1_p1_p2.inc");
+void HarpuiaMinigameEnemy_Die(struct Enemy* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+  (p->s).mode[1] = 0;
+  (p->s).mode[2] = 0;
+  (p->s).mode[3] = 0;
+}
 
 bool8 FUN_0809b350(struct Enemy* p) { return TRUE; }
 
