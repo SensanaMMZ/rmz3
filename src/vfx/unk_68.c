@@ -60,4 +60,12 @@ void Ghost68_Update(struct VFX* p) {
   (sGhost68Updates[(p->s).work[0]])(p);
 }
 
-INCASM("asm/vfx/unk_68_post.inc");
+void Ghost68_Die(struct VFX* p) {
+  (p->s).flags &= ~DISPLAY;
+  (p->s).flags &= ~FLIPABLE;
+  SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+}
+
+INCASM("asm/vfx/unk_68_post_p1.inc");
+
+INCASM("asm/vfx/unk_68_post_p2.inc");

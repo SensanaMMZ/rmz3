@@ -187,4 +187,12 @@ static void FUN_080b9494(struct Entity* p) {
   }
 }
 
-INCASM("asm/vfx/unk_25.inc");
+INCASM("asm/vfx/unk_25_p1.inc");
+
+void FUN_080b970c(struct VFX* p) {
+  if (--(p->s).work[2] == 0) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/vfx/unk_25_p2.inc");

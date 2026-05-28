@@ -16,7 +16,15 @@ void VFX58_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_58_post.inc");
+INCASM("asm/vfx/unk_58_post_p1.inc");
+
+void FUN_080c2364(struct VFX* p) {
+  if (--(p->s).work[2] == 0) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/vfx/unk_58_post_p2.inc");
 
 void VFX58_Init(struct VFX* vfx);
 void VFX58_Update(struct VFX* vfx);

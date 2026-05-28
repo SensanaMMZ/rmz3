@@ -64,37 +64,3 @@ _080C1950:
 	.align 2, 0
 _080C195C: .4byte gVFXHeaderPtr
 _080C1960: .4byte gVFXFnTable
-
-	thumb_func_start VFX57_Init
-VFX57_Init: @ 0x080C1964
-	push {lr}
-	adds r1, r0, #0
-	ldrb r0, [r1, #0x10]
-	cmp r0, #0
-	bne _080C1976
-	adds r0, r1, #0
-	bl FUN_080c19b4
-	b _080C197C
-_080C1976:
-	adds r0, r1, #0
-	bl FUN_080c1a3c
-_080C197C:
-	pop {r0}
-	bx r0
-
-	thumb_func_start VFX57_Update
-VFX57_Update: @ 0x080C1980
-	push {lr}
-	adds r1, r0, #0
-	ldrb r0, [r1, #0x10]
-	cmp r0, #0
-	bne _080C1992
-	adds r0, r1, #0
-	bl FUN_080c1aec
-	b _080C1998
-_080C1992:
-	adds r0, r1, #0
-	bl FUN_080c1b34
-_080C1998:
-	pop {r0}
-	bx r0
