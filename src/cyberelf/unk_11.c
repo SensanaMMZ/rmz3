@@ -4,7 +4,31 @@
 
 // Bee?
 
-INCASM("asm/cyberelf/unk_11_p1.inc");
+struct CyberElf11 {
+  OBJECT_HDR;
+  // props (16bytes, offset: 0xB4..)
+  s32 unk_b4;
+  s32 unk_b8;
+  u8 unk_bc[8];
+};
+static_assert(sizeof(struct CyberElf11) == sizeof(struct Elf));
+
+struct Elf* FUN_080e5048(s32 a0, s32 a1, u8 mode) {
+  struct CyberElf11* p = (struct CyberElf11*)AllocEntityFirst(gElfHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 16;
+    INIT_ELF_ROUTINE(p, 11);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    p->unk_b4 = a0;
+    p->unk_b8 = a1;
+    (p->s).work[0] = mode;
+    (p->s).work[1] = 0;
+  }
+  return (struct Elf*)p;
+}
+
+INCASM("asm/cyberelf/unk_11_p1_p2.inc");
 
 void Elf11_Die(struct Elf* p) {
   (p->body).status = 0;
