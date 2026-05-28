@@ -4,7 +4,38 @@
 
 static const ProjectileFunc* const sUpdates[5];
 
-INCASM("asm/projectile/hellbat_p1_pre.inc");
+struct Projectile* createBat(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 15);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    p->work[1] = a2;
+    p->work[2] = a3;
+    (p->s).coord = *c;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* createEchoWave(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 15);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    p->work[1] = a2;
+    (p->s).coord = *c;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/hellbat_p1_pre_p3.inc");
 
 void Projectile15_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]][(p->s).mode[1]])(p);
