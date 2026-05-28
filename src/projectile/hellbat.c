@@ -41,7 +41,11 @@ void Projectile15_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]][(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/hellbat_p1_post.inc");
+void Projectile15_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
 
 void FUN_080a176c(struct Projectile* p) {
   (p->s).mode[1] = 1;
