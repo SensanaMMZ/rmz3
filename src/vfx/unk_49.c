@@ -2,6 +2,9 @@
 #include "vfx.h"
 
 static const VFXFunc sUpdates[4];
+static const u8 sInitModes[4];
+
+void VFX49_Update(struct VFX* vfx);
 
 void FUN_080c025c(s32 x, s32 y) {
   struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
@@ -57,7 +60,14 @@ void FUN_080c0340(struct Entity* e) {
   }
 }
 
-INCASM("asm/vfx/unk_49_pre_pre_p2.inc");
+void VFX49_Init(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  VFX49_Update(p);
+}
 
 void VFX49_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);

@@ -2,6 +2,9 @@
 #include "vfx.h"
 
 static const VFXFunc sUpdates[1];
+extern const u8 u8_ARRAY_0836f59c[2];
+
+void Ghost65_Update(struct VFX* vfx);
 
 void CreateGhost65(s32 x, s32 y, u8 w1, u8 w2) {
   struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
@@ -18,7 +21,14 @@ void CreateGhost65(s32 x, s32 y, u8 w1, u8 w2) {
   }
 }
 
-INCASM("asm/vfx/unk_65_p1_p2.inc");
+void Ghost65_Init(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_0836f59c[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  Ghost65_Update(p);
+}
 
 void Ghost65_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
