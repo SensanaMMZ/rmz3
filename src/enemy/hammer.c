@@ -315,7 +315,17 @@ bool8 FUN_08075a30(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/hammer_p2_p2.inc");
+INCASM("asm/enemy/hammer_p2_p2_p1.inc");
+
+struct Entity* FUN_080b9228(struct Coord* c, s32 a2);
+
+bool8 FUN_08075a84(struct Enemy* p) {
+  struct Coord c;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - PIXEL(16);
+  FUN_080b9228(&c, 0);
+  return TRUE;
+}
 
 // --------------------------------------------
 
