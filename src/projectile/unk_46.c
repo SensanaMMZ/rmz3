@@ -6,7 +6,34 @@ static const ProjectileFunc PTR_ARRAY_0836d8b0[3];
 static const ProjectileFunc PTR_ARRAY_0836d8bc[3];
 static const ProjectileFunc PTR_ARRAY_0836d8c8[3];
 
-INCASM("asm/projectile/unk_46_p1.inc");
+struct Projectile* FUN_080b221c(struct Entity* e, u8 a1, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 46);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).unk_28 = e;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = a2;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080b2270(struct Entity* e, struct Entity* e2, u8 a2, u8 a3) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 46);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).unk_28 = e;
+    (p->s).unk_2c = e2;
+    (p->s).work[0] = a2;
+    (p->s).work[1] = a3;
+  }
+  return p;
+}
 
 void FUN_080b22c8(struct Projectile* p) {
   (PTR_ARRAY_0836d8b0[(p->s).work[0]])(p);
