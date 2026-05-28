@@ -6,7 +6,30 @@
 static const EnemyFunc sUpdates1[3];
 static const EnemyFunc sUpdates2[3];
 
-INCASM("asm/enemy/glacierle_arm_p1.inc");
+struct Enemy* createGlacierleAtkHand(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_GLACIERLE_ARM);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 0;
+    InitRotatableMotion(&p->s);
+    (p->s).unk_2c = NULL;
+    (p->s).unk_28 = e;
+    (p->s).d.x = 0;
+    (p->s).d.y = 0;
+    p->props[1] = 1;
+    p->props[0] = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = e->uniqueID;
+  }
+  return p;
+}
+
+INCASM("asm/enemy/glacierle_arm_p1_p2.inc");
 
 void nop_080828dc(struct Enemy* p) {}
 

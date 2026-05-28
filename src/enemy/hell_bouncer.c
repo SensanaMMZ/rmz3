@@ -2,7 +2,24 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/hell_bouncer_p1.inc");
+struct Enemy* createHellBouncer(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_HELL_BOUNCER);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord = *c;
+    (p->s).work[0] = a2;
+    (p->s).work[1] = a3;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/enemy/hell_bouncer_p1_p2.inc");
 
 bool8 FUN_0807e5f0(struct Enemy* p) { return TRUE; }
 

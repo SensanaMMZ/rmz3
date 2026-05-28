@@ -5,7 +5,26 @@
 
 static const struct Collision sCollisions[9];
 
-INCASM("asm/enemy/tile_cannon_p1.inc");
+INCASM("asm/enemy/tile_cannon_p1_p1.inc");
+
+struct Enemy* FUN_08078108(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_TILE_CANNON);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 2;
+    (p->s).coord.x = e->coord.x;
+    (p->s).coord.y = e->coord.y;
+    (p->s).unk_28 = e;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = e->uniqueID;
+  }
+  return p;
+}
 
 void FUN_08078170(struct Enemy* p) {}
 
