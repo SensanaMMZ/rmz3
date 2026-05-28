@@ -35,7 +35,23 @@ struct Enemy* FUN_08082b58(struct Coord* c, bool8 isLeftHand, struct Boss* omega
 
 static const EnemyFunc PTR_ARRAY_08368218[2];
 
-INCASM("asm/enemy/omega_gold_hand_p1_pre.inc");
+struct Enemy* FUN_08082bbc(struct Entity* e, u8 mode) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_OMEGA_GOLD_HAND);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = mode;
+    (p->s).work[1] = 1;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/enemy/omega_gold_hand_p1_pre_p2.inc");
 
 void OmegaGoldHand_Die(struct Enemy* p) {
   (PTR_ARRAY_08368218[(p->s).mode[1]])(p);
