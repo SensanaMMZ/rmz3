@@ -46,7 +46,42 @@ struct VFX* FUN_080c1c44(struct Coord* c) {
   return p;
 }
 
-INCASM("asm/vfx/unk_58_pre_pre_p4.inc");
+struct Unk58Props { u8 unk_0[12]; u16 unk_c; u16 unk_e; };
+
+struct VFX* FUN_080c1c94(struct Coord* c, u8 a1, u16 a2) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_058);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 6;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).work[1] = a1;
+    ((struct Unk58Props*)(p->props).raw)->unk_c = a2;
+  }
+  return p;
+}
+
+struct VFX* FUN_080c1cf4(struct Coord* c, u8 a1, u16 a2, u16 a3) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_058);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 7;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).work[1] = a1;
+    ((struct Unk58Props*)(p->props).raw)->unk_e = a2;
+    ((struct Unk58Props*)(p->props).raw)->unk_c = a3;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_58_pre_pre_p4_post.inc");
 
 void VFX58_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
