@@ -21,7 +21,66 @@ struct VFX* FUN_080bdd74(struct Entity* e, struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/vfx/unk_41_pre_pre_p2.inc");
+struct Unk41Props {
+  u16 unk_0;
+  u8 pad[2];
+  s32 unk_4;
+  u8 unk_8;
+  u8 unk_9[7];
+};
+
+struct VFX* FUN_080bddcc(struct Coord* c, u8 a1, u16 a2, s32 a3) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_041);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a1;
+    (p->s).work[1] = 1;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    ((struct Unk41Props*)(p->props).raw)->unk_0 = a2;
+    ((struct Unk41Props*)(p->props).raw)->unk_4 = a3;
+  }
+  return p;
+}
+
+struct VFX* createHellbatElectricBeam(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_041);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a2;
+    ((struct Unk41Props*)(p->props).raw)->unk_8 = a3;
+    (p->s).work[1] = 2;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct VFX* FUN_080bde9c(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_041);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a2;
+    ((struct Unk41Props*)(p->props).raw)->unk_8 = a3;
+    (p->s).work[1] = 3;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_41_pre_pre_p2_p4.inc");
 
 void VFX41_Update(struct VFX* vfx) {
   (PTR_ARRAY_0836eef8[(vfx->s).mode[1]])(vfx);
