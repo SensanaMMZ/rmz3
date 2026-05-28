@@ -46,7 +46,12 @@ void Projectile36_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_36_pre_post.inc");
+void Projectile36_Die(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_36_pre_post_p2.inc");
 
 void FUN_080ada50(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
