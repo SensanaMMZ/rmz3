@@ -1,4 +1,6 @@
+#include "gfx.h"
 #include "global.h"
+#include "gpu_regs.h"
 #include "vfx.h"
 
 struct VFX39 {
@@ -78,4 +80,13 @@ static void VFX39_Update(struct VFX* vfx) {
 
 // --------------------------------------------
 
-INCASM("asm/vfx/unk_39.inc");
+INCASM("asm/vfx/unk_39_p1.inc");
+
+void VFX39_Die(struct VFX* p) {
+  PALETTE16(0) = 0;
+  gWindowRegBuffer.dispcnt &= 0xBFFF;
+  (p->s).flags &= ~DISPLAY;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/vfx/unk_39_p2.inc");

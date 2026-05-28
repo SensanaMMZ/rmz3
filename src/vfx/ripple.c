@@ -75,7 +75,14 @@ static void Ripple_Init(struct VFX* p) {
   Ripple_Update(p);
 }
 
-INCASM("asm/vfx/ripple_p1.inc");
+INCASM("asm/vfx/ripple_p1_pre.inc");
+
+void Ripple_Die(struct VFX* p) {
+  struct Zero* z = (struct Zero*)(p->s).unk_28;
+  (p->s).flags &= ~DISPLAY;
+  z->ripple = FALSE;
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
 
 void Ripple_Disappear(struct VFX* p) {
   struct Zero* z = (struct Zero*)(p->s).unk_28;

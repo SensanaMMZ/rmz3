@@ -190,31 +190,3 @@ _080B5658: .4byte gZeroRanges
 _080B565C: .4byte 0x00000147
 _080B5660: .4byte 0x0002C00C
 _080B5664: .4byte gVFXFnTable
-
-	thumb_func_start Ripple_Die
-Ripple_Die: @ 0x080B5668
-	push {r4, lr}
-	ldr r3, [r0, #0x28]
-	ldrb r2, [r0, #0xa]
-	movs r1, #0xfe
-	ands r1, r2
-	movs r2, #0
-	strb r1, [r0, #0xa]
-	ldr r4, _080B5694 @ =0x0000011B
-	adds r1, r3, r4
-	strb r2, [r1]
-	ldr r2, _080B5698 @ =gVFXFnTable
-	ldrb r1, [r0, #9]
-	lsls r1, r1, #2
-	adds r1, r1, r2
-	movs r2, #4
-	str r2, [r0, #0xc]
-	ldr r1, [r1]
-	ldr r1, [r1, #0x10]
-	str r1, [r0, #0x14]
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080B5694: .4byte 0x0000011B
-_080B5698: .4byte gVFXFnTable
