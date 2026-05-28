@@ -5,7 +5,23 @@ static const motion_t sMotions[3];
 static const VFXFunc sInitializers[1];
 static const VFXFunc sUpdates[1];
 
-INCASM("asm/vfx/unk_62_pre_pre_pre.inc");
+void CreateVFX62(struct Entity* e, struct Coord* c) {
+  s32 i;
+  for (i = 0; i < 3; i++) {
+    struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+    if (p != NULL) {
+      (p->s).taskCol = 1;
+      INIT_VFX_ROUTINE(p, VFX_UNK_062);
+      (p->s).tileNum = 0;
+      (p->s).palID = 0;
+      (p->s).work[0] = 0;
+      (p->s).work[1] = i;
+      (p->s).unk_28 = e;
+      (p->s).coord.x = c->x;
+      (p->s).coord.y = c->y;
+    }
+  }
+}
 
 void VFX62_Init(struct VFX* vfx) {
   (sInitializers[(vfx->s).work[0]])(vfx);
