@@ -4,7 +4,23 @@
 
 static const EnemyFunc sUpdates[2];
 
-INCASM("asm/enemy/unk_72_pre_p1.inc");
+struct Enemy* FUN_0809c3b4(struct Entity* e, struct Coord* c, u16 a2, u8 a3) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_72);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord = *c;
+    (p->s).work[0] = a3;
+    (p->s).work[1] = 0;
+    *(u16*)&p->props[0] = a2;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
 
 struct Enemy* FUN_0809c430(struct Entity* e, struct Coord* c) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
