@@ -2,7 +2,23 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/cattatank_p1.inc");
+struct Enemy* FUN_08098838(struct Coord* c, u8 mode) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_CATTATANK);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).coord = *c;
+    (p->s).work[0] = mode;
+    (p->s).work[1] = 1;
+  }
+  return p;
+}
+
+INCASM("asm/enemy/cattatank_p1_p2.inc");
 
 bool8 nop_08099090(struct Enemy* p) { return TRUE; }
 

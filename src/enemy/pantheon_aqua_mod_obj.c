@@ -2,7 +2,71 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/pantheon_aqua_mod_obj_p1.inc");
+INCASM("asm/enemy/pantheon_aqua_mod_obj_p1_p1.inc");
+
+void FUN_08080858(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_P_AQUA_MOD_OBJ);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 6;
+    (p->s).coord.x = e->coord.x;
+    (p->s).coord.y = e->coord.y;
+    (p->s).unk_28 = e;
+  }
+}
+
+void FUN_080808b4(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_P_AQUA_MOD_OBJ);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 3;
+    (p->s).unk_28 = e;
+  }
+}
+
+void FUN_08080908(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_P_AQUA_MOD_OBJ);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 0;
+    (p->s).coord.x = e->coord.x;
+    (p->s).coord.y = e->coord.y;
+    (p->s).unk_28 = e;
+  }
+}
+
+void FUN_08080964(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_P_AQUA_MOD_OBJ);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = e->coord.x;
+    (p->s).coord.y = e->coord.y;
+    (p->s).unk_28 = e;
+  }
+}
+
+INCASM("asm/enemy/pantheon_aqua_mod_obj_p1_p5.inc");
 
 void nop_08080eb8(struct Enemy* p) {}
 

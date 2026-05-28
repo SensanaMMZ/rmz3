@@ -7,7 +7,20 @@ static const struct Collision sCollisions[25];
 
 static const EnemyFunc sDeads[2];
 
-INCASM("asm/enemy/pantheon_base_p1.inc");
+struct Enemy* FUN_0808a0ec(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_P_BASE);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 0;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
 
 void nop_0808a140(struct Enemy* p) {}
 
