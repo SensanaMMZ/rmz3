@@ -5,13 +5,27 @@
 
 static const VFXFunc sUpdates[2];
 
-INCASM("asm/vfx/unk_50_pre_pre.inc");
+struct VFX* FUN_080c078c(struct Entity* e, struct Coord* c, u8 arg2) {
+  struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_050);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = arg2;
+    (p->s).work[1] = 0;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/vfx/unk_50_pre_pre_p2.inc");
 
 void VFX50_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
 }
-
-INCASM("asm/vfx/unk_50_pre_post.inc");
 
 void VFX50_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;
