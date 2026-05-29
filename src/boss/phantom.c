@@ -547,7 +547,32 @@ void FUN_080608c8(struct Boss* p) {
   FUN_080607f0(p);
 }
 
-INCASM("asm/boss/phantom_p2_post_p1_p2.inc");
+bool8 FUN_080608e0(struct Boss* p) {
+  if ((s8)*(u8*)((u8*)p + 0x71) == 1 && (s8)*(u8*)((u8*)p + 0x72) <= 1) {
+    (p->s).spr.xflip = 0;
+    (p->s).spr.oam.xflip = 0;
+    (p->s).flags &= ~X_FLIP;
+    return TRUE;
+  }
+  return FALSE;
+}
+
+bool8 FUN_08060924(struct Boss* p) {
+  s32 dy;
+  SetDDP(&p->body, &sCollisions[12]);
+  dy = (p->s).d.y;
+  if (FUN_0806089c(p, dy)) {
+    FUN_080607a0(p, 4);
+    FUN_080607f0(p);
+    return TRUE;
+  }
+  if ((p->s).mode[2] == 5) {
+    (p->s).d.y = dy + 0xa8;
+  } else {
+    (p->s).d.y = dy + 0x40;
+  }
+  return FALSE;
+}
 
 s8 FUN_08060974(struct Boss* p) {
   SetDDP(&p->body, &sCollisions[0]);
