@@ -762,7 +762,27 @@ INCASM("asm/boss/blazin_p2.inc");
 
 bool8 FUN_0803ef64(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p3.inc");
+struct Projectile* createBlazinTail(struct Entity* e, s32 hp);
+
+void blazinMode2(struct Boss* p) {
+  struct Projectile** tailSlot;
+  switch ((p->s).mode[2]) {
+    case 0:
+      tailSlot = (struct Projectile**)((u8*)p + 0xc4);
+      *tailSlot = NULL;
+      *tailSlot = createBlazinTail(&p->s, 2);
+      SetMotion(&p->s, (motion_t)(*(u16*)((u8*)p + 0xc8) | 0xA200));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (!(gStageRun.vm.active & 1)) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 bool8 true_0803efc4(struct Boss* _) { return TRUE; }
 
