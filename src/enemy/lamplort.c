@@ -235,7 +235,24 @@ INCASM("asm/enemy/lamplort_p5.inc");
 
 bool8 true_0806cac4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p6.inc");
+void FUN_0806cac8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x1908);
+      SetDDP(&p->body, &sCollisions[0]);
+      *(u32*)((u8*)(p->s).unk_2c + 0xb4) |= 2;
+      SET_XFLIP(p, *(u8*)((u8*)p + 0xbc));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == MOTION_END) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_0806cb58(struct Enemy* p) { return TRUE; }
 
