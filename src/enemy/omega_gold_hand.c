@@ -103,7 +103,38 @@ INCASM("asm/enemy/omega_gold_hand_p5.inc");
 
 bool8 FUN_08083e14(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_gold_hand_p6_p1.inc");
+void FUN_08083e18(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      EXIT_BODY(p);
+      (p->s).d.x = 0;
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x40) {
+        (p->s).d.y = 0x40;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+void FUN_08083e68(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SET_XFLIP(p, 0);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void nop_08083eac(struct Enemy* p) {}
 
