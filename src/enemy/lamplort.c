@@ -1,6 +1,9 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
+
+static const struct Coord sElementCoord;
 
 static const struct Collision sCollisions[8];
 
@@ -322,7 +325,41 @@ void FUN_0806cda8(struct Enemy* p) {}
 
 bool8 FUN_0806cdac(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p11.inc");
+void FUN_0806cdb0(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[7]);
+    *(u32*)((u8*)(p->s).unk_2c + 0xb4) |= 2;
+    (p->s).d.y = 0;
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xc0);
+  if (isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[0]);
+    *slot = NULL;
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
+
+bool8 lamplort_0806ce08(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)((u8*)p + 0xc0);
+  if (*slot == NULL && ((p->body).status & 1)) {
+    struct VFX* e = ApplyElementEffect(0, &p->s, &sElementCoord);
+    *slot = e;
+    if (e != NULL) {
+      u8 attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+      if (attr == 0x10) {
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = 0;
+      } else if (attr == 0x30) {
+        (p->s).mode[1] = 9;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+  return TRUE;
+}
 
 bool8 FUN_0806ce5c(struct Enemy* p) { return TRUE; }
 
