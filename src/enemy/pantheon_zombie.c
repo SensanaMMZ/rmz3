@@ -17,7 +17,23 @@ void FUN_0807fd84(struct Body* body) {
   }
 }
 
-INCASM("asm/enemy/pantheon_zombie_p1_pre_p2.inc");
+void PantheonZombie_Die(struct Enemy* p);
+
+bool8 FUN_0807fda8(struct Enemy* p) {
+  if ((p->body).status & 0x200) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if ((p->body).status & 0x20000) {
+      (p->s).mode[1] = 2;
+    } else {
+      (p->s).mode[1] = 0;
+    }
+    PantheonZombie_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/pantheon_zombie_p1_pre_p2_p2.inc");
 
 void PantheonZombie_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
