@@ -3,7 +3,9 @@
 #include "vfx.h"
 
 static const VFXFunc sUpdates[1];
+void VFX63_Update(struct VFX* vfx);
 void VFX63_Die(struct VFX* p);
+extern u32 RNG_0202f388;
 
 struct Unk63Props {
   u16 unk_0;
@@ -29,7 +31,31 @@ struct VFX* CreateVFX63(struct Coord* c, u8 a1, u16 a2, s32 a3) {
   return p;
 }
 
-INCASM("asm/vfx/unk_63_pre_pre_p2.inc");
+void VFX63_Init(struct VFX* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  if ((p->s).work[0] == 0) {
+    SET_XFLIP(p, FALSE);
+  } else {
+    SET_XFLIP(p, TRUE);
+  }
+  if ((p->s).work[0] == 0) {
+    (p->s).d.x = -0xc0;
+  } else {
+    (p->s).d.x = 0xc0;
+  }
+  (p->s).d.y = 0;
+  if ((p->s).work[1] == 0) {
+    RNG_0202f388 = LCG(RNG_0202f388);
+    (p->s).work[2] = ((RNG_0202f388 >> 16) & 7) + 0x7f;
+    SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0;
+  }
+  VFX63_Update(p);
+}
 
 void VFX63_Update(struct VFX* vfx) {
   if (IS_METTAUR) {
