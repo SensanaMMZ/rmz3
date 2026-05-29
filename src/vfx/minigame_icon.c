@@ -106,7 +106,6 @@ void Ghost77_Update(struct VFX* p) {
   (sUpdates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/vfx/minigame_icon_pre_post.inc");
 
 void Ghost77_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;

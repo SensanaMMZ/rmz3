@@ -67,7 +67,6 @@ void Projectile13_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_13_p2_p2_p2.inc");
 
 void nop_0809fbd8(struct Projectile* p) {}
 

@@ -28,7 +28,6 @@ void Projectile20_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_20_pre_p2.inc");
 
 void FUN_080a5144(struct Projectile* p) {}
 

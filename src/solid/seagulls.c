@@ -103,16 +103,13 @@ void FUN_080dd400(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/solid/seagulls_p2.inc");
 
 void FUN_080dd418(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/solid/seagulls_p3.inc");
 
 void FUN_080dd430(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/solid/seagulls_p4.inc");

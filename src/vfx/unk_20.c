@@ -69,14 +69,12 @@ void Ghost20_Update(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_20_p1_pre_post.inc");
 
 void Ghost20_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_20_p1_post.inc");
 
 void FUN_080b73d0(struct VFX* p) {}
 

@@ -136,13 +136,11 @@ void Ghost69_Init(struct VFX* p) {
   Ghost69_Update(p);
 }
 
-INCASM("asm/vfx/unk_69_p1_pre_p2.inc");
 
 void Ghost69_Update(struct VFX* p) {
   (sGhost69Updates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/vfx/unk_69_p1_post_pre.inc");
 
 void Ghost69_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;

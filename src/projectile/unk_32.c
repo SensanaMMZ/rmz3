@@ -13,27 +13,22 @@ void Projectile32_Init(struct Projectile* p) {
   (sInitializers[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_32_p1_pre_post.inc");
 
 void Projectile32_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_32_p1_post_pre.inc");
 
 void Projectile32_Die(struct Projectile* p) {
   (PTR_ARRAY_0836c408[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_32_p1_post_post.inc");
 
 void nop_080aaecc(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_32_p2.inc");
 
 void nop_080aaed0(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_32_p3.inc");
 
 void nop_080aaed4(struct Projectile* p) {}
 

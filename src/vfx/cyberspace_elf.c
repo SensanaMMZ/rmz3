@@ -60,4 +60,3 @@ void CyberSpaceElf_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/cyberspace_elf_post.inc");

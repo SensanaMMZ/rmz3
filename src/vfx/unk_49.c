@@ -46,7 +46,6 @@ void FUN_080c02f4(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/vfx/unk_49_pre_pre_p1_p2_p3.inc");
 
 void FUN_080c0340(struct Entity* e) {
   struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
@@ -73,7 +72,6 @@ void VFX49_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
 }
 
-INCASM("asm/vfx/unk_49_pre_post.inc");
 
 void VFX49_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);

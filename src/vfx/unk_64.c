@@ -3,7 +3,6 @@
 
 static const VFXFunc sUpdates[9];
 
-INCASM("asm/vfx/unk_64_p1_p1.inc");
 
 void oz_080c39a0(struct Entity* e) {
   struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
@@ -23,7 +22,6 @@ void Ghost64_Update(struct VFX* p) {
   (sUpdates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/vfx/unk_64_p2.inc");
 
 void Ghost64_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);

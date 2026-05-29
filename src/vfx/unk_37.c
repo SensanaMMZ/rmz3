@@ -103,7 +103,6 @@ void VFX37_Update(struct VFX* vfx) {
   (PTR_ARRAY_0836edd4[(vfx->s).mode[1]])(vfx);
 }
 
-INCASM("asm/vfx/unk_37_pre_post.inc");
 
 void VFX37_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);

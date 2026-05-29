@@ -382,7 +382,6 @@ TextID getCielComputerResearchTextID(struct Solid* p) {
   return 0x28c;
 }
 
-INCASM("asm/solid/mob_npc_post.inc");
 
 void andrew_080d9cd8(struct Solid* p);
 void alouette_080d9eb8(struct Solid* p);

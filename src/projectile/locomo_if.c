@@ -65,7 +65,6 @@ void Projectile23_Die(struct Projectile* p) {
 
 void FUN_080a7de8(struct Projectile* p) {}
 
-INCASM("asm/projectile/locomo_if_post_p1.inc");
 
 void FUN_080a7dec(struct Projectile* p) {
   if ((p->body).status & BODY_STATUS_BINDING) {

@@ -67,13 +67,11 @@ void AnubisCoffin_Update(struct Solid* p) {
   (sAnubisCoffinUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/solid/anubis_coffin_post_p1_pre_p2.inc");
 
 void AnubisCoffin_Die(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/solid/anubis_coffin_post_p1_post.inc");
 
 void FUN_080cdf34(struct Solid* p) {}
 

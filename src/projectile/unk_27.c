@@ -40,7 +40,6 @@ void Projectile27_Init(struct Projectile* p) {
   (PTR_ARRAY_0836c0d0[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_27_pre_pre_post.inc");
 
 void Projectile27_Update(struct Projectile* p) {
   (PTR_ARRAY_0836c0ec[(p->s).work[0]])(p);
@@ -59,7 +58,6 @@ void FUN_080a9a74(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
 }
 
-INCASM("asm/projectile/unk_27_post.inc");
 
 void Projectile27_Init(struct Projectile* p);
 void Projectile27_Update(struct Projectile* p);

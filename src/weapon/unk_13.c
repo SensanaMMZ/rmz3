@@ -65,7 +65,6 @@ void Weapon13_Die(struct Weapon* p) {
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/weapon/unk_13_post.inc");
 
 const s8 s8_ARRAY_ARRAY_083616cc[2][4] = {
     {0xEA, 0xF5, 0x03, 0x16},

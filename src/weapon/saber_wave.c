@@ -238,4 +238,3 @@ static void hitZSaber(struct Body* body) {
   }
 }
 
-INCASM("asm/weapon/saber_wave_p2.inc");

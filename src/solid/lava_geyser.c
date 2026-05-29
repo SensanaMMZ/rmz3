@@ -116,18 +116,15 @@ static void Solid7_Init(struct LavaGeyserObject* p) {
 extern const SolidFunc sSolid7Updates1[6];
 extern const SolidFunc sSolid7Updates2[6];
 
-INCASM("asm/solid/lava_geyser_p1_p1.inc");
 
 void Solid7_Update(struct Solid* p) {
   (sSolid7Updates1[(p->s).mode[1]])(p);
   (sSolid7Updates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/solid/lava_geyser_p1_p2.inc");
 
 void Solid7_Die(struct Solid* p) {}
 
-INCASM("asm/solid/lava_geyser_p2.inc");
 
 void nop_080cc930(struct Solid* p) {}
 

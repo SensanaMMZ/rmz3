@@ -70,14 +70,12 @@ void Ghost66_Update(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_66_p1_pre_post.inc");
 
 void Ghost66_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_66_p1_post.inc");
 
 void nop_080c4668(struct VFX* p) {}
 

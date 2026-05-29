@@ -27,13 +27,11 @@ void VFX62_Init(struct VFX* vfx) {
   (sInitializers[(vfx->s).work[0]])(vfx);
 }
 
-INCASM("asm/vfx/unk_62_pre_pre_post.inc");
 
 void VFX62_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).work[0]])(vfx);
 }
 
-INCASM("asm/vfx/unk_62_pre_post.inc");
 
 void VFX62_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;

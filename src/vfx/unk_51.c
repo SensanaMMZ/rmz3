@@ -32,7 +32,6 @@ void VFX51_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
 }
 
-INCASM("asm/vfx/unk_51_pre_post.inc");
 
 void VFX51_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);

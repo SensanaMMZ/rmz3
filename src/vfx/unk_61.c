@@ -44,7 +44,6 @@ struct VFX* FUN_080c2ed0(struct Coord* c, u8 a1, u16 a2, s32 a3) {
   return p;
 }
 
-INCASM("asm/vfx/unk_61_pre_pre_p2_p2.inc");
 
 struct VFX* FUN_080c2f3c(struct Coord* c, u8 mode) {
   struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
@@ -72,7 +71,6 @@ void VFX61_Update(struct VFX* vfx) {
   }
 }
 
-INCASM("asm/vfx/unk_61_pre_post.inc");
 
 void VFX61_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;

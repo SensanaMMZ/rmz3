@@ -50,13 +50,11 @@ void FUN_080c6e70(struct Entity* e, struct Coord* c) {
   }
 }
 
-INCASM("asm/vfx/unk_73_pre_p2.inc");
 
 void Ghost73_Init(struct VFX* p) {
   (sInitializers[(p->s).work[0]])(p);
 }
 
-INCASM("asm/vfx/unk_73_post_pre_p1.inc");
 
 void Ghost73_Update(struct VFX* p) {
   if (IS_METTAUR) {
@@ -68,7 +66,6 @@ void Ghost73_Update(struct VFX* p) {
   (sUpdates[(p->s).work[0]])(p);
 }
 
-INCASM("asm/vfx/unk_73_post_pre_p2.inc");
 
 void Ghost73_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;

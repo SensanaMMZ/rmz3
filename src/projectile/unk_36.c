@@ -40,7 +40,6 @@ void Projectile36_Init(struct Projectile* p) {
   (sInitializers[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/unk_36_pre_pre_post.inc");
 
 void Projectile36_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]])(p);
@@ -60,7 +59,6 @@ void FUN_080ada50(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_36_post.inc");
 
 void Projectile36_Init(struct Projectile* p);
 void Projectile36_Update(struct Projectile* p);

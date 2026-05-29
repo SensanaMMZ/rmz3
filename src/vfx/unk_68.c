@@ -71,7 +71,6 @@ void Ghost68_Init(struct VFX* p) {
   Ghost68_Update(p);
 }
 
-INCASM("asm/vfx/unk_68_pre_post.inc");
 
 void Ghost68_Update(struct VFX* p) {
   (sGhost68Updates[(p->s).work[0]])(p);
@@ -83,9 +82,7 @@ void Ghost68_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
 }
 
-INCASM("asm/vfx/unk_68_post_p1.inc");
 
-INCASM("asm/vfx/unk_68_post_p2_p1.inc");
 
 void FUN_080c4d30(struct VFX* p) {
   (p->s).flags |= DISPLAY;

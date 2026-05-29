@@ -16,7 +16,6 @@ void Ghost33_Update(struct VFX* p) {
   (sUpdates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/vfx/unk_33_pre_p2.inc");
 
 void Ghost33_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);

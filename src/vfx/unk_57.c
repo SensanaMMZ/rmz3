@@ -29,7 +29,6 @@ void VFX57_Init(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_57_pre_p2.inc");
 
 void VFX57_Update(struct VFX* p) {
   if ((p->s).work[0] == 0) {
@@ -39,7 +38,6 @@ void VFX57_Update(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_57_pre_p3.inc");
 
 void VFX57_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);

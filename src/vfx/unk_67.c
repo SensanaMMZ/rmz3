@@ -41,7 +41,6 @@ void Ghost67_Update(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_67_pre_post.inc");
 
 void Ghost67_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;

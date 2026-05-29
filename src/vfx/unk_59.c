@@ -55,14 +55,12 @@ void VFX59_Update(struct VFX* vfx) {
   }
 }
 
-INCASM("asm/vfx/unk_59_p1_pre_post.inc");
 
 void VFX59_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_59_p1_post.inc");
 
 void nop_080c28fc(struct VFX* vfx) {}
 

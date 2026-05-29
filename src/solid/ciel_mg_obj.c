@@ -30,7 +30,6 @@ void CielMinigameObj_Init(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/ciel_mg_obj_pre_p2.inc");
 
 void CielMinigameObj_Update(struct Solid* p) {
   if ((p->s).work[0] == 0) {
@@ -40,7 +39,6 @@ void CielMinigameObj_Update(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/ciel_mg_obj_pre_p3.inc");
 
 void CielMinigameObj_Die(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);

@@ -40,7 +40,6 @@ void VFX63_Update(struct VFX* vfx) {
   }
 }
 
-INCASM("asm/vfx/unk_63_pre_post.inc");
 
 void VFX63_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;

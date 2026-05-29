@@ -40,7 +40,6 @@ void FUN_080d8fd4(struct Entity* p) {
   }
 }
 
-INCASM("asm/solid/unk_27_p1_p2.inc");
 
 void FUN_080d8fe4(struct Entity* p) {
   if (p != NULL) {

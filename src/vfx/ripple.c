@@ -90,4 +90,3 @@ void Ripple_Disappear(struct VFX* p) {
   DeleteVFX(&p->s);
 }
 
-INCASM("asm/vfx/ripple_p2.inc");

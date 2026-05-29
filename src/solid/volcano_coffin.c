@@ -64,7 +64,6 @@ INCASM("asm/solid/volcano_coffin_p1.inc");
 
 void VolcanoCoffin_Die(struct Solid* p) {}
 
-INCASM("asm/solid/volcano_coffin_p2.inc");
 
 static const struct Collision sCollision = {
   kind : DRP,

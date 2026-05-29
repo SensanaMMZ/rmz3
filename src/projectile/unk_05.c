@@ -63,7 +63,6 @@ void Projectile5_Init(struct Projectile* p) {
   Projectile5_Update(p);
 }
 
-INCASM("asm/projectile/unk_05_pre_p2_p2.inc");
 
 void Projectile5_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
