@@ -280,6 +280,7 @@ void FUN_0805f784(struct Boss* p) {
 }
 
 void FUN_0805f7d0(struct Boss* p);
+void FUN_0805f820(struct Boss* p);
 
 void FUN_0805f794(struct Boss* p) {
   if (FUN_080608e0(p)) {
@@ -294,7 +295,20 @@ void FUN_0805f794(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_post_p1_p2.inc");
+void FUN_0805f7d0(struct Boss* p) {
+  s32 dx;
+  s32 t;
+  t = (p->s).work[2] + 1;
+  (p->s).work[2] = t;
+  dx = (*(s32*)((u8*)p + 0xbc) - *(s32*)((u8*)p + 0xb8)) * t;
+  dx /= *(u8*)((u8*)p + 0xb7);
+  (p->s).coord.x = *(s32*)((u8*)p + 0xb8) + dx;
+  FUN_08060924(p);
+  if ((p->s).d.y > 0 && (p->s).coord.y >= ((p->s).unk_2c->coord.y - 0x80)) {
+    *(u16*)((u8*)p + 0xe) = 4;
+    FUN_0805f820(p);
+  }
+}
 
 void FUN_0805f820(struct Boss* p) {
   (PTR_ARRAY_083654c4[(p->s).mode[3]])(p);
