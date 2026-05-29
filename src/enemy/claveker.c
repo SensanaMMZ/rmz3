@@ -1,6 +1,9 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
+
+static const struct Coord sElementCoord;
 
 static const struct Collision sCollisions[3];
 
@@ -87,7 +90,26 @@ void FUN_0808f1a4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/claveker_p7_post.inc");
+bool8 FUN_0808f1e0(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)((u8*)p + 0xbc);
+  if (*slot == NULL && ((p->body).status & 1)) {
+    struct VFX* e = ApplyElementEffect(0, &p->s, &sElementCoord);
+    *slot = e;
+    if (e != NULL) {
+      u8 attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+      if (attr == 0x10) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      } else if (attr == 0x30) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/claveker_p7_post_p2.inc");
 
 // --------------------------------------------
 
