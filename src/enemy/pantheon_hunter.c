@@ -589,7 +589,29 @@ void phunter_08064c10(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_hunter_p1_p2.inc");
+void FUN_08064c38(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, 0x1300);
+    (p->s).d.y = 0;
+    (p->s).d.x = 0;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  {
+    metatile_attr_t r = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+    if (r != 0x800F && r != 0) {
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      (p->s).mode[1] = 5;
+      (p->s).mode[2] = 0;
+      (p->s).mode[3] = 6;
+    }
+  }
+}
 
 void nop_08064ca8(struct Enemy* p) {}
 
