@@ -19,8 +19,6 @@ void FUN_0808d0b0(s32 x, s32 y, u8 mode) {
   }
 }
 
-INCASM("asm/enemy/deathlock_pre_p1_p2.inc");
-
 void FUN_0808d10c(struct Entity* e) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
   if (p != NULL) {
@@ -44,8 +42,6 @@ INCASM("asm/enemy/deathlock_pre_p2_pre.inc");
 void Deathlock_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
-
-INCASM("asm/enemy/deathlock_pre_p2_post.inc");
 
 void FUN_0808d6f4(struct Enemy* p) {}
 

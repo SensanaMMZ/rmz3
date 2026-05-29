@@ -73,8 +73,6 @@ void Crossbyne_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/crossbyne_p2_post.inc");
-
 void FUN_0807cf5c(struct Enemy* p) {}
 
 void FUN_0807cf60(struct Enemy* p) {

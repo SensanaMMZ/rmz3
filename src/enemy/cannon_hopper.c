@@ -16,7 +16,6 @@ void FUN_080978e4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/cannon_hopper_post_pre_p2.inc");
 
 void FUN_08097904(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
