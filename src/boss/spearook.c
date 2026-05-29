@@ -1,6 +1,8 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "physics.h"
+#include "vfx.h"
 
 static const BossFunc sDeads[5];
 
@@ -31,7 +33,34 @@ INCASM("asm/boss/spearook_p3.inc");
 
 void nop_08063510(struct Boss* p) {}
 
-INCASM("asm/boss/spearook_p4.inc");
+void FUN_08063514(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      EXIT_BODY(p);
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      {
+        s32 push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (push < 0) {
+          (p->s).coord.y += push;
+          CreateSmoke(1, &(p->s).coord);
+          PlaySound(0x2a);
+          (p->s).flags &= ~DISPLAY;
+          (p->s).flags &= ~FLIPABLE;
+          EXIT_BODY(p);
+          SET_BOSS_ROUTINE(p, ENTITY_DISAPPEAR);
+        }
+      }
+      break;
+  }
+}
 
 void Spearook_Init(struct Boss* p);
 void Spearook_Update(struct Boss* p);
