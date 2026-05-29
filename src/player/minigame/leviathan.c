@@ -92,7 +92,25 @@ void Leviathan_Die(struct Zero* z) {
   SET_PLAYER_ROUTINE(z, ENTITY_EXIT);
 }
 
-INCASM("asm/player/leviathan_p1_post.inc");
+void leviathanMode0Pre(struct Zero* p) {
+  struct Entity* e = (p->s).unk_28;
+  if (*(u16*)((u8*)e + 0x10) & 0x30) {
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+  if (*(u16*)((u8*)e + 0x12) & 2) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
+
+void leviathanMode1Pre(struct Zero* p) {
+  struct Entity* e = (p->s).unk_28;
+  if (*(u16*)((u8*)e + 0x12) & 2) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void nop_08036044(struct Zero* z) {}
 
