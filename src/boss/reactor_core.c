@@ -53,7 +53,26 @@ void FUN_08061aa4(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/reactor_core_p2_post_p2.inc");
+void FUN_08061adc(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      StopSound(0xe0);
+      (p->s).flags2 &= ~0x08;
+      EXIT_BODY(p);
+      if ((gStageRun.missionStatus & 1) && !(gStageRun.vm.active & 1)) {
+        gStageRun.missionStatus = (gStageRun.missionStatus & 0xfffe) | 0x10;
+      }
+      (p->s).work[2] = 2;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (--(p->s).work[2] == 0) {
+        gStageRun.vm.active |= 2;
+        (p->s).mode[2]++;
+      }
+      break;
+  }
+}
 
 void ReactorCore_Init(struct Boss* p);
 void ReactorCore_Update(struct Boss* p);
