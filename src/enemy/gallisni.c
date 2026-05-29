@@ -29,8 +29,6 @@ void Gallisni_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/gallisni_p1_post.inc");
-
 void nop_0808737c(struct Enemy* p) {}
 
 INCASM("asm/enemy/gallisni_p2_pre_pre_p1.inc");
@@ -59,8 +57,6 @@ void FUN_080873a0(struct Enemy* p) {
     (p->s).mode[2] = 0;
   }
 }
-
-INCASM("asm/enemy/gallisni_p2_pre_pre_p2_p2.inc");
 
 void FUN_080873fc(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {

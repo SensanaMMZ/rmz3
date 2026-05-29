@@ -54,13 +54,9 @@ void EyeCannon_Update(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/eye_cannon_pre_pre_p2.inc");
-
 void EyeCannon_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
-
-INCASM("asm/enemy/eye_cannon_pre_post.inc");
 
 void FUN_08084930(struct Enemy* p) {}
 
@@ -77,8 +73,6 @@ void FUN_08084934(struct Enemy* p) {
     }
   }
 }
-
-INCASM("asm/enemy/eye_cannon_post_pre_p2.inc");
 
 void FUN_08084974(struct Enemy* p) {
   switch ((p->s).mode[2]) {

@@ -33,8 +33,6 @@ void HellBouncer_Die(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/hell_bouncer_p1_p2_p2.inc");
-
 bool8 FUN_0807e5f0(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/hell_bouncer_p2.inc");
@@ -48,8 +46,6 @@ bool8 FUN_0807f644(struct Enemy* p) { return TRUE; }
 INCASM("asm/enemy/hell_bouncer_p4_p1.inc");
 
 void nop_0807fd1c(struct Enemy* p) {}
-
-INCASM("asm/enemy/hell_bouncer_p4_p2.inc");
 
 void HellBouncer_Init(struct Enemy* p);
 void HellBouncer_Update(struct Enemy* p);

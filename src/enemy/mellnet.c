@@ -55,8 +55,6 @@ void FUN_0807d9b4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mellnet_post_pre_p2_p2.inc");
-
 void FUN_0807da10(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
     SetDDP(&p->body, &sCollisions[2]);

@@ -211,15 +211,11 @@ void Lamplort_Disappear(struct Enemy* p) {
   DeleteEnemy((struct Entity*)p);
 }
 
-INCASM("asm/enemy/lamplort_p1_post.inc");
-
 bool8 FUN_0806c81c(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/lamplort_p2_p1.inc");
 
 void FUN_0806c820(struct Enemy* p) {}
-
-INCASM("asm/enemy/lamplort_p2_p2.inc");
 
 bool8 FUN_0806c824(struct Enemy* p) { return TRUE; }
 
@@ -285,8 +281,6 @@ bool8 FUN_0806cda4(struct Enemy* p) { return TRUE; }
 INCASM("asm/enemy/lamplort_p10_p1.inc");
 
 void FUN_0806cda8(struct Enemy* p) {}
-
-INCASM("asm/enemy/lamplort_p10_p2.inc");
 
 bool8 FUN_0806cdac(struct Enemy* p) { return TRUE; }
 

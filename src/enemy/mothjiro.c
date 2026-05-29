@@ -68,8 +68,6 @@ INCASM("asm/enemy/mothjiro_p7_p1.inc");
 
 void nop_08088a48(struct Enemy* p) {}
 
-INCASM("asm/enemy/mothjiro_p7_p2.inc");
-
 bool8 nop_08088a4c(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/mothjiro_p8_pre.inc");

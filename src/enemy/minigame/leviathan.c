@@ -14,8 +14,6 @@ void LeviathanMinigameEnemy_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/minigame_leviathan_p2_post.inc");
-
 void nop_0809a1ec(struct Enemy* p) {}
 
 INCASM("asm/enemy/minigame_leviathan_p3.inc");

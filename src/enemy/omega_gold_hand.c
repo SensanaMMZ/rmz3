@@ -178,8 +178,6 @@ INCASM("asm/enemy/omega_gold_hand_p7.inc");
 
 bool8 FUN_080846fc(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_gold_hand_p8.inc");
-
 void FUN_08084700(struct Enemy* p) {}
 
 bool8 FUN_0808340c(struct Enemy* p);

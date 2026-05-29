@@ -28,8 +28,6 @@ void DeathtanzRock_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/deathtanz_rock_p2_post_post.inc");
-
 void nop_0807a6f8(struct Enemy* p) {}
 
 INCASM("asm/enemy/deathtanz_rock_p3.inc");
