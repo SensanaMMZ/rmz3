@@ -43,8 +43,6 @@ INCASM("asm/enemy/piller_cannon_p2_p1.inc");
 
 void FUN_08068610(struct Enemy* p) {}
 
-INCASM("asm/enemy/piller_cannon_p2_p2.inc");
-
 bool8 FUN_08068614(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/piller_cannon_p3.inc");
@@ -87,8 +85,6 @@ bool8 FUN_08068eb0(struct Enemy* p) { return TRUE; }
 INCASM("asm/enemy/piller_cannon_p9_p1.inc");
 
 void FUN_08068eb4(struct Enemy* p) {}
-
-INCASM("asm/enemy/piller_cannon_p9_p2.inc");
 
 bool8 FUN_08068eb8(struct Enemy* p) { return TRUE; }
 

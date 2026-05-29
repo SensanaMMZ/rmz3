@@ -98,8 +98,6 @@ void FUN_0807ff40(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_zombie_p2_pre_p1_p2.inc");
-
 void FUN_0807ff6c(struct Enemy* p) {
   u32 status = (p->body).status;
   if (status & BODY_STATUS_WHITE) {
@@ -110,16 +108,12 @@ void FUN_0807ff6c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_zombie_p2_pre_p1_p3.inc");
-
 void FUN_0807ff94(struct Enemy* p) {
   if (!((p->body).status & BODY_STATUS_BINDING)) {
     (p->s).mode[1] = 5;
     (p->s).mode[2] = 0;
   }
 }
-
-INCASM("asm/enemy/pantheon_zombie_p2_pre_p2.inc");
 
 void FUN_0807ffb0(struct Enemy* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);

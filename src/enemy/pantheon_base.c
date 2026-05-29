@@ -30,8 +30,6 @@ void PantheonBase_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/pantheon_base_p2_post.inc");
-
 void nop_0808a3f4(struct Enemy* p) {}
 
 INCASM("asm/enemy/pantheon_base_p3_pre_p1.inc");
@@ -47,8 +45,6 @@ void pBase_0808a3f8(struct Enemy* p) {
     }
   }
 }
-
-INCASM("asm/enemy/pantheon_base_p3_pre_p2.inc");
 
 void pBase_0808a438(struct Enemy* p) {
   struct Entity* parent = (p->s).unk_28;

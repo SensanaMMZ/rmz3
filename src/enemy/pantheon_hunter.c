@@ -603,8 +603,6 @@ void FUN_08064e0c(struct Enemy* p) {
   UpdateMotionGraphic(&p->s);
 }
 
-INCASM("asm/enemy/pantheon_hunter_p2_post.inc");
-
 void nop_08064e34(struct Enemy* p) {}
 
 INCASM("asm/enemy/pantheon_hunter_p3.inc");

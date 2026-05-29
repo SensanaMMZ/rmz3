@@ -98,7 +98,6 @@ void FUN_0808c334(struct Enemy* p) {
 
 void nop_0808c384(struct Enemy* p) {}
 
-INCASM("asm/enemy/omega_gold_sword_p4_p2.inc");
 
 // --------------------------------------------
 

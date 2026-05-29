@@ -58,8 +58,6 @@ INCASM("asm/enemy/pantheon_aqua_p7_p1.inc");
 
 void FUN_08072ffc(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_aqua_p7_p2.inc");
-
 bool8 FUN_08073000(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/pantheon_aqua_p8.inc");
