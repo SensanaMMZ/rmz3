@@ -121,7 +121,31 @@ void FUN_0809f7c8(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/unk_12_post.inc");
+void FUN_0809f7d4(struct Projectile* p) {
+  if ((p->s).unk_28->mode[0] > 1) {
+    EXIT_BODY(p);
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0xa600);
+      SET_XFLIP(p, TRUE);
+      (p->s).work[2] = 0xff;
+      (p->s).unk_coord.x = ((p->s).d.x << 10) >> 8;
+      (p->s).unk_coord.y = ((p->s).d.y << 10) >> 8;
+      (p->s).angle = *(u8*)((u8*)p + 0xb4);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).unk_coord.x;
+      (p->s).coord.y += (p->s).unk_coord.y;
+      UpdateMotionGraphic(&p->s);
+      if (--(p->s).work[2] == 0) {
+        EXIT_BODY(p);
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
 
 // --------------------------------------------
 
