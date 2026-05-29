@@ -47,7 +47,22 @@ void FUN_0807fdf8(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_zombie_p1_pre_p2_p3.inc");
+void PantheonZombie_Update(struct Enemy* p);
+extern const u8 sInitModes[4];
+
+void PantheonZombie_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 20, (void*)FUN_0807fd84);
+  *(u32*)&p->props[0] = 0;
+  p->props[4] = 0;
+  PantheonZombie_Update(p);
+}
+
+INCASM("asm/enemy/pantheon_zombie_p1_pre_p2_p4.inc");
 
 void PantheonZombie_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
