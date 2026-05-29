@@ -35,7 +35,20 @@ void Enemy61_Update(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/unk_61_p2_p2.inc");
+void Enemy61_Die(struct Enemy* p) {
+  struct Entity* parent = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      EXIT_BODY(p);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (parent->mode[0] > 2) {
+        SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      }
+      break;
+  }
+}
 
 void FUN_08093754(struct Enemy* p) {}
 
