@@ -45,8 +45,6 @@ void Enemy72_Update(struct Enemy* p) {
   (sUpdates[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/unk_72_post_pre.inc");
-
 void Enemy72_Die(struct Enemy* p) {
   (p->s).flags &= ~DISPLAY;
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
