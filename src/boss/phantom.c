@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "global.h"
 #include "motion.h"
+#include "stagerun.h"
 #include "zero.h"
 
 void FUN_080c4be0(s32 x, s32 y);
@@ -71,7 +72,26 @@ void phantom_0805eed4(struct Body* body) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p1_p2.inc");
+void phantom_080607e4(struct Entity* p);
+void Phantom_Die(struct Boss* p);
+extern const BossFunc PTR_ARRAY_08365414[];
+
+void Phantom_Update(struct Boss* p) {
+  if (((p->body).status & BODY_STATUS_DEAD) || (p->body).hp == 0) {
+    if (!(gStageRun.missionStatus & 8)) {
+      struct Entity** slot = (struct Entity**)((u8*)p + 0xd0);
+      if (*slot != NULL) {
+        *slot = NULL;
+      }
+      SET_BOSS_ROUTINE(p, ENTITY_DIE);
+      (p->s).mode[1] = 0;
+      Phantom_Die(p);
+      return;
+    }
+  }
+  (PTR_ARRAY_08365414[(p->s).work[0]])(p);
+  phantom_080607e4(&p->s);
+}
 
 void callPhantomBossModeTable(struct Boss* p) {
   (PTR_ARRAY_08365418[(p->s).mode[1]])(p);
