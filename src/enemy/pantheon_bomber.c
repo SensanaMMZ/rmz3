@@ -1,8 +1,10 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 
 static const struct Collision sCollisions[5];
+static const struct Coord sElementCoord;
 
 struct Enemy* CreatePantheonBomber(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -78,7 +80,27 @@ void FUN_08086604(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_bomber_p7_post.inc");
+bool8 pBomber_08086628(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)((u8*)p + 0xbc);
+  if (*slot == NULL && ((p->body).status & 1)) {
+    *slot = ApplyElementEffect(0, &p->s, &sElementCoord);
+  }
+  return TRUE;
+}
+
+void FUN_0808665c(struct Body* body, struct Coord* c) {
+  const struct Collision* col = (body->enemy)->processing;
+  if (col->atkType == 3 || col->atkType == 0xe || col->atkType == 0xf) {
+    struct Enemy* self = (struct Enemy*)body->parent;
+    if ((self->body).status & 0x200) {
+      if ((self->s).coord.x < c->x) {
+        *(u8*)((u8*)self + 0xba) = 0xff;
+      } else {
+        *(u8*)((u8*)self + 0xba) = 0xfe;
+      }
+    }
+  }
+}
 
 void PantheonBomber_Init(struct Enemy* p);
 void PantheonBomber_Update(struct Enemy* p);
