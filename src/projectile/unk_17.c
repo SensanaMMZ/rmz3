@@ -76,7 +76,36 @@ void FUN_080a2d9c(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_17_post.inc");
+void FUN_080a2dec(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x4202);
+      (p->s).work[2] = 0x14;
+      (p->s).d.y = 0x40;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.y -= (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      SetMotion(&p->s, 0x4203);
+      (p->s).work[2] = 0x14;
+      (p->s).d.y = 0x20;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      (p->s).coord.y -= (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
 
 void Projectile17_Init(struct Projectile* p);
 void Projectile17_Update(struct Projectile* p);
