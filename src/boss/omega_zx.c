@@ -524,7 +524,30 @@ INCASM("asm/boss/omega_zx_p9.inc");
 
 bool8 FUN_080615d8(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_zx_p10.inc");
+void FUN_080615dc(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      ClearBlink(0xa7);
+      ClearBlink(0xa8);
+      ClearBlink(0xa9);
+      ClearBlink(0xaa);
+      LoadBlink(0xa7, 0x2c0);
+      FUN_080616fc(p);
+      (p->s).mode[2]++;
+      break;
+    case 1:
+      FUN_080616fc(p);
+      UpdateBlinkMotionState(0xa7);
+      if ((*(struct Entity**)((u8*)p + 0xcc))->mode[1] != 7) {
+        ClearBlink(0xa7);
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/omega_zx_p10_p2.inc");
 
 // 0x083655d4
 static const struct Collision sCollisions[3] = {
