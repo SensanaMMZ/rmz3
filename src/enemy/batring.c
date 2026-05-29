@@ -1158,7 +1158,36 @@ void nop_08067f70(struct Enemy* p) {}
 
 bool8 FUN_08067f74(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/batring_p6.inc");
+void FUN_08067f78(struct Enemy* p) {
+  struct Entity** slot;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + (p->s).d.y + 0xe00) != 0) {
+        (p->s).d.y = 0;
+        (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - 0xe00;
+      } else {
+        (p->s).coord.y += (p->s).d.y;
+      }
+      break;
+  }
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    *slot = NULL;
+    *(u8*)((u8*)p + 0xc0) = 0;
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 FUN_08068014(struct Enemy* p) { return TRUE; }
 
