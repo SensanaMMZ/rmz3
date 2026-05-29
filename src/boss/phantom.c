@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "global.h"
 #include "motion.h"
+#include "zero.h"
 
 void FUN_080c4be0(s32 x, s32 y);
 
@@ -54,7 +55,23 @@ static const BossFunc PTR_ARRAY_0836552c[6];
 static const BossFunc PTR_ARRAY_08365544[5];
 static const BossFunc PTR_ARRAY_08365558[4];
 
-INCASM("asm/boss/phantom_p1_pre_p1.inc");
+INCASM("asm/boss/phantom_p1_pre_p1_p1.inc");
+
+void phantom_0805eed4(struct Body* body) {
+  struct Boss* self = (struct Boss*)body->parent;
+  if (body->hitboxFlags & 1) {
+    PlaySound(0xff);
+  }
+  {
+    u8 r = 0;
+    if ((pZero2->s).coord.x - (self->s).coord.x > 0) {
+      r = 1;
+    }
+    *(u8*)((u8*)self + 0xcb) = r;
+  }
+}
+
+INCASM("asm/boss/phantom_p1_pre_p1_p2.inc");
 
 void callPhantomBossModeTable(struct Boss* p) {
   (PTR_ARRAY_08365418[(p->s).mode[1]])(p);
