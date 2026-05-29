@@ -279,7 +279,22 @@ void FUN_0805f784(struct Boss* p) {
   FUN_080608c8(p);
 }
 
-INCASM("asm/boss/phantom_p1_post_p1.inc");
+void FUN_0805f7d0(struct Boss* p);
+
+void FUN_0805f794(struct Boss* p) {
+  if (FUN_080608e0(p)) {
+    u8 counter;
+    (p->s).mode[3] = 2;
+    counter = *(u8*)((u8*)p + 0xb7);
+    (p->s).d.y = -((counter + 1) << 6);
+    *(u8*)((u8*)p + 0xb7) = counter + 8;
+    *(s32*)((u8*)p + 0xb8) = (p->s).coord.x;
+    (p->s).work[2] = 0;
+    FUN_0805f7d0(p);
+  }
+}
+
+INCASM("asm/boss/phantom_p1_post_p1_p2.inc");
 
 void FUN_0805f820(struct Boss* p) {
   (PTR_ARRAY_083654c4[(p->s).mode[3]])(p);
