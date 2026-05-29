@@ -25,8 +25,6 @@ INCASM("asm/boss/spearook_p1_post.inc");
 
 void nop_0806316c(struct Boss* p) {}
 
-INCASM("asm/boss/spearook_p2.inc");
-
 void nop_08063170(struct Boss* p) {}
 
 INCASM("asm/boss/spearook_p3.inc");

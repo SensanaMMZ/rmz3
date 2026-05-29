@@ -70,8 +70,6 @@ void OmegaZeroRock_Die(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/omega_zero_rock_p1_p2.inc");
-
 void nop_0808b704(struct Enemy* p) {}
 
 void FUN_0808b708(struct Enemy* p) {
