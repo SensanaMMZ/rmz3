@@ -4,12 +4,30 @@
 
 static const EnemyFunc sUpdates1[4];
 static const EnemyFunc sUpdates2[4];
+static const struct Collision sCollisions[3];
+static const u8 sInitModes[6];
+static const s8 s8_ARRAY_ARRAY_08369f5a[4][2];
+
+void Enemy63_Update(struct Enemy* p);
 
 INCASM("asm/enemy/unk_63_p1.inc");
 
 void nop_08094ad8(struct Enemy* p) {}
 
-INCASM("asm/enemy/unk_63_p2_pre_p1.inc");
+void Enemy63_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 1, (void*)nop_08094ad8);
+  if ((p->s).work[0] <= 3) {
+    (p->s).coord.x += s8_ARRAY_ARRAY_08369f5a[(p->s).work[0]][0] << 8;
+    (p->s).coord.y += s8_ARRAY_ARRAY_08369f5a[(p->s).work[0]][1] << 8;
+    (p->s).work[2] = 0x1e;
+  }
+  Enemy63_Update(p);
+}
 
 void Enemy63_Update(struct Enemy* p) {
   (sUpdates1[(p->s).mode[1]])(p);
