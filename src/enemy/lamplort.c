@@ -218,7 +218,27 @@ void FUN_0806c820(struct Enemy* p) {}
 
 bool8 FUN_0806c824(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p3.inc");
+void FUN_0806c828(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      SetDDP(&p->body, &sCollisions[0]);
+      SetMotion(&p->s, 0x1900);
+      SET_XFLIP(p, *(u8*)((u8*)p + 0xbc));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_0806c8c8(struct Enemy* p) { return TRUE; }
 
