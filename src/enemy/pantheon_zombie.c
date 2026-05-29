@@ -82,8 +82,6 @@ void PantheonZombie_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/pantheon_zombie_p1_post.inc");
-
 void nop_0807ff3c(struct Enemy* p) {}
 
 INCASM("asm/enemy/pantheon_zombie_p2_pre_p1_p1.inc");
