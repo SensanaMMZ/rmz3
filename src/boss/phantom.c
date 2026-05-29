@@ -97,7 +97,6 @@ void callPhantomBossModeTable(struct Boss* p) {
   (PTR_ARRAY_08365418[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p2.inc");
 
 void phantom_0805efa4(struct Boss* p) {
   (PTR_ARRAY_08365434[(p->s).mode[2]])(p);
@@ -146,7 +145,6 @@ void FUN_0805f444(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p7_p1_p2_p1.inc");
 
 void FUN_0805f464(struct Boss* p) {
   FUN_08060924(p);
@@ -157,7 +155,6 @@ void FUN_0805f464(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p7_p1_p2_p2.inc");
 
 void FUN_0805f488(struct Boss* p) {
   if ((s8)FUN_08060974(p) < 0) {
@@ -172,7 +169,6 @@ void FUN_0805f54c(struct Boss* p) {
   (PTR_ARRAY_0836547c[(p->s).mode[2]])(p);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p8.inc");
 
 void FUN_0805f564(struct Boss* p) {
   (PTR_ARRAY_08365494[(p->s).mode[3]])(p);
@@ -180,7 +176,6 @@ void FUN_0805f564(struct Boss* p) {
 
 struct Projectile* FUN_080afbb0(struct Entity* parent, u8 r1);
 
-INCASM("asm/boss/phantom_p1_pre_p9_p1_p1.inc");
 
 void FUN_0805f57c(struct Boss* p) {
   SetDDP(&p->body, &sCollisions[0]);
@@ -199,7 +194,6 @@ void FUN_0805f630(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p9_p1_p2_p2.inc");
 
 void FUN_0805f660(struct Boss* p) {
   SetDDP(&p->body, &sCollisions[0]);
@@ -210,7 +204,6 @@ void FUN_0805f660(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p9_p1_p2_p3.inc");
 
 void FUN_0805f690(struct Boss* p) {
   u32 w = (p->s).work[2] - 1;
@@ -221,7 +214,6 @@ void FUN_0805f690(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p9_p2.inc");
 
 void FUN_0805f6b0(struct Boss* p) {
   (PTR_ARRAY_083654a8[(p->s).mode[3]])(p);
@@ -312,7 +304,6 @@ void FUN_0805f820(struct Boss* p) {
   (PTR_ARRAY_083654c4[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p1_post_p2_p1.inc");
 
 void FUN_0805f838(struct Boss* p) {
   SetDDP(&p->body, &sCollisions[12]);
@@ -320,7 +311,6 @@ void FUN_0805f838(struct Boss* p) {
   FUN_080607a0(p, 9);
 }
 
-INCASM("asm/boss/phantom_p1_post_p2_p2_p1.inc");
 
 void FUN_0805f85c(struct Boss* p) {
   if ((p->s).motion.state == 3) {
@@ -332,7 +322,6 @@ INCASM("asm/boss/phantom_p1_post_p2_p2_p2.inc");
 
 void nop_0805f930(struct Boss* p) {}
 
-INCASM("asm/boss/phantom_p2_pre_pre_p1.inc");
 
 void FUN_0805f934(struct Boss* p) {
   (PTR_ARRAY_083654d8[(p->s).mode[3]])(p);
@@ -340,7 +329,6 @@ void FUN_0805f934(struct Boss* p) {
 
 void FUN_0805f97c(struct Boss* p);
 
-INCASM("asm/boss/phantom_p2_pre_pre_p2_p1_p1.inc");
 
 void FUN_0805f94c(struct Boss* p) {
   SetDDP(&p->body, &sCollisions[2]);
@@ -350,7 +338,6 @@ void FUN_0805f94c(struct Boss* p) {
   FUN_0805f97c(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p2_p1_p2.inc");
 
 void FUN_0805f97c(struct Boss* p) {
   FUN_08060924(p);
@@ -376,7 +363,6 @@ void FUN_0805f9dc(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p2_p2_p1.inc");
 
 void FUN_0805f9f4(struct Boss* p) {
   if (FUN_08060974(p) < 0) {
@@ -385,20 +371,17 @@ void FUN_0805f9f4(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p2_p2_p2.inc");
 
 void FUN_0805fa10(struct Boss* p) {
   (PTR_ARRAY_083654ec[(p->s).mode[2]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p3_p1.inc");
 
 void FUN_0805fa28(struct Boss* p) {
   SetDDP(&p->body, &sCollisions[0]);
   *(u16*)((u8*)p + 0xe) = 1;
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p3_p2.inc");
 
 void FUN_0805fa44(struct Boss* p) {
   (PTR_ARRAY_08365504[(p->s).mode[3]])(p);
@@ -447,7 +430,6 @@ void FUN_080600c8(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p6_p2_p1.inc");
 
 void FUN_080600e0(struct Boss* p) {
   if ((s8)FUN_08060974(p) < 0) {
@@ -456,7 +438,6 @@ void FUN_080600e0(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p6_p2_p2.inc");
 
 void FUN_080600fc(struct Boss* p) {
   (PTR_ARRAY_08365544[(p->s).mode[3]])(p);
@@ -503,7 +484,6 @@ void FUN_080603b8(struct Boss* p) {
   (PTR_ARRAY_08365558[(p->s).mode[2]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p8.inc");
 
 void FUN_080603d0(struct Boss* p) {
   switch ((p->s).mode[3]) {
