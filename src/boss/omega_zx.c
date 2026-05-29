@@ -426,7 +426,49 @@ INCASM("asm/boss/omega_zx_p6.inc");
 
 bool8 FUN_080612d4(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_zx_p7.inc");
+extern struct Projectile* FUN_080afedc(struct Entity* parent, struct Coord* c, u8 n);
+
+void FUN_080612d8(struct Boss* p) {
+  struct Coord c;
+  switch ((p->s).mode[2]) {
+    case 0:
+      ClearBlink(0xa7);
+      ClearBlink(0xa8);
+      ClearBlink(0xa9);
+      ClearBlink(0xaa);
+      LoadBlink(0xaa, 0x2c0);
+      FUN_080afedc(&p->s, &(p->s).coord, 1);
+      (p->s).work[2] = 0x1e;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateBlinkMotionState(0xaa);
+      if ((p->s).work[2] != 0 && --(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      c.x = 0xffffdd00;
+      c.y = 0xffffaa00;
+      *(struct Projectile**)((u8*)p + 0xc4) = FUN_080afedc(&p->s, &c, 3);
+      (p->s).work[2] = 0xff;
+      (p->s).work[3] = -1;
+      (p->s).mode[2]++;
+      break;
+    case 3:
+      UpdateBlinkMotionState(0xaa);
+      if ((*(struct Entity**)((u8*)p + 0xc4))->mode[0] > 1) {
+        *(struct Entity**)((u8*)p + 0xc4) = NULL;
+        (p->s).mode[2]++;
+      }
+      break;
+    case 4:
+      ClearBlink(0xaa);
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_080613b8(struct Boss* p) { return TRUE; }
 
