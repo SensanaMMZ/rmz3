@@ -90,7 +90,17 @@ void FUN_0805f3d0(struct Boss* p) {
   (PTR_ARRAY_08365464[(p->s).mode[2]])(p);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p7_p1_p1.inc");
+void FUN_0805f3e8(struct Boss* p) {
+  *(u16*)((u8*)p + 0xe) = 1;
+  SetDDP(&p->body, &sCollisions[0]);
+  FUN_080608c8(p);
+  RNG_0202f388 = LCG(RNG_0202f388);
+  if ((RNG_0202f388 >> 16) & 6) {
+    (p->s).d.y = -0x5C0;
+  } else {
+    (p->s).d.y = -0x6C0;
+  }
+}
 
 void FUN_0805f444(struct Boss* p) {
   if (FUN_080608e0(p)) {
