@@ -42,8 +42,6 @@ INCASM("asm/enemy/puffy_p4_p1.inc");
 
 void nop_0807cacc(struct Enemy* p) {}
 
-INCASM("asm/enemy/puffy_p4_p2.inc");
-
 bool8 nop_0807cad0(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/puffy_p5.inc");

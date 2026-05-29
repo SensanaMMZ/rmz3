@@ -66,8 +66,6 @@ void WormerRockDrone_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/wormer_rock_drone_p2_post_post.inc");
-
 void FUN_08076fe4(struct Enemy* p) {}
 
 INCASM("asm/enemy/wormer_rock_drone_p3.inc");

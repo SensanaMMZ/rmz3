@@ -28,8 +28,6 @@ void WormerSnowBall_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/wormer_snow_ball_p2_post_post.inc");
-
 void FUN_0807b308(struct Enemy* p) {}
 
 INCASM("asm/enemy/wormer_snow_ball_p3_p1.inc");

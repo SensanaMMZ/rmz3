@@ -16,13 +16,10 @@ void Enemy63_Update(struct Enemy* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/unk_63_p2_pre_p2.inc");
-
 void Enemy63_Die(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/unk_63_p2_post.inc");
 
 void nop_08094bcc(struct Enemy* p) {}
 

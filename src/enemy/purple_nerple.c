@@ -30,16 +30,12 @@ void FUN_08076178(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/purple_nerple_p2_p2_p2.inc");
-
 void FUN_08076198(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
     (p->s).mode[1] = 8;
     (p->s).mode[2] = 0;
   }
 }
-
-INCASM("asm/enemy/purple_nerple_p2_p2_p3.inc");
 
 void FUN_080761b8(struct Enemy* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);

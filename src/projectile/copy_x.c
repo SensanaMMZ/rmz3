@@ -24,8 +24,6 @@ void CopyXProjectile_Init(struct Projectile* p) {
   (sInitializers[(p->s).work[0]])(p);
 }
 
-INCASM("asm/projectile/copy_x_pre_post.inc");
-
 void CopyXProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]])(p);
 }
