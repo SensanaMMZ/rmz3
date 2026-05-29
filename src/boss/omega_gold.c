@@ -95,11 +95,42 @@ INCASM("asm/boss/omega_gold_p5.inc");
 
 bool8 nop_0805b740(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_gold_p6.inc");
+static void floatGoldOmega1(struct Boss* p);
+
+void FUN_0805b744(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).spr.xflip = 0;
+      (p->s).spr.oam.xflip = 0;
+      (p->s).flags &= ~X_FLIP;
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).work[2] = 0xff;
+      (p->s).work[3] = -1;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+      } else if ((p->s).work[3] != 0 && --(p->s).work[3] == 0) {
+        (p->s).work[2] = 0x3c;
+        (p->s).mode[2]++;
+      }
+      UpdateBlinkMotionState(0xb);
+      floatGoldOmega1(p);
+      break;
+    case 2:
+      if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      UpdateBlinkMotionState(0xb);
+      floatGoldOmega1(p);
+      break;
+  }
+}
 
 bool8 nop_0805b7ec(struct Boss* p) { return TRUE; }
-
-static void floatGoldOmega1(struct Boss* p);
 
 void FUN_0805b7f0(struct Boss* p) {
   switch ((p->s).mode[2]) {
