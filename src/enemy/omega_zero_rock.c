@@ -74,7 +74,31 @@ INCASM("asm/enemy/omega_zero_rock_p1_p2.inc");
 
 void nop_0808b704(struct Enemy* p) {}
 
-INCASM("asm/enemy/omega_zero_rock_p2.inc");
+void FUN_0808b708(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.y = 0;
+      (p->s).work[2] = 0x10;
+      SetMotion(&p->s, 0xed00);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if ((p->s).work[2] != 0) {
+        if (--(p->s).work[2] == 0 && (p->s).work[3] <= 1) {
+          CreateOzChargeSaberRock((p->s).unk_coord.x, (p->s).work[3] + 1);
+        }
+      } else if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void nop_0808b704(struct Enemy* p);
 
