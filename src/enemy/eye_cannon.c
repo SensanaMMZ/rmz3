@@ -3,6 +3,9 @@
 #include "global.h"
 #include "motion.h"
 #include "sound.h"
+#include "mission.h"
+#include "story.h"
+#include "vfx.h"
 
 static const struct Collision sCollisions[3];
 
@@ -105,7 +108,30 @@ void FUN_08084cbc(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/eye_cannon_post_post_post.inc");
+extern void FUN_080b7f70(struct Enemy* p, struct Coord* c, motion_t* m, s32 n);
+extern void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+static const u32 u32_ARRAY_08368358[4];
+static const motion_t sMotions[3];
+
+void _killEyeCannon(struct Enemy* p) {
+  struct Coord c;
+  EXIT_BODY(p);
+  (p->s).flags &= ~DISPLAY;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y + 0x1200;
+  FUN_080b7f70(p, &c, (motion_t*)sMotions, 3);
+  CreateSmoke(1, &c);
+  PlaySound(0x2a);
+  TryDropItem(3, &(p->s).coord);
+  if (gMission.enemyCount <= 0x270e) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, &(p->s).coord);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+  if ((p->s).work[0] != 0) {
+    SET_FLAG(gCurStory.s.gameflags, u32_ARRAY_08368358[(p->s).work[0] - 1]);
+  }
+}
 
 void FUN_08084934(struct Enemy* p);
 void FUN_08084930(struct Enemy* p);
