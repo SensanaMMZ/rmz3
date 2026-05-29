@@ -120,7 +120,25 @@ void FUN_0805f338(struct Boss* p) {
   (PTR_ARRAY_0836545c[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p6.inc");
+void FUN_0805f350(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[0]);
+  (p->s).d.x = 0x300;
+  (p->s).d.x = 0x300 - ((*(u8*)((u8*)p + 0xcb) * 3) << 9);
+  (p->s).flags |= DISPLAY;
+  FUN_080607a0(p, 0x11);
+  (p->s).work[2] = 0x1e;
+  (p->s).mode[3] = 1;
+}
+
+void FUN_0805f394(struct Boss* p) {
+  FUN_08060864(p, (p->s).d.x);
+  (p->s).d.x = (p->s).d.x * 0xe6 / 256;
+  if (--(p->s).work[2] == 0) {
+    FUN_080607a0(p, 0x12);
+    (p->s).mode[1] = 0;
+    *(u16*)((u8*)p + 0xe) = 0;
+  }
+}
 
 void FUN_0805f3d0(struct Boss* p) {
   (PTR_ARRAY_08365464[(p->s).mode[2]])(p);
