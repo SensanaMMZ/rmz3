@@ -67,7 +67,20 @@ INCASM("asm/enemy/piller_cannon_p7.inc");
 
 bool8 FUN_08068e60(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/piller_cannon_p8.inc");
+void FUN_08068e64(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[12]);
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[11]);
+    *slot = NULL;
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 FUN_08068eb0(struct Enemy* p) { return TRUE; }
 
