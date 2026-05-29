@@ -272,8 +272,6 @@ void FUN_0805f76c(struct Boss* p) {
   (PTR_ARRAY_083654b8[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p11.inc");
-
 void FUN_0805f784(struct Boss* p) {
   (p->s).mode[3] = 1;
   FUN_080608c8(p);
