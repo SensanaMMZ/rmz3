@@ -185,7 +185,6 @@ INCASM("asm/enemy/volcaire_p1.inc");
 
 void nop_08077608(struct Enemy* p) {}
 
-INCASM("asm/enemy/volcaire_p2_pre_p1.inc");
 
 void FUN_0807760c(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {

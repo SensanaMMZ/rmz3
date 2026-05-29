@@ -29,7 +29,6 @@ INCASM("asm/enemy/shelluno_p3.inc");
 
 bool8 FUN_0807a064(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shelluno_p4_p1.inc");
 
 void FUN_0807a068(struct Enemy* p) {}
 

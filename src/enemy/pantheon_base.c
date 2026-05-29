@@ -32,7 +32,6 @@ void PantheonBase_Die(struct Enemy* p) {
 
 void nop_0808a3f4(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_base_p3_pre_p1.inc");
 
 void pBase_0808a3f8(struct Enemy* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);

@@ -10,7 +10,6 @@ void nop_0807b1dc(struct Enemy* p) {}
 
 void WormerSnowBall_Die(struct Enemy* p);
 
-INCASM("asm/enemy/wormer_snow_ball_p2_pre.inc");
 
 static bool8 FUN_0807b1e0(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_DEAD) {
@@ -30,7 +29,6 @@ void WormerSnowBall_Die(struct Enemy* p) {
 
 void FUN_0807b308(struct Enemy* p) {}
 
-INCASM("asm/enemy/wormer_snow_ball_p3_p1.inc");
 
 void FUN_0807b30c(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_B2) {

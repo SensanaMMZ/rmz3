@@ -10,7 +10,6 @@ void nop_0807a5bc(struct Enemy* p) {}
 
 void DeathtanzRock_Die(struct Enemy* p);
 
-INCASM("asm/enemy/deathtanz_rock_p2_pre.inc");
 
 static bool8 FUN_0807a5c0(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_DEAD) {

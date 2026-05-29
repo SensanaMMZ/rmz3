@@ -60,7 +60,6 @@ void EyeCannon_Die(struct Enemy* p) {
 
 void FUN_08084930(struct Enemy* p) {}
 
-INCASM("asm/enemy/eye_cannon_post_pre_p1.inc");
 
 void FUN_08084934(struct Enemy* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);

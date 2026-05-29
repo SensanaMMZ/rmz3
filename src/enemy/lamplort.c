@@ -213,7 +213,6 @@ void Lamplort_Disappear(struct Enemy* p) {
 
 bool8 FUN_0806c81c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p2_p1.inc");
 
 void FUN_0806c820(struct Enemy* p) {}
 
@@ -278,7 +277,6 @@ void FUN_0806cd4c(struct Enemy* p) {
 
 bool8 FUN_0806cda4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p10_p1.inc");
 
 void FUN_0806cda8(struct Enemy* p) {}
 

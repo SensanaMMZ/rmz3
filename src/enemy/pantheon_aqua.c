@@ -54,7 +54,6 @@ void FUN_08072fb0(struct Enemy* p) {
 
 bool8 FUN_08072ff8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_aqua_p7_p1.inc");
 
 void FUN_08072ffc(struct Enemy* p) {}
 

@@ -63,13 +63,11 @@ void FUN_080865d4(struct Enemy* p) {
 
 bool8 nop_080865f8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_bomber_p6_p1.inc");
 
 void nop_080865fc(struct Enemy* p) {}
 
 bool8 nop_08086600(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_bomber_p7_pre.inc");
 
 void FUN_08086604(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {

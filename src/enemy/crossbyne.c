@@ -91,7 +91,6 @@ void FUN_0807cf88(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/crossbyne_p3_post_pre.inc");
 
 void FUN_0807cfac(struct Enemy* p) {
   switch ((p->s).mode[2]) {

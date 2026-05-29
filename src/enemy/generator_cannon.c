@@ -38,7 +38,6 @@ INCASM("asm/enemy/generator_cannon_pre.inc");
 
 void FUN_0808c760(struct Enemy* p) {}
 
-INCASM("asm/enemy/generator_cannon_post_p1.inc");
 
 void FUN_0808c764(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
@@ -47,7 +46,6 @@ void FUN_0808c764(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/generator_cannon_post_p2_p1.inc");
 
 void FUN_0808c784(struct Enemy* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);

@@ -47,13 +47,11 @@ void FUN_08091154(struct Enemy* p) {
 
 bool8 FUN_08091168(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/petatria_p2_p1.inc");
 
 void FUN_0809116c(struct Enemy* p) {}
 
 bool8 FUN_08091170(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/petatria_p3_pre.inc");
 
 void FUN_08091174(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {

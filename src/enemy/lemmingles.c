@@ -54,7 +54,6 @@ INCASM("asm/enemy/lemmingles_p1.inc");
 
 void nop_0806e96c(struct Enemy* p) {}
 
-INCASM("asm/enemy/lemmingles_p2_p1.inc");
 
 void FUN_0806e970(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
@@ -63,7 +62,6 @@ void FUN_0806e970(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/lemmingles_p2_p2_p1.inc");
 
 void FUN_0806e990(struct Enemy* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);

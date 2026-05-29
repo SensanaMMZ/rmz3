@@ -68,7 +68,6 @@ void FUN_0808f15c(struct Enemy* p) {
 
 bool8 FUN_0808f198(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/claveker_p6_p1.inc");
 
 void FUN_0808f19c(struct Enemy* p) {}
 

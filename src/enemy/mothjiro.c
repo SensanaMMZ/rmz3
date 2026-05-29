@@ -64,13 +64,11 @@ void mothjiro_08088a20(struct Enemy* p) {
 
 bool8 nop_08088a44(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/mothjiro_p7_p1.inc");
 
 void nop_08088a48(struct Enemy* p) {}
 
 bool8 nop_08088a4c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/mothjiro_p8_pre.inc");
 
 void mothjiro_08088a50(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {

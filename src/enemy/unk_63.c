@@ -23,7 +23,6 @@ void Enemy63_Die(struct Enemy* p) {
 
 void nop_08094bcc(struct Enemy* p) {}
 
-INCASM("asm/enemy/unk_63_p3_p1.inc");
 
 void FUN_08094bd0(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_BINDING) {

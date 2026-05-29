@@ -31,7 +31,6 @@ void Gallisni_Die(struct Enemy* p) {
 
 void nop_0808737c(struct Enemy* p) {}
 
-INCASM("asm/enemy/gallisni_p2_pre_pre_p1.inc");
 
 void FUN_08087380(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
@@ -40,7 +39,6 @@ void FUN_08087380(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p2_pre_pre_p2_p1.inc");
 
 void FUN_080873a0(struct Enemy* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);

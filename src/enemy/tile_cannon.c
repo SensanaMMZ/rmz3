@@ -43,7 +43,6 @@ void FUN_08078170(struct Enemy* p) {}
 
 void TileCannon_Die(struct Enemy* p);
 
-INCASM("asm/enemy/tile_cannon_p2_pre.inc");
 
 static bool8 tilecannon_08078174(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_DEAD) {

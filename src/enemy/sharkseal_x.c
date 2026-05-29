@@ -23,7 +23,6 @@ INCASM("asm/enemy/sharkseal_x_p1_p2.inc");
 
 bool8 FUN_080707d0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/sharkseal_x_p2_p1.inc");
 
 void nop_080707d4(struct Enemy* p) {}
 
@@ -62,7 +61,6 @@ void sharksealxMode5(struct Enemy* p) {
 
 bool8 FUN_08070f8c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/sharkseal_x_p8_p1.inc");
 
 void nop_08070f90(struct Enemy* p) {}
 

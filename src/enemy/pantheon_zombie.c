@@ -84,7 +84,6 @@ void PantheonZombie_Die(struct Enemy* p) {
 
 void nop_0807ff3c(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_zombie_p2_pre_p1_p1.inc");
 
 void FUN_0807ff40(struct Enemy* p) {
   u32 status = (p->body).status;

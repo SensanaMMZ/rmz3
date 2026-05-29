@@ -8,7 +8,6 @@ INCASM("asm/enemy/purple_nerple_p1.inc");
 
 void FUN_08076140(struct Enemy* p) {}
 
-INCASM("asm/enemy/purple_nerple_p2_p1.inc");
 
 void FUN_08076144(struct Enemy* p) {
   if (p->props[4] != 0) {
@@ -21,7 +20,6 @@ void FUN_08076144(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/purple_nerple_p2_p2_p1.inc");
 
 void FUN_08076178(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {

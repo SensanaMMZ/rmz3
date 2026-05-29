@@ -28,7 +28,6 @@ INCASM("asm/enemy/mellnet_pre_p2.inc");
 
 void FUN_0807d990(struct Enemy* p) {}
 
-INCASM("asm/enemy/mellnet_post_pre_p1.inc");
 
 void FUN_0807d994(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
@@ -37,7 +36,6 @@ void FUN_0807d994(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mellnet_post_pre_p2_p1.inc");
 
 void FUN_0807d9b4(struct Enemy* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
@@ -62,7 +60,6 @@ void FUN_0807da10(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mellnet_post_post_pre.inc");
 
 void FUN_0807da34(struct Enemy* p) {
   switch ((p->s).mode[2]) {

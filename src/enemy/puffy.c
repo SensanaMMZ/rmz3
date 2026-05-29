@@ -38,7 +38,6 @@ void FUN_0807ca9c(struct Enemy* p) {
 
 bool8 nop_0807cac8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/puffy_p4_p1.inc");
 
 void nop_0807cacc(struct Enemy* p) {}
 

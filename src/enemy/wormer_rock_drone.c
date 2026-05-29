@@ -33,7 +33,6 @@ void nop_08076ee0(struct Enemy* p) {}
 
 void WormerRockDrone_Die(struct Enemy* p);
 
-INCASM("asm/enemy/wormer_rock_drone_p2_pre.inc");
 
 static bool8 FUN_08076ee4(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_DEAD) {

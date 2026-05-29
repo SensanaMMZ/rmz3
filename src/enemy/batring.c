@@ -1153,7 +1153,6 @@ void FUN_08067f1c(struct Enemy* p) {
 
 bool8 FUN_08067f6c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/batring_p5_p1.inc");
 
 void nop_08067f70(struct Enemy* p) {}
 
