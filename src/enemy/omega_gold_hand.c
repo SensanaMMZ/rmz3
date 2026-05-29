@@ -65,7 +65,39 @@ INCASM("asm/enemy/omega_gold_hand_p2.inc");
 
 bool8 FUN_080833c8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_gold_hand_p3.inc");
+void FUN_080833cc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
+void FUN_080833ec(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
+bool8 FUN_0808340c(struct Enemy* p) {
+  if (((struct Entity*)(p->s).unk_28)->mode[1] == 5) {
+    (p->s).mode[1] = 4;
+    (p->s).mode[2] = 0;
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/omega_gold_hand_p3_post.inc");
 
 bool8 FUN_080835b4(struct Enemy* p) { return TRUE; }
 
@@ -150,13 +182,13 @@ INCASM("asm/enemy/omega_gold_hand_p8.inc");
 
 void FUN_08084700(struct Enemy* p) {}
 
-void FUN_0808340c(struct Enemy* p);
+bool8 FUN_0808340c(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc PTR_ARRAY_08368188[6] = {
     (EnemyFunc)FUN_08083284,
     (EnemyFunc)FUN_080833c8,
-    FUN_0808340c,
+    (EnemyFunc)FUN_0808340c,
     (EnemyFunc)FUN_080835b4,
     (EnemyFunc)FUN_08083640,
     (EnemyFunc)FUN_08083e14,
