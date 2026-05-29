@@ -1,4 +1,7 @@
 #include "global.h"
+#include "script.h"
+#include "stagerun.h"
+#include "story.h"
 #include "vfx.h"
 
 // MMBN4との通信で出現する敵に関係するエフェクト?
@@ -59,7 +62,15 @@ static const EntityFunc sUpdates[1] = {
     FUN_080be974,
 };
 
-INCASM("asm/vfx/unk_44_pre.inc");
+void VFX44_Update(struct VFX* p) {
+  if ((gCurStory.s.gameflags[4] & 0x40) || gStageRun.vm.entities[1].entity != NULL) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+  } else {
+    sUpdates[(p->s).mode[1]](&p->s);
+  }
+}
 
 void VFX44_Die(struct VFX* vfx) {
   (vfx->s).flags &= ~DISPLAY;
