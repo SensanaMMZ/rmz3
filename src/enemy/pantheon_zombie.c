@@ -10,6 +10,9 @@ static const EnemyFunc sDeads[3];
 
 static const struct Coord sElementCoord;
 
+static const EnemyFunc sUpdates1[8];
+static const EnemyFunc sUpdates2[8];
+
 INCASM("asm/enemy/pantheon_zombie_p1_pre_p1.inc");
 
 void FUN_0807fd84(struct Body* body) {
@@ -62,7 +65,18 @@ void PantheonZombie_Init(struct Enemy* p) {
   PantheonZombie_Update(p);
 }
 
-INCASM("asm/enemy/pantheon_zombie_p1_pre_p2_p4.inc");
+void PantheonZombie_Update(struct Enemy* p) {
+  if (*(u32*)((u8*)(p->s).unk_28 + 0xc0) & 0x100) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    (p->s).mode[1] = 1;
+    PantheonZombie_Die(p);
+  } else {
+    if (FUN_0807fda8(p)) return;
+    FUN_0807fdf8(p);
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
 
 void PantheonZombie_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
