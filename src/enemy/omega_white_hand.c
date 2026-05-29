@@ -220,7 +220,33 @@ INCASM("asm/enemy/omega_white_hand_p3_p3.inc");
 
 bool8 FUN_0806b094(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_white_hand_p4.inc");
+void FUN_0806b098(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SET_XFLIP(p, FALSE);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+void FUN_0806b0dc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SET_XFLIP(p, FALSE);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 bool8 FUN_0806b120(struct Enemy* p) { return TRUE; }
 
