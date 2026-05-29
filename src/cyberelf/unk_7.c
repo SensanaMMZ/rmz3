@@ -50,8 +50,6 @@ void FUN_080e3f24(struct Elf* p) {
   }
 }
 
-INCASM("asm/cyberelf/unk_7_p1_p2.inc");
-
 void FUN_080e3f54(struct Elf* p) {
   u32 w = ((struct CyberElf7*)p)->unk_b8[4] - 1;
   ((struct CyberElf7*)p)->unk_b8[4] = w;

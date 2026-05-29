@@ -11,8 +11,6 @@ void Elf10_Die(struct Elf* p) {
   SET_ELF_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/cyberelf/unk_10_p2.inc");
-
 void Elf10_Init(struct Elf* p);
 void Elf10_Update(struct Elf* p);
 void Elf10_Die(struct Elf* p);

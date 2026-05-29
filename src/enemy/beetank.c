@@ -60,15 +60,11 @@ INCASM("asm/enemy/beetank_p5_p1.inc");
 
 void nop_0807be18(struct Enemy* p) {}
 
-INCASM("asm/enemy/beetank_p5_p2.inc");
-
 bool8 FUN_0807be1c(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/beetank_p6_p1.inc");
 
 void nop_0807bea4(struct Enemy* p) {}
-
-INCASM("asm/enemy/beetank_p6_p2.inc");
 
 bool8 nop_0807bc8c(struct Enemy* p);
 bool8 nop_0807bd3c(struct Enemy* p);
