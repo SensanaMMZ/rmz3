@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
@@ -6,6 +7,8 @@
 static const struct Collision sCollisions[8];
 
 static const EnemyFunc sDeads[3];
+
+static const struct Coord sElementCoord;
 
 INCASM("asm/enemy/pantheon_zombie_p1_pre_p1.inc");
 
@@ -33,7 +36,18 @@ bool8 FUN_0807fda8(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/pantheon_zombie_p1_pre_p2_p2.inc");
+void FUN_0807fdf8(struct Enemy* p) {
+  if (*(struct VFX**)&p->props[0] == NULL && ((p->body).status & 1)) {
+    struct VFX* e = ApplyElementEffect(0, &p->s, &sElementCoord);
+    *(struct VFX**)&p->props[0] = e;
+    if (e != NULL) {
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_zombie_p1_pre_p2_p3.inc");
 
 void PantheonZombie_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);

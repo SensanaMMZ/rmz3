@@ -4,37 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0807fdf8
-FUN_0807fdf8: @ 0x0807FDF8
-	push {r4, r5, r6, lr}
-	adds r4, r0, #0
-	adds r6, r4, #0
-	adds r6, #0xb4
-	ldr r5, [r6]
-	cmp r5, #0
-	bne _0807FE26
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #1
-	ands r0, r1
-	cmp r0, #0
-	beq _0807FE26
-	ldr r2, _0807FE2C @ =0x08367F90
-	movs r0, #0
-	adds r1, r4, #0
-	bl ApplyElementEffect
-	str r0, [r6]
-	cmp r0, #0
-	beq _0807FE26
-	strb r5, [r4, #0xd]
-	strb r5, [r4, #0xe]
-_0807FE26:
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0807FE2C: .4byte 0x08367F90
-
 	thumb_func_start PantheonZombie_Init
 PantheonZombie_Init: @ 0x0807FE30
 	push {r4, r5, r6, lr}
