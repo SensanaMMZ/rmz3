@@ -32,7 +32,34 @@ INCASM("asm/enemy/sharkseal_x_p3.inc");
 
 bool8 FUN_080708dc(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/sharkseal_x_p4.inc");
+void forceWaterLanding(struct Entity* p);
+
+void sharksealxMode2(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x1800);
+      SetDDP(&p->body, &sCollisions[0]);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      SET_XFLIP(p, *(u8*)((u8*)p + 0xbc));
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0x100) {
+        (p->s).d.y = 0x100;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      forceWaterLanding(&p->s);
+      if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_08070990(struct Enemy* p) { return TRUE; }
 
