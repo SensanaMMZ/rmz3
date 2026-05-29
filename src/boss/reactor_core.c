@@ -3,6 +3,7 @@
 #include "collision.h"
 #include "global.h"
 #include "motion.h"
+#include "stagerun.h"
 
 static const BossFunc sDeads[1];
 
@@ -36,7 +37,23 @@ void FUN_08061a78(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/reactor_core_p2_post.inc");
+void FUN_08061aa4(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[2] = 1;
+      }
+      break;
+    case 1:
+      if (!(gStageRun.vm.active & 1)) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/reactor_core_p2_post_p2.inc");
 
 void ReactorCore_Init(struct Boss* p);
 void ReactorCore_Update(struct Boss* p);
