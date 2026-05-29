@@ -351,7 +351,20 @@ INCASM("asm/boss/omega_zx_p1.inc");
 
 bool8 FUN_08060f98(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_zx_p2.inc");
+void FUN_08060f9c(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      if ((p->s).scriptEntity->flags & 1) {
+        gOverworld.state[1] = 1;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_08060fd8(struct Boss* p) { return TRUE; }
 
@@ -385,7 +398,23 @@ void FUN_08060fdc(struct Boss* p) {
 
 bool8 FUN_08061064(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_zx_p4.inc");
+struct VFX* FUN_080c4e58(struct Coord* c, void* _, struct Entity* e);
+
+void FUN_08061068(struct Boss* p) {
+  struct Coord c;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      if (!(gStageRun.vm.active & 1)) {
+        (p->s).unk_2c = (struct Entity*)FUN_080c4e58(&c, NULL, &p->s);
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_080610a8(struct Boss* p) { return TRUE; }
 
