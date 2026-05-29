@@ -2,6 +2,9 @@
 #include "enemy.h"
 #include "global.h"
 
+static const EnemyFunc sUpdates1[1];
+static const EnemyFunc sUpdates2[1];
+
 void FUN_080935b4(struct Entity* e, u8 a1, u8 a2) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
   if (p != NULL) {
@@ -21,7 +24,18 @@ void FUN_080935b4(struct Entity* e, u8 a1, u8 a2) {
 
 void nop_0809362c(struct Enemy* p) {}
 
-INCASM("asm/enemy/unk_61_p2.inc");
+INCASM("asm/enemy/unk_61_p2_p1.inc");
+
+void Enemy61_Update(struct Enemy* p) {
+  if (((struct Entity*)(p->s).unk_28)->mode[0] > 1) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+  } else {
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/enemy/unk_61_p2_p2.inc");
 
 void FUN_08093754(struct Enemy* p) {}
 
