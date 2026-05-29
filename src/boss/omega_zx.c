@@ -355,7 +355,33 @@ INCASM("asm/boss/omega_zx_p2.inc");
 
 bool8 FUN_08060fd8(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_zx_p3.inc");
+void FUN_08060fdc(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      *(s32*)((u8*)p + 0xd0) = 0x280;
+      (p->s).work[2] = 0xf0;
+      // fallthrough
+    case 1: {
+      s32 vy = *(s32*)((u8*)p + 0xd0);
+      vy += ((0x98 - vy) * 10) >> 8;
+      *(s32*)((u8*)p + 0xd0) = vy;
+      (p->s).coord.y -= vy;
+      if ((p->s).coord.y < *(s32*)((u8*)p + 0xb8)) {
+        (p->s).coord.y = *(s32*)((u8*)p + 0xb8);
+      }
+      (p->s).d = (p->s).coord;
+      if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      (p->s).mode[1] = (p->s).mode[2];
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_08061064(struct Boss* p) { return TRUE; }
 
