@@ -1,3 +1,4 @@
+#include "blink.h"
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
@@ -98,7 +99,34 @@ INCASM("asm/boss/omega_gold_p6.inc");
 
 bool8 nop_0805b7ec(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_gold_p7.inc");
+static void floatGoldOmega1(struct Boss* p);
+
+void FUN_0805b7f0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).spr.xflip = 0;
+      (p->s).spr.oam.xflip = 0;
+      (p->s).flags &= ~X_FLIP;
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).work[2] = 0xFF;
+      (p->s).work[3] = -1;
+      ClearBlink(0x66);
+      LoadBlink(0x67, 0x300);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((*(struct Entity**)((u8*)p + 0xc8))->mode[2] > 0x1d) {
+        LoadBlink(0x66, 0x300);
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      } else {
+        UpdateBlinkMotionState(0x67);
+        floatGoldOmega1(p);
+      }
+      break;
+  }
+}
 
 bool8 FUN_0805b41c(struct Boss* p);
 bool8 FUN_0805b45c(struct Boss* p);
