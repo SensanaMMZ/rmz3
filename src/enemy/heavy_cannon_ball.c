@@ -25,7 +25,18 @@ void CreateHeavyCannonBall(s32 x, s32 y, u8 a2) {
   }
 }
 
-INCASM("asm/enemy/heavy_cannon_ball_p1_pre_p2.inc");
+void FUN_0807aae8(struct Body* body, struct Coord* r1, struct Coord* r2) {
+  struct Enemy* atk = (struct Enemy*)((body->enemy)->parent);
+  struct Enemy* self = (struct Enemy*)body->parent;
+  if (body->hitboxFlags & 1) {
+    self->props[0] = ((atk->s).coord.x - (self->s).coord.x) > 0 ? 1 : 0;
+  }
+  if (body->hitboxFlags & 4) {
+    if ((atk->body).hp == 0) {
+      (self->s).work[2] = 0xff;
+    }
+  }
+}
 
 static bool8 FUN_0807ab30(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_DEAD) {
