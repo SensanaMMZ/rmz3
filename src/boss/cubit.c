@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "global.h"
 #include "motion.h"
+#include "physics.h"
 #include "script.h"
 #include "stagerun.h"
 
@@ -97,7 +98,40 @@ INCASM("asm/boss/cubit_p6.inc");
 
 bool8 FUN_080533bc(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/cubit_p7.inc");
+void cubitMode5(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 push;
+      (p->s).d.y += 0x40;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (push != 0) {
+        (p->s).coord.y += push;
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, 0xb014);
+      SetDDP(&p->body, &sCollisions[1]);
+      *(u8*)((u8*)p + 0xc8) = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 nop_08053460(struct Boss* p) { return TRUE; }
 
