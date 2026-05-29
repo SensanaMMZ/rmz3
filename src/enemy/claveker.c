@@ -109,7 +109,19 @@ bool8 FUN_0808f1e0(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/claveker_p7_post_p2.inc");
+void FUN_0808f234(struct Body* body, struct Coord* c) {
+  const struct Collision* col = (body->enemy)->processing;
+  if (col->atkType == 3 || col->atkType == 0xe || col->atkType == 0xf) {
+    struct Enemy* self = (struct Enemy*)body->parent;
+    if ((self->body).status & 0x200) {
+      if ((self->s).coord.x < c->x) {
+        *(u8*)((u8*)self + 0xbb) = 0xff;
+      } else {
+        *(u8*)((u8*)self + 0xbb) = 0xfe;
+      }
+    }
+  }
+}
 
 // --------------------------------------------
 
