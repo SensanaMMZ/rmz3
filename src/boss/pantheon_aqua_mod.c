@@ -43,8 +43,6 @@ void PantheonAquaMod_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/pantheon_aqua_mod_p1_post.inc");
-
 void nop_08051620(struct Boss* p) {}
 
 INCASM("asm/boss/pantheon_aqua_mod_p2.inc");

@@ -13,8 +13,6 @@ void LocomoIF_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/locomo_if_p1_post.inc");
-
 void nop_08054ad8(struct Boss* p) {}
 
 void FUN_08054adc(struct Boss* p) {

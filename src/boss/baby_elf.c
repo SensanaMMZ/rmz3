@@ -15,8 +15,6 @@ void BabyElf_Die(struct Boss* p) {
   (sDeinitializers[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/baby_elf_p1_post.inc");
-
 void nop_08046150(struct Boss* p) {}
 
 INCASM("asm/boss/baby_elf_p2.inc");

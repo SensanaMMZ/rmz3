@@ -24,8 +24,6 @@ void Anubis_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/anubis_p1_post.inc");
-
 void nop_080503c8(struct Boss* p) {}
 
 INCASM("asm/boss/anubis_p2.inc");

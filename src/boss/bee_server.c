@@ -39,8 +39,6 @@ void BeeServer_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/bee_server_p1_post.inc");
-
 void nop_0804d0a0(struct Boss* p) {}
 
 INCASM("asm/boss/bee_server_p2.inc");
