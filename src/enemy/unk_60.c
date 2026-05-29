@@ -1,6 +1,10 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mission.h"
+#include "vfx.h"
+
+extern void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 
 // OmegaZX spark chaser?
 
@@ -94,7 +98,25 @@ void Enemy60_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/unk_60_post_p1.inc");
+INCASM("asm/enemy/unk_60_post_p1a.inc");
+
+void FUN_08092918(struct Enemy* p) {
+  struct Coord c;
+  if ((p->s).mode[2] == 0) {
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    CreateSmoke(1, &c);
+    PlaySound(0x2a);
+    if (gMission.enemyCount <= 0x270e) {
+      gMission.enemyCount++;
+    }
+    TryDropZakoDisk(p, &(p->s).coord);
+    (p->s).flags &= ~DISPLAY;
+    SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+  }
+}
+
+INCASM("asm/enemy/unk_60_post_p1c.inc");
 
 void FUN_080929c8(struct Enemy* p) {
   switch ((p->s).mode[2]) {
