@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[8];
 
@@ -13,7 +14,17 @@ void MettaurSwim_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/mettaur_swim_p1_post.inc");
+void FUN_08089218(struct Body* body) {
+  struct Enemy* self = (struct Enemy*)body->parent;
+  struct Entity* atkParent = (struct Entity*)(body->enemy)->parent;
+  if (body->hitboxFlags & 8) {
+    if (*(u16*)&atkParent->kind == 0x1206) {
+      SET_ENEMY_ROUTINE(self, ENTITY_DIE);
+      (self->s).mode[1] = 0;
+    }
+  }
+  *(s32*)&self->props[0] = (pZero2->s).coord.x - (self->s).coord.x;
+}
 
 void nop_08089268(struct Enemy* p) {}
 
