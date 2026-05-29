@@ -20,7 +20,18 @@ void Projectile20_Init(struct Projectile* p) {
   Projectile20_Update(p);
 }
 
-INCASM("asm/projectile/unk_20_pre_p1_p2.inc");
+static const ProjectileFunc PTR_ARRAY_0836ba50[10];
+static const ProjectileFunc PTR_ARRAY_0836ba78[10];
+
+void Projectile20_Update(struct Projectile* p) {
+  struct Entity* parent = (p->s).unk_28;
+  if (parent->mode[0] > 1 && (p->s).mode[1] != 7) {
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+  PTR_ARRAY_0836ba50[(p->s).mode[1]](p);
+  PTR_ARRAY_0836ba78[(p->s).mode[1]](p);
+}
 
 void Projectile20_Die(struct Projectile* p) {
   EXIT_BODY(p);
