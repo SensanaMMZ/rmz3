@@ -315,7 +315,14 @@ bool8 FUN_08075a30(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/hammer_p2_p2_p1.inc");
+void FUN_08075a5c(struct Body* body) {
+  const struct Collision* c = (body->enemy)->processing;
+  if (c->special == 1) {
+    if ((*(u32*)&c->atkType & 0x000200FF) == 0x00020002) {
+      ((struct Enemy*)body->parent)->props[1] = 1;
+    }
+  }
+}
 
 struct Entity* FUN_080b9228(struct Coord* c, s32 a2);
 
