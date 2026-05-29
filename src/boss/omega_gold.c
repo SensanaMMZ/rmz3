@@ -1,6 +1,8 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "overworld_terrain.h"
+#include "script.h"
 
 void OmegaGold_Init(struct Boss* p);
 void OmegaGold_Update(struct Boss* p);
@@ -47,11 +49,40 @@ INCASM("asm/boss/omega_gold_p1_post.inc");
 
 bool8 FUN_0805b41c(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_gold_p2.inc");
+void goldOmega1_0805b420(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      if ((p->s).scriptEntity->flags & 1) {
+        gOverworld.state[1] = 1;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_0805b45c(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_gold_p3.inc");
+void makeGoldOmega1Mode2(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      (p->s).work[2] = 0x3c;
+      // fallthrough
+    case 1:
+      if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).mode[1] = (p->s).mode[2];
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_0805b4a4(struct Boss* p) { return TRUE; }
 
