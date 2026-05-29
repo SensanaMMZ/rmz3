@@ -486,7 +486,10 @@ void FUN_080607a0(struct Boss* p, s32 idx) {
   SetMotion(&p->s, sMotions[idx]);
 }
 
-INCASM("asm/boss/phantom_p2_pre_post_post_p2.inc");
+void FUN_080607bc(struct Entity* p, s32 idx, s32 r2, s32 r3) {
+  *((u8*)p + 0xb4) = idx;
+  GotoMotion(p, sMotions[idx], (u16)r2, (u16)r3);
+}
 
 void phantom_080607e4(struct Entity* p) {
   UpdateMotionGraphic(p);
