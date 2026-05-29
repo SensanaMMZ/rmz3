@@ -4,7 +4,21 @@
 
 static const BossFunc sDeads[2];
 
-INCASM("asm/boss/anubis_p1_pre.inc");
+INCASM("asm/boss/anubis_p1_pre_p1.inc");
+
+void FUN_080500c8(struct Body* body) {
+  struct Boss* atk = (struct Boss*)((body->enemy)->parent);
+  struct Boss* self = (struct Boss*)body->parent;
+  if (body->hitboxFlags & 1) {
+    u8 r = 0;
+    if ((self->s).coord.x < (atk->s).coord.x) {
+      r = 1;
+    }
+    *(u8*)((u8*)self + 0xcc) = r;
+  }
+}
+
+INCASM("asm/boss/anubis_p1_pre_p2.inc");
 
 void Anubis_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
