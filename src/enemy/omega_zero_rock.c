@@ -62,7 +62,29 @@ static bool8 FUN_0808b5e8(Object* p) {
 
 // --------------------------------------------
 
-INCASM("asm/enemy/omega_zero_rock_p1_p1.inc");
+static const struct Collision sCollisions[2];
+static const u8 sInitModes[2];
+static const EnemyFunc sUpdates1[1];
+static const EnemyFunc sUpdates2[1];
+
+void OmegaZeroRock_Update(struct Enemy* p);
+
+void OmegaZeroRock_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 5, onCollision);
+  OmegaZeroRock_Update(p);
+}
+
+void OmegaZeroRock_Update(struct Enemy* p) {
+  if (!FUN_0808b5e8((Object*)p)) {
+    sUpdates1[(p->s).mode[1]](p);
+    sUpdates2[(p->s).mode[1]](p);
+  }
+}
 
 void OmegaZeroRock_Die(struct Enemy* p) {
   PlaySound(0x41);
