@@ -7,7 +7,17 @@ static const struct Collision sCollisions[8];
 
 static const EnemyFunc sDeads[3];
 
-INCASM("asm/enemy/pantheon_zombie_p1_pre.inc");
+INCASM("asm/enemy/pantheon_zombie_p1_pre_p1.inc");
+
+void FUN_0807fd84(struct Body* body) {
+  struct Enemy* self = (struct Enemy*)body->parent;
+  if ((body->hitboxFlags & 0x800) && (self->s).mode[1] != 4) {
+    (self->s).mode[1] = 4;
+    (self->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/pantheon_zombie_p1_pre_p2.inc");
 
 void PantheonZombie_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
