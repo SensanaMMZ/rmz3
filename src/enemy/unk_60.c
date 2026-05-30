@@ -193,7 +193,25 @@ void FUN_08092aac(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/unk_60_post_p3_a.inc");
+void FUN_08092acc(struct Enemy60* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0xb601);
+      SET_XFLIP(p, FALSE);
+      SetDDP(&p->body, &sCollisions[5]);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).work[2] += 2;
+      (p->s).coord.y += (((p->c).y + (((p->s).unk_28)->coord).y - (p->s).coord.y) << 4) >> 8;
+      (p->s).coord.x = (p->c).x + (((p->s).unk_28)->coord).x;
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void FUN_08092b54(struct Enemy* p) {
   switch ((p->s).mode[2]) {
@@ -240,7 +258,7 @@ static const EnemyFunc sUpdates1[4] = {
 
 void FUN_08092a60(struct Enemy* p);
 void FUN_08092aac(struct Enemy* p);
-void FUN_08092acc(struct Enemy* p);
+void FUN_08092acc(struct Enemy60* p);
 
 static const EnemyFunc sUpdates2[4] = {
     (void*)FUN_08092a60,
