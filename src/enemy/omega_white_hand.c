@@ -3,6 +3,7 @@
 #include "entity.h"
 #include "global.h"
 #include "motion.h"
+#include "vfx.h"
 
 struct OmegaWhiteHandObject {
   OBJECT_HDR;
@@ -174,7 +175,19 @@ static void OmegaWhiteHand_Die(struct Entity* p) {
 
 // --------------------------------------------
 
-INCASM("asm/enemy/omega_white_hand_p1.inc");
+INCASM("asm/enemy/omega_white_hand_p1_a.inc");
+
+void FUN_0806aa54(struct Enemy* p) {
+  struct Coord c;
+  if ((p->s).mode[2] == 0) {
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    CreateSmoke(1, &c);
+    PlaySound(0x2a);
+    (p->s).flags &= ~DISPLAY;
+    SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+  }
+}
 
 bool8 FUN_0806aa9c(struct Enemy* p) { return TRUE; }
 
