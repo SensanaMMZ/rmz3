@@ -1,11 +1,56 @@
 #include "boss.h"
 #include "collision.h"
+#include "element.h"
 #include "global.h"
+#include "stagerun.h"
 
 static const struct Collision sCollisions[];
 static const struct Coord sElementCoord;
 
-INCASM("asm/boss/hanumachine_p1.inc");
+INCASM("asm/boss/hanumachine_p1_a.inc");
+
+static const BossFunc sUpdates1[30];
+static const BossFunc sUpdates2[30];
+u16 FUN_0805d594(struct Boss* p, s32 a, s32 b);
+void Hanumachine_Die(struct Boss* p);
+
+void Hanumachine_Update(struct Boss* p) {
+  if (!((p->body).status & BODY_STATUS_DEAD)) {
+    if (*(s16*)((u8*)p + 0xa4) != 0) {
+      goto alive;
+    }
+  }
+  if (gStageRun.missionStatus & 8) {
+    goto alive;
+  }
+  SET_BOSS_ROUTINE(p, ENTITY_DIE);
+  Hanumachine_Die(p);
+  return;
+
+alive:
+  *(s32*)((u8*)p + 0xc8) = (p->s).coord.x;
+  *(s32*)((u8*)p + 0xcc) = (p->s).coord.y;
+  if ((p->s).mode[1] != 0x1d) {
+    if (((p->body).status & 0x00020001) == 0x00020001) {
+      if (FUN_0805d594(p, 0, 0) == 0) {
+        (p->s).mode[1] = 0x1d;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+  if (((p->body).status & 1) && *(struct Entity**)((u8*)p + 0xc4) == NULL) {
+    *(struct Entity**)((u8*)p + 0xc4) = (struct Entity*)ApplyElementEffect(0x1c, &p->s, &sElementCoord);
+  }
+  if (isKilled(*(struct Entity**)((u8*)p + 0xc4))) {
+    *(struct Entity**)((u8*)p + 0xc4) = NULL;
+  }
+  if (sUpdates2[(p->s).mode[1]] != NULL) {
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/boss/hanumachine_p1_b.inc");
 
 void FUN_0805c3cc(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
