@@ -20,7 +20,17 @@ static bool8 FUN_0807156c(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/carry_arm_p2_post_pre.inc");
+INCASM("asm/enemy/carry_arm_p2_post_pre_a.inc");
+
+extern const EnemyFunc PTR_ARRAY_08366b48[6];
+extern const EnemyFunc PTR_ARRAY_08366b60[6];
+
+void CarryArm_Update(struct Enemy* p) {
+  if (!FUN_0807156c(p)) {
+    (PTR_ARRAY_08366b48[(p->s).mode[1]])(p);
+    (PTR_ARRAY_08366b60[(p->s).mode[1]])(p);
+  }
+}
 
 void CarryArm_Die(struct Enemy* p) {
   (PTR_ARRAY_08366b78[(p->s).mode[1]])(p);
