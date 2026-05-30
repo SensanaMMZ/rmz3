@@ -195,4 +195,25 @@ void FUN_080b970c(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_25_p2.inc");
+INCASM("asm/vfx/unk_25_p2_a.inc");
+
+void FUN_080b97f4(struct VFX* vfx) {
+  switch ((vfx->s).mode[2]) {
+    case 0:
+      SetMotion(&vfx->s, 0xe000);
+      (vfx->s).work[2] = 0x28;
+      (vfx->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&vfx->s);
+      if ((vfx->s).work[2] & 1) {
+        (vfx->s).flags |= DISPLAY;
+      } else {
+        (vfx->s).flags &= ~DISPLAY;
+      }
+      if ((vfx->s).work[2] != 0 && --(vfx->s).work[2] == 0) {
+        SET_VFX_ROUTINE(vfx, ENTITY_DIE);
+      }
+      break;
+  }
+}
