@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
@@ -45,7 +46,23 @@ static const EnemyFunc sUpdates2[6];
 void FUN_080847b8(struct Enemy* p);
 bool8 FUN_08084744(struct Enemy* p);
 
-INCASM("asm/enemy/eye_cannon_pre_pre_p1.inc");
+INCASM("asm/enemy/eye_cannon_pre_pre_p1_p1.inc");
+
+extern const struct Coord sElementCoord;
+
+void FUN_080847b8(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)((u8*)p + 0xb4);
+  if (*slot == NULL && ((p->body).status & 1)) {
+    struct VFX* e = ApplyElementEffect(0, &p->s, &sElementCoord);
+    *slot = e;
+    if (e != NULL) {
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/eye_cannon_pre_pre_p1_p2.inc");
 
 void EyeCannon_Update(struct Enemy* p) {
   if (!FUN_08084708(p)) {
