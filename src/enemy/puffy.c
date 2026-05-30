@@ -17,7 +17,30 @@ struct Enemy* CreatePuffy(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/puffy_p1_p2.inc");
+INCASM("asm/enemy/puffy_p1_p2_a.inc");
+
+extern const EnemyFunc PTR_ARRAY_08367aec[4];
+extern const EnemyFunc PTR_ARRAY_08367afc[4];
+void FUN_0807cb50(struct Enemy* p);
+void Puffy_Die(struct Enemy* p);
+
+void Puffy_Update(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    Puffy_Die(p);
+  } else {
+    (PTR_ARRAY_08367aec[(p->s).mode[1]])(p);
+    FUN_0807cb50(p);
+    if (IsFrozen(&p->s)) {
+      u8 m = (p->s).mode[1];
+      *(u8*)((u8*)p + 0xba) = m;
+    } else {
+      (PTR_ARRAY_08367afc[(p->s).mode[1]])(p);
+    }
+  }
+}
+
+INCASM("asm/enemy/puffy_p1_p2_c.inc");
 
 bool8 nop_0807c968(struct Enemy* p) { return TRUE; }
 
