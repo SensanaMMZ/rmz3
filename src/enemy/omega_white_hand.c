@@ -84,7 +84,7 @@ static void OmegaWhiteHand_Init(struct OmegaWhiteHandObject* p) {
 
 bool8 FUN_0806aa9c(struct Enemy* p);
 bool8 FUN_0806ae90(struct Enemy* p);
-void FUN_0806af24(struct Enemy* p);
+bool8 FUN_0806af24(struct Enemy* p);
 bool8 FUN_0806b094(struct Enemy* p);
 bool8 FUN_0806b120(struct Enemy* p);
 bool8 FUN_0806b8cc(struct Enemy* p);
@@ -229,7 +229,15 @@ void FUN_0806aedc(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/omega_white_hand_p3_p3.inc");
+bool8 FUN_0806af24(struct Enemy* p) {
+  if (((p->s).unk_28)->mode[1] == 5) {
+    (p->s).mode[1] = 4;
+    (p->s).mode[2] = 0;
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/omega_white_hand_p3_p3_b.inc");
 
 bool8 FUN_0806b094(struct Enemy* p) { return TRUE; }
 
