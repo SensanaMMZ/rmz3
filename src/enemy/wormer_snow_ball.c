@@ -21,7 +21,17 @@ static bool8 FUN_0807b1e0(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/wormer_snow_ball_p2_post_pre.inc");
+INCASM("asm/enemy/wormer_snow_ball_p2_post_pre_a.inc");
+
+extern const EnemyFunc sUpdates1[4];
+extern const EnemyFunc sUpdates2[4];
+
+void WormerSnowBall_Update(struct Enemy* p) {
+  if (!FUN_0807b1e0(p)) {
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
 
 void WormerSnowBall_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
