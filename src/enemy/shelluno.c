@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "overworld_terrain.h"
 
 extern const struct Collision sCollisions[6];
 
@@ -19,7 +20,62 @@ struct Enemy* CreateShelluno(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/shelluno_p1_p2.inc");
+INCASM("asm/enemy/shelluno_p1_p2_a.inc");
+
+extern const EnemyFunc sUpdates1[6];
+extern const EnemyFunc sUpdates2[6];
+s32 FUN_0807a3e8(struct Enemy* p);
+void FUN_0807a244(struct Enemy* p);
+void Shelluno_Die(struct Enemy* p);
+
+void Shelluno_Update(struct Enemy* p) {
+  u8 m;
+  s32 sea;
+  if (!((p->body).status & BODY_STATUS_DEAD)) {
+    if (FUN_0807a3e8(p)) {
+      goto alive;
+    }
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+  Shelluno_Die(p);
+  return;
+
+alive:
+  (sUpdates1[(p->s).mode[1]])(p);
+  FUN_0807a244(p);
+  m = (p->s).mode[1];
+  if (m == 2) goto water;
+  if (m == 4) goto water;
+  if (IsFrozen(&p->s)) {
+    p->props[4] = (p->s).mode[1];
+    return;
+  }
+water:
+  sea = gOverworld.sea;
+  if (sea > (p->s).coord.y - 0x400) {
+    u8* fl = (u8*)((u8*)p + 0xc2);
+    if (*fl == 0) {
+      (p->s).d.y = 0;
+    }
+    *fl = 1;
+    (p->s).d.y += 0x20;
+    if ((p->s).d.y > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+    (p->s).coord.y += (p->s).d.y;
+    return;
+  } else {
+    u8* fl = (u8*)((u8*)p + 0xc2);
+    if (*fl == 1) {
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+    *fl = 0;
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/enemy/shelluno_p1_p2_b.inc");
 
 bool8 nop_0807939c(struct Enemy* p) { return TRUE; }
 
@@ -55,7 +111,7 @@ bool8 FUN_0807a0fc(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/shelluno_p6.inc");
 
-bool8 FUN_0807a3e8(struct Enemy* p) { return TRUE; }
+s32 FUN_0807a3e8(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/shelluno_p7.inc");
 
