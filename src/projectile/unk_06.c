@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "story.h"
 
 static const ProjectileFunc sUpdates[4];
 static const struct Collision sCollisions[6];
@@ -48,7 +49,23 @@ static void Projectile6_Init(struct Projectile* p) {
   Projectile6_Update(p);
 }
 
-INCASM("asm/projectile/unk_06_p1.inc");
+void Projectile6_Update(struct Projectile* p) {
+  struct Entity* parent = (p->s).unk_28;
+  if (parent->mode[0] <= 1) {
+    if ((gCurStory.s.gameflags[4] & 0x40) == 0) {
+      goto dispatch;
+    }
+    (p->s).flags &= ~DISPLAY;
+    EXIT_BODY(p);
+  }
+  SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  Projectile6_Die(p);
+  return;
+
+dispatch:
+  SET_XFLIP(p, (parent->flags >> 4) & 1);
+  (sUpdates[(p->s).mode[1]])(p);
+}
 
 void Projectile6_Die(struct Projectile* p) {
   (p->s).flags &= ~DISPLAY;
