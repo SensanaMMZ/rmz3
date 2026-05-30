@@ -47,7 +47,93 @@ struct Enemy* FUN_0808a8b0(struct Entity* e) {
   return p;
 }
 
-INCASM("asm/enemy/carrybee_g_p1_p1.inc");
+INCASM("asm/enemy/carrybee_g_p1_p1_a.inc");
+
+extern const EnemyFunc sUpdates1[5];
+extern const EnemyFunc sUpdates2[5];
+void CarrybeeG_Die(struct Enemy* p);
+
+void CarrybeeG_Update(struct Enemy* p) {
+  struct Entity* par;
+  u8* t;
+  if (((p->body).status & BODY_STATUS_DEAD) && (p->s).work[0] == 0) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    CarrybeeG_Die(p);
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  if ((p->s).work[0] != 0) {
+    if (IsFrozen(&p->s)) {
+      par = (p->s).unk_28;
+      if (par->mode[0] > 2) {
+        (p->body).status = 0;
+        (p->body).prevStatus = 0;
+        (p->body).invincibleTime = 0;
+        (p->s).flags &= ~COLLIDABLE;
+        (p->s).flags &= ~DISPLAY;
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).work[1] = 1;
+        return;
+      } else if (par->mode[0] > 1) {
+        s32 blink;
+        (p->s).coord = par->coord;
+        blink = (p->s).work[2] + 1;
+        (p->s).work[2] = blink;
+        blink &= 0xff;
+        if (blink & 1) {
+          (p->s).flags |= DISPLAY;
+        } else {
+          (p->s).flags &= ~DISPLAY;
+        }
+        (p->body).status = 0;
+        (p->body).prevStatus = 0;
+        (p->body).invincibleTime = 0;
+        (p->s).flags &= ~COLLIDABLE;
+        UpdateMotionGraphic(&p->s);
+      }
+    }
+  }
+  if (IsFrozen(&p->s)) {
+    return;
+  }
+  if ((p->s).work[0] != 0) {
+    goto dispatch2;
+  }
+  {
+    struct Entity** s = (struct Entity**)((u8*)p + 0xbc);
+    if (*s != NULL) {
+      if ((*s)->mode[0] > 1) {
+        *s = NULL;
+      }
+      t = (u8*)((u8*)p + 0xc0);
+      if (*t == 0 || --*t == 0) {
+        *(u8*)((u8*)*s + 0x25) = 0x18;
+      }
+    }
+  }
+  if ((p->s).unk_2c != NULL) {
+    if (((p->s).unk_2c)->mode[0] > 1) {
+      (p->s).unk_2c = NULL;
+    }
+    t = (u8*)((u8*)p + 0xc1);
+    if (*t == 0 || --*t == 0) {
+      *(u8*)((u8*)(p->s).unk_2c + 0x25) = 0x18;
+    }
+  }
+  if ((p->s).unk_28 != NULL) {
+    if (((p->s).unk_28)->mode[0] > 1) {
+      (p->s).unk_28 = NULL;
+    }
+    t = (u8*)((u8*)p + 0xc2);
+    if (*t == 0 || --*t == 0) {
+      *(u8*)((u8*)(p->s).unk_28 + 0x25) = 0x18;
+    }
+  }
+dispatch2:
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/carrybee_g_p1_p1_b.inc");
 
 bool8 FUN_0808af78(struct Enemy* p) { return TRUE; }
 
