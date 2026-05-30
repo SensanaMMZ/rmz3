@@ -394,7 +394,21 @@ _0806D328: .4byte PTR_ARRAY_0836666c\n\
  .syntax divided\n");
 }
 
-INCASM("asm/enemy/gyro_cannon.inc");
+INCASM("asm/enemy/gyro_cannon_p1.inc");
+
+void FUN_0806d998(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, 0x1700);
+    (p->s).work[2] = 8;
+    (p->s).mode[2]++;
+  }
+  if ((u8)(--(p->s).work[2]) == 0xff) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/gyro_cannon_p2.inc");
 
 NAKED static void FUN_0806ddfc(struct Enemy* p) {
   asm(".syntax unified\n\
