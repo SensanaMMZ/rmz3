@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "overworld_terrain.h"
 
 static const struct Collision sCollisions[];
 
@@ -19,7 +20,83 @@ struct Enemy* CreatePantheonAqua(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/pantheon_aqua_p1_p2.inc");
+INCASM("asm/enemy/pantheon_aqua_p1_p2_a.inc");
+
+extern const EnemyFunc PTR_ARRAY_08366bd0[8];
+extern const EnemyFunc PTR_ARRAY_08366bf0[8];
+s32 FUN_08073368(struct Enemy* p);
+void FUN_080731c4(struct Enemy* p);
+void PantheonAqua_Die(struct Enemy* p);
+
+void PantheonAqua_Update(struct Enemy* p) {
+  u8 m;
+  s32 sea;
+  if (!((p->body).status & BODY_STATUS_DEAD)) {
+    if (FUN_08073368(p)) {
+      goto alive;
+    }
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+  PantheonAqua_Die(p);
+  return;
+
+alive:
+  {
+    s32* ppx = (s32*)((u8*)p + 0xb4);
+    s32 cx = (p->s).coord.x;
+    s32 d = cx - *ppx;
+    if (d > 0) {
+      if (d > 0x9400) {
+        goto setmode;
+      }
+    } else {
+      if (*ppx - cx > 0x9400) {
+        goto setmode;
+      }
+    }
+    goto dispatch;
+  setmode:
+    if ((p->s).mode[1] != 3) {
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+    }
+  }
+dispatch:
+  (PTR_ARRAY_08366bd0[(p->s).mode[1]])(p);
+  FUN_080731c4(p);
+  m = (p->s).mode[1];
+  if (m == 4) goto water;
+  if (m == 6) goto water;
+  if (IsFrozen(&p->s)) {
+    return;
+  }
+water:
+  sea = gOverworld.sea;
+  if (sea > (p->s).coord.y - 0x1E00) {
+    u8 f = p->props[4];
+    if (f == 0) {
+      SetMotion(&p->s, 0x2700);
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.y = f;
+    }
+    p->props[4] = 1;
+    (p->s).d.y += 0x20;
+    if ((p->s).d.y > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+    (p->s).coord.y += (p->s).d.y;
+    return;
+  } else {
+    if (p->props[4] == 1) {
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+    p->props[4] = 0;
+    (PTR_ARRAY_08366bf0[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/enemy/pantheon_aqua_p1_p2_b.inc");
 
 bool8 nop_080726a8(struct Enemy* p) { return TRUE; }
 
@@ -65,7 +142,7 @@ bool8 FUN_080730cc(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/pantheon_aqua_p9.inc");
 
-bool8 FUN_08073368(struct Enemy* p) { return TRUE; }
+s32 FUN_08073368(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/pantheon_aqua_p10.inc");
 
