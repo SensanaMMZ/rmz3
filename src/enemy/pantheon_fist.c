@@ -25,7 +25,25 @@ INCASM("asm/enemy/pantheon_fist_pre_p1_p2.inc");
 
 void nop_080950cc(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_fist_pre_p2.inc");
+INCASM("asm/enemy/pantheon_fist_pre_p2_a.inc");
+
+extern const EnemyFunc sUpdates1[9];
+extern const EnemyFunc sUpdates2[9];
+bool8 FUN_080950d0(struct Enemy* p);
+bool8 FUN_08095124(struct Enemy* p);
+void FUN_080951b4(struct Enemy* p);
+
+void PantheonFist_Update(struct Enemy* p) {
+  if (!FUN_080950d0(p)) {
+    FUN_080951b4(p);
+    if (!FUN_08095124(p)) {
+      (sUpdates1[(p->s).mode[1]])(p);
+      (sUpdates2[(p->s).mode[1]])(p);
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_fist_pre_p2_b.inc");
 
 void FUN_080953ac(struct Enemy* p) {}
 
