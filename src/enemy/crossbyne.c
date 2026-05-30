@@ -67,7 +67,20 @@ INCASM("asm/enemy/crossbyne_p1.inc");
 
 void nop_0807cd70(struct Enemy* p) {}
 
-INCASM("asm/enemy/crossbyne_p2_pre.inc");
+INCASM("asm/enemy/crossbyne_p2_pre_a.inc");
+
+extern const EnemyFunc sUpdates1[7];
+extern const EnemyFunc sUpdates2[7];
+bool8 FUN_0807cd74(struct Enemy* p);
+void crossbyne_0807cdc4(struct Enemy* p);
+
+void Crossbyne_Update(struct Enemy* p) {
+  if (!FUN_0807cd74(p)) {
+    crossbyne_0807cdc4(p);
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
 
 void Crossbyne_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
