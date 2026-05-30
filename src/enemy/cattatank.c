@@ -1,6 +1,9 @@
+#include "camera.h"
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mission.h"
+#include "stagerun.h"
 
 struct Enemy* FUN_08098838(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -18,7 +21,57 @@ struct Enemy* FUN_08098838(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/cattatank_p1_p2.inc");
+INCASM("asm/enemy/cattatank_p1_p2_a.inc");
+
+extern const EnemyFunc sUpdates1[10];
+extern const EnemyFunc sUpdates2[10];
+void cattatank_08099e20(struct Enemy* p);
+void Cattatank_Die(struct Enemy* p);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+void Cattatank_Update(struct Enemy* p) {
+  u8 m;
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    if ((p->s).mode[1] == 6) {
+      if (!IsFrozen(&p->s)) {
+        goto dispatch1;
+      }
+    }
+    (p->s).mode[3] = 0;
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    Cattatank_Die(p);
+    return;
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x3000) {
+    if (gStageRun.vm.camera.viewport.y + 0x4FFF < (p->s).coord.y + 0x2000) {
+      if ((p->s).work[1] == 1) {
+        (p->s).mode[3] = 1;
+        PlaySound(0x2a);
+        TryDropItem(1, &(p->s).coord);
+        if (gMission.enemyCount <= 0x270E) {
+          gMission.enemyCount++;
+        }
+        TryDropZakoDisk(p, &(p->s).coord);
+        (p->s).flags &= ~DISPLAY;
+        SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+        return;
+      }
+    }
+  }
+dispatch1:
+  (sUpdates1[(p->s).mode[1]])(p);
+  cattatank_08099e20(p);
+  m = (p->s).mode[1];
+  if (m == 6 || m == 7) goto dispatch2;
+  if (m == 9) goto dispatch2;
+  if (IsFrozen(&p->s)) {
+    return;
+  }
+dispatch2:
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/cattatank_p1_p2_b.inc");
 
 bool8 nop_08099090(struct Enemy* p) { return TRUE; }
 
