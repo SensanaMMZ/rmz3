@@ -4,6 +4,7 @@
 #include "global.h"
 #include "overworld_terrain.h"
 #include "script.h"
+#include "stagerun.h"
 
 void OmegaGold_Init(struct Boss* p);
 void OmegaGold_Update(struct Boss* p);
@@ -87,7 +88,21 @@ void makeGoldOmega1Mode2(struct Boss* p) {
 
 bool8 FUN_0805b4a4(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_gold_p4.inc");
+void FUN_0805b4a8(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      if (!(gStageRun.vm.active & 1)) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/omega_gold_p4_b.inc");
 
 bool8 nop_0805b5dc(struct Boss* p) { return TRUE; }
 
