@@ -3,6 +3,8 @@
 #include "global.h"
 #include "script.h"
 
+static const struct Collision sCollisions[7];
+
 void OmegaGoldHand_Init(struct Enemy* p);
 void OmegaGoldHand_Update(struct Enemy* p);
 void OmegaGoldHand_Die(struct Enemy* p);
@@ -120,7 +122,33 @@ bool8 FUN_0808340c(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/omega_gold_hand_p3_post.inc");
+INCASM("asm/enemy/omega_gold_hand_p3_post_a.inc");
+
+void FUN_080834fc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags2 |= WHITE_PAINTABLE;
+      (p->s).invincibleID = ((p->s).unk_28)->uniqueID;
+      SetMotion(&p->s, 0x901);
+      SET_XFLIP(p, FALSE);
+      SET_YFLIP(p, FALSE);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 wob;
+      (p->s).work[2] += 2;
+      wob = gSineTable[(p->s).work[2]] << 1;
+      (p->s).coord.y = *(s32*)((u8*)p + 0xb8) + ((p->s).unk_28)->coord.y + wob;
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4) + ((p->s).unk_28)->coord.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 bool8 FUN_080835b4(struct Enemy* p) { return TRUE; }
 
