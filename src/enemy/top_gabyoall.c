@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "sound.h"
+#include "vfx.h"
 
 static void Enemy14_Init(struct Enemy* p);
 void Enemy14_Update(struct Enemy* p);
@@ -67,7 +69,16 @@ static const EnemyFunc PTR_ARRAY_08366960[4] = {
 
 // --------------------------------------------
 
-INCASM("asm/enemy/top_gabyoall.inc");
+INCASM("asm/enemy/top_gabyoall_p1.inc");
+
+void Enemy14_Die(struct Enemy* p) {
+  CreateSmoke(1, &(p->s).coord);
+  PlaySound(0x2a);
+  (p->s).flags &= ~DISPLAY;
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/top_gabyoall_p2.inc");
 
 // 0x08070000
 void FUN_08070000(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
