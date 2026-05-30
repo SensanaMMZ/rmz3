@@ -44,7 +44,33 @@ struct Entity* CreateOmegaGold(struct Coord* c, u8 n) {
 
 static const BossFunc sDeads[2];
 
-INCASM("asm/boss/omega_gold_p1_pre.inc");
+INCASM("asm/boss/omega_gold_p1_pre_a.inc");
+
+static const BossFunc sUpdates1[8];
+static const BossFunc sUpdates2[8];
+
+void OmegaGold_Update(struct Boss* p) {
+  u8 m;
+  if (!((p->body).status & BODY_STATUS_DEAD)) {
+    if (*(s16*)((u8*)p + 0xa4) != 0) {
+      goto alive;
+    }
+  }
+  if (gStageRun.missionStatus & 8) {
+    goto alive;
+  }
+  SET_BOSS_ROUTINE(p, ENTITY_DIE);
+  OmegaGold_Die(p);
+  return;
+
+alive:
+  m = (p->s).mode[1];
+  if (m > 1 && m != 6) {
+    UpdateBlinkMotionState(0x66);
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
 
 void OmegaGold_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
