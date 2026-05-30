@@ -60,7 +60,14 @@ void OmegaGoldHand_Die(struct Enemy* p) {
   (PTR_ARRAY_08368218[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/omega_gold_hand_p1_post.inc");
+INCASM("asm/enemy/omega_gold_hand_p1_post_a.inc");
+
+void FUN_08083258(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).flags &= ~DISPLAY;
+    SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+  }
+}
 
 bool8 FUN_08083284(struct Enemy* p) { return TRUE; }
 
