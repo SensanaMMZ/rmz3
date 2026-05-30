@@ -208,7 +208,47 @@ _0806C38C: .4byte gEnemyFnTable\n\
 
 // --------------------------------------------
 
-INCASM("asm/enemy/lamplort_p1_pre.inc");
+extern const EnemyFunc sUpdates1[10];
+extern const EnemyFunc sUpdates2[10];
+s32 FUN_0806ce5c(struct Enemy* p);
+bool8 lamplort_0806ce08(struct Enemy* p);
+void Lamplort_Die(struct Enemy* p);
+
+void Lamplort_Update(struct Enemy* p) {
+  u8 m;
+  if (!((p->body).status & BODY_STATUS_DEAD)) {
+    if (FUN_0806ce5c(p)) {
+      goto alive;
+    }
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+  Lamplort_Die(p);
+  return;
+
+alive:
+  if (IsFrozen(&p->s)) {
+    u32 v;
+    *(u32*)((u8*)(p->s).unk_2c + 0xb4) |= 2;
+    v = *(u32*)((u8*)p + 0xc0);
+    if (v == 0) {
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = v;
+    }
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  lamplort_0806ce08(p);
+  m = (p->s).mode[1];
+  if (m == 7) goto dispatch2;
+  if (m == 9) goto dispatch2;
+  if (IsFrozen(&p->s)) {
+    p->props[6] = (p->s).mode[1];
+    return;
+  }
+dispatch2:
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/lamplort_p1_pre_b.inc");
 
 void Lamplort_Disappear(struct Enemy* p) {
   DeleteEnemy((struct Entity*)p);
@@ -361,7 +401,7 @@ bool8 lamplort_0806ce08(struct Enemy* p) {
   return TRUE;
 }
 
-bool8 FUN_0806ce5c(struct Enemy* p) { return TRUE; }
+s32 FUN_0806ce5c(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/lamplort_p12.inc");
 
