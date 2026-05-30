@@ -69,7 +69,18 @@ static void Solid37_Die(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/unk_37_pre.inc");
+INCASM("asm/solid/unk_37_pre_a.inc");
+
+void FUN_080dc898(struct Solid* p) {
+  if ((u8)(--(p->s).work[3]) == 0xff) {
+    CreateSolid37(p);
+    RNG_0202f388 = LCG(RNG_0202f388);
+    (p->s).work[3] = ((RNG_0202f388 >> 16) & 0x1f) + 8;
+  }
+  if ((p->s).work[2] > 0x1e) {
+    (p->s).work[2] = 0;
+  }
+}
 
 void FUN_080dc8e8(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
