@@ -31,7 +31,45 @@ struct Enemy* CreateCapsuleCannon(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/capsule_cannon_pre_p1_p1.inc");
+INCASM("asm/enemy/capsule_cannon_pre_p1_p1_a.inc");
+
+extern const EnemyFunc sUpdates1[6];
+extern const EnemyFunc sUpdates2[6];
+extern const struct Collision sCollisions[4];
+void FUN_08085c4c(struct Enemy* p);
+void CapsuleCannon_Die(struct Enemy* p);
+
+void CapsuleCannon_Update(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    CapsuleCannon_Die(p);
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  FUN_08085c4c(p);
+  if (*(struct Entity**)((u8*)p + 0xbc) == NULL) {
+    if (IsFrozen(&p->s)) {
+      return;
+    }
+    if (*(struct Entity**)((u8*)p + 0xbc) == NULL) {
+      goto dispatch2;
+    }
+  }
+  if (isKilled(*(struct Entity**)((u8*)p + 0xbc))) {
+    if ((p->s).mode[1] == 2) {
+      SetDDP(&p->body, &sCollisions[2]);
+    } else {
+      SetDDP(&p->body, &sCollisions[0]);
+    }
+    *(struct Entity**)((u8*)p + 0xbc) = NULL;
+  }
+  return;
+
+dispatch2:
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/capsule_cannon_pre_p1_p1_b.inc");
 
 bool8 FUN_08085a08(struct Enemy* p) { return TRUE; }
 
