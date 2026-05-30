@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
 
 static const EnemyFunc sDeads[4];
 
@@ -37,7 +38,33 @@ INCASM("asm/enemy/deathlock_pre_p1_p3.inc");
 
 void nop_0808d2f4(struct Enemy* p) {}
 
-INCASM("asm/enemy/deathlock_pre_p2_pre.inc");
+INCASM("asm/enemy/deathlock_pre_p2_pre_a.inc");
+
+static const EnemyFunc sUpdates1[8];
+static const EnemyFunc sUpdates2[8];
+bool8 FUN_0808d2f8(struct Enemy* p);
+void FUN_0808d4a0(struct Enemy* p);
+bool8 FUN_0808d370(struct Enemy* p);
+
+void Deathlock_Update(struct Enemy* p) {
+  if ((p->s).work[0] != 8 && (gCurStory.s.gameflags[4] & 2)) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    (p->s).flags &= ~COLLIDABLE;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  if (FUN_0808d2f8(p)) {
+    return;
+  }
+  FUN_0808d4a0(p);
+  if (FUN_0808d370(p)) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
 
 void Deathlock_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
