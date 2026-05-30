@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "story.h"
 #include "vfx.h"
 
 static const u8 u8_ARRAY_0836d77c[4];
@@ -62,7 +63,21 @@ void Projectile43_Init(struct Projectile* p) {
   Projectile43_Update(p);
 }
 
-INCASM("asm/projectile/unk_43_post_p2_p3.inc");
+extern const ProjectileFunc PTR_ARRAY_0836d748[1];
+
+void Projectile43_Update(struct Projectile* p) {
+  if (gCurStory.s.gameflags[4] & 0x40) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    (p->s).flags &= ~COLLIDABLE;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (PTR_ARRAY_0836d748[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/projectile/unk_43_post_p2_p3_b.inc");
 
 void Projectile43_Init(struct Projectile* p);
 void Projectile43_Update(struct Projectile* p);
