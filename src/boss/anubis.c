@@ -1,8 +1,11 @@
 #include "boss.h"
 #include "collision.h"
+#include "element.h"
 #include "global.h"
+#include "zero.h"
 
 static const BossFunc sDeads[2];
+static const struct Coord sElementCoord;
 
 INCASM("asm/boss/anubis_p1_pre_p1.inc");
 
@@ -18,7 +21,47 @@ void FUN_080500c8(struct Body* body) {
   }
 }
 
-INCASM("asm/boss/anubis_p1_pre_p2.inc");
+INCASM("asm/boss/anubis_p1_pre_p2_a.inc");
+
+static const BossFunc sUpdates1[11];
+static const BossFunc sUpdates2[11];
+bool8 FUN_080500f4(struct Boss* p);
+
+void Anubis_Update(struct Boss* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  struct Entity* e;
+  u8* t;
+  s32 v;
+  if (*slot != NULL) {
+    if (!isKilled(*slot)) {
+      goto next;
+    }
+    e = NULL;
+  } else {
+    if (!((p->body).status & 1)) {
+      goto next;
+    }
+    e = (struct Entity*)ApplyElementEffect(0x14, &p->s, &sElementCoord);
+  }
+  *slot = e;
+next:
+  t = (u8*)((u8*)p + 0xca);
+  if (*t != 0) {
+    v = *t - 1;
+  } else {
+    if (!((pZero2->body).status & 1)) {
+      goto skip;
+    }
+    v = 0x60;
+  }
+  *t = v;
+skip:
+  if (FUN_080500f4(p)) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
 
 void Anubis_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
