@@ -552,7 +552,16 @@ void phantom_080607e4(struct Entity* p) {
   UpdateMotionGraphic(p);
 }
 
-INCASM("asm/boss/phantom_p2_post_p1_p1_p1.inc");
+INCASM("asm/boss/phantom_p2_post_p1_p1_p1_a.inc");
+
+bool8 FUN_08060838(struct Boss* p) {
+  s32 px = (p->s).coord.x;
+  s32 zx = pZero2->s.coord.x;
+  if (px != zx) {
+    return px < zx;
+  }
+  return ((p->s).flags >> 4) & 1;
+}
 
 bool8 FUN_08060864(struct Boss* p, s32 dx) {
   s32 newx = (p->s).coord.x + dx;
