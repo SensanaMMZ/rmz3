@@ -547,7 +547,31 @@ void FUN_080615dc(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/omega_zx_p10_p2.inc");
+INCASM("asm/boss/omega_zx_p10_p2_a.inc");
+
+void FUN_080616b8(struct Boss* p) {
+  struct Entity* slot;
+
+  slot = (struct Entity*)((p->s).unk_2c)->unk_2c;
+  if (slot != NULL) {
+    if (slot->mode[0] > 1) {
+      ((p->s).unk_2c)->unk_2c = NULL;
+    } else {
+      slot->flags &= ~DISPLAY;
+    }
+  }
+
+  slot = *(struct Entity**)((u8*)(p->s).unk_2c + 0xbc);
+  if (slot != NULL) {
+    if (slot->mode[0] > 1) {
+      *(struct Entity**)((u8*)(p->s).unk_2c + 0xbc) = NULL;
+    } else {
+      slot->flags &= ~DISPLAY;
+    }
+  }
+}
+
+INCASM("asm/boss/omega_zx_p10_p2_c.inc");
 
 // 0x083655d4
 static const struct Collision sCollisions[3] = {
