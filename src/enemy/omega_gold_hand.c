@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "script.h"
 
 void OmegaGoldHand_Init(struct Enemy* p);
 void OmegaGoldHand_Update(struct Enemy* p);
@@ -61,7 +62,29 @@ INCASM("asm/enemy/omega_gold_hand_p1_post.inc");
 
 bool8 FUN_08083284(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_gold_hand_p2.inc");
+void FUN_08083288(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags2 |= WHITE_PAINTABLE;
+      (p->s).invincibleID = ((p->s).unk_28)->uniqueID;
+      SetMotion(&p->s, 0x900);
+      SET_XFLIP(p, FALSE);
+      SET_YFLIP(p, FALSE);
+      (p->s).coord.y = *(s32*)((u8*)p + 0xb8) + ((p->s).unk_28)->coord.y;
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4) + ((p->s).unk_28)->coord.x;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).unk_28)->scriptEntity->flags & 1) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/omega_gold_hand_p2_b.inc");
 
 bool8 FUN_080833c8(struct Enemy* p) { return TRUE; }
 
