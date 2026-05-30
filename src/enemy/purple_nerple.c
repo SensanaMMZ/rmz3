@@ -1,10 +1,52 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
 
 static const struct Collision sCollisions[];
 
-INCASM("asm/enemy/purple_nerple_p1.inc");
+INCASM("asm/enemy/purple_nerple_p1_a.inc");
+
+extern const EnemyFunc PTR_ARRAY_083670d0[10];
+extern const EnemyFunc PTR_ARRAY_083670f8[10];
+bool8 FUN_08075d40(struct Enemy* p);
+void FUN_08075e8c(struct Enemy* p);
+bool8 FUN_08075dc8(struct Enemy* p);
+void PurpleNerple_Die(struct Enemy* p);
+
+void PurpleNerple_Update(struct Enemy* p) {
+  if ((p->s).work[0] != 0) {
+    u8 prop = *(u8*)((u8*)p + 0xb9);
+    if (prop == 0 && (gCurStory.s.gameflags[4] & 0x40)) {
+      (p->s).flags &= ~DISPLAY;
+      (p->s).flags &= ~FLIPABLE;
+      (p->body).status = prop;
+      (p->body).prevStatus = prop;
+      (p->body).invincibleTime = prop;
+      (p->s).flags &= ~COLLIDABLE;
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      return;
+    }
+  }
+  if ((p->s).work[0] == 0) {
+    if (*(u8*)((u8*)p + 0xb9) != 0) {
+      if (((p->s).unk_28)->mode[0] > 1) {
+        (p->s).unk_28 = NULL;
+      }
+    }
+  }
+  if (FUN_08075d40(p)) {
+    return;
+  }
+  FUN_08075e8c(p);
+  if (FUN_08075dc8(p)) {
+    return;
+  }
+  (PTR_ARRAY_083670d0[(p->s).mode[1]])(p);
+  (PTR_ARRAY_083670f8[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/purple_nerple_p1_b.inc");
 
 void FUN_08076140(struct Enemy* p) {}
 
