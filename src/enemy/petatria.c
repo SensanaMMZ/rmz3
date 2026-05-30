@@ -17,7 +17,36 @@ struct Enemy* CreatePetatria(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/petatria_p1_pre_p1_p2.inc");
+INCASM("asm/enemy/petatria_p1_pre_p1_p2_a.inc");
+
+extern const EnemyFunc sUpdates1[10];
+extern const EnemyFunc sUpdates2[10];
+bool8 FUN_08091188(struct Enemy* p);
+void Petatria_Die(struct Enemy* p);
+
+void Petatria_Update(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    Petatria_Die(p);
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  FUN_08091188(p);
+  if (IsFrozen(&p->s)) {
+    return;
+  }
+  slot = (struct Entity**)((u8*)p + 0xc0);
+  if (*slot != NULL) {
+    if (!isKilled(*slot)) {
+      return;
+    }
+    *slot = NULL;
+  }
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/petatria_p1_pre_p1_p2_b.inc");
 
 bool8 FUN_080902a8(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_B3) {
