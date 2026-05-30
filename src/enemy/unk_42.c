@@ -76,7 +76,14 @@ static void Enemy42_Die(struct Entity* p) {
   (sDeads[(p->work)[0]])((void*)p);
 }
 
-INCASM("asm/enemy/unk_42.inc");
+INCASM("asm/enemy/unk_42_p1.inc");
+
+void FUN_0808534c(struct Enemy* p) {
+  EXIT_BODY(p);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/unk_42_p2.inc");
 
 // --------------------------------------------
 
