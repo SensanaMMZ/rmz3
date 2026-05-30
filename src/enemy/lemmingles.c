@@ -1,6 +1,9 @@
+#include "camera.h"
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "stagerun.h"
+#include "story.h"
 
 static const struct Collision sCollisions[];
 
@@ -50,7 +53,46 @@ void FUN_0806e590(struct Entity* e, u8 kind1, u8 kind2, u8 kind3) {
 // 0x0806e600
 static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) { return; }
 
-INCASM("asm/enemy/lemmingles_p1.inc");
+INCASM("asm/enemy/lemmingles_p1_a.inc");
+
+static const EnemyFunc sUpdates1[7];
+static const EnemyFunc sUpdates2[7];
+bool8 FUN_0806e604(struct Enemy* p);
+void FUN_0806e704(struct Enemy* p);
+bool8 FUN_0806e674(struct Enemy* p);
+void Lemmingles_Die(struct Enemy* p);
+
+void Lemmingles_Update(struct Enemy* p) {
+  struct Entity* par = (p->s).unk_28;
+  if (par != NULL) {
+    if (par->mode[0] > 1) {
+      (p->s).unk_28 = NULL;
+    }
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x6000 ||
+      (gCurStory.s.gameflags[4] & 0x42)) {
+    if (par != NULL) {
+      *(u32*)((u8*)par + 0xb4) &= ~(1 << (p->s).work[1]);
+    }
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    (p->s).flags &= ~COLLIDABLE;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  if (FUN_0806e604(p)) {
+    return;
+  }
+  FUN_0806e704(p);
+  if (FUN_0806e674(p)) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/lemmingles_p1_b.inc");
 
 void nop_0806e96c(struct Enemy* p) {}
 
