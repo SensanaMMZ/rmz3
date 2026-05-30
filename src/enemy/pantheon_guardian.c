@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "metatile.h"
 #include "mod.h"
 #include "motion.h"
 #include "story.h"
@@ -83,7 +84,61 @@ void doNothing_08063e10(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_guardian_pre_p2_p1.inc");
+void FUN_08063e28(struct Enemy* p) {
+  if ((p->body).status & 1) {
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = 0;
+  }
+  if (*(struct Entity**)((u8*)p + 0xc0) != NULL) {
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = 0;
+  }
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0x40) == 0) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  }
+  if (IsFrozen(&p->s)) {
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
+
+void FUN_08063e80(struct Enemy* p) {
+  if ((p->body).status & 1) {
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = 0;
+  }
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0x40) == 0) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  }
+  if (IsFrozen(&p->s)) {
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
+
+void FUN_08063ec8(struct Enemy* p) {
+  if (*(struct Entity**)((u8*)p + 0xc0) != NULL) {
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = 0;
+  }
+  if (IsFrozen(&p->s)) {
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
+
+void FUN_08063ef4(struct Enemy* p) {
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0x40) == 0) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  }
+  if (IsFrozen(&p->s)) {
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void FUN_08063f28(struct Enemy* p) {
   if ((p->s).mode[1] == 8) return;
