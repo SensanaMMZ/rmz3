@@ -151,7 +151,28 @@ INCASM("asm/vfx/unk_69_p1_post_post.inc");
 
 void nop_080c552c(struct VFX* p) {}
 
-INCASM("asm/vfx/unk_69_p2.inc");
+INCASM("asm/vfx/unk_69_p2_a.inc");
+
+void FUN_080c55bc(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x50;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).coord.x += (p->s).d.x;
+      if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+        SET_VFX_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
 
 // --------------------------------------------
 
