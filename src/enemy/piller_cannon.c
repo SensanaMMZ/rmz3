@@ -35,7 +35,50 @@ struct Enemy* CreatePillerCannon(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/piller_cannon_p1.inc");
+INCASM("asm/enemy/piller_cannon_p1_a.inc");
+
+extern const EnemyFunc sUpdates1[9];
+extern const EnemyFunc sUpdates2[9];
+void FUN_08068f08(struct Enemy* p);
+void PillerCannon_Die(struct Enemy* p);
+
+void PillerCannon_Update(struct Enemy* p) {
+  struct Entity** slot;
+  u8 m;
+  u8* t;
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    PillerCannon_Die(p);
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  FUN_08068f08(p);
+  m = (p->s).mode[1];
+  if (m == 6) goto check2;
+  if (m == 8) goto check2;
+  if (IsFrozen(&p->s)) {
+    p->props[6] = (p->s).mode[1];
+    return;
+  }
+check2:
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (*slot != NULL) {
+    if (!isKilled(*slot)) {
+      SetDDP(&p->body, &sCollisions[12]);
+      return;
+    }
+    SetDDP(&p->body, &sCollisions[11]);
+    *slot = NULL;
+  }
+  t = (u8*)((u8*)p + 0xc0);
+  if (*t != 0) {
+    *t = *t - 1;
+    return;
+  }
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/piller_cannon_p1_b.inc");
 
 bool8 FUN_0806860c(struct Enemy* p) { return TRUE; }
 
