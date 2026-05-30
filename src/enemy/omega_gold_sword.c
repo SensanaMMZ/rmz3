@@ -90,7 +90,17 @@ void FUN_0808bb88(struct Enemy* p) {
 
 bool8 FUN_0808bbe4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_gold_sword_p3_p1.inc");
+INCASM("asm/enemy/omega_gold_sword_p3_p1_a.inc");
+
+bool8 FUN_0808bd00(struct Enemy* p) {
+  if (((p->s).unk_28)->mode[1] == 6) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/omega_gold_sword_p3_p1_b.inc");
 
 bool8 FUN_0808bd8c(struct Enemy* p) { return TRUE; }
 
