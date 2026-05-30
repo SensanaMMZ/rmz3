@@ -45,7 +45,24 @@ void Deathlock_Die(struct Enemy* p) {
 
 void FUN_0808d6f4(struct Enemy* p) {}
 
-INCASM("asm/enemy/deathlock_post_p1.inc");
+extern const struct Collision sCollisions[15];
+extern const u8 sCollisionIdxs1[6];
+
+void FUN_0808d6f8(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    SetDDP(&p->body, &sCollisions[sCollisionIdxs1[*(u8*)((u8*)p + 0xb9)]]);
+    if (!IsFrozen(&p->s)) {
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+    }
+  }
+  if (((p->body).status & 0x20001) == 0x20001) {
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void FUN_0808d76c(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
