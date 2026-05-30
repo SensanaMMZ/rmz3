@@ -97,7 +97,21 @@ INCASM("asm/enemy/sharkseal_x_p9.inc");
 
 bool8 nop_080711d4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/sharkseal_x_p10.inc");
+void FUN_080711d8(struct Body* body, struct Coord* r1, struct Coord* r2) {
+  u8 atk_type = (body->enemy->processing)->atkType;
+  if (atk_type == 3 || atk_type == 0xe || atk_type == 0xf) {
+    struct Enemy* self = (struct Enemy*)(body->parent);
+    if ((self->body).status & BODY_STATUS_DEAD) {
+      if ((self->s).coord.x < r1->x) {
+        *(u8*)((u8*)self + 0xbf) = 0xff;
+      } else {
+        *(u8*)((u8*)self + 0xbf) = 0xfe;
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/sharkseal_x_p10_p2.inc");
 
 void SharksealX_Init(struct Enemy* p);
 void SharksealX_Update(struct Enemy* p);
