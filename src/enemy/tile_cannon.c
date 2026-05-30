@@ -52,7 +52,37 @@ static bool8 tilecannon_08078174(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/tile_cannon_p2_post.inc");
+INCASM("asm/enemy/tile_cannon_p2_post_a.inc");
+
+extern const EnemyFunc sUpdates1[9];
+extern const EnemyFunc sUpdates2[9];
+void tilecannon_08078210(struct Enemy* p);
+bool8 tilecannon_08078198(struct Enemy* p);
+
+void TileCannon_Update(struct Enemy* p) {
+  if ((p->s).work[0] == 2) {
+    if (((p->s).unk_28)->mode[0] > 1) {
+      (p->s).flags &= ~DISPLAY;
+      (p->s).flags &= ~FLIPABLE;
+      EXIT_BODY(p);
+      (p->s).flags &= ~COLLIDABLE;
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      return;
+    }
+    tilecannon_08078210(p);
+    if (tilecannon_08078174(p)) {
+      return;
+    }
+  } else {
+    if (tilecannon_08078198(p)) {
+      return;
+    }
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/tile_cannon_p2_post_b.inc");
 
 void FUN_0807847c(struct Enemy* p) {}
 
