@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "story.h"
 
 struct Volcaire {
   OBJECT_HDR;
@@ -181,7 +182,55 @@ _080772F2:\n\
  .syntax divided\n");
 }
 
-INCASM("asm/enemy/volcaire_p1.inc");
+INCASM("asm/enemy/volcaire_p1_a.inc");
+
+static const EnemyFunc sUpdates1[8];
+static const EnemyFunc sUpdates2[8];
+void FUN_08077388(struct Enemy* p);
+bool8 FUN_080772f8(struct Enemy* p);
+
+void Volcaire_Update(struct Enemy* p) {
+  u8 sf = gCurStory.s.gameflags[4] & 2;
+  if (sf == 0) {
+    if ((p->s).work[0] == 0) {
+      goto dispatch;
+    }
+    {
+      struct Entity* par = (p->s).unk_28;
+      if (par != NULL) {
+        if (par->mode[0] > 1) {
+          (p->s).unk_28 = (struct Entity*)(u32)sf;
+          par = NULL;
+        }
+      }
+      if ((gCurStory.s.gameflags[4] & 0x40) == 0) {
+        goto dispatch;
+      }
+      if (par != NULL) {
+        ((struct Enemy*)par)->props[4]--;
+      }
+    }
+  }
+  (p->s).flags &= ~DISPLAY;
+  (p->s).flags &= ~FLIPABLE;
+  EXIT_BODY(p);
+  (p->s).flags &= ~COLLIDABLE;
+  SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  return;
+
+dispatch:
+  if (FUN_08077260(p)) {
+    return;
+  }
+  FUN_08077388(p);
+  if (FUN_080772f8(p)) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/volcaire_p1_b.inc");
 
 void nop_08077608(struct Enemy* p) {}
 
