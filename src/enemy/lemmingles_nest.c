@@ -1,6 +1,9 @@
+#include "camera.h"
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "stagerun.h"
+#include "story.h"
 
 void LemminglesNest_Init(struct Enemy* p);
 void LemminglesNest_Update(struct Enemy* p);
@@ -86,7 +89,54 @@ static bool8 FUN_0806dfa4(struct Entity* p) {
 
 static const u8 sInitModes[];
 
-INCASM("asm/enemy/lemmingles_nest_p1.inc");
+INCASM("asm/enemy/lemmingles_nest_p1_a.inc");
+
+void LemminglesNest_Update(struct Enemy* p) {
+  bool8 r;
+  if ((p->s).work[0] > 3 && (gCurStory.s.gameflags[4] & 0x40)) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    (p->body).status = 0;
+    (p->body).prevStatus = 0;
+    (p->body).invincibleTime = 0;
+    goto tail;
+  }
+  {
+    u8 m = (p->s).work[0] - 2;
+    if (m <= 1) {
+      if (((p->s).unk_28)->mode[0] <= 1) {
+        goto dispatch;
+      }
+    } else {
+      if (!((p->body).status & BODY_STATUS_DEAD)) {
+        goto dispatch;
+      }
+    }
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+  LemminglesNest_Die(p);
+  return;
+
+dispatch:
+  r = FUN_0806dfa4(&p->s);
+  if (r) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x19000) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    (p->body).status = r;
+    (p->body).prevStatus = r;
+    (p->body).invincibleTime = r;
+  tail:
+    (p->s).flags &= ~COLLIDABLE;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
+
+INCASM("asm/enemy/lemmingles_nest_p1_b.inc");
 
 void nop_0806e284(struct Enemy* p) {}
 
