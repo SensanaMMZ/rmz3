@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "vfx.h"
+#include "zero.h"
 
 static const EnemyFunc sDeads[4];
 
@@ -30,7 +31,24 @@ void Enemy59_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/unk_59_pre_post.inc");
+void FUN_08091790(struct Body* body) {
+  struct Enemy* atk = (struct Enemy*)(body->enemy->parent);
+  struct Enemy* self = (struct Enemy*)(body->parent);
+  if ((self->s).work[0] == 0xc) {
+    if ((body->hitboxFlags & 8) &&
+        (s8)(atk->s).kind == 2 &&
+        (atk->s).mode[1] == 1 &&
+        (u8)((atk->s).mode[2] - 1) <= 1 &&
+        (atk->s).id == 0x15 &&
+        ((*(u32*)&(self->s).mode[0]) & 0xffff00) == 0x30800) {
+      *(s32*)((u8*)self + 0xb4) = (atk->s).coord.x - (self->s).coord.x;
+      (self->s).mode[1] = 9;
+      (self->s).mode[2] = 0;
+    }
+  } else {
+    *(s32*)((u8*)self + 0xb4) = pZero2->s.coord.x - (self->s).coord.x;
+  }
+}
 
 void FUN_08091810(struct Enemy* p) {}
 
