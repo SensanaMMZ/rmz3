@@ -2,8 +2,24 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "story.h"
 
-INCASM("asm/enemy/cannon_hopper_pre.inc");
+extern const EnemyFunc sDeads[4];
+
+INCASM("asm/enemy/cannon_hopper_pre_p1.inc");
+
+void CannonHopper_Die(struct Enemy* p) {
+  if (gCurStory.s.gameflags[4] & 0x40) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  } else {
+    (sDeads[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/enemy/cannon_hopper_pre_p2.inc");
 
 void FUN_080978e0(struct Enemy* p) {}
 
