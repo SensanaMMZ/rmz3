@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 
+extern const struct Collision sCollisions[6];
+
 struct Enemy* CreateShelluno(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
   if (p != NULL) {
@@ -25,7 +27,20 @@ INCASM("asm/enemy/shelluno_p2.inc");
 
 bool8 FUN_0807a018(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shelluno_p3.inc");
+void FUN_0807a01c(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[3]);
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[2]);
+    *slot = NULL;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 FUN_0807a064(struct Enemy* p) { return TRUE; }
 
