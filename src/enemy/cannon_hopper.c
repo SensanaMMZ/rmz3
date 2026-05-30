@@ -3,6 +3,7 @@
 #include "global.h"
 #include "motion.h"
 #include "story.h"
+#include "zero.h"
 
 extern const EnemyFunc sDeads[4];
 
@@ -19,7 +20,10 @@ void CannonHopper_Die(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/cannon_hopper_pre_p2.inc");
+void FUN_080978c8(struct Enemy* p) {
+  struct Enemy* parent = (struct Enemy*)(p->s).unk_2c;
+  *(s32*)((u8*)parent + 0xb4) = pZero2->s.coord.x - (parent->s).coord.x;
+}
 
 void FUN_080978e0(struct Enemy* p) {}
 
