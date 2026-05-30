@@ -41,7 +41,31 @@ static bool8 FUN_080cbdc0(Object* p) {
   return FALSE;
 }
 
-INCASM("asm/solid/heavy_cannon_pre.inc");
+void FUN_080cbe38(struct Solid* p) {
+  struct Entity* parent = (p->s).unk_2c;
+  if (parent != NULL) {
+    if ((parent->coord).y - (p->s).coord.y > 0x1000) {
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+    } else {
+      (p->s).coord.y = (parent->coord).y - 0x1000;
+      (p->s).d.y = 0;
+    }
+  } else {
+    (p->s).d.y += 0x40;
+    if ((p->s).d.y > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+    (p->s).coord.y += (p->s).d.y;
+    if ((p->s).coord.y > *(s32*)((u8*)p + 0xb4)) {
+      (p->s).coord.y = *(s32*)((u8*)p + 0xb4);
+      (p->s).d.y = 0;
+    }
+  }
+}
 
 void nop_080cbea4(struct Solid* p) {}
 
