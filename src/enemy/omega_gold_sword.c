@@ -58,7 +58,14 @@ void OmegaGoldSword_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/omega_gold_sword_p1_post.inc");
+INCASM("asm/enemy/omega_gold_sword_p1_post_a.inc");
+
+void FUN_0808bb58(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).flags &= ~DISPLAY;
+    SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+  }
+}
 
 bool8 FUN_0808bb84(struct Enemy* p) { return TRUE; }
 
