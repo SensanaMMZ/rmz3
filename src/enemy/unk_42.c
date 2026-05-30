@@ -76,7 +76,23 @@ static void Enemy42_Die(struct Entity* p) {
   (sDeads[(p->work)[0]])((void*)p);
 }
 
-INCASM("asm/enemy/unk_42_p1.inc");
+INCASM("asm/enemy/unk_42_p1_a.inc");
+
+void FUN_080852f4(struct Enemy* p) {
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).mode[3] == 0) {
+    (p->s).coord.x += (p->s).d.x;
+    (p->s).d.x += (p->s).unk_coord.x;
+    if ((p->s).work[2]++ > 0x40) {
+      (p->s).mode[3]++;
+      (p->s).work[2] = 0;
+    }
+  } else {
+    if (((p->s).unk_28)->mode[3] > 3) {
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    }
+  }
+}
 
 void FUN_0808534c(struct Enemy* p) {
   EXIT_BODY(p);
