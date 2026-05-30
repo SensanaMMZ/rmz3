@@ -77,4 +77,36 @@ void VFX44_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_44_post.inc");
+void FUN_080be974(struct Entity* p) {
+  switch (p->mode[2]) {
+    case 0:
+      SetMotion(p, 0x3d00);
+      p->work[2] = 0x14;
+      p->mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(p);
+      if (p->work[2]-- & 2) {
+        p->flags |= DISPLAY;
+      } else {
+        p->flags &= ~DISPLAY;
+      }
+      if (p->work[2] != 0) {
+        break;
+      }
+      p->mode[2]++;
+      break;
+    case 2:
+      SetMotion(p, 0x3d01);
+      PlaySound(0x62);
+      p->flags |= DISPLAY;
+      p->mode[2]++;
+      break;
+    case 3:
+      UpdateMotionGraphic(p);
+      if (p->motion.state == 3) {
+        SET_VFX_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
