@@ -24,7 +24,25 @@ void FUN_0807d6c0(s32 x, s32 y, u8 a2) {
 
 void FUN_0807d720(struct Enemy* p) {}
 
-INCASM("asm/enemy/mellnet_pre_p2.inc");
+INCASM("asm/enemy/mellnet_pre_p2_a.inc");
+
+extern const EnemyFunc sUpdates1[7];
+extern const EnemyFunc sUpdates2[7];
+bool8 FUN_0807d724(struct Enemy* p);
+bool8 FUN_0807d780(struct Enemy* p);
+void FUN_0807d810(struct Enemy* p);
+
+void Mellnet_Update(struct Enemy* p) {
+  if (!FUN_0807d724(p)) {
+    FUN_0807d810(p);
+    if (!FUN_0807d780(p)) {
+      (sUpdates1[(p->s).mode[1]])(p);
+      (sUpdates2[(p->s).mode[1]])(p);
+    }
+  }
+}
+
+INCASM("asm/enemy/mellnet_pre_p2_b.inc");
 
 void FUN_0807d990(struct Enemy* p) {}
 
