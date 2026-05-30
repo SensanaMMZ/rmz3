@@ -38,7 +38,21 @@ struct Enemy* CreateOmegaGoldSword(struct Coord* c, u8 r1, struct Entity* e) {
 
 static const EnemyFunc sDeads[2];
 
-INCASM("asm/enemy/omega_gold_sword_p1_pre.inc");
+INCASM("asm/enemy/omega_gold_sword_p1_pre_a.inc");
+
+extern const EnemyFunc sUpdates1[5];
+extern const EnemyFunc sUpdates2[5];
+
+void OmegaGoldSword_Update(struct Enemy* p) {
+  if (((p->s).unk_28)->mode[0] > 1) {
+    *(u8*)((u8*)p + 0x49) |= 0xc;
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    OmegaGoldSword_Die(p);
+  } else {
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
 
 void OmegaGoldSword_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
