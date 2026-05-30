@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "trig.h"
+#include "vfx.h"
 
 static const EnemyFunc sDeads[1];
 static const struct Collision sCollisions[2];
@@ -67,7 +68,20 @@ void WormerRockDrone_Die(struct Enemy* p) {
 
 void FUN_08076fe4(struct Enemy* p) {}
 
-INCASM("asm/enemy/wormer_rock_drone_p3.inc");
+INCASM("asm/enemy/wormer_rock_drone_p3_a.inc");
+
+extern void FUN_080b7f70(struct Enemy* p, struct Coord* c, motion_t* m, s32 n);
+
+void FUN_080770ac(struct Enemy* p) {
+  struct Coord c;
+  EXIT_BODY(p);
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  CreateSmoke(2, &c);
+  FUN_080b7f70(p, &c, (motion_t*)0x08367252, 2);
+  PlaySound(0x122);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
 
 void WormerRockDrone_Init(struct Enemy* p);
 void WormerRockDrone_Update(struct Enemy* p);
