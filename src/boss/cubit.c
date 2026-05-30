@@ -39,7 +39,36 @@ struct Boss* CreateCubit(struct Coord* c, u8 n) {
 
 static const BossFunc sDeads[2];
 
-INCASM("asm/boss/cubit_p1_pre.inc");
+INCASM("asm/boss/cubit_p1_pre_a.inc");
+
+static const BossFunc sUpdates1[12];
+static const BossFunc sUpdates2[12];
+void cubit_080544c0(struct Boss* p);
+
+void Cubit_Update(struct Boss* p) {
+  if (!((p->body).status & BODY_STATUS_DEAD)) {
+    if (*(s16*)((u8*)p + 0xa4) != 0) {
+      goto alive;
+    }
+  }
+  if (gStageRun.missionStatus & 8) {
+    goto alive;
+  }
+  SET_BOSS_ROUTINE(p, ENTITY_DIE);
+  PlaySound(0xd2);
+  if ((p->body).status & 0x00010000) {
+    (p->s).mode[3] = 1;
+  } else {
+    (p->s).mode[3] = 0;
+  }
+  Cubit_Die(p);
+  return;
+
+alive:
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+  cubit_080544c0(p);
+}
 
 void Cubit_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
