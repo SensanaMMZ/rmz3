@@ -35,7 +35,43 @@ struct Enemy* CreateMothjiro(struct Coord* c, u8 r1) {
   return p;
 }
 
-INCASM("asm/enemy/mothjiro_p1.inc");
+INCASM("asm/enemy/mothjiro_p1_a.inc");
+
+extern const EnemyFunc sUpdates1[7];
+extern const EnemyFunc sUpdates2[7];
+void mothjiro_08088a74(struct Enemy* p);
+void Mothjiro_Die(struct Enemy* p);
+
+void Mothjiro_Update(struct Enemy* p) {
+  u32 dead = (p->body).status & BODY_STATUS_DEAD;
+  struct Entity** slot;
+  if (dead) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    Mothjiro_Die(p);
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  mothjiro_08088a74(p);
+  slot = (struct Entity**)((u8*)p + 0xc0);
+  if (*slot == NULL) {
+    if (IsFrozen(&p->s)) {
+      return;
+    }
+    if (*slot == NULL) {
+      goto dispatch2;
+    }
+  }
+  if (isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[1]);
+    *slot = (struct Entity*)dead;
+  }
+  return;
+
+dispatch2:
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/mothjiro_p1_b.inc");
 
 bool8 nop_080881d8(struct Enemy* p) { return TRUE; }
 
