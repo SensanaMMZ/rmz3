@@ -21,7 +21,45 @@ struct Enemy* CreatePantheonBomber(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/pantheon_bomber_p1_p2.inc");
+INCASM("asm/enemy/pantheon_bomber_p1_p2_a.inc");
+
+extern const EnemyFunc sUpdates1[6];
+extern const EnemyFunc sUpdates2[6];
+bool8 pBomber_08086628(struct Enemy* p);
+void PantheonBomber_Die(struct Enemy* p);
+
+void PantheonBomber_Update(struct Enemy* p) {
+  u32 dead = (p->body).status & BODY_STATUS_DEAD;
+  struct Entity** slot;
+  if (dead) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    PantheonBomber_Die(p);
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  pBomber_08086628(p);
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (*slot == NULL) {
+    if (IsFrozen(&p->s)) {
+      return;
+    }
+    if (*slot == NULL) {
+      goto dispatch2;
+    }
+  }
+  if (isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[1]);
+    *slot = (struct Entity*)dead;
+  } else {
+    SetDDP(&p->body, &sCollisions[2]);
+  }
+  return;
+
+dispatch2:
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/pantheon_bomber_p1_p2_b.inc");
 
 bool8 nop_08086338(struct Enemy* p) { return TRUE; }
 
