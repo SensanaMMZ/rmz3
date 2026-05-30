@@ -69,38 +69,3 @@ _08060860:
 	pop {r1}
 	bx r1
 
-	thumb_func_start FUN_08060864
-FUN_08060864: @ 0x08060864
-	push {r4, lr}
-	adds r2, r0, #0
-	ldr r0, [r2, #0x54]
-	adds r4, r0, r1
-	adds r0, r2, #0
-	adds r0, #0xd4
-	ldr r3, [r0]
-	subs r1, r4, r3
-	adds r0, #8
-	ldr r0, [r0]
-	cmp r1, r0
-	bhi _08060882
-	str r4, [r2, #0x54]
-	movs r0, #0
-	b _08060894
-_08060882:
-	cmp r4, r3
-	bge _0806088A
-	str r3, [r2, #0x54]
-	b _08060892
-_0806088A:
-	adds r0, r2, #0
-	adds r0, #0xd8
-	ldr r0, [r0]
-	str r0, [r2, #0x54]
-_08060892:
-	movs r0, #1
-_08060894:
-	pop {r4}
-	pop {r1}
-	bx r1
-	.align 2, 0
-

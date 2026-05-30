@@ -554,6 +554,21 @@ void phantom_080607e4(struct Entity* p) {
 
 INCASM("asm/boss/phantom_p2_post_p1_p1_p1.inc");
 
+bool8 FUN_08060864(struct Boss* p, s32 dx) {
+  s32 newx = (p->s).coord.x + dx;
+  s32 left = *(s32*)((u8*)p + 0xd4);
+  if ((u32)(newx - left) <= (u32)*(s32*)((u8*)p + 0xdc)) {
+    (p->s).coord.x = newx;
+    return 0;
+  }
+  if (newx < left) {
+    (p->s).coord.x = left;
+  } else {
+    (p->s).coord.x = *(s32*)((u8*)p + 0xd8);
+  }
+  return 1;
+}
+
 bool8 FUN_0806089c(struct Boss* p, s32 dy) {
   s32 newy = (p->s).coord.y + dy;
   if (newy < FUN_08009f6c((p->s).coord.x, (p->s).coord.y)) {
