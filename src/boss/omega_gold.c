@@ -11,6 +11,9 @@ void OmegaGold_Update(struct Boss* p);
 void OmegaGold_Die(struct Boss* p);
 void OmegaGold_Disappear(struct Boss* p);
 
+static void floatGoldOmega1(struct Boss* p);
+static const struct Collision sCollisions[8];
+
 // clang-format off
 const BossRoutine gOmegaGoldRoutine = {
     [ENTITY_INIT] =      (void*)OmegaGold_Init,
@@ -102,7 +105,22 @@ void FUN_0805b4a8(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/omega_gold_p4_b.inc");
+INCASM("asm/boss/omega_gold_p4_b_a.inc");
+
+void goldOmega1Neutral(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).work[3] = 0x1e;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      floatGoldOmega1(p);
+      break;
+  }
+}
 
 bool8 nop_0805b5dc(struct Boss* p) { return TRUE; }
 
