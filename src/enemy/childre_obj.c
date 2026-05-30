@@ -414,7 +414,25 @@ void FUN_08073d88(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/childre_obj_post_post_p2.inc");
+void FUN_08073dd8(struct Enemy* p) {
+  EXIT_BODY(p);
+  CreateSmoke(2, &(p->s).coord);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+void FUN_08073e18(struct Enemy* p) {
+  PlaySound(0x3f);
+  CreateVFX31_2((p->s).coord.x, (p->s).coord.y);
+  EXIT_BODY(p);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+void FUN_08073e60(struct Enemy* p) {
+  EXIT_BODY(p);
+  CreateSmoke(2, &(p->s).coord);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+  PlaySound(0x35);
+}
 
 // --------------------------------------------
 
