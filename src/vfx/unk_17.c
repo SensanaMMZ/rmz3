@@ -274,46 +274,13 @@ static void FUN_080b6a9c(struct VFX* p) {
   Ghost17_Update((void*)p);
 }
 
-NAKED static void FUN_080b6b8c(struct VFX* p) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r4, r0, #0\n\
-	ldr r0, [r4, #0x54]\n\
-	ldr r1, [r4, #0x5c]\n\
-	adds r0, r0, r1\n\
-	str r0, [r4, #0x54]\n\
-	ldr r0, [r4, #0x58]\n\
-	ldr r1, [r4, #0x60]\n\
-	adds r0, r0, r1\n\
-	str r0, [r4, #0x58]\n\
-	adds r1, #0x40\n\
-	str r1, [r4, #0x60]\n\
-	adds r0, r4, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldr r0, [r4, #0x54]\n\
-	ldr r1, [r4, #0x58]\n\
-	bl FUN_080098a4\n\
-	lsls r0, r0, #0x10\n\
-	cmp r0, #0\n\
-	beq _080B6BD4\n\
-	adds r1, r4, #0\n\
-	adds r1, #0x54\n\
-	movs r0, #3\n\
-	bl CreateSmoke\n\
-	ldr r1, _080B6BDC @ =gVFXFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #2\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #8]\n\
-	str r0, [r4, #0x14]\n\
-_080B6BD4:\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080B6BDC: .4byte gVFXFnTable\n\
- .syntax divided\n");
+static void FUN_080b6b8c(struct VFX* p) {
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += PIXEL(1) / 4;
+  UpdateMotionGraphic(&p->s);
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    CreateSmoke(3, &(p->s).coord);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
 }
