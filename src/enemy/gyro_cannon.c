@@ -435,7 +435,23 @@ void FUN_0806da20(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gyro_cannon_p3.inc");
+INCASM("asm/enemy/gyro_cannon_p3a.inc");
+
+void FUN_0806db58(struct Enemy* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.y -= 0x200;
+  {
+    s32* base = (s32*)((u8*)p + 0xb4);
+    if ((p->s).coord.y < base[1]) {
+      (p->s).coord.y = base[1];
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      (p->s).work[3] = 0x7f;
+    }
+  }
+}
+
+INCASM("asm/enemy/gyro_cannon_p3b.inc");
 
 NAKED static void FUN_0806ddfc(struct Enemy* p) {
   asm(".syntax unified\n\
