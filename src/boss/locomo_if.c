@@ -1,13 +1,45 @@
 #include "boss.h"
 #include "collision.h"
+#include "element.h"
 #include "global.h"
 #include "motion.h"
 
 void nop_0805474c(struct Boss* p) {}
 
 static const BossFunc sDeads[1];
+static const struct Coord sElementCoord;
 
-INCASM("asm/boss/locomo_if_p1_pre.inc");
+INCASM("asm/boss/locomo_if_p1_pre_a.inc");
+
+static const BossFunc sUpdates1[7];
+static const BossFunc sUpdates2[7];
+bool8 tryKillLocomoIF(struct Boss* p);
+
+void LocomoIF_Update(struct Boss* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  struct Entity* e;
+  if (*slot != NULL) {
+    if (!isKilled(*slot)) {
+      goto next;
+    }
+    e = NULL;
+  } else {
+    if (!((p->body).status & 1)) {
+      goto next;
+    }
+    if ((*(u8*)((u8*)p + 0x97) & 0xf0) != 0x20) {
+      goto next;
+    }
+    e = (struct Entity*)ApplyElementEffect(0x17, &p->s, &sElementCoord);
+  }
+  *slot = e;
+next:
+  if (tryKillLocomoIF(p)) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
 
 void LocomoIF_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
