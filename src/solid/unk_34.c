@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "overworld.h"
 #include "physics.h"
 #include "solid.h"
 
@@ -29,7 +30,40 @@ static void Solid34_Init(struct Solid* p) {
   Solid34_Update(p);
 }
 
-INCASM("asm/solid/unk_34.inc");
+void Solid34_Update(struct Solid* p) {
+  switch ((p->s).mode[3]) {
+    case 0:
+      (p->s).work[0] = gOverworld.state[0];
+      if (gOverworld.state[0] == 0) {
+        SetMotion(&p->s, 0x7601);
+      } else {
+        SetMotion(&p->s, 0x7602);
+      }
+      (p->s).mode[3]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->body).status & 8) {
+        gOverworld.state[0] ^= 1;
+      }
+      if ((p->s).work[0] != gOverworld.state[0]) {
+        if ((p->s).work[0] == 0) {
+          SetMotion(&p->s, 0x7603);
+        } else {
+          SetMotion(&p->s, 0x7604);
+        }
+        (p->s).work[2] = 0x1e;
+        (p->s).mode[3]++;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)(--(p->s).work[2]) == 0) {
+        (p->s).mode[3] = 0;
+      }
+      break;
+  }
+}
 
 static void Solid34_Die(struct Solid* p) { return; }
 
