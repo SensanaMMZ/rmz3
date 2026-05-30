@@ -8,7 +8,28 @@ INCASM("asm/enemy/shotloid_pre_p1.inc");
 
 void nop_08093af8(struct Enemy* p) {}
 
-INCASM("asm/enemy/shotloid_pre_p2.inc");
+INCASM("asm/enemy/shotloid_pre_p2_a.inc");
+
+extern const EnemyFunc sUpdates1[9];
+extern const EnemyFunc sUpdates2[9];
+bool8 FUN_08093afc(struct Enemy* p);
+bool8 FUN_08093b50(struct Enemy* p);
+void FUN_08093be0(struct Enemy* p);
+
+void Shotloid_Update(struct Enemy* p) {
+  if (!FUN_08093afc(p)) {
+    if ((p->s).work[0] == 0) {
+      FUN_08093be0(p);
+      if (FUN_08093b50(p)) {
+        return;
+      }
+    }
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/enemy/shotloid_pre_p2_b.inc");
 
 void FUN_08093de0(struct Enemy* p) {}
 
