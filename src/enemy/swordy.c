@@ -17,7 +17,41 @@ struct Enemy* CreateSwordy(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/swordy_p1_p2.inc");
+INCASM("asm/enemy/swordy_p1_p2_a.inc");
+
+extern const EnemyFunc PTR_ARRAY_08367a38[4];
+extern const EnemyFunc PTR_ARRAY_08367a48[4];
+void FUN_0807c530(struct Enemy* p);
+void Swordy_Die(struct Enemy* p);
+
+void Swordy_Update(struct Enemy* p) {
+  struct Entity** slot;
+  struct Entity* e;
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    Swordy_Die(p);
+    return;
+  }
+  (PTR_ARRAY_08367a38[(p->s).mode[1]])(p);
+  FUN_0807c530(p);
+  if (IsFrozen(&p->s)) {
+    slot = (struct Entity**)((u8*)p + 0xbc);
+    e = *slot;
+    if (e != NULL) {
+      return;
+    }
+    p->props[6] = (p->s).mode[1];
+    (p->s).mode[1] = (s32)e;
+    (p->s).mode[2] = (s32)e;
+    if (isKilled(*slot)) {
+      *slot = e;
+    }
+    return;
+  }
+  (PTR_ARRAY_08367a48[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/swordy_p1_p2_b.inc");
 
 bool8 FUN_0807c230(struct Enemy* p) { return TRUE; }
 
