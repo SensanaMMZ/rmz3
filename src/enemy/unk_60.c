@@ -159,7 +159,24 @@ void FUN_08092aac(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/unk_60_post_p3.inc");
+INCASM("asm/enemy/unk_60_post_p3_a.inc");
+
+void FUN_08092b54(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      if (((p->s).unk_28->scriptEntity)->flags & 1) {
+        (p->s).flags |= DISPLAY;
+        SetMotion(&p->s, 0xb602);
+        UpdateMotionGraphic(&p->s);
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 void FUN_08092ba0(struct Enemy* p) {
   switch ((p->s).mode[2]) {
