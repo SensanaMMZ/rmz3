@@ -262,7 +262,31 @@ void FUN_0806af40(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/omega_white_hand_p3_p3_c.inc");
+void FUN_0806afdc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags2 |= WHITE_PAINTABLE;
+      (p->s).invincibleID = ((p->s).unk_28)->uniqueID;
+      SetMotion(&p->s, 0x901);
+      SET_XFLIP(p, FALSE);
+      SET_YFLIP(p, FALSE);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 wob;
+      (p->s).work[2] += 2;
+      wob = gSineTable[(p->s).work[2]] << 1;
+      (p->s).coord.y = *(s32*)((u8*)p + 0xb8) + ((p->s).unk_28)->coord.y + wob;
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4) + ((p->s).unk_28)->coord.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 bool8 FUN_0806b094(struct Enemy* p) { return TRUE; }
 
