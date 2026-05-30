@@ -408,7 +408,34 @@ void FUN_0806d998(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gyro_cannon_p2.inc");
+void CreateProjectile8(s32 x, s32 y);
+
+void FUN_0806d9d4(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, 0x1704);
+    (p->s).work[2] = 8;
+    (p->s).mode[2]++;
+  }
+  if ((u8)(--(p->s).work[2]) == 0xff) {
+    CreateProjectile8((p->s).coord.x, (p->s).coord.y + 0xc00);
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+  }
+}
+
+void FUN_0806da20(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, 0x1705);
+    (p->s).work[2] = 8;
+    (p->s).mode[2]++;
+  }
+  if ((u8)(--(p->s).work[2]) == 0xff) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/gyro_cannon_p3.inc");
 
 NAKED static void FUN_0806ddfc(struct Enemy* p) {
   asm(".syntax unified\n\
