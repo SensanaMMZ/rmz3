@@ -2,7 +2,46 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/snakecord_p1_p1.inc");
+INCASM("asm/enemy/snakecord_p1_p1_a.inc");
+
+static const EnemyFunc PTR_ARRAY_08366e30[12];
+extern const EnemyFunc PTR_ARRAY_08366e60[12];
+bool8 FUN_0807415c(struct Enemy* p);
+void FUN_080742ec(struct Enemy* p);
+bool8 FUN_08074208(struct Enemy* p);
+void Snakecord_Die(struct Enemy* p);
+
+void Snakecord_Update(struct Enemy* p) {
+  if ((p->s).work[0] == 1) {
+    struct Entity* par = (p->s).unk_2c;
+    if (par != NULL) {
+      u8 pm = par->mode[0];
+      if (pm > 2) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+        return;
+      }
+      if (pm > 1) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = (p->s).work[0];
+        return;
+      }
+    }
+  }
+  if (FUN_0807415c(p)) {
+    return;
+  }
+  FUN_080742ec(p);
+  if (FUN_08074208(p)) {
+    return;
+  }
+  (PTR_ARRAY_08366e30[(p->s).mode[1]])(p);
+  (PTR_ARRAY_08366e60[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/snakecord_p1_p1_b.inc");
 
 void FUN_0807461c(struct Enemy* p) {
   u32 status = (p->body).status;
