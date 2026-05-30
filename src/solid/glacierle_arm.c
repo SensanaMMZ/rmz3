@@ -52,7 +52,31 @@ static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struc
   return;
 }
 
-INCASM("asm/solid/glacierle_arm_pre.inc");
+INCASM("asm/solid/glacierle_arm_pre_a.inc");
+
+extern const SolidFunc sGlacierleArmUpdates1[2];
+extern const SolidFunc sGlacierleArmUpdates2[2];
+void GlacierleArm_Die(struct Solid* p);
+
+void GlacierleArm_Update(struct Solid* p) {
+  if ((p->s).work[0] == 0) {
+    if (((p->s).unk_28)->mode[0] > 1) {
+      *(u8*)((u8*)p + 0xbc) = (p->s).work[0];
+      SET_SOLID_ROUTINE(p, ENTITY_DIE);
+      GlacierleArm_Die(p);
+    }
+  }
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    *(u8*)((u8*)p + 0xbc) = 0;
+    SET_SOLID_ROUTINE(p, ENTITY_DIE);
+    GlacierleArm_Die(p);
+    return;
+  }
+  (sGlacierleArmUpdates1[(p->s).mode[1]])(p);
+  (sGlacierleArmUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/solid/glacierle_arm_pre_b.inc");
 
 void nop_080ceb28(struct Solid* p) {}
 
