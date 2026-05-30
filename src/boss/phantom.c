@@ -552,7 +552,17 @@ void phantom_080607e4(struct Entity* p) {
   UpdateMotionGraphic(p);
 }
 
-INCASM("asm/boss/phantom_p2_post_p1_p1.inc");
+INCASM("asm/boss/phantom_p2_post_p1_p1_p1.inc");
+
+bool8 FUN_0806089c(struct Boss* p, s32 dy) {
+  s32 newy = (p->s).coord.y + dy;
+  if (newy < FUN_08009f6c((p->s).coord.x, (p->s).coord.y)) {
+    (p->s).coord.y = newy;
+    return 0;
+  }
+  (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  return 1;
+}
 
 void FUN_080608c8(struct Boss* p) {
   FUN_080607a0(p, 3);
