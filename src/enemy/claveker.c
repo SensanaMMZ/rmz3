@@ -36,7 +36,60 @@ struct Enemy* CreateClaveker(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/claveker_p1.inc");
+INCASM("asm/enemy/claveker_p1_a.inc");
+
+extern const EnemyFunc sUpdates1[6];
+extern const EnemyFunc sUpdates2[6];
+bool8 FUN_0808f1e0(struct Enemy* p);
+void Claveker_Die(struct Enemy* p);
+
+void Claveker_Update(struct Enemy* p) {
+  u32 dead = (p->body).status & BODY_STATUS_DEAD;
+  if (dead) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    Claveker_Die(p);
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  FUN_0808f1e0(p);
+  if (IsFrozen(&p->s)) {
+    u8 m = (p->s).mode[1];
+    if (m == 2) goto skip_reset;
+    if (m == 3) goto skip_reset;
+    if (m == 5) goto skip_reset;
+    if (m == 4) goto skip_reset;
+    (p->s).mode[1] = dead;
+    (p->s).mode[2] = dead;
+  skip_reset:;
+  }
+  if (*(struct Entity**)((u8*)p + 0xbc) == NULL) {
+    if (IsFrozen(&p->s)) {
+      p->props[6] = (p->s).mode[1];
+      return;
+    }
+  }
+  if (IsFrozen(&p->s)) {
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+  if (*(struct Entity**)((u8*)p + 0xbc) == NULL) {
+    goto dispatch2;
+  }
+  if (isKilled(*(struct Entity**)((u8*)p + 0xbc))) {
+    SetDDP(&p->body, &sCollisions[1]);
+    *(struct Entity**)((u8*)p + 0xbc) = NULL;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+    return;
+  }
+  SetDDP(&p->body, &sCollisions[2]);
+  return;
+
+dispatch2:
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/claveker_p1_b.inc");
 
 bool8 FUN_0808eb20(struct Enemy* p) { return TRUE; }
 
