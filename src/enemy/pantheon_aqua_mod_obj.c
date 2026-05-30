@@ -82,7 +82,23 @@ INCASM("asm/enemy/pantheon_aqua_mod_obj_p1_p5.inc");
 
 void nop_08080eb8(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_aqua_mod_obj_p2.inc");
+INCASM("asm/enemy/pantheon_aqua_mod_obj_p2_a.inc");
+
+extern const EnemyFunc sUpdates1[10];
+extern const EnemyFunc sUpdates2[10];
+void PantheonAquaModObj_Die(struct Enemy* p);
+
+void PantheonAquaModObj_Update(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    PantheonAquaModObj_Die(p);
+  } else {
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/enemy/pantheon_aqua_mod_obj_p2_c.inc");
 
 void FUN_08080fe8(struct Enemy* p) {}
 
