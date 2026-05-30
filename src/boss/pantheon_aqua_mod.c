@@ -37,7 +37,22 @@ static void paquam_080512f8(struct Boss* p) {
 
 static const BossFunc sDeads[1];
 
-INCASM("asm/boss/pantheon_aqua_mod_p1_pre.inc");
+INCASM("asm/boss/pantheon_aqua_mod_p1_pre_a.inc");
+
+static const BossFunc sUpdates1[9];
+static const BossFunc sUpdates2[9];
+
+void PantheonAquaMod_Update(struct Boss* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xc0);
+  if (*slot != NULL && isKilled(*slot)) {
+    *slot = NULL;
+  }
+  if (tryKillPantheonAquaMod(p)) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
 
 void PantheonAquaMod_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
