@@ -573,7 +573,23 @@ void copyxMode9(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p2.inc");
+void copyxMode10(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, 0xb306);
+    (p->s).mode[2] = 0;
+    SetDDP(&p->body, &sCollisions[0]);
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y > 0) {
+    (p->s).mode[1] = (p->s).mode[3];
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p2_b.inc");
 
 void copyxMode12(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
