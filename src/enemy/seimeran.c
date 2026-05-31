@@ -1,11 +1,82 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
 
+// Entity.work[0]
+#define SEIMERAN_ROOT 0
+#define SEIMERAN_CLONE 1
+#define SEIMERAN_SEED 2
+
+typedef struct EnemySeimeran {
+  OBJECT_HDR;
+  // props (16bytes, offset: 0xB4..)
+  struct {
+    struct Entity* elfx;  // 0xB4, Element Effect
+    struct Coord c_b8;    // 0xB8
+    u8 unk_c0;            // 0xC0
+  } props;
+} Seimeran;
+
 static const struct Collision sCollisions[15];
 
+void Seimeran_Die(struct Enemy* p);
+extern const EnemyFunc sUpdates1[8];
+extern const EnemyFunc sUpdates2[8];
+extern const struct Coord sElementCoord;
+
 INCASM("asm/enemy/seimeran_p1.inc");
+
+static bool8 FUN_0808f348(Seimeran* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if (((p->s).work[0] != SEIMERAN_SEED) && ((p->body).status & BODY_STATUS_SLASHED) && ((p->props).unk_c0 > 9)) {
+      (p->s).mode[1] = 1;
+    } else {
+      (p->s).mode[1] = 0;
+    }
+    Seimeran_Die((void*)p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+static bool8 FUN_0808f3a8(Seimeran* p) {
+  if (((p->s).work[0] != SEIMERAN_SEED) && (p->props).elfx == NULL) {
+    switch ((p->s).mode[3]) {
+      case 0: {
+        if (IsFrozen((void*)p)) {
+          (sUpdates1[(p->s).mode[1]])((void*)p);
+          (sUpdates2[(p->s).mode[1]])((void*)p);
+          (p->s).mode[3]++;
+          UpdateMotionGraphic(&p->s);
+          return TRUE;
+        }
+        break;
+      }
+      case 1: {
+        if (IsFrozen((void*)p)) {
+          return TRUE;
+        }
+        (p->s).mode[3] = 0;
+        break;
+      }
+    }
+  }
+  return FALSE;
+}
+
+static void FUN_0808f424(Seimeran* p) {
+  if ((p->props).elfx == NULL && ((p->s).work[0] != SEIMERAN_SEED) && ((p->s).mode[1] != 5) && ((p->s).mode[1] != 6) && ((p->body).status & BODY_STATUS_WHITE)) {
+    (p->props).elfx = (void*)ApplyElementEffect(0, &p->s, &sElementCoord);
+    if ((p->props).elfx != NULL) {
+      (p->s).mode[1] = 0, (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/seimeran_p1b.inc");
 
 void FUN_0808f728(struct Enemy* p) {}
 
@@ -67,7 +138,7 @@ void FUN_0808f728(struct Enemy* p);
 void FUN_0808f72c(struct Enemy* p);
 
 // clang-format off
-static const EnemyFunc sUpdates1[8] = {
+const EnemyFunc sUpdates1[8] = {
     FUN_0808f72c,
     FUN_0808f728,
     FUN_0808f728,
@@ -89,7 +160,7 @@ void FUN_0808fb10(struct Enemy* p);
 void FUN_0808fc10(struct Enemy* p);
 
 // clang-format off
-static const EnemyFunc sUpdates2[8] = {
+const EnemyFunc sUpdates2[8] = {
     FUN_0808f7ac,
     FUN_0808f824,
     FUN_0808f8e0,
@@ -246,7 +317,7 @@ static const struct Collision sCollisions[15] = {
 
 static const u8 sCollisionIdxs[16] = {1, 1, 3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 11, 0, 0, 0};
 
-static const struct Coord sElementCoord = {PIXEL(0), -PIXEL(8)};
+const struct Coord sElementCoord = {PIXEL(0), -PIXEL(8)};
 
 static const u8 sInitModes[4] = {1, 5, 7, 0};
 
