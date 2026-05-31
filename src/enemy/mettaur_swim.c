@@ -2,11 +2,32 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "physics.h"
 #include "zero.h"
 
 static const struct Collision sCollisions[8];
 
 static const EnemyFunc sDeads[3];
+
+struct Entity* FUN_08088b4c(s32 x, s32 y, u8 kind) {
+  struct Entity* p = AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    p->taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_METTAUR_SWIM);
+    p->tileNum = 0, p->palID = 0;
+    p->flags2 |= WHITE_PAINTABLE;
+    p->invincibleID = p->uniqueID;
+    (p->coord).x = x, (p->coord).y = y;
+    p->work[0] = kind;
+  }
+  return p;
+}
+
+u8 FUN_08088ba8(struct Enemy* p) {
+  s32 val = PushoutToUp1((p->s).coord.x, (p->s).coord.y + PIXEL(8));
+  if (val < 0) return TRUE;
+  return FALSE;
+}
 
 INCASM("asm/enemy/mettaur_swim_p1_pre.inc");
 
