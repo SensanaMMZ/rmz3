@@ -1,5 +1,6 @@
 #include "entity.h"
 #include "global.h"
+#include "mod.h"
 #include "solid.h"
 #include "syssav.h"
 
@@ -95,6 +96,28 @@ static void Seagulls_Die(struct Solid* p) {
       break;
     }
   }
+}
+
+struct Seagulls {
+  OBJECT_HDR;
+  // props (16bytes, offset: 0xB4..)
+  s32 unk_b4_x;   // 0xB4
+  u8 unk_b8[12];  // 0xB8
+};
+
+void FUN_080dcd20(struct Solid* p) {
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  if (!MOD_ENABLED(gSystemSavedataManager.mods, MOD_SEAGULLS)) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (p->s).unk_2c = (void*)CreateSeagulls(p, 1, 0);
+  ((struct Seagulls*)p)->unk_b4_x = (p->s).coord.x;
+  (p->s).work[2] = 0, (p->s).work[3] = 0;
+  Seagulls_Update(p);
 }
 
 INCASM("asm/solid/seagulls_p1.inc");
