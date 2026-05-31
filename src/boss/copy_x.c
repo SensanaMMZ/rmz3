@@ -559,6 +559,24 @@ void copyxNextMode(struct Boss* p) {
   }
 }
 
+void copyxMode4(struct Boss* p) {
+  UpdateMotionGraphic(&p->s);
+  ((p->props).copyx).unk_c6[0] = 1;
+  (p->s).mode[1] = 3;
+  (p->s).mode[2] = 1;
+  (p->s).mode[3] = 2;
+  {
+    s16 hp = (p->body).hp;
+    if (hp < 32) {
+      (p->s).work[2] = 8;
+    } else if (hp < 48) {
+      (p->s).work[2] = 4;
+    } else {
+      (p->s).work[2] = 2;
+    }
+  }
+}
+
 INCASM("asm/boss/copy_x_p2_p1.inc");
 
 void copyxMode9(struct Boss* p) {

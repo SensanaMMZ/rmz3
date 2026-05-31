@@ -4,42 +4,6 @@
 
 	.text
 
-	thumb_func_start copyxMode4
-copyxMode4: @ 0x08055AEC
-	push {r4, lr}
-	adds r4, r0, #0
-	bl UpdateMotionGraphic
-	adds r1, r4, #0
-	adds r1, #0xc6
-	movs r0, #1
-	strb r0, [r1]
-	movs r1, #3
-	strb r1, [r4, #0xd]
-	strb r0, [r4, #0xe]
-	movs r1, #2
-	strb r1, [r4, #0xf]
-	adds r0, r4, #0
-	adds r0, #0xa4
-	movs r2, #0
-	ldrsh r0, [r0, r2]
-	cmp r0, #0x1f
-	bgt _08055B18
-	movs r0, #8
-	strb r0, [r4, #0x12]
-	b _08055B24
-_08055B18:
-	cmp r0, #0x2f
-	bgt _08055B22
-	movs r0, #4
-	strb r0, [r4, #0x12]
-	b _08055B24
-_08055B22:
-	strb r1, [r4, #0x12]
-_08055B24:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
 
 	thumb_func_start copyxMode5
 copyxMode5: @ 0x08055B2C
