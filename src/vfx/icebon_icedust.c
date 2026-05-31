@@ -56,7 +56,26 @@ void IcebonIcedust_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/icebon_icedust_p3_a.inc");
+void ice_080b996c(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(SM017_ICEBON_ICE, 9));
+      RNG_0202f388 = LCG(RNG_0202f388);
+      (p->s).d.x = ((RNG_0202f388 >> 16) & 0x1FF) - PIXEL(1);
+      RNG_0202f388 = LCG(RNG_0202f388);
+      (p->s).d.y = ((RNG_0202f388 >> 16) & 0x7F) + PIXEL(1) / 2;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        SET_VFX_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
 
 void ice_080b9a0c(struct VFX* p) {
   switch ((p->s).mode[2]) {
