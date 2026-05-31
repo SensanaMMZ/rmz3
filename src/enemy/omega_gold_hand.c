@@ -93,7 +93,27 @@ void FUN_08083288(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/omega_gold_hand_p2_b.inc");
+void FUN_08083328(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags2 |= WHITE_PAINTABLE;
+      (p->s).invincibleID = ((p->s).unk_28)->uniqueID;
+      SetMotion(&p->s, MOTION(SM009_OMEGA_HAND, 1));
+      SET_XFLIP(p, FALSE);
+      SET_YFLIP(p, FALSE);
+      (p->s).coord.y = *(s32*)((u8*)p + 0xb8) + ((p->s).unk_28)->coord.y;
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4) + ((p->s).unk_28)->coord.x;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).unk_28)->scriptEntity->flags & 1) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_080833c8(struct Enemy* p) { return TRUE; }
 
