@@ -77,6 +77,12 @@ void FUN_080b1b28(struct Projectile* p) {
   (PTR_ARRAY_0836d7cc[(p->s).mode[1]])(p);
 }
 
+void FUN_080b1b40(struct Projectile* p) {
+  (p->s).flags &= ~DISPLAY;
+  EXIT_BODY(p);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
 INCASM("asm/projectile/unk_45_p2.inc");
 
 void FUN_080b1a48(struct Projectile* p);
