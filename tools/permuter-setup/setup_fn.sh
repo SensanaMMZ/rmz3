@@ -118,7 +118,7 @@ else
   } > "$OUTDIR/target.s"
 fi
 
-/opt/devkitpro/devkitARM/bin/arm-none-eabi-as \
+/c/devkitPro/devkitARM/bin/arm-none-eabi-as \
   -mcpu=arm7tdmi -march=armv4t -mthumb -mthumb-interwork \
   "$OUTDIR/target.s" -o "$OUTDIR/target.o"
 
