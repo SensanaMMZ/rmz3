@@ -1,0 +1,4 @@
+compiler_command = "tools/permuter_compile.sh -nostdinc -I tools/agbcc -I tools/agbcc/include -I include -DMODERN=0"
+assembler_command = "C:/devkitPro/devkitARM/bin/arm-none-eabi-as -mcpu=arm7tdmi -march=armv4t -mthumb -mthumb-interwork -g"
+asm_prelude_file = "tools/permuter_arm_prelude.inc"
+compiler_type = "gcc"

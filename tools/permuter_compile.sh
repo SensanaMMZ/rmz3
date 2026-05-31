@@ -1,28 +1,32 @@
 #!/bin/bash
-# Compile a single C file to a .o exactly the way the rmz3 makefile does,
-# for use with decomp-permuter. The permuter runs this from a scratch dir,
-# so every path is absolute (rooted at the repo).
+# Compile a single C file to a .o exactly the way the rmz3 makefile does
+# (cpp | agbcc | as), for decomp-permuter. The agbcc flags are fixed here; any
+# extra flags in the argument list (e.g. the -I/-D that import.py forwards) are
+# ignored — we only scrape the input .c and the -o output path out of the args.
 #
-# Invoked by the permuter as:  permuter_compile.sh <input.c> -o <output.o>
-#
-# To create a scratch for a blocked function:
-#   1. Build so expected/build has the target .o (tools/refresh-expected.sh).
-#   2. Dump the target function's asm to a glabel-prefixed file, e.g.:
-#        arm-none-eabi-objdump -d expected/build/rmz3/src/enemy/gallisni.o ...
-#      (or hand the permuter the .o symbol).
-#   3. tools/decomp-permuter/import.py src/enemy/gallisni.c Gallisni_Update
-#      then point its compile.sh at this script.
+# Works both as the permuter's compile.sh AND as a standalone:
+#   tools/permuter_compile.sh [flags...] <input.c> [flags...] -o <output.o>
 set -e
 REPO="C:/Users/user/MMZ5-X8-Base/rmz3"
 DKA="C:/devkitPro/devkitARM"
 AGBCC="$REPO/tools/agbcc/bin/agbcc"
 
-INPUT="$1"
-OUTPUT="$3"   # permuter passes: <input.c> -o <output.o>
-SFILE="${OUTPUT%.o}.s"
+INPUT=""
+OUTPUT=""
+prev=""
+for a in "$@"; do
+  if [ "$prev" = "-o" ]; then OUTPUT="$a"; prev=""; continue; fi
+  case "$a" in
+    -o) prev="-o" ;;
+    *.c) INPUT="$a" ;;
+    *) : ;;  # ignore all other flags
+  esac
+done
+[ -z "$INPUT" ]  && { echo "permuter_compile.sh: no .c input in args: $*" >&2; exit 2; }
+[ -z "$OUTPUT" ] && { echo "permuter_compile.sh: no -o output in args: $*" >&2; exit 2; }
 
-# NOTE: -Werror is intentionally dropped — permuter mutations can introduce
-# benign warnings that should not abort a candidate.
+SFILE="${OUTPUT%.o}.s"
+# -Werror dropped: permuter mutations can introduce benign warnings.
 cpp -I "$REPO/tools/agbcc" -I "$REPO/tools/agbcc/include" -iquote "$REPO/include" \
     -nostdinc -std=gnu89 -DMODERN=0 "$INPUT" \
   | "$AGBCC" -mthumb-interwork -Wimplicit -Wparentheses -O2 -fshort-enums -fhex-asm -o "$SFILE"
