@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "story.h"
 
 struct Projectile* FUN_080a244c(struct Coord* c1, struct Coord* c2, u8 a2) {
   struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
@@ -18,7 +19,37 @@ struct Projectile* FUN_080a244c(struct Coord* c1, struct Coord* c2, u8 a2) {
   return p;
 }
 
-INCASM("asm/projectile/unk_16_p2_p1.inc");
+static const struct Collision sCollisions[];
+static const ProjectileFunc PTR_ARRAY_0836b350[2];
+void Projectile16_Update(struct Projectile* p);
+
+void Projectile16_Init(struct Projectile* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  INIT_BODY(p, &sCollisions[0], 2, NULL);
+  if ((p->s).work[0] == 0) {
+    SET_XFLIP(p, FALSE);
+  } else {
+    SET_XFLIP(p, TRUE);
+  }
+  (p->s).work[2] = 0xFF;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 0, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
+  Projectile16_Update(p);
+}
+
+void Projectile16_Update(struct Projectile* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+
+  (PTR_ARRAY_0836b350[(p->s).mode[1]])(p);
+}
 
 void Projectile16_Die(struct Projectile* p) {
   (p->s).flags &= ~DISPLAY;
