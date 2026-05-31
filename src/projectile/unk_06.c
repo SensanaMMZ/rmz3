@@ -75,6 +75,50 @@ void Projectile6_Die(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_06_p2.inc");
 
+void FUN_0809de04(struct Projectile* p) {
+  struct Entity* l = (p->s).unk_28;
+  if (l->mode[0] >= ENTITY_DIE) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    Projectile6_Die(p);
+    return;
+  }
+
+  SET_XFLIP(p, (l->flags >> 4) & 1);
+  if (*(u32*)p->work & 2) {
+    *(u32*)p->work = 0;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+    return;
+  }
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags |= DISPLAY;
+      SetMotion(&p->s, MOTION(SM025_LAMPLORT, 5));
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.cmdIdx == 1) {
+        SetDDP(&p->body, &sCollisions[2]);
+        (p->s).mode[2]++;
+      }
+      if ((p->s).motion.state == MOTION_END) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == MOTION_END) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 void FUN_0809df14(struct Projectile* p) {
   struct Entity* l = (p->s).unk_28;
   if (l->mode[0] >= ENTITY_DIE) {
