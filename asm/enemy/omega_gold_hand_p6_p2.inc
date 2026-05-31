@@ -4,18 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08083eb0
-FUN_08083eb0: @ 0x08083EB0
-	adds r3, r0, #0
-	adds r3, #0xc1
-	movs r2, #0
-	movs r1, #1
-	strb r1, [r3]
-	movs r1, #4
-	strb r1, [r0, #0xd]
-	strb r2, [r0, #0xe]
-	movs r0, #1
-	bx lr
 
 	thumb_func_start FUN_08083ec4
 FUN_08083ec4: @ 0x08083EC4

@@ -228,6 +228,13 @@ void FUN_08083e68(struct Enemy* p) {
 
 void nop_08083eac(struct Enemy* p) {}
 
+bool8 FUN_08083eb0(struct Enemy* p) {
+  (p->props)[0xd] = 1;
+  (p->s).mode[1] = 4;
+  (p->s).mode[2] = 0;
+  return TRUE;
+}
+
 INCASM("asm/enemy/omega_gold_hand_p6_p2.inc");
 
 bool8 FUN_08083ff0(struct Enemy* p) { return TRUE; }
@@ -251,13 +258,13 @@ static const EnemyFunc PTR_ARRAY_08368188[6] = {
 };
 // clang-format on
 
-void FUN_08083eb0(struct Enemy* p);
+bool8 FUN_08083eb0(struct Enemy* p);
 
 // clang-format off
 static const EnemyFunc PTR_ARRAY_083681a0[6] = {
     (EnemyFunc)FUN_080846fc,
     (EnemyFunc)FUN_080846fc,
-    FUN_08083eb0,
+    (EnemyFunc)FUN_08083eb0,
     (EnemyFunc)FUN_080846fc,
     (EnemyFunc)FUN_08083ff0,
     (EnemyFunc)FUN_080846fc,
