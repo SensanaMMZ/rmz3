@@ -4,64 +4,6 @@
 	
 	.text
 
-	thumb_func_start CreateNurseBElf
-CreateNurseBElf: @ 0x080E257C
-	push {r4, r5, r6, r7, lr}
-	adds r4, r0, #0
-	lsls r1, r1, #0x18
-	lsrs r7, r1, #0x18
-	lsls r2, r2, #0x18
-	lsrs r6, r2, #0x18
-	lsls r3, r3, #0x18
-	lsrs r5, r3, #0x18
-	ldr r0, _080E25D4 @ =gElfHeaderPtr
-	ldr r0, [r0]
-	bl AllocEntityFirst
-	adds r3, r0, #0
-	cmp r3, #0
-	beq _080E25E4
-	adds r1, r3, #0
-	adds r1, #0x25
-	movs r2, #0
-	movs r0, #0x10
-	strb r0, [r1]
-	ldr r1, _080E25D8 @ =gElfFnTable
-	movs r0, #2
-	strb r0, [r3, #9]
-	ldr r0, [r1, #8]
-	ldr r0, [r0]
-	str r0, [r3, #0x14]
-	movs r0, #0
-	strh r2, [r3, #0x20]
-	adds r1, r3, #0
-	adds r1, #0x22
-	strb r0, [r1]
-	adds r0, r3, #0
-	adds r0, #0xb4
-	str r4, [r0]
-	strb r7, [r3, #0x10]
-	strb r6, [r3, #0x11]
-	strb r5, [r3, #0x12]
-	cmp r5, #0
-	bne _080E25DC
-	adds r0, r4, #0
-	adds r0, #0xb4
-	ldrb r0, [r0]
-	b _080E25E2
-	.align 2, 0
-_080E25D4: .4byte gElfHeaderPtr
-_080E25D8: .4byte gElfFnTable
-_080E25DC:
-	adds r0, r4, #0
-	adds r0, #0xb4
-	ldrb r0, [r0, #1]
-_080E25E2:
-	strb r0, [r3, #0x13]
-_080E25E4:
-	adds r0, r3, #0
-	pop {r4, r5, r6, r7}
-	pop {r1}
-	bx r1
 
 	thumb_func_start NurseB_Init
 NurseB_Init: @ 0x080E25EC
