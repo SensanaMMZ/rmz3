@@ -2,6 +2,7 @@
 #include "entity.h"
 #include "global.h"
 #include "solid.h"
+#include "stagerun.h"
 #include "vfx.h"
 
 static const struct Collision sCollisions[2];
@@ -86,7 +87,36 @@ void FUN_080dc8e8(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/solid/unk_37_post.inc");
+INCASM("asm/solid/unk_37_post_p1.inc");
+
+void FUN_080dcb80(struct Solid* p) {
+  struct Camera* cam;
+  if ((p->s).mode[1] == 0) {
+    struct Entity* q;
+    SetMotion(&p->s, MOTION(SM230_FLYING_FISH, 0));
+    (p->s).d.x = PIXEL(7) / 4;
+    (p->s).d.y = -PIXEL(4);
+    (p->s).work[2] = 0;
+    q = (p->s).unk_28;
+    q->work[2]++;
+    EXIT_BODY(p);
+    (p->s).mode[1]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += PIXEL(1) / 4;
+  (p->s).work[2]++;
+  if ((p->s).work[2] & 1) {
+    (p->s).flags &= ~DISPLAY;
+  } else {
+    (p->s).flags |= DISPLAY;
+  }
+  cam = &gStageRun.vm.camera;
+  if ((p->s).coord.x > ((cam->viewport).x + PIXEL(136) - 1)) {
+    SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+  }
+}
 
 static const struct Collision sCollisions[2] = {
     {
