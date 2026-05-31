@@ -1,8 +1,15 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
 
 static const struct Collision sCollisions[];
+
+bool8 FUN_0808c3ec(struct Enemy* p);
+bool8 FUN_0808c450(struct Enemy* p);
+void FUN_0808c4e8(struct Enemy* p);
+static const EnemyFunc sUpdates1[8];
+static const EnemyFunc sUpdates2[8];
 
 void GeneratorCannon_Init(struct Enemy* p);
 void GeneratorCannon_Update(struct Enemy* p);
@@ -34,7 +41,44 @@ static void CreateGeneratorCannon(s32 x, s32 y, u8 n) {
 
 static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) { return; }
 
-INCASM("asm/enemy/generator_cannon_pre.inc");
+INCASM("asm/enemy/generator_cannon_pre_a.inc");
+
+void GeneratorCannon_Update(struct Enemy* p) {
+  u8 sf = (u8)(gCurStory.s.gameflags[4] & 2);
+  if (sf) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    (p->body).status = 0;
+    (p->body).prevStatus = 0;
+    (p->body).invincibleTime = 0;
+    (p->s).flags &= ~COLLIDABLE;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  if ((p->s).work[0] == 1 && (gCurStory.s.gameflags[4] & 0x40)) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    (p->body).status = sf;
+    do {
+      (p->body).prevStatus = sf;
+    } while (0);
+    (p->body).invincibleTime = sf;
+    (p->s).flags &= ~COLLIDABLE;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  if (FUN_0808c3ec(p)) {
+    return;
+  }
+  FUN_0808c4e8(p);
+  if (FUN_0808c450(p)) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/generator_cannon_pre_b.inc");
 
 void FUN_0808c760(struct Enemy* p) {}
 
