@@ -78,6 +78,40 @@ void FUN_08080964(struct Entity* e) {
   }
 }
 
+void createLaserSign2(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_P_AQUA_MOD_OBJ);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 2;
+    (p->s).work[1] = 1;
+    (p->s).coord.x = e->coord.x;
+    (p->s).coord.y = e->coord.y - PIXEL(12);
+    (p->s).unk_28 = e;
+  }
+}
+
+void createSweepLaserSign(struct Entity* e) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_P_AQUA_MOD_OBJ);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 2;
+    (p->s).work[1] = 1;
+    (p->s).coord.x = e->coord.x;
+    (p->s).coord.y = e->coord.y - PIXEL(12);
+    (p->s).unk_28 = e;
+  }
+}
+
 INCASM("asm/enemy/pantheon_aqua_mod_obj_p1_p5.inc");
 
 void nop_08080eb8(struct Enemy* p) {}
