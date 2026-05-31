@@ -7,10 +7,21 @@
 
 set -e -o pipefail
 
-INPUT="$1"
-OUTPUT="$3"
+# --- PATH NORMALIZATION (do this for ANY path that reaches a tool) ----------
+# This pipeline mixes MSYS tools (cpp) with WINDOWS binaries (agbcc.exe,
+# arm-none-eabi-as). They accept DIFFERENT path forms:
+#   - decomp-permuter hands us Windows tempfile paths  C:\Users\..\x.c  (backslashes)
+#   - other callers pass MSYS paths                    /tmp/x  or  /c/Users/..
+# A Windows binary cannot resolve /tmp or /c/... (it reads them as <drive>:\tmp\..);
+# bash can mangle backslashes. `cygpath -m` collapses ALL of these to the one
+# form BOTH worlds accept: mixed  C:/Users/.../x  (forward-slash Windows path).
+# Normalizing up front is what makes this script path-robust.
+norm() { if command -v cygpath >/dev/null 2>&1; then cygpath -m "$1"; else printf '%s' "$1"; fi; }
 
-REPO="@@REPO@@"
+INPUT="$(norm "$1")"
+OUTPUT="$(norm "$3")"
+
+REPO="$(norm "@@REPO@@")"
 
 # -D__attribute__(x)= is needed because pycparser's c_generator emits
 # attributes in a position agbcc doesn't accept (before the type instead of

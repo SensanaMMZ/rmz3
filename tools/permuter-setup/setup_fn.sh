@@ -35,6 +35,13 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(cd "$HERE/../.." && pwd)"
 OUTDIR="$HERE/$FN"
 
+# Normalize a path to mixed form (C:/Users/.../x) — the one form accepted by
+# BOTH MSYS tools and Windows binaries (agbcc.exe / arm-none-eabi-as.exe).
+# Use this for every path handed to a native Windows tool below, instead of
+# trusting MSYS's implicit /c/.. -> C:\.. argument conversion (which doesn't
+# fire for /tmp and can be disabled by MSYS2_ARG_CONV_EXCL).
+norm() { if command -v cygpath >/dev/null 2>&1; then cygpath -m "$1"; else printf '%s' "$1"; fi; }
+
 PY=$(command -v py || command -v python3 || command -v python || echo "")
 if [ -z "$PY" ]; then
   echo "no python found; permuter requires it" >&2; exit 1
@@ -120,7 +127,7 @@ fi
 
 /c/devkitPro/devkitARM/bin/arm-none-eabi-as \
   -mcpu=arm7tdmi -march=armv4t -mthumb -mthumb-interwork \
-  "$OUTDIR/target.s" -o "$OUTDIR/target.o"
+  "$(norm "$OUTDIR/target.s")" -o "$(norm "$OUTDIR/target.o")"
 
 echo
 echo "Setup complete: $OUTDIR"
