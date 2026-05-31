@@ -386,7 +386,16 @@ INCASM("asm/boss/volteel_p13.inc");
 
 bool8 FUN_08045610(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p14.inc");
+INCASM("asm/boss/volteel_p14_p1.inc");
+
+bool8 FUN_080459d4(struct Boss* p) {
+  if ((p->s).mode[1] == 5) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/boss/volteel_p14_p2.inc");
 
 // --------------------------------------------
 
