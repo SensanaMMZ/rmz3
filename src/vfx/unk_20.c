@@ -58,7 +58,31 @@ struct VFX* FUN_080b721c(struct Coord* c, u8 a1, u16 a2, s32 a3) {
   return p;
 }
 
-INCASM("asm/vfx/unk_20_p1_pre_pre_p2.inc");
+void Ghost20_Init(struct VFX* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  if ((p->s).work[0] == 0) {
+    SET_XFLIP(p, FALSE);
+    (p->s).d.x = -PIXEL(3) / 4;
+  } else {
+    SET_XFLIP(p, TRUE);
+    (p->s).d.x = PIXEL(3) / 4;
+  }
+  (p->s).d.y = 0;
+
+  if ((p->s).work[1] == 0) {
+    (p->s).work[2] = 0xFF;
+    SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = 1, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
+  } else {
+    RNG_0202f388 = LCG(RNG_0202f388);
+    (p->s).work[2] = 127 + ((RNG_0202f388 >> 16) & 7);
+    SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = 2, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
+  }
+  Ghost20_Update(p);
+}
 
 void Ghost20_Update(struct VFX* p) {
   if (IS_METTAUR) {
