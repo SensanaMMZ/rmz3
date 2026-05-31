@@ -235,7 +235,52 @@ bool8 FUN_08083eb0(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/omega_gold_hand_p6_p2.inc");
+void FUN_08083ec4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(SM009_OMEGA_HAND, 0));
+      SET_XFLIP(p, FALSE);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).work[2] = 0;
+      (p->props)[0xd] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 wob;
+      (p->s).work[2] += 2;
+      wob = gSineTable[(p->s).work[2]];
+      (p->s).coord.y = *(s32*)((u8*)p + 0xb8) + ((p->s).unk_28)->coord.y + wob;
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4) + ((p->s).unk_28)->coord.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+void FUN_08083f4c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(SM009_OMEGA_HAND, 1));
+      SET_XFLIP(p, FALSE);
+      SET_YFLIP(p, FALSE);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).work[2] = 0;
+      (p->props)[0xd] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 wob;
+      (p->s).work[2] += 2;
+      wob = gSineTable[(p->s).work[2]] << 1;
+      (p->s).coord.y = *(s32*)((u8*)p + 0xb8) + ((p->s).unk_28)->coord.y + wob;
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4) + ((p->s).unk_28)->coord.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 bool8 FUN_08083ff0(struct Enemy* p) { return TRUE; }
 
