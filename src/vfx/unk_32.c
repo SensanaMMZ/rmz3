@@ -175,6 +175,29 @@ static void Ghost32_Init(struct VFX* p) {
 static const VFXFunc sUpdates[8];
 void Ghost32_Die(struct VFX* p);
 
+void FUN_080baad8(struct VFX* p) {
+  InitNonAffineMotion(&p->s);
+  if ((p->s).work[0] == 0) {
+    SET_XFLIP(p, FALSE);
+    (p->s).d.x = PIXEL(3) / 8;
+  } else {
+    SET_XFLIP(p, TRUE);
+    (p->s).d.x = -PIXEL(3) / 8;
+  }
+  (p->s).d.y = 0;
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 0, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
+}
+
+void FUN_080bab54(struct VFX* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).d.x = 0, (p->s).d.y = 0;
+  RNG_0202f388 = LCG(RNG_0202f388);
+  (p->s).work[2] = ((RNG_0202f388 >> 16) & 7) + 0x7F;
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 1, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
+}
+
 INCASM("asm/vfx/unk_32_pre_pre.inc");
 
 void Ghost32_Update(struct VFX* p) {
@@ -193,6 +216,27 @@ void Ghost32_Die(struct VFX* p) {
 }
 
 INCASM("asm/vfx/unk_32_post.inc");
+
+void FUN_080bb7c4(struct VFX* p) {
+  if (--(p->s).work[2] == 0) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(SM039_PANTHEON_AQUA, 12));
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).work[3]++;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void FUN_080bade8(struct VFX* p);
 void FUN_080bb048(struct VFX* p);
