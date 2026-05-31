@@ -76,7 +76,21 @@ void TretistaProjectile_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/tretista_post_p2.inc");
+INCASM("asm/projectile/tretista_post_p2_p1.inc");
+
+void FUN_080a4ef8(struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 20);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 0;
+    (p->s).unk_28 = e;
+  }
+}
+
+INCASM("asm/projectile/tretista_post_p2_p2.inc");
 
 void TretistaProjectile_Init(struct Projectile* p);
 void TretistaProjectile_Update(struct Projectile* p);
