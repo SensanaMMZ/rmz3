@@ -63,7 +63,28 @@ static void FUN_0807cc50(s32 x, s32 y) {
 
 static const EnemyFunc sDeads[3];
 
-INCASM("asm/enemy/crossbyne_p1.inc");
+static const struct Coord16 Coord16_ARRAY_08367c24[4];
+
+void FUN_0807cce0(s32 x, s32 y) {
+  s32 i;
+  const struct Coord16* c = Coord16_ARRAY_08367c24;
+
+  for (i = 0; i < (s32)ARRAY_COUNT(Coord16_ARRAY_08367c24); i++) {
+    struct Entity* p = AllocEntityLast(gEnemyHeaderPtr);
+    if (p != NULL) {
+      p->taskCol = 24;
+      INIT_ENEMY_ROUTINE(p, ENEMY_CROSSBYNE);
+      p->tileNum = 0, p->palID = 0;
+      p->flags2 |= WHITE_PAINTABLE;
+      p->invincibleID = p->uniqueID;
+      p->work[0] = 3, p->work[1] = i;
+      (p->coord).x = x;
+      (p->coord).x += c[i].x;
+      (p->coord).y = y;
+      (p->coord).y += c[i].y;
+    }
+  }
+}
 
 void nop_0807cd70(struct Enemy* p) {}
 
