@@ -2,10 +2,18 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "stagerun.h"
+#include "story.h"
 
 static const struct Collision sCollisions[5];
 
 static const EnemyFunc sDeads[3];
+
+bool8 gallisni_080870bc(struct Enemy* p);
+bool8 gallisni_08087118(struct Enemy* p);
+void gallisni_080871b4(struct Enemy* p);
+static const EnemyFunc sUpdates1[8];
+static const EnemyFunc sUpdates2[8];
 
 void CreateGallisni(s32 x, s32 y, u8 a2) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -23,7 +31,44 @@ void CreateGallisni(s32 x, s32 y, u8 a2) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p1_pre_p2.inc");
+INCASM("asm/enemy/gallisni_p1_pre_p2_a.inc");
+
+void Gallisni_Update(struct Enemy* p) {
+  if ((p->s).work[0] == 1) {
+    u8 sf = (u8)(gCurStory.s.gameflags[4] & 2);
+    if (sf) {
+      (p->s).flags &= ~DISPLAY;
+      (p->s).flags &= ~FLIPABLE;
+      (p->body).status = 0;
+      (p->body).prevStatus = 0;
+      (p->body).invincibleTime = 0;
+      goto despawn;
+    }
+    if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x8000) {
+      (p->s).flags &= ~DISPLAY;
+      (p->s).flags &= ~FLIPABLE;
+      (p->body).status = sf;
+      // do/while needed to match: forces sf into its home register here.
+      do {
+        (p->body).prevStatus = sf;
+      } while (0);
+      (p->body).invincibleTime = sf;
+    despawn:
+      (p->s).flags &= ~COLLIDABLE;
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      return;
+    }
+  }
+  if (gallisni_080870bc(p)) {
+    return;
+  }
+  gallisni_080871b4(p);
+  if (gallisni_08087118(p)) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
 
 void Gallisni_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
