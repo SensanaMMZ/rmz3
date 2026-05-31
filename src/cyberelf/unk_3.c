@@ -5,13 +5,16 @@
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
-void Elf3_Init(struct Elf *p);
+void Elf3_Init(Object *p);
 void Elf3_Update(struct Elf *p);
 void Elf3_Die(struct Elf *p);
 
+extern const struct Collision sElf3Collisions[2];
+void FUN_080e2af0(struct Body* body, struct Coord* r1, struct Coord* r2);
+
 // clang-format off
 const ElfRoutine gElf3Routine = {
-    [ENTITY_INIT] =      Elf3_Init,
+    [ENTITY_INIT] =      (ElfFunc)Elf3_Init,
     [ENTITY_UPDATE] =    Elf3_Update,
     [ENTITY_DIE] =       Elf3_Die,
     [ENTITY_DISAPPEAR] = DeleteElf,
@@ -32,6 +35,17 @@ struct Elf *CreateElf3(struct Entity *r0, void *r1) {
     (p->s).work[1] = r0->work[1];
   }
   return p;
+}
+
+void Elf3_Init(Object* p) {
+  (p->s).flags |= FLIPABLE;
+  (p->s).spr.xflip = FALSE;
+  (p->s).spr.oam.xflip = FALSE;
+  (p->s).flags &= ~X_FLIP;
+  INIT_BODY(p, sElf3Collisions, 1, FUN_080e2af0);
+  (p->s).work[2] = 0;
+  SET_ELF_ROUTINE(p, ENTITY_UPDATE);
+  Elf3_Update((void*)p);
 }
 
 INCASM("asm/cyberelf/unk_3_pre.inc");
