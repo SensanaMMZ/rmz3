@@ -3,8 +3,65 @@
 #include "vfx.h"
 
 static const VFXFunc sUpdates[4];
+static const u8 sInitModes[4];
 
-INCASM("asm/vfx/unk_33_pre_p1.inc");
+void Ghost33_Update(struct VFX* p);
+
+struct Entity* FUN_080bb830(struct Entity* e) {
+  struct Entity* p = AllocEntityLast(gVFXHeaderPtr);
+  if (p != NULL) {
+    p->taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_033);
+    p->tileNum = 0, p->palID = 0;
+    p->work[0] = 0;
+    p->unk_28 = (void*)e;
+  }
+}
+
+struct Entity* FUN_080bb878(struct Entity* e) {
+  struct Entity* p = AllocEntityLast(gVFXHeaderPtr);
+  if (p != NULL) {
+    p->taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_033);
+    p->tileNum = 0, p->palID = 0;
+    p->work[0] = 1;
+    p->unk_28 = (void*)e;
+  }
+}
+
+struct Entity* FUN_080bb8c0(struct Entity* e) {
+  struct Entity* p = AllocEntityLast(gVFXHeaderPtr);
+  if (p != NULL) {
+    p->taskCol = 1;
+    INIT_VFX_ROUTINE(p, VFX_UNK_033);
+    p->tileNum = 0, p->palID = 0;
+    p->work[0] = 2;
+    p->unk_28 = (void*)e;
+  }
+}
+
+void FUN_080bb908(s32 x, s32 y) {
+  s32 i;
+  for (i = 0; i < 3; i++) {
+    struct Entity* p = AllocEntityLast(gVFXHeaderPtr);
+    if (p != NULL) {
+      p->taskCol = 1;
+      INIT_VFX_ROUTINE(p, VFX_UNK_033);
+      p->tileNum = 0, p->palID = 0;
+      p->work[0] = 3, p->work[1] = i;
+      p->coord.x = x, p->coord.y = y;
+    }
+  }
+}
+
+void Ghost33_Init(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  Ghost33_Update(p);
+}
 
 void Ghost33_Update(struct VFX* p) {
   if (IS_METTAUR) {
