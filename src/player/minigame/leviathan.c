@@ -1,7 +1,11 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "minigame.h"
 #include "zero.h"
+
+extern const ZeroFunc sLeviathanUpdates1[3];
+extern const ZeroFunc sLeviathanUpdates2[3];
 
 static const struct Collision sCollisions[3];
 static const u8 sInitModes[4];
@@ -86,7 +90,25 @@ static void Leviathan_Init(struct Zero* z) {
   Leviathan_Update(z);
 }
 
-INCASM("asm/player/leviathan_p1_pre.inc");
+void Leviathan_Update(struct Zero* z) {
+  struct MinigameState* s = (struct MinigameState*)(z->s).unk_28;
+  if (s->unk_30[1] == 0) {
+    (sLeviathanUpdates1[(z->s).mode[1]])(z);
+    (sLeviathanUpdates2[(z->s).mode[1]])(z);
+  }
+
+  {
+    s32 min_x, max_x;
+    min_x = (z->mg).leviathan.x - PIXEL(108);
+    if ((z->s).coord.x <= min_x) {
+      (z->s).coord.x = min_x, (z->s).d.x = 0;
+    }
+    max_x = (z->mg).leviathan.x + PIXEL(108);
+    if ((z->s).coord.x >= max_x) {
+      (z->s).coord.x = max_x, (z->s).d.x = 0;
+    }
+  }
+}
 
 void Leviathan_Die(struct Zero* z) {
   SET_PLAYER_ROUTINE(z, ENTITY_EXIT);
