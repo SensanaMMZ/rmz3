@@ -23,7 +23,20 @@ void FUN_08062268(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/spearook_p1_post.inc");
+INCASM("asm/boss/spearook_p1_post_p1.inc");
+
+void FUN_08062304(struct Boss* p) {
+  u32 v = *(u32*)((u8*)p + 0x8c);
+  if (v & 1) {
+    if (v & 0x20000) {
+      *(u32*)((u8*)p + 0xbc) &= ~4;
+      (p->s).mode[1] = 14;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/boss/spearook_p1_post_p2.inc");
 
 void nop_0806316c(struct Boss* p) {}
 
