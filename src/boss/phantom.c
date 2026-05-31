@@ -102,6 +102,52 @@ void phantom_0805efa4(struct Boss* p) {
   (PTR_ARRAY_08365434[(p->s).mode[2]])(p);
 }
 
+void FUN_0805f004(struct Boss* p);
+
+void FUN_0805efbc(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[0]);
+  *((u16*)&(p->s).mode[2]) = 1;
+  FUN_080607a0(p, 0);
+  RNG_0202f388 = LCG(RNG_0202f388);
+  (p->s).work[2] = 1;
+  FUN_0805f004(p);
+}
+
+void FUN_0805f004(struct Boss* p) {
+  s32 i;
+  FUN_080607f0(p);
+  i = (p->s).work[2] - 1;
+  (p->s).work[2] = i;
+  if (i) {
+    return;
+  }
+  if ((p->body).hp < 48) {
+    u32 idx;
+    RNG_0202f388 = LCG(RNG_0202f388);
+    idx = (RNG_0202f388 >> 16) & 0x1F;
+    if (idx < 10) {
+      (p->s).mode[1] = 1, *((u16*)&(p->s).mode[2]) = 0;
+    } else if (idx < 17) {
+      (p->s).mode[1] = 3, *((u16*)&(p->s).mode[2]) = 0;
+    } else if (idx < 24) {
+      (p->s).mode[1] = 4, *((u16*)&(p->s).mode[2]) = 0;
+    } else {
+      (p->s).mode[1] = 6, *((u16*)&(p->s).mode[2]) = 0;
+    }
+  } else {
+    u32 idx;
+    RNG_0202f388 = LCG(RNG_0202f388);
+    idx = (RNG_0202f388 >> 16) & 0x1F;
+    if (idx < 14) {
+      (p->s).mode[1] = 1, *((u16*)&(p->s).mode[2]) = 0;
+    } else if (idx < 23) {
+      (p->s).mode[1] = 3, *((u16*)&(p->s).mode[2]) = 0;
+    } else {
+      (p->s).mode[1] = 4, *((u16*)&(p->s).mode[2]) = 0;
+    }
+  }
+}
+
 INCASM("asm/boss/phantom_p1_pre_p3.inc");
 
 void FUN_0805f180(struct Boss* p) {
