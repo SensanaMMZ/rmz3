@@ -32,7 +32,25 @@ void nop_080aaed0(struct Projectile* p) {}
 
 void nop_080aaed4(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_32_p4.inc");
+INCASM("asm/projectile/unk_32_p4_p1.inc");
+
+void FUN_080ab178(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_32_p4_p2.inc");
+
+void FUN_080abb2c(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_32_p4_p3.inc");
+
+void FUN_080abea8(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_32_p4_p4.inc");
 
 void Projectile32_Init(struct Projectile* p);
 void Projectile32_Update(struct Projectile* p);
