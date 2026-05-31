@@ -6,7 +6,20 @@
 
 static const EnemyFunc sDeads[4];
 
-INCASM("asm/enemy/unk_59_pre_pre_p1.inc");
+void FUN_080c4c2c(s32 x, s32 y, s32 amplitude, u8 theta);
+
+void FUN_08091280(struct Entity* p) {
+  s32 x, y, amplitude;
+  u8 theta;
+  RNG_0202f388 = LCG(RNG_0202f388);
+  x = (p->coord).x + PIXEL(((RNG_0202f388 >> 16) & 0x1F) - 16);
+  RNG_0202f388 = LCG(RNG_0202f388);
+  y = (p->coord).y - PIXEL((-(RNG_0202f388 >> 16)) % 48);
+  amplitude = 0x100;
+  RNG_0202f388 = LCG(RNG_0202f388);
+  theta = 0x80 | ((RNG_0202f388 >> 16) & 0x7F);
+  FUN_080c4c2c(x, y, amplitude, theta);
+}
 
 void FUN_0809130c(struct Entity* e, u8 idx) {
   struct Entity* p = AllocEntityFirst(gEnemyHeaderPtr);
