@@ -57,7 +57,36 @@ void MenuExit_SaberSmash(struct Weapon* w) {
   }
 }
 
-INCASM("asm/weapon/saber_smash_elec.inc");
+struct Weapon* CreateSmashElec(struct Zero* z, struct Coord* c, u8 leftOrRight) {
+  struct Weapon* w = (struct Weapon*)AllocEntityFirst(gWeaponHeaderPtr);
+  if (w != NULL) {
+    if ((z->unk_b4).mainCopy == WEAPON_SABER) {
+      INIT_WEAPON_ROUTINE(w, WEAPON_MOVE_RAKUSAIGA);
+      (w->s).flags2 &= ~ENTITY_FLAGS2_B6;
+      (w->s).taskCol = 16;
+      (w->s).tileNum = gWeaponTileNum[0], (w->s).palID = gWeaponPalIDs[0];
+    } else {
+      INIT_WEAPON_ROUTINE(w, WEAPON_MOVE_RAKUSAIGA);
+      (w->s).flags2 &= ~ENTITY_FLAGS2_B6;
+      (w->s).taskCol = 16;
+      (w->s).tileNum = gWeaponTileNum[1], (w->s).palID = gWeaponPalIDs[1];
+    }
+    (w->s).unk_28 = (struct Entity*)z;
+    (w->s).coord = *c;
+    (w->s).work[0] = leftOrRight, (w->s).work[1] = 0;
+    z->unk_13a++;
+  }
+  return w;
+}
+
+INCASM("asm/weapon/saber_smash_elec_p2.inc");
+
+void SmashElec_Disappear(struct Weapon* w) {
+  struct Zero* z = (struct Zero*)(w->s).unk_28;
+  if (z->unk_13a != 0) z->unk_13a--;
+  (w->s).flags &= ~DISPLAY;
+  DeleteWeapon(w);
+}
 
 // 0x0803cb64
 static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {

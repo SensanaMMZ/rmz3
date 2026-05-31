@@ -1,98 +1,8 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-	
-	.text
 
-	thumb_func_start CreateSmashElec
-CreateSmashElec: @ 0x0803C810
-	push {r4, r5, r6, lr}
-	adds r4, r0, #0
-	adds r5, r1, #0
-	lsls r2, r2, #0x18
-	lsrs r6, r2, #0x18
-	ldr r0, _0803C85C @ =gWeaponHeaderPtr
-	ldr r0, [r0]
-	bl AllocEntityFirst
-	adds r2, r0, #0
-	cmp r2, #0
-	beq _0803C8B2
-	adds r0, r4, #0
-	adds r0, #0xe4
-	ldrb r0, [r0]
-	cmp r0, #1
-	bne _0803C86C
-	ldr r1, _0803C860 @ =gWeaponFnTable
-	movs r0, #0xe
-	strb r0, [r2, #9]
-	ldr r0, [r1, #0x38]
-	ldr r0, [r0]
-	str r0, [r2, #0x14]
-	ldrb r1, [r2, #0xb]
-	movs r0, #0xbf
-	ands r0, r1
-	strb r0, [r2, #0xb]
-	adds r1, r2, #0
-	adds r1, #0x25
-	movs r0, #0x10
-	strb r0, [r1]
-	ldr r0, _0803C864 @ =gWeaponTileNum
-	ldrh r0, [r0]
-	strh r0, [r2, #0x20]
-	ldr r0, _0803C868 @ =gWeaponPalIDs
-	ldrb r0, [r0]
-	b _0803C892
-	.align 2, 0
-_0803C85C: .4byte gWeaponHeaderPtr
-_0803C860: .4byte gWeaponFnTable
-_0803C864: .4byte gWeaponTileNum
-_0803C868: .4byte gWeaponPalIDs
-_0803C86C:
-	ldr r1, _0803C8BC @ =gWeaponFnTable
-	movs r0, #0xe
-	strb r0, [r2, #9]
-	ldr r0, [r1, #0x38]
-	ldr r0, [r0]
-	str r0, [r2, #0x14]
-	ldrb r1, [r2, #0xb]
-	movs r0, #0xbf
-	ands r0, r1
-	strb r0, [r2, #0xb]
-	adds r1, r2, #0
-	adds r1, #0x25
-	movs r0, #0x10
-	strb r0, [r1]
-	ldr r0, _0803C8C0 @ =gWeaponTileNum
-	ldrh r0, [r0, #2]
-	strh r0, [r2, #0x20]
-	ldr r0, _0803C8C4 @ =gWeaponPalIDs
-	ldrb r0, [r0, #1]
-_0803C892:
-	subs r1, #3
-	strb r0, [r1]
-	str r4, [r2, #0x28]
-	ldr r0, [r5]
-	ldr r1, [r5, #4]
-	str r0, [r2, #0x54]
-	str r1, [r2, #0x58]
-	movs r0, #0
-	strb r6, [r2, #0x10]
-	strb r0, [r2, #0x11]
-	movs r0, #0x9d
-	lsls r0, r0, #1
-	adds r1, r4, r0
-	ldrb r0, [r1]
-	adds r0, #1
-	strb r0, [r1]
-_0803C8B2:
-	adds r0, r2, #0
-	pop {r4, r5, r6}
-	pop {r1}
-	bx r1
-	.align 2, 0
-_0803C8BC: .4byte gWeaponFnTable
-_0803C8C0: .4byte gWeaponTileNum
-_0803C8C4: .4byte gWeaponPalIDs
+	.text
 
 	thumb_func_start SmashElec_Init
 SmashElec_Init: @ 0x0803C8C8
@@ -410,27 +320,3 @@ _0803CB02:
 	bx r0
 	.align 2, 0
 _0803CB38: .4byte gWeaponFnTable
-
-	thumb_func_start SmashElec_Disappear
-SmashElec_Disappear: @ 0x0803CB3C
-	push {lr}
-	adds r2, r0, #0
-	ldr r0, [r2, #0x28]
-	movs r3, #0x9d
-	lsls r3, r3, #1
-	adds r1, r0, r3
-	ldrb r0, [r1]
-	cmp r0, #0
-	beq _0803CB52
-	subs r0, #1
-	strb r0, [r1]
-_0803CB52:
-	ldrb r1, [r2, #0xa]
-	movs r0, #0xfe
-	ands r0, r1
-	strb r0, [r2, #0xa]
-	adds r0, r2, #0
-	bl DeleteWeapon
-	pop {r0}
-	bx r0
-
