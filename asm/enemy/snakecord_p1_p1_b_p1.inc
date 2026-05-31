@@ -57,7 +57,3 @@ _08074610:
 	bx r0
 	.align 2, 0
 _08074614: .4byte 0x08366E90
-
-	thumb_func_start FUN_08074618
-FUN_08074618:
-	.byte 0x70, 0x47, 0x00, 0x00

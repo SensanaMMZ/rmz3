@@ -50,7 +50,11 @@ void Projectile18_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_18_p2_p2_p2.inc");
+void FUN_080a308c(struct Projectile* p) {}
+
+void FUN_080a3090(struct Projectile* p) {}
+
+INCASM("asm/projectile/unk_18_p2_p2_p2_p3.inc");
 
 static const struct Collision sCollisions[4];
 static const u8 sInitModes[4];

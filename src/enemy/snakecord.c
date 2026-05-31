@@ -41,7 +41,9 @@ void Snakecord_Update(struct Enemy* p) {
   (PTR_ARRAY_08366e60[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/snakecord_p1_p1_b.inc");
+INCASM("asm/enemy/snakecord_p1_p1_b_p1.inc");
+
+void FUN_08074618(struct Enemy* p) {}
 
 void FUN_0807461c(struct Enemy* p) {
   u32 status = (p->body).status;
