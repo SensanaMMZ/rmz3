@@ -205,7 +205,16 @@ void cubitMode10(struct Boss* p) {
 
 bool8 FUN_0805433c(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/cubit_p13.inc");
+INCASM("asm/boss/cubit_p13_p1.inc");
+
+bool8 cubit_08054674(struct Boss* p) {
+  if (*(u8*)((u8*)p + 0xc8) != 0) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/boss/cubit_p13_p2.inc");
 
 // --------------------------------------------
 
