@@ -66,7 +66,31 @@ bool8 FUN_080906ec(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/petatria_p1_pre_p3.inc");
+INCASM("asm/enemy/petatria_p1_pre_p3_p1.inc");
+
+bool8 FUN_08090b20(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/petatria_p1_pre_p3_p2.inc");
+
+bool8 FUN_08090c60(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/petatria_p1_pre_p3_p3.inc");
+
+bool8 FUN_08090da4(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/petatria_p1_pre_p3_p4.inc");
+
+bool8 FUN_08090edc(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/petatria_p1_pre_p3_p5.inc");
+
+bool8 FUN_08091068(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/petatria_p1_pre_p3_p6.inc");
+
+bool8 FUN_08091150(struct Enemy* p) { return TRUE; }
+
+INCASM("asm/enemy/petatria_p1_pre_p3_p7.inc");
 
 void FUN_08091154(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
@@ -110,12 +134,12 @@ const EnemyRoutine gPetatriaRoutine = {
 
 bool8 FUN_080902a8(struct Enemy* p);
 bool8 FUN_080906ec(struct Enemy* p);
-void FUN_08090b20(struct Enemy* p);
-void FUN_08090c60(struct Enemy* p);
-void FUN_08090da4(struct Enemy* p);
-void FUN_08090edc(struct Enemy* p);
-void FUN_08091068(struct Enemy* p);
-void FUN_08091150(struct Enemy* p);
+bool8 FUN_08090b20(struct Enemy* p);
+bool8 FUN_08090c60(struct Enemy* p);
+bool8 FUN_08090da4(struct Enemy* p);
+bool8 FUN_08090edc(struct Enemy* p);
+bool8 FUN_08091068(struct Enemy* p);
+bool8 FUN_08091150(struct Enemy* p);
 bool8 FUN_08091168(struct Enemy* p);
 bool8 FUN_08091170(struct Enemy* p);
 
@@ -123,12 +147,12 @@ bool8 FUN_08091170(struct Enemy* p);
 static const EnemyFunc sUpdates1[10] = {
     (EnemyFunc)FUN_080902a8,
     (EnemyFunc)FUN_080906ec,
-    FUN_08090b20,
-    FUN_08090c60,
-    FUN_08090da4,
-    FUN_08090edc,
-    FUN_08091068,
-    FUN_08091150,
+    (EnemyFunc)FUN_08090b20,
+    (EnemyFunc)FUN_08090c60,
+    (EnemyFunc)FUN_08090da4,
+    (EnemyFunc)FUN_08090edc,
+    (EnemyFunc)FUN_08091068,
+    (EnemyFunc)FUN_08091150,
     (EnemyFunc)FUN_08091168,
     (EnemyFunc)FUN_08091170,
 };
