@@ -52,7 +52,14 @@ void FUN_080a176c(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/hellbat_p2.inc");
+INCASM("asm/projectile/hellbat_p2_p1.inc");
+
+void FUN_080a1f10(struct Projectile* p) {
+  (p->s).mode[1] = 1;
+  (p->s).mode[2] = 0;
+}
+
+INCASM("asm/projectile/hellbat_p2_p2.inc");
 
 void FUN_080a2020(struct Projectile* p) {
   (p->s).mode[1] = 1;
