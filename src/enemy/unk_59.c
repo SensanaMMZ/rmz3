@@ -8,6 +8,37 @@ static const EnemyFunc sDeads[4];
 
 INCASM("asm/enemy/unk_59_pre_pre_p1.inc");
 
+void FUN_0809130c(struct Entity* e, u8 idx) {
+  struct Entity* p = AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    p->taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_59);
+    p->tileNum = 0, p->palID = 0;
+    p->flags2 |= WHITE_PAINTABLE;
+    p->invincibleID = p->uniqueID;
+    (p->coord).x = (e->coord).x, (p->coord).y = (e->coord).y;
+    if (idx < 4) {
+      s32 x = (idx - 2) * PIXEL(48) + PIXEL(24);
+      (p->unk_coord).x = (e->coord).x + x;
+    }
+    if (idx > 4) {
+      s32 x = (idx - 7) * PIXEL(48) + PIXEL(24);
+      (p->coord).x = (e->coord).x + x;
+    }
+    p->unk_28 = e;
+    InitNonAffineMotion(p);
+    ResetDynamicMotion(p);
+    (p->spr).sprites = (*(void**)&e->kind);
+    {
+      u8 palID = *((u8*)e + 0x15);
+      (p->spr).oam.paletteNum = palID >> 4;
+    }
+    p->work[0] = idx;
+  }
+}
+
+INCASM("asm/enemy/unk_59_pre_pre_p1b.inc");
+
 void FUN_0809142c(struct Entity* e, u8 a2) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
   if (p != NULL) {
@@ -53,6 +84,16 @@ void FUN_08091790(struct Body* body) {
 void FUN_08091810(struct Enemy* p) {}
 
 INCASM("asm/enemy/unk_59_post.inc");
+
+void FUN_080923ec(struct Enemy* p) {
+  struct Coord c;
+  EXIT_BODY(p);
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - PIXEL(8);
+  CreateSmoke(1, &c);
+  PlaySound(SE_ZAKO_EXPLODE);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
 
 void Enemy59_Init(struct Enemy* p);
 void Enemy59_Update(struct Enemy* p);
