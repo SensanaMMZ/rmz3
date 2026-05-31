@@ -3,6 +3,7 @@
 #include "global.h"
 #include "motion.h"
 #include "physics.h"
+#include "vfx.h"
 #include "zero.h"
 
 static const struct Collision sCollisions[8];
@@ -89,6 +90,29 @@ void FUN_08089e60(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/mettaur_swim_p2_post.inc");
+
+void FUN_0808a068(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      struct Coord c;
+      (p->s).flags &= ~DISPLAY;
+      EXIT_BODY(p);
+      c.x = (p->s).coord.x, c.y = (p->s).coord.y - PIXEL(8);
+      CreateSmoke(1, &c);
+      if ((p->s).work[0] == 2) {
+        PlaySound(SE_UNK_31);
+      } else {
+        PlaySound(SE_ZAKO_EXPLODE);
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 1: {
+      SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      break;
+    }
+  }
+}
 
 void MettaurSwim_Init(struct Enemy* p);
 void MettaurSwim_Update(struct Enemy* p);
