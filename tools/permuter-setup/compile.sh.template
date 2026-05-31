@@ -5,7 +5,7 @@
 #
 # decomp-permuter calls this as: ./compile.sh INPUT.c -o OUTPUT.o
 
-set -e
+set -e -o pipefail
 
 INPUT="$1"
 OUTPUT="$3"
@@ -23,8 +23,14 @@ CFLAGS="-mthumb-interwork -Wimplicit -Wparentheses -O2 -fshort-enums -fhex-asm"
 AS="/c/devkitPro/devkitARM/bin/arm-none-eabi-as"
 ASFLAGS="-mcpu=arm7tdmi -march=armv4t -mthumb -mthumb-interwork -g"
 
-TMPSTEM="$(mktemp -u)"
-TMPS="${TMPSTEM}.s"
+# IMPORTANT: agbcc.exe and arm-none-eabi-as are WINDOWS binaries and cannot
+# resolve an MSYS path like /tmp/tmp.XXX.s — they interpret it as <drive>:\tmp\…
+# which doesn't exist, so the .s write silently fails. The decomp-permuter
+# candidate $OUTPUT is already a path the Windows tools handle (it's where AS
+# writes the .o), so put the intermediate .s right next to it. (Using /tmp here
+# was the bug that made every permuter candidate compile to an empty stub .o —
+# no target symbol → constant "all-deletions" score.)
+TMPS="${OUTPUT}.s"
 
 cpp $CPPFLAGS "$INPUT" | "$AGBCC" $CFLAGS -o "$TMPS"
 printf '.text\n\t.align\t2, 0\n' >> "$TMPS"
