@@ -221,32 +221,3 @@ _0803B002:
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
-
-	thumb_func_start ReflectLaser_Die
-ReflectLaser_Die: @ 0x0803B008
-	adds r2, r0, #0
-	adds r0, #0x8c
-	movs r1, #0
-	str r1, [r0]
-	adds r0, #4
-	str r1, [r0]
-	adds r0, #4
-	strb r1, [r0]
-	ldrb r1, [r2, #0xa]
-	movs r0, #0xfb
-	ands r0, r1
-	movs r1, #0xfe
-	ands r0, r1
-	strb r0, [r2, #0xa]
-	ldr r1, _0803B038 @ =gWeaponFnTable
-	ldrb r0, [r2, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #4
-	str r1, [r2, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #0x10]
-	str r0, [r2, #0x14]
-	bx lr
-	.align 2, 0
-_0803B038: .4byte gWeaponFnTable

@@ -116,7 +116,13 @@ static void Weapon16_Update(struct Weapon* w) {
   (sUpdates[(w->s).mode[1]])(w);
 }
 
-INCASM("asm/weapon/minigame_rod.inc");
+void Weapon16_Die(struct Weapon* w) {
+  (w->s).flags &= ~DISPLAY;
+  EXIT_BODY(w);
+  SET_WEAPON_ROUTINE(w, ENTITY_EXIT);
+}
+
+INCASM("asm/weapon/minigame_rod_p2.inc");
 
 const struct Collision gWeapon16Collisions[15] = {
     [0] = {

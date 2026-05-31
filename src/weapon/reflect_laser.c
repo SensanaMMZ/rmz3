@@ -88,7 +88,13 @@ struct Weapon* CreateReflectLaser(struct Zero* z, struct Entity* p, u8 n) {
 
 NAKED static struct Weapon* unused_CreateReflectLaser(struct Zero* z, struct Entity* p, void* r2, u8 r3, u8 r4) { INCCODE("asm/unused/unused_CreateReflectLaser.inc"); }
 
-INCASM("asm/weapon/reflect_laser.inc");
+INCASM("asm/weapon/reflect_laser_p1.inc");
+
+void ReflectLaser_Die(struct Weapon* w) {
+  EXIT_BODY(w);
+  (w->s).flags &= ~DISPLAY;
+  SET_WEAPON_ROUTINE(w, ENTITY_EXIT);
+}
 
 // clang-format off
 static const motion_t sMotions[8] = {
