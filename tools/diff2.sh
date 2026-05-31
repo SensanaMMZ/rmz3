@@ -43,7 +43,8 @@ REF="$REPO/expected/build/rmz3/$OBJ"
 dis() {
   "$OBJDUMP" -d --disassemble="$FN" "$1" 2>/dev/null \
     | grep -E "^[[:space:]]+[0-9a-f]+:" \
-    | sed -E 's/^[[:space:]]+[0-9a-f]+:[[:space:]]+[0-9a-f ]+\t//; s/[0-9a-f]+ <[^>]*>/<L>/g'
+    | sed -E 's/^[[:space:]]+[0-9a-f]+:[[:space:]]+[0-9a-f ]+\t//; s/[0-9a-f]+ <[^>]*>/<L>/g' \
+    | grep -vE '^\.short[[:space:]]+0x0000$'   # objdump renders 2-byte align padding inconsistently; never a real diff
 }
 TA=$(mktemp); TB=$(mktemp); trap 'rm -f "$TA" "$TB"' EXIT
 dis "$REF" > "$TA"

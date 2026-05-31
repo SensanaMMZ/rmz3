@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "overworld.h"
 #include "solid.h"
 
 static void Solid25_Init(struct Solid* p);
@@ -37,6 +38,23 @@ static void Solid25_Init(struct Solid* p) {
   Solid25_Update(p);
 }
 
-INCASM("asm/solid/unk_25.inc");
+void Solid25_Update(struct Solid* p) {
+  u16 val;
+  u32 tmp = (p->s).work[0] * 64;
+  if (((gOverworld.terrain.id & 0x7F) == STAGE_AREA_X2) || ((gOverworld.terrain.id & 0x7F) == STAGE_WEILS_LABO)) {
+    tmp += gOverworld.work.areaX2.unk_008;
+  }
+
+  val = tmp;
+  val &= 0xFF;
+  if (val < 0x80) {
+    s32 y = (val * 0xC0) - PIXEL(48);
+    (p->s).coord.y = (p->s).unk_coord.y + y;
+  } else {
+    s32 y = ((val - 0x80) * 0xC0) - PIXEL(48);
+    (p->s).coord.y = (p->s).unk_coord.y - y;
+  }
+  UpdateMotionGraphic(&p->s);
+}
 
 void Solid25_Die(struct Solid* p) {}

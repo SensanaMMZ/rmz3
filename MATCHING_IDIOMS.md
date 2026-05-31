@@ -212,10 +212,14 @@ passes with an hours-long run — low confidence.
 
 Both forks decompile the same byte-identical ROM, so `FUN_<addr>` and named functions
 share names — directly comparable. This fork is **well ahead overall** (≈625 functions
-are C here but asm upstream), but **68 functions are C upstream and still asm here** —
-free ports (mind **signature drift**: upstream uses `Player*`/`Object*` where this fork
-uses its own structs; adapt types and re-verify the SHA). Fetch bodies from
+are C here but asm upstream), and **56 functions are genuine C upstream and still asm
+here** — free ports (mind **signature drift**: upstream uses `Player*`/`Object*` where
+this fork uses its own structs; adapt types and re-verify the SHA). Fetch bodies from
 `raw.githubusercontent.com/mmzret/rmz3/main/<path>`.
+
+**Caveat when generating the list:** exclude `NAKED`/`asm(...)`-bodied upstream
+functions — they're asm there too (a naive "has a `name(...) {` definition" scan
+counts ~12 of those as false positives). Check the body's first token isn't `asm`.
 
 Notably, several are *helpers inside the "intractable" files* (the `*_Update` stays
 asm, but its helpers are portable): `unk_59` (Enemy59) ×4, `seimeran` ×4,
