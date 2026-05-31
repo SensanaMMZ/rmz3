@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "global.h"
 #include "overworld.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[];
 static const struct Coord sExplosionCoords[2];
@@ -856,6 +857,64 @@ void hellbatDamage(struct Boss* p) {
 bool8 FUN_0804caa0(struct Boss* p) { return TRUE; }
 
 INCASM("asm/boss/hellbat_p9.inc");
+
+extern const u16 u16_ARRAY_080feedc[6];
+
+u16 FUN_0804cccc(void* _, u32 a, bool32 rankAS) {
+  s32 i;
+  if (rankAS == 1) {
+    for (i = 0; i < (s32)ARRAY_COUNT(u16_ARRAY_080feedc); i++) {
+      if (u16_ARRAY_080feedc[i] == a) {
+        return u16_ARRAY_080feedc[(i + 1) % 6];
+      }
+    }
+  } else {
+    for (i = 0; i < (s32)ARRAY_COUNT(u16_ARRAY_080feedc) - 1; i++) {
+      if (u16_ARRAY_080feedc[i] == a) {
+        return u16_ARRAY_080feedc[(i + 1) % 5];
+      }
+    }
+  }
+}
+
+bool32 isHellbatFarAway(struct Boss* p) {
+  s32 zx = (pZero2->s).coord.x;
+  s32 hellbat_x = (p->s).coord.x;
+  if ((zx - hellbat_x) > 0) {
+    if ((zx - hellbat_x) < PIXEL(80)) {
+      return FALSE;
+    }
+    return TRUE;
+  } else {
+    if ((hellbat_x - zx) >= PIXEL(80)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+}
+
+void hellbat_0804cd5c(struct Boss* p) {
+  if ((((p->s).motionID << 8) | (p->s).motion.step) == MOTION(DM168_HELLBAT, 14)) {
+    if ((p->s).motion.state == MOTION_END) {
+      if (((p->s).flags & X_FLIP) == 0) {
+        (p->s).spr.xflip = TRUE;
+        (p->s).spr.oam.xflip = TRUE;
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).spr.xflip = FALSE;
+        (p->s).spr.oam.xflip = FALSE;
+        (p->s).flags &= ~X_FLIP;
+      }
+      SetMotion(&p->s, MOTION(DM168_HELLBAT, 0));
+    }
+  } else if ((pZero2->s).coord.x > (p->s).coord.x) {
+    if (!((p->s).flags & X_FLIP)) {
+      SetMotion(&p->s, MOTION(DM168_HELLBAT, 14));
+    }
+  } else if ((p->s).flags & X_FLIP) {
+    SetMotion(&p->s, MOTION(DM168_HELLBAT, 14));
+  }
+}
 
 // 0x08362f50
 static const struct Collision sCollisions[29] = {
