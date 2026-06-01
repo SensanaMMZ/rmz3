@@ -77,7 +77,18 @@ static void Projectile28_Die(Object* p) {
 
 // --------------------------------------------
 
-INCASM("asm/projectile/unk_28.inc");
+INCASM("asm/projectile/unk_28_p1.inc");
+
+void FUN_080a9d88(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x5f, 1));
+  (p->s).mode[2] = 1;
+  Projectile28_Update(&p->s);
+}
+
+INCASM("asm/projectile/unk_28_p2.inc");
 
 // --------------------------------------------
 
