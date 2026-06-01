@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "global.h"
 #include "overworld.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[13];
 
@@ -332,7 +333,25 @@ INCASM("asm/boss/tretista_p12.inc");
 
 bool8 FUN_0804fc6c(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/tretista_p13.inc");
+INCASM("asm/boss/tretista_p13_p1.inc");
+
+bool8 isTretistaFarAway(struct Boss* p) {
+  s32 zx = (pZero2->s).coord.x;
+  s32 sx = (p->s).coord.x;
+  s32 dx = zx - sx;
+  if (dx > 0) {
+    if (dx <= 0x86FF) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+  if (sx - zx > 0x86FF) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/boss/tretista_p13_p2.inc");
 
 // 0x083633b0
 static const struct Collision sCollisions[13] = {
