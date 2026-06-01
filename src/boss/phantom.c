@@ -493,7 +493,18 @@ void FUN_0805ff64(struct Boss* p) {
   (PTR_ARRAY_0836552c[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p6_p1.inc");
+void FUN_0805ffb4(struct Boss* p);
+
+void FUN_0805ff7c(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[0]);
+  (p->s).mode[3] = 1;
+  (p->s).d.y = -0x5c0;
+  FUN_080608c8(p);
+  *(s32*)((u8*)p + 0xc4) = 2;
+  FUN_0805ffb4(p);
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p6_p1_p2.inc");
 
 void FUN_080600c8(struct Boss* p) {
   if (FUN_08060924(p)) {
