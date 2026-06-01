@@ -1,10 +1,26 @@
 #include "collision.h"
+#include "definition.h"
 #include "enemy.h"
 #include "global.h"
 
 static const struct Collision sCollisions[];
 
-INCASM("asm/enemy/shotloid_pre_p1.inc");
+INCASM("asm/enemy/shotloid_pre_p1_p1.inc");
+
+bool8 FUN_08093a64(struct Enemy* p, s32 dy) {
+  if (dy > 0) {
+    s32 diff;
+    (p->s).coord.y += dy;
+    diff = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - (p->s).coord.y;
+    if (diff <= 0x7ff) {
+      (p->s).coord.y = (p->s).coord.y + diff;
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/shotloid_pre_p1_p2.inc");
 
 void nop_08093af8(struct Enemy* p) {}
 
