@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "definition.h"
 #include "enemy.h"
 #include "global.h"
 
@@ -21,7 +22,22 @@ struct Enemy* createPantheonFistInElevator(s32 x, s32 y, u8 a2) {
   return p;
 }
 
-INCASM("asm/enemy/pantheon_fist_pre_p1_p2.inc");
+INCASM("asm/enemy/pantheon_fist_pre_p1_p2_p1.inc");
+
+bool8 FUN_08094fe0(struct Enemy* p, s32 dy) {
+  if (dy > 0) {
+    s32 diff;
+    (p->s).coord.y += dy;
+    diff = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - (p->s).coord.y;
+    if (diff <= 0x7ff) {
+      (p->s).coord.y = (p->s).coord.y + diff;
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/pantheon_fist_pre_p1_p2_p2.inc");
 
 void nop_080950cc(struct Enemy* p) {}
 
