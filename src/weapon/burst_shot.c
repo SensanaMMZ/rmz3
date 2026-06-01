@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "mission.h"
+#include "motion.h"
 #include "weapon.h"
 
 // A firework of Burst shot
@@ -73,7 +74,15 @@ struct Weapon* CreateBurstShot(struct Zero* z, struct Weapon* p, u8 n, s32 x, s3
   return w;
 }
 
-INCASM("asm/weapon/burst_shot_pre.inc");
+INCASM("asm/weapon/burst_shot_pre_p1.inc");
+
+void BurstShot_Update(struct Weapon* w) {
+  UpdateMotionGraphic(&w->s);
+  if ((w->s).motion.state == MOTION_END) {
+    SET_WEAPON_ROUTINE(w, ENTITY_DIE);
+    BurstShot_Die(w);
+  }
+}
 
 void BurstShot_Die(struct Weapon* p) {
   (p->s).flags &= ~DISPLAY;
