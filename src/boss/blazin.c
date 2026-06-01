@@ -822,7 +822,19 @@ INCASM("asm/boss/blazin_p11.inc");
 
 bool8 FUN_0803fd58(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p12.inc");
+INCASM("asm/boss/blazin_p12_p1.inc");
+
+struct Enemy* FUN_0809c430(struct Entity* e, struct Coord* c);
+
+bool8 FUN_0803ffc0(struct Boss* p) {
+  struct Coord c;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  FUN_0809c430((struct Entity*)p, &c);
+  return TRUE;
+}
+
+INCASM("asm/boss/blazin_p12_p2.inc");
 
 // 0x080403c4
 NON_MATCH static void setBlazinDirection(struct Entity* p) {
