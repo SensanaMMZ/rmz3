@@ -1,5 +1,6 @@
 #include "blink.h"
 #include "global.h"
+#include "gpu_regs.h"
 #include "overworld.h"
 
 #define STAGE (gOverworld.work.weilLabo)
@@ -264,7 +265,14 @@ static void FUN_080153cc(struct StageLayer* l, const struct Stage* _ UNUSED) {
   l->unk_10++;
 }
 
-INCASM("asm/stage_gfx/weil_labo_p1.inc");
+INCASM("asm/stage_gfx/weil_labo_p1_p1.inc");
+
+void FUN_08015c40(struct StageLayer* l, const struct Stage* stage) {
+  gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN1_ON;
+  gWindowRegBuffer.winin[2] |= 0xe;
+}
+
+INCASM("asm/stage_gfx/weil_labo_p1_p2.inc");
 
 void FUN_08016094(s32 a, s32 b, s32 c) {
   STAGE.unk_018 = a;
