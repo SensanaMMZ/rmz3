@@ -76,7 +76,15 @@ void OmegaGold_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/omega_gold_p1_post.inc");
+void OmegaGold_Disappear(struct Boss* p) {
+  ClearBlink(0xb);
+  ClearBlink(0x66);
+  ClearBlink(0x67);
+  ClearBlink(0x10f);
+  DeleteBoss(p);
+}
+
+INCASM("asm/boss/omega_gold_p1_post_p2.inc");
 
 bool8 FUN_0805b41c(struct Boss* p) { return TRUE; }
 
