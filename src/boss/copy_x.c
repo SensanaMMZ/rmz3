@@ -622,7 +622,23 @@ void copyxMode12(struct Boss* p) {
   (p->s).work[2] = 6;
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1.inc");
+INCASM("asm/boss/copy_x_p2_p3_p1_p1.inc");
+
+void FUN_080569a4(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb3, 0xc));
+    (p->s).mode[2] = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).motion.state == MOTION_END) {
+    (p->s).mode[1] = MOTION_END;
+    (p->s).mode[2] = 1;
+    (p->s).mode[3] = 2;
+    (p->s).work[2] = 4;
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p3_p1_p2.inc");
 
 void CopyX_OnDamage(struct Body* body) {
   if (body->hitboxFlags & 1) {
