@@ -182,7 +182,18 @@ void FUN_08064444(struct Enemy* p) {
   UpdateMotionGraphic(&p->s);
 }
 
-INCASM("asm/enemy/pantheon_guardian_post.inc");
+INCASM("asm/enemy/pantheon_guardian_post_p1.inc");
+
+void FUN_0806465c(struct Body* body, struct Coord* c1, struct Coord* c2) {
+  if (body->hitboxFlags & 1) {
+    struct Enemy* self = (struct Enemy*)body->parent;
+    u8 r = 0;
+    if ((pZero2->s).coord.x < (self->s).coord.x) {
+      r = 1;
+    }
+    *(u8*)((u8*)self + 0xb8) = r;
+  }
+}
 
 void FUN_08063da0(struct Enemy* p);
 void doNothing_08063e10(struct Enemy* p);
