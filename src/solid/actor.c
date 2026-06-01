@@ -1586,7 +1586,20 @@ _080D1744: .4byte gSolidFnTable\n\
  .syntax divided\n");
 }
 
-INCASM("asm/solid/actor_p1.inc");
+INCASM("asm/solid/actor_p1_p1.inc");
+
+extern const struct Rect Rect_08370c60;
+
+void initActor23(struct Solid* p) {
+  (p->s).flags2 |= 8;
+  (p->s).size = &Rect_08370c60;
+  (p->s).hazardAttr = 0x2001;
+  (p->s).d.x = 0;
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  Actor_Update(p);
+}
+
+INCASM("asm/solid/actor_p1_p2.inc");
 
 void Actor48_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
