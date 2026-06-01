@@ -44,7 +44,17 @@ void FUN_080abb2c(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_32_p4_p3.inc");
+INCASM("asm/projectile/unk_32_p4_p3_p1.inc");
+
+void FUN_080abdc8(struct Projectile* p) {
+  *(u32*)((u8*)p + 0x8c) = 0;
+  *(u32*)((u8*)p + 0x90) = 0;
+  *(u8*)((u8*)p + 0x94) = 0;
+  (p->s).flags &= ~COLLIDABLE;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_32_p4_p3_p2.inc");
 
 void FUN_080abea8(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
