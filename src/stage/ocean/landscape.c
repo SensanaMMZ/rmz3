@@ -1,5 +1,6 @@
 #include "blink.h"
 #include "global.h"
+#include "gpu_regs.h"
 #include "overworld.h"
 #include "solid.h"
 
@@ -517,7 +518,15 @@ static void exitOcean(struct Coord* _ UNUSED) {
   }
 }
 
-INCASM("asm/stage_gfx/ocean_p1.inc");
+INCASM("asm/stage_gfx/ocean_p1_p1.inc");
+
+void FUN_0800d264(struct StageLayer* l, const struct Stage* stage) {
+  gBlendRegBuffer.bldclt = 0;
+  gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN1_ON;
+  gWindowRegBuffer.winin[2] |= 0xe;
+}
+
+INCASM("asm/stage_gfx/ocean_p1_p2.inc");
 
 void FUN_0800d5a8(void) {
   PatchMetatileMap(31, 37, (struct MetatilePatch*)0x0833CDA8);
