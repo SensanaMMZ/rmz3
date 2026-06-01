@@ -228,7 +228,13 @@ struct Weapon* CreateSaberWave(struct Zero* z, struct Weapon* saber, bool8 isPro
   return (struct Weapon*)w;
 }
 
-INCASM("asm/weapon/saber_wave_p1.inc");
+INCASM("asm/weapon/saber_wave_p1_p1.inc");
+
+void Weapon5_Die(struct Weapon* w) {
+  EXIT_BODY(w);
+  (w->s).flags &= ~DISPLAY;
+  SET_WEAPON_ROUTINE(w, ENTITY_EXIT);
+}
 
 static void hitZSaber(struct Body* body) {
   if (body->hitboxFlags & BODY_STATUS_B2) {
