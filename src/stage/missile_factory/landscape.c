@@ -332,7 +332,17 @@ void FUN_0800f54c(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED)
   ClearBlink(0xd0);
 }
 
-INCASM("asm/stage_gfx/missile_factory_p2.inc");
+INCASM("asm/stage_gfx/missile_factory_p2_p1.inc");
+
+void FUN_0800f874(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    l->scrollPower.x = 0xc0;
+    l->scroll.x = 0x6cc;
+    l->phase++;
+  }
+}
+
+INCASM("asm/stage_gfx/missile_factory_p2_p2.inc");
 
 extern const struct ChunkMap sChunkMap1;
 INCBIN_STATIC(sChunkMap1, "data/stage/missile_factory/layer1.bin");  // ./tools/dumper/bin.ts ./baserom.gba 0x0833e1cc 0x0833e390 ./data/stage/missile_factory/layer1.bin
