@@ -113,7 +113,21 @@ void mothjiro_08088a50(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mothjiro_p8_post.inc");
+INCASM("asm/enemy/mothjiro_p8_post_p1.inc");
+
+struct Coord* FUN_08012a64(struct Coord* c);
+
+bool8 FUN_08088ae0(struct Enemy* p) {
+  struct Coord* r = FUN_08012a64(&(p->s).coord);
+  if (r != NULL) {
+    *(s32*)((u8*)p + 0xb8) = r->x;
+    *(s32*)((u8*)p + 0xbc) = r->y;
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/mothjiro_p8_post_p2.inc");
 
 // --------------------------------------------
 
