@@ -161,7 +161,22 @@ static const StageLayerRoutine sLayerRoutine[7] = {
 };
 // clang-format on
 
-INCASM("asm/stage_gfx/frostline_ice_base.inc");
+INCASM("asm/stage_gfx/frostline_ice_base_p1.inc");
+
+void FUN_080113dc(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    l->scrollPower.x = 0x80;
+    l->scrollPower.y = 0x100;
+    l->phase++;
+  }
+  if ((l->viewportCenterPixel).x <= 0x1c1f) {
+    l->scroll.x = 0xca8;
+  } else {
+    l->scroll.x = 0xe88;
+  }
+}
+
+INCASM("asm/stage_gfx/frostline_ice_base_p2.inc");
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
