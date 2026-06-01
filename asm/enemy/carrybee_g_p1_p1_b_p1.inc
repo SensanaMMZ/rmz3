@@ -372,30 +372,3 @@ _0808AF2E:
 	bx r0
 	.align 2, 0
 _0808AF40: .4byte gEnemyFnTable
-
-	thumb_func_start CarrybeeG_Disappear
-CarrybeeG_Disappear: @ 0x0808AF44
-	push {lr}
-	adds r2, r0, #0
-	ldrb r0, [r2, #0x10]
-	cmp r0, #0
-	bne _0808AF64
-	adds r0, r2, #0
-	adds r0, #0xc3
-	ldrb r0, [r0]
-	cmp r0, #1
-	bne _0808AF64
-	ldr r1, _0808AF70 @ =gOverworld
-	ldr r0, _0808AF74 @ =0x0002D02C
-	adds r1, r1, r0
-	ldrb r0, [r1]
-	subs r0, #1
-	strb r0, [r1]
-_0808AF64:
-	adds r0, r2, #0
-	bl DeleteEnemy
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0808AF70: .4byte gOverworld
-_0808AF74: .4byte 0x0002D02C

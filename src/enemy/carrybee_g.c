@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "overworld_terrain.h"
 
 void CarrybeeG_Init(struct Enemy* p);
 void CarrybeeG_Update(struct Enemy* p);
@@ -133,7 +134,14 @@ dispatch2:
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/carrybee_g_p1_p1_b.inc");
+INCASM("asm/enemy/carrybee_g_p1_p1_b_p1.inc");
+
+void CarrybeeG_Disappear(struct Enemy* p) {
+  if ((p->s).work[0] == 0 && *(u8*)((u8*)p + 0xc3) == 1) {
+    gOverworld.work.raw[4]--;
+  }
+  DeleteEnemy(&p->s);
+}
 
 bool8 FUN_0808af78(struct Enemy* p) { return TRUE; }
 
