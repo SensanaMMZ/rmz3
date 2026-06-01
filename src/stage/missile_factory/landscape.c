@@ -313,7 +313,13 @@ static void LayerUpdate_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
   l->unk_10 += 0x10;
 }
 
-INCASM("asm/stage_gfx/missile_factory_p1_p1.inc");
+INCASM("asm/stage_gfx/missile_factory_p1_p1_p1.inc");
+
+void FUN_0800f2c4(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase > 1 && l->unk_0f != 0) {
+    DrawGeneralStageLayer(l, stage);
+  }
+}
 
 void FUN_0800f2e0(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED) {
   gBlendRegBuffer.bldclt = 0;
