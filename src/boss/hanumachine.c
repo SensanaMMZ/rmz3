@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "element.h"
 #include "global.h"
+#include "physics.h"
 #include "stagerun.h"
 
 static const struct Collision sCollisions[];
@@ -50,7 +51,17 @@ alive:
   (sUpdates1[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/hanumachine_p1_b.inc");
+INCASM("asm/boss/hanumachine_p1_b_p1.inc");
+
+void FUN_0805bcdc(struct Boss* p) {
+  s32 push = PushoutToUp1((p->s).coord.x, (p->s).coord.y + 1);
+  if (push == 0) {
+    (p->s).mode[1] = 0x19;
+    (p->s).mode[2] = push;
+  }
+}
+
+INCASM("asm/boss/hanumachine_p1_b_p2.inc");
 
 void FUN_0805c3cc(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
