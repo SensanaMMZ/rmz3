@@ -97,7 +97,16 @@ bool8 FUN_080353e4(struct Zero* z) {
   return TRUE;
 }
 
-INCASM("asm/player/harpuia_p2_p2.inc");
+INCASM("asm/player/harpuia_p2_p2_p1.inc");
+
+bool8 FUN_080354a4(struct Zero* z) {
+  if ((z->s).mode[2] == 1 && *(s8*)((u8*)z + 0x71) > 3 && (gJoypad[0].pressed & B_BUTTON)) {
+    (z->s).mode[3] = (z->s).mode[2];
+  }
+  return TRUE;
+}
+
+INCASM("asm/player/harpuia_p2_p2_p2.inc");
 
 bool8 FUN_080355c0(struct Zero* z) { return TRUE; }
 
@@ -108,7 +117,7 @@ INCASM("asm/player/harpuia_p3.inc");
 bool8 FUN_0803532c(struct Zero* z);
 bool8 FUN_0803537c(struct Zero* z);
 bool8 FUN_080353e4(struct Zero* z);
-void FUN_080354a4(struct Zero* z);
+bool8 FUN_080354a4(struct Zero* z);
 bool8 FUN_080355c0(struct Zero* z);
 
 // clang-format off
@@ -116,7 +125,7 @@ const ZeroFunc sHarpuiaUpdates1[5] = {
     (ZeroFunc)FUN_0803532c,
     (ZeroFunc)FUN_0803537c,
     (ZeroFunc)FUN_080353e4,
-    FUN_080354a4,
+    (ZeroFunc)FUN_080354a4,
     (ZeroFunc)FUN_080355c0,
 };
 // clang-format on
