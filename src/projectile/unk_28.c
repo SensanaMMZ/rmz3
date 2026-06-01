@@ -88,7 +88,19 @@ void FUN_080a9d88(struct Projectile* p) {
   Projectile28_Update(&p->s);
 }
 
-INCASM("asm/projectile/unk_28_p2.inc");
+INCASM("asm/projectile/unk_28_p2_p1.inc");
+
+void FUN_080aa120(struct Projectile* p) {
+  struct Entity* par = (p->s).unk_28;
+  (p->s).coord = par->coord;
+  (p->s).work[3]++;
+  if (par->mode[1] != 0xf) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    Projectile28_Die((Object*)p);
+  }
+}
+
+INCASM("asm/projectile/unk_28_p2_p2.inc");
 
 // --------------------------------------------
 
