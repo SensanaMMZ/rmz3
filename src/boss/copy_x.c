@@ -4,6 +4,7 @@
 #include "global.h"
 #include "motion.h"
 #include "overworld.h"
+#include "zero.h"
 
 struct Entity* CreateVFX55(struct Boss* e, u8 r1, u8 r2);
 
@@ -621,7 +622,20 @@ void copyxMode12(struct Boss* p) {
   (p->s).work[2] = 6;
 }
 
-INCASM("asm/boss/copy_x_p2_p3.inc");
+INCASM("asm/boss/copy_x_p2_p3_p1.inc");
+
+void CopyX_OnDamage(struct Body* body) {
+  if (body->hitboxFlags & 1) {
+    struct Boss* self = (struct Boss*)body->parent;
+    u8 r = 0;
+    if ((self->s).coord.x < (pZero2->s).coord.x) {
+      r = 1;
+    }
+    *(u8*)((u8*)self + 0xc4) = r;
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p3_p2.inc");
 
 // 0x08363c18
 static const struct Collision sCollisions[10] = {
