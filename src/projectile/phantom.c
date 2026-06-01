@@ -339,7 +339,17 @@ void FUN_080af9b0(struct Projectile* p) {
   (PTR_ARRAY_0836d44c[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/phantom_p2_p2.inc");
+void FUN_080af9f4(struct Projectile* p);
+
+void FUN_080af9c8(struct Projectile* p) {
+  SetMotion(&p->s, MOTION(0x86, 2));
+  (p->s).angle = (p->s).work[2] + 0x20;
+  (p->s).mode[1] = 1;
+  (p->s).work[3] = 0;
+  FUN_080af9f4(p);
+}
+
+INCASM("asm/projectile/phantom_p2_p2_p2.inc");
 
 void FUN_080af518(struct Projectile* p);
 void FUN_080af5cc(struct Projectile* p);
