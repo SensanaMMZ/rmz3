@@ -8,7 +8,24 @@ static const BossFunc sDeinitializers[2];
 
 void FUN_08045b68(struct Boss* p);
 
-INCASM("asm/boss/baby_elf_p1_pre.inc");
+INCASM("asm/boss/baby_elf_p1_pre_p1.inc");
+
+void FUN_08045d28(struct Body* body) {
+  struct Entity* self = (struct Entity*)body->parent;
+  if (body->hitboxFlags & 1) {
+    if (self->work[0] == 1) {
+      struct Entity* par = self->unk_28;
+      u16* pf = (u16*)((u8*)par + 0xa4);
+      u16* sf;
+      s32 v = *pf - 0x60;
+      sf = (u16*)((u8*)self + 0xa4);
+      *pf = v + *sf;
+      *sf = 0x60;
+    }
+  }
+}
+
+INCASM("asm/boss/baby_elf_p1_pre_p2.inc");
 
 void BabyElf_Die(struct Boss* p) {
   FUN_08045b68(p);
