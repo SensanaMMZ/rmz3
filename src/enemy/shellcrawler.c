@@ -3,7 +3,18 @@
 #include "global.h"
 #include "motion.h"
 
-INCASM("asm/enemy/shellcrawler_pre.inc");
+INCASM("asm/enemy/shellcrawler_pre_p1.inc");
+
+bool8 FUN_08095d80(struct Enemy* p);
+
+void FUN_08096468(struct Enemy* p) {
+  if (FUN_08095d80(p) == 0) {
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/shellcrawler_pre_p2.inc");
 
 void FUN_080964bc(struct Enemy* p) {}
 
