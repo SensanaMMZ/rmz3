@@ -37,7 +37,18 @@ INCASM("asm/boss/wormer_p1.inc");
 
 void nop_08042890(struct Boss* p) {}
 
-INCASM("asm/boss/wormer_p2_p1.inc");
+void FUN_08042894(struct Boss* p) {
+  if ((p->s).work[0] == 1) {
+    if (*(u32*)((u8*)p + 0x8c) & 1) {
+      if ((*(u8*)((u8*)p + 0x97) & 0xf0) == 0x20) {
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+}
+
+INCASM("asm/boss/wormer_p2_p1_p2.inc");
 
 void FUN_08042d4c(struct Boss* p) {
   switch ((p->s).mode[2]) {
