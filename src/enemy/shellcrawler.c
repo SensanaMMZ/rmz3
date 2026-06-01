@@ -3,9 +3,19 @@
 #include "global.h"
 #include "motion.h"
 
-INCASM("asm/enemy/shellcrawler_pre_p1.inc");
+INCASM("asm/enemy/shellcrawler_pre_p1_p1.inc");
 
 bool8 FUN_08095d80(struct Enemy* p);
+
+void FUN_08096438(struct Enemy* p) {
+  if (FUN_08095d80(p) == 0) {
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  } else if (*(u32*)((u8*)p + 0x8c) & 1) {
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void FUN_08096468(struct Enemy* p) {
   if (FUN_08095d80(p) == 0) {
