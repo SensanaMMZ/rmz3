@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "input.h"
 #include "minigame.h"
 #include "physics.h"
 #include "weapon.h"
@@ -83,7 +84,7 @@ static void ZeroMini_Init(struct Zero* z) {
 
 static bool32 nop_0803658c(struct Zero* z);
 void FUN_080365d8(struct Zero* z);
-void FUN_08036848(struct Zero* z);
+bool8 FUN_08036848(struct Zero* z);
 void FUN_08036904(struct Zero* z);
 static bool32 FUN_08036b94(struct Zero* z);
 
@@ -100,7 +101,7 @@ static void ZeroMini_Update(struct Zero* z) {
   static const ZeroFunc sUpdates1[5] = {
       (ZeroFunc)nop_0803658c,
       FUN_080365d8,
-      FUN_08036848,
+      (ZeroFunc)FUN_08036848,
       FUN_08036904,
       (ZeroFunc)FUN_08036b94,
   };
@@ -180,7 +181,17 @@ static void zeroMini_08036590(struct Zero* z) {
 
 // --------------------------------------------
 
-INCASM("asm/player/zero_minigame.inc");
+INCASM("asm/player/zero_minigame_p1.inc");
+
+bool8 FUN_08036848(struct Zero* z) {
+  if ((z->s).mode[2] > 1 && (gJoypad[0].pressed & B_BUTTON)) {
+    (z->s).mode[1] = 3;
+    (z->s).mode[2] = 0;
+  }
+  return TRUE;
+}
+
+INCASM("asm/player/zero_minigame_p2.inc");
 
 // 0x08036b94
 static bool32 FUN_08036b94(struct Zero* z) { return TRUE; }
