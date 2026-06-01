@@ -79,7 +79,21 @@ INCASM("asm/enemy/shelluno_p1_p2_b.inc");
 
 bool8 nop_0807939c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shelluno_p2.inc");
+INCASM("asm/enemy/shelluno_p2_p1.inc");
+
+bool8 FUN_080795b8(struct Enemy* p) {
+  if (gOverworld.sea > (p->s).coord.y - 0xc00) {
+    u8* t = (u8*)((u8*)p + 0xc1);
+    s32 zero = 0;
+    *t = 0x3c;
+    (p->s).d.y = zero;
+    (p->s).mode[1] = zero;
+    (p->s).mode[2] = zero;
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/shelluno_p2_p2.inc");
 
 bool8 FUN_0807a018(struct Enemy* p) { return TRUE; }
 
@@ -130,7 +144,7 @@ const EnemyRoutine gShellunoRoutine = {
 // clang-format on
 
 bool8 nop_0807939c(struct Enemy* p);
-void FUN_080795b8(struct Enemy* p);
+bool8 FUN_080795b8(struct Enemy* p);
 bool8 FUN_0807a018(struct Enemy* p);
 bool8 FUN_0807a064(struct Enemy* p);
 bool8 FUN_0807a06c(struct Enemy* p);
@@ -139,7 +153,7 @@ bool8 FUN_0807a0fc(struct Enemy* p);
 // clang-format off
 static const EnemyFunc sUpdates1[6] = {
     (EnemyFunc)nop_0807939c,
-    FUN_080795b8,
+    (EnemyFunc)FUN_080795b8,
     (EnemyFunc)FUN_0807a018,
     (EnemyFunc)FUN_0807a064,
     (EnemyFunc)FUN_0807a06c,
