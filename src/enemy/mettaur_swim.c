@@ -82,7 +82,23 @@ void FUN_080892a4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mettaur_swim_p2_pre_p2.inc");
+INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1.inc");
+
+void FUN_08089a00(struct Enemy* p) {
+  struct Entity* par = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[4]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x = par->coord.x;
+      (p->s).coord.y = par->coord.y;
+      break;
+  }
+}
+
+INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p2.inc");
 
 void FUN_08089e60(struct Enemy* p) {
   switch ((p->s).mode[2]) {
