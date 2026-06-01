@@ -66,7 +66,16 @@ void nop_0807cacc(struct Enemy* p) {}
 
 bool8 nop_0807cad0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/puffy_p5.inc");
+INCASM("asm/enemy/puffy_p5_p1.inc");
+
+void FUN_0807cba4(struct Body* body) {
+  struct Enemy* parent = (struct Enemy*)body->parent;
+  if ((*(u32*)((u8*)parent + 0x8c) & 0x200) && (gCollisionManager.sweep & 2)) {
+    *(u8*)((u8*)parent + 0xc0) = 0;
+  }
+}
+
+INCASM("asm/enemy/puffy_p5_p2.inc");
 
 void Puffy_Init(struct Enemy* p);
 void Puffy_Update(struct Enemy* p);
