@@ -2,7 +2,22 @@
 #include "enemy.h"
 #include "global.h"
 
-INCASM("asm/enemy/snakecord_p1_p1_a.inc");
+INCASM("asm/enemy/snakecord_p1_p1_a_p1.inc");
+
+void FUN_080740e4(struct Enemy* p);
+
+void FUN_08074134(struct Body* body) {
+  struct Enemy* parent = (struct Enemy*)body->parent;
+  if (body->hitboxFlags & BODY_STATUS_B3) {
+    if ((parent->s).work[0] == 1) {
+      if (body->hitboxFlags & BODY_STATUS_SLASHED) {
+        FUN_080740e4(parent);
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/snakecord_p1_p1_a_p2.inc");
 
 static const EnemyFunc PTR_ARRAY_08366e30[12];
 extern const EnemyFunc PTR_ARRAY_08366e60[12];
