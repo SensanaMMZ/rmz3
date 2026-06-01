@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "metatile.h"
 #include "projectile.h"
 
 void CreateVFX53(struct Entity* e, u8 n);
@@ -50,7 +51,20 @@ void Projectile27_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_27_pre_post_p2_p1.inc");
+INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1.inc");
+
+void FUN_080a99d4(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  if ((p->s).mode[1] == 0) {
+    if ((u8)--(p->s).work[2] == 0xff) {
+      (p->s).mode[1]++;
+    }
+  } else if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void FUN_080a9a30(struct Projectile* p) {
   InitNonAffineMotion(&p->s);
