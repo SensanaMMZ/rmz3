@@ -834,7 +834,25 @@ bool8 FUN_0803ffc0(struct Boss* p) {
   return TRUE;
 }
 
-INCASM("asm/boss/blazin_p12_p2.inc");
+INCASM("asm/boss/blazin_p12_p2_p1.inc");
+
+s32 howFarBlazin(struct Boss* p) {
+  s32 zx = (pZero2->s).coord.x;
+  s32 sx = (p->s).coord.x;
+  s32 d = zx - sx;
+  if (d <= 0) {
+    d = sx - zx;
+  }
+  if (d <= 0x4eff) {
+    return 0;
+  }
+  if (d <= 0x8eff) {
+    return 1;
+  }
+  return 2;
+}
+
+INCASM("asm/boss/blazin_p12_p2_p2.inc");
 
 // 0x080403c4
 NON_MATCH static void setBlazinDirection(struct Entity* p) {
