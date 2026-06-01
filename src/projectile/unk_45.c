@@ -83,7 +83,14 @@ void FUN_080b1b40(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_45_p2.inc");
+INCASM("asm/projectile/unk_45_p2_p1.inc");
+
+void FUN_080b2204(struct Body* body) {
+  struct CollidableEntity* parent = body->parent;
+  if ((body->enemy->processing)->faction == 0) {
+    *(u8*)((u8*)parent + 0xbc) = 1;
+  }
+}
 
 void FUN_080b1a48(struct Projectile* p);
 void FUN_080b1b28(struct Projectile* p);

@@ -851,19 +851,3 @@ _080B21FE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-
-	thumb_func_start FUN_080b2204
-FUN_080b2204: @ 0x080B2204
-	push {lr}
-	ldr r1, [r0, #0x2c]
-	ldr r0, [r0, #0xc]
-	ldr r0, [r0, #4]
-	ldrb r0, [r0, #1]
-	cmp r0, #0
-	bne _080B2218
-	adds r1, #0xbc
-	movs r0, #1
-	strb r0, [r1]
-_080B2218:
-	pop {r0}
-	bx r0
