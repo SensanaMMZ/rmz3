@@ -294,7 +294,13 @@ void FUN_080af5cc(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/phantom_p1_p1_p2.inc");
+bool8 FUN_080afe38(struct Entity* e, struct Coord* a, struct Coord* b, struct Coord* c);
+
+void FUN_080af5f4(struct Projectile* p) {
+  if (FUN_080afe38((p->s).unk_28, &(p->s).coord, &(p->s).d, &(p->s).unk_coord)) {
+    (p->s).mode[2] = 1;
+  }
+}
 
 void FUN_080af61c(struct Projectile* p) {
   (PTR_ARRAY_0836d430[(p->s).mode[1]])(p);
