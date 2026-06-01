@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "element.h"
 #include "global.h"
+#include "metatile.h"
 #include "physics.h"
 #include "stagerun.h"
 
@@ -89,7 +90,17 @@ void FUN_0805d568(struct Body* body) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p2_p2.inc");
+u16 FUN_0805d594(struct Boss* p, s32 a, s32 b) {
+  u16 r = FUN_080098a4((p->s).coord.x + a, (p->s).coord.y);
+  if (r != 0) {
+    return r;
+  }
+  r = FUN_080098a4((p->s).coord.x + a, (p->s).coord.y - 0x2000);
+  if (r != 0) {
+    return r;
+  }
+  return 0;
+}
 
 void Hanumachine_Init(struct Boss* p);
 void Hanumachine_Update(struct Boss* p);
