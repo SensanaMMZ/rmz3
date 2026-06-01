@@ -30,7 +30,19 @@ u8 FUN_08088ba8(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/mettaur_swim_p1_pre.inc");
+INCASM("asm/enemy/mettaur_swim_p1_pre_p1.inc");
+
+void CreateVFX62(struct Entity* e, struct Coord* c);
+
+void FUN_08088d54(struct Enemy* p) {
+  struct Coord c;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - PIXEL(20);
+  CreateSmoke(2, &c);
+  CreateVFX62(&p->s, &c);
+}
+
+INCASM("asm/enemy/mettaur_swim_p1_pre_p2.inc");
 
 void MettaurSwim_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
