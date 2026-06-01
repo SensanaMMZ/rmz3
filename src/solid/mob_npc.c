@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
+#include "story.h"
 
 // レジスタンスベースのモブキャラ
 
@@ -376,7 +377,16 @@ static void FUN_080d9734(struct MobObject* p) {
   }
 }
 
-INCASM("asm/solid/mob_npc_pre.inc");
+INCASM("asm/solid/mob_npc_pre_p1.inc");
+
+TextID kiss_080dac04(struct Solid* p) {
+  if (gCurStory.s.counts[24] == 0) {
+    return 0x2b6;
+  }
+  return 0x2b7;
+}
+
+INCASM("asm/solid/mob_npc_pre_p2.inc");
 
 TextID getCielComputerResearchTextID(struct Solid* p) {
   return 0x28c;
