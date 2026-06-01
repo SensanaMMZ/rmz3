@@ -526,7 +526,19 @@ void FUN_0800d264(struct StageLayer* l, const struct Stage* stage) {
   gWindowRegBuffer.winin[2] |= 0xe;
 }
 
-INCASM("asm/stage_gfx/ocean_p1_p2.inc");
+INCASM("asm/stage_gfx/ocean_p1_p2_p1.inc");
+
+void ocean_0800d544(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    l->scrollPower.x = 0x100;
+    l->scrollPower.y = 0x80;
+    l->scroll.x = 0;
+    l->scroll.y = 0x140;
+    l->phase++;
+  }
+}
+
+INCASM("asm/stage_gfx/ocean_p1_p2_p2.inc");
 
 void FUN_0800d5a8(void) {
   PatchMetatileMap(31, 37, (struct MetatilePatch*)0x0833CDA8);
