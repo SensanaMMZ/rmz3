@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "input.h"
+#include "minigame.h"
 #include "overworld.h"
 #include "physics.h"
 #include "zero.h"
@@ -76,7 +77,17 @@ INCASM("asm/player/harpuia_p1.inc");
 
 bool8 FUN_0803532c(struct Zero* z) { return TRUE; }
 
-INCASM("asm/player/harpuia_p2_p1.inc");
+INCASM("asm/player/harpuia_p2_p1_p1.inc");
+
+bool8 FUN_0803537c(struct Zero* z) {
+  if (((struct MinigameState*)(z->s).unk_28)->unk_04 == 1 && (gJoypad[0].pressed & B_BUTTON)) {
+    (z->s).mode[1] = 3;
+    (z->s).mode[2] = 0;
+  }
+  return TRUE;
+}
+
+INCASM("asm/player/harpuia_p2_p1_p2.inc");
 
 bool8 FUN_080353e4(struct Zero* z) {
   if ((z->s).mode[2] > 1 && (gJoypad[0].pressed & B_BUTTON)) {
@@ -95,7 +106,7 @@ INCASM("asm/player/harpuia_p3.inc");
 // --------------------------------------------
 
 bool8 FUN_0803532c(struct Zero* z);
-void FUN_0803537c(struct Zero* z);
+bool8 FUN_0803537c(struct Zero* z);
 bool8 FUN_080353e4(struct Zero* z);
 void FUN_080354a4(struct Zero* z);
 bool8 FUN_080355c0(struct Zero* z);
@@ -103,7 +114,7 @@ bool8 FUN_080355c0(struct Zero* z);
 // clang-format off
 const ZeroFunc sHarpuiaUpdates1[5] = {
     (ZeroFunc)FUN_0803532c,
-    FUN_0803537c,
+    (ZeroFunc)FUN_0803537c,
     (ZeroFunc)FUN_080353e4,
     FUN_080354a4,
     (ZeroFunc)FUN_080355c0,
