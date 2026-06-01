@@ -75,7 +75,21 @@ void FUN_0805c3cc(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p2.inc");
+INCASM("asm/boss/hanumachine_p2_p1.inc");
+
+void FUN_0805d568(struct Body* body) {
+  if (body->hitboxFlags & 1) {
+    struct Boss* atk = (struct Boss*)((body->enemy)->parent);
+    struct Boss* self = (struct Boss*)body->parent;
+    u8 r = 0;
+    if ((atk->s).coord.x > (self->s).coord.x) {
+      r = 1;
+    }
+    *(u8*)((u8*)self + 0xbc) = r;
+  }
+}
+
+INCASM("asm/boss/hanumachine_p2_p2.inc");
 
 void Hanumachine_Init(struct Boss* p);
 void Hanumachine_Update(struct Boss* p);
