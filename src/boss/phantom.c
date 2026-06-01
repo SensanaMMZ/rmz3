@@ -487,7 +487,17 @@ void FUN_0805fd5c(struct Boss* p) {
   (PTR_ARRAY_08365520[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p5.inc");
+void FUN_0805fd74(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[6]);
+  InitScalerotMotion1(&p->s);
+  ResetDynamicMotion(&p->s);
+  FUN_080607a0(p, 0xf);
+  (p->s).mode[3] = 1;
+  (p->s).work[2] = 0;
+  *(s32*)((u8*)p + 0xc4) = 4;
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p5_p2.inc");
 
 void FUN_0805ff64(struct Boss* p) {
   (PTR_ARRAY_0836552c[(p->s).mode[3]])(p);
