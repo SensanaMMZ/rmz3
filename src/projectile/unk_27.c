@@ -50,7 +50,16 @@ void Projectile27_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_27_pre_post_p2.inc");
+INCASM("asm/projectile/unk_27_pre_post_p2_p1.inc");
+
+void FUN_080a9a30(struct Projectile* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x5c, 4));
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  Projectile27_Update(p);
+}
 
 void FUN_080a9a74(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
