@@ -143,7 +143,22 @@ static void Solid17_Die(struct Entity* p) {
 
 static void nop_080cf208(void* _ UNUSED) {}
 
-INCASM("asm/solid/unk_17.inc");
+extern const motion_t sSolid17Motions[3][4];
+
+void FUN_080cf20c(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, sSolid17Motions[0][(p->s).work[0]]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/solid/unk_17_p2.inc");
 
 // --------------------------------------------
 
