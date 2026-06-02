@@ -46,7 +46,28 @@ void BabyElf_Die(struct Boss* p) {
 
 void nop_08046150(struct Boss* p) {}
 
-INCASM("asm/boss/baby_elf_p2.inc");
+INCASM("asm/boss/baby_elf_p2_p1.inc");
+
+u16 FUN_080d08d0(struct Boss* p, motion_t m);
+
+void FUN_0804874c(struct Boss* p) {
+  s32 m = (p->s).mode[2];
+  if (m != 1) {
+    if (m > 1) {
+      return;
+    }
+    if (m != 0) {
+      return;
+    }
+    (p->s).mode[2] = 1;
+  }
+  if (FUN_080d08d0(p, 0x3000)) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/boss/baby_elf_p2_p2.inc");
 
 void BabyElf_Init(struct Boss* p);
 void BabyElf_Update(struct Boss* p);
