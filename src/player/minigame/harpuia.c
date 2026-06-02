@@ -84,7 +84,22 @@ void Harpuia_Die(struct Zero* z) {
 
 bool8 FUN_0803532c(struct Zero* z) { return TRUE; }
 
-INCASM("asm/player/harpuia_p2_p1_p1.inc");
+void FUN_08035330(struct Zero* z) {
+  switch ((z->s).mode[2]) {
+    case 0:
+      SetMotion(&z->s, MOTION(0xBE, 0x21));
+      (z->s).work[2] = 0x3c;
+      (z->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&z->s);
+      if ((z->s).work[2] == 0 || --(z->s).work[2] == 0) {
+        (z->s).mode[1] = 1;
+        (z->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_0803537c(struct Zero* z) {
   if (((struct MinigameState*)(z->s).unk_28)->unk_04 == 1 && (gJoypad[0].pressed & B_BUTTON)) {
