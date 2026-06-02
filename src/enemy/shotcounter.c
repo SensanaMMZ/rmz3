@@ -786,7 +786,24 @@ void FUN_08066ad4(struct Enemy* p) {}
 
 bool8 FUN_08066ad8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shotcounter_p5.inc");
+void FUN_08066adc(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[8]);
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xc0);
+  if (isKilled(*slot)) {
+    u8* flag = (u8*)((u8*)p + 0xbf);
+    s32 zero = 0;
+    *flag = zero;
+    *slot = (struct Entity*)zero;
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = zero;
+    SetDDP(&p->body, &sCollisions[7]);
+    (p->s).mode[2] = 1;
+  }
+}
 
 bool8 FUN_08066b30(struct Enemy* p) { return TRUE; }
 
