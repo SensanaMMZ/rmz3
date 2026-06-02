@@ -4,34 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0807be20
-FUN_0807be20: @ 0x0807BE20
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	bne _0807BE32
-	str r0, [r4, #0x60]
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_0807BE32:
-	adds r5, r4, #0
-	adds r5, #0xbc
-	ldr r0, [r5]
-	bl isKilled
-	cmp r0, #0
-	beq _0807BE48
-	movs r0, #0
-	str r0, [r5]
-	strb r0, [r4, #0xd]
-	strb r0, [r4, #0xe]
-_0807BE48:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-
 	thumb_func_start FUN_0807be50
 FUN_0807be50: @ 0x0807BE50
 	push {r4, r5, r6, lr}

@@ -61,7 +61,22 @@ void nop_0807be18(struct Enemy* p) {}
 
 bool8 FUN_0807be1c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/beetank_p6_p1.inc");
+void FUN_0807be20(struct Enemy* p) {
+  struct Entity** slot;
+  u8 m = (p->s).mode[2];
+  if (m == 0) {
+    (p->s).d.y = m;
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    *slot = NULL;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/beetank_p6_p1_p2.inc");
 
 void nop_0807bea4(struct Enemy* p) {}
 
