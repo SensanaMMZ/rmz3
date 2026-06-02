@@ -50,7 +50,18 @@ void Projectile36_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_36_pre_post_p2.inc");
+INCASM("asm/projectile/unk_36_pre_post_p2_p1.inc");
+
+void FUN_080ad958(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[2] += (p->s).work[3];
+  (p->s).angle = (p->s).work[2];
+  if ((p->s).motion.state == 3) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/projectile/unk_36_pre_post_p2_p2.inc");
 
 void FUN_080ada50(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
