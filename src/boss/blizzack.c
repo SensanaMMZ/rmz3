@@ -39,7 +39,24 @@ void Blizzack_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/blizzack_post.inc");
+INCASM("asm/boss/blizzack_post_p1.inc");
+
+void FUN_080aabd4(struct Boss* p);
+
+void blizzackMode8(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    (p->s).mode[2] = 0;
+    (p->s).work[2] = 0xb4;
+    FUN_080aabd4(p);
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((u8)--(p->s).work[2] == 0xff) {
+    (p->s).mode[1] = 9;
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/boss/blizzack_post_p2.inc");
 
 void blizzackMode0(struct Boss* p);
 void blizzackMode1(struct Boss* p);
