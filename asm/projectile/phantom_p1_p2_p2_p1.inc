@@ -91,35 +91,3 @@ _080AF6FA:
 _080AF700: .4byte gSineTable
 _080AF704: .4byte gStageRun+232
 _080AF708: .4byte gProjectileFnTable
-
-	thumb_func_start FUN_080af70c
-FUN_080af70c: @ 0x080AF70C
-	push {lr}
-	adds r3, r0, #0
-	adds r0, #0x8c
-	movs r2, #0
-	str r2, [r0]
-	adds r0, #4
-	str r2, [r0]
-	adds r0, #4
-	strb r2, [r0]
-	ldrb r1, [r3, #0xa]
-	movs r0, #0xfb
-	ands r0, r1
-	strb r0, [r3, #0xa]
-	ldr r1, _080AF744 @ =gProjectileFnTable
-	ldrb r0, [r3, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #1
-	str r1, [r3, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #4]
-	str r0, [r3, #0x14]
-	strb r2, [r3, #0xd]
-	adds r0, r3, #0
-	bl PhantomProjectile_Update
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080AF744: .4byte gProjectileFnTable

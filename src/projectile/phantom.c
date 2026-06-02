@@ -315,7 +315,17 @@ void FUN_080af634(struct Projectile* p) {
   FUN_080af65c(p);
 }
 
-INCASM("asm/projectile/phantom_p1_p2_p2.inc");
+INCASM("asm/projectile/phantom_p1_p2_p2_p1.inc");
+
+void FUN_080af70c(struct Projectile* p) {
+  *(u32*)((u8*)p + 0x8c) = 0;
+  *(u32*)((u8*)p + 0x90) = 0;
+  *(u8*)((u8*)p + 0x94) = 0;
+  (p->s).flags &= ~COLLIDABLE;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 0;
+  PhantomProjectile_Update(p);
+}
 
 void FUN_080af748(struct Projectile* p) {
   (PTR_ARRAY_0836d438[(p->s).mode[1]])(p);
