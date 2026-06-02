@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "vfx.h"
 
 void createPAquaModRubble(s32 x) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -132,7 +133,19 @@ void PantheonAquaModObj_Update(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_aqua_mod_obj_p2_c.inc");
+static const motion_t sMotions[8];
+
+void PantheonAquaModObj_Die(struct Enemy* p) {
+  struct Coord c;
+  *(u32*)((u8*)p + 0x8c) = 0;
+  *(u32*)((u8*)p + 0x90) = 0;
+  *(u8*)((u8*)p + 0x94) = 0;
+  (p->s).flags &= ~COLLIDABLE;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  FUN_080b81a0(&p->s, &c, (motion_t*)sMotions, 3);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
 
 void FUN_08080fe8(struct Enemy* p) {}
 
