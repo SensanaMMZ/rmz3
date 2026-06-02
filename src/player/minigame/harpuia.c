@@ -94,7 +94,18 @@ bool8 FUN_0803537c(struct Zero* z) {
   return TRUE;
 }
 
-INCASM("asm/player/harpuia_p2_p1_p2.inc");
+void FUN_080353a8(struct Zero* z) {
+  switch ((z->s).mode[2]) {
+    case 0:
+      SetMotion(&z->s, MOTION(0xBE, 0x21));
+      SetDDP(&z->body, &sCollisions[0]);
+      (z->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&z->s);
+      break;
+  }
+}
 
 bool8 FUN_080353e4(struct Zero* z) {
   if ((z->s).mode[2] > 1 && (gJoypad[0].pressed & B_BUTTON)) {
