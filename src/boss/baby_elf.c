@@ -25,7 +25,19 @@ void FUN_08045d28(struct Body* body) {
   }
 }
 
-INCASM("asm/boss/baby_elf_p1_pre_p2.inc");
+INCASM("asm/boss/baby_elf_p1_pre_p2_p1.inc");
+
+extern const BossFunc sUpdates1[19];
+extern const BossFunc sUpdates2[19];
+bool8 FUN_08045d54(struct Boss* p);
+
+void BabyElf_Update(struct Boss* p) {
+  FUN_08045b68(p);
+  if (!FUN_08045d54(p)) {
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
 
 void BabyElf_Die(struct Boss* p) {
   FUN_08045b68(p);

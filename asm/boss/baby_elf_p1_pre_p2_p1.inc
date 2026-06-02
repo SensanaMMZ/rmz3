@@ -453,35 +453,3 @@ _080460D8: .4byte wStaticGraphicTilenums
 _080460DC: .4byte gStaticMotionGraphics+12
 _080460E0: .4byte wStaticMotionPalIDs
 _080460E4: .4byte gBossHeaderPtr
-
-	thumb_func_start BabyElf_Update
-BabyElf_Update: @ 0x080460E8
-	push {r4, lr}
-	adds r4, r0, #0
-	bl FUN_08045b68
-	adds r0, r4, #0
-	bl FUN_08045d54
-	lsls r0, r0, #0x18
-	cmp r0, #0
-	bne _0804611C
-	ldr r1, _08046124 @ =0x083625BC
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	ldr r1, _08046128 @ =0x08362608
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-_0804611C:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08046124: .4byte 0x083625BC
-_08046128: .4byte 0x08362608
