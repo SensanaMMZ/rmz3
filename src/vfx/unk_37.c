@@ -97,7 +97,18 @@ void FUN_080bc758(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/vfx/unk_37_pre_pre_p2.inc");
+INCASM("asm/vfx/unk_37_pre_pre_p2_p1.inc");
+
+extern const u8 u8_ARRAY_0836edf0[7];
+
+void VFX37_Init(struct VFX* vfx) {
+  SET_VFX_ROUTINE(vfx, ENTITY_UPDATE);
+  (vfx->s).mode[1] = u8_ARRAY_0836edf0[(vfx->s).work[0]];
+  (vfx->s).flags |= FLIPABLE;
+  (vfx->s).flags |= DISPLAY;
+  InitNonAffineMotion(&vfx->s);
+  VFX37_Update(vfx);
+}
 
 void VFX37_Update(struct VFX* vfx) {
   (PTR_ARRAY_0836edd4[(vfx->s).mode[1]])(vfx);
