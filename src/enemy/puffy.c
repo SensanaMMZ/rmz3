@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "overworld_terrain.h"
 
 struct Enemy* CreatePuffy(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -75,7 +76,12 @@ void FUN_0807cba4(struct Body* body) {
   }
 }
 
-INCASM("asm/enemy/puffy_p5_p2.inc");
+int dragInSea(struct Entity* p) {
+  s32 sea = gOverworld.sea;
+  if (sea > p->coord.y) {
+    p->coord.y = sea;
+  }
+}
 
 void Puffy_Init(struct Enemy* p);
 void Puffy_Update(struct Enemy* p);

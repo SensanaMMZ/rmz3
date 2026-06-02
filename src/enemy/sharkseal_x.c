@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "overworld_terrain.h"
 
 static const struct Collision sCollisions[5];
 
@@ -32,7 +33,7 @@ INCASM("asm/enemy/sharkseal_x_p3.inc");
 
 bool8 FUN_080708dc(struct Enemy* p) { return TRUE; }
 
-void forceWaterLanding(struct Entity* p);
+short forceWaterLanding(struct Entity* p);
 
 void sharksealxMode2(struct Enemy* p) {
   switch ((p->s).mode[2]) {
@@ -111,7 +112,12 @@ void FUN_080711d8(struct Body* body, struct Coord* r1, struct Coord* r2) {
   }
 }
 
-INCASM("asm/enemy/sharkseal_x_p10_p2.inc");
+short forceWaterLanding(struct Entity* p) {
+  s32 sea = gOverworld.sea;
+  if (sea > p->coord.y) {
+    p->coord.y = sea;
+  }
+}
 
 void SharksealX_Init(struct Enemy* p);
 void SharksealX_Update(struct Enemy* p);
