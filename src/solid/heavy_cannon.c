@@ -91,7 +91,21 @@ void FUN_080cc298(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/heavy_cannon_post_post_p2.inc");
+INCASM("asm/solid/heavy_cannon_post_post_p2_p1.inc");
+
+void FUN_080cc4dc(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0x38, 0));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+  FUN_080cbe38(p);
+}
 
 // --------------------------------------------
 

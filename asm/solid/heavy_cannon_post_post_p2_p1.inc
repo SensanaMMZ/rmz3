@@ -264,37 +264,3 @@ _080CC4CA:
 _080CC4D0: .4byte 0xFFFFE800
 _080CC4D4: .4byte 0xFFFFF700
 _080CC4D8: .4byte 0x00003802
-
-	thumb_func_start FUN_080cc4dc
-FUN_080cc4dc: @ 0x080CC4DC
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _080CC4EC
-	cmp r0, #1
-	beq _080CC506
-	b _080CC50C
-_080CC4EC:
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _080CC518 @ =0x0836FEA4
-	bl SetDDP
-	movs r1, #0xe0
-	lsls r1, r1, #6
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_080CC506:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_080CC50C:
-	adds r0, r4, #0
-	bl FUN_080cbe38
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080CC518: .4byte sCollisions+(24*1)
