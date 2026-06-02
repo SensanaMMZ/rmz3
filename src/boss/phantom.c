@@ -514,7 +514,19 @@ void FUN_0805ff7c(struct Boss* p) {
   FUN_0805ffb4(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p6_p1_p2.inc");
+void FUN_0805ffb4(struct Boss* p) {
+  (p->s).work[2]++;
+  if ((p->s).work[2] & 3) {
+    (p->s).flags |= DISPLAY;
+  } else {
+    (p->s).flags &= ~DISPLAY;
+  }
+  if (FUN_080608e0(p)) {
+    (p->s).mode[3] = 2;
+  }
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p6_p1_p2_p2.inc");
 
 void FUN_080600c8(struct Boss* p) {
   if (FUN_08060924(p)) {
