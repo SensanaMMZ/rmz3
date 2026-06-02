@@ -538,7 +538,18 @@ void ocean_0800d544(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
-INCASM("asm/stage_gfx/ocean_p1_p2_p2.inc");
+void ocean_0800d568(struct StageLayer* l, const struct Stage* stage) {
+  if ((l->viewportCenterPixel).x - 0x1961U <= 0x1be) {
+    if (!isSoundPlaying(SE_UNK_e1)) {
+      PlaySound(SE_UNK_e1);
+    }
+    SetStageNoiseVolume(SE_UNK_e1);
+  } else {
+    if (isSoundPlaying(SE_UNK_e1)) {
+      StopSound(SE_UNK_e1);
+    }
+  }
+}
 
 void FUN_0800d5a8(void) {
   PatchMetatileMap(31, 37, (struct MetatilePatch*)0x0833CDA8);
