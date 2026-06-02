@@ -214,7 +214,47 @@ void harpuia_080354d4(struct Zero* z) {
 
 bool8 FUN_080355c0(struct Zero* z) { return TRUE; }
 
-INCASM("asm/player/harpuia_p3.inc");
+void FUN_080355c4(struct Zero* z) {
+  switch ((z->s).mode[2]) {
+    case 0:
+      SetMotion(&z->s, MOTION(0xBE, 0x21));
+      *(u32*)((u8*)z + 0x8c) = 0;
+      *(u32*)((u8*)z + 0x90) = 0;
+      *(u8*)((u8*)z + 0x94) = 0;
+      (z->s).flags &= ~COLLIDABLE;
+      (z->s).d.y = 0;
+      (z->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 push;
+      (z->s).d.y += 0x40;
+      if ((z->s).d.y > 0x700) {
+        (z->s).d.y = 0x700;
+      }
+      (z->s).coord.y += (z->s).d.y;
+      if ((z->s).coord.y <= 0x12C00) {
+        push = PushoutToUp2((z->s).coord.x, (z->s).coord.y);
+        if (push == 0) {
+          push = PushoutToUp2((z->s).coord.x + 0x1A00, (z->s).coord.y);
+          if (push == 0) {
+            push = PushoutToUp2((z->s).coord.x - 0x1A00, (z->s).coord.y);
+          }
+        }
+        if (push != 0) {
+          (z->s).coord.y += push;
+        }
+      }
+      if ((z->s).coord.y - 0x6400 > 0x14000) {
+        (z->s).d.y = 0;
+        (z->s).flags &= ~DISPLAY;
+      }
+      UpdateMotionGraphic(&z->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/player/harpuia_p3_b.inc");
 
 // --------------------------------------------
 
