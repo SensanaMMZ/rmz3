@@ -127,7 +127,19 @@ bool8 FUN_08088ae0(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/mothjiro_p8_post_p2.inc");
+void FUN_08088b0c(struct Body* body, struct Coord* c) {
+  u8 atkType = (body->enemy->processing)->atkType;
+  if (atkType == 3 || atkType == 0xe || atkType == 0xf) {
+    struct Enemy* self = (struct Enemy*)body->parent;
+    if (*(u32*)((u8*)self + 0x8c) & 0x200) {
+      if ((self->s).coord.x < c->x) {
+        *(u8*)((u8*)self + 0x11) = 0xff;
+      } else {
+        *(u8*)((u8*)self + 0x11) = 0xfe;
+      }
+    }
+  }
+}
 
 // --------------------------------------------
 
