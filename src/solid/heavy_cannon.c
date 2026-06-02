@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "element.h"
 #include "global.h"
 #include "solid.h"
 
@@ -76,7 +77,21 @@ void FUN_080cc284(struct Solid* p) {
   DeleteSolid((Object*)p);
 }
 
-INCASM("asm/solid/heavy_cannon_post_post.inc");
+extern const struct Coord Coord_0836ff28;
+
+void FUN_080cc298(struct Solid* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb8);
+  struct Entity* old = *slot;
+  if (old == NULL && (*(u32*)((u8*)p + 0x8c) & 1)) {
+    *slot = (struct Entity*)ApplyElementEffect(0, &p->s, &Coord_0836ff28);
+    if (*slot != NULL) {
+      (p->s).mode[1] = 2;
+      (p->s).mode[3] = (u8)(u32)old;
+    }
+  }
+}
+
+INCASM("asm/solid/heavy_cannon_post_post_p2.inc");
 
 // --------------------------------------------
 
