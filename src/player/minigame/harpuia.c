@@ -170,7 +170,47 @@ bool8 FUN_080354a4(struct Zero* z) {
   return TRUE;
 }
 
-INCASM("asm/player/harpuia_p2_p2_p2.inc");
+void harpuia_080354d4(struct Zero* z) {
+  switch ((z->s).mode[2]) {
+    case 0:
+      SetMotion(&z->s, MOTION(0xBE, 0x22));
+      SetDDP(&z->body, &sCollisions[1]);
+      PlaySound(0xf9);
+      *(u8*)((u8*)z + 0xf) = 0;
+      (z->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&z->s);
+      if ((*(u32*)((u8*)z + 0x70) & 0x00FFFF00) == 0x00010500) {
+        SetDDP(&z->body, &sCollisions[0]);
+      }
+      if (*(u8*)((u8*)z + 0x73) == 3) {
+        if (*(u8*)((u8*)z + 0xf) == 1) {
+          (z->s).mode[2]++;
+        } else {
+          (z->s).mode[1] = 1;
+          (z->s).mode[2] = 0;
+        }
+      }
+      break;
+    case 2:
+      SetMotion(&z->s, MOTION(0xBE, 0x23));
+      SetDDP(&z->body, &sCollisions[1]);
+      PlaySound(0xf9);
+      (z->s).mode[2]++;
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&z->s);
+      if ((*(u32*)((u8*)z + 0x70) & 0x00FFFF00) == 0x00010400) {
+        SetDDP(&z->body, &sCollisions[0]);
+      }
+      if (*(u8*)((u8*)z + 0x73) == 3) {
+        (z->s).mode[1] = 1;
+        (z->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_080355c0(struct Zero* z) { return TRUE; }
 
