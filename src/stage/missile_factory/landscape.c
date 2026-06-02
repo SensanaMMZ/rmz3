@@ -342,7 +342,9 @@ void FUN_0800f874(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
-INCASM("asm/stage_gfx/missile_factory_p2_p2.inc");
+void FUN_0800f894(u32 a) {
+  gOverworld.work.missileFactory.unk_010 = a;
+}
 
 extern const struct ChunkMap sChunkMap1;
 INCBIN_STATIC(sChunkMap1, "data/stage/missile_factory/layer1.bin");  // ./tools/dumper/bin.ts ./baserom.gba 0x0833e1cc 0x0833e390 ./data/stage/missile_factory/layer1.bin
