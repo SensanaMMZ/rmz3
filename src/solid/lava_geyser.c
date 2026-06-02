@@ -128,7 +128,15 @@ void Solid7_Die(struct Solid* p) {}
 
 void nop_080cc930(struct Solid* p) {}
 
-INCASM("asm/solid/lava_geyser_p3.inc");
+void FUN_080cc934(struct Solid* p) {
+  if ((*(u32*)((u8*)p + 0x8c) & 8) && (*(u8*)((u8*)p + 0x97) & 0xf0) == 0x30) {
+    PlaySound(SE_ICE_40);
+    (p->s).mode[1] = 4;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/solid/lava_geyser_p3_p2.inc");
 
 // --------------------------------------------
 
