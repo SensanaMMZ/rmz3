@@ -73,7 +73,14 @@ static void Harpuia_Init(struct Zero* z) {
   Harpuia_Update(z);
 }
 
-INCASM("asm/player/harpuia_p1.inc");
+INCASM("asm/player/harpuia_p1_p1.inc");
+
+void Harpuia_Die(struct Zero* z) {
+  (z->s).flags &= ~DISPLAY;
+  (z->s).flags &= ~FLIPABLE;
+  EXIT_BODY(z);
+  SET_PLAYER_ROUTINE(z, ENTITY_DISAPPEAR);
+}
 
 bool8 FUN_0803532c(struct Zero* z) { return TRUE; }
 
