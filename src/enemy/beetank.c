@@ -6,6 +6,10 @@ void Beetank_Init(struct Enemy* p);
 void Beetank_Update(struct Enemy* p);
 void Beetank_Die(struct Enemy* p);
 
+void FUN_0807be50(struct Enemy* p);
+static const EnemyFunc sUpdates1[5];
+static const EnemyFunc sUpdates2[5];
+
 // clang-format off
 const EnemyRoutine gBeetankRoutine = {
     [ENTITY_INIT] =      Beetank_Init,
@@ -31,7 +35,45 @@ struct Enemy* CreateBeetank(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/beetank_p1.inc");
+INCASM("asm/enemy/beetank_Init.inc");
+
+// Does not match: agbcc cannot reproduce the target's register allocation in
+// the ground-snap min() block (the constant is cached in r8 forcing a push/pop,
+// and the two FUN_08009f6c results are double-homed). ~48h of permuter search
+// floored at 18 instruction diffs / score 235, so this stays as the matching
+// asm body; the MODERN branch documents the equivalent C.
+NON_MATCH void Beetank_Update(struct Enemy* p) {
+#if MODERN
+  if (*(u32*)((u8*)p + 0x8c) & 0x200) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    Beetank_Die(p);
+  } else {
+    s32 push, a, b;
+
+    (sUpdates1[(p->s).mode[1]])(p);
+    FUN_0807be50(p);
+
+    push = PushoutToLeft1((p->s).coord.x + 0x400, (p->s).coord.y - 0x400);
+    if (push != 0) (p->s).coord.x += push;
+    push = PushoutToRight1((p->s).coord.x - 0x400, (p->s).coord.y - 0x400);
+    if (push != 0) (p->s).coord.x += push;
+
+    a = FUN_08009f6c((p->s).coord.x - 0x1000, (p->s).coord.y - 0x600);
+    b = FUN_08009f6c((p->s).coord.x + 0x1000, (p->s).coord.y - 0x600);
+    (p->s).coord.y = (a < b) ? a : b;
+
+    if (IsFrozen(&p->s)) {
+      *(u8*)((u8*)p + 0xba) = (p->s).mode[1];
+    } else {
+      (sUpdates2[(p->s).mode[1]])(p);
+    }
+  }
+#else
+  INCCODE("asm/enemy/beetank_Update.inc");
+#endif
+}
+
+INCASM("asm/enemy/beetank_Die.inc");
 
 bool8 nop_0807bc8c(struct Enemy* p) { return TRUE; }
 
