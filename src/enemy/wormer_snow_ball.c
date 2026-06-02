@@ -47,7 +47,17 @@ void FUN_0807b30c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/wormer_snow_ball_p3_p2.inc");
+INCASM("asm/enemy/wormer_snow_ball_p3_p2_p1.inc");
+
+void CreateIceballParticle2(s32 x, s32 y);
+
+void FUN_0807b7c0(struct Enemy* p) {
+  EXIT_BODY(p);
+  CreateIceballParticle2((p->s).coord.x, (p->s).coord.y);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/wormer_snow_ball_p3_p2_p2.inc");
 
 void WormerSnowBall_Init(struct Enemy* p);
 void WormerSnowBall_Update(struct Enemy* p);
