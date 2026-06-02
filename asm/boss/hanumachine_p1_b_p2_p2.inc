@@ -4,39 +4,6 @@
 
 	.text
 
-	thumb_func_start hanu_0805bcfc
-hanu_0805bcfc: @ 0x0805BCFC
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	ldrb r5, [r4, #0xe]
-	cmp r5, #0
-	bne _0805BD16
-	movs r1, #0xb5
-	lsls r1, r1, #8
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-	strb r5, [r4, #0xf]
-_0805BD16:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-	ldr r0, [r4, #0x18]
-	ldrb r1, [r0, #9]
-	movs r2, #1
-	adds r0, r2, #0
-	ands r0, r1
-	cmp r0, #0
-	beq _0805BD30
-	movs r0, #0
-	strb r2, [r4, #0xd]
-	strb r0, [r4, #0xe]
-_0805BD30:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-
 	thumb_func_start hanu_0805bd38
 hanu_0805bd38: @ 0x0805BD38
 	push {r4, lr}

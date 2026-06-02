@@ -62,7 +62,21 @@ void FUN_0805bcdc(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p1_b_p2.inc");
+void hanu_0805bcfc(struct Boss* p) {
+  u8 m = (p->s).mode[2];
+  if (m == 0) {
+    SetMotion(&p->s, MOTION(0xb5, 0));
+    (p->s).mode[2]++;
+    (p->s).mode[3] = m;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).scriptEntity->flags & 1) {
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/boss/hanumachine_p1_b_p2_p2.inc");
 
 void FUN_0805c3cc(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
