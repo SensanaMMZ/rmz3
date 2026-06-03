@@ -82,7 +82,32 @@ NON_MATCH void blizzackMode1(struct Boss* p) {
 #endif
 }
 
-INCASM("asm/boss/blizzack_post_p1_rest.inc");
+INCASM("asm/boss/blizzack_rest_a.inc");
+
+// blizzackNextMode does not match for the same regmove reason as blizzackMode1:
+// agbcc schedules the mode[2]=0 zero early, forcing the 0x6402 constant into a
+// spare reg + copy the target avoids. Logic is faithful in the MODERN branch;
+// the INCCODE asm body matches the ROM byte-for-byte.
+NON_MATCH void blizzackNextMode(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb4, 0x02));
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6402;
+    (p->s).mode[2] = 0;
+    PlaySound(0x42);
+  }
+  UpdateMotionGraphic(&p->s);
+  if (*(u8*)((u8*)p + 0x73) == 3) {
+    (p->s).mode[1] = *(u8*)((u8*)p + 0xf);
+    (p->s).mode[2] = 1;
+  }
+#else
+  INCCODE("asm/boss/blizzack_nextmode_body.inc");
+#endif
+}
+
+INCASM("asm/boss/blizzack_rest_b.inc");
 
 void FUN_080aabd4(struct Boss* p);
 
