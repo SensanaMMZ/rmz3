@@ -638,7 +638,27 @@ void phantom_080607e4(struct Entity* p) {
   UpdateMotionGraphic(p);
 }
 
-INCASM("asm/boss/phantom_p2_post_p1_p1_p1_a.inc");
+bool8 FUN_08060838(struct Boss* p);
+
+// Does not match: agbcc CSE-folds the two ~0x10 masks into a callee-saved reg
+// (r6 spill) where the target re-materializes each, and the 0x4a/flags writes
+// hit a regmove the allocator won't reproduce from C. Logic is faithful; the
+// MODERN branch documents it, the asm body matches the ROM.
+NON_MATCH void FUN_080607f0(struct Boss* p) {
+#if MODERN
+  s32 b;
+  *(u8*)((u8*)p + 0x4c) = FUN_08060838(p) & 1;
+  b = FUN_08060838(p) & 1;
+  *(u8*)((u8*)p + 0x4a) = (b << 4) | (*(u8*)((u8*)p + 0x4a) & ~0x10);
+  if (b) {
+    (p->s).flags |= X_FLIP;
+  } else {
+    (p->s).flags &= ~X_FLIP;
+  }
+#else
+  INCCODE("asm/boss/phantom_080607f0_body.inc");
+#endif
+}
 
 bool8 FUN_08060838(struct Boss* p) {
   s32 px = (p->s).coord.x;
