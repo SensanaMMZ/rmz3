@@ -56,7 +56,15 @@ void blizzackMode8(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/blizzack_post_p2.inc");
+INCASM("asm/boss/blizzack_post_p2_a.inc");
+
+void FUN_0805af14(struct Boss* p) {
+  if ((p->s).coord.x < *(s32*)((u8*)p + 0xb4) + 0x2000 ||
+      (p->s).coord.x > *(s32*)((u8*)p + 0xd8) - 0x2000) {
+    (p->s).coord.x = *(s32*)((u8*)p + 0xc0);
+  }
+  *(s32*)((u8*)p + 0xc0) = (p->s).coord.x;
+}
 
 void blizzackMode0(struct Boss* p);
 void blizzackMode1(struct Boss* p);

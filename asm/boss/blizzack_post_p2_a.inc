@@ -1397,36 +1397,3 @@ _0805AF0C:
 	pop {r0}
 	bx r0
 
-	thumb_func_start FUN_0805af14
-FUN_0805af14: @ 0x0805AF14
-	push {lr}
-	adds r2, r0, #0
-	adds r0, #0xb4
-	ldr r0, [r0]
-	movs r1, #0x80
-	lsls r1, r1, #6
-	adds r0, r0, r1
-	ldr r3, [r2, #0x54]
-	cmp r3, r0
-	blt _0805AF3A
-	adds r0, r2, #0
-	adds r0, #0xd8
-	ldr r0, [r0]
-	ldr r1, _0805AF4C @ =0xFFFFE000
-	adds r0, r0, r1
-	adds r1, r2, #0
-	adds r1, #0xc0
-	cmp r3, r0
-	ble _0805AF42
-_0805AF3A:
-	adds r1, r2, #0
-	adds r1, #0xc0
-	ldr r0, [r1]
-	str r0, [r2, #0x54]
-_0805AF42:
-	ldr r0, [r2, #0x54]
-	str r0, [r1]
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0805AF4C: .4byte 0xFFFFE000
