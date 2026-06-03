@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "stagerun.h"
 
 void Blizzack_Init(struct Boss* p);
 void Blizzack_Update(struct Boss* p);
@@ -39,7 +40,49 @@ void Blizzack_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/blizzack_post_p1.inc");
+// blizzackMode0/Mode1 do not match: agbcc schedules the mode[2]=0 zero early,
+// forcing the 0x64xx constant into a spare reg + copy (regmove) the target
+// avoids. Logic is faithful in the MODERN branches; the INCCODE asm bodies
+// match the ROM byte-for-byte.
+NON_MATCH void blizzackMode0(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb4, 0));
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6400;
+    (p->s).mode[2] = 0;
+    (p->s).work[2] = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (((struct Entity*)(p->s).scriptEntity)->id & 1) {
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 1;
+  }
+#else
+  INCCODE("asm/boss/blizzack_mode0_body.inc");
+#endif
+}
+
+NON_MATCH void blizzackMode1(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb4, 0x01));
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6401;
+    (p->s).mode[2] = 0;
+    PlaySound(0x42);
+  }
+  UpdateMotionGraphic(&p->s);
+  if (*(u8*)((u8*)p + 0x73) == 3 && (gStageRun.vm.active & 1) == 0) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 1;
+  }
+#else
+  INCCODE("asm/boss/blizzack_mode1_body.inc");
+#endif
+}
+
+INCASM("asm/boss/blizzack_post_p1_rest.inc");
 
 void FUN_080aabd4(struct Boss* p);
 
