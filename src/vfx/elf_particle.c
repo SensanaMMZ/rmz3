@@ -655,6 +655,17 @@ static void FUN_080c019c(struct CyberelfParticle* p) {
   (p->s).unk_coord.y = 1;
 }
 
-INCASM("asm/vfx/elf_particle.inc");
+// Does not match: agbcc proves (u8 rng)+1 non-negative and drops the signed
+// %0x40 correction branch the target keeps. Logic is faithful; the MODERN
+// branch documents it, the INCCODE asm body matches the ROM.
+NON_MATCH void FUN_080c021c(struct VFX* vfx) {
+#if MODERN
+  struct CyberelfParticle* p = (struct CyberelfParticle*)vfx;
+  (p->s).coord.x = p->x + (SIN(p->rng << 2) << 1);
+  p->rng = (p->rng + 1) % 0x40;
+#else
+  INCCODE("asm/vfx/elf_particle_080c021c_body.inc");
+#endif
+}
 
 static void nop_080c0258(struct VFX* vfx) { return; }
