@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-	thumb_func_start FUN_08050090
-FUN_08050090: @ 0x08050090
 	mov ip, r0
 	mov r1, ip
 	adds r1, #0xc8

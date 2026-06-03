@@ -7,7 +7,19 @@
 static const BossFunc sDeads[2];
 static const struct Coord sElementCoord;
 
-INCASM("asm/boss/anubis_p1_pre_p1.inc");
+// Does not match: agbcc holds p in ip/r12 and emits a redundant coord.y store
+// that the natural C doesn't. Logic is faithful in the MODERN branch; the
+// INCCODE asm body matches the ROM.
+NON_MATCH void FUN_08050090(struct Boss* p) {
+#if MODERN
+  s32 base;
+  *(u16*)((u8*)p + 0xc8) += 0x200;
+  base = *(s32*)((u8*)p + 0xc4);
+  (p->s).coord.y = base + (SIN(*(u16*)((u8*)p + 0xc8) >> 8) << 2);
+#else
+  INCCODE("asm/boss/anubis_08050090_body.inc");
+#endif
+}
 
 void FUN_080500c8(struct Body* body) {
   struct Boss* atk = (struct Boss*)((body->enemy)->parent);
