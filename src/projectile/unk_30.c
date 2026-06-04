@@ -6,6 +6,7 @@ static const ProjectileFunc sUpdates1[1];
 static const ProjectileFunc sUpdates2[1];
 static const struct Collision sCollisions[1];
 static const u8 u8_ARRAY_0836c304[2];
+static const motion_t sMotions[8];
 
 void Projectile30_Update(struct Projectile* p);
 
@@ -48,7 +49,30 @@ void Projectile30_Die(struct Projectile* p) {
 
 void FUN_080aa710(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_30_post.inc");
+void FUN_080aa714(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      {
+        s32 dir = (u8)((ArcTan2((s16)(p->s).d.x, (s16)(p->s).d.y) >> 8) + 0x10) >> 5;
+        SetMotion(&p->s, sMotions[dir]);
+      }
+      UpdateMotionGraphic(&p->s);
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
 
 void Projectile30_Init(struct Projectile* p);
 void Projectile30_Update(struct Projectile* p);
