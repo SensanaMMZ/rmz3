@@ -2,6 +2,7 @@
 #include "global.h"
 #include "projectile.h"
 #include "story.h"
+#include "vfx.h"
 
 struct Projectile* FUN_080a244c(struct Coord* c1, struct Coord* c2, u8 a2) {
   struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
@@ -57,7 +58,45 @@ void Projectile16_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_16_p2_p2.inc");
+// NON_MATCH: 128/128 instructions; agbcc schedules the work[3]=0 `movs` late
+// (and into r0) instead of hoisting it after __divsi3 like the original. Pure
+// scheduler/const-propagation choice with no source lever found — permuter TODO.
+//   void FUN_080a25f8(struct Projectile* p) {
+//     if ((p->body).status & BODY_STATUS_DEAD) { ... CreateSmoke(2); DIE; }
+//     else if ((p->body).status & BODY_STATUS_B2) { ... CreateSmoke(2); PlaySound(0x35); DIE; }
+//     else if (--(p->s).work[2] == 0) { CreateSmoke(2); DIE; }
+//     else switch ((p->s).mode[2]) {
+//       case 0: SetMotion(0x3e03); targetX = coord.x +/- 0x6000 (X_FLIP);
+//               unk_coord.x = 0x1e; d.x = (targetX - coord.x)/0x1e; d.y = -0x3c0;
+//               unk_coord.x = 0x1d; work[3] = 0; mode[2]++;  // fallthrough
+//       case 1: d.y += 0x40; coord += d; UpdateMotionGraphic();
+//               if (FUN_080098a4(coord.x, coord.y)) { mode[1]=1; mode[2]=0; } break;
+//     }
+//   }
+INCASM("asm/projectile/unk_16_p2_p2_a.inc");
+
+void FUN_080a2710(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      struct Coord c;
+      (p->s).flags &= ~DISPLAY;
+      (p->s).work[2] = 0x14;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y - 0x800;
+      CreateSmoke(1, &c);
+      PlaySound(0x35);
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).mode[2]++;
+      // fallthrough
+    }
+    case 1:
+      if ((p->s).work[2] != 0 && --(p->s).work[2] != 0) {
+        break;
+      }
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      break;
+  }
+}
 
 void Projectile16_Init(struct Projectile* p);
 void Projectile16_Update(struct Projectile* p);
