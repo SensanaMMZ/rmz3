@@ -1,7 +1,13 @@
+#include "blink.h"
 #include "collision.h"
 #include "global.h"
+#include "metatile.h"
 #include "projectile.h"
+#include "trig.h"
 #include "vfx.h"
+
+u8 GetEntityPalID(struct Entity* p);
+static const motion_t sMotions[10];
 
 static const ProjectileFunc PTR_ARRAY_0836bb00[3];
 static const ProjectileFunc PTR_ARRAY_0836bb0c[3];
@@ -52,7 +58,79 @@ void PantheonAquaModProjectile_Die(struct Projectile* p) {
 
 void FUN_080a5cf8(struct Projectile* p) {}
 
-INCASM("asm/projectile/pantheon_aqua_mod_post.inc");
+void FUN_080a5cfc(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[0]);
+      SetMotion(&p->s, sMotions[(p->s).work[2]]);
+      LoadBlink(0x57, ((u8)GetEntityPalID(&p->s) << 5) | 0x200);
+      (p->s).d.x = gSineTable[(u8)(-0x40 - (p->s).work[2] * 0x20)] * 3;
+      (p->s).d.y = gSineTable[(u8)(-0x80 - (p->s).work[2] * 0x20)] * 3;
+      SET_XFLIP(p, (p->s).work[2] > 2);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateBlinkMotionState(0x57);
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+void FUN_080a5e00(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      const motion_t* m;
+      SetDDP(&p->body, &sCollisions[1]);
+      m = &sMotions[5];
+      SetMotion(&p->s, m[(p->s).work[2]]);
+      (p->s).work[3] = 0x30;
+      (p->s).mode[2]++;
+      // fallthrough
+    }
+    case 1:
+      UpdateBlinkMotionState(0x57);
+      UpdateMotionGraphic(&p->s);
+      if (--(p->s).work[3] == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+void FUN_080a5e64(struct Projectile* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->body).status = m;
+      (p->body).prevStatus = m;
+      (p->body).invincibleTime = m;
+      (p->s).flags &= ~COLLIDABLE;
+      (p->s).work[3] = 0xa;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).work[3] & 1) {
+        (p->s).flags &= ~DISPLAY;
+      } else {
+        (p->s).flags |= DISPLAY;
+      }
+      if (--(p->s).work[3] == 0) {
+        ClearBlink(0x57);
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
 
 void PantheonAquaModProjectile_Init(struct Projectile* p);
 void PantheonAquaModProjectile_Update(struct Projectile* p);
