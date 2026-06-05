@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "metatile.h"
 #include "projectile.h"
 #include "story.h"
 #include "vfx.h"
@@ -58,22 +59,56 @@ void Projectile16_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-// NON_MATCH: 128/128 instructions; agbcc schedules the work[3]=0 `movs` late
-// (and into r0) instead of hoisting it after __divsi3 like the original. Pure
-// scheduler/const-propagation choice with no source lever found — permuter TODO.
-//   void FUN_080a25f8(struct Projectile* p) {
-//     if ((p->body).status & BODY_STATUS_DEAD) { ... CreateSmoke(2); DIE; }
-//     else if ((p->body).status & BODY_STATUS_B2) { ... CreateSmoke(2); PlaySound(0x35); DIE; }
-//     else if (--(p->s).work[2] == 0) { CreateSmoke(2); DIE; }
-//     else switch ((p->s).mode[2]) {
-//       case 0: SetMotion(0x3e03); targetX = coord.x +/- 0x6000 (X_FLIP);
-//               unk_coord.x = 0x1e; d.x = (targetX - coord.x)/0x1e; d.y = -0x3c0;
-//               unk_coord.x = 0x1d; work[3] = 0; mode[2]++;  // fallthrough
-//       case 1: d.y += 0x40; coord += d; UpdateMotionGraphic();
-//               if (FUN_080098a4(coord.x, coord.y)) { mode[1]=1; mode[2]=0; } break;
-//     }
-//   }
-INCASM("asm/projectile/unk_16_p2_p2_a.inc");
+void FUN_080a25f8(struct Projectile* p) {
+  // `zero` is declared up here and assigned 0 only after the division below, so
+  // agbcc materializes the work[3] zero straight after __divsi3 and holds it in a
+  // register across the d.y/unk_coord.x stores (a case-scoped `= 0` const-folds
+  // away and is rescheduled late). Permuter-found; see git history.
+  s32 zero;
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    EXIT_BODY(p);
+    CreateSmoke(2, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else if ((p->body).status & BODY_STATUS_B2) {
+    EXIT_BODY(p);
+    CreateSmoke(2, &(p->s).coord);
+    PlaySound(0x35);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else if (--(p->s).work[2] == 0) {
+    CreateSmoke(2, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else {
+    switch ((p->s).mode[2]) {
+      case 0: {
+        s32 targetX;
+        SetMotion(&p->s, 0x3e03);
+        if (!((p->s).flags & X_FLIP)) {
+          targetX = (p->s).coord.x - 0x6000;
+        } else {
+          targetX = (p->s).coord.x + 0x6000;
+        }
+        (p->s).unk_coord.x = 0x1e;
+        (p->s).d.x = (targetX - (p->s).coord.x) / 0x1e;
+        zero = 0;
+        (p->s).d.y = -0x3c0;
+        (p->s).unk_coord.x = 0x1d;
+        (p->s).work[3] = zero;
+        (p->s).mode[2]++;
+        // fallthrough
+      }
+      case 1:
+        (p->s).d.y += 0x40;
+        (p->s).coord.x += (p->s).d.x;
+        (p->s).coord.y += (p->s).d.y;
+        UpdateMotionGraphic(&p->s);
+        if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+          (p->s).mode[1] = 1;
+          (p->s).mode[2] = 0;
+        }
+        break;
+    }
+  }
+}
 
 void FUN_080a2710(struct Projectile* p) {
   switch ((p->s).mode[2]) {
