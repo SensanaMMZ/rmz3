@@ -1,8 +1,10 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "metatile.h"
 #include "projectile.h"
 #include "story.h"
+#include "vfx.h"
 
 static const struct Collision sCollisions[2];
 
@@ -159,7 +161,40 @@ void ShotcounterBullet_Die(struct Projectile* p) {
 
 void nop_0809ceac(struct Projectile* p) {}
 
-INCASM("asm/projectile/shotcounter_bullet.inc");
+void FUN_0809ceb0(struct Projectile* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    EXIT_BODY(p);
+    PlaySound(0x35);
+    CreateSmoke(2, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else if ((p->body).status & BODY_STATUS_B2) {
+    EXIT_BODY(p);
+    PlaySound(0x35);
+    CreateSmoke(2, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else if (--(p->s).work[2] == 0) {
+    CreateSmoke(3, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else {
+    u16 r;
+    if ((p->s).work[1] == 1 && (r = FUN_080098a4((p->s).coord.x, (p->s).coord.y)) != 0 && !(r & METATILE_SOFT_PLATFORM)) {
+      CreateSmoke(3, &(p->s).coord);
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    } else {
+      switch ((p->s).mode[2]) {
+        case 0:
+          SetMotion(&p->s, MOTION(SM004_SHOTCOUNTER, 8));
+          (p->s).mode[2]++;
+          // fallthrough
+        case 1:
+          (p->s).coord.x += (p->s).d.x;
+          (p->s).coord.y += (p->s).d.y;
+          UpdateMotionGraphic(&p->s);
+          break;
+      }
+    }
+  }
+}
 
 void FUN_0809cf98(struct Projectile* p) {}
 
