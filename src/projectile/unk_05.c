@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "vfx.h"
 
 static const ProjectileFunc sUpdates[2];
 static const struct Collision sCollisions[3];
@@ -74,7 +75,72 @@ void Projectile5_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_05_post_p2.inc");
+void FUN_0809da14(struct Projectile* p) {
+  if ((p->s).unk_28->mode[0] > 1) {
+    CreateSmoke(3, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else {
+    switch ((p->s).mode[2]) {
+      case 0:
+        if ((p->s).work[0] == 0) {
+          SetMotion(&p->s, 0xa00);
+        } else {
+          SetMotion(&p->s, 0xa03);
+        }
+        (p->s).mode[2]++;
+        // fallthrough
+      case 1:
+        UpdateMotionGraphic(&p->s);
+        break;
+    }
+    if ((p->prevCoord).y == 0 || --(p->prevCoord).y == 0) {
+      (p->s).work[2] = 0x7f;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+void FUN_0809daa0(struct Projectile* p) {
+  if ((p->s).unk_28->mode[0] > 1) {
+    CreateSmoke(3, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else if (--(p->s).work[2] == 0) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else {
+    s32 m = (p->s).mode[2];
+    switch (m) {
+      case 0:
+        if ((p->s).work[0] == 0) {
+          SetMotion(&p->s, 0xa01);
+          SetDDP(&p->body, &sCollisions[1]);
+          (p->s).d.y = (p->prevCoord).x;
+          (p->s).d.x = m;
+        } else {
+          SetMotion(&p->s, 0xa04);
+          SetDDP(&p->body, &sCollisions[2]);
+          (p->s).d.x = -(p->prevCoord).x;
+          (p->s).d.y = m;
+        }
+        RNG_0202f388 = LCG(RNG_0202f388);
+        (p->s).work[3] = (RNG_0202f388 >> 16) & 1;
+        (p->s).mode[2]++;
+        // fallthrough
+      case 1:
+        UpdateMotionGraphic(&p->s);
+        if ((p->s).motion.state == 3) {
+          (p->s).flags |= DISPLAY;
+          (p->s).mode[2]++;
+        }
+        break;
+      case 2:
+        (p->s).coord.x += (p->s).d.x;
+        (p->s).coord.y += (p->s).d.y;
+        UpdateMotionGraphic(&p->s);
+        break;
+    }
+  }
+}
 
 void FUN_0809da14(struct Projectile* p);
 void FUN_0809daa0(struct Projectile* p);
