@@ -21,84 +21,22 @@ const ProjectileRoutine gLemonRoutine = {
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
-NAKED struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r6, r0, #0\n\
-	adds r5, r1, #0\n\
-	lsls r2, r2, #0x18\n\
-	lsrs r4, r2, #0x18\n\
-	ldr r0, _0809CA28 @ =gProjectileHeaderPtr\n\
-	ldr r0, [r0]\n\
-	bl AllocEntityFirst\n\
-	adds r3, r0, #0\n\
-	cmp r3, #0\n\
-	beq _0809CA1E\n\
-	adds r2, r3, #0\n\
-	adds r2, #0x25\n\
-	movs r1, #0\n\
-	movs r0, #8\n\
-	strb r0, [r2]\n\
-	ldr r0, _0809CA2C @ =gProjectileFnTable\n\
-	strb r1, [r3, #9]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0]\n\
-	str r0, [r3, #0x14]\n\
-	movs r0, #0\n\
-	strh r1, [r3, #0x20]\n\
-	adds r1, r3, #0\n\
-	adds r1, #0x22\n\
-	strb r0, [r1]\n\
-	ldr r0, [r6]\n\
-	str r0, [r3, #0x54]\n\
-	ldr r0, [r6, #4]\n\
-	str r0, [r3, #0x58]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x80\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	adds r4, r0, #0\n\
-	adds r0, r3, #0\n\
-	adds r0, #0xb4\n\
-	str r5, [r0]\n\
-	ldr r2, _0809CA30 @ =gSineTable\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x40\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x17\n\
-	adds r0, r0, r2\n\
-	movs r1, #0\n\
-	ldrsh r0, [r0, r1]\n\
-	muls r0, r5, r0\n\
-	cmp r0, #0\n\
-	bge _0809CA02\n\
-	adds r0, #0xff\n\
-_0809CA02:\n\
-	asrs r0, r0, #8\n\
-	str r0, [r3, #0x5c]\n\
-	lsls r0, r4, #1\n\
-	adds r0, r0, r2\n\
-	movs r1, #0\n\
-	ldrsh r0, [r0, r1]\n\
-	muls r0, r5, r0\n\
-	cmp r0, #0\n\
-	bge _0809CA16\n\
-	adds r0, #0xff\n\
-_0809CA16:\n\
-	asrs r0, r0, #8\n\
-	str r0, [r3, #0x60]\n\
-	movs r0, #1\n\
-	strb r0, [r3, #0x10]\n\
-_0809CA1E:\n\
-	adds r0, r3, #0\n\
-	pop {r4, r5, r6}\n\
-	pop {r1}\n\
-	bx r1\n\
-	.align 2, 0\n\
-_0809CA28: .4byte gProjectileHeaderPtr\n\
-_0809CA2C: .4byte gProjectileFnTable\n\
-_0809CA30: .4byte gSineTable\n\
- .syntax divided\n");
+struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 0);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    r2 += 0x80;
+    *(s32*)(p->work) = r1;
+    (p->s).d.x = Cos(r2, r1);
+    (p->s).d.y = Sin(r2, r1);
+    (p->s).work[0] = 1;
+  }
+  return p;
 }
 
 #if MODERN == 0
