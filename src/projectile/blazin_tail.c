@@ -106,56 +106,7 @@ static void FUN_0809f140(struct Projectile* p) {
 }
 
 NAKED static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
-  asm(".syntax unified\n\
-	push {lr}\n\
-	movs r3, #0\n\
-	ldr r2, [r0, #0x2c]\n\
-	adds r0, #0x23\n\
-	ldrb r0, [r0]\n\
-	movs r1, #0xf\n\
-	ands r1, r0\n\
-	cmp r1, #1\n\
-	beq _0809F252\n\
-	cmp r1, #3\n\
-	bne _0809F282\n\
-_0809F252:\n\
-	adds r0, r2, #0\n\
-	adds r0, #0xb8\n\
-	ldr r0, [r0]\n\
-	cmp r0, #0\n\
-	bne _0809F270\n\
-	ldr r0, _0809F26C @ =pZero2\n\
-	ldr r0, [r0]\n\
-	ldr r1, [r0, #0x54]\n\
-	ldr r0, [r2, #0x54]\n\
-	cmp r1, r0\n\
-	ble _0809F282\n\
-	b _0809F28E\n\
-	.align 2, 0\n\
-_0809F26C: .4byte pZero2\n\
-_0809F270:\n\
-	cmp r0, #1\n\
-	bne _0809F282\n\
-	ldr r0, _0809F294 @ =pZero2\n\
-	ldr r0, [r0]\n\
-	ldr r1, [r0, #0x54]\n\
-	ldr r0, [r2, #0x54]\n\
-	cmp r1, r0\n\
-	bge _0809F282\n\
-	movs r3, #1\n\
-_0809F282:\n\
-	cmp r3, #0\n\
-	bne _0809F28E\n\
-	adds r1, r2, #0\n\
-	adds r1, #0xa4\n\
-	movs r0, #1\n\
-	strh r0, [r1]\n\
-_0809F28E:\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_0809F294: .4byte pZero2\n\
- .syntax divided\n");
+  INCCODE("asm/projectile/blazin_tail_onCollision.inc");
 }
 
 // --------------------------------------------
