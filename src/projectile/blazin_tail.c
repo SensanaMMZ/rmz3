@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[2];
 
@@ -105,8 +106,25 @@ static void FUN_0809f140(struct Projectile* p) {
   }
 }
 
-NAKED static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
-  INCCODE("asm/projectile/blazin_tail_onCollision.inc");
+static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+  bool8 flag = FALSE;
+  struct Projectile* parent = (struct Projectile*)body->parent;
+  if (body->unk_23 == 1 || body->unk_23 == 3) {
+    if ((parent->prevCoord).x == 0) {
+      if ((pZero2->s).coord.x > (parent->s).coord.x) {
+        do {
+          return;
+        } while (0);
+      }
+    } else if ((parent->prevCoord).x == 1) {
+      if ((pZero2->s).coord.x < (parent->s).coord.x) {
+        flag = TRUE;
+      }
+    }
+  }
+  if (!flag) {
+    (parent->body).hp = 1;
+  }
 }
 
 // --------------------------------------------
