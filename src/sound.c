@@ -133,36 +133,14 @@ void StopSound(s16 n) {
   }
 }
 
-NAKED void fadeoutSound(s16 r0, u16 r1) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	lsls r4, r1, #0x10\n\
-	ldr r3, _0800463C @ =gMPlayTable\n\
-	ldr r1, _08004640 @ =gSongTable\n\
-	lsls r0, r0, #0x10\n\
-	asrs r0, r0, #0xd\n\
-	adds r0, r0, r1\n\
-	ldrh r2, [r0, #4]\n\
-	lsls r1, r2, #1\n\
-	adds r1, r1, r2\n\
-	lsls r1, r1, #2\n\
-	adds r1, r1, r3\n\
-	ldr r2, [r1]\n\
-	ldr r1, [r2]\n\
-	ldr r0, [r0]\n\
-	cmp r1, r0\n\
-	bne _08004636\n\
-	lsrs r1, r4, #0x14\n\
-	adds r0, r2, #0\n\
-	bl m4aMPlayFadeOut\n\
-_08004636:\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_0800463C: .4byte gMPlayTable\n\
-_08004640: .4byte gSongTable\n\
-          .syntax divided\n");
+void fadeoutSound(s16 songId, u16 fade) {
+  const struct MusicPlayer* mt = gMPlayTable;
+  const struct Song* st = gSongTable;
+  const struct Song* song = &st[songId];
+  struct MusicPlayerInfo* info = mt[song->ms].info;
+  if (info->songHeader == song->header) {
+    m4aMPlayFadeOut(info, fade >> 4);
+  }
 }
 
 // まだ音が終わっていないか
