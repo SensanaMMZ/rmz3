@@ -318,96 +318,10 @@ WIP static void FadeBlack(u32* src, u32* dst, u32 lv, u32* mask) {
 }
 
 NAKED static void FadeWhite(u32* src, u32* dst, u32* fades, u32* mask) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7}\n\
-	ldr r4, [r2]\n\
-	movs r7, #0xff\n\
-_08003D3A:\n\
-	push {r0, r1, r7}\n\
-	ldr r1, [r0]\n\
-	ldr r5, [r2, #4]\n\
-	ldr r0, [r3]\n\
-	ands r0, r1\n\
-	muls r0, r4, r0\n\
-	lsrs r0, r0, #5\n\
-	adds r0, r0, r5\n\
-	ldr r6, [r3]\n\
-	ands r6, r0\n\
-	lsls r5, r5, #5\n\
-	ldr r0, [r3, #4]\n\
-	ands r0, r1\n\
-	muls r0, r4, r0\n\
-	lsrs r0, r0, #5\n\
-	adds r0, r0, r5\n\
-	ldr r7, [r3, #4]\n\
-	ands r7, r0\n\
-	orrs r6, r7\n\
-	lsls r5, r5, #5\n\
-	ldr r0, [r3, #8]\n\
-	ands r0, r1\n\
-	lsrs r0, r0, #5\n\
-	muls r0, r4, r0\n\
-	ldr r7, [r3, #8]\n\
-	adds r0, r0, r5\n\
-	ands r7, r0\n\
-	orrs r6, r7\n\
-	pop {r0, r1, r7}\n\
-	str r6, [r1]\n\
-	adds r0, #4\n\
-	adds r1, #4\n\
-	subs r7, #1\n\
-	bpl _08003D3A\n\
-	pop {r4, r5, r6, r7}\n\
-	bx lr\n\
-	.align 2, 0\n\
- .syntax divided\n");
+  INCCODE("asm/gfx/gfx_fadewhite.inc");
 }
 
 // 0x08003d84
 NAKED static void FadeColor(u32* src, u32* dst, u32* fades, u32* mask) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7}\n\
-	movs r7, #0xff\n\
-_08003D88:\n\
-	push {r0, r1, r7}\n\
-	ldr r1, [r0]\n\
-	ldr r4, [r2]\n\
-	ldr r5, [r2, #0xc]\n\
-	ldr r0, [r3]\n\
-	ands r0, r1\n\
-	muls r0, r4, r0\n\
-	lsrs r0, r0, #5\n\
-	adds r0, r0, r5\n\
-	ldr r6, [r3]\n\
-	ands r6, r0\n\
-	ldr r4, [r2, #4]\n\
-	ldr r5, [r2, #0x10]\n\
-	ldr r0, [r3, #4]\n\
-	ands r0, r1\n\
-	muls r0, r4, r0\n\
-	lsrs r0, r0, #5\n\
-	adds r0, r0, r5\n\
-	ldr r7, [r3, #4]\n\
-	ands r7, r0\n\
-	orrs r6, r7\n\
-	ldr r4, [r2, #8]\n\
-	ldr r5, [r2, #0x14]\n\
-	ldr r0, [r3, #8]\n\
-	ands r0, r1\n\
-	lsrs r0, r0, #5\n\
-	muls r0, r4, r0\n\
-	ldr r7, [r3, #8]\n\
-	adds r0, r0, r5\n\
-	ands r7, r0\n\
-	orrs r6, r7\n\
-	pop {r0, r1, r7}\n\
-	str r6, [r1]\n\
-	adds r0, #4\n\
-	adds r1, #4\n\
-	subs r7, #1\n\
-	bpl _08003D88\n\
-	pop {r4, r5, r6, r7}\n\
-	bx lr\n\
-	.align 2, 0\n\
-	 .syntax divided\n");
+  INCCODE("asm/gfx/gfx_fadecolor.inc");
 }
