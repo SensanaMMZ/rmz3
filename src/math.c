@@ -41,37 +41,7 @@ s32 CalcAngleBetweenPoints(s32 x1, s32 y1, s32 x2, s32 y2) { return CalcAngle(x2
 s32 CalcAngleBetweenCoords(struct Coord* c1, struct Coord* c2) { return CalcAngleBetweenPoints(c1->x, c1->y, c2->x, c2->y); }
 
 NAKED u8 FUN_080e964c(u32 r0, s32 r1, s32 r2) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r6, r0, #0\n\
-	adds r3, r1, #0\n\
-	adds r4, r2, #0\n\
-	subs r2, r6, r3\n\
-	adds r0, r2, r4\n\
-	movs r5, #0xff\n\
-	ands r0, r5\n\
-	lsls r1, r4, #1\n\
-	cmp r0, r1\n\
-	bhi _080E9666\n\
-	adds r3, r6, #0\n\
-	b _080E9678\n\
-_080E9666:\n\
-	ands r2, r5\n\
-	movs r0, #1\n\
-	rsbs r0, r0, #0\n\
-	cmp r2, #0x7f\n\
-	bgt _080E9672\n\
-	movs r0, #1\n\
-_080E9672:\n\
-	muls r0, r4, r0\n\
-	adds r3, r3, r0\n\
-	ands r3, r5\n\
-_080E9678:\n\
-	adds r0, r3, #0\n\
-	pop {r4, r5, r6}\n\
-	pop {r1}\n\
-	bx r1\n\
- .syntax divided\n");
+  INCCODE("asm/math/math_080e964c.inc");
 }
 
 #if MODERN == 0
