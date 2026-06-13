@@ -102,6 +102,51 @@ static void Door2DBlue_Die(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
 
+#if MODERN
+static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+  u8 flag2;
+  struct Solid* door = (struct Solid*)body->parent;
+  struct Zero* z = (struct Zero*)(body->enemy)->parent;
+  if ((z->s).kind != ENTITY_PLAYER) {
+    return;
+  }
+  if ((door->s).coord.y < (z->s).coord.y) {
+    return;
+  }
+  if ((door->s).coord.y - (z->s).coord.y > PIXEL(8)) {
+    return;
+  }
+  flag2 = (door->s).work[0] & 2;
+  if (flag2) {
+    u8 story = FLAG(gCurStory.s.gameflags, FLAG_2);
+    if (story) {
+      return;
+    }
+    if ((door->s).coord.x > (z->s).coord.x) {
+      (door->s).mode[1] = 1;
+    } else {
+      (door->s).mode[1] = 2;
+    }
+    (door->s).mode[2] = story;
+  } else {
+    if ((door->s).coord.x > (z->s).coord.x) {
+      if ((door->s).work[0] & 1) {
+        return;
+      }
+      (door->s).mode[1] = 1;
+    } else {
+      if (!((door->s).work[0] & 1)) {
+        return;
+      }
+      (door->s).mode[1] = 2;
+    }
+    (door->s).mode[2] = flag2;
+  }
+  z->isAreaChange = TRUE;
+  gStageRun.vm.unk_004 |= 1;
+  *(struct Zero**)door->props.raw = z;
+}
+#else
 NAKED static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, lr}\n\
@@ -192,6 +237,7 @@ _080CAF74: .4byte 0x00000119\n\
 _080CAF78: .4byte gStageRun\n\
  .syntax divided\n");
 }
+#endif
 
 static void FUN_080caf7c(struct Solid* p) {
   switch ((p->s).mode[2]) {
