@@ -110,8 +110,7 @@ bool32 _isSoundPlaying(SoundID n) {
   return FALSE;
 }
 
-NON_MATCH s16 PlaySound(SoundID id) {
-#if MODERN
+s16 PlaySound(SoundID id) {
   if (gSongTable[id].ms == gSongTable[SE_ZAKO_STUN].ms) {
     if ((SoundID2 == MUS_DUMMY) || (SoundID2 == SE_ZAKO_STUN)) {
       SoundID2 = id;
@@ -120,13 +119,14 @@ NON_MATCH s16 PlaySound(SoundID id) {
   }
 
   if (id == MUS_DUMMY) {
+    // empty do/while nudges agbcc to extend (u16)id straight into its home
+    // register instead of via a scratch+copy (permuter-found, do not remove)
+    do {
+    } while (0);
     return MUS_DUMMY;
   }
   m4aSongNumStart(id);
   return id;
-#else
-  INCCODE("asm/wip/PlaySound.inc");
-#endif
 }
 
 void StopSound(s16 n) {
