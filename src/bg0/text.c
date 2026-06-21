@@ -35,15 +35,21 @@ void LoadAsciiBold(void) {
 
 NON_MATCH void ResetCharTiles(void) {
 #if MODERN
-  struct CharTile* tile;
+  s32 i;
+  struct CharTile* node;
+  s32 tileID;
   gTextPrinter.freelist = NULL;
-  for (s32 i = 79; i >= 0; i--) {
-    tile = &gTextPrinter.tilelist[i];
-    tile->tileID = 894 - (79 - i) * 2;
-    tile->next = gTextPrinter.freelist;
-    gTextPrinter.freelist = tile;
+  node = &gTextPrinter.tilelist[79];
+  tileID = 894;
+  for (i = 79; i >= 0; i--) {
+    node->tileID = tileID;
+    node->next = gTextPrinter.freelist;
+    gTextPrinter.freelist = node;
+    node--;
+    tileID -= 2;
   }
-  gTextPrinter.used = gTextPrinter.cur = NULL;
+  gTextPrinter.cur = NULL;
+  gTextPrinter.used = NULL;
   gTextPrinter.len = 0;
 #else
   INCCODE("asm/wip/ResetCharTiles.inc");
