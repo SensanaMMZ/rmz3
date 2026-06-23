@@ -191,36 +191,7 @@ _080EE324: .4byte 0x05000040\n\
  * @warning asm直書きかもしれない　(push の前に length >>= 1 のアセンブリが入ってたり, ループの終了判定で subs して(cmpせず) すぐに bne はあまりみない気がする)
  */
 NAKED static void FUN_080ee328(u32* pal, u32 length, u32 r2, u16* lut) {
-  asm(".syntax unified\n\
-	lsrs r1, r1, #1\n\
-	push {r4, r5, r6, r7}\n\
-	movs r7, #0x7f\n\
-_080EE32E:\n\
-	ldr r4, [r0]\n\
-	lsrs r5, r4, #0xa\n\
-	ands r5, r2\n\
-	lsrs r6, r4, #5\n\
-	ands r6, r2\n\
-	ands r4, r2\n\
-	adds r4, r4, r5\n\
-	adds r4, r4, r6\n\
-	adds r5, r4, #0\n\
-	ands r5, r7\n\
-	lsls r5, r5, #1\n\
-	ldrh r5, [r3, r5]\n\
-	lsrs r4, r4, #0x10\n\
-	ands r4, r7\n\
-	lsls r4, r4, #1\n\
-	ldrh r4, [r3, r4]\n\
-	lsls r4, r4, #0x10\n\
-	orrs r4, r5\n\
-	str r4, [r0]\n\
-	adds r0, #4\n\
-	subs r1, #1\n\
-	bne _080EE32E\n\
-	pop {r4, r5, r6, r7}\n\
-	bx lr\n\
- .syntax divided\n");
+  INCCODE("asm/wip/FUN_080ee328.inc");
 }
 
 // --------------------------------------------
