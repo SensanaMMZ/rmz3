@@ -168,62 +168,30 @@ static u32 getAreaX2Area(struct Coord* c) {
   return 0;
 }
 
-NAKED static u32 getEnergyFactoryArea(struct Coord* c) {
-  asm(".syntax unified\n\
-	push {lr}\n\
-	ldr r1, [r0]\n\
-	ldr r0, _080193D4 @ =0x002B9000\n\
-	cmp r1, r0\n\
-	ble _080193D8\n\
-	movs r0, #7\n\
-	b _08019426\n\
-	.align 2, 0\n\
-_080193D4: .4byte 0x002B9000\n\
-_080193D8:\n\
-	ldr r0, _080193F0 @ =0x00223800\n\
-	cmp r1, r0\n\
-	bgt _080193EA\n\
-	ldr r0, _080193F4 @ =0x00205800\n\
-	cmp r1, r0\n\
-	bgt _08019424\n\
-	ldr r0, _080193F8 @ =0x0016F800\n\
-	cmp r1, r0\n\
-	ble _080193FC\n\
-_080193EA:\n\
-	movs r0, #1\n\
-	b _08019426\n\
-	.align 2, 0\n\
-_080193F0: .4byte 0x00223800\n\
-_080193F4: .4byte 0x00205800\n\
-_080193F8: .4byte 0x0016F800\n\
-_080193FC:\n\
-	ldr r0, _08019408 @ =0x00151800\n\
-	cmp r1, r0\n\
-	ble _0801940C\n\
-	movs r0, #6\n\
-	b _08019426\n\
-	.align 2, 0\n\
-_08019408: .4byte 0x00151800\n\
-_0801940C:\n\
-	ldr r0, _0801941C @ =0x000F7800\n\
-	cmp r1, r0\n\
-	bgt _08019418\n\
-	ldr r0, _08019420 @ =0x000D9800\n\
-	cmp r1, r0\n\
-	bgt _08019424\n\
-_08019418:\n\
-	movs r0, #0\n\
-	b _08019426\n\
-	.align 2, 0\n\
-_0801941C: .4byte 0x000F7800\n\
-_08019420: .4byte 0x000D9800\n\
-_08019424:\n\
-	movs r0, #5\n\
-_08019426:\n\
-	pop {r1}\n\
-	bx r1\n\
-	.align 2, 0\n\
- .syntax divided\n");
+static u32 getEnergyFactoryArea(struct Coord* c) {
+  s32 x = c->x;
+  if (x > 0x2B9000) {
+    return 7;
+  }
+  if (x > 0x223800) {
+    return 1;
+  }
+  if (x > 0x205800) {
+    return 5;
+  }
+  if (x > 0x16F800) {
+    return 1;
+  }
+  if (x > 0x151800) {
+    return 6;
+  }
+  if (x > 0xF7800) {
+    return 0;
+  }
+  if (x > 0xD9800) {
+    return 5;
+  }
+  return 0;
 }
 
 static u32 getSnowyPlainsArea(struct Coord* c) {
