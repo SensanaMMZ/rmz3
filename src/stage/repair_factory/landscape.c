@@ -204,81 +204,22 @@ static void LayerUpdate_3(struct StageLayer* l, const struct Stage* stage) {
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
-NAKED bool8 FUN_0800daec(s32 x, s32 y) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	sub sp, #8\n\
-	adds r5, r0, #0\n\
-	adds r6, r1, #0\n\
-	ldr r0, _0800DB4C @ =0xFFF97000\n\
-	adds r1, r5, r0\n\
-	ldr r0, _0800DB50 @ =0x0001DFFF\n\
-	cmp r1, r0\n\
-	bhi _0800DB7A\n\
-	ldr r0, _0800DB54 @ =0xFFFD8000\n\
-	adds r7, r6, r0\n\
-	ldr r0, _0800DB58 @ =0x00013FFF\n\
-	cmp r7, r0\n\
-	bhi _0800DB7A\n\
-	ldr r2, _0800DB5C @ =gOverworld\n\
-	movs r0, #0xfc\n\
-	lsls r0, r0, #3\n\
-	adds r2, r2, r0\n\
-	ldrh r4, [r2]\n\
-	asrs r0, r6, #0xc\n\
-	adds r1, r4, #0\n\
-	muls r1, r0, r1\n\
-	asrs r3, r5, #0xc\n\
-	adds r1, r1, r3\n\
-	adds r1, #2\n\
-	lsls r1, r1, #1\n\
-	adds r1, r1, r2\n\
-	asrs r0, r7, #0xc\n\
-	muls r0, r4, r0\n\
-	adds r0, r0, r3\n\
-	adds r0, #2\n\
-	lsls r0, r0, #1\n\
-	adds r0, r0, r2\n\
-	ldrh r1, [r1]\n\
-	ldrh r0, [r0]\n\
-	cmp r1, r0\n\
-	beq _0800DB7A\n\
-	str r5, [sp]\n\
-	str r6, [sp, #4]\n\
-	ldr r0, _0800DB60 @ =0x00077FFF\n\
-	cmp r5, r0\n\
-	bgt _0800DB64\n\
-	movs r0, #7\n\
-	movs r1, #4\n\
-	movs r2, #0x36\n\
-	bl LoadScreenIntoMetatileMap\n\
-	b _0800DB6E\n\
-	.align 2, 0\n\
-_0800DB4C: .4byte 0xFFF97000\n\
-_0800DB50: .4byte 0x0001DFFF\n\
-_0800DB54: .4byte 0xFFFD8000\n\
-_0800DB58: .4byte 0x00013FFF\n\
-_0800DB5C: .4byte gOverworld\n\
-_0800DB60: .4byte 0x00077FFF\n\
-_0800DB64:\n\
-	movs r0, #8\n\
-	movs r1, #4\n\
-	movs r2, #0x37\n\
-	bl LoadScreenIntoMetatileMap\n\
-_0800DB6E:\n\
-	movs r0, #8\n\
-	mov r1, sp\n\
-	bl AppendQuake\n\
-	movs r0, #1\n\
-	b _0800DB7C\n\
-_0800DB7A:\n\
-	movs r0, #0\n\
-_0800DB7C:\n\
-	add sp, #8\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r1}\n\
-	bx r1\n\
- .syntax divided\n");
+bool8 FUN_0800daec(s32 x, s32 y) {
+  struct Coord c;
+  if ((u32)(x - 0x69000) <= 0x1DFFF && (u32)(y - 0x28000) <= 0x13FFF &&
+      gOverworld.terrain.tilemap[gOverworld.terrain.tilemap[0] * (y >> 12) + (x >> 12) + 2] !=
+          gOverworld.terrain.tilemap[((y - 0x28000) >> 12) * gOverworld.terrain.tilemap[0] + (x >> 12) + 2]) {
+    c.x = x;
+    c.y = y;
+    if (x <= 0x77FFF) {
+      LoadScreenIntoMetatileMap(7, 4, 0x36);
+    } else {
+      LoadScreenIntoMetatileMap(8, 4, 0x37);
+    }
+    AppendQuake(8, &c);
+    return TRUE;
+  }
+  return FALSE;
 }
 
 #undef STAGE
