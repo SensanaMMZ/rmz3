@@ -111,132 +111,21 @@ static void FUN_080c8938(struct VFX* p) {
   Ghost78_Update(p);
 }
 
-NAKED static void FUN_080c89c8(struct VFX* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r5, r0, #0\n\
-	ldr r1, _080C8A1C @ =gVFXFnTable\n\
-	ldrb r0, [r5, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #1\n\
-	str r1, [r5, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #4]\n\
-	str r0, [r5, #0x14]\n\
-	adds r0, r5, #0\n\
-	bl InitNonAffineMotion\n\
-	ldrb r0, [r5, #0xa]\n\
-	movs r4, #1\n\
-	movs r6, #0\n\
-	orrs r0, r4\n\
-	movs r1, #2\n\
-	orrs r0, r1\n\
-	strb r0, [r5, #0xa]\n\
-	ldr r1, _080C8A20 @ =0x0000E90B\n\
-	adds r0, r5, #0\n\
-	bl SetMotion\n\
-	ldr r2, _080C8A24 @ =RNG_0202f388\n\
-	ldr r1, [r2]\n\
-	ldr r0, _080C8A28 @ =0x000343FD\n\
-	muls r0, r1, r0\n\
-	ldr r1, _080C8A2C @ =0x00269EC3\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #1\n\
-	lsrs r1, r0, #1\n\
-	str r1, [r2]\n\
-	lsrs r2, r0, #0x11\n\
-	ands r2, r4\n\
-	cmp r2, #0\n\
-	beq _080C8A30\n\
-	ldrb r0, [r5, #0xa]\n\
-	movs r1, #0x10\n\
-	orrs r0, r1\n\
-	b _080C8A36\n\
-	.align 2, 0\n\
-_080C8A1C: .4byte gVFXFnTable\n\
-_080C8A20: .4byte 0x0000E90B\n\
-_080C8A24: .4byte RNG_0202f388\n\
-_080C8A28: .4byte 0x000343FD\n\
-_080C8A2C: .4byte 0x00269EC3\n\
-_080C8A30:\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-_080C8A36:\n\
-	strb r0, [r5, #0xa]\n\
-	movs r4, #1\n\
-	adds r1, r2, #0\n\
-	adds r0, r5, #0\n\
-	adds r0, #0x4c\n\
-	strb r1, [r0]\n\
-	adds r3, r5, #0\n\
-	adds r3, #0x4a\n\
-	lsls r1, r1, #4\n\
-	ldrb r2, [r3]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r2\n\
-	orrs r0, r1\n\
-	strb r0, [r3]\n\
-	ldr r2, _080C8A78 @ =RNG_0202f388\n\
-	ldr r1, [r2]\n\
-	ldr r0, _080C8A7C @ =0x000343FD\n\
-	muls r0, r1, r0\n\
-	ldr r1, _080C8A80 @ =0x00269EC3\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #1\n\
-	lsrs r1, r0, #1\n\
-	str r1, [r2]\n\
-	lsrs r2, r0, #0x11\n\
-	ands r2, r4\n\
-	cmp r2, #0\n\
-	beq _080C8A84\n\
-	ldrb r0, [r5, #0xa]\n\
-	movs r1, #0x20\n\
-	orrs r0, r1\n\
-	b _080C8A8A\n\
-	.align 2, 0\n\
-_080C8A78: .4byte RNG_0202f388\n\
-_080C8A7C: .4byte 0x000343FD\n\
-_080C8A80: .4byte 0x00269EC3\n\
-_080C8A84:\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #0xdf\n\
-	ands r0, r1\n\
-_080C8A8A:\n\
-	strb r0, [r5, #0xa]\n\
-	adds r1, r2, #0\n\
-	adds r2, r5, #0\n\
-	adds r2, #0x4d\n\
-	movs r4, #0\n\
-	strb r1, [r2]\n\
-	lsls r1, r1, #5\n\
-	ldrb r2, [r3]\n\
-	movs r0, #0x21\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r2\n\
-	orrs r0, r1\n\
-	strb r0, [r3]\n\
-	adds r0, r5, #0\n\
-	adds r0, #0x7d\n\
-	ldrb r1, [r0]\n\
-	adds r1, #5\n\
-	lsls r1, r1, #0x18\n\
-	lsrs r1, r1, #0x18\n\
-	adds r0, r5, #0\n\
-	bl ForceEntityPalette\n\
-	movs r0, #0x20\n\
-	strb r0, [r5, #0x12]\n\
-	str r4, [r5, #0x5c]\n\
-	movs r0, #0x70\n\
-	str r0, [r5, #0x60]\n\
-	adds r0, r5, #0\n\
-	bl Ghost78_Update\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+static void FUN_080c89c8(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(SM233_UNK, 0xB));
+  RNG_0202f388 = LCG(RNG_0202f388);
+  SET_XFLIP(p, (RNG_0202f388 >> 16) & 1);
+  RNG_0202f388 = LCG(RNG_0202f388);
+  SET_YFLIP(p, (RNG_0202f388 >> 16) & 1);
+  ForceEntityPalette(&p->s, (p->props).raw[9] + 5);
+  (p->s).work[2] = 0x20;
+  (p->s).d.x = 0;
+  (p->s).d.y = 0x70;
+  Ghost78_Update(p);
 }
 
 NAKED static void FUN_080c8acc(struct VFX* p) {
