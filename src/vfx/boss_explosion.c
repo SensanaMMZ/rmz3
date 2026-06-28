@@ -464,71 +464,18 @@ _080C7F74: .4byte gVFXFnTable\n\
  .syntax divided\n");
 }
 
-NAKED static void FUN_080c7f78(struct VFX* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r4, r0, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldr r2, [r4, #0x64]\n\
-	movs r5, #0xff\n\
-	subs r1, r5, r2\n\
-	lsls r0, r1, #2\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #4\n\
-	cmp r0, #0\n\
-	bge _080C7F92\n\
-	adds r0, #0xff\n\
-_080C7F92:\n\
-	asrs r0, r0, #8\n\
-	adds r3, r2, r0\n\
-	str r3, [r4, #0x64]\n\
-	ldr r2, [r4, #0x68]\n\
-	subs r1, r5, r2\n\
-	lsls r0, r1, #1\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #2\n\
-	cmp r0, #0\n\
-	bge _080C7FA8\n\
-	adds r0, #0xff\n\
-_080C7FA8:\n\
-	asrs r0, r0, #8\n\
-	adds r0, r2, r0\n\
-	str r0, [r4, #0x68]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x50\n\
-	strh r3, [r0]\n\
-	ldr r0, [r4, #0x68]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0x52\n\
-	strh r0, [r1]\n\
-	ldrb r0, [r4, #0x13]\n\
-	adds r0, #1\n\
-	strb r0, [r4, #0x13]\n\
-	subs r1, #0x2e\n\
-	strb r0, [r1]\n\
-	ldrb r0, [r4, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r4, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r0, #0xff\n\
-	bne _080C7FE6\n\
-	ldr r1, _080C7FEC @ =gVFXFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #2\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #8]\n\
-	str r0, [r4, #0x14]\n\
-_080C7FE6:\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080C7FEC: .4byte gVFXFnTable\n\
- .syntax divided\n");
+static void FUN_080c7f78(struct VFX* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).unk_coord.x += (0xFF - (p->s).unk_coord.x) * 80 / 256;
+  (p->s).unk_coord.y += (0xFF - (p->s).unk_coord.y) * 12 / 256;
+  (p->s).spr.mag.x = (p->s).unk_coord.x;
+  (p->s).spr.mag.y = (p->s).unk_coord.y;
+  (p->s).work[3]++;
+  (p->s).angle = (p->s).work[3];
+  (p->s).work[2]--;
+  if ((p->s).work[2] == 0xFF) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
 }
 
 static void FUN_080c7ff0(struct VFX* p) {
