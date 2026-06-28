@@ -540,50 +540,17 @@ static void FUN_080c7ff0(struct VFX* p) {
   }
 }
 
-NAKED static void updateFireball(struct VFX* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r4, r0, #0\n\
-	ldr r5, [r4, #0x28]\n\
-	bl UpdateMotionGraphic\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x50\n\
-	ldrh r1, [r2]\n\
-	ldr r0, _080C807C @ =0x000001FF\n\
-	cmp r1, r0\n\
-	bhi _080C8054\n\
-	adds r0, r1, #4\n\
-	strh r0, [r2]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0x52\n\
-	ldrh r0, [r1]\n\
-	adds r0, #4\n\
-	strh r0, [r1]\n\
-_080C8054:\n\
-	ldrb r0, [r5, #0xc]\n\
-	cmp r0, #4\n\
-	bne _080C8074\n\
-	ldr r1, _080C8080 @ =gVFXFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #2\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #8]\n\
-	str r0, [r4, #0x14]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xfe\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-_080C8074:\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080C807C: .4byte 0x000001FF\n\
-_080C8080: .4byte gVFXFnTable\n\
-   .syntax divided\n");
+static void updateFireball(struct VFX* p) {
+  struct Entity* e = (p->s).unk_28;
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).spr.mag.x <= 0x1FF) {
+    (p->s).spr.mag.x += 4;
+    (p->s).spr.mag.y += 4;
+  }
+  if (e->mode[0] == ENTITY_EXIT) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    (p->s).flags &= ~DISPLAY;
+  }
 }
 
 // --------------------------------------------
