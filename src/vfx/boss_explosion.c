@@ -502,79 +502,27 @@ static void updateFireball(struct VFX* p) {
 
 // --------------------------------------------
 
-NAKED static void FUN_080c8084(struct VFX* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r5, r0, #0\n\
-	ldr r6, [r5, #0x28]\n\
-	ldrb r0, [r5, #0xe]\n\
-	adds r1, r0, #0\n\
-	cmp r1, #0\n\
-	bne _080C8098\n\
-	strb r1, [r5, #0x12]\n\
-	adds r0, #1\n\
-	strb r0, [r5, #0xe]\n\
-_080C8098:\n\
-	ldrb r1, [r5, #0x12]\n\
-	adds r0, r1, #1\n\
-	strb r0, [r5, #0x12]\n\
-	movs r0, #3\n\
-	ands r0, r1\n\
-	cmp r0, #1\n\
-	bls _080C80C4\n\
-	adds r1, r6, #0\n\
-	adds r1, #0x8c\n\
-	ldr r0, [r1]\n\
-	movs r4, #1\n\
-	orrs r0, r4\n\
-	str r0, [r1]\n\
-	adds r1, #4\n\
-	ldr r0, [r1]\n\
-	orrs r0, r4\n\
-	str r0, [r1]\n\
-	adds r0, r6, #0\n\
-	bl PaintEntityWhite\n\
-	strb r4, [r5, #0x11]\n\
-	b _080C80E4\n\
-_080C80C4:\n\
-	adds r1, r6, #0\n\
-	adds r1, #0x8c\n\
-	ldr r0, [r1]\n\
-	movs r2, #2\n\
-	rsbs r2, r2, #0\n\
-	ands r0, r2\n\
-	str r0, [r1]\n\
-	adds r1, #4\n\
-	ldr r0, [r1]\n\
-	ands r0, r2\n\
-	str r0, [r1]\n\
-	adds r0, r6, #0\n\
-	bl UpdateEntityPaletteID\n\
-	movs r0, #0\n\
-	strb r0, [r5, #0x11]\n\
-_080C80E4:\n\
-	ldrb r2, [r6, #0xc]\n\
-	cmp r2, #4\n\
-	bne _080C8102\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #0xfe\n\
-	ands r0, r1\n\
-	strb r0, [r5, #0xa]\n\
-	ldr r1, _080C8108 @ =gVFXFnTable\n\
-	ldrb r0, [r5, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	str r2, [r5, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #0x10]\n\
-	str r0, [r5, #0x14]\n\
-_080C8102:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080C8108: .4byte gVFXFnTable\n\
-   .syntax divided\n");
+static void FUN_080c8084(struct VFX* p) {
+  struct Entity* e = (p->s).unk_28;
+  if ((p->s).mode[2] == 0) {
+    (p->s).work[2] = 0;
+    (p->s).mode[2]++;
+  }
+  if (((p->s).work[2]++ & 3) > 1) {
+    *(u32*)((u8*)e + 0x8c) |= 1;
+    *(u32*)((u8*)e + 0x90) |= 1;
+    PaintEntityWhite(e);
+    (p->s).work[1] = 1;
+  } else {
+    *(u32*)((u8*)e + 0x8c) &= ~1;
+    *(u32*)((u8*)e + 0x90) &= ~1;
+    UpdateEntityPaletteID(e);
+    (p->s).work[1] = 0;
+  }
+  if (e->mode[0] == ENTITY_EXIT) {
+    (p->s).flags &= ~DISPLAY;
+    SET_VFX_ROUTINE(p, ENTITY_EXIT);
+  }
 }
 
 static void FUN_080c810c(struct VFX* p) { SET_VFX_ROUTINE(p, ENTITY_EXIT); }
