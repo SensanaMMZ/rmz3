@@ -3813,42 +3813,24 @@ _080F5A72:\n\
  .syntax divided\n");
 }
 
-NAKED void SortSubtank(struct Zero* z) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r4, r0, #0\n\
-	adds r2, r4, #0\n\
-	adds r2, #0xb4\n\
-	ldrb r3, [r2, #8]\n\
-	cmp r3, #0xff\n\
-	beq _080F5A98\n\
-	ldrb r0, [r2, #9]\n\
-	adds r1, r0, #0\n\
-	cmp r1, #0xff\n\
-	beq _080F5A98\n\
-	cmp r3, r1\n\
-	bhs _080F5A98\n\
-	adds r1, r3, #0\n\
-	strb r0, [r2, #8]\n\
-	strb r1, [r2, #9]\n\
-_080F5A98:\n\
-	adds r0, r4, #0\n\
-	adds r0, #0xb4\n\
-	ldrb r2, [r0, #0xa]\n\
-	cmp r2, #0xff\n\
-	beq _080F5AB4\n\
-	ldrb r3, [r0, #0xb]\n\
-	adds r1, r3, #0\n\
-	cmp r1, #0xff\n\
-	beq _080F5AB4\n\
-	cmp r2, r1\n\
-	bhs _080F5AB4\n\
-	adds r1, r2, #0\n\
-	strb r3, [r0, #0xa]\n\
-	strb r1, [r0, #0xb]\n\
-_080F5AB4:\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+void SortSubtank(struct Zero* z) {
+  u8 t;
+  {
+    struct ZeroAsset* a = &(z->unk_b4.status).asset;
+    if (a->subtankHP[0] != 0xFF && a->subtankHP[1] != 0xFF &&
+        a->subtankHP[0] < a->subtankHP[1]) {
+      t = a->subtankHP[0];
+      a->subtankHP[0] = a->subtankHP[1];
+      a->subtankHP[1] = t;
+    }
+  }
+  {
+    struct ZeroAsset* a = &(z->unk_b4.status).asset;
+    if (a->subtankHP[2] != 0xFF && a->subtankHP[3] != 0xFF &&
+        a->subtankHP[2] < a->subtankHP[3]) {
+      t = a->subtankHP[2];
+      a->subtankHP[2] = a->subtankHP[3];
+      a->subtankHP[3] = t;
+    }
+  }
 }
