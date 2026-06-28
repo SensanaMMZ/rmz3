@@ -95,76 +95,20 @@ static void Ghost78_Die(struct VFX* p) {
 
 // --------------------------------------------
 
-NAKED static void FUN_080c8938(struct VFX* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r4, r0, #0\n\
-	ldr r1, _080C89C0 @ =gVFXFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #1\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #4]\n\
-	str r0, [r4, #0x14]\n\
-	adds r0, r4, #0\n\
-	bl InitNonAffineMotion\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #1\n\
-	orrs r0, r1\n\
-	movs r1, #2\n\
-	orrs r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	ldr r1, _080C89C4 @ =0x0000EA03\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	movs r5, #0\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	strb r5, [r0]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	movs r0, #0x3c\n\
-	strb r0, [r4, #0x12]\n\
-	ldr r1, [r4, #0x54]\n\
-	movs r0, #0x80\n\
-	lsls r0, r0, #5\n\
-	adds r1, r1, r0\n\
-	str r1, [r4, #0x54]\n\
-	ldr r0, [r4, #0x58]\n\
-	movs r2, #0xe8\n\
-	lsls r2, r2, #5\n\
-	adds r0, r0, r2\n\
-	str r0, [r4, #0x58]\n\
-	movs r0, #0xd0\n\
-	lsls r0, r0, #8\n\
-	subs r0, r0, r1\n\
-	movs r1, #0x3c\n\
-	bl __divsi3\n\
-	str r0, [r4, #0x5c]\n\
-	str r5, [r4, #0x60]\n\
-	movs r0, #4\n\
-	rsbs r0, r0, #0\n\
-	str r0, [r4, #0x68]\n\
-	adds r0, r4, #0\n\
-	bl Ghost78_Update\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080C89C0: .4byte gVFXFnTable\n\
-_080C89C4: .4byte 0x0000EA03\n\
- .syntax divided\n");
+static void FUN_080c8938(struct VFX* p) {
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(SM234_UNK, 3));
+  SET_XFLIP(p, FALSE);
+  (p->s).work[2] = 0x3c;
+  (p->s).coord.x += 0x1000;
+  (p->s).coord.y += 0x1d00;
+  (p->s).d.x = (0xD000 - (p->s).coord.x) / 0x3c;
+  (p->s).d.y = 0;
+  (p->s).unk_coord.y = -4;
+  Ghost78_Update(p);
 }
 
 NAKED static void FUN_080c89c8(struct VFX* p) {
