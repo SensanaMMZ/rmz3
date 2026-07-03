@@ -110,61 +110,31 @@ _080EA71A:\n\
  .syntax divided\n");
 }
 
-NAKED void PrintOptionMessage1(TextID t) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	lsls r0, r0, #0x10\n\
-	ldr r4, _080EA760 @ =gTextWindow+8\n\
-	ldr r3, _080EA764 @ =gTextTable\n\
-	lsrs r2, r0, #0x18\n\
-	lsls r2, r2, #2\n\
-	adds r3, r2, r3\n\
-	ldr r1, _080EA768 @ =gTextOffsetTable\n\
-	adds r2, r2, r1\n\
-	movs r1, #0xff\n\
-	lsls r1, r1, #0x10\n\
-	ands r1, r0\n\
-	ldr r0, [r2]\n\
-	lsrs r1, r1, #0xf\n\
-	adds r1, r1, r0\n\
-	ldrh r1, [r1]\n\
-	ldr r0, [r3]\n\
-	adds r1, r0, r1\n\
-	str r1, [r4, #0x18]\n\
-	movs r5, #1\n\
-	str r5, [r4, #8]\n\
-	ldrb r0, [r4, #0xc]\n\
-	cmp r0, #1\n\
-	bne _080EA76C\n\
-	str r1, [r4, #0x20]\n\
-	strh r5, [r4, #2]\n\
-	movs r0, #5\n\
-	strb r0, [r4, #0xd]\n\
-	b _080EA786\n\
-	.align 2, 0\n\
-_080EA760: .4byte gTextWindow+8\n\
-_080EA764: .4byte gTextTable\n\
-_080EA768: .4byte gTextOffsetTable\n\
-_080EA76C:\n\
-	adds r0, r4, #0\n\
-	bl resetTextWindow\n\
-	adds r0, r4, #0\n\
-	bl setupTextWindow\n\
-	ldrb r0, [r4, #4]\n\
-	cmp r0, #0\n\
-	beq _080EA782\n\
-	str r5, [r4, #0xc]\n\
-	b _080EA786\n\
-_080EA782:\n\
-	movs r0, #2\n\
-	str r0, [r4, #0xc]\n\
-_080EA786:\n\
-	movs r0, #1\n\
-	strh r0, [r4]\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+void PrintOptionMessage1(TextID t) {
+  u16 ofs;
+  char_t* s;
+  struct TextWindowText* tw = &gTextWindow.text;
+  char_t** table = (char_t**)gTextTable;
+  table = &table[t >> 8];
+  ofs = gTextOffsetTable[t >> 8][t & 0xFF];
+  s = &((*table)[ofs]);
+
+  tw->start = s;
+  tw->textType = 1;
+  if (tw->props.kind == 1) {
+    tw->next = s;
+    tw->mode = 1;
+    tw->props.phase = 5;
+  } else {
+    resetTextWindow(tw);
+    setupTextWindow(tw);
+    if (tw->mugshot != 0) {
+      *(u32*)&tw->props = 1;
+    } else {
+      *(u32*)&tw->props = 2;
+    }
+  }
+  tw->flag = 1;
 }
 
 void PrintOptionMessage2(TextID n) {
