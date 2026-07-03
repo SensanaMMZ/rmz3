@@ -2,6 +2,7 @@
 #include "entity.h"
 #include "global.h"
 #include "solid.h"
+#include "zero.h"
 
 // SubArcadia's platform
 
@@ -26,60 +27,28 @@ const SolidRoutine gSubArcadiaPlatformRoutine = {
 // ------------------------------------------------------------------------------------------------------------------------------------
 
 // 0x080cf098
-NAKED static void onCollision(struct Body* body, struct Coord* c1, struct Coord* c2) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r3, r0, #0\n\
-	ldr r0, [r3, #0xc]\n\
-	ldr r4, [r0, #0x2c]\n\
-	ldr r2, [r3, #0x2c]\n\
-	ldr r0, [r3, #0x14]\n\
-	movs r1, #4\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080CF0CE\n\
-	movs r0, #8\n\
-	ldrsb r0, [r4, r0]\n\
-	cmp r0, #0\n\
-	bne _080CF0CE\n\
-	ldr r0, _080CF0F4 @ =pZero2\n\
-	ldr r0, [r0]\n\
-	ldr r1, [r0, #0x58]\n\
-	ldr r0, [r2, #0x58]\n\
-	cmp r1, r0\n\
-	bgt _080CF0CE\n\
-	movs r1, #1\n\
-	strb r1, [r2, #0x12]\n\
-	ldrb r0, [r2, #0xd]\n\
-	cmp r0, #0\n\
-	bne _080CF0CE\n\
-	strb r1, [r2, #0xd]\n\
-	strb r0, [r2, #0xe]\n\
-_080CF0CE:\n\
-	ldr r0, [r3, #0x14]\n\
-	movs r1, #0x20\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080CF0EE\n\
-	ldrh r1, [r4, #8]\n\
-	ldr r0, _080CF0F8 @ =0x00001106\n\
-	cmp r1, r0\n\
-	bne _080CF0EE\n\
-	ldrb r0, [r2, #0xd]\n\
-	cmp r0, #1\n\
-	bne _080CF0EE\n\
-	movs r1, #0\n\
-	movs r0, #2\n\
-	strb r0, [r2, #0xd]\n\
-	strb r1, [r2, #0xe]\n\
-_080CF0EE:\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080CF0F4: .4byte pZero2\n\
-_080CF0F8: .4byte 0x00001106\n\
- .syntax divided\n");
+static void onCollision(struct Body* body, struct Coord* c1 UNUSED, struct Coord* c2 UNUSED) {
+  Object* attacker = body->enemy->parent;
+  Object* self = body->parent;
+  if (body->hitboxFlags & 4) {
+    if ((attacker->s).kind == 0) {
+      if ((pZero2->s).coord.y <= (self->s).coord.y) {
+        (self->s).work[2] = 1;
+        if ((self->s).mode[1] == 0) {
+          (self->s).mode[1] = 1;
+          (self->s).mode[2] = 0;
+        }
+      }
+    }
+  }
+  if (body->hitboxFlags & 0x20) {
+    if (*(u16*)&(attacker->s).kind == 0x1106) {
+      if ((self->s).mode[1] == 1) {
+        (self->s).mode[1] = 2;
+        (self->s).mode[2] = 0;
+      }
+    }
+  }
 }
 
 // --------------------------------------------
