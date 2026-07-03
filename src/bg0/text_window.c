@@ -47,67 +47,31 @@ void PrintNormalMessage(TextID n) {
   return;
 }
 
-NAKED void PrintTextWindow(TextID t, u16 kind) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	lsls r0, r0, #0x10\n\
-	lsrs r3, r0, #0x10\n\
-	lsls r1, r1, #0x10\n\
-	lsrs r6, r1, #0x10\n\
-	ldr r4, _080EA6EC @ =gTextWindow+8\n\
-	ldr r2, _080EA6F0 @ =gTextTable\n\
-	lsrs r0, r0, #0x18\n\
-	lsls r0, r0, #2\n\
-	adds r2, r0, r2\n\
-	ldr r1, _080EA6F4 @ =gTextOffsetTable\n\
-	adds r0, r0, r1\n\
-	movs r1, #0xff\n\
-	ands r1, r3\n\
-	ldr r0, [r0]\n\
-	lsls r1, r1, #1\n\
-	adds r1, r1, r0\n\
-	ldrh r1, [r1]\n\
-	ldr r0, [r2]\n\
-	adds r5, r0, r1\n\
-	movs r1, #0xff\n\
-	lsls r1, r1, #8\n\
-	ands r1, r3\n\
-	movs r0, #0x80\n\
-	lsls r0, r0, #1\n\
-	cmp r1, r0\n\
-	bne _080EA6FE\n\
-	cmp r3, r1\n\
-	bne _080EA6F8\n\
-	movs r0, #0x24\n\
-	bl PlaySound\n\
-	b _080EA6FE\n\
-	.align 2, 0\n\
-_080EA6EC: .4byte gTextWindow+8\n\
-_080EA6F0: .4byte gTextTable\n\
-_080EA6F4: .4byte gTextOffsetTable\n\
-_080EA6F8:\n\
-	movs r0, #6\n\
-	bl PlaySound\n\
-_080EA6FE:\n\
-	str r5, [r4, #0x18]\n\
-	str r6, [r4, #8]\n\
-	adds r0, r4, #0\n\
-	bl resetTextWindow\n\
-	adds r0, r4, #0\n\
-	bl setupTextWindow\n\
-	ldrb r0, [r4, #4]\n\
-	cmp r0, #0\n\
-	beq _080EA718\n\
-	movs r0, #1\n\
-	b _080EA71A\n\
-_080EA718:\n\
-	movs r0, #2\n\
-_080EA71A:\n\
-	str r0, [r4, #0xc]\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+void PrintTextWindow(TextID t, u16 kind) {
+  u16 ofs;
+  char_t* s;
+  struct TextWindowText* tw = &gTextWindow.text;
+  char_t** table = (char_t**)gTextTable;
+  table = &table[t >> 8];
+  ofs = gTextOffsetTable[t >> 8][t & 0xFF];
+  s = &((*table)[ofs]);
+
+  if ((t & 0xFF00) == 0x100) {
+    if (t == 0x100) {
+      PlaySound(SE_GAIN_DISK);
+    } else {
+      PlaySound(SE_NOTIFICATION);
+    }
+  }
+  tw->start = s;
+  tw->textType = kind;
+  resetTextWindow(tw);
+  setupTextWindow(tw);
+  if (tw->mugshot != 0) {
+    *(u32*)&tw->props = 1;
+  } else {
+    *(u32*)&tw->props = 2;
+  }
 }
 
 void PrintOptionMessage1(TextID t) {
