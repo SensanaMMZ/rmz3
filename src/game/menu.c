@@ -129,45 +129,13 @@ _080F3728: .4byte 0x00000402\n\
 }
 
 // 01 02 xx xx
-NAKED static void MenuLoop_Update(struct GameState* m) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r5, r0, #0\n\
-	ldr r0, _080F376C @ =0x00000E1D\n\
-	adds r4, r5, r0\n\
-	movs r0, #0\n\
-	strb r0, [r4]\n\
-	ldr r1, _080F3770 @ =sEachMenuLoops\n\
-	ldr r2, _080F3774 @ =0x00000E18\n\
-	adds r0, r5, r2\n\
-	ldrb r0, [r0]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	ldr r1, [r0]\n\
-	adds r0, r5, #0\n\
-	bl _call_via_r1\n\
-	ldrb r0, [r4]\n\
-	cmp r0, #0\n\
-	bne _080F3764\n\
-	ldr r0, _080F3778 @ =gJoypad\n\
-	ldrh r1, [r0, #4]\n\
-	movs r0, #8\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F3764\n\
-	movs r0, #3\n\
-	strb r0, [r5, #1]\n\
-	strb r0, [r5, #2]\n\
-_080F3764:\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F376C: .4byte 0x00000E1D\n\
-_080F3770: .4byte sEachMenuLoops\n\
-_080F3774: .4byte 0x00000E18\n\
-_080F3778: .4byte gJoypad\n\
- .syntax divided\n");
+static void MenuLoop_Update(struct GameState* g) {
+  MENU->unk_4e[3] = 0;
+  (sEachMenuLoops[MENU->unk_4c])(g);
+  if (MENU->unk_4e[3] == 0 && (gJoypad[0].pressed & START_BUTTON)) {
+    g->mode[1] = 3;
+    g->mode[2] = 3;
+  }
 }
 
 // 01 03 xx xx
