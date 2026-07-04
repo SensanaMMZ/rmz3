@@ -771,53 +771,22 @@ _080F3C8C: .4byte sEachMenuLoops\n\
  * @param x Start X Tile
  * @param y Start Y Tile
  */
-NAKED void CopyBgMap(u16* dst, struct BgMapHeader* src, u8 x, u8 y) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	mov ip, r0\n\
-	adds r4, r1, #0\n\
-	lsls r2, r2, #0x18\n\
-	lsls r3, r3, #0x18\n\
-	ldrb r6, [r4, #4]\n\
-	ldrb r7, [r4, #6]\n\
-	adds r4, #8\n\
-	lsrs r3, r3, #0x12\n\
-	add r3, ip\n\
-	lsrs r2, r2, #0x17\n\
-	adds r3, r3, r2\n\
-	mov ip, r3\n\
-	movs r1, #0\n\
-	cmp r1, r7\n\
-	bhs _080F3CDA\n\
-_080F3CB0:\n\
-	lsls r0, r1, #6\n\
-	mov r2, ip\n\
-	adds r3, r2, r0\n\
-	movs r2, #0\n\
-	adds r5, r1, #1\n\
-	cmp r2, r6\n\
-	bhs _080F3CD2\n\
-_080F3CBE:\n\
-	lsls r0, r2, #1\n\
-	adds r0, r0, r3\n\
-	ldrh r1, [r4]\n\
-	strh r1, [r0]\n\
-	adds r4, #2\n\
-	adds r0, r2, #1\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r2, r0, #0x18\n\
-	cmp r2, r6\n\
-	blo _080F3CBE\n\
-_080F3CD2:\n\
-	lsls r0, r5, #0x18\n\
-	lsrs r1, r0, #0x18\n\
-	cmp r1, r7\n\
-	blo _080F3CB0\n\
-_080F3CDA:\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+NON_MATCH void CopyBgMap(u16* dst, struct BgMapHeader* src, u8 x, u8 y) {
+#if MODERN
+  u8 w = src->w;
+  u8 h = src->h;
+  const u16* data = (const u16*)(src + 1);
+  u16* base = dst + y * 32 + x;
+  u8 row, col;
+  for (row = 0; row < h; row++) {
+    u16* p = base + row * 32;
+    for (col = 0; col < w; col++) {
+      p[col] = *data++;
+    }
+  }
+#else
+  INCCODE("asm/wip/CopyBgMap.inc");
+#endif
 }
 
 void PrintNumber(u16 n, u8 x, u8 y) {

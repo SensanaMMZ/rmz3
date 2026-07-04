@@ -75,78 +75,28 @@ void FUN_080e9840(void) {
 /*
   毎フレーム、gTextPrinter の文字列を全て描画する
 */
-NAKED void PrintAllStrings(void) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	ldr r1, _080E98E4 @ =gTextPrinter\n\
-	movs r2, #0xb1\n\
-	lsls r2, r2, #3\n\
-	adds r0, r1, r2\n\
-	ldr r2, [r0]\n\
-	ldr r7, _080E98E8 @ =0x0000058C\n\
-	adds r1, r1, r7\n\
-	cmp r2, #0\n\
-	beq _080E9888\n\
-	ldr r3, [r1]\n\
-_080E987A:\n\
-	ldr r0, [r2]\n\
-	str r3, [r2]\n\
-	adds r3, r2, #0\n\
-	adds r2, r0, #0\n\
-	cmp r2, #0\n\
-	bne _080E987A\n\
-	str r3, [r1]\n\
-_080E9888:\n\
-	ldr r3, _080E98E4 @ =gTextPrinter\n\
-	movs r1, #0xb1\n\
-	lsls r1, r1, #3\n\
-	adds r0, r3, r1\n\
-	movs r1, #0\n\
-	str r1, [r0]\n\
-	movs r5, #0\n\
-	movs r2, #4\n\
-	ldrsh r0, [r3, r2]\n\
-	cmp r5, r0\n\
-	bge _080E98D6\n\
-	adds r6, r3, #0\n\
-_080E98A0:\n\
-	movs r7, #0xc4\n\
-	lsls r7, r7, #1\n\
-	adds r0, r6, r7\n\
-	adds r0, r5, r0\n\
-	ldrb r0, [r0]\n\
-	movs r2, #0xf4\n\
-	lsls r2, r2, #1\n\
-	adds r1, r6, r2\n\
-	adds r1, r5, r1\n\
-	ldrb r1, [r1]\n\
-	lsls r2, r5, #2\n\
-	adds r3, r6, #0\n\
-	adds r3, #8\n\
-	adds r2, r2, r3\n\
-	ldr r2, [r2]\n\
-	lsls r3, r5, #1\n\
-	adds r7, #0xc0\n\
-	adds r4, r6, r7\n\
-	adds r3, r3, r4\n\
-	ldrh r3, [r3]\n\
-	bl printStringWithLen\n\
-	adds r5, #1\n\
-	movs r1, #4\n\
-	ldrsh r0, [r6, r1]\n\
-	cmp r5, r0\n\
-	blt _080E98A0\n\
-_080E98D6:\n\
-	ldr r1, _080E98E4 @ =gTextPrinter\n\
-	movs r0, #0\n\
-	strh r0, [r1, #4]\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080E98E4: .4byte gTextPrinter\n\
-_080E98E8: .4byte 0x0000058C\n\
- .syntax divided\n");
+NON_MATCH void PrintAllStrings(void) {
+#if MODERN
+  s32 i;
+  struct CharTile* node = gTextPrinter.cur;
+  if (node != NULL) {
+    struct CharTile* prev = gTextPrinter.used;
+    do {
+      struct CharTile* next = node->next;
+      node->next = prev;
+      prev = node;
+      node = next;
+    } while (node != NULL);
+    gTextPrinter.used = prev;
+  }
+  gTextPrinter.cur = NULL;
+  for (i = 0; i < gTextPrinter.len; i++) {
+    printStringWithLen(gTextPrinter.x[i], gTextPrinter.y[i], gTextPrinter.strings[i],
+                       gTextPrinter.progress[i]);
+  }
+#else
+  INCCODE("asm/wip/PrintAllStrings.inc");
+#endif
 }
 
 NAKED void FUN_080e98ec(void) {
