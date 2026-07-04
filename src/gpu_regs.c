@@ -59,61 +59,23 @@ NON_MATCH void LoadBgMap(u8 bg16, const u32* tbl, u8 idx, s8 x, s8 y) {
  * @brief BgMapOffsets[n] を(x*8, y*8)にくるようにdst(BGMap)にロード
  * @note 0x08004248
  */
-NAKED void loadBgMap_08004248(u16* dst, const u32* tbl, s32 idx, u8 x, s32 y) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	mov r7, sb\n\
-	mov r6, r8\n\
-	push {r6, r7}\n\
-	ldr r4, [sp, #0x1c]\n\
-	lsls r2, r2, #0x18\n\
-	lsls r4, r4, #0x18\n\
-	asrs r4, r4, #0x13\n\
-	lsls r3, r3, #0x18\n\
-	asrs r3, r3, #0x18\n\
-	adds r4, r4, r3\n\
-	lsls r4, r4, #1\n\
-	adds r7, r0, r4\n\
-	lsrs r2, r2, #0x16\n\
-	adds r0, r2, r1\n\
-	ldr r0, [r0]\n\
-	adds r1, r1, r0\n\
-	adds r1, r1, r2\n\
-	ldrh r0, [r1, #4]\n\
-	ldrh r4, [r1, #6]\n\
-	adds r5, r1, #0\n\
-	adds r5, #8\n\
-	cmp r4, #0\n\
-	beq _0800429E\n\
-	lsls r6, r0, #1\n\
-	lsrs r0, r6, #1\n\
-	mov r8, r0\n\
-	ldr r3, _080042AC @ =0x001FFFFF\n\
-	mov sb, r3\n\
-_08004282:\n\
-	adds r0, r5, #0\n\
-	adds r1, r7, #0\n\
-	mov r2, r8\n\
-	mov r3, sb\n\
-	ands r2, r3\n\
-	bl CpuSet\n\
-	subs r0, r4, #1\n\
-	lsls r0, r0, #0x10\n\
-	lsrs r4, r0, #0x10\n\
-	adds r5, r5, r6\n\
-	adds r7, #0x40\n\
-	cmp r4, #0\n\
-	bne _08004282\n\
-_0800429E:\n\
-	pop {r3, r4}\n\
-	mov r8, r3\n\
-	mov sb, r4\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080042AC: .4byte 0x001FFFFF\n\
-	 .syntax divided\n");
+NON_MATCH void loadBgMap_08004248(u16* dst, const u32* tbl, s32 idx, u8 x, s32 y) {
+#if MODERN
+  u16* d = &dst[((s8)y * 32) + (s8)x];
+  struct BgMapHeader* hdr = (struct BgMapHeader*)SELF_REL_PTR(&tbl[(u8)idx]);
+  u32 w = hdr->w * 2;
+  u16 row = hdr->h;
+  u16* src = (u16*)&hdr[1];
+
+  while (row != 0) {
+    CpuCopy16(src, d, w);
+    row--;
+    src += (w / 2);
+    d += 32;
+  }
+#else
+  INCCODE("asm/wip/loadBgMap_08004248.inc");
+#endif
 }
 
 /**
