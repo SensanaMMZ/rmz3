@@ -377,55 +377,22 @@ _080F7CE4: .4byte 0x000003B6\n\
  .syntax divided\n");
 }
 
-NAKED static void ExMenuLoop_SlideOut(struct GameState* g) {
-  asm(".syntax unified\n\
-	push {lr}\n\
-	adds r2, r0, #0\n\
-	ldr r1, _080F7D00 @ =0x00000E19\n\
-	adds r0, r2, r1\n\
-	ldrb r0, [r0]\n\
-	cmp r0, #2\n\
-	bne _080F7D08\n\
-	ldr r1, _080F7D04 @ =gVideoRegBuffer+16\n\
-	ldrh r0, [r1]\n\
-	adds r0, #0x10\n\
-	b _080F7D0E\n\
-	.align 2, 0\n\
-_080F7D00: .4byte 0x00000E19\n\
-_080F7D04: .4byte gVideoRegBuffer+16\n\
-_080F7D08:\n\
-	ldr r1, _080F7D3C @ =gVideoRegBuffer+16\n\
-	ldrh r0, [r1]\n\
-	subs r0, #0x10\n\
-_080F7D0E:\n\
-	strh r0, [r1]\n\
-	adds r3, r1, #0\n\
-	ldrh r0, [r3]\n\
-	ldr r1, _080F7D40 @ =0x000001FF\n\
-	ands r1, r0\n\
-	strh r1, [r3]\n\
-	movs r0, #0xff\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080F7D38\n\
-	ldr r3, _080F7D44 @ =0x00000E19\n\
-	adds r0, r2, r3\n\
-	ldrb r1, [r0]\n\
-	subs r3, #1\n\
-	adds r0, r2, r3\n\
-	strb r1, [r0]\n\
-	movs r0, #1\n\
-	strb r0, [r2, #2]\n\
-	adds r0, r2, #0\n\
-	bl ExMenuLoop_Exit\n\
-_080F7D38:\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F7D3C: .4byte gVideoRegBuffer+16\n\
-_080F7D40: .4byte 0x000001FF\n\
-_080F7D44: .4byte 0x00000E19\n\
- .syntax divided\n");
+NON_MATCH static void ExMenuLoop_SlideOut(struct GameState* g) {
+#if MODERN
+  if (MENU->unk_4d == 2) {
+    gVideoRegBuffer.bgofs[1][0] += 0x10;
+  } else {
+    gVideoRegBuffer.bgofs[1][0] -= 0x10;
+  }
+  gVideoRegBuffer.bgofs[1][0] &= 0x1FF;
+  if ((gVideoRegBuffer.bgofs[1][0] & 0xFF) == 0) {
+    MENU->unk_4c = MENU->unk_4d;
+    g->mode[2] = 1;
+    ExMenuLoop_Exit(g);
+  }
+#else
+  INCCODE("asm/wip/ExMenuLoop_SlideOut.inc");
+#endif
 }
 
 static void ExMenuLoop_Exit(struct GameState* g) {
