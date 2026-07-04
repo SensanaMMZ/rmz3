@@ -69,63 +69,24 @@ static void MenuLoop_InitMenu(struct GameState* g) {
 }
 
 // 01 01 xx xx
-NAKED static void MenuLoop_OpenMenu(struct GameState* m) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r4, r0, #0\n\
-	ldrh r0, [r4, #4]\n\
-	adds r0, #1\n\
-	adds r1, r0, #0\n\
-	strh r0, [r4, #4]\n\
-	lsls r0, r0, #0x10\n\
-	asrs r0, r0, #0x10\n\
-	cmp r0, #0xf\n\
-	ble _080F36FC\n\
-	ldr r1, _080F36F0 @ =gPaletteManager\n\
-	ldr r2, _080F36F4 @ =0x00000402\n\
-	adds r0, r1, r2\n\
-	movs r2, #0x20\n\
-	strb r2, [r0]\n\
-	ldr r3, _080F36F8 @ =0x00000401\n\
-	adds r0, r1, r3\n\
-	strb r2, [r0]\n\
-	movs r0, #0x80\n\
-	lsls r0, r0, #3\n\
-	adds r1, r1, r0\n\
-	strb r2, [r1]\n\
-	movs r0, #2\n\
-	strb r0, [r4, #1]\n\
-	adds r0, r4, #0\n\
-	bl MenuLoop_Update\n\
-	b _080F3716\n\
-	.align 2, 0\n\
-_080F36F0: .4byte gPaletteManager\n\
-_080F36F4: .4byte 0x00000402\n\
-_080F36F8: .4byte 0x00000401\n\
-_080F36FC:\n\
-	ldr r2, _080F3724 @ =gPaletteManager\n\
-	ldr r3, _080F3728 @ =0x00000402\n\
-	adds r0, r2, r3\n\
-	strb r1, [r0]\n\
-	movs r0, #0xff\n\
-	ands r0, r1\n\
-	subs r3, #1\n\
-	adds r1, r2, r3\n\
-	strb r0, [r1]\n\
-	movs r1, #0x80\n\
-	lsls r1, r1, #3\n\
-	adds r2, r2, r1\n\
-	strb r0, [r2]\n\
-_080F3716:\n\
-	adds r0, r4, #0\n\
-	bl menu_080f39a8\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F3724: .4byte gPaletteManager\n\
-_080F3728: .4byte 0x00000402\n\
- .syntax divided\n");
+NON_MATCH static void MenuLoop_OpenMenu(struct GameState* m) {
+#if MODERN
+  m->frames++;
+  if (m->frames > 0xF) {
+    gPaletteManager.filter[2] = 0x20;
+    gPaletteManager.filter[1] = 0x20;
+    gPaletteManager.filter[0] = 0x20;
+    m->mode[1] = 2;
+    MenuLoop_Update(m);
+  } else {
+    gPaletteManager.filter[2] = m->frames;
+    gPaletteManager.filter[1] = m->frames;
+    gPaletteManager.filter[0] = m->frames;
+  }
+  menu_080f39a8(m);
+#else
+  INCCODE("asm/wip/MenuLoop_OpenMenu.inc");
+#endif
 }
 
 // 01 02 xx xx
@@ -139,60 +100,23 @@ static void MenuLoop_Update(struct GameState* g) {
 }
 
 // 01 03 xx xx
-NAKED static void MenuLoop_BlackOut(struct GameState* m) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r2, r0, #0\n\
-	ldrh r0, [r2, #4]\n\
-	subs r0, #1\n\
-	movs r3, #0\n\
-	adds r1, r0, #0\n\
-	strh r0, [r2, #4]\n\
-	lsls r0, r0, #0x10\n\
-	cmp r0, #0\n\
-	bne _080F37BC\n\
-	ldr r0, _080F37B4 @ =gPaletteManager\n\
-	ldr r4, _080F37B8 @ =0x00000402\n\
-	adds r1, r0, r4\n\
-	strb r3, [r1]\n\
-	subs r4, #1\n\
-	adds r1, r0, r4\n\
-	strb r3, [r1]\n\
-	movs r1, #0x80\n\
-	lsls r1, r1, #3\n\
-	adds r0, r0, r1\n\
-	strb r3, [r0]\n\
-	movs r0, #4\n\
-	strb r0, [r2, #1]\n\
-	adds r0, r2, #0\n\
-	bl MenuLoop_ExitMenu\n\
-	b _080F37D6\n\
-	.align 2, 0\n\
-_080F37B4: .4byte gPaletteManager\n\
-_080F37B8: .4byte 0x00000402\n\
-_080F37BC:\n\
-	ldr r2, _080F37DC @ =gPaletteManager\n\
-	ldr r3, _080F37E0 @ =0x00000402\n\
-	adds r0, r2, r3\n\
-	strb r1, [r0]\n\
-	movs r0, #0xff\n\
-	ands r0, r1\n\
-	ldr r4, _080F37E4 @ =0x00000401\n\
-	adds r1, r2, r4\n\
-	strb r0, [r1]\n\
-	movs r1, #0x80\n\
-	lsls r1, r1, #3\n\
-	adds r2, r2, r1\n\
-	strb r0, [r2]\n\
-_080F37D6:\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F37DC: .4byte gPaletteManager\n\
-_080F37E0: .4byte 0x00000402\n\
-_080F37E4: .4byte 0x00000401\n\
- .syntax divided\n");
+NON_MATCH static void MenuLoop_BlackOut(struct GameState* m) {
+#if MODERN
+  m->frames--;
+  if (m->frames == 0) {
+    gPaletteManager.filter[2] = 0;
+    gPaletteManager.filter[1] = 0;
+    gPaletteManager.filter[0] = 0;
+    m->mode[1] = 4;
+    MenuLoop_ExitMenu(m);
+  } else {
+    gPaletteManager.filter[2] = m->frames;
+    gPaletteManager.filter[1] = m->frames;
+    gPaletteManager.filter[0] = m->frames;
+  }
+#else
+  INCCODE("asm/wip/MenuLoop_BlackOut.inc");
+#endif
 }
 
 // --------------------------------------------
