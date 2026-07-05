@@ -1270,55 +1270,18 @@ _080F473E:\n\
 }
 
 // 01 02 02 xx
-NAKED static void MainMenuLoop_SlideOut(struct GameState* m) {
-  asm(".syntax unified\n\
-	push {lr}\n\
-	adds r2, r0, #0\n\
-	ldr r1, _080F4764 @ =0x00000E19\n\
-	adds r0, r2, r1\n\
-	ldrb r0, [r0]\n\
-	cmp r0, #1\n\
-	bne _080F476C\n\
-	ldr r1, _080F4768 @ =gVideoRegBuffer+16\n\
-	ldrh r0, [r1]\n\
-	adds r0, #0x10\n\
-	b _080F4772\n\
-	.align 2, 0\n\
-_080F4764: .4byte 0x00000E19\n\
-_080F4768: .4byte gVideoRegBuffer+16\n\
-_080F476C:\n\
-	ldr r1, _080F47A0 @ =gVideoRegBuffer+16\n\
-	ldrh r0, [r1]\n\
-	subs r0, #0x10\n\
-_080F4772:\n\
-	strh r0, [r1]\n\
-	adds r3, r1, #0\n\
-	ldrh r0, [r3]\n\
-	ldr r1, _080F47A4 @ =0x000001FF\n\
-	ands r1, r0\n\
-	strh r1, [r3]\n\
-	movs r0, #0xff\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080F479C\n\
-	ldr r3, _080F47A8 @ =0x00000E19\n\
-	adds r0, r2, r3\n\
-	ldrb r1, [r0]\n\
-	subs r3, #1\n\
-	adds r0, r2, r3\n\
-	strb r1, [r0]\n\
-	movs r0, #1\n\
-	strb r0, [r2, #2]\n\
-	adds r0, r2, #0\n\
-	bl MainMenuLoop_Exit\n\
-_080F479C:\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F47A0: .4byte gVideoRegBuffer+16\n\
-_080F47A4: .4byte 0x000001FF\n\
-_080F47A8: .4byte 0x00000E19\n\
- .syntax divided\n");
+static void MainMenuLoop_SlideOut(struct GameState* g) {
+  if (MENU->unk_4d == 1) {
+    (*(u16*)((u8*)&gVideoRegBuffer + 16)) += 0x10;
+  } else {
+    (*(u16*)((u8*)&gVideoRegBuffer + 16)) -= 0x10;
+  }
+  (*(u16*)((u8*)&gVideoRegBuffer + 16)) &= 0x1FF;
+  if (((*(u16*)((u8*)&gVideoRegBuffer + 16)) & 0xFF) == 0) {
+    MENU->unk_4c = MENU->unk_4d;
+    g->mode[2] = 1;
+    MainMenuLoop_Exit(g);
+  }
 }
 
 // 01 02 03 xx
