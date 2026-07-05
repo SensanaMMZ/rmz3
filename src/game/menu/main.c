@@ -3,6 +3,7 @@
 #include "gfx.h"
 #include "global.h"
 #include "menu.h"
+#include "blink.h"
 
 // 08547280 のidx
 const u8 u8_ARRAY_08386378[16] = {
@@ -1321,31 +1322,16 @@ _080F47A8: .4byte 0x00000E19\n\
 }
 
 // 01 02 03 xx
-NAKED static void MainMenuLoop_Exit(struct GameState* m) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	ldr r1, _080F47D8 @ =0x00000DCC\n\
-	adds r4, r0, r1\n\
-	movs r0, #1\n\
-	strb r0, [r4, #4]\n\
-	ldrb r0, [r4, #3]\n\
-	cmp r0, #0xff\n\
-	beq _080F47C0\n\
-	bl ClearBlink\n\
-_080F47C0:\n\
-	ldrb r0, [r4, #0x11]\n\
-	cmp r0, #0\n\
-	beq _080F47CA\n\
-	bl ClearBlink\n\
-_080F47CA:\n\
-	movs r0, #4\n\
-	bl ClearBlink\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F47D8: .4byte 0x00000DCC\n\
- .syntax divided\n");
+static void MainMenuLoop_Exit(struct GameState* m) {
+  u8* s = (u8*)&m->sceneState;
+  s[4] = 1;
+  if (s[3] != 0xff) {
+    ClearBlink(s[3]);
+  }
+  if (s[0x11] != 0) {
+    ClearBlink(s[0x11]);
+  }
+  ClearBlink(4);
 }
 
 // --------------------------------------------
