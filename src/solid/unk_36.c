@@ -2,6 +2,8 @@
 #include "entity.h"
 #include "global.h"
 #include "solid.h"
+#include "overworld.h"
+#include "zero.h"
 #include "vfx.h"
 
 static const struct Rect sSize;
@@ -30,90 +32,33 @@ static void Solid36_Init(struct Solid* p) {
   Solid36_Update(p);
 }
 
-NAKED static void Solid36_Update(struct Solid* p) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r4, r0, #0\n\
-	ldrb r0, [r4, #0x10]\n\
-	lsls r1, r0, #1\n\
-	adds r1, r1, r0\n\
-	ldr r0, _080DC6F4 @ =gOverworld\n\
-	ldr r2, _080DC6F8 @ =0x0002D02C\n\
-	adds r0, r0, r2\n\
-	lsls r1, r1, #5\n\
-	ldrh r0, [r0]\n\
-	adds r1, r1, r0\n\
-	lsls r0, r1, #0x10\n\
-	lsrs r0, r0, #0x10\n\
-	movs r1, #0xc0\n\
-	lsls r1, r1, #1\n\
-	bl __umodsi3\n\
-	lsls r0, r0, #0x10\n\
-	lsrs r1, r0, #0x10\n\
-	cmp r1, #0xbf\n\
-	bhi _080DC700\n\
-	lsls r0, r1, #2\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #0xd\n\
-	movs r1, #0xc0\n\
-	bl __udivsi3\n\
-	ldr r1, _080DC6FC @ =0xFFFFB000\n\
-	adds r0, r0, r1\n\
-	ldr r1, [r4, #0x68]\n\
-	adds r1, r1, r0\n\
-	b _080DC716\n\
-	.align 2, 0\n\
-_080DC6F4: .4byte gOverworld\n\
-_080DC6F8: .4byte 0x0002D02C\n\
-_080DC6FC: .4byte 0xFFFFB000\n\
-_080DC700:\n\
-	subs r1, #0xc0\n\
-	lsls r0, r1, #2\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #0xd\n\
-	movs r1, #0xc0\n\
-	bl __udivsi3\n\
-	ldr r2, _080DC73C @ =0xFFFFB000\n\
-	adds r0, r0, r2\n\
-	ldr r1, [r4, #0x68]\n\
-	subs r1, r1, r0\n\
-_080DC716:\n\
-	str r1, [r4, #0x58]\n\
-	ldr r0, _080DC740 @ =pZero2\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #0x58]\n\
-	ldr r1, _080DC744 @ =0xFFFFF400\n\
-	adds r0, r0, r1\n\
-	ldr r1, [r4, #0x58]\n\
-	cmp r1, r0\n\
-	ble _080DC750\n\
-	ldrb r1, [r4, #0xb]\n\
-	movs r0, #8\n\
-	orrs r0, r1\n\
-	strb r0, [r4, #0xb]\n\
-	ldr r0, _080DC748 @ =0x083715FC\n\
-	str r0, [r4, #0x30]\n\
-	ldr r0, _080DC74C @ =0x0000A001\n\
-	strh r0, [r4, #0x26]\n\
-	b _080DC758\n\
-	.align 2, 0\n\
-_080DC73C: .4byte 0xFFFFB000\n\
-_080DC740: .4byte pZero2\n\
-_080DC744: .4byte 0xFFFFF400\n\
-_080DC748: .4byte sSize\n\
-_080DC74C: .4byte 0x0000A001\n\
-_080DC750:\n\
-	ldrb r1, [r4, #0xb]\n\
-	movs r0, #0xf7\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xb]\n\
-_080DC758:\n\
-	adds r0, r4, #0\n\
-	bl UpdateMotionGraphic\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// Vertically-oscillating platform: phase = work[0]*96 + stage frame counter,
+// wrapped to [0,0x180); a triangle wave drives coord.y around unk_coord.y with
+// amplitude ~PIXEL(80). Above pZero2 - PIXEL(12) the platform is solid (hazard),
+// otherwise Zero passes through. Matches except an r0/r1 register-allocation tie
+// in the phase computation (agbcc colors work[0]->r1, retail ->r0).
+NON_MATCH static void Solid36_Update(struct Solid* p) {
+#if MODERN
+  u32 tmp = ((p->s).work[0] * 3 << 5) + gOverworld.work.missileFactory.unk_004;
+  u16 val = (u32)(u16)tmp % 0x180;
+  if (val < 0xc0) {
+    s32 y = ((u32)val * 5 << 13) / 0xc0 - PIXEL(80);
+    (p->s).coord.y = (p->s).unk_coord.y + y;
+  } else {
+    s32 y = ((u32)(val - 0xc0) * 5 << 13) / 0xc0 - PIXEL(80);
+    (p->s).coord.y = (p->s).unk_coord.y - y;
+  }
+  if ((p->s).coord.y > (pZero2->s).coord.y - PIXEL(12)) {
+    (p->s).flags2 |= ENTITY_HAZARD;
+    (p->s).size = (struct Rect*)&sSize;
+    (p->s).hazardAttr = 0xA001;
+  } else {
+    (p->s).flags2 &= ~ENTITY_HAZARD;
+  }
+  UpdateMotionGraphic(&p->s);
+#else
+  INCCODE("asm/wip/Solid36_Update.inc");
+#endif
 }
 
 static void Solid36_Die(struct Solid* p) { return; }
