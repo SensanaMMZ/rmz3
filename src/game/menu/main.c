@@ -4,6 +4,7 @@
 #include "global.h"
 #include "menu.h"
 #include "blink.h"
+#include "zero.h"
 
 // 08547280 のidx
 const u8 u8_ARRAY_08386378[16] = {
@@ -49,6 +50,8 @@ static void MainMenuLoop_Init(struct GameState* p);
 static void MainMenuLoop_Update(struct GameState* p);
 static void MainMenuLoop_SlideOut(struct GameState* p);
 static void MainMenuLoop_Exit(struct GameState* p);
+void menu_080f54a0(struct GameState* g);
+void printMainMenuString(struct GameState* g);
 
 // 01 02 xx xx (BYTE[0x02031978] = 0)
 static const MenuLoopFunc sMainManuLoops[4] = {
@@ -1167,106 +1170,53 @@ _080F4670: .4byte gVideoRegBuffer+6\n\
 }
 
 // 01 02 01 xx
-NAKED static void MainMenuLoop_Update(struct GameState* m) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	adds r6, r0, #0\n\
-	ldr r1, _080F4710 @ =0x000064AC\n\
-	adds r0, r6, r1\n\
-	ldr r7, [r0]\n\
-	ldr r1, _080F4714 @ =gMainMenuFocusLoops\n\
-	ldrb r0, [r6, #3]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	ldr r1, [r0]\n\
-	adds r0, r6, #0\n\
-	bl _call_via_r1\n\
-	ldr r0, _080F4718 @ =0x00000DCC\n\
-	adds r4, r6, r0\n\
-	ldrb r1, [r4, #0xf]\n\
-	movs r0, #0x38\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F46A2\n\
-	adds r0, r6, #0\n\
-	bl menu_080f54a0\n\
-_080F46A2:\n\
-	movs r0, #4\n\
-	bl UpdateBlinkMotionState\n\
-	ldrb r2, [r4, #0x10]\n\
-	adds r1, r2, #0\n\
-	cmp r1, #5\n\
-	bhi _080F473E\n\
-	ldrb r0, [r4, #0x11]\n\
-	cmp r0, #0\n\
-	bne _080F46D4\n\
-	adds r0, r7, #0\n\
-	adds r0, #0xb4\n\
-	ldrb r0, [r0, #0x10]\n\
-	cmp r1, r0\n\
-	beq _080F46CE\n\
-	adds r0, r2, #0\n\
-	adds r0, #0xab\n\
-	strb r0, [r4, #0x11]\n\
-	ldrb r0, [r4, #0x11]\n\
-	movs r1, #0\n\
-	bl LoadBlink\n\
-_080F46CE:\n\
-	ldrb r0, [r4, #0x11]\n\
-	cmp r0, #0\n\
-	beq _080F473E\n\
-_080F46D4:\n\
-	ldr r1, _080F4718 @ =0x00000DCC\n\
-	adds r5, r6, r1\n\
-	ldrb r0, [r5, #0x11]\n\
-	bl UpdateBlinkMotionState\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r0, #3\n\
-	bne _080F473E\n\
-	ldrb r0, [r5, #0x11]\n\
-	bl ClearBlink\n\
-	ldrb r0, [r5, #0x11]\n\
-	cmp r0, #0xb2\n\
-	bhi _080F471C\n\
-	adds r0, r7, #0\n\
-	adds r0, #0xb4\n\
-	ldrb r0, [r0, #0x10]\n\
-	strb r0, [r5, #0x10]\n\
-	adds r0, #0xb3\n\
-	strb r0, [r5, #0x11]\n\
-	ldrb r0, [r5, #0x11]\n\
-	movs r1, #0\n\
-	bl LoadBlink\n\
-	ldrb r0, [r5, #0x11]\n\
-	bl UpdateBlinkMotionState\n\
-	b _080F473E\n\
-	.align 2, 0\n\
-_080F4710: .4byte 0x000064AC\n\
-_080F4714: .4byte gMainMenuFocusLoops\n\
-_080F4718: .4byte 0x00000DCC\n\
-_080F471C:\n\
-	adds r0, r7, #0\n\
-	adds r0, #0xb4\n\
-	ldrb r0, [r0, #0x10]\n\
-	adds r0, #0xab\n\
-	movs r4, #0\n\
-	strb r0, [r5, #0x11]\n\
-	ldrb r0, [r5, #0x11]\n\
-	movs r1, #0\n\
-	bl LoadBlink\n\
-	ldrb r0, [r5, #0x11]\n\
-	bl UpdateBlinkMotionState\n\
-	ldrb r0, [r5, #0x11]\n\
-	bl ClearBlink\n\
-	strb r4, [r5, #0x11]\n\
-_080F473E:\n\
-	adds r0, r6, #0\n\
-	bl printMainMenuString\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// Main-menu cursor-focus blink state machine: dispatch to the per-tab focus
+// loop, then drive the cursor blink toward the equipped body slot (BODY(z)) —
+// start a blink when the shown slot differs, and on blink-complete (state 3)
+// either commit the new slot or reset. Matches except a register-allocation
+// tie: retail computes the sceneState base twice (r4 for the guard, r5 for the
+// blink-update), agbcc-from-clean-C keeps one base (1 instr shorter).
+NON_MATCH static void MainMenuLoop_Update(struct GameState* m) {
+#if MODERN
+  struct Zero* z = *(struct Zero**)((u8*)m + 0x64AC);
+  u8* s;
+  gMainMenuFocusLoops[m->mode[3]](m);
+  s = (u8*)&m->sceneState;
+  if ((s[0xf] & 0x38) != 0) {
+    menu_080f54a0(m);
+  }
+  UpdateBlinkMotionState(4);
+  if (s[0x10] <= 5) {
+    if (s[0x11] == 0) {
+      if (s[0x10] != BODY(z)) {
+        s[0x11] = s[0x10] + 0xab;
+        LoadBlink(s[0x11], 0);
+      }
+      if (s[0x11] == 0) {
+        goto done;
+      }
+    }
+    if ((u8)UpdateBlinkMotionState(s[0x11]) == 3) {
+      ClearBlink(s[0x11]);
+      if (s[0x11] <= 0xb2) {
+        s[0x10] = BODY(z);
+        s[0x11] = BODY(z) + 0xb3;
+        LoadBlink(s[0x11], 0);
+        UpdateBlinkMotionState(s[0x11]);
+      } else {
+        s[0x11] = BODY(z) + 0xab;
+        LoadBlink(s[0x11], 0);
+        UpdateBlinkMotionState(s[0x11]);
+        ClearBlink(s[0x11]);
+        s[0x11] = 0;
+      }
+    }
+  }
+done:
+  printMainMenuString(m);
+#else
+  INCCODE("asm/wip/MainMenuLoop_Update.inc");
+#endif
 }
 
 // 01 02 02 xx
