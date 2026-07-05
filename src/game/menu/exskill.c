@@ -377,22 +377,18 @@ _080F7CE4: .4byte 0x000003B6\n\
  .syntax divided\n");
 }
 
-NON_MATCH static void ExMenuLoop_SlideOut(struct GameState* g) {
-#if MODERN
+static void ExMenuLoop_SlideOut(struct GameState* g) {
   if (MENU->unk_4d == 2) {
-    gVideoRegBuffer.bgofs[1][0] += 0x10;
+    (*(u16*)((u8*)&gVideoRegBuffer + 16)) += 0x10;
   } else {
-    gVideoRegBuffer.bgofs[1][0] -= 0x10;
+    (*(u16*)((u8*)&gVideoRegBuffer + 16)) -= 0x10;
   }
-  gVideoRegBuffer.bgofs[1][0] &= 0x1FF;
-  if ((gVideoRegBuffer.bgofs[1][0] & 0xFF) == 0) {
+  (*(u16*)((u8*)&gVideoRegBuffer + 16)) &= 0x1FF;
+  if (((*(u16*)((u8*)&gVideoRegBuffer + 16)) & 0xFF) == 0) {
     MENU->unk_4c = MENU->unk_4d;
     g->mode[2] = 1;
     ExMenuLoop_Exit(g);
   }
-#else
-  INCCODE("asm/wip/ExMenuLoop_SlideOut.inc");
-#endif
 }
 
 static void ExMenuLoop_Exit(struct GameState* g) {
