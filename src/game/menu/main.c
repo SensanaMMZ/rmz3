@@ -2900,59 +2900,35 @@ _080F5438: .4byte 0x00000E1D\n\
  .syntax divided\n");
 }
 
-NAKED static void MainMenuFocusLoop_Escape(struct GameState* g) {
-  asm(".syntax unified\n\
-	push {lr}\n\
-	adds r3, r0, #0\n\
-	ldr r0, _080F5450 @ =0x00000E17\n\
-	adds r2, r3, r0\n\
-	ldrb r1, [r2]\n\
-	cmp r1, #0\n\
-	beq _080F5454\n\
-	cmp r1, #1\n\
-	beq _080F545A\n\
-	b _080F549C\n\
-	.align 2, 0\n\
-_080F5450: .4byte 0x00000E17\n\
-_080F5454:\n\
-	movs r0, #1\n\
-	strb r0, [r2]\n\
-	b _080F549C\n\
-_080F545A:\n\
-	ldr r0, _080F5480 @ =gJoypad\n\
-	ldrh r2, [r0, #4]\n\
-	ands r1, r2\n\
-	cmp r1, #0\n\
-	beq _080F548C\n\
-	ldr r2, _080F5484 @ =gStageRun\n\
-	ldrh r1, [r2, #8]\n\
-	ldr r0, _080F5488 @ =0x0000FFFE\n\
-	ands r0, r1\n\
-	movs r1, #0x20\n\
-	orrs r0, r1\n\
-	strh r0, [r2, #8]\n\
-	movs r0, #3\n\
-	strb r0, [r3, #1]\n\
-	strb r0, [r3, #2]\n\
-	movs r0, #2\n\
-	bl PlaySound\n\
-	b _080F549C\n\
-	.align 2, 0\n\
-_080F5480: .4byte gJoypad\n\
-_080F5484: .4byte gStageRun\n\
-_080F5488: .4byte 0x0000FFFE\n\
-_080F548C:\n\
-	movs r0, #2\n\
-	ands r0, r2\n\
-	cmp r0, #0\n\
-	beq _080F549C\n\
-	strb r1, [r3, #3]\n\
-	movs r0, #3\n\
-	bl PlaySound\n\
-_080F549C:\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// Escape (quit-to-title) menu focus loop. State unk_4b: 0 arms the prompt (->1);
+// 1 waits for input — A (unk_4b & pressed, since unk_4b==1==A_BUTTON) confirms
+// (set missionStatus quit bit 0x20, mode[1]=mode[2]=3, SE 2), B cancels
+// (mode[3]=0, SE 3). Matches structurally but retail keeps g in scratch r3 with
+// a redundant-load layout that clean C either CSEs (2 instr shorter) or trades
+// for a callee-saved reg — a register/CSE tie.
+NON_MATCH static void MainMenuFocusLoop_Escape(struct GameState* g) {
+#if MODERN
+  s32 x = MENU->unk_4b;
+  switch (x) {
+    case 0:
+      MENU->unk_4b = 1;
+      break;
+    case 1:
+      x &= gJoypad[0].pressed;
+      if (x) {
+        gStageRun.missionStatus = (gStageRun.missionStatus & 0xFFFE) | 0x20;
+        g->mode[1] = 3;
+        g->mode[2] = 3;
+        PlaySound(2);
+      } else if (gJoypad[0].pressed & B_BUTTON) {
+        g->mode[3] = x;
+        PlaySound(3);
+      }
+      break;
+  }
+#else
+  INCCODE("asm/wip/MainMenuFocusLoop_Escape.inc");
+#endif
 }
 
 // --------------------------------------------
