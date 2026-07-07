@@ -31,91 +31,31 @@ struct VFX* CreateGhost30(struct Entity* e, struct Coord* c, u8 n, u32 m) {
   return p;
 }
 
-NAKED static void Ghost30_Init(struct VFX* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r4, r0, #0\n\
-	bl InitNonAffineMotion\n\
-	ldrb r0, [r4, #0xa]\n\
-	movs r1, #1\n\
-	movs r5, #0\n\
-	orrs r1, r0\n\
-	movs r0, #2\n\
-	orrs r1, r0\n\
-	strb r1, [r4, #0xa]\n\
-	adds r0, r4, #0\n\
-	bl ResetDynamicMotion\n\
-	ldrb r2, [r4, #0x10]\n\
-	cmp r2, #0\n\
-	bne _080BA3A8\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	strb r2, [r0]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	b _080BA3CA\n\
-_080BA3A8:\n\
-	movs r2, #1\n\
-	ldrb r0, [r4, #0xa]\n\
-	movs r1, #0x10\n\
-	orrs r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	strb r2, [r0]\n\
-	adds r3, r4, #0\n\
-	adds r3, #0x4a\n\
-	movs r2, #0x10\n\
-	ldrb r1, [r3]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	orrs r0, r2\n\
-	strb r0, [r3]\n\
-_080BA3CA:\n\
-	ldrb r0, [r4, #0x10]\n\
-	cmp r0, #0\n\
-	bne _080BA3D4\n\
-	movs r0, #0x80\n\
-	b _080BA3D8\n\
-_080BA3D4:\n\
-	movs r0, #0x80\n\
-	rsbs r0, r0, #0\n\
-_080BA3D8:\n\
-	str r0, [r4, #0x5c]\n\
-	movs r2, #0\n\
-	str r2, [r4, #0x60]\n\
-	movs r0, #0xff\n\
-	strb r0, [r4, #0x12]\n\
-	ldr r1, _080BA408 @ =gVFXFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #1\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #4]\n\
-	str r0, [r4, #0x14]\n\
-	strb r1, [r4, #0xd]\n\
-	strb r2, [r4, #0xe]\n\
-	strb r2, [r4, #0xf]\n\
-	adds r0, r4, #0\n\
-	bl Ghost30_Update\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080BA408: .4byte gVFXFnTable\n\
- .syntax divided\n");
+// Cyberelf ghost/afterimage. Flip the sprite by spawn direction (work[0]) via
+// SET_XFLIP, set horizontal speed d.x = +/-0x80 to match, arm the lifetime
+// timer (work[2]=0xff), and route to Update. Retail RELOADS work[0] for the d.x
+// direction, keeping the SET_XFLIP branch and the d.x branch separate; agbcc
+// from clean C proves work[0] unchanged across SET_XFLIP's writes and MERGES
+// the two work[0]==0 tests (11 instr shorter) — a no-alias CSE clean C can't
+// suppress. INCCODE for the byte-match; MODERN keeps the readable decode.
+NON_MATCH static void Ghost30_Init(struct VFX* p) {
+#if MODERN
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  ResetDynamicMotion(&p->s);
+  SET_XFLIP(p, (p->s).work[0]);
+  (p->s).d.x = ((p->s).work[0] == 0) ? 0x80 : -0x80;
+  (p->s).d.y = 0;
+  (p->s).work[2] = 0xff;
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 1;
+  (p->s).mode[2] = 0;
+  (p->s).mode[3] = 0;
+  Ghost30_Update(p);
+#else
+  INCCODE("asm/wip/Ghost30_Init.inc");
+#endif
 }
 
 // --------------------------------------------
