@@ -31,67 +31,32 @@ static void FUN_0802e324(struct Zero* z) {
   FUN_0802e338(z);
 }
 
-NAKED static void FUN_0802e338(struct Zero* z) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r4, r0, #0\n\
-	movs r0, #0x94\n\
-	lsls r0, r0, #1\n\
-	adds r1, r4, r0\n\
-	adds r0, r4, #0\n\
-	bl IsAttackOK\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r3, r0, #0x18\n\
-	cmp r3, #0\n\
-	beq _0802E370\n\
-	ldr r2, _0802E36C @ =0x0000012B\n\
-	adds r1, r4, r2\n\
-	movs r0, #0xff\n\
-	strb r0, [r1]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0xec\n\
-	movs r2, #0\n\
-	movs r0, #3\n\
-	strb r0, [r1]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0xed\n\
-	strb r2, [r0]\n\
-	b _0802E392\n\
-	.align 2, 0\n\
-_0802E36C: .4byte 0x0000012B\n\
-_0802E370:\n\
-	ldr r0, _0802E39C @ =0x0000012B\n\
-	adds r2, r4, r0\n\
-	ldrb r1, [r2]\n\
-	adds r0, r1, #0\n\
-	cmp r0, #0xff\n\
-	beq _0802E3A0\n\
-	movs r2, #0x94\n\
-	lsls r2, r2, #1\n\
-	adds r0, r4, r2\n\
-	strb r1, [r0]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0xec\n\
-	movs r0, #3\n\
-	strb r0, [r1]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0xed\n\
-	strb r3, [r0]\n\
-_0802E392:\n\
-	adds r0, r4, #0\n\
-	bl FUN_0802e3b0\n\
-	b _0802E3A6\n\
-	.align 2, 0\n\
-_0802E39C: .4byte 0x0000012B\n\
-_0802E3A0:\n\
-	movs r0, #0xff\n\
-	orrs r0, r1\n\
-	strb r0, [r2]\n\
-_0802E3A6:\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// Ground-walk attack arm step: identical shape to zero_wall_080303d4 (and
+// air1). Retail duplicates the attackMode writes across both arms and
+// recomputes &z->usingWeapon; agbcc-from-clean-C folds the duplicated writes
+// and caches the address, several instr shorter — a retail-suboptimal quirk
+// clean C can't reproduce. INCCODE for the byte-match.
+NON_MATCH static void FUN_0802e338(struct Zero* z) {
+#if MODERN
+  bool8 ok = IsAttackOK(z, &z->usingWeapon);
+  if (ok) {
+    z->forceWeapon = 0xFF;
+    (z->unk_b4).attackMode[0] = 3;
+    (z->unk_b4).attackMode[1] = 0;
+  } else {
+    u8 w = z->forceWeapon;
+    if (w == 0xFF) {
+      z->forceWeapon = 0xFF | w;
+      return;
+    }
+    z->usingWeapon = w;
+    (z->unk_b4).attackMode[0] = 3;
+    (z->unk_b4).attackMode[1] = ok;
+  }
+  FUN_0802e3b0(z);
+#else
+  INCCODE("asm/wip/FUN_0802e338.inc");
+#endif
 }
 
 static void FUN_0802e3ac(struct Zero* z) { return; };
