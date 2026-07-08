@@ -33,78 +33,27 @@ struct Weapon* CreateWeaponMinigameRod(struct Entity* p, u8 r1, u8 r2) {
   return w;
 }
 
-NAKED static void Weapon16_Init(struct Weapon* w) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r4, r0, #0\n\
-	bl InitNonAffineMotion\n\
-	adds r0, r4, #0\n\
-	bl ResetDynamicMotion\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #1\n\
-	movs r3, #0\n\
-	adds r2, r0, #0\n\
-	orrs r2, r1\n\
-	movs r0, #2\n\
-	orrs r2, r0\n\
-	orrs r2, r3\n\
-	strb r2, [r4, #0xa]\n\
-	ldrb r1, [r4, #0x10]\n\
-	cmp r1, #0\n\
-	bne _0803CEE6\n\
-	movs r0, #0xef\n\
-	ands r2, r0\n\
-	strb r2, [r4, #0xa]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	strb r1, [r0]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	b _0803CF06\n\
-_0803CEE6:\n\
-	movs r1, #1\n\
-	movs r0, #0x10\n\
-	orrs r2, r0\n\
-	strb r2, [r4, #0xa]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	strb r1, [r0]\n\
-	adds r3, r4, #0\n\
-	adds r3, #0x4a\n\
-	movs r2, #0x10\n\
-	ldrb r1, [r3]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	orrs r0, r2\n\
-	strb r0, [r3]\n\
-_0803CF06:\n\
-	ldr r1, _0803CF2C @ =gWeaponFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #1\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #4]\n\
-	str r0, [r4, #0x14]\n\
-	movs r0, #0\n\
-	strb r0, [r4, #0xd]\n\
-	strb r0, [r4, #0xe]\n\
-	strb r0, [r4, #0xf]\n\
-	adds r0, r4, #0\n\
-	bl Weapon16_Update\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_0803CF2C: .4byte gWeaponFnTable\n\
- .syntax divided\n");
+// Init the minigame rod weapon: display + flippable, face by spawn direction
+// (work[0]), route to Update. Retail keeps everything in one base register (r4),
+// recomputing the spr pointers (+0x4a/+0x4c) per direction branch, expands the
+// flag OR into three separate bit-ORs (incl. a live |0), and materializes the
+// mode constant afresh; agbcc-from-clean-C caches the base in a second register
+// and folds the flag OR — several instr shorter, a retail-suboptimal codegen
+// quirk clean C can't reproduce. INCCODE for the byte-match.
+NON_MATCH static void Weapon16_Init(struct Weapon* w) {
+#if MODERN
+  InitNonAffineMotion(&w->s);
+  ResetDynamicMotion(&w->s);
+  (w->s).flags |= DISPLAY | FLIPABLE;
+  SET_XFLIP(w, (w->s).work[0]);
+  SET_WEAPON_ROUTINE(w, ENTITY_UPDATE);
+  (w->s).mode[1] = 0;
+  (w->s).mode[2] = 0;
+  (w->s).mode[3] = 0;
+  Weapon16_Update(w);
+#else
+  INCCODE("asm/wip/Weapon16_Init.inc");
+#endif
 }
 
 void weapon_0803cf84(struct Weapon* w);
