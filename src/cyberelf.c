@@ -480,52 +480,32 @@ bool8 IsAllElfUnlocked(void) {
 }
 
 // 全部のエルフを育てきってるか(称号エルフブリーダーの条件を満たしているか)
-NAKED bool8 IsElfBreeder(void) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	movs r4, #0\n\
-	ldr r6, _080E1894 @ =gElfBreedInfo\n\
-	ldr r0, _080E1898 @ =gUnlockedElfPtr\n\
-	ldr r5, [r0]\n\
-_080E1866:\n\
-	lsls r0, r4, #2\n\
-	adds r0, r0, r6\n\
-	ldrb r2, [r0]\n\
-	lsls r1, r2, #0x1d\n\
-	adds r3, r5, r4\n\
-	ldr r0, [r3]\n\
-	lsls r0, r0, #0x1b\n\
-	lsrs r1, r1, #0x1d\n\
-	lsrs r0, r0, #0x1e\n\
-	cmp r1, r0\n\
-	bne _080E188E\n\
-	lsls r0, r2, #0x1a\n\
-	lsrs r0, r0, #0x1d\n\
-	cmp r0, #2\n\
-	bne _080E189C\n\
-	ldrb r1, [r3]\n\
-	movs r0, #4\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080E189C\n\
-_080E188E:\n\
-	movs r0, #0\n\
-	b _080E18A8\n\
-	.align 2, 0\n\
-_080E1894: .4byte gElfBreedInfo\n\
-_080E1898: .4byte gUnlockedElfPtr\n\
-_080E189C:\n\
-	adds r0, r4, #1\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r4, r0, #0x18\n\
-	cmp r4, #0x49\n\
-	bls _080E1866\n\
-	movs r0, #1\n\
-_080E18A8:\n\
-	pop {r4, r5, r6}\n\
-	pop {r1}\n\
-	bx r1\n\
- .syntax divided\n");
+// True iff every cyberelf is "bred": for each of the 74 elves, the breed-info
+// kind (unk_0 low 3 bits) must equal the availability record's stage field
+// (bits 3-4, read via an unaligned word), and any elf whose breed-stage
+// (unk_0 bits 3-5) is 2 must already have its bit-2 flag set. Retail reads
+// both records as packed bitfields (`<<29>>29` field extracts, a word load for
+// the 2-bit availability field vs a byte load for its flag); reproducing that
+// cleanly would require converting the shared gElfBreedInfo / gUnlockedElfPtr
+// types to bitfield structs (their data initializer + FUN_080e1cac depend on
+// the u8 layout), so MODERN carries explicit shift/mask reads and INCCODE the
+// byte-match.
+bool8 IsElfBreeder(void) {
+  u8 i = 0;
+  const struct ElfBreedInfo* info = gElfBreedInfo;
+  u8* avail = *gUnlockedElfPtr;
+
+  for (; i < CYBERELF_LENGTH; i++) {
+    u32 a = (u32)info[i].unk_0 << 29;
+    u32 b = *(u32*)(avail + i) << 27;
+    if ((a >> 29) != (b >> 30)) {
+      return FALSE;
+    }
+    if ((((u32)info[i].unk_0 << 26) >> 29) == 2 && (avail[i] & 4) == 0) {
+      return FALSE;
+    }
+  }
+  return TRUE;
 }
 
 // リザルトでのエルフ減点を計算
