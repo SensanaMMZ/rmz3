@@ -8,6 +8,7 @@
 static void zero_wall_080303c0(struct Zero* z);
 static void zero_wall_080303d4(struct Zero* z);
 static void nop_08030448(struct Zero* z);
+void zeroWallAtk(struct Zero* z);
 
 void ZeroAttack_Wall(struct Zero* z) {
   static ZeroFunc const sZeroWallAttackRoutine[] = {
@@ -24,67 +25,34 @@ static void zero_wall_080303c0(struct Zero* z) {
   zero_wall_080303d4(z);
 }
 
-NAKED static void zero_wall_080303d4(struct Zero* z) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r4, r0, #0\n\
-	movs r0, #0x94\n\
-	lsls r0, r0, #1\n\
-	adds r1, r4, r0\n\
-	adds r0, r4, #0\n\
-	bl IsAttackOK\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r3, r0, #0x18\n\
-	cmp r3, #0\n\
-	beq _0803040C\n\
-	ldr r2, _08030408 @ =0x0000012B\n\
-	adds r1, r4, r2\n\
-	movs r0, #0xff\n\
-	strb r0, [r1]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0xec\n\
-	movs r2, #0\n\
-	movs r0, #3\n\
-	strb r0, [r1]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0xed\n\
-	strb r2, [r0]\n\
-	b _0803042E\n\
-	.align 2, 0\n\
-_08030408: .4byte 0x0000012B\n\
-_0803040C:\n\
-	ldr r0, _08030438 @ =0x0000012B\n\
-	adds r2, r4, r0\n\
-	ldrb r1, [r2]\n\
-	adds r0, r1, #0\n\
-	cmp r0, #0xff\n\
-	beq _0803043C\n\
-	movs r2, #0x94\n\
-	lsls r2, r2, #1\n\
-	adds r0, r4, r2\n\
-	strb r1, [r0]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0xec\n\
-	movs r0, #3\n\
-	strb r0, [r1]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0xed\n\
-	strb r3, [r0]\n\
-_0803042E:\n\
-	adds r0, r4, #0\n\
-	bl zeroWallAtk\n\
-	b _08030442\n\
-	.align 2, 0\n\
-_08030438: .4byte 0x0000012B\n\
-_0803043C:\n\
-	movs r0, #0xff\n\
-	orrs r0, r1\n\
-	strb r0, [r2]\n\
-_08030442:\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// Wall-attack arm step (sibling of air1): if an attack is allowed, or a queued
+// forceWeapon is pending, latch weapon 3 / mode {3,0} and run the wall attack;
+// otherwise re-arm forceWeapon. Retail duplicates the attackMode writes across
+// both arms and recomputes &z->usingWeapon rather than caching it; clean C
+// folds the duplicated writes (both mode[1] stores are 0) and keeps the address
+// in a register, several instr shorter — a retail-suboptimal quirk clean C
+// can't reproduce (same as air1). INCCODE for the byte-match.
+NON_MATCH static void zero_wall_080303d4(struct Zero* z) {
+#if MODERN
+  bool8 ok = IsAttackOK(z, &z->usingWeapon);
+  if (ok) {
+    z->forceWeapon = 0xFF;
+    (z->unk_b4).attackMode[0] = 3;
+    (z->unk_b4).attackMode[1] = 0;
+  } else {
+    u8 w = z->forceWeapon;
+    if (w == 0xFF) {
+      z->forceWeapon = 0xFF | w;
+      return;
+    }
+    z->usingWeapon = w;
+    (z->unk_b4).attackMode[0] = 3;
+    (z->unk_b4).attackMode[1] = ok;
+  }
+  zeroWallAtk(z);
+#else
+  INCCODE("asm/wip/zero_wall_080303d4.inc");
+#endif
 }
 
 static void nop_08030448(struct Zero* z) { return; }
