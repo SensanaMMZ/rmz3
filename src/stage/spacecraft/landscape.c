@@ -669,73 +669,27 @@ _0800B910: .4byte 0xFFFF0000\n\
 }
 
 // 0x0800b914
-NAKED static void LayerUpdate_SpaceCraft_3(struct StageLayer* l, const struct Stage* _ UNUSED) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	mov r7, r8\n\
-	push {r7}\n\
-	sub sp, #8\n\
-	adds r7, r0, #0\n\
-	ldr r0, [r7, #0x5c]\n\
-	lsls r0, r0, #0x10\n\
-	ldrb r1, [r7, #0xe]\n\
-	mov r8, r1\n\
-	cmp r1, #0\n\
-	bne _0800B97E\n\
-	lsrs r5, r0, #0x14\n\
-	lsls r5, r5, #1\n\
-	ldr r0, _0800B98C @ =gVideoRegBuffer+4\n\
-	adds r5, r5, r0\n\
-	ldr r1, [r7, #0x64]\n\
-	ldr r2, _0800B990 @ =0x00004046\n\
-	adds r0, r2, #0\n\
-	orrs r1, r0\n\
-	strh r1, [r5]\n\
-	ldr r0, _0800B994 @ =gBgMapOffsets+(42*4)\n\
-	ldr r0, [r0]\n\
-	ldr r2, _0800B998 @ =gBgMapOffsets+(44*4)\n\
-	adds r0, r0, r2\n\
-	movs r4, #0xf8\n\
-	lsls r4, r4, #5\n\
-	ands r1, r4\n\
-	lsls r1, r1, #3\n\
-	movs r2, #0xc0\n\
-	lsls r2, r2, #0x13\n\
-	adds r1, r1, r2\n\
-	movs r6, #0x80\n\
-	lsls r6, r6, #2\n\
-	adds r2, r6, #0\n\
-	bl CpuFastSet\n\
-	ldrh r0, [r5]\n\
-	ands r4, r0\n\
-	lsls r4, r4, #3\n\
-	ldr r0, _0800B99C @ =0x06000800\n\
-	adds r4, r4, r0\n\
-	mov r1, r8\n\
-	str r1, [sp]\n\
-	movs r2, #0x80\n\
-	lsls r2, r2, #0x11\n\
-	orrs r2, r6\n\
-	mov r0, sp\n\
-	adds r1, r4, #0\n\
-	bl CpuFastSet\n\
-	ldrb r0, [r7, #0xe]\n\
-	adds r0, #1\n\
-	strb r0, [r7, #0xe]\n\
-_0800B97E:\n\
-	add sp, #8\n\
-	pop {r3}\n\
-	mov r8, r3\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_0800B98C: .4byte gVideoRegBuffer+4\n\
-_0800B990: .4byte 0x00004046\n\
-_0800B994: .4byte gBgMapOffsets+(42*4)\n\
-_0800B998: .4byte gBgMapOffsets+(44*4)\n\
-_0800B99C: .4byte 0x06000800\n\
- .syntax divided\n");
+// One-shot (phase 0) BG3 setup: point BGCNT at the screen block, copy the map
+// in and clear the second screen block (filled with phase, which is 0 here).
+// Retail spills `phase` to r8 (a high callee-saved reg, forcing the r8
+// push/pop + a second stack slot) even though it only ever holds the plain
+// u32 phase; agbcc's coalescer folds that redundant SImode copy away, so
+// clean C keeps it in a low reg and can't reproduce the spill (same wall as
+// the sibling LayerDraw_FixOmegaWhiteCoord). INCCODE for the byte-match.
+NON_MATCH static void LayerUpdate_SpaceCraft_3(struct StageLayer* l, const struct Stage* _ UNUSED) {
+#if MODERN
+  u32 phase = l->phase;
+  const u16 n = l->bgIdx;
+
+  if (phase == 0) {
+    BGCNT16(n >> 4) = l->screenBase | 0x4046;
+    CpuFastCopy(BGMAP(42), (void*)(VRAM + SCREEN_BASE_16(n >> 4)), 2048);
+    CpuFastFill(phase, (void*)(VRAM + 0x800 + SCREEN_BASE_16(n >> 4)), 2048);
+    l->phase++;
+  }
+#else
+  INCCODE("asm/wip/LayerUpdate_SpaceCraft_3.inc");
+#endif
 }
 
 // オメガ(BG3)のスクロールとかを調整してオメガが正しい位置に来るようにする
