@@ -356,117 +356,39 @@ _080E174A:\n\
  .syntax divided\n");
 }
 
-NAKED void CreateSateliteElf(struct Zero* z, cyberelf_t e, bool8 isSatelite2) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r3, r0, #0\n\
-	lsls r1, r1, #0x18\n\
-	lsrs r1, r1, #0x18\n\
-	adds r6, r1, #0\n\
-	lsls r2, r2, #0x18\n\
-	lsrs r4, r2, #0x18\n\
-	adds r5, r4, #0\n\
-	cmp r1, #0xff\n\
-	beq _080E1822\n\
-	cmp r1, #0x1a\n\
-	bhi _080E17B4\n\
-	cmp r1, #0x16\n\
-	bhi _080E1778\n\
-	movs r1, #0\n\
-	b _080E17C0\n\
-_080E1778:\n\
-	cmp r1, #0x18\n\
-	bhi _080E1798\n\
-	ldr r0, _080E1794 @ =gUnlockedElfPtr\n\
-	ldr r0, [r0]\n\
-	adds r0, r0, r1\n\
-	ldr r2, [r0]\n\
-	lsls r2, r2, #0x1d\n\
-	lsrs r2, r2, #0x1f\n\
-	adds r0, r3, #0\n\
-	movs r1, #0\n\
-	adds r3, r4, #0\n\
-	bl CreateNurseBElf\n\
-	b _080E1822\n\
-	.align 2, 0\n\
-_080E1794: .4byte gUnlockedElfPtr\n\
-_080E1798:\n\
-	ldr r0, _080E17B0 @ =gUnlockedElfPtr\n\
-	ldr r0, [r0]\n\
-	adds r0, r0, r1\n\
-	ldr r2, [r0]\n\
-	lsls r2, r2, #0x1d\n\
-	lsrs r2, r2, #0x1f\n\
-	adds r0, r3, #0\n\
-	movs r1, #0\n\
-	adds r3, r4, #0\n\
-	bl CreateNurseEElf\n\
-	b _080E1822\n\
-	.align 2, 0\n\
-_080E17B0: .4byte gUnlockedElfPtr\n\
-_080E17B4:\n\
-	cmp r1, #0x27\n\
-	bhi _080E1816\n\
-	cmp r1, #0x1f\n\
-	bhi _080E17CA\n\
-	adds r0, r3, #0\n\
-	movs r1, #1\n\
-_080E17C0:\n\
-	movs r2, #0\n\
-	adds r3, r4, #0\n\
-	bl CreateFollowerElf\n\
-	b _080E1822\n\
-_080E17CA:\n\
-	cmp r1, #0x21\n\
-	bhi _080E17DC\n\
-	adds r0, r3, #0\n\
-	movs r1, #0\n\
-	movs r2, #0\n\
-	adds r3, r4, #0\n\
-	bl CreateBirdElf\n\
-	b _080E1822\n\
-_080E17DC:\n\
-	cmp r1, #0x23\n\
-	bhi _080E17EE\n\
-	adds r0, r3, #0\n\
-	movs r1, #0\n\
-	movs r2, #0\n\
-	adds r3, r4, #0\n\
-	bl CreateSeaotterElf\n\
-	b _080E1822\n\
-_080E17EE:\n\
-	cmp r6, #0x25\n\
-	bhi _080E1808\n\
-	ldr r0, _080E1804 @ =gUnlockedElfPtr\n\
-	ldr r0, [r0]\n\
-	adds r0, r0, r6\n\
-	ldr r2, [r0]\n\
-	lsls r2, r2, #0x1d\n\
-	lsrs r2, r2, #0x1f\n\
-	adds r0, r3, #0\n\
-	movs r1, #0\n\
-	b _080E180E\n\
-	.align 2, 0\n\
-_080E1804: .4byte gUnlockedElfPtr\n\
-_080E1808:\n\
-	adds r0, r3, #0\n\
-	movs r1, #2\n\
-	movs r2, #0\n\
-_080E180E:\n\
-	adds r3, r4, #0\n\
-	bl elf_080e4bf4\n\
-	b _080E1822\n\
-_080E1816:\n\
-	adds r0, r3, #0\n\
-	movs r1, #2\n\
-	movs r2, #0\n\
-	adds r3, r5, #0\n\
-	bl CreateFollowerElf\n\
-_080E1822:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+struct Entity* elf_080e4bf4(struct Zero* z, u8 breed, u8 availability, u8 _);
+
+// Spawn the cyberelf that matches the equipped-elf id: dispatch by id range to
+// the right Create*Elf constructor. Nurse/otter/satellite ids pass the elf's
+// SATELITE availability bit (bit 2 of its availability record) as the 3rd arg;
+// the rest pass a fixed breed/availability. id 0xFF = none.
+void CreateSateliteElf(struct Zero* z, cyberelf_t e, bool8 isSatelite2) {
+  if (e == 0xFF) {
+    return;
+  }
+  if (e <= 0x1a) {
+    if (e <= 0x16) {
+      CreateFollowerElf(z, 0, 0, isSatelite2);
+    } else if (e <= 0x18) {
+      CreateNurseBElf(z, 0, (*(u32*)(*gUnlockedElfPtr + e) << 29) >> 31, isSatelite2);
+    } else {
+      CreateNurseEElf(z, 0, (*(u32*)(*gUnlockedElfPtr + e) << 29) >> 31, isSatelite2);
+    }
+  } else if (e <= 0x27) {
+    if (e <= 0x1f) {
+      CreateFollowerElf(z, 1, 0, isSatelite2);
+    } else if (e <= 0x21) {
+      CreateBirdElf(z, 0, 0, isSatelite2);
+    } else if (e <= 0x23) {
+      CreateSeaotterElf(z, 0, 0, isSatelite2);
+    } else if (e <= 0x25) {
+      elf_080e4bf4(z, 0, (*(u32*)(*gUnlockedElfPtr + e) << 29) >> 31, isSatelite2);
+    } else {
+      elf_080e4bf4(z, 2, 0, isSatelite2);
+    }
+  } else {
+    CreateFollowerElf(z, 2, 0, isSatelite2);
+  }
 }
 
 bool8 IsAllElfUnlocked(void) {
