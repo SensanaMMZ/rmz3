@@ -3,6 +3,7 @@
 #include "gfx.h"
 #include "global.h"
 #include "widget.h"
+#include "zero.h"
 
 // サテライト1、サテライト2、フュージョン、Eクリスタル、リスト
 
@@ -40,97 +41,40 @@ struct Widget* CreateElfMenuItem(struct GameState* g, u8 row, u8 r2) {
 
 // --------------------------------------------
 
-NAKED static void ElfMenuItem_Init(struct Widget* w) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r4, r0, #0\n\
-	ldr r0, [r4, #0x28]\n\
-	ldr r1, _080E7318 @ =0x000064AC\n\
-	adds r0, r0, r1\n\
-	ldr r3, [r0]\n\
-	ldr r1, _080E731C @ =gWidgetFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #1\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #4]\n\
-	str r0, [r4, #0x14]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #1\n\
-	movs r2, #0\n\
-	orrs r0, r1\n\
-	movs r1, #2\n\
-	orrs r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	strb r2, [r0]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	ldr r0, _080E7320 @ =0x00012100\n\
-	str r0, [r4, #0x54]\n\
-	adds r3, #0xb4\n\
-	ldrb r0, [r3, #0x1a]\n\
-	cmp r0, #1\n\
-	bne _080E7324\n\
-	movs r0, #0xe0\n\
-	lsls r0, r0, #6\n\
-	b _080E7332\n\
-	.align 2, 0\n\
-_080E7318: .4byte 0x000064AC\n\
-_080E731C: .4byte gWidgetFnTable\n\
-_080E7320: .4byte 0x00012100\n\
-_080E7324:\n\
-	ldrb r1, [r4, #0x10]\n\
-	lsls r0, r1, #2\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #0xa\n\
-	movs r1, #0x80\n\
-	lsls r1, r1, #5\n\
-	adds r0, r0, r1\n\
-_080E7332:\n\
-	str r0, [r4, #0x58]\n\
-	ldr r1, _080E736C @ =0xFFFFFF00\n\
-	str r1, [r4, #0x5c]\n\
-	movs r0, #0x80\n\
-	rsbs r0, r0, #0\n\
-	str r0, [r4, #0x60]\n\
-	ldr r0, [r4, #0x54]\n\
-	str r0, [r4, #0x74]\n\
-	lsls r1, r1, #3\n\
-	adds r0, r0, r1\n\
-	str r0, [r4, #0x78]\n\
-	ldr r0, [r4, #0x54]\n\
-	ldr r1, [r4, #0x58]\n\
-	str r0, [r4, #0x64]\n\
-	str r1, [r4, #0x68]\n\
-	ldrb r0, [r4, #0x10]\n\
-	cmp r0, #0\n\
-	bne _080E7360\n\
-	movs r1, #0xc0\n\
-	lsls r1, r1, #2\n\
-	movs r0, #0x5b\n\
-	bl LoadBlink\n\
-_080E7360:\n\
-	adds r0, r4, #0\n\
-	bl ElfMenuItem_Update\n\
-	pop {r4}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080E736C: .4byte 0xFFFFFF00\n\
- .syntax divided\n");
+// Init an elf-menu list item: route to Update, display+flippable, unflipped;
+// park it off-screen right (x 0x12100) and set its target Y from the row
+// (work[0]) unless the menu is color-locked; drift it in from the right
+// (d = -0x100,-0x80) toward the home slot recorded in props; row 0 also loads
+// the selection blink. Retail expands `flags |= DISPLAY | FLIPABLE` into two
+// bit-ORs where clean C folds to |3 (retail-suboptimal as in Weapon16_Init);
+// INCCODE for the byte-match.
+NON_MATCH static void ElfMenuItem_Init(struct Widget* w) {
+#if MODERN
+  struct GameState* g = (struct GameState*)(w->s).unk_28;
+  struct Zero* z = *(struct Zero**)((u8*)g + 0x64AC);
+
+  SET_WIDGET_ROUTINE(w, ENTITY_UPDATE);
+  (w->s).flags |= DISPLAY | FLIPABLE;
+  SET_XFLIP(w, 0);
+  (w->s).coord.x = 0x12100;
+  if (((&z->unk_b4)->status).menuZeroColor == 1) {
+    (w->s).coord.y = 0x3800;
+  } else {
+    (w->s).coord.y = (((w->s).work[0] * 5) << 10) + 0x1000;
+  }
+  (w->s).d.x = -0x100;
+  (w->s).d.y = -0x80;
+  *(s32*)&w->props[0] = (w->s).coord.x;
+  *(s32*)&w->props[4] = (w->s).coord.x + (-0x100 << 3);
+  (w->s).unk_coord.x = (w->s).coord.x;
+  (w->s).unk_coord.y = (w->s).coord.y;
+  if ((w->s).work[0] == 0) {
+    LoadBlink(0x5B, 0x300);
+  }
+  ElfMenuItem_Update(w);
+#else
+  INCCODE("asm/wip/ElfMenuItem_Init.inc");
+#endif
 }
 
 NAKED static void ElfMenuItem_Update(struct Widget* w) {
