@@ -258,152 +258,67 @@ static void ElfMenuFocusLoop_OpenTab(struct GameState* g) {
   }
 }
 
-NAKED static void ElfMenuFocusLoop_TabSelect(struct GameState* g) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	mov r7, r8\n\
-	push {r7}\n\
-	adds r7, r0, #0\n\
-	ldr r0, _080F6C00 @ =0x00000E17\n\
-	adds r6, r7, r0\n\
-	ldrb r0, [r6]\n\
-	cmp r0, #0\n\
-	bne _080F6BB8\n\
-	movs r0, #0x4f\n\
-	movs r1, #0\n\
-	bl LoadBlink\n\
-	ldr r0, _080F6C04 @ =0x00000DFC\n\
-	adds r1, r7, r0\n\
-	ldrb r0, [r1, #8]\n\
-	strb r0, [r1, #0xa]\n\
-	ldrb r0, [r6]\n\
-	adds r0, #1\n\
-	strb r0, [r6]\n\
-_080F6BB8:\n\
-	movs r0, #0x4f\n\
-	bl UpdateBlinkMotionState\n\
-	ldr r0, _080F6C04 @ =0x00000DFC\n\
-	adds r4, r7, r0\n\
-	ldrb r3, [r4, #0xd]\n\
-	lsls r1, r3, #0x18\n\
-	lsrs r0, r1, #0x18\n\
-	cmp r0, #0x90\n\
-	bhi _080F6BDE\n\
-	lsrs r0, r1, #0x1c\n\
-	ldr r2, _080F6C08 @ =gWindowRegBuffer\n\
-	lsls r0, r0, #0xc\n\
-	movs r1, #0x90\n\
-	orrs r0, r1\n\
-	strh r0, [r2, #8]\n\
-	adds r0, r3, #0\n\
-	adds r0, #8\n\
-	strb r0, [r4, #0xd]\n\
-_080F6BDE:\n\
-	ldr r2, _080F6C0C @ =gJoypad\n\
-	ldrh r1, [r2, #4]\n\
-	movs r5, #0x81\n\
-	ands r5, r1\n\
-	cmp r5, #0\n\
-	beq _080F6C10\n\
-	movs r1, #0\n\
-	movs r0, #3\n\
-	strb r0, [r7, #3]\n\
-	strb r1, [r6]\n\
-	movs r0, #0x4f\n\
-	bl ClearBlink\n\
-	movs r0, #2\n\
-	bl PlaySound\n\
-	b _080F6CB6\n\
-	.align 2, 0\n\
-_080F6C00: .4byte 0x00000E17\n\
-_080F6C04: .4byte 0x00000DFC\n\
-_080F6C08: .4byte gWindowRegBuffer\n\
-_080F6C0C: .4byte gJoypad\n\
-_080F6C10:\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	lsls r0, r0, #0x10\n\
-	lsrs r6, r0, #0x10\n\
-	cmp r6, #0\n\
-	beq _080F6C50\n\
-	strb r5, [r7, #3]\n\
-	movs r0, #0x4f\n\
-	bl ClearBlink\n\
-	movs r0, #0x4e\n\
-	strb r0, [r4, #0xc]\n\
-	movs r1, #0\n\
-	bl LoadBlink\n\
-	ldrb r0, [r4, #0xc]\n\
-	bl UpdateBlinkMotionState\n\
-	strb r5, [r4, #8]\n\
-	ldr r2, _080F6C48 @ =gWindowRegBuffer\n\
-	ldrh r1, [r2]\n\
-	ldr r0, _080F6C4C @ =0x0000DFFF\n\
-	ands r0, r1\n\
-	strh r0, [r2]\n\
-	movs r0, #3\n\
-	bl PlaySound\n\
-	b _080F6CB6\n\
-	.align 2, 0\n\
-_080F6C48: .4byte gWindowRegBuffer\n\
-_080F6C4C: .4byte 0x0000DFFF\n\
-_080F6C50:\n\
-	ldrb r0, [r4, #8]\n\
-	mov r8, r0\n\
-	ldrh r5, [r2, #6]\n\
-	movs r0, #0x20\n\
-	ands r0, r5\n\
-	cmp r0, #0\n\
-	beq _080F6C6A\n\
-	mov r0, r8\n\
-	adds r0, #2\n\
-	movs r1, #3\n\
-	bl __modsi3\n\
-	strb r0, [r4, #8]\n\
-_080F6C6A:\n\
-	movs r0, #0x10\n\
-	ands r0, r5\n\
-	cmp r0, #0\n\
-	beq _080F6C7E\n\
-	ldrb r0, [r4, #8]\n\
-	adds r0, #1\n\
-	movs r1, #3\n\
-	bl __modsi3\n\
-	strb r0, [r4, #8]\n\
-_080F6C7E:\n\
-	ldrb r0, [r4, #8]\n\
-	cmp r8, r0\n\
-	beq _080F6CB6\n\
-	movs r0, #0x4f\n\
-	bl ClearBlink\n\
-	movs r0, #0x4f\n\
-	movs r1, #0\n\
-	bl LoadBlink\n\
-	movs r0, #0x4f\n\
-	bl UpdateBlinkMotionState\n\
-	ldrb r0, [r4, #8]\n\
-	strb r0, [r4, #0xa]\n\
-	strb r6, [r4, #6]\n\
-	strb r6, [r4, #9]\n\
-	adds r0, r7, #0\n\
-	bl FUN_080f70d8\n\
-	movs r0, #0x10\n\
-	strb r0, [r4, #0xd]\n\
-	ldr r1, _080F6CC0 @ =gWindowRegBuffer\n\
-	ldr r0, _080F6CC4 @ =0x00001090\n\
-	strh r0, [r1, #8]\n\
-	movs r0, #1\n\
-	bl PlaySound\n\
-_080F6CB6:\n\
-	pop {r3}\n\
-	mov r8, r3\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F6CC0: .4byte gWindowRegBuffer\n\
-_080F6CC4: .4byte 0x00001090\n\
- .syntax divided\n");
+// Fully decoded; residual is a 2-instruction allocator/CSE tie: retail keeps
+// `pressed & B_BUTTON` in r0 (preserving pressed) and shares the unk_d<<24
+// truncation between the (u8) range test and the >>28 nibble extraction, where
+// agbcc-from-clean-C picks the other register and recomputes the shift. INCCODE
+// for the byte-match.
+NON_MATCH static void ElfMenuFocusLoop_TabSelect(struct GameState* g) {
+#if MODERN
+  u8 savedTab;
+  u16 pressed;
+
+  if (MENU->unk_4b == 0) {
+    LoadBlink(0x4F, 0);
+    ELF_MENU->unk_a = ELF_MENU->tab;
+    MENU->unk_4b++;
+  }
+  UpdateBlinkMotionState(0x4F);
+
+  if ((u8)ELF_MENU->unk_d <= 0x90) {
+    gWindowRegBuffer.winV.half[0] = ((ELF_MENU->unk_d >> 4) << 12) | 0x90;
+    ELF_MENU->unk_d += 8;
+  }
+
+  pressed = gJoypad[0].pressed;
+  if (pressed & (DPAD_DOWN | A_BUTTON)) {
+    g->mode[3] = 3;
+    MENU->unk_4b = 0;
+    ClearBlink(0x4F);
+    PlaySound(2);
+  } else if (pressed & B_BUTTON) {
+    g->mode[3] = 0;
+    ClearBlink(0x4F);
+    ELF_MENU->blinkID = 0x4E;
+    LoadBlink(0x4E, 0);
+    UpdateBlinkMotionState(ELF_MENU->blinkID);
+    ELF_MENU->tab = 0;
+    gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN0_ON;
+    PlaySound(3);
+  } else {
+    savedTab = ELF_MENU->tab;
+    if (gJoypad[0].field3_0x6 & DPAD_LEFT) {
+      ELF_MENU->tab = (savedTab + 2) % 3;
+    }
+    if (gJoypad[0].field3_0x6 & DPAD_RIGHT) {
+      ELF_MENU->tab = (ELF_MENU->tab + 1) % 3;
+    }
+    if (savedTab != ELF_MENU->tab) {
+      ClearBlink(0x4F);
+      LoadBlink(0x4F, 0);
+      UpdateBlinkMotionState(0x4F);
+      ELF_MENU->unk_a = ELF_MENU->tab;
+      ELF_MENU->y = 0;
+      ELF_MENU->cursor = 0;
+      FUN_080f70d8(g);
+      ELF_MENU->unk_d = 0x10;
+      gWindowRegBuffer.winV.half[0] = 0x1090;
+      PlaySound(1);
+    }
+  }
+#else
+  INCCODE("asm/wip/ElfMenuFocusLoop_TabSelect.inc");
+#endif
 }
 
 NAKED static void ElfMenuFocusLoop_ElfSelect(struct GameState* g) {
