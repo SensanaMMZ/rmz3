@@ -2008,96 +2008,45 @@ _080F7874: .4byte gStringData\n\
  .syntax divided\n");
 }
 
-NAKED static void printElfMenuBottomString(struct GameState* g) {
-  asm(".syntax unified\n\
-	push {lr}\n\
-	adds r2, r0, #0\n\
-	ldr r1, _080F7894 @ =0x000064AC\n\
-	adds r0, r2, r1\n\
-	ldr r0, [r0]\n\
-	movs r3, #0\n\
-	ldrb r1, [r2, #3]\n\
-	cmp r1, #2\n\
-	beq _080F78AA\n\
-	cmp r1, #2\n\
-	bgt _080F7898\n\
-	cmp r1, #0\n\
-	beq _080F789E\n\
-	b _080F78FC\n\
-	.align 2, 0\n\
-_080F7894: .4byte 0x000064AC\n\
-_080F7898:\n\
-	cmp r1, #3\n\
-	beq _080F78AE\n\
-	b _080F78FC\n\
-_080F789E:\n\
-	adds r0, #0xb4\n\
-	ldrb r0, [r0, #0x1a]\n\
-	cmp r0, #1\n\
-	beq _080F78FC\n\
-	movs r3, #0xb4\n\
-	b _080F7900\n\
-_080F78AA:\n\
-	movs r3, #0xb8\n\
-	b _080F7900\n\
-_080F78AE:\n\
-	ldr r1, _080F78C4 @ =0x00000DFC\n\
-	adds r0, r2, r1\n\
-	ldrb r0, [r0, #7]\n\
-	cmp r0, #4\n\
-	bhi _080F78FC\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _080F78C8 @ =_080F78CC\n\
-	adds r0, r0, r1\n\
-	ldr r0, [r0]\n\
-	mov pc, r0\n\
-	.align 2, 0\n\
-_080F78C4: .4byte 0x00000DFC\n\
-_080F78C8: .4byte _080F78CC\n\
-_080F78CC: @ jump table\n\
-	.4byte _080F78E0 @ case 0\n\
-	.4byte _080F78E0 @ case 1\n\
-	.4byte _080F78E4 @ case 2\n\
-	.4byte _080F78E8 @ case 3\n\
-	.4byte _080F78FC @ case 4\n\
-_080F78E0:\n\
-	movs r3, #0xb9\n\
-	b _080F7900\n\
-_080F78E4:\n\
-	movs r3, #0xba\n\
-	b _080F7900\n\
-_080F78E8:\n\
-	ldr r1, _080F7918 @ =0x00000E17\n\
-	adds r0, r2, r1\n\
-	ldrb r0, [r0]\n\
-	movs r3, #0xc5\n\
-	cmp r0, #4\n\
-	beq _080F7900\n\
-	movs r3, #0xc0\n\
-	cmp r0, #5\n\
-	bne _080F78FC\n\
-	movs r3, #0xc6\n\
-_080F78FC:\n\
-	cmp r3, #0\n\
-	beq _080F7914\n\
-_080F7900:\n\
-	ldr r1, _080F791C @ =StringOfsTable\n\
-	lsls r0, r3, #1\n\
-	adds r0, r0, r1\n\
-	ldrh r0, [r0]\n\
-	ldr r1, _080F7920 @ =gStringData\n\
-	adds r0, r0, r1\n\
-	movs r1, #1\n\
-	movs r2, #0x12\n\
-	bl PrintString\n\
-_080F7914:\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F7918: .4byte 0x00000E17\n\
-_080F791C: .4byte StringOfsTable\n\
-_080F7920: .4byte gStringData\n\
- .syntax divided\n");
+static void printElfMenuBottomString(struct GameState* g) {
+  struct Zero* z = *(struct Zero**)((u8*)g + 0x64AC);
+  str_id_t strId = 0;
+
+  switch (g->mode[3]) {
+    case 0:
+      if (((&z->unk_b4)->status).menuZeroColor != 1) {
+        strId = 0xB4;
+      }
+      break;
+    case 2:
+      strId = 0xB8;
+      break;
+    case 3:
+      switch (ELF_MENU->mode) {
+        case 0:
+        case 1:
+          strId = 0xB9;
+          break;
+        case 2:
+          strId = 0xBA;
+          break;
+        case 3:
+          if (MENU->unk_4b == 4) {
+            strId = 0xC5;
+          } else if (MENU->unk_4b == 5) {
+            strId = 0xC6;
+          } else {
+            strId = 0xC0;
+          }
+          break;
+        case 4:
+          break;
+      }
+      break;
+  }
+  if (strId != 0) {
+    PrintString(STRING(strId), 1, 0x12);
+  }
 }
 
 bool8 FUN_080e1cac(cyberelf_t n);
