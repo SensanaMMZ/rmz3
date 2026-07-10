@@ -1,4 +1,5 @@
 #include "blink.h"
+#include "cyberelf.h"
 #include "game.h"
 #include "gfx.h"
 #include "global.h"
@@ -2099,100 +2100,27 @@ _080F7920: .4byte gStringData\n\
  .syntax divided\n");
 }
 
-NAKED static str_id_t getElfDescStrID(struct GameState* g, u8 r1) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	lsls r1, r1, #0x18\n\
-	lsrs r4, r1, #0x18\n\
-	ldr r1, _080F7970 @ =0x000064AC\n\
-	adds r0, r0, r1\n\
-	ldr r2, [r0]\n\
-	ldr r0, _080F7974 @ =gUnlockedElfPtr\n\
-	ldr r0, [r0]\n\
-	adds r0, r0, r4\n\
-	ldrb r1, [r0]\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F7996\n\
-	adds r0, r2, #0\n\
-	adds r0, #0xb4\n\
-	ldrb r0, [r0, #0x1a]\n\
-	cmp r0, #2\n\
-	bne _080F7980\n\
-	adds r0, r4, #0\n\
-	bl FUN_080e1cac\n\
-	lsls r0, r0, #0x18\n\
-	cmp r0, #0\n\
-	bne _080F7996\n\
-	ldr r0, _080F7978 @ =StringOfsTable\n\
-	movs r1, #0xbb\n\
-	lsls r1, r1, #2\n\
-	adds r0, r0, r1\n\
-	ldrh r0, [r0]\n\
-	ldr r1, _080F797C @ =gStringData\n\
-	adds r0, r0, r1\n\
-	movs r1, #0x11\n\
-	movs r2, #0xd\n\
-	bl PrintString\n\
-	b _080F7996\n\
-	.align 2, 0\n\
-_080F7970: .4byte 0x000064AC\n\
-_080F7974: .4byte gUnlockedElfPtr\n\
-_080F7978: .4byte StringOfsTable\n\
-_080F797C: .4byte gStringData\n\
-_080F7980:\n\
-	ldr r0, _080F79C0 @ =StringOfsTable\n\
-	movs r1, #0xbb\n\
-	lsls r1, r1, #2\n\
-	adds r0, r0, r1\n\
-	ldrh r0, [r0]\n\
-	ldr r1, _080F79C4 @ =gStringData\n\
-	adds r0, r0, r1\n\
-	movs r1, #0x11\n\
-	movs r2, #0xd\n\
-	bl PrintString\n\
-_080F7996:\n\
-	ldr r0, _080F79C8 @ =gElfBreedInfo\n\
-	lsls r1, r4, #2\n\
-	adds r1, r1, r0\n\
-	ldrb r0, [r1]\n\
-	lsls r0, r0, #0x1a\n\
-	lsrs r0, r0, #0x1d\n\
-	cmp r0, #2\n\
-	bne _080F79E0\n\
-	ldr r0, _080F79CC @ =gUnlockedElfPtr\n\
-	ldr r0, [r0]\n\
-	adds r0, r0, r4\n\
-	ldrb r1, [r0]\n\
-	movs r0, #4\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F79E0\n\
-	cmp r4, #0x1a\n\
-	bhi _080F79D4\n\
-	ldr r1, _080F79D0 @ =0x0000010B\n\
-	adds r0, r4, r1\n\
-	b _080F79E4\n\
-	.align 2, 0\n\
-_080F79C0: .4byte StringOfsTable\n\
-_080F79C4: .4byte gStringData\n\
-_080F79C8: .4byte gElfBreedInfo\n\
-_080F79CC: .4byte gUnlockedElfPtr\n\
-_080F79D0: .4byte 0x0000010B\n\
-_080F79D4:\n\
-	cmp r4, #0x27\n\
-	bhi _080F79E0\n\
-	movs r1, #0x81\n\
-	lsls r1, r1, #1\n\
-	adds r0, r4, r1\n\
-	b _080F79E4\n\
-_080F79E0:\n\
-	adds r0, r4, #0\n\
-	adds r0, #0xc8\n\
-_080F79E4:\n\
-	pop {r4}\n\
-	pop {r1}\n\
-	bx r1\n\
- .syntax divided\n");
+bool8 FUN_080e1cac(cyberelf_t n);
+
+static str_id_t getElfDescStrID(struct GameState* g, u8 e) {
+  struct Zero* z = *(struct Zero**)((u8*)g + 0x64AC);
+
+  if (ELF_AVABILITY(e) & 2) {
+    if (((&z->unk_b4)->status).menuZeroColor == 2) {
+      if (!FUN_080e1cac(e)) {
+        PrintString(STRING(374), 17, 13);
+      }
+    } else {
+      PrintString(STRING(374), 17, 13);
+    }
+  }
+  if ((((u32)gElfBreedInfo[e].unk_0 << 26) >> 29) == 2 && (ELF_AVABILITY(e) & 4)) {
+    if (e <= 0x1a) {
+      return e + 0x10B;
+    }
+    if (e <= 0x27) {
+      return e + 0x102;
+    }
+  }
+  return e + 0xC8;
 }
