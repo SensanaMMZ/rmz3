@@ -175,101 +175,41 @@ static void ElfMenuLoop_Exit(struct GameState* g) {
 
 // --------------------------------------------
 
-NAKED static void ElfMenuFocusLoop_NoFocus(struct GameState* g) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	adds r5, r0, #0\n\
-	ldr r1, _080F6A7C @ =0x000064AC\n\
-	adds r0, r5, r1\n\
-	ldr r3, [r0]\n\
-	ldr r2, _080F6A80 @ =gWindowRegBuffer\n\
-	ldrh r1, [r2]\n\
-	ldr r0, _080F6A84 @ =0x0000DFFF\n\
-	ands r0, r1\n\
-	strh r0, [r2]\n\
-	ldr r2, _080F6A88 @ =0x00000DFC\n\
-	adds r4, r5, r2\n\
-	ldrb r0, [r4, #0xb]\n\
-	cmp r0, #0xf\n\
-	bhi _080F69F2\n\
-	adds r0, #1\n\
-	strb r0, [r4, #0xb]\n\
-_080F69F2:\n\
-	ldrb r7, [r4, #7]\n\
-	adds r0, r3, #0\n\
-	adds r0, #0xb4\n\
-	ldrb r0, [r0, #0x1a]\n\
-	cmp r0, #1\n\
-	beq _080F6A2A\n\
-	ldr r6, _080F6A8C @ =gJoypad\n\
-	ldrh r1, [r6, #6]\n\
-	movs r0, #0x40\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F6A14\n\
-	adds r0, r7, #4\n\
-	movs r1, #5\n\
-	bl __modsi3\n\
-	strb r0, [r4, #7]\n\
-_080F6A14:\n\
-	ldrh r1, [r6, #6]\n\
-	movs r0, #0x80\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F6A2A\n\
-	ldrb r0, [r4, #7]\n\
-	adds r0, #1\n\
-	movs r1, #5\n\
-	bl __modsi3\n\
-	strb r0, [r4, #7]\n\
-_080F6A2A:\n\
-	ldr r0, _080F6A88 @ =0x00000DFC\n\
-	adds r4, r5, r0\n\
-	ldrb r1, [r4, #7]\n\
-	cmp r7, r1\n\
-	beq _080F6A3A\n\
-	movs r0, #1\n\
-	bl PlaySound\n\
-_080F6A3A:\n\
-	ldr r0, _080F6A8C @ =gJoypad\n\
-	ldrh r1, [r0, #4]\n\
-	movs r0, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F6A76\n\
-	movs r1, #0\n\
-	strb r1, [r4, #6]\n\
-	strb r1, [r4, #9]\n\
-	movs r0, #1\n\
-	strb r0, [r5, #3]\n\
-	ldr r2, _080F6A90 @ =0x00000E17\n\
-	adds r0, r5, r2\n\
-	strb r1, [r0]\n\
-	ldrb r0, [r4, #0xc]\n\
-	cmp r0, #0\n\
-	beq _080F6A60\n\
-	bl ClearBlink\n\
-_080F6A60:\n\
-	movs r0, #0x4d\n\
-	strb r0, [r4, #0xc]\n\
-	movs r1, #0\n\
-	bl LoadBlink\n\
-	ldrb r0, [r4, #0xc]\n\
-	bl UpdateBlinkMotionState\n\
-	movs r0, #2\n\
-	bl PlaySound\n\
-_080F6A76:\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F6A7C: .4byte 0x000064AC\n\
-_080F6A80: .4byte gWindowRegBuffer\n\
-_080F6A84: .4byte 0x0000DFFF\n\
-_080F6A88: .4byte 0x00000DFC\n\
-_080F6A8C: .4byte gJoypad\n\
-_080F6A90: .4byte 0x00000E17\n\
- .syntax divided\n");
+static void ElfMenuFocusLoop_NoFocus(struct GameState* g) {
+  struct Zero* z = *(struct Zero**)((u8*)g + 0x64AC);
+  u8 mode;
+
+  gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN0_ON;
+
+  if (ELF_MENU->unk_b <= 0xF) {
+    ELF_MENU->unk_b++;
+  }
+  mode = ELF_MENU->mode;
+
+  if (((&z->unk_b4)->status).menuZeroColor != 1) {
+    if (gJoypad[0].field3_0x6 & DPAD_UP) {
+      ELF_MENU->mode = (mode + 4) % 5;
+    }
+    if (gJoypad[0].field3_0x6 & DPAD_DOWN) {
+      ELF_MENU->mode = (ELF_MENU->mode + 1) % 5;
+    }
+  }
+  if (mode != ELF_MENU->mode) {
+    PlaySound(1);
+  }
+  if (gJoypad[0].pressed & A_BUTTON) {
+    ELF_MENU->y = 0;
+    ELF_MENU->cursor = 0;
+    g->mode[3] = 1;
+    MENU->unk_4b = 0;
+    if (ELF_MENU->blinkID != 0) {
+      ClearBlink(ELF_MENU->blinkID);
+    }
+    ELF_MENU->blinkID = 0x4D;
+    LoadBlink(0x4D, 0);
+    UpdateBlinkMotionState(ELF_MENU->blinkID);
+    PlaySound(2);
+  }
 }
 
 NAKED static void ElfMenuFocusLoop_OpenTab(struct GameState* g) {
