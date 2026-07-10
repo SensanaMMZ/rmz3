@@ -212,127 +212,50 @@ static void ElfMenuFocusLoop_NoFocus(struct GameState* g) {
   }
 }
 
-NAKED static void ElfMenuFocusLoop_OpenTab(struct GameState* g) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	adds r5, r0, #0\n\
-	ldr r1, _080F6B20 @ =0x00000DFC\n\
-	adds r0, r5, r1\n\
-	ldrb r0, [r0, #0xc]\n\
-	bl UpdateBlinkMotionState\n\
-	ldr r3, _080F6B24 @ =0x00000E17\n\
-	adds r6, r5, r3\n\
-	ldrb r0, [r6]\n\
-	cmp r0, #0\n\
-	bne _080F6AEC\n\
-	adds r0, r5, #0\n\
-	bl FUN_080f70d8\n\
-	movs r4, #0\n\
-_080F6AB4:\n\
-	adds r0, r5, #0\n\
-	adds r1, r4, #0\n\
-	bl createMenuCursor\n\
-	adds r0, r4, #1\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r4, r0, #0x18\n\
-	cmp r4, #2\n\
-	bls _080F6AB4\n\
-	movs r4, #0\n\
-_080F6AC8:\n\
-	adds r0, r5, #0\n\
-	movs r1, #0\n\
-	adds r2, r4, #0\n\
-	bl CreateMenuComp9\n\
-	adds r0, r5, #0\n\
-	movs r1, #1\n\
-	adds r2, r4, #0\n\
-	bl CreateMenuComp9\n\
-	adds r0, r4, #1\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r4, r0, #0x18\n\
-	cmp r4, #5\n\
-	bls _080F6AC8\n\
-	ldrb r0, [r6]\n\
-	adds r0, #1\n\
-	strb r0, [r6]\n\
-_080F6AEC:\n\
-	ldr r0, _080F6B28 @ =gJoypad\n\
-	ldrh r1, [r0, #4]\n\
-	movs r7, #2\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F6B2C\n\
-	movs r0, #0\n\
-	strb r0, [r5, #3]\n\
-	ldr r0, _080F6B20 @ =0x00000DFC\n\
-	adds r4, r5, r0\n\
-	ldrb r0, [r4, #0xc]\n\
-	bl ClearBlink\n\
-	movs r0, #0x4e\n\
-	strb r0, [r4, #0xc]\n\
-	movs r1, #0\n\
-	bl LoadBlink\n\
-	ldrb r0, [r4, #0xc]\n\
-	bl UpdateBlinkMotionState\n\
-	movs r0, #3\n\
-	bl PlaySound\n\
-	b _080F6B7E\n\
-	.align 2, 0\n\
-_080F6B20: .4byte 0x00000DFC\n\
-_080F6B24: .4byte 0x00000E17\n\
-_080F6B28: .4byte gJoypad\n\
-_080F6B2C:\n\
-	ldr r1, _080F6B40 @ =0x00000DFC\n\
-	adds r6, r5, r1\n\
-	ldrb r0, [r6, #0xb]\n\
-	adds r4, r0, #0\n\
-	cmp r4, #0\n\
-	beq _080F6B44\n\
-	subs r0, #1\n\
-	strb r0, [r6, #0xb]\n\
-	b _080F6B7E\n\
-	.align 2, 0\n\
-_080F6B40: .4byte 0x00000DFC\n\
-_080F6B44:\n\
-	strb r7, [r5, #3]\n\
-	ldr r3, _080F6B84 @ =0x00000E17\n\
-	adds r0, r5, r3\n\
-	strb r4, [r0]\n\
-	strb r4, [r6, #8]\n\
-	ldrb r0, [r6, #0xc]\n\
-	cmp r0, #0\n\
-	beq _080F6B5A\n\
-	bl ClearBlink\n\
-	strb r4, [r6, #0xc]\n\
-_080F6B5A:\n\
-	ldr r2, _080F6B88 @ =gWindowRegBuffer\n\
-	ldrh r1, [r2]\n\
-	movs r3, #0x80\n\
-	lsls r3, r3, #6\n\
-	adds r0, r3, #0\n\
-	orrs r0, r1\n\
-	strh r0, [r2]\n\
-	strb r7, [r2, #0xc]\n\
-	ldrb r0, [r2, #0xe]\n\
-	movs r1, #0x11\n\
-	orrs r0, r1\n\
-	strb r0, [r2, #0xe]\n\
-	ldr r0, _080F6B8C @ =0x00001078\n\
-	strh r0, [r2, #4]\n\
-	adds r0, #0x18\n\
-	strh r0, [r2, #8]\n\
-	movs r0, #0x10\n\
-	strb r0, [r6, #0xd]\n\
-_080F6B7E:\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F6B84: .4byte 0x00000E17\n\
-_080F6B88: .4byte gWindowRegBuffer\n\
-_080F6B8C: .4byte 0x00001078\n\
- .syntax divided\n");
+void FUN_080f70d8(struct GameState* g);
+struct Widget* createMenuCursor(struct GameState* g, u8 kind);
+struct Widget* CreateMenuComp9(struct GameState* g, bool8 r1, u8 r2);
+
+static void ElfMenuFocusLoop_OpenTab(struct GameState* g) {
+  UpdateBlinkMotionState(ELF_MENU->blinkID);
+
+  if (MENU->unk_4b == 0) {
+    u8 i;
+    FUN_080f70d8(g);
+    for (i = 0; i <= 2; i++) {
+      createMenuCursor(g, i);
+    }
+    for (i = 0; i <= 5; i++) {
+      CreateMenuComp9(g, 0, i);
+      CreateMenuComp9(g, 1, i);
+    }
+    MENU->unk_4b++;
+  }
+
+  if (gJoypad[0].pressed & B_BUTTON) {
+    g->mode[3] = 0;
+    ClearBlink(ELF_MENU->blinkID);
+    ELF_MENU->blinkID = 0x4E;
+    LoadBlink(0x4E, 0);
+    UpdateBlinkMotionState(ELF_MENU->blinkID);
+    PlaySound(3);
+  } else if (ELF_MENU->unk_b != 0) {
+    ELF_MENU->unk_b--;
+  } else {
+    g->mode[3] = 2;
+    MENU->unk_4b = 0;
+    ELF_MENU->tab = 0;
+    if (ELF_MENU->blinkID != 0) {
+      ClearBlink(ELF_MENU->blinkID);
+      ELF_MENU->blinkID = 0;
+    }
+    gWindowRegBuffer.dispcnt |= DISPCNT_WIN0_ON;
+    gWindowRegBuffer.winin[0] = 2;
+    gWindowRegBuffer.winin[2] |= 0x11;
+    gWindowRegBuffer.winH.half[0] = 0x1078;
+    gWindowRegBuffer.winV.half[0] = 0x1090;
+    ELF_MENU->unk_d = 0x10;
+  }
 }
 
 NAKED static void ElfMenuFocusLoop_TabSelect(struct GameState* g) {
