@@ -225,111 +225,46 @@ _080E6BB4: .4byte sChipHeight\n\
  .syntax divided\n");
 }
 
-NAKED static void FUN_080e6bb8(struct Widget* w) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r4, r0, #0\n\
-	ldr r5, [r4, #0x74]\n\
-	ldr r1, _080E6C04 @ =gWidgetFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #1\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #4]\n\
-	str r0, [r4, #0x14]\n\
-	adds r0, r4, #0\n\
-	bl InitNonAffineMotion\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #1\n\
-	orrs r0, r1\n\
-	movs r1, #2\n\
-	orrs r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	ldrb r0, [r5, #0x11]\n\
-	cmp r0, #0\n\
-	bne _080E6C0C\n\
-	ldr r0, _080E6C08 @ =sHeadChipMotions\n\
-	ldrb r1, [r4, #0x11]\n\
-	lsls r1, r1, #1\n\
-	adds r1, r1, r0\n\
-	ldrh r1, [r1]\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	adds r0, r4, #0\n\
-	movs r1, #5\n\
-	bl ForceEntityPalette\n\
-	b _080E6C50\n\
-	.align 2, 0\n\
-_080E6C04: .4byte gWidgetFnTable\n\
-_080E6C08: .4byte sHeadChipMotions\n\
-_080E6C0C:\n\
-	cmp r0, #1\n\
-	bne _080E6C38\n\
-	ldr r1, _080E6C30 @ =sBodyChipMotions\n\
-	ldrb r0, [r4, #0x11]\n\
-	lsls r0, r0, #1\n\
-	adds r0, r0, r1\n\
-	ldrh r1, [r0]\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	ldr r1, _080E6C34 @ =sBodyChipPalIDs\n\
-	ldrb r0, [r4, #0x11]\n\
-	adds r0, r0, r1\n\
-	ldrb r1, [r0]\n\
-	adds r0, r4, #0\n\
-	bl ForceEntityPalette\n\
-	b _080E6C50\n\
-	.align 2, 0\n\
-_080E6C30: .4byte sBodyChipMotions\n\
-_080E6C34: .4byte sBodyChipPalIDs\n\
-_080E6C38:\n\
-	ldr r0, _080E6C90 @ =sFootChipMotions\n\
-	ldrb r1, [r4, #0x11]\n\
-	lsls r1, r1, #1\n\
-	adds r1, r1, r0\n\
-	ldrh r1, [r1]\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	adds r0, r4, #0\n\
-	movs r1, #5\n\
-	bl ForceEntityPalette\n\
-_080E6C50:\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	movs r2, #0\n\
-	strb r2, [r0]\n\
-	adds r3, r4, #0\n\
-	adds r3, #0x4a\n\
-	ldrb r1, [r3]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r3]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	subs r3, #1\n\
-	ldrb r1, [r3]\n\
-	movs r0, #0xd\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	movs r1, #4\n\
-	orrs r0, r1\n\
-	strb r0, [r3]\n\
-	ldr r0, [r5, #0x54]\n\
-	ldr r1, [r5, #0x58]\n\
-	str r0, [r4, #0x54]\n\
-	str r1, [r4, #0x58]\n\
-	strb r2, [r4, #0x12]\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080E6C90: .4byte sFootChipMotions\n\
- .syntax divided\n");
+extern const motion_t sHeadChipMotions[4];
+extern const motion_t sBodyChipMotions[6];
+extern const motion_t sFootChipMotions[8];
+extern const u8 sBodyChipPalIDs[6];
+
+// Init an armor-chip icon: mirror the owning armor-select cursor's slot. The
+// owner (stored in props) picks head/body/foot (owner->work[1]); this icon's
+// work[1] indexes the per-part motion table (and body has its own palette IDs).
+// Then unflip, priority 1, snap to the owner's coord. Retail expands
+// `flags |= DISPLAY | FLIPABLE` into two bit-ORs where clean C folds to |3
+// (retail-suboptimal as in Weapon16_Init); INCCODE for the byte-match.
+NON_MATCH static void FUN_080e6bb8(struct Widget* w) {
+#if MODERN
+  struct Entity* owner = *(struct Entity**)&w->props[0];
+
+  SET_WIDGET_ROUTINE(w, ENTITY_UPDATE);
+  InitNonAffineMotion(&w->s);
+  (w->s).flags |= DISPLAY | FLIPABLE;
+  switch (owner->work[1]) {
+    case 0:
+      SetMotion(&w->s, sHeadChipMotions[(w->s).work[1]]);
+      ForceEntityPalette(&w->s, 5);
+      break;
+    case 1:
+      SetMotion(&w->s, sBodyChipMotions[(w->s).work[1]]);
+      ForceEntityPalette(&w->s, sBodyChipPalIDs[(w->s).work[1]]);
+      break;
+    default:
+      SetMotion(&w->s, sFootChipMotions[(w->s).work[1]]);
+      ForceEntityPalette(&w->s, 5);
+      break;
+  }
+  SET_XFLIP(w, 0);
+  (w->s).spr.oam.priority = 1;
+  (w->s).coord.x = owner->coord.x;
+  (w->s).coord.y = owner->coord.y;
+  (w->s).work[2] = 0;
+#else
+  INCCODE("asm/wip/FUN_080e6bb8.inc");
+#endif
 }
 
 NAKED static void FUN_080e6c94(struct Widget* w) {
