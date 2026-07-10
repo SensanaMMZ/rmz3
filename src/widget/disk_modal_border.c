@@ -39,98 +39,39 @@ struct Widget* createSecretDiskModalBorder(struct GameState* g, u8 n) {
   return w;
 }
 
-NAKED static void DiskModalBorder_Init(struct Widget* w) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r5, r0, #0\n\
-	ldr r1, _080E82AC @ =gWidgetFnTable\n\
-	ldrb r0, [r5, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r4, #1\n\
-	str r4, [r5, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #4]\n\
-	str r0, [r5, #0x14]\n\
-	adds r0, r5, #0\n\
-	bl InitNonAffineMotion\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #2\n\
-	movs r6, #0\n\
-	orrs r0, r1\n\
-	strb r0, [r5, #0xa]\n\
-	ldr r1, _080E82B0 @ =0x00000E04\n\
-	adds r0, r5, #0\n\
-	bl SetMotion\n\
-	ldrb r1, [r5, #0x10]\n\
-	adds r0, r4, #0\n\
-	ands r0, r1\n\
-	adds r1, r5, #0\n\
-	adds r1, #0x4c\n\
-	strb r0, [r1]\n\
-	ldrb r0, [r5, #0x10]\n\
-	ands r4, r0\n\
-	adds r3, r5, #0\n\
-	adds r3, #0x4a\n\
-	lsls r2, r4, #4\n\
-	ldrb r1, [r3]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	orrs r0, r2\n\
-	strb r0, [r3]\n\
-	cmp r4, #0\n\
-	beq _080E82B4\n\
-	ldrb r0, [r5, #0xa]\n\
-	movs r1, #0x10\n\
-	orrs r0, r1\n\
-	b _080E82BA\n\
-	.align 2, 0\n\
-_080E82AC: .4byte gWidgetFnTable\n\
-_080E82B0: .4byte 0x00000E04\n\
-_080E82B4:\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-_080E82BA:\n\
-	strb r0, [r5, #0xa]\n\
-	ldrb r0, [r5, #0x10]\n\
-	lsrs r0, r0, #1\n\
-	movs r2, #1\n\
-	ands r0, r2\n\
-	adds r1, r5, #0\n\
-	adds r1, #0x4d\n\
-	strb r0, [r1]\n\
-	ldrb r1, [r5, #0x10]\n\
-	lsrs r1, r1, #1\n\
-	adds r4, r5, #0\n\
-	adds r4, #0x4a\n\
-	ands r1, r2\n\
-	lsls r3, r1, #5\n\
-	ldrb r2, [r4]\n\
-	movs r0, #0x21\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r2\n\
-	orrs r0, r3\n\
-	strb r0, [r4]\n\
-	cmp r1, #0\n\
-	beq _080E82EE\n\
-	ldrb r0, [r5, #0xa]\n\
-	movs r1, #0x20\n\
-	orrs r0, r1\n\
-	b _080E82F4\n\
-_080E82EE:\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #0xdf\n\
-	ands r0, r1\n\
-_080E82F4:\n\
-	strb r0, [r5, #0xa]\n\
-	adds r0, r5, #0\n\
-	bl DiskModalBorder_Update\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// Init a disk-modal corner border: route to Update, flippable, motion 0xE04,
+// then set X/Y flip from work[0] bits 0/1 (which corner). Retail keeps the `1`
+// it wrote for the ENTITY_UPDATE mode live in a callee-saved reg and reuses it
+// as the flip `& 1` mask across both flips; agbcc-from-clean-C re-materializes
+// the mask and copies, ~6 instr longer — a constant-reuse allocation tie clean
+// C can't force. INCCODE for the byte-match.
+NON_MATCH static void DiskModalBorder_Init(struct Widget* w) {
+#if MODERN
+  SET_WIDGET_ROUTINE(w, ENTITY_UPDATE);
+  InitNonAffineMotion(&w->s);
+  (w->s).flags |= FLIPABLE;
+  SetMotion(&w->s, 0xE04);
+
+  (w->s).spr.xflip = (w->s).work[0] & 1;
+  (w->s).spr.oam.xflip = (w->s).work[0] & 1;
+  if ((w->s).work[0] & 1) {
+    (w->s).flags |= X_FLIP;
+  } else {
+    (w->s).flags &= ~X_FLIP;
+  }
+
+  (w->s).spr.yflip = ((w->s).work[0] >> 1) & 1;
+  (w->s).spr.oam.yflip = ((w->s).work[0] >> 1) & 1;
+  if (((w->s).work[0] >> 1) & 1) {
+    (w->s).flags |= Y_FLIP;
+  } else {
+    (w->s).flags &= ~Y_FLIP;
+  }
+
+  DiskModalBorder_Update(w);
+#else
+  INCCODE("asm/wip/DiskModalBorder_Init.inc");
+#endif
 }
 
 static void DiskModalBorder_Update(struct Widget* w) {
