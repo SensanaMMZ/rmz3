@@ -160,92 +160,33 @@ NON_MATCH static void FUN_080e7ab0(struct Widget* w) {
 #endif
 }
 
-NAKED static void FUN_080e7b9c(struct Widget* w) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r3, r0, #0\n\
-	ldr r0, [r3, #0x28]\n\
-	ldr r1, _080E7BCC @ =0x00000DFC\n\
-	adds r0, r0, r1\n\
-	ldrb r1, [r3, #0x11]\n\
-	adds r0, r0, r1\n\
-	ldrb r4, [r0]\n\
-	cmp r4, #0xff\n\
-	beq _080E7C38\n\
-	ldr r1, _080E7BD0 @ =gElfBreedInfo\n\
-	lsls r2, r4, #2\n\
-	adds r0, r2, r1\n\
-	ldrb r5, [r0]\n\
-	lsls r0, r5, #0x19\n\
-	adds r6, r1, #0\n\
-	cmp r0, #0\n\
-	bge _080E7BE0\n\
-	lsrs r0, r5, #7\n\
-	cmp r0, #0\n\
-	beq _080E7BD8\n\
-	ldr r1, _080E7BD4 @ =0x00005311\n\
-	b _080E7C2A\n\
-	.align 2, 0\n\
-_080E7BCC: .4byte 0x00000DFC\n\
-_080E7BD0: .4byte gElfBreedInfo\n\
-_080E7BD4: .4byte 0x00005311\n\
-_080E7BD8:\n\
-	ldr r1, _080E7BDC @ =0x00005308\n\
-	b _080E7C2A\n\
-	.align 2, 0\n\
-_080E7BDC: .4byte 0x00005308\n\
-_080E7BE0:\n\
-	ldr r0, _080E7C04 @ =gUnlockedElfPtr\n\
-	ldr r0, [r0]\n\
-	adds r0, r0, r4\n\
-	ldrb r1, [r0]\n\
-	movs r0, #4\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080E7C14\n\
-	lsls r0, r5, #0x1a\n\
-	lsrs r0, r0, #0x1d\n\
-	cmp r0, #1\n\
-	bne _080E7C14\n\
-	lsls r0, r5, #0x18\n\
-	cmp r0, #0\n\
-	bge _080E7C0C\n\
-	ldr r1, _080E7C08 @ =0x00005311\n\
-	b _080E7C2A\n\
-	.align 2, 0\n\
-_080E7C04: .4byte gUnlockedElfPtr\n\
-_080E7C08: .4byte 0x00005311\n\
-_080E7C0C:\n\
-	ldr r1, _080E7C10 @ =0x00005308\n\
-	b _080E7C2A\n\
-	.align 2, 0\n\
-_080E7C10: .4byte 0x00005308\n\
-_080E7C14:\n\
-	adds r0, r2, r6\n\
-	ldrb r0, [r0]\n\
-	lsrs r0, r0, #7\n\
-	cmp r0, #0\n\
-	beq _080E7C28\n\
-	ldr r1, _080E7C24 @ =0x00005310\n\
-	b _080E7C2A\n\
-	.align 2, 0\n\
-_080E7C24: .4byte 0x00005310\n\
-_080E7C28:\n\
-	ldr r1, _080E7C34 @ =0x00005307\n\
-_080E7C2A:\n\
-	adds r0, r3, #0\n\
-	bl SetMotion\n\
-	b _080E7C40\n\
-	.align 2, 0\n\
-_080E7C34: .4byte 0x00005307\n\
-_080E7C38:\n\
-	ldrb r1, [r3, #0xa]\n\
-	movs r0, #0xfe\n\
-	ands r0, r1\n\
-	strb r0, [r3, #0xa]\n\
-_080E7C40:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// Sibling of FUN_080e7ab0 for the second icon column: picks the motion from the
+// elf's breed-info flags (bit 6 = fully bred, bit 7 = variant) and, when neither
+// fully bred, whether it is an available satellite at breed-stage 1. Retail tests
+// the flag bits via sign-shifts (`x<<25; bge`), caches the breed-info base, and
+// re-reads unk_0 in the fallback arm; agbcc-from-clean-C masks the bits and reuses
+// the cached byte, ~10 instr shorter. Retail-suboptimal like the sibling; INCCODE
+// for the byte-match.
+NON_MATCH static void FUN_080e7b9c(struct Widget* w) {
+#if MODERN
+  struct GameState* g = (struct GameState*)(w->s).unk_28;
+  cyberelf_t e = ELF_MENU->displayed[(w->s).work[1]];
+
+  if (e != 0xFF) {
+    u8 breedInfo = gElfBreedInfo[e].unk_0;
+    motion_t id;
+    if (breedInfo & 0x40) {
+      id = (breedInfo & 0x80) ? 0x5311 : 0x5308;
+    } else if ((ELF_AVABILITY(e) & 4) && (((u32)breedInfo << 26) >> 29) == 1) {
+      id = (breedInfo & 0x80) ? 0x5311 : 0x5308;
+    } else {
+      id = (breedInfo & 0x80) ? 0x5310 : 0x5307;
+    }
+    SetMotion(&w->s, id);
+  } else {
+    (w->s).flags &= ~DISPLAY;
+  }
+#else
+  INCCODE("asm/wip/FUN_080e7b9c.inc");
+#endif
 }
