@@ -224,49 +224,37 @@ static void onSaber(struct Zero* z) {
 }
 
 // 0x0802f6d4
-NON_MATCH static void handle_saber_input(struct Zero* z) {
-#if MODERN
+static void handle_saber_input(struct Zero* z) {
   u8 c;
-  struct Zero_b4* b4 = &(z->unk_b4);
-
-  if ((b4->status).mainWeapon == WEAPON_SABER) {
+  if (((&z->unk_b4)->status).mainWeapon == WEAPON_SABER) {
     c = GetWeaponCharge(z, FALSE);
   } else {
     c = GetWeaponCharge(z, TRUE);
   }
+  if ((z->input).ultimateCommand_22c[1] == 3) c = FULL_CHARGE;
 
-  if ((z->input).ultimateCommand_22c[1] == 3) {
-    c = FULL_CHARGE;
-  }
   if (c == FULL_CHARGE) {
     (z->unk_b4).attackMode[1] = 4;
     (z->unk_b4).attackMode[2] = 0;
     air_charge_saber(z);
-
   } else {
-    zero_input_t input = (z->input).val;  // input へのアクセスがうまくいかない
-    if ((input & ZERO_INPUT_DPAD_UP) && (isElfUsed_2(z, ELF_MALTHAS))) {
+    if (((&z->input)->val & ZERO_INPUT_DPAD_UP) && (isElfUsed_2(z, ELF_MALTHAS))) {
       (z->unk_b4).attackMode[1] = 6;
       (z->unk_b4).attackMode[2] = 0;
       air_rolling_saber(z);
-
     } else {
       struct Zero_b4* b4 = &(z->unk_b4);
-      if ((input & ZERO_INPUT_DPAD_DOWN) && ((b4->status).exSkill & (1 << EXSKILL_ID_SMASH))) {
+      if (((&z->input)->val & ZERO_INPUT_DPAD_DOWN) && ((b4->status).exSkill & (1 << EXSKILL_ID_SMASH))) {
         (z->unk_b4).attackMode[1] = 7;
         (z->unk_b4).attackMode[2] = 0;
         saber_smash(z);
         return;
       }
-
       (z->unk_b4).attackMode[1] = 1;
       (z->unk_b4).attackMode[2] = 0;
       air_saber(z);
     }
   }
-#else
-  INCCODE("asm/wip/handle_saber_input_air.inc");
-#endif
 }
 
 static void air_saber(struct Zero* z) {

@@ -319,47 +319,36 @@ static void triple_slash_1st(struct Zero* z) {
 }
 
 // 0x0802d59c
-NON_MATCH static void triple_slash_2nd(struct Zero* z) {
-#if MODERN
-  weapon_t w[4];
-
+static void triple_slash_2nd(struct Zero* z) {
   if ((z->unk_b4).attackMode[2] == 0) {
     SetMotion(&z->s, MOTION(DM015_ZERO_SABER_TRIPLE2, 0));
     CreateWeaponSaber(z, SABER_TRIPLE_2);
     (z->unk_b4).attackMode[2]++;
   } else {
-    if (IsAttackOK(z, w) && (w[0] == WEAPON_SABER)) {
-      z->tripleSlashCounter++;
-    }
+    weapon_t w[4];
+    if (IsAttackOK(z, w) && (w[0] == WEAPON_SABER)) z->tripleSlashCounter++;
     KeepMotion(z, MOTION(DM015_ZERO_SABER_TRIPLE2, 0));
   }
 
   if (((z->s).motion.cmdIdx >= 4) && (z->tripleSlashCounter > 1)) {
-    zero_input_t* input = &(z->input).val;
-    if ((*input & DPAD_UP) && isElfUsed_2(z, ELF_LIZETUS)) {
+    if (((&z->input)->val & ZERO_INPUT_DPAD_UP) && isElfUsed_2(z, ELF_LIZETUS)) {
       (z->unk_b4).attackMode[1] = 5;
       (z->unk_b4).attackMode[2] = 0;
       slash_up(z);
-
-    } else if ((*input & DPAD_DOWN) && isElfUsed_2(z, ELF_COTTUS)) {
+    } else if (((&z->input)->val & ZERO_INPUT_DPAD_DOWN) && isElfUsed_2(z, ELF_COTTUS)) {
       (z->unk_b4).attackMode[1] = 6;
       (z->unk_b4).attackMode[2] = 0;
       throw_blade(z);
-
     } else {
       (z->unk_b4).attackMode[1] = 3;
       (z->unk_b4).attackMode[2] = 0;
       triple_slash_3rd(z);
     }
   }
-
   if ((z->s).motion.state == MOTION_END) {
     (z->unk_b4).attackMode[0] = 0;
     SetMotion(&z->s, GetDefaultMotion(z));
   }
-#else
-  INCCODE("asm/wip/idle_saber_2.inc");
-#endif
 }
 
 // 0x0802d6b4

@@ -207,33 +207,25 @@ static void onSaber(struct Zero* z) {
   (routine[(z->unk_b4).attackMode[1]])(z);
 }
 
-NON_MATCH static void handle_saber_input(struct Zero* z) {
-#if MODERN
+static void handle_saber_input(struct Zero* z) {
   u8 charge;
-  struct Zero_b4* b4 = &(z->unk_b4);
-
-  if ((b4->status).mainWeapon == WEAPON_SABER) {
+  if (((&z->unk_b4)->status).mainWeapon == WEAPON_SABER) {
     charge = GetWeaponCharge(z, FALSE);
   } else {
     charge = GetWeaponCharge(z, TRUE);
   }
-  if ((z->input).ultimateCommand_22c[1] == 3) {
+  if ((&z->input)->ultimateCommand_22c[1] == 3) {
     charge = FULL_CHARGE;
   }
-
   if (charge == FULL_CHARGE) {
     (z->unk_b4).attackMode[1] = 2;
     (z->unk_b4).attackMode[2] = 0;
     charge_saber(z);
     return;
   }
-
   (z->unk_b4).attackMode[1] = 1;
   (z->unk_b4).attackMode[2] = 0;
   wall_saber(z);
-#else
-  INCCODE("asm/wip/handle_saber_input_wall.inc");
-#endif
 }
 
 // 0x08030720
