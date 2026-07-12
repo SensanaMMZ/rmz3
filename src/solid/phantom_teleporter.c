@@ -229,7 +229,7 @@ _080D8920:\n\
 	bne _080D8994\n\
 	ldr r0, _080D8980 @ =gStageRun+232\n\
 	movs r1, #1\n\
-	bl SetCameraMode\n\
+	bl Camera_SetMode\n\
 	adds r0, r6, #0\n\
 	adds r0, #0x54\n\
 	bl FUN_08019d20\n\
@@ -318,7 +318,7 @@ _080D89C4:\n\
 	adds r4, #0xe8\n\
 	adds r0, r4, #0\n\
 	movs r1, #6\n\
-	bl SetCameraMode\n\
+	bl Camera_SetMode\n\
 	movs r0, #8\n\
 	strb r0, [r4, #0x19]\n\
 	strh r7, [r4, #0x22]\n\

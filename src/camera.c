@@ -8,7 +8,7 @@ static void focus(struct Camera* camera, u8 r1);
 
 void CalcCameraDelta(struct Coord* c1, struct Coord* c2);
 
-void ResetCamera(struct Camera* camera, const struct CameraTemplate* template, struct TaskManager* tm) {
+void Camera_Reset(struct Camera* camera, const struct CameraTemplate* template, struct TaskManager* tm) {
   camera->template = template;
   camera->taskManager = tm;
   (camera->viewport).x = 0;
@@ -21,17 +21,17 @@ void ResetCamera(struct Camera* camera, const struct CameraTemplate* template, s
   focus(camera, 8);
 }
 
-void RunCameraCallback(struct Camera* camera) {
+void Camera_Update(struct Camera* camera) {
   camera->callback(camera);
   return;
 }
 
-void quake_0801a604(struct Camera* camera) {
+void Camera_Shake(struct Camera* camera) {
   CalcQuake(&camera->viewport, &camera->base);
   quake_0801acdc(&camera->viewport);
 }
 
-void RunAllDrawTasks(struct Camera* camera) {
+void Camera_Render(struct Camera* camera) {
   struct TaskManager* tm = camera->taskManager;
   if (camera->mode != 0) {
     SetTaskPivot(tm, &camera->pivot);
@@ -48,7 +48,7 @@ static void CameraMode3Callback(struct Camera* camera);
 static void CameraMode4Callback(struct Camera* camera);
 static void CameraMode7Callback(struct Camera* camera);
 
-void SetCameraMode(struct Camera* camera, u32 mode) {
+void Camera_SetMode(struct Camera* camera, u32 mode) {
   // clang-format off
   static const CameraFunc sUpdates[8] = {
       [0] = CameraMode0Callback,
@@ -70,7 +70,7 @@ void SetCameraMode(struct Camera* camera, u32 mode) {
 
 void LoadCameraTemplate(struct Camera* camera, const struct CameraTemplate* t) {
   if (t == NULL) {
-    SetCameraMode(camera, 0);
+    Camera_SetMode(camera, 0);
     camera->zero = NULL;
     camera->chaseMode = 0;
     camera->unk_22 = 0;
@@ -79,7 +79,7 @@ void LoadCameraTemplate(struct Camera* camera, const struct CameraTemplate* t) {
     return;
   }
 
-  SetCameraMode(camera, t->mode);
+  Camera_SetMode(camera, t->mode);
   camera->chaseMode = t->chaseMode;
   camera->unk_22 = 0;
   camera->zero = NULL;

@@ -92,7 +92,7 @@ void setStageCheckpoint(u8 cp);
 void setStageCheckpoint2(u8 cp);
 void ApplyGiantElf(struct StageRun* p);
 u32 CalcFromCamera(struct Camera* p, struct Coord* c);
-void SetCameraMode(struct Camera* p, u32 mode);
+void Camera_SetMode(struct Camera* p, u32 mode);
 void LoadCameraTemplate(struct Camera* p, const struct CameraTemplate* t);
 
 // --------------------------------------------

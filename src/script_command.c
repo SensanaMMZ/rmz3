@@ -180,7 +180,7 @@ static bool32 Cmd_adjust_camera(struct VM* vm) {
   struct Camera* camera = &gStageRun.vm.camera;
   switch (vm->pc->status) {
     case 0: {
-      SetCameraMode(camera, vm->pc->work);
+      Camera_SetMode(camera, vm->pc->work);
       break;
     }
     case 1: {
@@ -252,13 +252,13 @@ static bool32 Cmd_adjust_camera(struct VM* vm) {
       break;
     }
     case 16: {
-      SetCameraMode(camera, 0);
+      Camera_SetMode(camera, 0);
       SaveDispRegister();
       gVideoRegBuffer.dispcnt &= ~(DISPCNT_BG1_ON | DISPCNT_BG2_ON | DISPCNT_BG3_ON | DISPCNT_OBJ_ON | DISPCNT_WIN0_ON);
       break;
     }
     case 17: {
-      SetCameraMode(camera, 6);
+      Camera_SetMode(camera, 6);
       RestoreBackground();
       break;
     }
@@ -352,7 +352,7 @@ static bool32 Cmd_resume(struct VM* vm) {
     struct Camera* camera = &gStageRun.vm.camera;
     if (camera->mode == 0) {
       RestoreBackground();
-      SetCameraMode(camera, 6);
+      Camera_SetMode(camera, 6);
       camera->chaseMode = (1 << 3);
       camera->unk_22 = 0;
     }

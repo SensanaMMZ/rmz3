@@ -102,7 +102,7 @@ _0801A126:
 	bne _0801A19C
 	ldr r0, _0801A1D4 @ =gStageRun+232
 	mov sl, r0
-	bl RunCameraCallback
+	bl Camera_Update
 	ldr r6, _0801A1D8 @ =0x020023D4
 	subs r1, r6, #2
 	mov sb, r1

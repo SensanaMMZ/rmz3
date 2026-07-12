@@ -122,7 +122,7 @@ void ClearStageRun(struct TaskManager* tm) {
   gStageRun.stageEventPhase = 0;
   gStageRun.remainingTimeFrame = 0xffffffff;
   ClearQuakeManager();
-  ResetCamera(&gStageRun.vm.camera, &gDefaultCameraTemplate, tm);
+  Camera_Reset(&gStageRun.vm.camera, &gDefaultCameraTemplate, tm);
   ResetLandscape(gStageID32s[id], &gStageRun.vm.camera.viewport);
 
   if (((gMission.unk_00)->missionDones & (1 << gStageMissionBitTable[id])) == 0) {
@@ -170,7 +170,7 @@ NON_MATCH bool32 OverworldUpdate(bool8 paused) {
     }
   } while (running);
 
-  RunCameraCallback(&gStageRun.vm.camera);
+  Camera_Update(&gStageRun.vm.camera);
 
   // Update hazards
   {
@@ -207,7 +207,7 @@ void CameraUpdate(bool8 paused) {
   struct TaskManager* tm = ow->taskManager;
 
   if (!paused) {
-    quake_0801a604(&(ow->vm).camera);
+    Camera_Shake(&(ow->vm).camera);
   }
 
   camera = &(ow->vm).camera;
@@ -215,7 +215,7 @@ void CameraUpdate(bool8 paused) {
     DrawOverworld(tm);
   }
   RenderWipeZ(&ow->vm);  // wipe by "Z" and print string (if any)
-  RunAllDrawTasks(camera);
+  Camera_Render(camera);
 }
 
 // ミッションの終了状況を見てフラグを立てる

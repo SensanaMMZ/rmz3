@@ -55,9 +55,9 @@ struct Camera {
   s32 bottom;  // cameraMode 4以上の時の境界
 };
 
-void RunCameraCallback(struct Camera* p);
-void RunAllDrawTasks(struct Camera* p);
-void quake_0801a604(struct Camera* p);
-void ResetCamera(struct Camera* camera, const struct CameraTemplate* template, struct TaskManager* tm);
+void Camera_Update(struct Camera* p);
+void Camera_Render(struct Camera* p);
+void Camera_Shake(struct Camera* p);
+void Camera_Reset(struct Camera* camera, const struct CameraTemplate* template, struct TaskManager* tm);
 
 #endif  // GUARD_RMZ3_CAMERA_H

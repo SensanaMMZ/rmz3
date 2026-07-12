@@ -531,7 +531,7 @@ _080F2A2A:\n\
 	adds r4, #0xe8\n\
 	adds r0, r4, #0\n\
 	movs r1, #3\n\
-	bl SetCameraMode\n\
+	bl Camera_SetMode\n\
 	movs r0, #8\n\
 	strb r0, [r4, #0x19]\n\
 	strh r7, [r4, #0x22]\n\
@@ -685,7 +685,7 @@ _080F2B84:\n\
 	adds r4, #0xe8\n\
 	adds r0, r4, #0\n\
 	movs r1, #6\n\
-	bl SetCameraMode\n\
+	bl Camera_SetMode\n\
 	movs r0, #8\n\
 	strb r0, [r4, #0x19]\n\
 	strh r5, [r4, #0x22]\n\
