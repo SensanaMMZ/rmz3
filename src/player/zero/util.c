@@ -353,32 +353,42 @@ void zero_08032724(struct Zero* z) {
   }
 }
 
-NON_MATCH void setStageElfFlags(struct Zero* z) {
-#if MODERN
-  if ((ELF_AVABILITY(ELF_BYSE) & ELF_AVABILITY_UNLOCKED) && ((ELF_AVABILITY(ELF_BYSE) & ELF_AVABILITY_USED) || z->inCyberSpace || SATELITE_1 == ELF_BYSE || SATELITE_2 == ELF_BYSE)) {
+static inline bool32 IsCyberElfUsed(struct Zero* p, cyberelf_t id) {
+  struct Zero_b4* b4;
+  cyberelf_t* satelites;
+  if (ELF_AVABILITY(id) & ELF_AVABILITY_UNLOCKED) {
+    if (ELF_AVABILITY(id) & ELF_AVABILITY_USED) {
+      return TRUE;
+    }
+    b4 = &p->unk_b4;
+    satelites = (b4->status).asset.satelites;
+    if ((p->inCyberSpace) || ((satelites[0] == id) || (satelites[1] == id))) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+void setStageElfFlags(struct Zero* p) {
+  if (IsCyberElfUsed(p, ELF_BYSE)) {
     SET_FLAG(gCurStory.s.gameflags, BYSE_ENABLED);
-    SET_FLAG(gGameState.save.story.gameflags, FLAG_7);
-    SET_FLAG(gGameState.save.savedStory.gameflags, FLAG_7);
+    SET_FLAG((&gGameState.save.story)->gameflags, FLAG_7);
+    SET_FLAG((&gGameState.save.savedStory)->gameflags, FLAG_7);
   } else {
     CLEAR_FLAG(gCurStory.s.gameflags, BYSE_ENABLED);
-    CLEAR_FLAG(gGameState.save.story.gameflags, FLAG_7);
-    CLEAR_FLAG(gGameState.save.savedStory.gameflags, FLAG_7);
+    CLEAR_FLAG((&gGameState.save.story)->gameflags, FLAG_7);
+    CLEAR_FLAG((&gGameState.save.savedStory)->gameflags, FLAG_7);
   }
-
-  if ((ELF_AVABILITY(ELF_DYLPHINA) & ELF_AVABILITY_UNLOCKED) && ((ELF_AVABILITY(ELF_DYLPHINA) & ELF_AVABILITY_USED) || z->inCyberSpace || SATELITE_1 == ELF_DYLPHINA || SATELITE_2 == ELF_DYLPHINA)) {
+  if (IsCyberElfUsed(p, ELF_DYLPHINA)) {
     SET_FLAG(gCurStory.s.gameflags, DYLPHINA_ENABLED);
   } else {
     CLEAR_FLAG(gCurStory.s.gameflags, DYLPHINA_ENABLED);
   }
-
-  if ((ELF_AVABILITY(ELF_PUTITE) & ELF_AVABILITY_UNLOCKED) && ((ELF_AVABILITY(ELF_PUTITE) & ELF_AVABILITY_USED) || z->inCyberSpace || SATELITE_1 == ELF_PUTITE || SATELITE_2 == ELF_PUTITE)) {
+  if (IsCyberElfUsed(p, ELF_PUTITE)) {
     SET_FLAG(gCurStory.s.gameflags, PUTITE_ENABLED);
   } else {
     CLEAR_FLAG(gCurStory.s.gameflags, PUTITE_ENABLED);
   }
-#else
-  INCCODE("asm/wip/setStageElfFlags.inc");
-#endif
 }
 
 u8 FUN_08032880(struct Zero* z, u8 r1) {
