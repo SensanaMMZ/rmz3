@@ -2092,23 +2092,25 @@ _08026BA2:\n\
  .syntax divided\n");
 }
 
-NON_MATCH u8 ladder_08026bb0(struct Zero* z, const struct Rect* range, bool8 _) {
-#if MODERN
+u8 ladder_08026bb0(struct Zero* z, const struct Rect* range, bool8 _) {
   u8 val;
   metatile_attr_t attr = GetMetatileAttr((z->s).coord.x, (z->s).coord.y + range->y);
   if (attr == (METATILE_SOFT_PLATFORM | 0x0F)) {
     val = 1;
-  } else if (attr == (METATILE_SOFT_PLATFORM | 0x0E)) {
-    val = 2;
   } else {
-    struct Coord* pc = &(z->unk_b4).prevCoord;
-    attr = GetMetatileAttr(pc->x, pc->y + range->y);
-    val = 3;
+    register u32 r6 asm("r6") = (METATILE_SOFT_PLATFORM | 0x0E);
+    if (attr == r6) {  // attr == (METATILE_SOFT_PLATFORM | 0x0E)
+      val = 2;
+    } else {
+      attr = GetMetatileAttr((&(z->unk_b4).prevCoord)->x, (&(z->unk_b4).prevCoord)->y + range->y);
+      if (attr == 3) {
+        val = attr;
+      } else {
+        val = 3;
+      }
+    }
   }
   return val;
-#else
-  INCCODE("asm/wip/ladder_08026bb0.inc");
-#endif
 }
 
 /**
