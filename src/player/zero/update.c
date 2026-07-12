@@ -2569,6 +2569,9 @@ static void zeroTeleport4(struct Zero* z) {
 static void zeroCyberDoor0(struct Zero* z);
 static void zeroCyberDoor1(struct Zero* z);
 static void zeroCyberDoor2(struct Zero* z);
+void FUN_080399fc(struct Weapon* w);
+u8 FUN_08032880(struct Zero* z, u8 r1);
+void CreateCyberSpaceElf(struct Coord* c, u8 a, u8 b);
 
 void zeroCyberDoor(struct Zero* z) {
   static ZeroFunc const sZeroCyberDoorSeq[] = {
@@ -2624,261 +2627,83 @@ static void zeroCyberDoor1(struct Zero* z) {
   }
 }
 
-NAKED static void zeroCyberDoor2(struct Zero* z) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r4, r0, #0\n\
-	ldrb r0, [r4, #0xf]\n\
-	cmp r0, #0xa\n\
-	bls _0802CDC8\n\
-	b _0802CFD0\n\
-_0802CDC8:\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _0802CDD4 @ =_0802CDD8\n\
-	adds r0, r0, r1\n\
-	ldr r0, [r0]\n\
-	mov pc, r0\n\
-	.align 2, 0\n\
-_0802CDD4: .4byte _0802CDD8\n\
-_0802CDD8: @ jump table\n\
-	.4byte _0802CE04 @ case 0\n\
-	.4byte _0802CE64 @ case 1\n\
-	.4byte _0802CE76 @ case 2\n\
-	.4byte _0802CE9C @ case 3\n\
-	.4byte _0802CEE8 @ case 4\n\
-	.4byte _0802CF7E @ case 5\n\
-	.4byte _0802CFD0 @ case 6\n\
-	.4byte _0802CFD0 @ case 7\n\
-	.4byte _0802CFD0 @ case 8\n\
-	.4byte _0802CFD0 @ case 9\n\
-	.4byte _0802CFBC @ case 10\n\
-_0802CE04:\n\
-	ldr r0, _0802CE58 @ =gCurStory\n\
-	ldrb r1, [r0, #4]\n\
-	movs r0, #0x10\n\
-	ands r0, r1\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r1, r0, #0x18\n\
-	cmp r1, #0\n\
-	bne _0802CE3C\n\
-	ldr r2, _0802CE5C @ =0x00000231\n\
-	adds r0, r4, r2\n\
-	strb r1, [r0]\n\
-	adds r0, r4, #0\n\
-	bl GetMaxHP\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	adds r5, r4, #0\n\
-	adds r5, #0xa4\n\
-	movs r2, #0\n\
-	ldrsh r1, [r5, r2]\n\
-	cmp r0, r1\n\
-	bge _0802CE3C\n\
-	adds r0, r4, #0\n\
-	bl GetMaxHP\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	strh r0, [r5]\n\
-_0802CE3C:\n\
-	adds r0, r4, #0\n\
-	bl resetSateliteElfPosition\n\
-	ldr r0, _0802CE60 @ =FUN_080399fc\n\
-	bl KillAllWeapons\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xfe\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	movs r0, #0x14\n\
-	strb r0, [r4, #0x12]\n\
-	b _0802CE90\n\
-	.align 2, 0\n\
-_0802CE58: .4byte gCurStory\n\
-_0802CE5C: .4byte 0x00000231\n\
-_0802CE60: .4byte FUN_080399fc\n\
-_0802CE64:\n\
-	ldrb r0, [r4, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r4, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r0, #0xff\n\
-	beq _0802CE74\n\
-	b _0802CFD0\n\
-_0802CE74:\n\
-	b _0802CE90\n\
-_0802CE76:\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #1\n\
-	orrs r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	ldr r1, _0802CE98 @ =0x00003402\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	ldr r0, [r4, #0x54]\n\
-	ldr r1, [r4, #0x58]\n\
-	bl FUN_0800a05c\n\
-	str r0, [r4, #0x58]\n\
-_0802CE90:\n\
-	ldrb r0, [r4, #0xf]\n\
-	adds r0, #1\n\
-	strb r0, [r4, #0xf]\n\
-	b _0802CFD0\n\
-	.align 2, 0\n\
-_0802CE98: .4byte 0x00003402\n\
-_0802CE9C:\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x73\n\
-	ldrb r0, [r0]\n\
-	cmp r0, #3\n\
-	beq _0802CEA8\n\
-	b _0802CFD0\n\
-_0802CEA8:\n\
-	movs r5, #0\n\
-	strb r5, [r4, #0x12]\n\
-	ldr r0, _0802CEDC @ =gCurStory\n\
-	ldrb r1, [r0, #4]\n\
-	movs r0, #0x10\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0802CEE2\n\
-	adds r0, r4, #0\n\
-	movs r1, #0xff\n\
-	bl FUN_08032880\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r0, #0\n\
-	beq _0802CEE0\n\
-	movs r1, #0xd0\n\
-	lsls r1, r1, #6\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	strb r5, [r4, #0x12]\n\
-	strb r5, [r4, #0x13]\n\
-	movs r0, #4\n\
-	strb r0, [r4, #0xf]\n\
-	b _0802CFD0\n\
-	.align 2, 0\n\
-_0802CEDC: .4byte gCurStory\n\
-_0802CEE0:\n\
-	strb r0, [r4, #0x12]\n\
-_0802CEE2:\n\
-	movs r0, #5\n\
-	strb r0, [r4, #0xf]\n\
-	b _0802CFD0\n\
-_0802CEE8:\n\
-	ldrb r0, [r4, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r4, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r0, #0xff\n\
-	bne _0802CFD0\n\
-	adds r5, r4, #0\n\
-	adds r5, #0x54\n\
-	ldrb r1, [r4, #0x13]\n\
-	adds r0, r4, #0\n\
-	bl FUN_08032880\n\
-	adds r1, r0, #0\n\
-	lsls r1, r1, #0x18\n\
-	lsrs r1, r1, #0x18\n\
-	ldrb r0, [r4, #0x13]\n\
-	movs r6, #1\n\
-	adds r2, r6, #0\n\
-	ands r2, r0\n\
-	adds r0, r5, #0\n\
-	bl CreateCyberSpaceElf\n\
-	ldrb r0, [r4, #0x13]\n\
-	adds r0, #1\n\
-	strb r0, [r4, #0x13]\n\
-	adds r0, r4, #0\n\
-	movs r1, #0xff\n\
-	bl FUN_08032880\n\
-	ldrb r1, [r4, #0x13]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r1, r0\n\
-	bhs _0802CF4C\n\
-	adds r0, r4, #0\n\
-	bl FUN_08032880\n\
-	adds r1, r0, #0\n\
-	lsls r1, r1, #0x18\n\
-	lsrs r1, r1, #0x18\n\
-	ldrb r0, [r4, #0x13]\n\
-	adds r2, r6, #0\n\
-	ands r2, r0\n\
-	adds r0, r5, #0\n\
-	bl CreateCyberSpaceElf\n\
-	ldrb r0, [r4, #0x13]\n\
-	adds r0, #1\n\
-	strb r0, [r4, #0x13]\n\
-_0802CF4C:\n\
-	adds r0, r4, #0\n\
-	movs r1, #0xff\n\
-	bl FUN_08032880\n\
-	ldrb r1, [r4, #0x13]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r1, r0\n\
-	blo _0802CF6A\n\
-	ldrb r0, [r4, #0xf]\n\
-	adds r0, #1\n\
-	strb r0, [r4, #0xf]\n\
-	movs r0, #0x20\n\
-	strb r0, [r4, #0x12]\n\
-	b _0802CFD0\n\
-_0802CF6A:\n\
-	adds r0, r4, #0\n\
-	movs r1, #0xff\n\
-	bl FUN_08032880\n\
-	ldrb r1, [r4, #0x13]\n\
-	subs r0, r0, r1\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x19\n\
-	strb r0, [r4, #0x12]\n\
-	b _0802CFD0\n\
-_0802CF7E:\n\
-	ldrb r0, [r4, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r4, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r0, #0xff\n\
-	bne _0802CFD0\n\
-	ldr r0, _0802CFB0 @ =gCurStory\n\
-	ldrb r1, [r0, #4]\n\
-	movs r0, #0x10\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0802CFA0\n\
-	ldr r0, _0802CFB4 @ =0x00000231\n\
-	adds r1, r4, r0\n\
-	movs r0, #1\n\
-	strb r0, [r1]\n\
-_0802CFA0:\n\
-	ldr r1, _0802CFB8 @ =0x00003301\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	movs r0, #0xa\n\
-	strb r0, [r4, #0xf]\n\
-	b _0802CFD0\n\
-	.align 2, 0\n\
-_0802CFB0: .4byte gCurStory\n\
-_0802CFB4: .4byte 0x00000231\n\
-_0802CFB8: .4byte 0x00003301\n\
-_0802CFBC:\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x73\n\
-	ldrb r0, [r0]\n\
-	cmp r0, #3\n\
-	bne _0802CFD0\n\
-	movs r0, #0\n\
-	strb r0, [r4, #0xd]\n\
-	strb r0, [r4, #0xe]\n\
-	strb r0, [r4, #0xf]\n\
-	str r0, [r4, #0x5c]\n\
-_0802CFD0:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+static void zeroCyberDoor2(struct Zero* z) {
+  switch ((z->s).mode[3]) {
+    case 0: {
+      if (!FLAG(gCurStory.s.gameflags, IN_CYBERSPACE)) {
+        z->inCyberSpace = FALSE;
+        if (GetMaxHP(z) < (z->body).hp) {
+          (z->body).hp = GetMaxHP(z);
+        }
+      }
+      resetSateliteElfPosition(z);
+      KillAllWeapons((void*)FUN_080399fc);
+      (z->s).flags &= ~DISPLAY;
+      (z->s).work[2] = 20;
+      (z->s).mode[3]++;
+      break;
+    }
+    case 1: {
+      if (--(z->s).work[2] == 0xFF) {
+        (z->s).mode[3]++;
+      }
+      break;
+    }
+    case 2: {
+      (z->s).flags |= DISPLAY;
+      SetMotion(&z->s, MOTION(DM052_ZERO_TELEPORT_START, 2));
+      (z->s).coord.y = FUN_0800a05c((z->s).coord.x, (z->s).coord.y);
+      (z->s).mode[3]++;
+      break;
+    }
+    case 3: {
+      if ((z->s).motion.state == MOTION_END) {
+        (z->s).work[2] = 0;
+        if (FLAG(gCurStory.s.gameflags, IN_CYBERSPACE)) {
+          if (FUN_08032880(z, 0xFF)) {
+            SetMotion(&z->s, MOTION(DM052_ZERO_TELEPORT_START, 0));
+            (z->s).work[2] = 0, (z->s).work[3] = 0;
+            (z->s).mode[3] = 4;
+            break;
+          }
+          (z->s).work[2] = 0;
+        }
+        (z->s).mode[3] = 5;
+      }
+      break;
+    }
+    case 4: {
+      if (--(z->s).work[2] == 0xFF) {
+        CreateCyberSpaceElf(&(z->s).coord, FUN_08032880(z, (z->s).work[3]), (z->s).work[3] & 1);
+        (z->s).work[3]++;
+        if ((z->s).work[3] < FUN_08032880(z, 0xFF)) {
+          CreateCyberSpaceElf(&(z->s).coord, FUN_08032880(z, (z->s).work[3]), (z->s).work[3] & 1);
+          (z->s).work[3]++;
+        }
+        if ((z->s).work[3] >= FUN_08032880(z, 0xFF)) {
+          (z->s).mode[3]++;
+          (z->s).work[2] = 32;
+        } else {
+          u8 val = FUN_08032880(z, 0xFF) - (z->s).work[3];
+          (z->s).work[2] = val >> 1;
+        }
+      }
+      break;
+    }
+    case 5: {
+      if (--(z->s).work[2] == 0xFF) {
+        if (FLAG(gCurStory.s.gameflags, IN_CYBERSPACE)) z->inCyberSpace = TRUE;
+        SetMotion(&z->s, MOTION(DM051_ZERO_UNK, 1));
+        (z->s).mode[3] = 10;
+      }
+      break;
+    }
+    case 10: {
+      if ((z->s).motion.state == MOTION_END) {
+        (z->s).mode[1] = ZERO_GROUND, (z->s).mode[2] = 0, (z->s).mode[3] = 0;
+        (z->s).d.x = 0;
+      }
+      break;
+    }
+  }
 }
