@@ -3355,87 +3355,46 @@ _080F581C: .4byte gStringData\n\
  .syntax divided\n");
 }
 
-NAKED u8 CheckUnlockedHead(struct GameState* g, u8 r1) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r4, r0, #0\n\
-	lsls r1, r1, #0x18\n\
-	lsrs r1, r1, #0x18\n\
-	ldr r2, _080F5894 @ =0x000064AC\n\
-	adds r0, r4, r2\n\
-	ldr r0, [r0]\n\
-	cmp r1, #0xff\n\
-	bne _080F589C\n\
-	movs r2, #0\n\
-	adds r3, r0, #0\n\
-	adds r3, #0xb4\n\
-	ldrb r1, [r3, #0x17]\n\
-	movs r5, #1\n\
-	adds r0, r5, #0\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F584C\n\
-	ldr r1, _080F5898 @ =0x00000DD2\n\
-	adds r0, r4, r1\n\
-	strb r2, [r0]\n\
-	movs r2, #1\n\
-_080F584C:\n\
-	ldrb r1, [r3, #0x17]\n\
-	movs r6, #2\n\
-	adds r0, r6, #0\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F5866\n\
-	ldr r1, _080F5898 @ =0x00000DD2\n\
-	adds r0, r4, r1\n\
-	adds r0, r0, r2\n\
-	strb r5, [r0]\n\
-	adds r0, r2, #1\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r2, r0, #0x18\n\
-_080F5866:\n\
-	ldrb r1, [r3, #0x17]\n\
-	movs r0, #4\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F587E\n\
-	ldr r1, _080F5898 @ =0x00000DD2\n\
-	adds r0, r4, r1\n\
-	adds r0, r0, r2\n\
-	strb r6, [r0]\n\
-	adds r0, r2, #1\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r2, r0, #0x18\n\
-_080F587E:\n\
-	ldrb r1, [r3, #0x17]\n\
-	movs r0, #8\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F58AC\n\
-	ldr r1, _080F5898 @ =0x00000DD2\n\
-	adds r0, r4, r1\n\
-	adds r0, r0, r2\n\
-	movs r1, #3\n\
-	strb r1, [r0]\n\
-	b _080F58AC\n\
-	.align 2, 0\n\
-_080F5894: .4byte 0x000064AC\n\
-_080F5898: .4byte 0x00000DD2\n\
-_080F589C:\n\
-	ldr r2, _080F58A8 @ =0x00000DD2\n\
-	adds r0, r4, r2\n\
-	adds r0, r0, r1\n\
-	ldrb r0, [r0]\n\
-	b _080F58AE\n\
-	.align 2, 0\n\
-_080F58A8: .4byte 0x00000DD2\n\
-_080F58AC:\n\
-	movs r0, #0xff\n\
-_080F58AE:\n\
-	pop {r4, r5, r6}\n\
-	pop {r1}\n\
-	bx r1\n\
- .syntax divided\n");
+// idx==0xFF builds the list of unlocked head-part IDs (bits 0-3 of the player's
+// status.unlockedHead -> IDs 0/1/2/3) into the g+0xDD2 menu buffer and returns
+// 0xFF; otherwise returns the idx-th entry. Fully decoded (explicit-& status
+// access, block-scoped `u8* list = (u8*)g + 0xDD2` to keep the base-first
+// address order). Residual: retail places the list[idx] return between the
+// list-builder and the shared `return 0xFF`, needing an extra branch clean C
+// doesn't emit (a C-unreachable block-ordering quirk). INCCODE for the match.
+NON_MATCH u8 CheckUnlockedHead(struct GameState* g, u8 idx) {
+#if MODERN
+  struct Zero* z = *(struct Zero**)((u8*)g + 0x64AC);
+
+  if (idx == 0xFF) {
+    u8 count = 0;
+    if (((&z->unk_b4)->status).unlockedHead & 1) {
+      ((u8*)g + 0xDD2)[0] = 0;
+      count = 1;
+    }
+    if (((&z->unk_b4)->status).unlockedHead & 2) {
+      u8* list = (u8*)g + 0xDD2;
+      list[count] = 1;
+      count++;
+    }
+    if (((&z->unk_b4)->status).unlockedHead & 4) {
+      u8* list = (u8*)g + 0xDD2;
+      list[count] = 2;
+      count++;
+    }
+    if (((&z->unk_b4)->status).unlockedHead & 8) {
+      u8* list = (u8*)g + 0xDD2;
+      list[count] = 3;
+    }
+    return 0xFF;
+  }
+  {
+    u8* list = (u8*)g + 0xDD2;
+    return list[idx];
+  }
+#else
+  INCCODE("asm/wip/CheckUnlockedHead.inc");
+#endif
 }
 
 NAKED u8 CheckUnlockedBody(struct GameState* g, u8 r1) {
