@@ -2436,114 +2436,48 @@ static void zeroTeleport0(struct Zero* z) {
   (z->s).mode[3] = 0;
 }
 
-NAKED static void zeroTeleport1(struct Zero* z) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	adds r4, r0, #0\n\
-	movs r7, #0\n\
-	ldr r0, _0802CB98 @ =gCollisionManager\n\
-	movs r1, #0xc6\n\
-	lsls r1, r1, #3\n\
-	adds r0, r0, r1\n\
-	ldr r0, [r0]\n\
-	cmp r0, #0\n\
-	beq _0802CBEA\n\
-	ldr r3, [r0, #0x2c]\n\
-	cmp r3, #0\n\
-	beq _0802CBEA\n\
-	adds r5, r3, #0\n\
-	ldrb r0, [r4, #0xf]\n\
-	cmp r0, #0\n\
-	bne _0802CBC4\n\
-	ldr r1, [r4, #0x54]\n\
-	ldr r0, [r5, #0x54]\n\
-	cmp r1, r0\n\
-	beq _0802CBF0\n\
-	movs r6, #0x80\n\
-	lsls r6, r6, #2\n\
-	adds r0, r4, #0\n\
-	adds r1, r6, #0\n\
-	bl SetMotion\n\
-	ldr r1, [r4, #0x54]\n\
-	ldr r0, [r5, #0x54]\n\
-	cmp r1, r0\n\
-	ble _0802CBA0\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	strb r7, [r0]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	ldr r0, _0802CB9C @ =0xFFFFFE00\n\
-	str r0, [r4, #0x5c]\n\
-	b _0802CBBC\n\
-	.align 2, 0\n\
-_0802CB98: .4byte gCollisionManager\n\
-_0802CB9C: .4byte 0xFFFFFE00\n\
-_0802CBA0:\n\
-	adds r1, r4, #0\n\
-	adds r1, #0x4c\n\
-	movs r0, #1\n\
-	strb r0, [r1]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r0, [r2]\n\
-	movs r1, #0x10\n\
-	orrs r0, r1\n\
-	strb r0, [r2]\n\
-	ldrb r0, [r4, #0xa]\n\
-	orrs r1, r0\n\
-	strb r1, [r4, #0xa]\n\
-	str r6, [r4, #0x5c]\n\
-_0802CBBC:\n\
-	ldrb r0, [r4, #0xf]\n\
-	adds r0, #1\n\
-	strb r0, [r4, #0xf]\n\
-	b _0802CBEC\n\
-_0802CBC4:\n\
-	ldr r1, [r4, #0x54]\n\
-	ldr r0, [r4, #0x5c]\n\
-	adds r2, r1, r0\n\
-	str r2, [r4, #0x54]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0x10\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0802CBE0\n\
-	ldr r0, [r5, #0x54]\n\
-	cmp r2, r0\n\
-	ble _0802CBEC\n\
-	str r0, [r4, #0x54]\n\
-	b _0802CBF0\n\
-_0802CBE0:\n\
-	ldr r0, [r3, #0x54]\n\
-	cmp r2, r0\n\
-	bge _0802CBEC\n\
-	str r0, [r4, #0x54]\n\
-	b _0802CBF0\n\
-_0802CBEA:\n\
-	movs r7, #1\n\
-_0802CBEC:\n\
-	cmp r7, #0\n\
-	beq _0802CBF8\n\
-_0802CBF0:\n\
-	movs r1, #0\n\
-	movs r0, #2\n\
-	strb r0, [r4, #0xe]\n\
-	strb r1, [r4, #0xf]\n\
-_0802CBF8:\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+static void zeroTeleport1(struct Zero* z) {
+  register struct Entity* r3 asm("r3");
+  bool32 done = FALSE;
+  if ((gCollisionManager.teleportal != NULL) &&
+      (r3 = (struct Entity*)(gCollisionManager.teleportal)->parent, r3 != NULL)) {
+    struct Entity* q = r3;
+    if ((z->s).mode[3] == 0) {
+      if ((z->s).coord.x != (q->coord).x) {
+        SetMotion(&z->s, MOTION(DM002_ZERO_RUN, 0));
+        if ((z->s).coord.x > (q->coord).x) {
+          (z->s).spr.xflip = FALSE, (z->s).spr.oam.xflip = FALSE;
+          (z->s).flags &= ~X_FLIP;
+          (z->s).d.x = -PIXEL(2);
+        } else {
+          (z->s).spr.xflip = TRUE, (z->s).spr.oam.xflip = TRUE;
+          (z->s).flags |= X_FLIP;
+          (z->s).d.x = PIXEL(2);
+        }
+        (z->s).mode[3]++;
+      } else {
+        done = TRUE;
+      }
+    } else {
+      (z->s).coord.x += (z->s).d.x;
+      if ((z->s).flags & X_FLIP) {
+        register s32 qx asm("r0") = (q->coord).x;
+        if ((z->s).coord.x > qx) {
+          (z->s).coord.x = qx;
+          done = TRUE;
+        }
+      } else {
+        s32 qx = (r3->coord).x;
+        if ((z->s).coord.x < qx) {
+          (z->s).coord.x = qx;
+          done = TRUE;
+        }
+      }
+    }
+  } else {
+    done = TRUE;
+  }
+  if (done) (z->s).mode[2] = 2, (z->s).mode[3] = 0;
 }
 
 static void zeroTeleport2(struct Zero* z) {
