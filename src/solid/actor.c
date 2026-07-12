@@ -891,207 +891,67 @@ static void Actor4_Update(struct Solid* p) {
   }
 }
 
-NAKED static void Actor5_Update(struct Solid* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r6, r0, #0\n\
-	ldrb r0, [r6, #0xd]\n\
-	cmp r0, #6\n\
-	bls _080D11CC\n\
-	b _080D1366\n\
-_080D11CC:\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _080D11D8 @ =_080D11DC\n\
-	adds r0, r0, r1\n\
-	ldr r0, [r0]\n\
-	mov pc, r0\n\
-	.align 2, 0\n\
-_080D11D8: .4byte _080D11DC\n\
-_080D11DC: @ jump table\n\
-	.4byte _080D11F8 @ case 0\n\
-	.4byte _080D1256 @ case 1\n\
-	.4byte _080D12B4 @ case 2\n\
-	.4byte _080D12D4 @ case 3\n\
-	.4byte _080D1304 @ case 4\n\
-	.4byte _080D133A @ case 5\n\
-	.4byte _080D1360 @ case 6\n\
-_080D11F8:\n\
-	ldr r0, [r6, #0x54]\n\
-	ldr r1, [r6, #0x58]\n\
-	bl FUN_08009f6c\n\
-	str r0, [r6, #0x58]\n\
-	ldrb r0, [r6, #0x11]\n\
-	cmp r0, #0\n\
-	bne _080D1248\n\
-	movs r4, #0xaf\n\
-	lsls r4, r4, #4\n\
-	ldr r1, _080D1298 @ =gStaticMotionGraphics\n\
-	adds r0, r4, r1\n\
-	ldr r1, _080D129C @ =wStaticGraphicTilenums\n\
-	movs r5, #0x8c\n\
-	lsls r5, r5, #1\n\
-	adds r1, r1, r5\n\
-	ldrh r1, [r1]\n\
-	ldrh r2, [r0, #6]\n\
-	lsrs r2, r2, #6\n\
-	subs r1, r1, r2\n\
-	lsls r1, r1, #5\n\
-	movs r2, #0x80\n\
-	lsls r2, r2, #9\n\
-	adds r1, r1, r2\n\
-	bl LoadGraphic\n\
-	ldr r0, _080D12A0 @ =gStaticMotionGraphics+12\n\
-	adds r4, r4, r0\n\
-	ldr r0, _080D12A4 @ =wStaticMotionPalIDs\n\
-	adds r0, r0, r5\n\
-	ldrh r1, [r0]\n\
-	ldrb r0, [r4, #7]\n\
-	subs r1, r1, r0\n\
-	lsls r1, r1, #5\n\
-	movs r2, #0x80\n\
-	lsls r2, r2, #2\n\
-	adds r1, r1, r2\n\
-	adds r0, r4, #0\n\
-	bl LoadPalette\n\
-_080D1248:\n\
-	ldr r1, _080D12A8 @ =0x00008C05\n\
-	adds r0, r6, #0\n\
-	bl SetMotion\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080D1256:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldr r0, [r6, #0x18]\n\
-	ldrb r1, [r0, #9]\n\
-	movs r0, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080D127A\n\
-	ldr r1, _080D12AC @ =0x00008C06\n\
-	adds r0, r6, #0\n\
-	bl SetMotion\n\
-	movs r0, #0x2d\n\
-	strb r0, [r6, #0x12]\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080D127A:\n\
-	ldr r0, [r6, #0x18]\n\
-	ldrb r1, [r0, #9]\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080D1366\n\
-	ldr r1, _080D12B0 @ =0x00008C07\n\
-	adds r0, r6, #0\n\
-	bl SetMotion\n\
-	movs r0, #0xe\n\
-	strb r0, [r6, #0x12]\n\
-	movs r0, #3\n\
-	strb r0, [r6, #0xd]\n\
-	b _080D1366\n\
-	.align 2, 0\n\
-_080D1298: .4byte gStaticMotionGraphics\n\
-_080D129C: .4byte wStaticGraphicTilenums\n\
-_080D12A0: .4byte gStaticMotionGraphics+12\n\
-_080D12A4: .4byte wStaticMotionPalIDs\n\
-_080D12A8: .4byte 0x00008C05\n\
-_080D12AC: .4byte 0x00008C06\n\
-_080D12B0: .4byte 0x00008C07\n\
-_080D12B4:\n\
-	ldrb r0, [r6, #0x12]\n\
-	adds r1, r0, #1\n\
-	strb r1, [r6, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r0, #0x2c\n\
-	bls _080D12CC\n\
-	movs r0, #0x59\n\
-	bl PlaySound\n\
-	movs r0, #0\n\
-	strb r0, [r6, #0x12]\n\
-_080D12CC:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	b _080D1366\n\
-_080D12D4:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldr r0, [r6, #0x54]\n\
-	movs r1, #0xe0\n\
-	lsls r1, r1, #1\n\
-	adds r0, r0, r1\n\
-	str r0, [r6, #0x54]\n\
-	ldrb r0, [r6, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r6, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	cmp r0, #0\n\
-	bne _080D1366\n\
-	ldr r1, _080D1300 @ =0x00008C05\n\
-	adds r0, r6, #0\n\
-	bl SetMotion\n\
-	movs r0, #8\n\
-	strb r0, [r6, #0x12]\n\
-	b _080D1354\n\
-	.align 2, 0\n\
-_080D1300: .4byte 0x00008C05\n\
-_080D1304:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldrb r0, [r6, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r6, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r2, r0, #0x18\n\
-	cmp r2, #0\n\
-	bne _080D1366\n\
-	ldrb r1, [r6, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r6, #0xa]\n\
-	adds r0, r6, #0\n\
-	adds r0, #0x4c\n\
-	strb r2, [r0]\n\
-	adds r2, r6, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	movs r0, #8\n\
-	strb r0, [r6, #0x12]\n\
-	b _080D1354\n\
-_080D133A:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldrb r0, [r6, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r6, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	cmp r0, #0\n\
-	bne _080D1366\n\
-	ldr r1, _080D135C @ =0x00008C06\n\
-	adds r0, r6, #0\n\
-	bl SetMotion\n\
-_080D1354:\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-	b _080D1366\n\
-	.align 2, 0\n\
-_080D135C: .4byte 0x00008C06\n\
-_080D1360:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-_080D1366:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+static void Actor5_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      if ((p->s).work[1] == 0) {
+        LOAD_STATIC_GRAPHIC(SM140_RESISTANCE_MOB);
+      }
+      SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 5));
+      (p->s).mode[1]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).scriptEntity->flags & 1) {
+        SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 6));
+        (p->s).work[2] = 0x2D;
+        (p->s).mode[1]++;
+      }
+      if ((p->s).scriptEntity->flags & 2) {
+        SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 7));
+        (p->s).work[2] = 0xE;
+        (p->s).mode[1] = 3;
+      }
+      break;
+    case 2:
+      if ((p->s).work[2]++ > 0x2C) {
+        PlaySound(SE_UNK_59);
+        (p->s).work[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += 0x1C0;
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] == 0) {
+        SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 5));
+        (p->s).work[2] = 8;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] == 0) {
+        SET_XFLIP(&p->s, 0);
+        (p->s).work[2] = 8;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] == 0) {
+        SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 6));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
 }
 
 static void Actor6_Update(struct Solid* p) {
