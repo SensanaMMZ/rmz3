@@ -20,101 +20,38 @@ struct Widget* CreateMenuComp1(struct GameState* m, u8 kind, u8 r2) {
   return w;
 }
 
-NAKED static void MenuComp1_Init(struct Widget* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r5, r0, #0\n\
-	ldr r4, [r5, #0x28]\n\
-	bl InitNonAffineMotion\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #1\n\
-	movs r2, #0\n\
-	orrs r0, r1\n\
-	movs r1, #2\n\
-	orrs r0, r1\n\
-	strb r0, [r5, #0xa]\n\
-	adds r0, r5, #0\n\
-	adds r0, #0x4c\n\
-	strb r2, [r0]\n\
-	adds r2, r5, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r5, #0xa]\n\
-	ldr r0, _080E62E8 @ =0x00000DCC\n\
-	adds r4, r4, r0\n\
-	ldrb r0, [r4]\n\
-	strb r0, [r5, #0x12]\n\
-	ldrb r0, [r5, #0x10]\n\
-	ldrb r4, [r4]\n\
-	cmp r0, r4\n\
-	bne _080E62F0\n\
-	ldr r0, _080E62EC @ =sMenuComp1Motions\n\
-	ldrb r1, [r5, #0x10]\n\
-	lsls r1, r1, #2\n\
-	adds r0, #2\n\
-	adds r1, r1, r0\n\
-	ldrh r1, [r1]\n\
-	adds r0, r5, #0\n\
-	bl SetMotion\n\
-	b _080E6300\n\
-	.align 2, 0\n\
-_080E62E8: .4byte 0x00000DCC\n\
-_080E62EC: .4byte sMenuComp1Motions\n\
-_080E62F0:\n\
-	ldr r0, _080E6340 @ =sMenuComp1Motions\n\
-	ldrb r1, [r5, #0x10]\n\
-	lsls r1, r1, #2\n\
-	adds r1, r1, r0\n\
-	ldrh r1, [r1]\n\
-	adds r0, r5, #0\n\
-	bl SetMotion\n\
-_080E6300:\n\
-	ldr r1, _080E6344 @ =u8_ARRAY_08372020\n\
-	ldrb r0, [r5, #0x10]\n\
-	adds r0, r0, r1\n\
-	ldrb r0, [r0]\n\
-	lsls r0, r0, #8\n\
-	str r0, [r5, #0x54]\n\
-	ldr r1, _080E6348 @ =u8_ARRAY_08372027\n\
-	ldrb r0, [r5, #0x10]\n\
-	adds r0, r0, r1\n\
-	ldrb r0, [r0]\n\
-	lsls r0, r0, #8\n\
-	str r0, [r5, #0x58]\n\
-	ldr r0, [r5, #0x54]\n\
-	ldr r1, [r5, #0x58]\n\
-	str r0, [r5, #0x64]\n\
-	str r1, [r5, #0x68]\n\
-	ldr r1, _080E634C @ =gWidgetFnTable\n\
-	ldrb r0, [r5, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #1\n\
-	str r1, [r5, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #4]\n\
-	str r0, [r5, #0x14]\n\
-	adds r0, r5, #0\n\
-	bl MenuComp1_Update\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080E6340: .4byte sMenuComp1Motions\n\
-_080E6344: .4byte u8_ARRAY_08372020\n\
-_080E6348: .4byte u8_ARRAY_08372027\n\
-_080E634C: .4byte gWidgetFnTable\n\
- .syntax divided\n");
-}
-
 extern const motion_t sMenuComp1Motions[14];
+extern const u8 u8_ARRAY_08372020[7];
+extern const u8 u8_ARRAY_08372027[7];
+
+// Spawn a menu component: display+flippable, unflipped, latch the current
+// cursor (work[2]=MENU->unk_0), set the selected/unselected motion for its slot
+// (work[0]), and place it from the per-slot x/y tables (mirrored into
+// unk_coord), then route to Update. Retail expands `flags |= DISPLAY | FLIPABLE`
+// into two bit-ORs where clean C folds to |3 (retail-suboptimal as in
+// Weapon16_Init); INCCODE for the byte-match.
+NON_MATCH static void MenuComp1_Init(struct Widget* p) {
+#if MODERN
+  struct GameState* g = (struct GameState*)(p->s).unk_28;
+
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY | FLIPABLE;
+  SET_XFLIP(p, 0);
+  (p->s).work[2] = MENU->unk_00[0];
+  if ((p->s).work[0] == MENU->unk_00[0]) {
+    SetMotion(&p->s, sMenuComp1Motions[(p->s).work[0] * 2 + 1]);
+  } else {
+    SetMotion(&p->s, sMenuComp1Motions[(p->s).work[0] * 2]);
+  }
+  (p->s).coord.x = u8_ARRAY_08372020[(p->s).work[0]] << 8;
+  (p->s).coord.y = u8_ARRAY_08372027[(p->s).work[0]] << 8;
+  (p->s).unk_coord = (p->s).coord;
+  SET_WIDGET_ROUTINE(p, ENTITY_UPDATE);
+  MenuComp1_Update(p);
+#else
+  INCCODE("asm/wip/MenuComp1_Init.inc");
+#endif
+}
 
 // Fully decoded. Residual is a 2-instruction tie in the selected-motion arm:
 // retail re-loads work[0] and adds 2 to the freshly-loaded table base at
