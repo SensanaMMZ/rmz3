@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "global.h"
+#include "quake.h"
 #include "solid.h"
+#include "stagerun.h"
 
 static const struct Rect sSize;
 
@@ -153,84 +155,30 @@ _080DE710: .4byte gSolidFnTable\n\
  .syntax divided\n");
 }
 
-NAKED static void Solid45_Update(struct Solid* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r4, r0, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldr r0, _080DE7A4 @ =gOverworld\n\
-	ldr r1, _080DE7A8 @ =0x0002D024\n\
-	adds r6, r0, r1\n\
-	ldrb r0, [r6]\n\
-	cmp r0, #0\n\
-	beq _080DE79C\n\
-	ldrb r0, [r4, #0xd]\n\
-	adds r5, r4, #0\n\
-	adds r5, #0x54\n\
-	cmp r0, #0\n\
-	bne _080DE74E\n\
-	movs r0, #1\n\
-	adds r1, r5, #0\n\
-	bl AppendQuake\n\
-	movs r1, #0x9a\n\
-	lsls r1, r1, #8\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	movs r0, #0xa\n\
-	strb r0, [r4, #0x12]\n\
-	ldrb r0, [r4, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r4, #0xd]\n\
-_080DE74E:\n\
-	ldr r0, [r4, #0x5c]\n\
-	cmp r0, #0xff\n\
-	bgt _080DE758\n\
-	adds r0, #8\n\
-	str r0, [r4, #0x5c]\n\
-_080DE758:\n\
-	ldr r0, [r4, #0x54]\n\
-	ldr r1, [r4, #0x5c]\n\
-	subs r0, r0, r1\n\
-	str r0, [r4, #0x54]\n\
-	ldrb r0, [r4, #0x12]\n\
-	cmp r0, #0\n\
-	beq _080DE774\n\
-	subs r0, #1\n\
-	strb r0, [r4, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	cmp r0, #0\n\
-	bne _080DE774\n\
-	movs r0, #2\n\
-	strb r0, [r6]\n\
-_080DE774:\n\
-	ldr r0, _080DE7AC @ =gStageRun+232\n\
-	adds r1, r5, #0\n\
-	bl CalcFromCamera\n\
-	movs r1, #0x80\n\
-	lsls r1, r1, #7\n\
-	cmp r0, r1\n\
-	bls _080DE79C\n\
-	ldr r1, _080DE7B0 @ =gSolidFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #2\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #8]\n\
-	str r0, [r4, #0x14]\n\
-	adds r0, r4, #0\n\
-	bl Solid45_Die\n\
-_080DE79C:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080DE7A4: .4byte gOverworld\n\
-_080DE7A8: .4byte 0x0002D024\n\
-_080DE7AC: .4byte gStageRun+232\n\
-_080DE7B0: .4byte gSolidFnTable\n\
- .syntax divided\n");
+static void Solid45_Update(struct Solid* p) {
+  UpdateMotionGraphic(&p->s);
+  if (gOverworld.state[0] != 0) {
+    if ((p->s).mode[1] == 0) {
+      AppendQuake(1, &(p->s).coord);
+      SetMotion(&p->s, 0x9A00);
+      (p->s).work[2] = 0xA;
+      (p->s).mode[1]++;
+    }
+    if ((p->s).d.x <= 0xFF) {
+      (p->s).d.x += 8;
+    }
+    (p->s).coord.x -= (p->s).d.x;
+    if ((p->s).work[2] != 0) {
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] == 0) {
+        gOverworld.state[0] = 2;
+      }
+    }
+    if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+      SET_SOLID_ROUTINE(p, ENTITY_DIE);
+      Solid45_Die(p);
+    }
+  }
 }
 
 void Solid45_Die(struct Solid* p) {
