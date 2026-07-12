@@ -597,28 +597,26 @@ _080F3BE8:\n\
 // whole-function r2<->r3 swap (g vs the reused B-mask 0-value): agbcc colors g
 // into r2, retail into r3, a C-unreachable register-numbering tie (like the
 // door/bird holdouts). INCCODE for the byte-match.
-NON_MATCH bool8 TrySlideMenu(struct GameState* g) {
-#if MODERN
+bool8 TrySlideMenu(struct GameState* g) {
   if (gJoypad[0].pressed & B_BUTTON) {
-    g->mode[1] = 3;
-    g->mode[2] = 3;
+    g->mode[1] = 3, g->mode[2] = 3;
     return TRUE;
   }
   if (gJoypad[0].pressed & L_BUTTON) {
     MENU->unk_4d = (MENU->unk_4c + 3) & 3;
     g->mode[2] = 0;
-  } else if (gJoypad[0].pressed & R_BUTTON) {
+    (sEachMenuLoops[MENU->unk_4d])(g);
+    PlaySound(SE_MENU_SLIDE);
+    return TRUE;
+  }
+  if (gJoypad[0].pressed & R_BUTTON) {
     MENU->unk_4d = (MENU->unk_4c + 1) & 3;
     g->mode[2] = 0;
-  } else {
-    return FALSE;
+    (sEachMenuLoops[MENU->unk_4d])(g);
+    PlaySound(SE_MENU_SLIDE);
+    return TRUE;
   }
-  (sEachMenuLoops[MENU->unk_4d])(g);
-  PlaySound(0x33);
-  return TRUE;
-#else
-  INCCODE("asm/wip/TrySlideMenu.inc");
-#endif
+  return FALSE;
 }
 
 /**
