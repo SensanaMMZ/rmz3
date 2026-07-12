@@ -88,122 +88,28 @@ static void onBuster(struct Zero* z) {
 }
 
 // 0x08030f94
-NAKED static void buster_0(struct Zero* z) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	adds r4, r0, #0\n\
-	ldr r7, [r4, #0x58]\n\
-	ldrb r0, [r4, #0xa]\n\
-	lsrs r5, r0, #4\n\
-	movs r6, #1\n\
-	ands r5, r6\n\
-	movs r0, #0x86\n\
-	lsls r0, r0, #2\n\
-	adds r3, r4, r0\n\
-	ldr r0, [r3]\n\
-	movs r1, #0x10\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _08030FC8\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	strb r6, [r0]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r0, [r2]\n\
-	orrs r0, r1\n\
-	strb r0, [r2]\n\
-	ldrb r0, [r4, #0xa]\n\
-	orrs r1, r0\n\
-	strb r1, [r4, #0xa]\n\
-_08030FC8:\n\
-	ldr r0, [r3]\n\
-	movs r1, #0x20\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _08030FEE\n\
-	adds r1, r4, #0\n\
-	adds r1, #0x4c\n\
-	movs r0, #0\n\
-	strb r0, [r1]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	subs r0, #0x11\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-_08030FEE:\n\
-	ldr r1, _0803102C @ =0xFFFFE500\n\
-	ldr r2, _08031030 @ =0xFFFFEF00\n\
-	ldrb r3, [r4, #0xa]\n\
-	lsrs r3, r3, #4\n\
-	ands r3, r6\n\
-	adds r0, r4, #0\n\
-	bl CreateBuster\n\
-	cmp r0, #0\n\
-	bne _08031048\n\
-	adds r1, r5, #0\n\
-	ands r1, r6\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x4c\n\
-	strb r1, [r0]\n\
-	adds r3, r4, #0\n\
-	adds r3, #0x4a\n\
-	lsls r1, r1, #4\n\
-	ldrb r2, [r3]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r2\n\
-	orrs r0, r1\n\
-	strb r0, [r3]\n\
-	ands r5, r6\n\
-	cmp r5, #0\n\
-	beq _08031034\n\
-	ldrb r0, [r4, #0xa]\n\
-	movs r1, #0x10\n\
-	orrs r0, r1\n\
-	b _0803103A\n\
-	.align 2, 0\n\
-_0803102C: .4byte 0xFFFFE500\n\
-_08031030: .4byte 0xFFFFEF00\n\
-_08031034:\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-_0803103A:\n\
-	strb r0, [r4, #0xa]\n\
-	str r7, [r4, #0x58]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0xec\n\
-	movs r0, #0\n\
-	strb r0, [r1]\n\
-	b _08031064\n\
-_08031048:\n\
-	ldr r1, _0803106C @ =0x00000D01\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	ldr r0, _08031070 @ =0x00000129\n\
-	adds r1, r4, r0\n\
-	movs r0, #2\n\
-	strb r0, [r1]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0xed\n\
-	strb r6, [r0]\n\
-	adds r0, r4, #0\n\
-	bl buster_1\n\
-_08031064:\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_0803106C: .4byte 0x00000D01\n\
-_08031070: .4byte 0x00000129\n\
- .syntax divided\n");
-};
+static void buster_0(struct Zero* z) {
+  s32 y = (z->s).coord.y;
+  const bool8 xflip = ((z->s).flags & X_FLIP) != 0;
+  if ((z->input).val & ZERO_INPUT_DPAD_RIGHT) {
+    (z->s).spr.xflip = TRUE, (z->s).spr.oam.xflip = TRUE;
+    (z->s).flags |= X_FLIP;
+  }
+  if ((z->input).val & ZERO_INPUT_DPAD_LEFT) {
+    (z->s).spr.xflip = FALSE, (z->s).spr.oam.xflip = FALSE;
+    (z->s).flags &= ~X_FLIP;
+  }
+  if (CreateBuster(z, -PIXEL(27), -PIXEL(17), (((z->s).flags & X_FLIP) != 0)) == NULL) {
+    SET_PLAYER_XFLIP(z, xflip);
+    (z->s).coord.y = y;
+    (z->unk_b4).attackMode[0] = 0;
+    return;
+  }
+  SetMotion(&z->s, MOTION(DM013_ZERO_BUSTER_LADDER, 1));
+  z->atkCooltime = 2;
+  (z->unk_b4).attackMode[1] = 1;
+  buster_1(z);
+}
 
 static void buster_1(struct Zero* z) {
   u8* ct;
@@ -327,20 +233,16 @@ static void onSaber(struct Zero* z) {
 }
 
 // 0x08031298
-NON_MATCH static void handle_saber_input(struct Zero* z) {
-#if MODERN
+static void handle_saber_input(struct Zero* z) {
   u8 charge;
-  struct Zero_b4* b4 = &(z->unk_b4);
-  const zero_input_t input = (z->input).val;
+  struct Zero_b4* b4 = &z->unk_b4;
 
-  if (input & DPAD_RIGHT) {
-    (z->s).spr.xflip = TRUE;
-    (z->s).spr.oam.xflip = TRUE;
+  if ((&z->input)->val & ZERO_INPUT_DPAD_RIGHT) {
+    (z->s).spr.xflip = TRUE, (z->s).spr.oam.xflip = TRUE;
     (z->s).flags |= X_FLIP;
   }
-  if (input & DPAD_LEFT) {
-    (z->s).spr.xflip = FALSE;
-    (z->s).spr.oam.xflip = FALSE;
+  if ((&z->input)->val & ZERO_INPUT_DPAD_LEFT) {
+    (z->s).spr.xflip = FALSE, (z->s).spr.oam.xflip = FALSE;
     (z->s).flags &= ~X_FLIP;
   }
 
@@ -349,15 +251,8 @@ NON_MATCH static void handle_saber_input(struct Zero* z) {
   } else {
     charge = GetWeaponCharge(z, TRUE);
   }
-  if ((z->input).ultimateCommand_22c[1] == 3) {
-    bool8 xflip = ((z->input).ultimateCommand_22c[2]) & 1;
-    (z->s).spr.xflip = xflip;
-    (z->s).spr.oam.xflip = xflip;
-    if (xflip) {
-      (z->s).flags |= X_FLIP;
-    } else {
-      (z->s).flags &= ~X_FLIP;
-    }
+  if ((&z->input)->ultimateCommand_22c[1] == 3) {
+    SET_PLAYER_XFLIP(z, (z->input).ultimateCommand_22c[2]);
     charge = FULL_CHARGE;
   }
 
@@ -370,9 +265,6 @@ NON_MATCH static void handle_saber_input(struct Zero* z) {
     (z->unk_b4).attackMode[2] = 0;
     ladder_saber(z);
   }
-#else
-  INCCODE("asm/wip/ladderSaber_08031298.inc");
-#endif
 }
 
 // 0x803139c
@@ -491,20 +383,16 @@ NON_MATCH static void onRod(struct Zero* z) {
 }
 
 // 0x08031578
-NON_MATCH static void handle_rod_input(struct Zero* z) {
-#if MODERN
+static void handle_rod_input(struct Zero* z) {
   u8 charge;
   struct Zero_b4* b4 = &(z->unk_b4);
-  const zero_input_t input = (z->input).val;
 
-  if (input & DPAD_RIGHT) {
-    (z->s).spr.xflip = TRUE;
-    (z->s).spr.oam.xflip = TRUE;
+  if ((z->input).val & ZERO_INPUT_DPAD_RIGHT) {
+    (z->s).spr.xflip = TRUE, (z->s).spr.oam.xflip = TRUE;
     (z->s).flags |= X_FLIP;
   }
-  if (input & DPAD_LEFT) {
-    (z->s).spr.xflip = FALSE;
-    (z->s).spr.oam.xflip = FALSE;
+  if ((z->input).val & ZERO_INPUT_DPAD_LEFT) {
+    (z->s).spr.xflip = FALSE, (z->s).spr.oam.xflip = FALSE;
     (z->s).flags &= ~X_FLIP;
   }
 
@@ -513,22 +401,15 @@ NON_MATCH static void handle_rod_input(struct Zero* z) {
   } else {
     charge = GetWeaponCharge(z, TRUE);
   }
-
   z->unk_rod_133 = 0;
 
   if ((z->input).ultimateCommand_224[1] == 3) {
-    bool8 xflip = ((z->input).ultimateCommand_224[2]) & 1;
-    (z->s).spr.xflip = xflip;
-    (z->s).spr.oam.xflip = xflip;
-    if (xflip) {
-      (z->s).flags |= X_FLIP;
-    } else {
-      (z->s).flags &= ~X_FLIP;
-    }
+    SET_PLAYER_XFLIP(z, (z->input).ultimateCommand_224[2]);
+    (z->unk_b4).attackMode[1] = 7;
+    (z->unk_b4).attackMode[2] = 0;
     charge_rod(z);
     return;
   }
-
   if (charge == FULL_CHARGE) {
     (z->unk_b4).attackMode[1] = 7;
     (z->unk_b4).attackMode[2] = 0;
@@ -538,9 +419,6 @@ NON_MATCH static void handle_rod_input(struct Zero* z) {
     (z->unk_b4).attackMode[2] = 0;
     FUN_08031698(z);
   }
-#else
-  INCCODE("asm/wip/handle_rod_input_ladder.inc");
-#endif
 }
 
 // 0x08031698
