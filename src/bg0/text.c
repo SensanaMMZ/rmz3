@@ -412,7 +412,21 @@ void PrintUnicodeString(const char_t* s, u32 x8, u32 y8) {
 }
 
 // 0x080e9d04
-NAKED void PrintMinigameNumber(s32 score, u16 x, u16 y) { INCCODE("asm/todo/PrintMinigameNumber.inc"); };
+void PrintMinigameNumber(s32 score, u16 x, u16 y) {
+  s16 i;
+  char_t s[17];  // 符号 + 15桁 + 終端
+  s32 val = score;
+  if (score < 0) val = -score;
+  s[16] = '\0';
+
+  for (i = 15; i > 0; i--) {
+    s[i] = '0' + (val % 10);
+    if (val < 10) break;
+    val /= 10;
+  }
+  if (score < 0) s[--i] = '-';  // sign
+  PrintUnicodeString(&s[i], x - 15 + i, y);
+}
 
 #if MODERN == 0
 NAKED void unused_080e9d94(s32 r0, u16 r1, u16 r2) { INCCODE("asm/unused/unused_080e9d94.inc"); };
