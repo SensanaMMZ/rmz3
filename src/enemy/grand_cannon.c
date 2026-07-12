@@ -162,11 +162,12 @@ NON_MATCH static void GrandCannon_Init(struct GrandCannon* p) {
 
   if ((p->s).work[0] == GRAND_CANNON_TURRET) {
     (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
-    (p->s).flags |= COLLIDABLE;
-    if (!MOD_ENABLED(gSystemSavedataManager.mods, 105) || FLAG(gCurStory.s.gameflags, DEMO_PLAY)) {
-      InitBody(&p->body, sCollisions, &(p->s).coord, 8);
-    } else {
+    if (MOD_ENABLED(gSystemSavedataManager.mods, 105) && !FLAG(gCurStory.s.gameflags, DEMO_PLAY)) {
+      (p->s).flags |= COLLIDABLE;
       InitBody(&p->body, sCollisions, &(p->s).coord, 12);
+    } else {
+      (p->s).flags |= COLLIDABLE;
+      InitBody(&p->body, sCollisions, &(p->s).coord, 8);
     }
     (&p->body)->parent = (struct CollidableEntity*)p;
     (&p->body)->fn = NULL;
