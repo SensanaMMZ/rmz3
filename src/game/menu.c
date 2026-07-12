@@ -607,86 +607,34 @@ _080F3BE8:\n\
 /**
  * @return TRUE: B,L,Rのいずれかが押されてメニューが遷移, FALSE: 何もなし
  */
-NAKED bool8 TrySlideMenu(struct GameState* g) {
-  asm(".syntax unified\n\
-	push {r4, lr}\n\
-	adds r3, r0, #0\n\
-	ldr r0, _080F3C14 @ =gJoypad\n\
-	ldrh r1, [r0, #4]\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	lsls r0, r0, #0x10\n\
-	lsrs r2, r0, #0x10\n\
-	cmp r2, #0\n\
-	beq _080F3C18\n\
-	movs r0, #3\n\
-	strb r0, [r3, #1]\n\
-	strb r0, [r3, #2]\n\
-	b _080F3C7C\n\
-	.align 2, 0\n\
-_080F3C14: .4byte gJoypad\n\
-_080F3C18:\n\
-	movs r0, #0x80\n\
-	lsls r0, r0, #2\n\
-	ands r0, r1\n\
-	lsls r0, r0, #0x10\n\
-	lsrs r4, r0, #0x10\n\
-	cmp r4, #0\n\
-	beq _080F3C44\n\
-	ldr r1, _080F3C3C @ =0x00000E18\n\
-	adds r0, r3, r1\n\
-	ldrb r0, [r0]\n\
-	adds r0, #3\n\
-	movs r1, #3\n\
-	ands r0, r1\n\
-	ldr r4, _080F3C40 @ =0x00000E19\n\
-	adds r1, r3, r4\n\
-	strb r0, [r1]\n\
-	strb r2, [r3, #2]\n\
-	b _080F3C66\n\
-	.align 2, 0\n\
-_080F3C3C: .4byte 0x00000E18\n\
-_080F3C40: .4byte 0x00000E19\n\
-_080F3C44:\n\
-	movs r0, #0x80\n\
-	lsls r0, r0, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080F3C52\n\
-	movs r0, #0\n\
-	b _080F3C7E\n\
-_080F3C52:\n\
-	ldr r1, _080F3C84 @ =0x00000E18\n\
-	adds r0, r3, r1\n\
-	ldrb r0, [r0]\n\
-	adds r0, #1\n\
-	movs r1, #3\n\
-	ands r0, r1\n\
-	ldr r2, _080F3C88 @ =0x00000E19\n\
-	adds r1, r3, r2\n\
-	strb r0, [r1]\n\
-	strb r4, [r3, #2]\n\
-_080F3C66:\n\
-	ldr r2, _080F3C8C @ =sEachMenuLoops\n\
-	ldrb r0, [r1]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r2\n\
-	ldr r1, [r0]\n\
-	adds r0, r3, #0\n\
-	bl _call_via_r1\n\
-	movs r0, #0x33\n\
-	bl PlaySound\n\
-_080F3C7C:\n\
-	movs r0, #1\n\
-_080F3C7E:\n\
-	pop {r4}\n\
-	pop {r1}\n\
-	bx r1\n\
-	.align 2, 0\n\
-_080F3C84: .4byte 0x00000E18\n\
-_080F3C88: .4byte 0x00000E19\n\
-_080F3C8C: .4byte sEachMenuLoops\n\
- .syntax divided\n");
+// L/R slide the top menu tabs (MENU->unk_4d = (unk_4c -/+ 1) & 3, then dispatch
+// + slide SFX), B cancels to mode {3,3}; returns whether a slide/cancel happened.
+// Fully decoded, structurally identical to retail — the only difference is a
+// whole-function r2<->r3 swap (g vs the reused B-mask 0-value): agbcc colors g
+// into r2, retail into r3, a C-unreachable register-numbering tie (like the
+// door/bird holdouts). INCCODE for the byte-match.
+NON_MATCH bool8 TrySlideMenu(struct GameState* g) {
+#if MODERN
+  if (gJoypad[0].pressed & B_BUTTON) {
+    g->mode[1] = 3;
+    g->mode[2] = 3;
+    return TRUE;
+  }
+  if (gJoypad[0].pressed & L_BUTTON) {
+    MENU->unk_4d = (MENU->unk_4c + 3) & 3;
+    g->mode[2] = 0;
+  } else if (gJoypad[0].pressed & R_BUTTON) {
+    MENU->unk_4d = (MENU->unk_4c + 1) & 3;
+    g->mode[2] = 0;
+  } else {
+    return FALSE;
+  }
+  (sEachMenuLoops[MENU->unk_4d])(g);
+  PlaySound(0x33);
+  return TRUE;
+#else
+  INCCODE("asm/wip/TrySlideMenu.inc");
+#endif
 }
 
 /**
