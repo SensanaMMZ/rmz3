@@ -346,71 +346,54 @@ static void zero_dash_step0(struct Zero* z) {
   zero_dash_step1(z);
 }
 
-NON_MATCH static void zero_dash_step1(struct Zero* z) {
-#if MODERN
-  bool8 xflip;
-  if (z->posture != POSTURE_SHADOW) {
-    z->posture = POSTURE_DASH;
-  }
+static void zero_dash_step1(struct Zero* z) {
+  if (z->posture != POSTURE_SHADOW) z->posture = POSTURE_DASH;
 
   z->dashDustTimer++;
   if (z->dashDustTimer == 3) {
     z->dashDustTimer = 0;
-    CreateDashDust(&(z->s).coord, ((z->s).flags >> 4) & 1);
+    CreateDashDust(&(z->s).coord, ((z->s).flags & X_FLIP) != 0);
   }
 
-  if (z->restriction.move) {
-    return;
-  }
+  if (!(z->restriction).move) {
+    bool8 xflip;
+    if ((&z->input)->val & ZERO_INPUT_DPAD_LEFT) {
+      xflip = FALSE;
+    } else if ((&z->input)->val & ZERO_INPUT_DPAD_RIGHT) {
+      xflip = TRUE;
+    } else {
+      xflip = ((z->s).flags & X_FLIP) != 0;
+    }
+    SET_PLAYER_XFLIP(z, xflip);
 
-  if ((z->input).val & DPAD_LEFT) {
-    xflip = FALSE;
-  } else if ((z->input).val & DPAD_RIGHT) {
-    xflip = TRUE;
-  } else {
-    xflip = ((z->s).flags >> 4) & 1;
-  }
-  (z->s).spr.oam.xflip = (z->s).spr.xflip = xflip;
-  if (xflip) {
-    (z->s).flags |= X_FLIP;
-  } else {
-    (z->s).flags &= ~X_FLIP;
-  }
-
-  if (z->slip) {
-    if (xflip) {
-      (z->s).d.x += 0x20;
-      if ((z->s).d.x > GetDashSpeed(z)) {
-        (z->s).d.x = GetDashSpeed(z);
+    if (z->slip) {
+      if (xflip) {
+        (z->s).d.x += 0x20;
+        if ((z->s).d.x > GetDashSpeed(z)) {
+          (z->s).d.x = GetDashSpeed(z);
+        }
+      } else {
+        (z->s).d.x -= 0x20;
+        if ((z->s).d.x < -GetDashSpeed(z)) {
+          (z->s).d.x = -GetDashSpeed(z);
+        }
       }
     } else {
-      (z->s).d.x -= 0x20;
-      if ((z->s).d.x < -GetDashSpeed(z)) {
+      if (xflip) {
+        (z->s).d.x = GetDashSpeed(z);
+      } else {
         (z->s).d.x = -GetDashSpeed(z);
       }
     }
-  } else {
-    if (xflip) {
-      (z->s).d.x = GetDashSpeed(z);
-    } else {
-      (z->s).d.x = -GetDashSpeed(z);
-    }
-  }
 
-  // Check dash end
-  (z->unk_b4).dashTimer--;
-  if ((z->unk_b4).dashTimer == 0xFF) {
-    if ((z->input).val & (DPAD_RIGHT | DPAD_LEFT)) {
-      (z->s).mode[2] = 1;
-      (z->s).mode[3] = 0;
-    } else {
-      (z->s).mode[2] = 0;
-      (z->s).mode[3] = 0;
+    if (--(z->unk_b4).dashTimer == 0xFF) {
+      if ((&z->input)->val & (ZERO_INPUT_DPAD_LEFT | ZERO_INPUT_DPAD_RIGHT)) {
+        (z->s).mode[2] = 1, (z->s).mode[3] = 0;
+      } else {
+        (z->s).mode[2] = 0, (z->s).mode[3] = 0;
+      }
     }
   }
-#else
-  INCCODE("asm/wip/zero_dash_step1.inc");
-#endif
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------

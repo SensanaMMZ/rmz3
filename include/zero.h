@@ -7,6 +7,19 @@
 #include "gba/gba.h"
 #include "types.h"
 
+// Like SET_XFLIP but writes spr.xflip / oam.xflip BEFORE the flags bit
+#define SET_PLAYER_XFLIP(enti, value)                              \
+  {                                                                \
+    bool8 __xflip__;                                               \
+    (((struct Entity*)enti)->spr).xflip = (value) & 1;             \
+    __xflip__ = (((struct Entity*)enti)->spr).oam.xflip = (value); \
+    if (__xflip__) {                                               \
+      ((struct Entity*)enti)->flags |= X_FLIP;                     \
+    } else {                                                       \
+      ((struct Entity*)enti)->flags &= ~X_FLIP;                    \
+    }                                                              \
+  }
+
 // Zero.posture (gZeroCollisions's idx)
 enum ZeroPosture {
   POSTURE_IDLE = 0,
