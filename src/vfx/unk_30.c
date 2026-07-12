@@ -38,24 +38,26 @@ struct VFX* CreateGhost30(struct Entity* e, struct Coord* c, u8 n, u32 m) {
 // from clean C proves work[0] unchanged across SET_XFLIP's writes and MERGES
 // the two work[0]==0 tests (11 instr shorter) — a no-alias CSE clean C can't
 // suppress. INCCODE for the byte-match; MODERN keeps the readable decode.
-NON_MATCH static void Ghost30_Init(struct VFX* p) {
-#if MODERN
+static void Ghost30_Init(struct VFX* p) {
   InitNonAffineMotion(&p->s);
   (p->s).flags |= DISPLAY;
   (p->s).flags |= FLIPABLE;
   ResetDynamicMotion(&p->s);
-  SET_XFLIP(p, (p->s).work[0]);
-  (p->s).d.x = ((p->s).work[0] == 0) ? 0x80 : -0x80;
+  if ((p->s).work[0] == 0) {
+    SET_XFLIP(p, FALSE);
+  } else {
+    SET_XFLIP(p, TRUE);
+  }
+  if ((p->s).work[0] == 0) {
+    (p->s).d.x = PIXEL(1) / 2;
+  } else {
+    (p->s).d.x = -PIXEL(1) / 2;
+  }
   (p->s).d.y = 0;
-  (p->s).work[2] = 0xff;
+  (p->s).work[2] = 0xFF;
   SET_VFX_ROUTINE(p, ENTITY_UPDATE);
-  (p->s).mode[1] = 1;
-  (p->s).mode[2] = 0;
-  (p->s).mode[3] = 0;
+  (p->s).mode[1] = 1, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
   Ghost30_Update(p);
-#else
-  INCCODE("asm/wip/Ghost30_Init.inc");
-#endif
 }
 
 // --------------------------------------------
