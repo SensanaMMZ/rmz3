@@ -25,6 +25,13 @@
 
 #define CpuFastCopy(src, dest, bytesize) CpuFastSet(src, dest, ((bytesize) / (32 / 8) & 0x1FFFFF))
 
+// 32バイト単位のcopyは CpuFastCopy, あまりは CpuCopy32 で行うマクロ
+#define MemCopy32(src, dest, bytesize)                                                                                                          \
+  {                                                                                                                                             \
+    CpuFastCopy(src, dest, ((bytesize) - ((bytesize) & 0x1F)));                                                                                 \
+    CpuCopy32((((u8*)(src)) + ((bytesize) - ((bytesize) & 0x1F))), (((u8*)(dest)) + ((bytesize) - ((bytesize) & 0x1F))), ((bytesize) & 0x1F));  \
+  }
+
 #define DmaSet(dmaNum, src, dest, control)        \
   {                                               \
     vu32 *dmaRegs = (vu32 *)REG_ADDR_DMA##dmaNum; \

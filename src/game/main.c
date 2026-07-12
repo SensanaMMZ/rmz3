@@ -201,40 +201,68 @@ void MainLoop_Game(struct GameState* s) {
   return;
 }
 
-NON_MATCH void SaveGraphicState(struct GameState* p) {
-#if MODERN
-  p->savedColor0 = *((u16*)&gPaletteManager.buf[0]);
+void SaveGraphicState(struct GameState* g) {
+  g->savedColor0 = *((u16*)&gPaletteManager.buf[0]);
   SaveDispRegister();
 
-  CpuFastCopy(&gBlendRegBuffer, &p->savedBlendRegister, sizeof(struct WramBlendRegister) / 32);
-  CpuCopy32(&gBlendRegBuffer, &p->savedBlendRegister, sizeof(struct WramBlendRegister) % 32);
-  gBlendRegBuffer.bldclt = 0;
+  {
+    void* src = &gBlendRegBuffer;
+    void* dst = &g->savedBlendRegister;
+    u32 bytesize = sizeof(struct WramBlendRegister);
+    MemCopy32(src, dst, bytesize);
+    gBlendRegBuffer.bldclt = 0;
+  }
 
-  CpuFastCopy(&gWindowRegBuffer, &p->savedWindowRegister, sizeof(struct WramWindowRegister) / 32);
-  CpuCopy32(&gWindowRegBuffer, &p->savedWindowRegister, sizeof(struct WramWindowRegister) % 32);
-  gWindowRegBuffer.dispcnt = 0;
-  gWindowRegBuffer.winin[2] = 0xFF;
+  {
+    void* src = &gWindowRegBuffer;
+    void* dst = &g->savedWindowRegister;
+    u32 bytesize = sizeof(struct WramWindowRegister);
+    MemCopy32(src, dst, bytesize);
+    gWindowRegBuffer.dispcnt = 0;
+    gWindowRegBuffer.winin[2] = 0xFF;
+  }
 
-  CpuFastCopy(OBJ_VRAM1, p->savedObjVRAM, 16384);
-  CpuFastCopy(&gPaletteManager.buf[256], p->savedObjPal, 512);
-#else
-  INCCODE("asm/wip/SaveGraphicState.inc");
-#endif
+  {
+    void* src = OBJ_VRAM1;
+    void* dst = g->savedObjVRAM;
+    u32 bytesize = OBJ_VRAM1_SIZE;
+    CpuFastCopy(src, dst, bytesize);
+  }
+  {
+    void* src = &gPaletteManager.buf[256];
+    void* dst = g->savedObjPal;
+    u32 bytesize = OBJ_PLTT_SIZE;
+    CpuFastCopy(src, dst, bytesize);
+  }
 }
 
-NON_MATCH void RestoreGraphicState(struct GameState* p) {
-#if MODERN
+void RestoreGraphicState(struct GameState* g) {
   RestoreBackground();
-  CpuFastCopy(&p->savedBlendRegister, &gBlendRegBuffer, sizeof(struct WramBlendRegister) / 32);
-  CpuCopy32(&p->savedBlendRegister, &gBlendRegBuffer, sizeof(struct WramBlendRegister) % 32);
-  CpuFastCopy(&p->savedWindowRegister, &gWindowRegBuffer, sizeof(struct WramWindowRegister) / 32);
-  CpuCopy32(&p->savedWindowRegister, &gWindowRegBuffer, sizeof(struct WramWindowRegister) % 32);
-  CpuFastCopy(p->savedObjVRAM, OBJ_VRAM1, 16384);
-  CpuFastCopy(p->savedObjPal, &gPaletteManager.buf[256], 512);
-  *((u16*)&gPaletteManager.buf[0]) = p->savedColor0;
-#else
-  INCCODE("asm/wip/RestoreGraphicState.inc");
-#endif
+  {
+    void* src = &g->savedBlendRegister;
+    void* dst = &gBlendRegBuffer;
+    u32 bytesize = sizeof(struct WramBlendRegister);
+    MemCopy32(src, dst, bytesize);
+  }
+  {
+    void* src = &g->savedWindowRegister;
+    void* dst = &gWindowRegBuffer;
+    u32 bytesize = sizeof(struct WramWindowRegister);
+    MemCopy32(src, dst, bytesize);
+  }
+  {
+    void* src = g->savedObjVRAM;
+    void* dst = OBJ_VRAM1;
+    u32 bytesize = OBJ_VRAM1_SIZE;
+    CpuFastCopy(src, dst, bytesize);
+  }
+  {
+    void* src = g->savedObjPal;
+    void* dst = &gPaletteManager.buf[256];
+    u32 bytesize = OBJ_PLTT_SIZE;
+    CpuFastCopy(src, dst, bytesize);
+  }
+  *((u16*)&gPaletteManager.buf[0]) = g->savedColor0;
 }
 
 // 00 00 nn nn
