@@ -68,7 +68,7 @@ extern u16 wMOSAIC;  // wMOSAIC
 void ResetVideoRegister(void);
 void FlushVideoRegister(void);
 void LoadBgMap(u8 bg16, const u32* tbl, u8 idx, s8 x, s8 y);
-void loadBgMap_08004248(u16* dst, const u32* tbl, s32 idx, u8 x, s32 y);
+void loadBgMap_08004248(u16* dst, const u32* tbl, u8 idx, s8 x8, s8 y8);
 void ResetOAM(void);
 void FlushOAM(void);
 void ClearBLDCLT_1(void);

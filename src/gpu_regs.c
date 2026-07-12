@@ -34,48 +34,45 @@ void FlushVideoRegister(void) {
  * @param y BgMapのY座標(タイル単位)
  * @note 0x080041c4
  */
-NON_MATCH void LoadBgMap(u8 bg16, const u32* tbl, u8 idx, s8 x, s8 y) {
-#if MODERN
-  u16* base = (void*)(VRAM + SCREEN_BASE_16(bg16 >> 4));
-  u16* dst = &base[(y * 32) + x];
+static inline void* GetHdr(const u32* tbl, u8 idx) {
+  tbl = (const u32*)((const char*)tbl + tbl[idx]);
+  return (void*)&tbl[idx];
+}
 
-  struct BgMapHeader* hdr = (struct BgMapHeader*)SELF_REL_PTR(&tbl[idx]);
-  u32 w = hdr->w * 2;
-  u16 row = hdr->h;
-  u16* src = (u16*)&hdr[1];
+void LoadBgMap(u8 bg16, const u32* tbl, u8 idx, s8 x8, s8 y8) {
+  u16* dst = (void*)(VRAM + SCREEN_BASE_16(bg16 >> 4));
+  dst += (y8 * 32) + x8;
 
-  while (row != 0) {
-    CpuCopy16(src, dst, w);
-    row--;
-    src += (w / 2);
-    dst += 32;
+  {
+    struct BgMapHeader* hdr = GetHdr(tbl, idx);
+    u32 w8 = hdr->w;
+    u16 h8 = hdr->h;
+    u16* src = (u16*)&hdr[1];
+
+    while (h8 > 0) {
+      CpuCopy16(src, dst, w8 << 1);
+      h8--;
+      src += w8, dst += 32;
+    }
   }
-#else
-  INCCODE("asm/wip/LoadBgMap.inc");
-#endif
 }
 
 /**
  * @brief BgMapOffsets[n] を(x*8, y*8)にくるようにdst(BGMap)にロード
  * @note 0x08004248
  */
-NON_MATCH void loadBgMap_08004248(u16* dst, const u32* tbl, s32 idx, u8 x, s32 y) {
-#if MODERN
-  u16* d = &dst[((s8)y * 32) + (s8)x];
-  struct BgMapHeader* hdr = (struct BgMapHeader*)SELF_REL_PTR(&tbl[(u8)idx]);
-  u32 w = hdr->w * 2;
-  u16 row = hdr->h;
-  u16* src = (u16*)&hdr[1];
+void loadBgMap_08004248(u16* _dst, const u32* tbl, u8 idx, s8 x8, s8 y8) {
+  u16* dst = &_dst[(y8 * 32) + x8];
+  struct BgMapHeader* hdr = GetHdr(tbl, idx);
+  u32 w8 = hdr->w;
+  u16 h8 = hdr->h;
+  u16* src = (u16*)(hdr + 1);
 
-  while (row != 0) {
-    CpuCopy16(src, d, w);
-    row--;
-    src += (w / 2);
-    d += 32;
+  while (h8 > 0) {
+    CpuCopy16(src, dst, w8 << 1);
+    h8--;
+    src += w8, dst += 32;
   }
-#else
-  INCCODE("asm/wip/loadBgMap_08004248.inc");
-#endif
 }
 
 /**
