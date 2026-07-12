@@ -206,15 +206,15 @@ _0805B136:
 	movs r1, #0xa8
 	lsls r1, r1, #2
 	movs r0, #0xb
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r1, #0xc0
 	lsls r1, r1, #2
 	movs r0, #0x66
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r0, _0805B19C @ =0x0000010F
 	movs r1, #0xa0
 	lsls r1, r1, #2
-	bl LoadBlink
+	bl StartPaletteAnimation
 	adds r0, r7, #0
 	bl OmegaGold_Update
 	add sp, #8

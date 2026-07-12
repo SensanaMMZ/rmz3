@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
@@ -458,9 +458,9 @@ static void CopyX_Update(struct Boss* p) {
   // clang-format on
 
   if ((((p->body).status & BODY_STATUS_DEAD) || ((p->body).hp == 0)) && !(gStageRun.missionStatus & MISSION_FAIL)) {
-    LoadBlink(92, 640);
-    UpdateBlinkMotionState(92);
-    ClearBlink(92);
+    StartPaletteAnimation(92, 640);
+    StepPaletteAnimation(92);
+    RemovePaletteAnimation(92);
     SET_BOSS_ROUTINE(p, ENTITY_DIE);
     (p->s).mode[2] = 1;
     EXIT_BODY(p);
@@ -492,9 +492,9 @@ static void CopyX_Update(struct Boss* p) {
   }
 
   (sUpdates[(p->s).mode[1]])(p);
-  LoadBlink(92 + ((p->props).copyx).unk_c5, 640);
-  UpdateBlinkMotionState(92 + ((p->props).copyx).unk_c5);
-  ClearBlink(92 + ((p->props).copyx).unk_c5);
+  StartPaletteAnimation(92 + ((p->props).copyx).unk_c5, 640);
+  StepPaletteAnimation(92 + ((p->props).copyx).unk_c5);
+  RemovePaletteAnimation(92 + ((p->props).copyx).unk_c5);
   UpdateMotionGraphic(&p->s);
 }
 

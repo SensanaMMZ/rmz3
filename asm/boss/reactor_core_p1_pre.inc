@@ -150,7 +150,7 @@ _0806179C:
 	lsls r0, r0, #2
 	orrs r1, r0
 	movs r0, #0xcb
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #1
 	strb r0, [r5]
 	adds r0, r7, #0
@@ -165,7 +165,7 @@ _0806179C:
 	lsls r2, r2, #2
 	orrs r1, r2
 	movs r0, #0xcc
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0xe0
 	bl PlaySound
 	adds r0, r7, #0
@@ -200,9 +200,9 @@ ReactorCore_Update: @ 0x080618F8
 	sub sp, #4
 	adds r7, r0, #0
 	movs r0, #0xcb
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0xcc
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldr r2, _080619D8 @ =gStageRun
 	ldrb r1, [r2, #0x12]
 	movs r0, #1

@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
@@ -66,7 +66,7 @@ void OmegaGold_Update(struct Boss* p) {
 alive:
   m = (p->s).mode[1];
   if (m > 1 && m != 6) {
-    UpdateBlinkMotionState(0x66);
+    StepPaletteAnimation(0x66);
   }
   (sUpdates1[(p->s).mode[1]])(p);
   (sUpdates2[(p->s).mode[1]])(p);
@@ -77,10 +77,10 @@ void OmegaGold_Die(struct Boss* p) {
 }
 
 void OmegaGold_Disappear(struct Boss* p) {
-  ClearBlink(0xb);
-  ClearBlink(0x66);
-  ClearBlink(0x67);
-  ClearBlink(0x10f);
+  RemovePaletteAnimation(0xb);
+  RemovePaletteAnimation(0x66);
+  RemovePaletteAnimation(0x67);
+  RemovePaletteAnimation(0x10f);
   DeleteBoss(p);
 }
 
@@ -183,7 +183,7 @@ void FUN_0805b744(struct Boss* p) {
         (p->s).work[2] = 0x3c;
         (p->s).mode[2]++;
       }
-      UpdateBlinkMotionState(0xb);
+      StepPaletteAnimation(0xb);
       floatGoldOmega1(p);
       break;
     case 2:
@@ -191,7 +191,7 @@ void FUN_0805b744(struct Boss* p) {
         (p->s).mode[1] = 3;
         (p->s).mode[2] = 0;
       }
-      UpdateBlinkMotionState(0xb);
+      StepPaletteAnimation(0xb);
       floatGoldOmega1(p);
       break;
   }
@@ -209,17 +209,17 @@ void FUN_0805b7f0(struct Boss* p) {
       (p->s).d.x = 0;
       (p->s).work[2] = 0xFF;
       (p->s).work[3] = -1;
-      ClearBlink(0x66);
-      LoadBlink(0x67, 0x300);
+      RemovePaletteAnimation(0x66);
+      StartPaletteAnimation(0x67, 0x300);
       (p->s).mode[2]++;
       // fallthrough
     case 1:
       if ((*(struct Entity**)((u8*)p + 0xc8))->mode[2] > 0x1d) {
-        LoadBlink(0x66, 0x300);
+        StartPaletteAnimation(0x66, 0x300);
         (p->s).mode[1] = 3;
         (p->s).mode[2] = 0;
       } else {
-        UpdateBlinkMotionState(0x67);
+        StepPaletteAnimation(0x67);
         floatGoldOmega1(p);
       }
       break;

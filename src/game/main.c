@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "collision.h"
 #include "cyberelf.h"
 #include "disk.h"
@@ -291,7 +291,7 @@ static void GameLoop_Nop2(struct GameState* _) { return; }
 static void GameLoop_PreOverworld(struct GameState* p) {
   gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
   gPaletteManager.post_process = NULL;
-  ClearBlinkings();
+  RemoveAllPaletteAnimations();
   gBlendRegBuffer.bldclt = 0;
   gWindowRegBuffer.dispcnt = 0;
   gWindowRegBuffer.winin[2] = 0xFF;
@@ -465,7 +465,7 @@ static void GameLoop_OpenMenu(struct GameState* p) {
     PALETTE16(0) = RGB_BLACK;
     gVideoRegBuffer.dispcnt &= 0xc1ff;
     wMOSAIC = 0;
-    PauseAllBlinks();
+    PauseAllPaletteAnimations();
     DisableCyberSpaceColorFilter();
     SetGameMode(p, GAMEMODE(MODE_MENU, 0, 0, 0));
   } else {
@@ -510,7 +510,7 @@ NON_MATCH static void GameLoop_CloseMenu(struct GameState* p) {
       EnableCyberSpaceColorFilter();
     }
     RestoreGraphicState(p);
-    ResumeAllBlinks();
+    ResumeAllPaletteAnimations();
     p->frames = 0;
 
     if ((p->save).gamemode == 1) {
@@ -811,7 +811,7 @@ static void GameLoop_StartDemoPlay(struct GameState* g) {
 static void GameLoop_SkieEventScene(struct GameState* p) {
   gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
   gPaletteManager.post_process = NULL;
-  ClearBlinkings();
+  RemoveAllPaletteAnimations();
   gBlendRegBuffer.bldclt = 0;
   gWindowRegBuffer.dispcnt = 0;
   gWindowRegBuffer.winin[2] = 0xFF;

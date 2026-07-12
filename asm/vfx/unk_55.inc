@@ -57,7 +57,7 @@ _080C126A:
 	movs r1, #0xc0
 	lsls r1, r1, #2
 	movs r0, #0x61
-	bl LoadBlink
+	bl StartPaletteAnimation
 	strb r4, [r5, #0x12]
 	pop {r4, r5, r6}
 	pop {r0}
@@ -118,7 +118,7 @@ _080C12E2:
 	movs r1, #0xc0
 	lsls r1, r1, #2
 	movs r0, #0x61
-	bl LoadBlink
+	bl StartPaletteAnimation
 	strb r4, [r5, #0x12]
 	pop {r4, r5, r6}
 	pop {r0}
@@ -148,15 +148,15 @@ FUN_080c1328: @ 0x080C1328
 	movs r1, #0xa0
 	lsls r1, r1, #2
 	movs r0, #0x65
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r1, #0xc0
 	lsls r1, r1, #2
 	movs r0, #0x60
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x65
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x60
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x8d
 	lsls r0, r0, #1
 	bl PlaySound
@@ -168,18 +168,18 @@ _080C137E:
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	movs r0, #0x65
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x60
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	adds r0, #0x73
 	ldrb r0, [r0]
 	cmp r0, #3
 	bne _080C13BE
 	movs r0, #0x65
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x60
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r1, _080C13C4 @ =gVFXFnTable
 	ldrb r0, [r4, #9]
 	lsls r0, r0, #2
@@ -205,7 +205,7 @@ FUN_080c13c8: @ 0x080C13C8
 	ldr r5, [r4, #0x28]
 	bl UpdateMotionGraphic
 	movs r0, #0x61
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r4, #0x12]
 	adds r0, #1
 	strb r0, [r4, #0x12]
@@ -238,7 +238,7 @@ _080C13F2:
 	beq _080C142E
 _080C1410:
 	movs r0, #0x61
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r1, _080C1438 @ =gVFXFnTable
 	ldrb r0, [r4, #9]
 	lsls r0, r0, #2
@@ -265,7 +265,7 @@ FUN_080c143c: @ 0x080C143C
 	ldr r5, [r4, #0x28]
 	bl UpdateMotionGraphic
 	movs r0, #0x61
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r5, #0xa]
 	lsrs r2, r0, #4
 	movs r0, #1
@@ -335,7 +335,7 @@ _080C14AC:
 	beq _080C14E8
 _080C14CA:
 	movs r0, #0x61
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r1, _080C14F4 @ =gVFXFnTable
 	ldrb r0, [r4, #9]
 	lsls r0, r0, #2

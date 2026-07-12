@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "game.h"
 #include "global.h"
 #include "minigame.h"
@@ -18,7 +18,7 @@ bool32 exitCielMinigame(struct GameState* g) {
   }
 
   gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN0_ON;
-  ClearBlink(0xD6);
+  RemovePaletteAnimation(0xD6);
   return FALSE;
 }
 

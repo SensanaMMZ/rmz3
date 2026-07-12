@@ -3,7 +3,7 @@
 #include "gfx.h"
 #include "global.h"
 #include "menu.h"
-#include "blink.h"
+#include "palette_animation.h"
 #include "zero.h"
 
 // 08547280 のidx
@@ -811,7 +811,7 @@ _080F4344:\n\
 _080F4378:\n\
 	movs r0, #4\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldr r0, _080F4458 @ =0x00000DCC\n\
 	adds r4, r7, r0\n\
 	ldrb r0, [r4, #0x10]\n\
@@ -819,13 +819,13 @@ _080F4378:\n\
 	beq _080F43A2\n\
 	adds r0, #0xab\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldrb r0, [r4, #0x10]\n\
 	adds r0, #0xab\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldrb r0, [r4, #0x10]\n\
 	adds r0, #0xab\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 _080F43A2:\n\
 	movs r4, #0x8c\n\
 	lsls r4, r4, #1\n\
@@ -1185,29 +1185,29 @@ NON_MATCH static void MainMenuLoop_Update(struct GameState* m) {
   if ((s[0xf] & 0x38) != 0) {
     menu_080f54a0(m);
   }
-  UpdateBlinkMotionState(4);
+  StepPaletteAnimation(4);
   if (s[0x10] <= 5) {
     if (s[0x11] == 0) {
       if (s[0x10] != BODY(z)) {
         s[0x11] = s[0x10] + 0xab;
-        LoadBlink(s[0x11], 0);
+        StartPaletteAnimation(s[0x11], 0);
       }
       if (s[0x11] == 0) {
         goto done;
       }
     }
-    if ((u8)UpdateBlinkMotionState(s[0x11]) == 3) {
-      ClearBlink(s[0x11]);
+    if ((u8)StepPaletteAnimation(s[0x11]) == 3) {
+      RemovePaletteAnimation(s[0x11]);
       if (s[0x11] <= 0xb2) {
         s[0x10] = BODY(z);
         s[0x11] = BODY(z) + 0xb3;
-        LoadBlink(s[0x11], 0);
-        UpdateBlinkMotionState(s[0x11]);
+        StartPaletteAnimation(s[0x11], 0);
+        StepPaletteAnimation(s[0x11]);
       } else {
         s[0x11] = BODY(z) + 0xab;
-        LoadBlink(s[0x11], 0);
-        UpdateBlinkMotionState(s[0x11]);
-        ClearBlink(s[0x11]);
+        StartPaletteAnimation(s[0x11], 0);
+        StepPaletteAnimation(s[0x11]);
+        RemovePaletteAnimation(s[0x11]);
         s[0x11] = 0;
       }
     }
@@ -1239,12 +1239,12 @@ static void MainMenuLoop_Exit(struct GameState* m) {
   u8* s = (u8*)&m->sceneState;
   s[4] = 1;
   if (s[3] != 0xff) {
-    ClearBlink(s[3]);
+    RemovePaletteAnimation(s[3]);
   }
   if (s[0x11] != 0) {
-    ClearBlink(s[0x11]);
+    RemovePaletteAnimation(s[0x11]);
   }
-  ClearBlink(4);
+  RemovePaletteAnimation(4);
 }
 
 // --------------------------------------------
@@ -2958,7 +2958,7 @@ _080F54CC:\n\
 	strb r2, [r4, #3]\n\
 	ldrb r0, [r4, #3]\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	b _080F5510\n\
 _080F54DE:\n\
 	ldrb r1, [r4, #3]\n\
@@ -2967,25 +2967,25 @@ _080F54DE:\n\
 	cmp r1, r0\n\
 	beq _080F5510\n\
 	adds r0, r1, #0\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #3\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #3\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #3\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	ldrb r0, [r4]\n\
 	subs r0, #3\n\
 	strb r0, [r4, #3]\n\
 	ldrb r0, [r4, #3]\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 _080F5510:\n\
 	ldr r1, _080F551C @ =0x00000DCC\n\
 	adds r0, r6, r1\n\
 	ldrb r0, [r0, #3]\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	b _080F5546\n\
 	.align 2, 0\n\
 _080F551C: .4byte 0x00000DCC\n\
@@ -2995,14 +2995,14 @@ _080F5520:\n\
 	ldrb r0, [r4, #3]\n\
 	cmp r0, #0xff\n\
 	beq _080F5546\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #3\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #3\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #3\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0xff\n\
 	strb r0, [r4, #3]\n\
 _080F5546:\n\

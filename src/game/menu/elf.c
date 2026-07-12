@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "cyberelf.h"
 #include "game.h"
 #include "gfx.h"
@@ -104,7 +104,7 @@ static void ElfMenuLoop_Init(struct GameState* g) {
     }
   }
   CreateElfIcon(g);
-  LoadBlink(81, 0);
+  StartPaletteAnimation(81, 0);
   g->mode[2] = 2;
 }
 
@@ -114,9 +114,9 @@ static void ElfMenuLoop_Update(struct GameState* g) {
   u8 prev = g->mode[3];
   if ((g->mode[3] != 0) || (!TrySlideMenu(g))) {
     (ElfMenuFocusLoops[g->mode[3]])(g);
-    UpdateBlinkMotionState(81);
+    StepPaletteAnimation(81);
     if (ELF_MENU->blinkID != 0) {
-      UpdateBlinkMotionState(ELF_MENU->blinkID);
+      StepPaletteAnimation(ELF_MENU->blinkID);
     }
     gBlendRegBuffer.bldalpha = (ELF_MENU->unk_b & 0x1F) | ((0x10 - ELF_MENU->unk_b) << 8);
     if (tab != ELF_MENU->tab) {
@@ -167,9 +167,9 @@ static void ElfMenuLoop_Exit(struct GameState* g) {
   struct ElfMenuState* m = &((g->sceneState).menu).elf;
   m->unk_f &= 3;
   m->unk_f |= (1 << 2);
-  ClearBlink(81);
+  RemovePaletteAnimation(81);
   if (m->blinkID != 0) {
-    ClearBlink(m->blinkID);
+    RemovePaletteAnimation(m->blinkID);
   }
 }
 
@@ -203,11 +203,11 @@ static void ElfMenuFocusLoop_NoFocus(struct GameState* g) {
     g->mode[3] = 1;
     MENU->unk_4b = 0;
     if (ELF_MENU->blinkID != 0) {
-      ClearBlink(ELF_MENU->blinkID);
+      RemovePaletteAnimation(ELF_MENU->blinkID);
     }
     ELF_MENU->blinkID = 0x4D;
-    LoadBlink(0x4D, 0);
-    UpdateBlinkMotionState(ELF_MENU->blinkID);
+    StartPaletteAnimation(0x4D, 0);
+    StepPaletteAnimation(ELF_MENU->blinkID);
     PlaySound(2);
   }
 }
@@ -217,7 +217,7 @@ struct Widget* createMenuCursor(struct GameState* g, u8 kind);
 struct Widget* CreateMenuComp9(struct GameState* g, bool8 r1, u8 r2);
 
 static void ElfMenuFocusLoop_OpenTab(struct GameState* g) {
-  UpdateBlinkMotionState(ELF_MENU->blinkID);
+  StepPaletteAnimation(ELF_MENU->blinkID);
 
   if (MENU->unk_4b == 0) {
     u8 i;
@@ -234,10 +234,10 @@ static void ElfMenuFocusLoop_OpenTab(struct GameState* g) {
 
   if (gJoypad[0].pressed & B_BUTTON) {
     g->mode[3] = 0;
-    ClearBlink(ELF_MENU->blinkID);
+    RemovePaletteAnimation(ELF_MENU->blinkID);
     ELF_MENU->blinkID = 0x4E;
-    LoadBlink(0x4E, 0);
-    UpdateBlinkMotionState(ELF_MENU->blinkID);
+    StartPaletteAnimation(0x4E, 0);
+    StepPaletteAnimation(ELF_MENU->blinkID);
     PlaySound(3);
   } else if (ELF_MENU->unk_b != 0) {
     ELF_MENU->unk_b--;
@@ -246,7 +246,7 @@ static void ElfMenuFocusLoop_OpenTab(struct GameState* g) {
     MENU->unk_4b = 0;
     ELF_MENU->tab = 0;
     if (ELF_MENU->blinkID != 0) {
-      ClearBlink(ELF_MENU->blinkID);
+      RemovePaletteAnimation(ELF_MENU->blinkID);
       ELF_MENU->blinkID = 0;
     }
     gWindowRegBuffer.dispcnt |= DISPCNT_WIN0_ON;
@@ -269,11 +269,11 @@ NON_MATCH static void ElfMenuFocusLoop_TabSelect(struct GameState* g) {
   u16 pressed;
 
   if (MENU->unk_4b == 0) {
-    LoadBlink(0x4F, 0);
+    StartPaletteAnimation(0x4F, 0);
     ELF_MENU->unk_a = ELF_MENU->tab;
     MENU->unk_4b++;
   }
-  UpdateBlinkMotionState(0x4F);
+  StepPaletteAnimation(0x4F);
 
   if ((u8)ELF_MENU->unk_d <= 0x90) {
     gWindowRegBuffer.winV.half[0] = ((ELF_MENU->unk_d >> 4) << 12) | 0x90;
@@ -284,14 +284,14 @@ NON_MATCH static void ElfMenuFocusLoop_TabSelect(struct GameState* g) {
   if (pressed & (DPAD_DOWN | A_BUTTON)) {
     g->mode[3] = 3;
     MENU->unk_4b = 0;
-    ClearBlink(0x4F);
+    RemovePaletteAnimation(0x4F);
     PlaySound(2);
   } else if (pressed & B_BUTTON) {
     g->mode[3] = 0;
-    ClearBlink(0x4F);
+    RemovePaletteAnimation(0x4F);
     ELF_MENU->blinkID = 0x4E;
-    LoadBlink(0x4E, 0);
-    UpdateBlinkMotionState(ELF_MENU->blinkID);
+    StartPaletteAnimation(0x4E, 0);
+    StepPaletteAnimation(ELF_MENU->blinkID);
     ELF_MENU->tab = 0;
     gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN0_ON;
     PlaySound(3);
@@ -304,9 +304,9 @@ NON_MATCH static void ElfMenuFocusLoop_TabSelect(struct GameState* g) {
       ELF_MENU->tab = (ELF_MENU->tab + 1) % 3;
     }
     if (savedTab != ELF_MENU->tab) {
-      ClearBlink(0x4F);
-      LoadBlink(0x4F, 0);
-      UpdateBlinkMotionState(0x4F);
+      RemovePaletteAnimation(0x4F);
+      StartPaletteAnimation(0x4F, 0);
+      StepPaletteAnimation(0x4F);
       ELF_MENU->unk_a = ELF_MENU->tab;
       ELF_MENU->y = 0;
       ELF_MENU->cursor = 0;
@@ -337,11 +337,11 @@ NAKED static void ElfMenuFocusLoop_ElfSelect(struct GameState* g) {
 	bne _080F6CFA\n\
 	movs r0, #0x4f\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x4f\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x4f\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	ldrb r0, [r4]\n\
 	adds r0, #1\n\
 	strb r0, [r4]\n\

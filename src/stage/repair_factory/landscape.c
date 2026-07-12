@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "gfx.h"
 #include "global.h"
 #include "mission.h"
@@ -23,43 +23,43 @@ static void initRepairFactory(struct Coord* _ UNUSED) {
   STAGE.unk_000 = 0;
   STAGE.unk_001 = 0;
   STAGE.unk_002 = 0;
-  LoadBlink(0x2B, 0);
-  LoadBlink(0x2C, 0);
+  StartPaletteAnimation(0x2B, 0);
+  StartPaletteAnimation(0x2C, 0);
 }
 
 static void repairFactory_0800d6b4(struct Coord* c) {
   if ((TILESET_ID(1) == STAGE_REPAIR_FACTORY) && (TILESET_IDX(1) == 1)) {
     if ((STAGE.unk_000 & (1 << 0)) == 0) {
       STAGE.unk_000 |= (1 << 0);
-      LoadBlink(45, 0);
+      StartPaletteAnimation(45, 0);
     }
-    UpdateBlinkMotionState(45);
+    StepPaletteAnimation(45);
 
   } else if (STAGE.unk_000 & (1 << 0)) {
     STAGE.unk_000 ^= (1 << 0);
-    ClearBlink(45);
+    RemovePaletteAnimation(45);
   }
 
   if ((TILESET_ID(1) == STAGE_REPAIR_FACTORY) && (TILESET_IDX(1) == 4)) {
     if ((STAGE.unk_000 & (1 << 1)) == 0) {
       STAGE.unk_000 |= (1 << 1);
-      LoadBlink(46, 0);
-      LoadBlink(47, 0);
-      LoadBlink(48, 0);
+      StartPaletteAnimation(46, 0);
+      StartPaletteAnimation(47, 0);
+      StartPaletteAnimation(48, 0);
     }
-    UpdateBlinkMotionState(46);
-    UpdateBlinkMotionState(47);
-    UpdateBlinkMotionState(48);
+    StepPaletteAnimation(46);
+    StepPaletteAnimation(47);
+    StepPaletteAnimation(48);
 
   } else if (STAGE.unk_000 & (1 << 1)) {
     STAGE.unk_000 ^= (1 << 1);
-    ClearBlink(46);
-    ClearBlink(47);
-    ClearBlink(48);
+    RemovePaletteAnimation(46);
+    RemovePaletteAnimation(47);
+    RemovePaletteAnimation(48);
   }
 
-  UpdateBlinkMotionState(43);
-  UpdateBlinkMotionState(44);
+  StepPaletteAnimation(43);
+  StepPaletteAnimation(44);
 
   // Toggle Conveyor Direction
   if (gOverworld.state[0] == 0) {
@@ -111,12 +111,12 @@ static void repairFactory_0800d8c0(struct Coord* _ UNUSED) {
 }
 
 static void exitRepairFactory(struct Coord* _ UNUSED) {
-  ClearBlink(43);
-  ClearBlink(44);
-  ClearBlink(45);
-  ClearBlink(46);
-  ClearBlink(47);
-  ClearBlink(48);
+  RemovePaletteAnimation(43);
+  RemovePaletteAnimation(44);
+  RemovePaletteAnimation(45);
+  RemovePaletteAnimation(46);
+  RemovePaletteAnimation(47);
+  RemovePaletteAnimation(48);
   if (isSoundPlaying(SE_UNK_10b)) {
     StopSound(SE_UNK_10b);
   }

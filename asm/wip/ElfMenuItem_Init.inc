@@ -77,7 +77,7 @@ _080E7332:
 	movs r1, #0xc0
 	lsls r1, r1, #2
 	movs r0, #0x5b
-	bl LoadBlink
+	bl StartPaletteAnimation
 _080E7360:
 	adds r0, r4, #0
 	bl ElfMenuItem_Update

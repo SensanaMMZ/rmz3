@@ -21,7 +21,7 @@
 	bl menu_080f54a0
 _080F46A2:
 	movs r0, #4
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r2, [r4, #0x10]
 	adds r1, r2, #0
 	cmp r1, #5
@@ -39,7 +39,7 @@ _080F46A2:
 	strb r0, [r4, #0x11]
 	ldrb r0, [r4, #0x11]
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 _080F46CE:
 	ldrb r0, [r4, #0x11]
 	cmp r0, #0
@@ -48,13 +48,13 @@ _080F46D4:
 	ldr r1, _080F4718 @ =0x00000DCC
 	adds r5, r6, r1
 	ldrb r0, [r5, #0x11]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #3
 	bne _080F473E
 	ldrb r0, [r5, #0x11]
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldrb r0, [r5, #0x11]
 	cmp r0, #0xb2
 	bhi _080F471C
@@ -66,9 +66,9 @@ _080F46D4:
 	strb r0, [r5, #0x11]
 	ldrb r0, [r5, #0x11]
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r5, #0x11]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	b _080F473E
 	.align 2, 0
 _080F4710: .4byte 0x000064AC
@@ -83,11 +83,11 @@ _080F471C:
 	strb r0, [r5, #0x11]
 	ldrb r0, [r5, #0x11]
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r5, #0x11]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r5, #0x11]
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	strb r4, [r5, #0x11]
 _080F473E:
 	adds r0, r6, #0

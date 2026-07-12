@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "game.h"
 #include "gfx.h"
 #include "global.h"
@@ -30,7 +30,7 @@ NON_MATCH void AgbMain(void) {
   REG_DISPCNT = DISPCNT_FORCED_BLANK;
   ClearVRAM();
   InitPaletteManager();
-  ClearBlinkings();
+  RemoveAllPaletteAnimations();
   ResetVideoRegister();
   ResetOAM();
   ClearBLDCLT_1();

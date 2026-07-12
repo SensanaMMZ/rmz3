@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "collision.h"
 #include "game.h"
 #include "global.h"
@@ -222,7 +222,7 @@ void CameraUpdate(bool8 paused) {
 void UpdateStoryFlag(void) {
   ExitStageLandscape();
   FUN_08021b88(&gStageRun.vm);
-  ClearBlinkings();
+  RemoveAllPaletteAnimations();
 
   if ((gStageRun.missionStatus & MISSION_FAIL) == 0) {
     if ((gMission.unk_00)->missionDones & SPACE_CRAFT) {

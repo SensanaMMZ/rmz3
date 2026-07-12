@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "global.h"
 #include "gpu_regs.h"
 #include "overworld.h"
@@ -68,15 +68,15 @@ NAKED static void ocean_0800cbe8(struct Coord* _ UNUSED) {
 	strb r0, [r2]\n\
 	movs r0, #0xe5\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0xe6\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 _0800CC24:\n\
 	movs r0, #0xe5\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0xe6\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	b _0800CC62\n\
 	.align 2, 0\n\
 _0800CC34: .4byte gOverworld\n\
@@ -95,9 +95,9 @@ _0800CC40:\n\
 	eors r0, r1\n\
 	strb r0, [r2]\n\
 	movs r0, #0xe5\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0xe6\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 _0800CC62:\n\
 	ldr r2, _0800CCC8 @ =gOverworld\n\
 	ldr r1, _0800CCD0 @ =0x000007D6\n\
@@ -122,25 +122,25 @@ _0800CC62:\n\
 	strb r0, [r2]\n\
 	movs r0, #0xe7\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0xe8\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0xe9\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0xea\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 _0800CCAC:\n\
 	movs r0, #0xe7\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0xe8\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0xe9\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0xea\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	b _0800CD02\n\
 	.align 2, 0\n\
 _0800CCC8: .4byte gOverworld\n\
@@ -159,13 +159,13 @@ _0800CCD4:\n\
 	eors r0, r1\n\
 	strb r0, [r2]\n\
 	movs r0, #0xe7\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0xe8\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0xe9\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0xea\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 _0800CD02:\n\
 	ldr r5, _0800CD78 @ =gOverworld\n\
 	ldr r2, _0800CD80 @ =0x000007D4\n\
@@ -192,7 +192,7 @@ _0800CD02:\n\
 	strb r0, [r2]\n\
 	movs r0, #0xeb\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldr r1, _0800CD84 @ =0x0002D029\n\
 	adds r0, r5, r1\n\
 	strb r4, [r0]\n\
@@ -201,7 +201,7 @@ _0800CD02:\n\
 	strb r4, [r0]\n\
 _0800CD44:\n\
 	movs r0, #0xeb\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldr r0, _0800CD84 @ =0x0002D029\n\
 	adds r1, r5, r0\n\
 	ldrb r0, [r1]\n\
@@ -244,7 +244,7 @@ _0800CD8C:\n\
 	eors r0, r1\n\
 	strb r0, [r2]\n\
 	movs r0, #0xeb\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 _0800CDA8:\n\
 	ldr r2, _0800CE0C @ =gOverworld\n\
 	ldr r1, _0800CE14 @ =0x000007D4\n\
@@ -269,25 +269,25 @@ _0800CDA8:\n\
 	strb r0, [r2]\n\
 	movs r0, #0xec\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0xed\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0xee\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0xef\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 _0800CDF2:\n\
 	movs r0, #0xec\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0xed\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0xee\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0xef\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	b _0800CE46\n\
 	.align 2, 0\n\
 _0800CE0C: .4byte gOverworld\n\
@@ -306,13 +306,13 @@ _0800CE18:\n\
 	eors r0, r1\n\
 	strb r0, [r2]\n\
 	movs r0, #0xec\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0xed\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0xee\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0xef\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 _0800CE46:\n\
 	ldr r0, _0800CF88 @ =gCurStory\n\
 	ldrb r5, [r0, #9]\n\
@@ -498,17 +498,17 @@ static void ocean_0800cfac(struct Coord* _ UNUSED) {
 
 static void exitOcean(struct Coord* _ UNUSED) {
   s8 i;
-  ClearBlink(229);
-  ClearBlink(230);
-  ClearBlink(231);
-  ClearBlink(232);
-  ClearBlink(233);
-  ClearBlink(234);
-  ClearBlink(235);
-  ClearBlink(236);
-  ClearBlink(237);
-  ClearBlink(238);
-  ClearBlink(239);
+  RemovePaletteAnimation(229);
+  RemovePaletteAnimation(230);
+  RemovePaletteAnimation(231);
+  RemovePaletteAnimation(232);
+  RemovePaletteAnimation(233);
+  RemovePaletteAnimation(234);
+  RemovePaletteAnimation(235);
+  RemovePaletteAnimation(236);
+  RemovePaletteAnimation(237);
+  RemovePaletteAnimation(238);
+  RemovePaletteAnimation(239);
   for (i = 0; i < 4; i++) {
     struct Solid* btn = (*(&gOverworld.work.ocean.btns))[i];
     (btn->s).flags &= ~DISPLAY;

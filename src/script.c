@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "entity.h"
 #include "gfx.h"
 #include "global.h"
@@ -53,7 +53,7 @@ void ClearVM(struct VM* vm, u32 stageID) {
 void FUN_08021b88(struct VM* _ UNUSED) {
   gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
   gPaletteManager.post_process = NULL;
-  ClearBlinkings();
+  RemoveAllPaletteAnimations();
   gBlendRegBuffer.bldclt = 0;
   gWindowRegBuffer.dispcnt = 0;
   gWindowRegBuffer.winin[2] = 0xFF;

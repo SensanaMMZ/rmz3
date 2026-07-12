@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "boss.h"
 #include "collision.h"
 #include "enemy.h"
@@ -85,7 +85,7 @@ static void OmegaWhite_Init(struct Boss* p) {
   CreateOmegaWhiteHand(&c, FALSE, (void*)p);
   (p->s).unk_2c = omegaWhite_080b91d4(&c, 2, (struct Entity*)p);
   CreateOmegaWhiteHand(&c, TRUE, (void*)p);
-  LoadBlink(11, 672);
+  StartPaletteAnimation(11, 672);
   OmegaWhite_Update((void*)p);
 }
 
@@ -157,7 +157,7 @@ static void OmegaWhite_Die(struct Boss* p) {
 }
 
 static void OmegaWhite_Disappear(struct Boss* p) {
-  ClearBlink(11);
+  RemovePaletteAnimation(11);
   EXIT_BODY(p);
   (p->s).flags &= ~DISPLAY;
   gOverworld.state[1] = 0;
@@ -167,7 +167,7 @@ static void OmegaWhite_Disappear(struct Boss* p) {
 static void omegaWhite_0803e148(struct Boss* p) {
   struct Coord* velocity;
 
-  UpdateBlinkMotionState(11);
+  StepPaletteAnimation(11);
   switch ((p->s).mode[2]) {
     case 0: {
       if ((gStageRun.missionStatus & MISSION_STAY) && !(gStageRun.vm.active & 1)) {
@@ -205,7 +205,7 @@ static void omegaWhite_0803e1f8(struct Boss* p) {
   u8 phase = (p->s).mode[2];
   switch (phase) {
     case 0: {
-      ClearBlink(11);
+      RemovePaletteAnimation(11);
       (p->s).flags &= ~DISPLAY;
       gOverworld.state[1] = phase;
       (p->s).mode[2]++;
@@ -428,7 +428,7 @@ _0803E46C:\n\
 	bl createOmega1Laser\n\
 _0803E482:\n\
 	movs r0, #0xb\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldrb r0, [r4, #0xe]\n\
 	adds r0, #1\n\
 	strb r0, [r4, #0xe]\n\
@@ -473,13 +473,13 @@ _0803E4D2:\n\
 	strb r0, [r4, #0xe]\n\
 _0803E4D4:\n\
 	movs r0, #0xb\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	b _0803E500\n\
 _0803E4DC:\n\
 	adds r0, r4, #0\n\
 	bl floatOmegaWhite\n\
 	movs r0, #0xb\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldrb r0, [r4, #0x12]\n\
 	cmp r0, #0\n\
 	beq _0803E500\n\
@@ -583,7 +583,7 @@ _0803E586:\n\
 	strb r0, [r4, #0xe]\n\
 _0803E5A0:\n\
 	movs r0, #0xb\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	adds r0, r4, #0\n\
 	adds r0, #0xb8\n\
 	ldr r0, [r0]\n\
@@ -614,7 +614,7 @@ _0803E5CA:\n\
 	strb r2, [r4, #0xe]\n\
 _0803E5DA:\n\
 	movs r0, #0xb\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 _0803E5E0:\n\
 	pop {r4}\n\
 	pop {r0}\n\
@@ -629,7 +629,7 @@ NAKED static void omegaWhite_0803e5ec(struct Boss* p) {
 	push {r4, r5, lr}\n\
 	adds r4, r0, #0\n\
 	movs r0, #0xb\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldrb r0, [r4, #0xe]\n\
 	cmp r0, #5\n\
 	bls _0803E5FE\n\

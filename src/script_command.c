@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "collision.h"
 #include "element.h"
 #include "entity.h"
@@ -277,13 +277,13 @@ NON_MATCH static bool32 Cmd_cmd06(struct VM* vm) {
       LoadGraphic(BG_GRAPHIC(c->status), (void*)0x4000);
       LoadPalette(BG_PALETTE(c->status), 0);
       LoadBgMap(USE_BG1, gBgMapOffsets, c->status, 0, 0);
-      PauseAllBlinks();
+      PauseAllPaletteAnimations();
       break;
     }
     case 1: {
       gVideoRegBuffer.dispcnt &= ~(DISPCNT_BG1_ON | DISPCNT_OBJ_ON);
       gVideoRegBuffer.dispcnt |= DISPCNT_BG0_ON;
-      ResumeAllBlinks();
+      ResumeAllPaletteAnimations();
       break;
     }
     case 2: {
@@ -297,7 +297,7 @@ NON_MATCH static bool32 Cmd_cmd06(struct VM* vm) {
       LoadPalette(BG_PALETTE(c->status), 0);
       LoadBgMap(USE_BG1, gBgMapOffsets, c->status, 0, 0);
       loadBgMap_08004248((u16*)(void*)(BG_SCREEN_ADDR(1) + SCREEN_BASE_16(1)), gBgMapOffsets, c->status + 1, 0, 0);
-      PauseAllBlinks();
+      PauseAllPaletteAnimations();
       break;
     }
     case 3: {
@@ -309,7 +309,7 @@ NON_MATCH static bool32 Cmd_cmd06(struct VM* vm) {
       LoadGraphic(BG_GRAPHIC(c->status), (void*)0x4000);
       LoadPalette(BG_PALETTE(c->status), 0);
       LoadBgMap(USE_BG1, gBgMapOffsets, c->status, 0, 0);
-      PauseAllBlinks();
+      PauseAllPaletteAnimations();
       break;
     }
     case 4: {
@@ -332,7 +332,7 @@ NON_MATCH static bool32 Cmd_cmd06(struct VM* vm) {
       LoadGraphic(BG_GRAPHIC(c->status), (void*)0x4000);
       LoadPalette(BG_PALETTE(c->status), 0);
       LoadBgMap(USE_BG1, gBgMapOffsets, c->status, 0, 0);
-      PauseAllBlinks();
+      PauseAllPaletteAnimations();
       break;
     }
     default: {
@@ -1631,7 +1631,7 @@ _080238F0:\n\
 	add r1, sl\n\
 	adds r0, r4, #0\n\
 	bl LoadPalette\n\
-	bl PauseAllBlinks\n\
+	bl PauseAllPaletteAnimations\n\
 	adds r0, r7, #0\n\
 	adds r0, #0xd0\n\
 	movs r2, #0\n\
@@ -1880,10 +1880,10 @@ _08023B88:\n\
 	movs r2, #0x7d\n\
 	movs r3, #0\n\
 	bl LoadBgMap\n\
-	bl PauseAllBlinks\n\
+	bl PauseAllPaletteAnimations\n\
 	ldr r0, _08023C30 @ =0x00000111\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	adds r0, r7, #0\n\
 	adds r0, #0xd0\n\
 	str r5, [r0]\n\
@@ -1901,7 +1901,7 @@ _08023C2C: .4byte gGraphic_Capcom+2512\n\
 _08023C30: .4byte 0x00000111\n\
 _08023C34:\n\
 	ldr r0, _08023C80 @ =0x00000111\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	adds r0, r7, #0\n\
 	adds r0, #0xd0\n\
 	ldr r3, [r0]\n\
@@ -2070,7 +2070,7 @@ _08023D84:\n\
 	b _08023E8E\n\
 _08023D94:\n\
 	ldr r0, _08023DBC @ =0x00000111\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	bl LoadAsciiBold\n\
 _08023D9E:\n\
 	ldr r2, _08023DC0 @ =gVideoRegBuffer\n\
@@ -2082,7 +2082,7 @@ _08023D9E:\n\
 	adds r1, r3, #0\n\
 	orrs r0, r1\n\
 	strh r0, [r2]\n\
-	bl ResumeAllBlinks\n\
+	bl ResumeAllPaletteAnimations\n\
 	b _08023EE6\n\
 	.align 2, 0\n\
 _08023DB8: .4byte gStageRun\n\
@@ -2120,7 +2120,7 @@ _08023DC8:\n\
 	movs r2, #0x79\n\
 	movs r3, #0\n\
 	bl LoadBgMap\n\
-	bl PauseAllBlinks\n\
+	bl PauseAllPaletteAnimations\n\
 	adds r0, r7, #0\n\
 	adds r0, #0xd0\n\
 	str r4, [r0]\n\
@@ -2221,7 +2221,7 @@ _08023ED0:\n\
 	adds r1, r3, #0\n\
 	orrs r0, r1\n\
 	strh r0, [r2]\n\
-	bl ResumeAllBlinks\n\
+	bl ResumeAllPaletteAnimations\n\
 _08023EE6:\n\
 	movs r0, #0\n\
 _08023EE8:\n\

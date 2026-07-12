@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "collision.h"
 #include "global.h"
 #include "overworld.h"
@@ -130,7 +130,7 @@ static void Update2_0(struct Zero* z) {
     case 0: {
       SetMotion(&z->s, MOTION(DM179_COPY_X, 0));
       z->mg.copyx.element = 0;  // flame
-      LoadBlink(93, 640);
+      StartPaletteAnimation(93, 640);
       (z->s).work[2] = 60;
       (z->s).mode[2]++;
       FALLTHROUGH;
@@ -240,11 +240,11 @@ _08035B68:\n\
 	movs r0, #1\n\
 	strb r0, [r1]\n\
 	movs r0, #0x5d\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r1, #0xa0\n\
 	lsls r1, r1, #2\n\
 	movs r0, #0x5e\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	b _08035BD8\n\
 	.align 2, 0\n\
 _08035BA4: .4byte 0x0000B314\n\
@@ -253,11 +253,11 @@ _08035BA8:\n\
 	bne _08035BC0\n\
 	strb r5, [r1]\n\
 	movs r0, #0x5f\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r1, #0xa0\n\
 	lsls r1, r1, #2\n\
 	movs r0, #0x5d\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	b _08035BD8\n\
 _08035BC0:\n\
 	cmp r0, #1\n\
@@ -265,11 +265,11 @@ _08035BC0:\n\
 	movs r0, #2\n\
 	strb r0, [r1]\n\
 	movs r0, #0x5e\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r1, #0xa0\n\
 	lsls r1, r1, #2\n\
 	movs r0, #0x5f\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 _08035BD8:\n\
 	movs r1, #0xa1\n\
 	lsls r1, r1, #2\n\
@@ -288,11 +288,11 @@ _08035BE6:\n\
 	movs r0, #2\n\
 	strb r0, [r1]\n\
 	movs r0, #0x5d\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r1, #0xa0\n\
 	lsls r1, r1, #2\n\
 	movs r0, #0x5f\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	b _08035C38\n\
 _08035C08:\n\
 	cmp r0, #2\n\
@@ -300,22 +300,22 @@ _08035C08:\n\
 	movs r0, #1\n\
 	strb r0, [r1]\n\
 	movs r0, #0x5f\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r1, #0xa0\n\
 	lsls r1, r1, #2\n\
 	movs r0, #0x5e\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	b _08035C38\n\
 _08035C22:\n\
 	cmp r0, #1\n\
 	bne _08035C38\n\
 	strb r5, [r1]\n\
 	movs r0, #0x5e\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r1, #0xa0\n\
 	lsls r1, r1, #2\n\
 	movs r0, #0x5d\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 _08035C38:\n\
 	movs r1, #0xa1\n\
 	lsls r1, r1, #2\n\

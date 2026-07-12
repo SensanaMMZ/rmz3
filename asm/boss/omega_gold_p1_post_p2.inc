@@ -42,13 +42,13 @@ _0805B2AC:
 	movs r0, #0xe8
 	bl PlaySound
 	movs r0, #0xb
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x66
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x67
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r0, _0805B328 @ =0x0000010F
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	adds r0, r4, #0
 	adds r0, #0x8c
 	movs r1, #0

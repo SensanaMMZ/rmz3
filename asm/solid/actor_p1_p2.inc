@@ -233,13 +233,13 @@ _080D3380:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0xf8
-	bl LoadBlink
+	bl StartPaletteAnimation
 	b _080D357C
 _080D339C:
 	adds r0, r7, #0
 	bl UpdateMotionGraphic
 	movs r0, #0xf8
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #3
@@ -247,7 +247,7 @@ _080D339C:
 	b _080D358C
 _080D33B2:
 	movs r0, #0xf8
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	b _080D357C
 _080D33BA:
 	adds r0, r7, #0
@@ -260,7 +260,7 @@ _080D33BA:
 	adds r0, r3, #0
 	orrs r1, r0
 	movs r0, #0xf9
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r7, #0xd]
 	adds r0, #1
 	strb r0, [r7, #0xd]
@@ -268,7 +268,7 @@ _080D33DA:
 	adds r0, r7, #0
 	bl UpdateMotionGraphic
 	movs r0, #0xf9
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #4
@@ -276,7 +276,7 @@ _080D33DA:
 	b _080D358C
 _080D33F0:
 	movs r0, #0xf9
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	adds r0, r7, #0
 	bl GetEntityPalID
 	adds r1, r0, #0
@@ -287,13 +287,13 @@ _080D33F0:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0xfa
-	bl LoadBlink
+	bl StartPaletteAnimation
 	b _080D357C
 _080D3412:
 	adds r0, r7, #0
 	bl UpdateMotionGraphic
 	movs r0, #0xfa
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #3
@@ -432,7 +432,7 @@ _080D34F8:
 	movs r1, #1
 	strb r1, [r0]
 	movs r0, #0xfa
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldrb r4, [r7, #0x11]
 	adds r4, #0xfb
 	adds r0, r7, #0
@@ -445,7 +445,7 @@ _080D34F8:
 	adds r0, r2, #0
 	orrs r1, r0
 	adds r0, r4, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r7, #0xd]
 	adds r0, #1
 	strb r0, [r7, #0xd]
@@ -464,7 +464,7 @@ _080D3568: .4byte s32_ARRAY_08370de8
 _080D356C:
 	ldrb r0, [r7, #0x11]
 	adds r0, #0xfb
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #3
@@ -477,7 +477,7 @@ _080D357C:
 _080D3584:
 	ldrb r0, [r7, #0x11]
 	adds r0, #0xfb
-	bl ClearBlink
+	bl RemovePaletteAnimation
 _080D358C:
 	add sp, #8
 	pop {r4, r5, r6, r7}

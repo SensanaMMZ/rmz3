@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "gfx.h"
 #include "global.h"
 #include "mod.h"
@@ -54,24 +54,24 @@ static void updateResistanceBase(struct Coord* c) {
   if ((TILESET_ID(0) == STAGE_BASE) && (TILESET_IDX(0) == 1)) {
     if ((gOverworld.work.resistanceBase.unk_000 & 1) == 0) {
       gOverworld.work.resistanceBase.unk_000 |= 1;
-      LoadBlink(0x6a, 0);
+      StartPaletteAnimation(0x6a, 0);
     }
-    UpdateBlinkMotionState(0x6a);
+    StepPaletteAnimation(0x6a);
 
   } else if (gOverworld.work.resistanceBase.unk_000 & 1) {
-    ClearBlink(0x6a);
+    RemovePaletteAnimation(0x6a);
     gOverworld.work.resistanceBase.unk_000 ^= 1;
   }
 
   if ((TILESET_ID(0) == STAGE_BASE) && (TILESET_IDX(0) == 4)) {
     if ((gOverworld.work.resistanceBase.unk_000 & 2) == 0) {
       gOverworld.work.resistanceBase.unk_000 |= 2;
-      LoadBlink(0x68, 0);
+      StartPaletteAnimation(0x68, 0);
     }
-    UpdateBlinkMotionState(0x68);
+    StepPaletteAnimation(0x68);
 
   } else if (gOverworld.work.resistanceBase.unk_000 & 2) {
-    ClearBlink(0x68);
+    RemovePaletteAnimation(0x68);
     gOverworld.work.resistanceBase.unk_000 ^= 2;
   }
 
@@ -109,8 +109,8 @@ static void updateResistanceBase(struct Coord* c) {
 static void nop_08016378(struct Coord* _ UNUSED) { return; }
 
 static void exitResistanceBase(struct Coord* _ UNUSED) {
-  ClearBlink(0x68);
-  ClearBlink(0x6a);
+  RemovePaletteAnimation(0x68);
+  RemovePaletteAnimation(0x6a);
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
@@ -160,31 +160,31 @@ _080163C0:\n\
 	strh r0, [r1]\n\
 	movs r0, #0x6b\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x6c\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x6d\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x6e\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x6f\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x70\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x74\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x75\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x76\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	strh r4, [r5, #0x10]\n\
 	ldrb r0, [r5, #0xe]\n\
 	adds r0, #1\n\
@@ -198,13 +198,13 @@ _08016438:\n\
 	beq _080164D2\n\
 	movs r0, #0x72\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldrb r0, [r5, #0xe]\n\
 	adds r0, #1\n\
 	strb r0, [r5, #0xe]\n\
 _08016452:\n\
 	movs r0, #0x72\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	lsls r0, r0, #0x18\n\
 	lsrs r0, r0, #0x18\n\
 	cmp r0, #4\n\
@@ -216,22 +216,22 @@ _08016452:\n\
 	cmp r0, #2\n\
 	bne _080164D2\n\
 	movs r0, #0x72\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0x73\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldrb r0, [r5, #0xe]\n\
 	adds r0, #1\n\
 	strb r0, [r5, #0xe]\n\
 _08016480:\n\
 	movs r0, #0x73\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	lsls r0, r0, #0x18\n\
 	lsrs r0, r0, #0x18\n\
 	cmp r0, #3\n\
 	bne _080164D2\n\
 	movs r0, #0x73\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0x78\n\
 	strh r0, [r5, #0x12]\n\
 	ldrb r0, [r5, #0xe]\n\
@@ -264,23 +264,23 @@ _080164D2:\n\
 	adds r0, #1\n\
 	strh r0, [r5, #0x10]\n\
 	movs r0, #0x6b\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x6c\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x6d\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x6e\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x6f\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x70\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x74\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x75\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x76\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	pop {r4, r5}\n\
 	pop {r0}\n\
 	bx r0\n\
@@ -297,17 +297,17 @@ static void rbase_0801651c(struct StageLayer* l, const struct Stage* stage) {
 }
 static void rbase_08016584(struct StageLayer* l UNUSED, const struct Stage* _ UNUSED) {
   gBlendRegBuffer.bldclt = 0;
-  ClearBlink(0x6b);
-  ClearBlink(0x6c);
-  ClearBlink(0x6d);
-  ClearBlink(0x6e);
-  ClearBlink(0x6f);
-  ClearBlink(0x70);
-  ClearBlink(0x74);
-  ClearBlink(0x75);
-  ClearBlink(0x76);
-  ClearBlink(0x72);
-  ClearBlink(0x73);
+  RemovePaletteAnimation(0x6b);
+  RemovePaletteAnimation(0x6c);
+  RemovePaletteAnimation(0x6d);
+  RemovePaletteAnimation(0x6e);
+  RemovePaletteAnimation(0x6f);
+  RemovePaletteAnimation(0x70);
+  RemovePaletteAnimation(0x74);
+  RemovePaletteAnimation(0x75);
+  RemovePaletteAnimation(0x76);
+  RemovePaletteAnimation(0x72);
+  RemovePaletteAnimation(0x73);
 }
 
 void setBgPrio3(struct StageLayer* l, const struct Stage* _) {
@@ -363,15 +363,15 @@ static void rbase_0801666c(struct StageLayer* l, const struct Stage* _ UNUSED) {
     }
 
     if (gOverworld.work.resistanceBase.weather == SUNNY) {
-      LoadBlink(105, 0);
+      StartPaletteAnimation(105, 0);
     } else if (gOverworld.work.resistanceBase.weather == NIGHT) {
       (l->scroll).y -= 0x140;
-      LoadBlink(120, 0);
-      LoadBlink(121, 0);
-      LoadBlink(122, 0);
+      StartPaletteAnimation(120, 0);
+      StartPaletteAnimation(121, 0);
+      StartPaletteAnimation(122, 0);
     } else if (gOverworld.work.resistanceBase.weather == SNOWY) {
-      LoadBlink(201, 0);
-      LoadBlink(202, 0);
+      StartPaletteAnimation(201, 0);
+      StartPaletteAnimation(202, 0);
     }
 
     l->unk_10 = 0;
@@ -379,23 +379,23 @@ static void rbase_0801666c(struct StageLayer* l, const struct Stage* _ UNUSED) {
   }
 
   if (gOverworld.work.resistanceBase.weather == SUNNY) {
-    UpdateBlinkMotionState(105);
+    StepPaletteAnimation(105);
 
   } else if (gOverworld.work.resistanceBase.weather == NIGHT) {
-    UpdateBlinkMotionState(120);
-    UpdateBlinkMotionState(121);
-    UpdateBlinkMotionState(122);
-    UpdateBlinkMotionState(123);
+    StepPaletteAnimation(120);
+    StepPaletteAnimation(121);
+    StepPaletteAnimation(122);
+    StepPaletteAnimation(123);
     l->unk_10++;
     if (l->unk_10 == 3600) {
-      ClearBlink(123);
-      LoadBlink(123, 0);
+      RemovePaletteAnimation(123);
+      StartPaletteAnimation(123, 0);
       l->unk_10 = 0;
     }
 
   } else if (gOverworld.work.resistanceBase.weather == SNOWY) {
-    UpdateBlinkMotionState(201);
-    UpdateBlinkMotionState(202);
+    StepPaletteAnimation(201);
+    StepPaletteAnimation(202);
   }
 }
 
@@ -404,13 +404,13 @@ static void rbase_080167dc(struct StageLayer* l, const struct Stage* _ UNUSED) {
   gOverworld.range.top = 0;
   gOverworld.range.right = MAX_X;
   gOverworld.range.bottom = MAX_Y;
-  ClearBlink(0x69);
-  ClearBlink(0x78);
-  ClearBlink(0x79);
-  ClearBlink(0x7a);
-  ClearBlink(0x7b);
-  ClearBlink(0xc9);
-  ClearBlink(0xca);
+  RemovePaletteAnimation(0x69);
+  RemovePaletteAnimation(0x78);
+  RemovePaletteAnimation(0x79);
+  RemovePaletteAnimation(0x7a);
+  RemovePaletteAnimation(0x7b);
+  RemovePaletteAnimation(0xc9);
+  RemovePaletteAnimation(0xca);
 }
 
 static void setBgPrio1(struct StageLayer* l, const struct Stage* _ UNUSED) {
@@ -520,7 +520,7 @@ _08016952:\n\
 	bne _080169F0\n\
 	movs r0, #0xc7\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0xc8\n\
 	b _08016A00\n\
 	.align 2, 0\n\
@@ -539,11 +539,11 @@ _080169F0:\n\
 	movs r0, #0x89\n\
 	lsls r0, r0, #1\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldr r0, _08016A08 @ =0x00000113\n\
 _08016A00:\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	b _08016A46\n\
 	.align 2, 0\n\
 _08016A08: .4byte 0x00000113\n\
@@ -574,7 +574,7 @@ _08016A0C:\n\
 	bl CpuFastSet\n\
 	movs r0, #0x77\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 _08016A46:\n\
 	mov r1, sb\n\
 	lsrs r0, r1, #4\n\
@@ -595,9 +595,9 @@ _08016A5C:\n\
 	cmp r0, #2\n\
 	bne _08016A90\n\
 	movs r0, #0xc7\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0xc8\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	b _08016AA2\n\
 	.align 2, 0\n\
 _08016A78: .4byte gVideoRegBuffer+4\n\
@@ -611,9 +611,9 @@ _08016A90:\n\
 	bne _08016AA2\n\
 	movs r0, #0x89\n\
 	lsls r0, r0, #1\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldr r0, _08016AB4 @ =0x00000113\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 _08016AA2:\n\
 	ldr r0, [r7, #0x68]\n\
 	adds r0, #1\n\
@@ -917,7 +917,7 @@ _08016CD8:\n\
 	ble _08016CD8\n\
 _08016CE0:\n\
 	movs r0, #0x77\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 _08016CE6:\n\
 	add sp, #4\n\
 	pop {r3, r4, r5}\n\
@@ -934,11 +934,11 @@ _08016CFC: .4byte 0xFFFF0000\n\
 }
 
 static void rbase_08016d00(struct StageLayer* l, const struct Stage* _ UNUSED) {
-  ClearBlink(119);
-  ClearBlink(199);
-  ClearBlink(200);
-  ClearBlink(274);
-  ClearBlink(275);
+  RemovePaletteAnimation(119);
+  RemovePaletteAnimation(199);
+  RemovePaletteAnimation(200);
+  RemovePaletteAnimation(274);
+  RemovePaletteAnimation(275);
 }
 
 static void rbase_08016d2c(struct StageLayer* l, const struct Stage* _ UNUSED) {

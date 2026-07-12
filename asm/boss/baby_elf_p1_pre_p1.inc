@@ -28,23 +28,23 @@ _08045B82:
 	movs r1, #0xc8
 	lsls r1, r1, #2
 	movs r0, #0x19
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x19
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r5]
 	adds r0, #1
 	strb r0, [r5]
 	b _08045BBC
 _08045BA4:
 	movs r0, #0x19
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	adds r0, #0xcf
 	ldrb r4, [r0]
 	cmp r4, #0
 	bne _08045BBC
 	movs r0, #0x19
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	strb r4, [r5]
 _08045BBC:
 	pop {r4, r5}

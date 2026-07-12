@@ -615,7 +615,7 @@ _08055124:
 	ldrb r0, [r4]
 	cmp r0, #0
 	beq _08055144
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0
 	strb r0, [r4]
 _08055144:

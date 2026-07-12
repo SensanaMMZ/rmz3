@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "game.h"
 #include "gfx.h"
 #include "global.h"
@@ -71,17 +71,17 @@ NAKED static void KcMenuLoop_Init(struct GameState *g) {
 	bl FUN_080f614c\n\
 	movs r0, #0x43\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x43\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x43\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0x44\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x40\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x40\n\
 	mov r1, r8\n\
 	strb r0, [r1, #1]\n\
@@ -657,17 +657,17 @@ _080F5F8A:\n\
 	cmp r0, #5\n\
 	bne _080F5FD0\n\
 	ldrb r0, [r4, #1]\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0x42\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x42\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x42\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0x41\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x41\n\
 	b _080F5FFA\n\
 	.align 2, 0\n\
@@ -678,27 +678,27 @@ _080F5FD0:\n\
 	cmp r3, #5\n\
 	bne _080F5FFC\n\
 	ldrb r0, [r4, #1]\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0x43\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x43\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x43\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0x40\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x40\n\
 _080F5FFA:\n\
 	strb r0, [r4, #1]\n\
 _080F5FFC:\n\
 	movs r0, #0x44\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldr r0, _080F6030 @ =0x00000DF8\n\
 	add r0, r8\n\
 	ldrb r0, [r0, #1]\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldr r0, _080F6034 @ =0x00000ED8\n\
 	add r0, r8\n\
 	ldr r1, _080F6038 @ =gVideoRegBuffer+6\n\
@@ -740,10 +740,10 @@ static void KcMenuLoop_SlideOut(struct GameState *g) {
 
 static void KcMenuLoop_Exit(struct GameState *g) {
   struct KeyConfigMenuState *m;
-  ClearBlink(68);
+  RemovePaletteAnimation(68);
 
   m = &((g->sceneState).menu).kc;
-  ClearBlink(m->blinkID);
+  RemovePaletteAnimation(m->blinkID);
 }
 
 NAKED void FUN_080f60bc(u16 *p, KEY_INPUT key, u16 r2, u8 r3) {

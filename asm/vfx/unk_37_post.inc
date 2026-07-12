@@ -441,13 +441,13 @@ _080BCBEA:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x18
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r4, #0xe]
 	adds r0, #1
 	strb r0, [r4, #0xe]
 _080BCC12:
 	movs r0, #0x18
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #3
@@ -461,7 +461,7 @@ _080BCC26:
 	b _080BCC8E
 _080BCC2E:
 	movs r0, #0x18
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #6
 	strb r0, [r4, #0x12]
 	ldrb r0, [r4, #0xe]
@@ -569,7 +569,7 @@ _080BCCE0:
 	cmp r0, #0
 	beq _080BCCFC
 	movs r0, #0x19
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 _080BCCFC:
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
@@ -683,7 +683,7 @@ _080BCDAC:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x1a
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0xc
 	strb r0, [r4, #0x12]
 	ldrb r0, [r4, #0xe]
@@ -691,7 +691,7 @@ _080BCDAC:
 	strb r0, [r4, #0xe]
 _080BCDE0:
 	movs r0, #0x1a
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	ldrb r1, [r4, #0x12]
@@ -718,7 +718,7 @@ _080BCE0A:
 	cmp r0, #0
 	bne _080BCE3C
 	movs r0, #0x1a
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldrb r1, [r4, #0xa]
 	movs r0, #0xfe
 	ands r0, r1

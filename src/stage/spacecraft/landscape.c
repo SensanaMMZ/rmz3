@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "gfx.h"
 #include "global.h"
 #include "overworld.h"
@@ -23,63 +23,63 @@ static void updateSpaceCraft(struct Coord* _ UNUSED) {
   if ((TILESET_ID(0) == STAGE_SPACE_CRAFT) && (TILESET_IDX(0) == 0)) {
     if ((gOverworld.work.spacecraft.unk_00e & (1 << 0)) == 0) {
       gOverworld.work.spacecraft.unk_00e |= 1;
-      LoadBlink(5, 0);
+      StartPaletteAnimation(5, 0);
     }
-    UpdateBlinkMotionState(5);
+    StepPaletteAnimation(5);
   } else if (gOverworld.work.spacecraft.unk_00e & 1) {
     gOverworld.work.spacecraft.unk_00e ^= 1;
-    ClearBlink(5);
+    RemovePaletteAnimation(5);
   }
 
   if ((TILESET_ID(1) == STAGE_SPACE_CRAFT) && (TILESET_IDX(1) == 2)) {
     if ((gOverworld.work.spacecraft.unk_00e & (1 << 1)) == 0) {
       gOverworld.work.spacecraft.unk_00e |= (1 << 1);
-      LoadBlink(9, 0);
+      StartPaletteAnimation(9, 0);
     }
-    UpdateBlinkMotionState(9);
+    StepPaletteAnimation(9);
   } else if (gOverworld.work.spacecraft.unk_00e & (1 << 1)) {
     gOverworld.work.spacecraft.unk_00e ^= (1 << 1);
-    ClearBlink(9);
+    RemovePaletteAnimation(9);
   }
 
   if ((TILESET_ID(0) == STAGE_SPACE_CRAFT) && (TILESET_IDX(0) == 3)) {
     if ((gOverworld.work.spacecraft.unk_00e & (1 << 2)) == 0) {
       gOverworld.work.spacecraft.unk_00e |= (1 << 2);
-      LoadBlink(6, 0);
-      LoadBlink(8, 0);
+      StartPaletteAnimation(6, 0);
+      StartPaletteAnimation(8, 0);
     }
-    UpdateBlinkMotionState(6);
-    UpdateBlinkMotionState(8);
+    StepPaletteAnimation(6);
+    StepPaletteAnimation(8);
   } else if (gOverworld.work.spacecraft.unk_00e & (1 << 2)) {
     gOverworld.work.spacecraft.unk_00e ^= (1 << 2);
-    ClearBlink(6);
-    ClearBlink(8);
+    RemovePaletteAnimation(6);
+    RemovePaletteAnimation(8);
   }
 
   if ((TILESET_ID(1) == STAGE_SPACE_CRAFT) && (TILESET_IDX(1) == 4)) {
     if ((gOverworld.work.spacecraft.unk_00e & (1 << 3)) == 0) {
       gOverworld.work.spacecraft.unk_00e |= (1 << 3);
-      LoadBlink(7, 0);
-      LoadBlink(10, 0);
+      StartPaletteAnimation(7, 0);
+      StartPaletteAnimation(10, 0);
     }
-    UpdateBlinkMotionState(7);
-    UpdateBlinkMotionState(10);
+    StepPaletteAnimation(7);
+    StepPaletteAnimation(10);
   } else if (gOverworld.work.spacecraft.unk_00e & (1 << 3)) {
     gOverworld.work.spacecraft.unk_00e ^= (1 << 3);
-    ClearBlink(7);
-    ClearBlink(10);
+    RemovePaletteAnimation(7);
+    RemovePaletteAnimation(10);
   }
 }
 
 static void nop_0800b434(struct Coord* _ UNUSED) { return; }
 
 static void exitSpaceCraft(struct Coord* _ UNUSED) {
-  ClearBlink(5);
-  ClearBlink(6);
-  ClearBlink(7);
-  ClearBlink(8);
-  ClearBlink(9);
-  ClearBlink(10);
+  RemovePaletteAnimation(5);
+  RemovePaletteAnimation(6);
+  RemovePaletteAnimation(7);
+  RemovePaletteAnimation(8);
+  RemovePaletteAnimation(9);
+  RemovePaletteAnimation(10);
 }
 
 static void LayerUpdate_SpaceCraft_2(struct StageLayer* l, const struct Stage* _ UNUSED) {

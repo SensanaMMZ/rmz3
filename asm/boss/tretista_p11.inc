@@ -34,7 +34,7 @@ _0804F600:
 	movs r1, #0xb8
 	lsls r1, r1, #2
 	movs r0, #0x4c
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r1, _0804F650 @ =0x0000AB1C
 	adds r0, r5, #0
 	bl SetMotion
@@ -94,7 +94,7 @@ _0804F658:
 	strb r0, [r5, #0xe]
 _0804F682:
 	movs r0, #0x4c
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r5, #0
 	bl UpdateMotionGraphic
 	ldrb r0, [r5, #0xf]
@@ -179,7 +179,7 @@ _0804F73C: .4byte 0xFFFFC000
 _0804F740: .4byte 0xFFFFD600
 _0804F744:
 	movs r0, #0x4c
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r5, #0
 	bl UpdateMotionGraphic
 	ldrb r0, [r5, #0x12]
@@ -204,7 +204,7 @@ _0804F762:
 	strb r0, [r5, #0xe]
 _0804F77A:
 	movs r0, #0x4c
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r5, #0
 	bl UpdateMotionGraphic
 	adds r0, r5, #0
@@ -225,7 +225,7 @@ _0804F79C: .4byte 0x0000AB1F
 _0804F7A0: .4byte sCollisions+(24*1)
 _0804F7A4:
 	movs r0, #0x4c
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r5, #0
 	bl UpdateMotionGraphic
 	ldrb r0, [r5, #0x12]
@@ -238,7 +238,7 @@ _0804F7A4:
 	bne _0804F7CE
 _0804F7C0:
 	movs r0, #0x4c
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r1, #0
 	movs r0, #3
 	strb r0, [r5, #0xd]

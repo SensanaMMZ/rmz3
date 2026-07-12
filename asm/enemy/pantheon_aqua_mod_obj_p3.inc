@@ -1724,7 +1724,7 @@ _08081D3E:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x55
-	bl LoadBlink
+	bl StartPaletteAnimation
 	strb r5, [r4, #0x12]
 	ldrb r0, [r4, #0xe]
 	adds r0, #1
@@ -1750,7 +1750,7 @@ _08081D92:
 	movs r5, #0
 	strb r0, [r4, #0x12]
 	movs r0, #0x55
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	adds r0, r6, #0
@@ -1765,7 +1765,7 @@ _08081D92:
 	bls _08081DF4
 _08081DBA:
 	movs r0, #0x55
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldrb r1, [r4, #0xa]
 	movs r0, #0xfe
 	ands r0, r1

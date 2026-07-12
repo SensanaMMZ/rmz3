@@ -76,13 +76,13 @@ _0804FCF2:
 	orrs r0, r1
 	strb r0, [r4, #0xa]
 	movs r0, #0x49
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x4a
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x4b
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x4c
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x28
 	strb r0, [r4, #0x12]
 	ldrb r0, [r4, #0xe]

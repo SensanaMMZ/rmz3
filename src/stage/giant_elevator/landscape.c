@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "global.h"
 #include "overworld.h"
 #include "story.h"
@@ -32,34 +32,34 @@ static void gelevator_08013e88(struct Coord* _ UNUSED) {
   if ((TILESET_ID(0) == STAGE_GIANT_ELEVATOR) && (TILESET_IDX(0) == 0)) {
     if ((gOverworld.work.giantElevator.unk_000[0] & (1 << 0)) == 0) {
       gOverworld.work.giantElevator.unk_000[0] |= (1 << 0);
-      LoadBlink(216, 0);
+      StartPaletteAnimation(216, 0);
     }
-    UpdateBlinkMotionState(216);
+    StepPaletteAnimation(216);
 
   } else if ((gOverworld.work.giantElevator.unk_000[0] & (1 << 0))) {
     gOverworld.work.giantElevator.unk_000[0] ^= (1 << 0);
-    ClearBlink(216);
+    RemovePaletteAnimation(216);
   }
 
   if ((TILESET_ID(1) == STAGE_GIANT_ELEVATOR) && (TILESET_IDX(1) == 1)) {
     if ((gOverworld.work.giantElevator.unk_000[0] & (1 << 1)) == 0) {
       gOverworld.work.giantElevator.unk_000[0] |= (1 << 1);
-      LoadBlink(215, 0);
+      StartPaletteAnimation(215, 0);
     }
-    UpdateBlinkMotionState(215);
+    StepPaletteAnimation(215);
 
   } else if ((gOverworld.work.giantElevator.unk_000[0] & (1 << 1))) {
     gOverworld.work.giantElevator.unk_000[0] ^= (1 << 1);
-    ClearBlink(215);
+    RemovePaletteAnimation(215);
   }
 
   if ((TILESET_ID(1) == STAGE_GIANT_ELEVATOR) && (TILESET_IDX(1) == 2)) {
     if ((gOverworld.work.giantElevator.unk_000[0] & (1 << 2)) == 0) {
       gOverworld.work.giantElevator.unk_000[0] |= (1 << 2);
-      LoadBlink(217, 0);
+      StartPaletteAnimation(217, 0);
       gOverworld.work.giantElevator.unk_006 = 0;
     }
-    UpdateBlinkMotionState(217);
+    StepPaletteAnimation(217);
     if (gOverworld.state[0] >= 11) {
       if (gOverworld.work.giantElevator.unk_004 != 0) {
         gOverworld.work.giantElevator.unk_004 -= 2;
@@ -78,7 +78,7 @@ static void gelevator_08013e88(struct Coord* _ UNUSED) {
 
   } else if ((gOverworld.work.giantElevator.unk_000[0] & (1 << 2))) {
     gOverworld.work.giantElevator.unk_000[0] ^= (1 << 2);
-    ClearBlink(217);
+    RemovePaletteAnimation(217);
   }
 }
 

@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "gfx.h"
 #include "global.h"
 #include "overworld.h"
@@ -19,8 +19,8 @@ static const StageFunc sStageRoutine[4] = {
 static void initTwilightDesert(struct Coord* _ UNUSED) {
   gOverworld.work.twilightDesert.unk_004 = 0;
   gOverworld.work.twilightDesert.unk_001 = 0;
-  LoadBlink(131, 0);
-  LoadBlink(132, 0);
+  StartPaletteAnimation(131, 0);
+  StartPaletteAnimation(132, 0);
 }
 
 static void FUN_0800f8dc(struct Coord* c) {
@@ -49,15 +49,15 @@ _SKIP:
       }
     }
   }
-  UpdateBlinkMotionState(131);
-  UpdateBlinkMotionState(132);
+  StepPaletteAnimation(131);
+  StepPaletteAnimation(132);
 }
 
 static void nop_0800f9bc(struct Coord* _ UNUSED) { return; }
 
 static void exitTwilightDesert(struct Coord* _ UNUSED) {
-  ClearBlink(131);
-  ClearBlink(132);
+  RemovePaletteAnimation(131);
+  RemovePaletteAnimation(132);
 }
 
 static void LayerUpdate_TwilightDesert_2(struct StageLayer* l, const struct Stage* stage) {

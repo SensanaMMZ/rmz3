@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "gfx.h"
 #include "global.h"
 #include "mission.h"
@@ -35,91 +35,91 @@ static void volcano_0800be3c(struct Coord* c) {
   if ((TILESET_ID(0) == STAGE_VOLCANO) && (TILESET_IDX(0) == 0)) {
     if ((STAGE.unk_000 & (1 << 0)) == 0) {
       STAGE.unk_000 |= 1;
-      LoadBlink(49, 0);
-      LoadBlink(50, 0);
+      StartPaletteAnimation(49, 0);
+      StartPaletteAnimation(50, 0);
       STAGE.unk_001 = 0;
     }
-    UpdateBlinkMotionState(49);
-    UpdateBlinkMotionState(50);
+    StepPaletteAnimation(49);
+    StepPaletteAnimation(50);
     STAGE.unk_001++;
     if (STAGE.unk_001 == 45) {
       STAGE.unk_001 = 0;
     }
   } else if (STAGE.unk_000 & 1) {
     STAGE.unk_000 ^= 1;
-    ClearBlink(49);
-    ClearBlink(50);
+    RemovePaletteAnimation(49);
+    RemovePaletteAnimation(50);
   }
 
   if ((TILESET_ID(1) == STAGE_VOLCANO) && (TILESET_IDX(1) == 1)) {
     if ((STAGE.unk_000 & (1 << 1)) == 0) {
       STAGE.unk_000 |= (1 << 1);
-      LoadBlink(60, 0);
+      StartPaletteAnimation(60, 0);
     }
-    UpdateBlinkMotionState(60);
+    StepPaletteAnimation(60);
   } else if (STAGE.unk_000 & (1 << 1)) {
     STAGE.unk_000 ^= (1 << 1);
-    ClearBlink(60);
+    RemovePaletteAnimation(60);
   }
 
   if ((TILESET_ID(1) == STAGE_VOLCANO) && (TILESET_IDX(1) == 2)) {
     if ((STAGE.unk_000 & (1 << 2)) == 0) {
       STAGE.unk_000 |= (1 << 2);
-      LoadBlink(51, 0);
-      LoadBlink(52, 0);
+      StartPaletteAnimation(51, 0);
+      StartPaletteAnimation(52, 0);
       STAGE.unk_002 = 0;
     }
-    UpdateBlinkMotionState(51);
-    UpdateBlinkMotionState(52);
+    StepPaletteAnimation(51);
+    StepPaletteAnimation(52);
     STAGE.unk_002++;
     if (STAGE.unk_002 == 16) {
       STAGE.unk_002 = 0;
     }
   } else if (STAGE.unk_000 & (1 << 2)) {
     STAGE.unk_000 ^= (1 << 2);
-    ClearBlink(51);
-    ClearBlink(52);
+    RemovePaletteAnimation(51);
+    RemovePaletteAnimation(52);
   }
 
   if ((TILESET_ID(0) == STAGE_VOLCANO) && (TILESET_IDX(0) == 3)) {
     if ((STAGE.unk_000 & (1 << 3)) == 0) {
       STAGE.unk_000 |= (1 << 3);
-      LoadBlink(50, 0);
-      LoadBlink(53, 0);
-      LoadBlink(54, 0);
-      LoadBlink(55, 0);
-      LoadBlink(56, 0);
-      LoadBlink(57, 0);
+      StartPaletteAnimation(50, 0);
+      StartPaletteAnimation(53, 0);
+      StartPaletteAnimation(54, 0);
+      StartPaletteAnimation(55, 0);
+      StartPaletteAnimation(56, 0);
+      StartPaletteAnimation(57, 0);
       STAGE.unk_001 = 0;
     }
-    UpdateBlinkMotionState(50);
-    UpdateBlinkMotionState(53);
-    UpdateBlinkMotionState(54);
-    UpdateBlinkMotionState(55);
-    UpdateBlinkMotionState(56);
-    UpdateBlinkMotionState(57);
+    StepPaletteAnimation(50);
+    StepPaletteAnimation(53);
+    StepPaletteAnimation(54);
+    StepPaletteAnimation(55);
+    StepPaletteAnimation(56);
+    StepPaletteAnimation(57);
     STAGE.unk_001++;
     if (STAGE.unk_001 == 45) {
       STAGE.unk_001 = 0;
     }
   } else if (STAGE.unk_000 & (1 << 3)) {
     STAGE.unk_000 ^= (1 << 3);
-    ClearBlink(50);
-    ClearBlink(53);
-    ClearBlink(54);
-    ClearBlink(55);
-    ClearBlink(56);
-    ClearBlink(57);
+    RemovePaletteAnimation(50);
+    RemovePaletteAnimation(53);
+    RemovePaletteAnimation(54);
+    RemovePaletteAnimation(55);
+    RemovePaletteAnimation(56);
+    RemovePaletteAnimation(57);
   }
 
   if ((TILESET_ID(1) == STAGE_VOLCANO) && (TILESET_IDX(1) == 4)) {
     if ((STAGE.unk_000 & (1 << 4)) == 0) {
       STAGE.unk_000 |= (1 << 4);
-      LoadBlink(58, 0);
+      StartPaletteAnimation(58, 0);
       STAGE.unk_002 = 0;
       STAGE.unk_003 = 0;
     }
-    UpdateBlinkMotionState(58);
+    StepPaletteAnimation(58);
     STAGE.unk_002++;
     if (STAGE.unk_002 == 45) {
       STAGE.unk_002 = 0;
@@ -130,43 +130,43 @@ static void volcano_0800be3c(struct Coord* c) {
     }
   } else if (STAGE.unk_000 & (1 << 4)) {
     STAGE.unk_000 ^= (1 << 4);
-    ClearBlink(58);
+    RemovePaletteAnimation(58);
   }
 
   if ((TILESET_ID(0) == STAGE_VOLCANO) && (TILESET_IDX(0) == 5)) {
     if ((STAGE.unk_000 & (1 << 5)) == 0) {
       STAGE.unk_000 |= (1 << 5);
-      LoadBlink(53, 0);
-      LoadBlink(54, 0);
-      LoadBlink(56, 0);
-      LoadBlink(57, 0);
+      StartPaletteAnimation(53, 0);
+      StartPaletteAnimation(54, 0);
+      StartPaletteAnimation(56, 0);
+      StartPaletteAnimation(57, 0);
       STAGE.unk_001 = 0;
     }
-    UpdateBlinkMotionState(53);
-    UpdateBlinkMotionState(54);
-    UpdateBlinkMotionState(56);
-    UpdateBlinkMotionState(57);
+    StepPaletteAnimation(53);
+    StepPaletteAnimation(54);
+    StepPaletteAnimation(56);
+    StepPaletteAnimation(57);
     STAGE.unk_001++;
     if (STAGE.unk_001 == 32) {
       STAGE.unk_001 = 0;
     }
   } else if (STAGE.unk_000 & (1 << 5)) {
     STAGE.unk_000 ^= (1 << 5);
-    ClearBlink(53);
-    ClearBlink(54);
-    ClearBlink(56);
-    ClearBlink(57);
+    RemovePaletteAnimation(53);
+    RemovePaletteAnimation(54);
+    RemovePaletteAnimation(56);
+    RemovePaletteAnimation(57);
   }
 
   if ((TILESET_ID(0) == STAGE_VOLCANO) && (TILESET_IDX(0) == 6)) {
     if ((STAGE.unk_000 & (1 << 6)) == 0) {
       STAGE.unk_000 |= (1 << 6);
-      LoadBlink(59, 0);
+      StartPaletteAnimation(59, 0);
     }
-    UpdateBlinkMotionState(59);
+    StepPaletteAnimation(59);
   } else if (STAGE.unk_000 & (1 << 6)) {
     STAGE.unk_000 ^= (1 << 6);
-    ClearBlink(59);
+    RemovePaletteAnimation(59);
   }
 
   if (c->x - 0x1E0000U < PIXEL(3600)) {
@@ -228,18 +228,18 @@ static void volcano_0800c394(struct Coord* _ UNUSED) {
 }
 
 static void exitVolcano(struct Coord* _ UNUSED) {
-  ClearBlink(49);
-  ClearBlink(50);
-  ClearBlink(51);
-  ClearBlink(52);
-  ClearBlink(53);
-  ClearBlink(54);
-  ClearBlink(55);
-  ClearBlink(56);
-  ClearBlink(57);
-  ClearBlink(58);
-  ClearBlink(59);
-  ClearBlink(60);
+  RemovePaletteAnimation(49);
+  RemovePaletteAnimation(50);
+  RemovePaletteAnimation(51);
+  RemovePaletteAnimation(52);
+  RemovePaletteAnimation(53);
+  RemovePaletteAnimation(54);
+  RemovePaletteAnimation(55);
+  RemovePaletteAnimation(56);
+  RemovePaletteAnimation(57);
+  RemovePaletteAnimation(58);
+  RemovePaletteAnimation(59);
+  RemovePaletteAnimation(60);
 }
 
 static void LayerUpdate_Volcano_2(struct StageLayer* l, const struct Stage* stage);
@@ -456,7 +456,7 @@ static void LayerUpdate_LavaRiver1(struct StageLayer* l, const struct Stage* _ U
   u16 n;
 
   if (l->phase == 0) {
-    LoadBlink(61, 0x300);
+    StartPaletteAnimation(61, 0x300);
     l->unk_10 = 0;
     l->phase++;
   }
@@ -482,17 +482,17 @@ static void LayerUpdate_LavaRiver1(struct StageLayer* l, const struct Stage* _ U
     }
   }
 
-  UpdateBlinkMotionState(61);
+  StepPaletteAnimation(61);
 }
 
 static void LayerExit_Volcano_7(struct StageLayer* l, const struct Stage* _) {
-  ClearBlink(61);
+  RemovePaletteAnimation(61);
   return;
 }
 
 static void LayerUpdate_LavaRiver2(struct StageLayer* l, const struct Stage* _ UNUSED) {
   if (l->phase == 0) {
-    LoadBlink(61, 0x300);
+    StartPaletteAnimation(61, 0x300);
     l->unk_10 = 0;
     l->unk_12 = 0;
     l->phase++;
@@ -525,11 +525,11 @@ static void LayerUpdate_LavaRiver2(struct StageLayer* l, const struct Stage* _ U
     CreateLavaRiverPlatform(coords[5].x, coords[5].y);
   }
 
-  UpdateBlinkMotionState(61);
+  StepPaletteAnimation(61);
 }
 
 static void LayerExit_Volcano_8(struct StageLayer* l, const struct Stage* _) {
-  ClearBlink(61);
+  RemovePaletteAnimation(61);
   return;
 }
 

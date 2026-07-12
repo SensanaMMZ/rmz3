@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
@@ -204,18 +204,18 @@ _08060C44:\n\
 	lsls r4, r4, #2\n\
 	movs r0, #0xa7\n\
 	adds r1, r4, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r1, #0xb8\n\
 	lsls r1, r1, #2\n\
 	movs r0, #0xa8\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r1, #0xc0\n\
 	lsls r1, r1, #2\n\
 	movs r0, #0xa9\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0xaa\n\
 	adds r1, r4, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	adds r0, r5, #0\n\
 	bl OmegaZX_Update\n\
 	add sp, #8\n\
@@ -304,10 +304,10 @@ static void OmegaZX_Die(struct Boss* p) {
 // --------------------------------------------
 
 static void OmegaZX_Disappear(struct Boss* p) {
-  ClearBlink(167);
-  ClearBlink(168);
-  ClearBlink(169);
-  ClearBlink(170);
+  RemovePaletteAnimation(167);
+  RemovePaletteAnimation(168);
+  RemovePaletteAnimation(169);
+  RemovePaletteAnimation(170);
   DeleteBoss(p);
 }
 
@@ -326,10 +326,10 @@ static void FUN_08060d60(Object* p) {
       FALLTHROUGH;
     }
     case 1: {
-      UpdateBlinkMotionState(167);
-      UpdateBlinkMotionState(168);
-      UpdateBlinkMotionState(169);
-      UpdateBlinkMotionState(170);
+      StepPaletteAnimation(167);
+      StepPaletteAnimation(168);
+      StepPaletteAnimation(169);
+      StepPaletteAnimation(170);
       if ((p->s).work[2] != 0) {
         (p->s).work[2]--;
         if ((p->s).work[2] == 0) {
@@ -432,17 +432,17 @@ void FUN_080612d8(struct Boss* p) {
   struct Coord c;
   switch ((p->s).mode[2]) {
     case 0:
-      ClearBlink(0xa7);
-      ClearBlink(0xa8);
-      ClearBlink(0xa9);
-      ClearBlink(0xaa);
-      LoadBlink(0xaa, 0x2c0);
+      RemovePaletteAnimation(0xa7);
+      RemovePaletteAnimation(0xa8);
+      RemovePaletteAnimation(0xa9);
+      RemovePaletteAnimation(0xaa);
+      StartPaletteAnimation(0xaa, 0x2c0);
       FUN_080afedc(&p->s, &(p->s).coord, 1);
       (p->s).work[2] = 0x1e;
       (p->s).mode[2]++;
       // fallthrough
     case 1:
-      UpdateBlinkMotionState(0xaa);
+      StepPaletteAnimation(0xaa);
       if ((p->s).work[2] != 0 && --(p->s).work[2] == 0) {
         (p->s).mode[2]++;
       }
@@ -456,14 +456,14 @@ void FUN_080612d8(struct Boss* p) {
       (p->s).mode[2]++;
       break;
     case 3:
-      UpdateBlinkMotionState(0xaa);
+      StepPaletteAnimation(0xaa);
       if ((*(struct Entity**)((u8*)p + 0xc4))->mode[0] > 1) {
         *(struct Entity**)((u8*)p + 0xc4) = NULL;
         (p->s).mode[2]++;
       }
       break;
     case 4:
-      ClearBlink(0xaa);
+      RemovePaletteAnimation(0xaa);
       (p->s).mode[1] = 3;
       (p->s).mode[2] = 0;
       break;
@@ -480,11 +480,11 @@ void FUN_080613bc(struct Boss* p) {
   struct Coord c;
   switch ((p->s).mode[2]) {
     case 0:
-      ClearBlink(0xa7);
-      ClearBlink(0xa8);
-      ClearBlink(0xa9);
-      ClearBlink(0xaa);
-      LoadBlink(0xa8, 0x2e0);
+      RemovePaletteAnimation(0xa7);
+      RemovePaletteAnimation(0xa8);
+      RemovePaletteAnimation(0xa9);
+      RemovePaletteAnimation(0xaa);
+      StartPaletteAnimation(0xa8, 0x2e0);
       FUN_080c4f04(&p->s, &(p->s).coord, 0);
       (p->s).work[2] = 0x1e;
       (p->s).mode[2]++;
@@ -503,7 +503,7 @@ void FUN_080613bc(struct Boss* p) {
       break;
     case 3:
       FUN_080616fc(p);
-      UpdateBlinkMotionState(0xa8);
+      StepPaletteAnimation(0xa8);
       if ((*(struct Entity**)((u8*)p + 0xc4))->mode[0] > 1) {
         *(struct Entity**)((u8*)p + 0xc4) = NULL;
         (p->s).mode[2]++;
@@ -511,7 +511,7 @@ void FUN_080613bc(struct Boss* p) {
       break;
     case 4:
       FUN_080616fc(p);
-      ClearBlink(0xa8);
+      RemovePaletteAnimation(0xa8);
       (p->s).mode[1] = 3;
       (p->s).mode[2] = 0;
       break;
@@ -527,19 +527,19 @@ bool8 FUN_080615d8(struct Boss* p) { return TRUE; }
 void FUN_080615dc(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0:
-      ClearBlink(0xa7);
-      ClearBlink(0xa8);
-      ClearBlink(0xa9);
-      ClearBlink(0xaa);
-      LoadBlink(0xa7, 0x2c0);
+      RemovePaletteAnimation(0xa7);
+      RemovePaletteAnimation(0xa8);
+      RemovePaletteAnimation(0xa9);
+      RemovePaletteAnimation(0xaa);
+      StartPaletteAnimation(0xa7, 0x2c0);
       FUN_080616fc(p);
       (p->s).mode[2]++;
       break;
     case 1:
       FUN_080616fc(p);
-      UpdateBlinkMotionState(0xa7);
+      StepPaletteAnimation(0xa7);
       if ((*(struct Entity**)((u8*)p + 0xcc))->mode[1] != 7) {
-        ClearBlink(0xa7);
+        RemovePaletteAnimation(0xa7);
         (p->s).mode[1] = 3;
         (p->s).mode[2] = 0;
       }

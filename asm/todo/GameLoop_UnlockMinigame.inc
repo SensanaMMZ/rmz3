@@ -41,7 +41,7 @@ _080EF968:
 	lsls r1, r1, #3
 	adds r0, r5, r1
 	str r4, [r0]
-	bl ClearBlinkings
+	bl RemoveAllPaletteAnimations
 	ldr r0, _080EFC18 @ =gBlendRegBuffer
 	strh r4, [r0]
 	ldr r1, _080EFC1C @ =gWindowRegBuffer

@@ -189,10 +189,10 @@ _080240A2:\n\
 	movs r2, #0\n\
 	movs r3, #0\n\
 	bl CopyBgMap\n\
-	bl PauseAllBlinks\n\
+	bl PauseAllPaletteAnimations\n\
 	movs r0, #0x40\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldr r2, _080241C4 @ =gWindowRegBuffer\n\
 	ldrh r1, [r2]\n\
 	ldr r0, _080241C8 @ =0x0000BFFF\n\
@@ -228,7 +228,7 @@ _0802416A:\n\
 	strb r0, [r6]\n\
 _0802417C:\n\
 	movs r0, #0x40\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldr r0, _080241CC @ =gStageRun\n\
 	movs r3, #0xaa\n\
 	lsls r3, r3, #1\n\
@@ -260,7 +260,7 @@ _080241CC: .4byte gStageRun\n\
 _080241D0: .4byte gPaletteManager\n\
 _080241D4:\n\
 	movs r0, #0x40\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	adds r0, r6, #0\n\
 	bl printPlayerAllScore\n\
 	cmp r0, #1\n\
@@ -272,7 +272,7 @@ _080241E6:\n\
 	b _0802425A\n\
 _080241EC:\n\
 	movs r0, #0x40\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	adds r0, r6, #0\n\
 	bl getStageRewardChip\n\
 	cmp r0, #1\n\
@@ -282,7 +282,7 @@ _080241EC:\n\
 	b _0802425A\n\
 _08024202:\n\
 	movs r0, #0x40\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	adds r0, r6, #0\n\
 	bl getStageRewardExSkill\n\
 	cmp r0, #1\n\
@@ -292,7 +292,7 @@ _08024202:\n\
 	b _0802425A\n\
 _08024218:\n\
 	movs r0, #0x40\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	adds r0, r6, #0\n\
 	bl FUN_080248f0\n\
 	cmp r0, #1\n\
@@ -302,7 +302,7 @@ _08024218:\n\
 	b _0802425A\n\
 _0802422E:\n\
 	movs r0, #0x40\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldr r4, _08024264 @ =gStageRun\n\
 	movs r0, #0xb4\n\
 	lsls r0, r0, #1\n\
@@ -331,7 +331,7 @@ _0802425A:\n\
 _08024264: .4byte gStageRun\n\
 _08024268:\n\
 	movs r0, #0x40\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldr r0, _080242C4 @ =gStageRun\n\
 	movs r3, #0xaa\n\
 	lsls r3, r3, #1\n\
@@ -345,8 +345,8 @@ _08024268:\n\
 	ands r0, r1\n\
 	strh r0, [r2]\n\
 	movs r0, #0x40\n\
-	bl ClearBlink\n\
-	bl ResumeAllBlinks\n\
+	bl RemovePaletteAnimation\n\
+	bl ResumeAllPaletteAnimations\n\
 	movs r0, #0x3c\n\
 	strh r0, [r6, #4]\n\
 	ldrb r0, [r6]\n\

@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "global.h"
 #include "overworld.h"
 #include "story.h"
@@ -36,21 +36,21 @@ static void FUN_08011dd8(struct Coord* _ UNUSED) {
   if ((TILESET_ID(1) == STAGE_E_FACILITY) && (TILESET_IDX(1) == 3)) {
     if ((gOverworld.work.energyFacility.unk_000[0] & (1 << 0)) == 0) {
       gOverworld.work.energyFacility.unk_000[0] |= (1 << 0);
-      LoadBlink(196, 0);
+      StartPaletteAnimation(196, 0);
     }
-    UpdateBlinkMotionState(196);
+    StepPaletteAnimation(196);
 
   } else if ((gOverworld.work.energyFacility.unk_000[0] & (1 << 0))) {
     gOverworld.work.energyFacility.unk_000[0] ^= (1 << 0);
-    ClearBlink(196);
+    RemovePaletteAnimation(196);
   }
 
   if ((TILESET_ID(1) == STAGE_E_FACILITY) && (TILESET_IDX(1) == 1)) {
     if ((gOverworld.work.energyFacility.unk_000[0] & (1 << 1)) == 0) {
       gOverworld.work.energyFacility.unk_000[0] |= (1 << 1);
-      LoadBlink(197, 0);
+      StartPaletteAnimation(197, 0);
     }
-    UpdateBlinkMotionState(197);
+    StepPaletteAnimation(197);
     gOverworld.work.energyFacility.unk_00c[0]++;
     if (gOverworld.work.energyFacility.unk_00c[0] == 27) {
       gOverworld.work.energyFacility.unk_00c[0] = 0;
@@ -58,7 +58,7 @@ static void FUN_08011dd8(struct Coord* _ UNUSED) {
 
   } else if ((gOverworld.work.energyFacility.unk_000[0] & (1 << 1))) {
     gOverworld.work.energyFacility.unk_000[0] ^= (1 << 1);
-    ClearBlink(197);
+    RemovePaletteAnimation(197);
   }
 
   if ((TILESET_ID(1) == STAGE_E_FACILITY) && (TILESET_IDX(1) == 4)) {
@@ -78,11 +78,11 @@ static void FUN_08011dd8(struct Coord* _ UNUSED) {
         gOverworld.work.energyFacility.unk_00e = 0;
       }
       if (gOverworld.work.energyFacility.unk_00e == 0) {
-        ClearBlink(192);
+        RemovePaletteAnimation(192);
       } else if (gOverworld.work.energyFacility.unk_00e == 198) {
-        LoadBlink(192, 0);
+        StartPaletteAnimation(192, 0);
       }
-      UpdateBlinkMotionState(192);
+      StepPaletteAnimation(192);
     }
     if (gCurStory.unk_54 & (1 << 3)) {
       if (gOverworld.work.energyFacility.unk_012[0] < 64) {
@@ -104,24 +104,24 @@ static void FUN_08011dd8(struct Coord* _ UNUSED) {
     }
     if (gCurStory.unk_54 & (1 << 5)) {
       if (gOverworld.work.energyFacility.unk_00c[1] == 0) {
-        LoadBlink(193, 0);
+        StartPaletteAnimation(193, 0);
       }
       if (gOverworld.work.energyFacility.unk_00c[1] <= 90) {
         if (gOverworld.work.energyFacility.unk_00c[1] == 90) {
-          ClearBlink(193);
-          LoadBlink(194, 0);
+          RemovePaletteAnimation(193);
+          StartPaletteAnimation(194, 0);
         }
         gOverworld.work.energyFacility.unk_00c[1]++;
       }
-      UpdateBlinkMotionState(193);
-      UpdateBlinkMotionState(194);
+      StepPaletteAnimation(193);
+      StepPaletteAnimation(194);
     }
 
   } else if ((gOverworld.work.energyFacility.unk_000[0] & (1 << 2))) {
     gOverworld.work.energyFacility.unk_000[0] ^= (1 << 2);
-    ClearBlink(192);
-    ClearBlink(193);
-    ClearBlink(194);
+    RemovePaletteAnimation(192);
+    RemovePaletteAnimation(193);
+    RemovePaletteAnimation(194);
     gOverworld.work.energyFacility.unk_00e = 0;
     gOverworld.work.energyFacility.unk_00c[1] = 0;
   }
@@ -578,12 +578,12 @@ _080124E8: .4byte 0x08704CDC\n\
 }
 
 static void FUN_080124ec(struct Coord* _ UNUSED) {
-  ClearBlink(192);
-  ClearBlink(193);
-  ClearBlink(194);
-  ClearBlink(196);
-  ClearBlink(197);
-  ClearBlink(198);
+  RemovePaletteAnimation(192);
+  RemovePaletteAnimation(193);
+  RemovePaletteAnimation(194);
+  RemovePaletteAnimation(196);
+  RemovePaletteAnimation(197);
+  RemovePaletteAnimation(198);
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
@@ -825,35 +825,35 @@ static void LayerUpdate_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
     if ((gCurStory.unk_54 >> bit) & 1) {
       if (!(l->unk_12 & (1 << 0))) {
         l->unk_12 |= (1 << 0);
-        ClearBlink(243);
-        LoadBlink(191, 0);
+        RemovePaletteAnimation(243);
+        StartPaletteAnimation(191, 0);
       }
     } else {
       if (l->unk_12 & (1 << 0)) {
         l->unk_12 &= 0xFE;
-        ClearBlink(191);
-        LoadBlink(243, 0);
+        RemovePaletteAnimation(191);
+        StartPaletteAnimation(243, 0);
       }
     }
   } else {
     l->unk_12 &= 0xFE;
-    ClearBlink(191);
-    ClearBlink(243);
+    RemovePaletteAnimation(191);
+    RemovePaletteAnimation(243);
   }
 
   if ((TILESET_ID(0) == STAGE_E_FACILITY) && (TILESET_IDX(0) == 0)) {
     if ((gCurStory.unk_54 & (1 << 1)) && !(l->unk_12 & (1 << 1))) {
       l->unk_12 |= (1 << 1);
-      LoadBlink(195, 0);
+      StartPaletteAnimation(195, 0);
     }
   } else {
     l->unk_12 &= 0xFD;
-    ClearBlink(195);
+    RemovePaletteAnimation(195);
   }
 
-  UpdateBlinkMotionState(191);
-  UpdateBlinkMotionState(195);
-  UpdateBlinkMotionState(243);
+  StepPaletteAnimation(191);
+  StepPaletteAnimation(195);
+  StepPaletteAnimation(243);
 }
 
 static void LayerDraw_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
@@ -863,9 +863,9 @@ static void LayerDraw_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
 
 static void LayerExit_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
   gBlendRegBuffer.bldclt = 0;
-  ClearBlink(191);
-  ClearBlink(195);
-  ClearBlink(243);
+  RemovePaletteAnimation(191);
+  RemovePaletteAnimation(195);
+  RemovePaletteAnimation(243);
 }
 
 INCASM("asm/stage_gfx/energy_facility.inc");

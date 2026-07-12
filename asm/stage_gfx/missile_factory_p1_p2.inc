@@ -40,7 +40,7 @@ _0800F324:
 _0800F332:
 	movs r0, #0xd0
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r2, _0800F358 @ =0x0002D025
 	adds r1, r4, r2
 	movs r4, #0
@@ -57,7 +57,7 @@ _0800F358: .4byte 0x0002D025
 _0800F35C: .4byte 0x00000121
 _0800F360:
 	movs r0, #0xd0
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrh r0, [r6, #0x10]
 	adds r0, #1
 	strh r0, [r6, #0x10]
@@ -99,10 +99,10 @@ _0800F378:
 	b _0800F532
 _0800F3BA:
 	movs r0, #0xd0
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xd5
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #6
 	b _0800F530
 	.align 2, 0
@@ -112,12 +112,12 @@ _0800F3D4: .4byte gOverworld
 _0800F3D8: .4byte 0x0002D025
 _0800F3DC:
 	movs r0, #0xd5
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #2
 	b _0800F530
 _0800F3E6:
 	movs r0, #0xd5
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r0, _0800F408 @ =gOverworld
 	ldr r2, _0800F40C @ =0x0002D025
 	adds r0, r0, r2
@@ -128,7 +128,7 @@ _0800F3E6:
 _0800F3FA:
 	movs r0, #0xcf
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0
 	strh r0, [r6, #0x10]
 	b _0800F52C
@@ -137,7 +137,7 @@ _0800F408: .4byte gOverworld
 _0800F40C: .4byte 0x0002D025
 _0800F410:
 	movs r0, #0xcf
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrh r0, [r6, #0x10]
 	movs r1, #9
 	bl __umodsi3
@@ -185,7 +185,7 @@ _0800F42C:
 	lsls r0, r0, #8
 	str r0, [sp, #4]
 	movs r0, #0xcf
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldrb r0, [r5]
 	adds r0, #4
 	ldr r2, _0800F4A4 @ =0x0002D024
@@ -214,14 +214,14 @@ _0800F4A8:
 	bl PlaySound
 	movs r0, #0xd0
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	strh r4, [r6, #0x10]
 	b _0800F52C
 	.align 2, 0
 _0800F4C8: .4byte 0x00000121
 _0800F4CC:
 	movs r0, #0xd0
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrh r0, [r6, #0x10]
 	adds r0, #1
 	strh r0, [r6, #0x10]
@@ -256,10 +256,10 @@ _0800F4E4:
 	cmp r0, #0
 	bne _0800F532
 	movs r0, #0xd0
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xd5
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r2, _0800F548 @ =0x0002D024
 	adds r1, r7, r2
 	movs r0, #4

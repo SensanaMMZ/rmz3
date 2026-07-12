@@ -29,17 +29,17 @@ _080614C4: @ jump table
 	.4byte _080615AC @ case 4
 _080614D8:
 	movs r0, #0xa7
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xa8
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xa9
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xaa
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r1, #0xc0
 	lsls r1, r1, #2
 	movs r0, #0xa9
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #3
 	strb r0, [r4, #0x13]
 	ldr r2, _0806158C @ =RNG_0202f388
@@ -92,7 +92,7 @@ _08061524:
 	strb r0, [r4, #0xe]
 _08061560:
 	movs r0, #0xa9
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r4, #0x12]
 	cmp r0, #0
 	beq _080615D0
@@ -128,7 +128,7 @@ _080615A2:
 	strb r0, [r4, #0xe]
 _080615AC:
 	movs r0, #0xa9
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r4, #0x12]
 	cmp r0, #0
 	beq _080615D0
@@ -139,7 +139,7 @@ _080615AC:
 	cmp r5, #0
 	bne _080615D0
 	movs r0, #0xa9
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #3
 	strb r0, [r4, #0xd]
 	strb r5, [r4, #0xe]

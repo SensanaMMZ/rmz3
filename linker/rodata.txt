@@ -603,7 +603,7 @@
 		src/data/bgmaps.o (.rodata);
 		src/data/graphic_table/bg.o (.rodata);
 		src/data/graphic_table/dialog.o (.rodata);
-		src/blink.o (.rodata);
+		src/palette_animation.o (.rodata);
 
     sprites/static/anim.o (.rodata);
     sprites/static/header.o (.rodata);

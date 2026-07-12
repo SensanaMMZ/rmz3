@@ -42,7 +42,7 @@ _080DBEDE:
 	str r5, [r4, #0x2c]
 	str r6, [r4, #0x24]
 	movs r0, #0xbd
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	adds r0, r5, #0
 	bl GetEntityPalID
 	adds r1, r0, #0
@@ -53,7 +53,7 @@ _080DBEDE:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0xbe
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r5, #0xf]
 	adds r0, #1
 	strb r0, [r5, #0xf]
@@ -106,7 +106,7 @@ _080DBF74:
 	ands r0, r1
 	strb r0, [r5, #0xa]
 	movs r0, #0xbe
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	adds r0, r5, #0
 	bl GetEntityPalID
 	adds r1, r0, #0
@@ -117,7 +117,7 @@ _080DBF74:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0xbd
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r5, #0xf]
 	adds r0, #1
 	strb r0, [r5, #0xf]
@@ -141,9 +141,9 @@ _080DBFBA:
 	strb r1, [r5, #0xf]
 _080DBFDE:
 	movs r0, #0xbd
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0xbe
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0

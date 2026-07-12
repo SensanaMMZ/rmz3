@@ -19,7 +19,7 @@
 _080EEE16:
 	adds r0, r5, #0
 	bl RestoreGraphicState
-	bl ResumeAllBlinks
+	bl ResumeAllPaletteAnimations
 	strh r6, [r5, #4]
 	ldr r2, _080EEE38 @ =0x0000625C
 	adds r0, r5, r2

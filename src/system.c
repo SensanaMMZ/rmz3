@@ -1,6 +1,6 @@
 #include "system.h"
 
-#include "blink.h"
+#include "palette_animation.h"
 #include "game.h"
 #include "gfx.h"
 #include "global.h"
@@ -75,7 +75,7 @@ void Process_SoftReset(struct Process* _ UNUSED) {
   gJoypad[1].field7_0x15 = 4;
   gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
   gPaletteManager.post_process = NULL;
-  ClearBlinkings();
+  RemoveAllPaletteAnimations();
   gBlendRegBuffer.bldclt = 0;
   gWindowRegBuffer.dispcnt = 0;
   gWindowRegBuffer.winin[2] = 0xFF;
@@ -101,7 +101,7 @@ NON_MATCH NORETURN void Process_System(struct Process* p) {
   u16* head = &heap->ofs;
   while (TRUE) {
     PrintAllStrings();
-    ExecBlink();
+    TransferAnimatedPalettesToPaletteBuffer();
     // swap buffers
     heap->idx = (heap->idx == 0);
     *head = 0;

@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 
 #include "gba/gba.h"
 #include "gfx.h"
@@ -9,10 +9,10 @@
  * @brief wBlinks(0x02001fe0 から 0x02001ff0 まで)をゼロクリアする
  * @note 0x08003d84
  */
-void ClearBlinkings(void) {
-  u16* start = (u16*)&gBlinkManager;
+void RemoveAllPaletteAnimations(void) {
+  u16* start = (u16*)&gPaletteAnimationManager;
   u16 fill = 0;
-  u16* id = &start[BLINK_LENGTH - 1];
+  u16* id = &start[MAX_PLTT_ANIM - 1];
   do {
     *id = fill;
     id--;
@@ -23,13 +23,13 @@ void ClearBlinkings(void) {
  * @brief CMD室の世界地図のような時間経過で色が変わるオブジェクトの色を変える処理(つまり点滅処理)を行う
  * @note 0x08003df4
  */
-NAKED void ExecBlink(void) {
+NAKED void TransferAnimatedPalettesToPaletteBuffer(void) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
 	mov r7, r8\n\
 	push {r7}\n\
 	movs r7, #0\n\
-	ldr r0, _08003E68 @ =gBlinkManager\n\
+	ldr r0, _08003E68 @ =gPaletteAnimationManager\n\
 	mov r8, r0\n\
 	mov r5, r8\n\
 	adds r5, #0x20\n\
@@ -84,7 +84,7 @@ _08003E06:\n\
 	bl CpuSet\n\
 	b _08003EAE\n\
 	.align 2, 0\n\
-_08003E68: .4byte gBlinkManager\n\
+_08003E68: .4byte gPaletteAnimationManager\n\
 _08003E6C: .4byte 0x000001FF\n\
 _08003E70: .4byte gPaletteManager\n\
 _08003E74: .4byte 0x001FFFFF\n\
@@ -136,11 +136,11 @@ _08003EC8: .4byte 0x001FFFFF\n\
  * @brief Blinkingを一時停止させる？ メニュー画面に入る時とか
  * @note 0x08003ecc
  */
-void PauseAllBlinks(void) {
+void PauseAllPaletteAnimations(void) {
   s32 i;
-  for (i = 0; i < BLINK_LENGTH; i++) {
-    if ((gBlinkManager.ids)[i] != 0) {
-      (gBlinkManager.blinks)[i].paused = TRUE;
+  for (i = 0; i < MAX_PLTT_ANIM; i++) {
+    if ((gPaletteAnimationManager.ids)[i] != 0) {
+      (gPaletteAnimationManager.blinks)[i].paused = TRUE;
     }
   }
 }
@@ -148,14 +148,14 @@ void PauseAllBlinks(void) {
 /**
  * @brief メニュー画面から出る時
  */
-void ResumeAllBlinks(void) {
+void ResumeAllPaletteAnimations(void) {
   s32 i;
-  for (i = 0; i < BLINK_LENGTH; i++) {
-    if ((gBlinkManager.ids)[i] != 0) {
-      if ((gBlinkManager.blinks)[i].paused) {
-        (gBlinkManager.blinks)[i].paused = FALSE;
+  for (i = 0; i < MAX_PLTT_ANIM; i++) {
+    if ((gPaletteAnimationManager.ids)[i] != 0) {
+      if ((gPaletteAnimationManager.blinks)[i].paused) {
+        (gPaletteAnimationManager.blinks)[i].paused = FALSE;
       } else {
-        (gBlinkManager.ids)[i] = 0;
+        (gPaletteAnimationManager.ids)[i] = 0;
       }
     }
   }
@@ -167,7 +167,7 @@ void ResumeAllBlinks(void) {
  * @param ofs Paletteオフセット (詳細はTODO)
  * @note 0x08003f2c
  */
-NAKED void LoadBlink(u16 blinkID, u16 ofs) {
+NAKED void StartPaletteAnimation(u16 blinkID, u16 ofs) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
 	mov r7, r8\n\
@@ -177,7 +177,7 @@ NAKED void LoadBlink(u16 blinkID, u16 ofs) {
 	lsls r1, r1, #0x10\n\
 	lsrs r7, r1, #0x10\n\
 	movs r6, #0\n\
-	ldr r3, _08003FF4 @ =gBlinkManager\n\
+	ldr r3, _08003FF4 @ =gPaletteAnimationManager\n\
 	adds r0, r4, #1\n\
 	mov r8, r0\n\
 	mov r2, r8\n\
@@ -211,7 +211,7 @@ _08003F6E:\n\
 	lsls r0, r6, #2\n\
 	adds r0, r0, r6\n\
 	lsls r0, r0, #2\n\
-	ldr r1, _08003FF8 @ =gBlinkManager+32\n\
+	ldr r1, _08003FF8 @ =gPaletteAnimationManager+32\n\
 	adds r5, r0, r1\n\
 	lsls r1, r4, #2\n\
 	ldr r0, _08003FFC @ =gBlinkMotionColorOffsets\n\
@@ -271,8 +271,8 @@ _08003F6E:\n\
 	bl CpuSet\n\
 	b _08004046\n\
 	.align 2, 0\n\
-_08003FF4: .4byte gBlinkManager\n\
-_08003FF8: .4byte gBlinkManager+32\n\
+_08003FF4: .4byte gPaletteAnimationManager\n\
+_08003FF8: .4byte gPaletteAnimationManager+32\n\
 _08003FFC: .4byte gBlinkMotionColorOffsets\n\
 _08004000: .4byte gBlinkMotionCmdTable\n\
 _08004004: .4byte 0x000001FF\n\
@@ -306,7 +306,7 @@ _08004010:\n\
 	ands r2, r3\n\
 	bl CpuSet\n\
 _08004046:\n\
-	ldr r1, _08004064 @ =gBlinkManager\n\
+	ldr r1, _08004064 @ =gPaletteAnimationManager\n\
 	lsls r0, r6, #1\n\
 	adds r0, r0, r1\n\
 	mov r1, r8\n\
@@ -320,27 +320,27 @@ _08004050:\n\
 	.align 2, 0\n\
 _0800405C: .4byte gPaletteManager\n\
 _08004060: .4byte 0x001FFFFF\n\
-_08004064: .4byte gBlinkManager\n\
+_08004064: .4byte gPaletteAnimationManager\n\
 	 .syntax divided\n");
 }
 
 /**
  * @note 0x08004068
  */
-u32 UpdateBlinkMotionState(u16 blinkID) {
-  struct Blink* b;
+u32 StepPaletteAnimation(u16 blinkID) {
+  struct PaletteAnimation* b;
   s32 i;
 
   blinkID++;
-  for (i = 0; i < BLINK_LENGTH; i++) {
-    if ((gBlinkManager.ids)[i] == blinkID) {
+  for (i = 0; i < MAX_PLTT_ANIM; i++) {
+    if ((gPaletteAnimationManager.ids)[i] == blinkID) {
       break;
     }
   }
-  if (i == BLINK_LENGTH) {
+  if (i == MAX_PLTT_ANIM) {
     return MOTION_END;
   }
-  b = &gBlinkManager.blinks[i];
+  b = &gPaletteAnimationManager.blinks[i];
   UpdateMotionState(&b->m);
   return b->m.state;
 }
@@ -350,17 +350,17 @@ u32 UpdateBlinkMotionState(u16 blinkID) {
  * @param n BlinkのID 0x085be764 のidx
  * @note 0x080040b4
  */
-void ClearBlink(u16 blinkID) {
+void RemovePaletteAnimation(u16 blinkID) {
   s32 i;
 
   blinkID++;
-  for (i = 0; i < BLINK_LENGTH; i++) {
-    if ((gBlinkManager.ids)[i] == blinkID) {
+  for (i = 0; i < MAX_PLTT_ANIM; i++) {
+    if ((gPaletteAnimationManager.ids)[i] == blinkID) {
       break;
     }
   }
-  if (i != BLINK_LENGTH) {
-    (gBlinkManager.ids)[i] = 0;
+  if (i != MAX_PLTT_ANIM) {
+    (gPaletteAnimationManager.ids)[i] = 0;
   }
 }
 

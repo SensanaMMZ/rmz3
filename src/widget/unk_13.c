@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "game.h"
 #include "global.h"
 #include "widget.h"
@@ -533,7 +533,7 @@ _080E8878:\n\
 	lsls r3, r3, #2\n\
 	adds r2, r3, #0\n\
 	orrs r1, r2\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 _080E8892:\n\
 	adds r0, r6, #0\n\
 	bl MenuComp13_Update\n\
@@ -567,7 +567,7 @@ _080E88C0:\n\
 	ldrb r0, [r1]\n\
 	cmp r0, #0\n\
 	beq _080E88CE\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 _080E88CE:\n\
 	ldrb r0, [r5, #2]\n\
 	cmp r0, #2\n\
@@ -2106,7 +2106,7 @@ static void MenuComp13_Die(struct Widget13* w) {
   }
 
   if (w->unk_c != 0) {
-    ClearBlink(w->unk_c);
+    RemovePaletteAnimation(w->unk_c);
   }
 
   (w->s).flags &= ~DISPLAY;

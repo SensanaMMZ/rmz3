@@ -38,13 +38,13 @@ _08060E38:
 	strb r0, [r7, #0xe]
 _08060E4A:
 	movs r0, #0xa7
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0xa8
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0xa9
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0xaa
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldr r0, [r7, #0x68]
 	adds r0, #8
 	str r0, [r7, #0x68]
@@ -158,13 +158,13 @@ _08060F40: .4byte 0x000343FD
 _08060F44: .4byte 0x00269EC3
 _08060F48:
 	movs r0, #0xa7
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xa8
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xa9
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xaa
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r2, _08060F8C @ =gStageRun
 	ldrb r1, [r2, #0x12]
 	movs r0, #2

@@ -1369,14 +1369,14 @@ copyx_08057520: @ 0x08057520
 	movs r1, #0xa0
 	lsls r1, r1, #2
 	movs r0, #0x62
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x24
 	strb r0, [r4, #0x12]
 _08057544:
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	movs r0, #0x62
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r1, r4, #0
 	adds r1, #0x4c
 	movs r0, #0
@@ -1399,7 +1399,7 @@ _08057544:
 	cmp r0, #0xff
 	bne _08057588
 	movs r0, #0x62
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #3
 	strb r0, [r4, #0xd]
 	movs r0, #1
@@ -1428,7 +1428,7 @@ copyx_08057590: @ 0x08057590
 	movs r1, #0xa0
 	lsls r1, r1, #2
 	movs r0, #0x63
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x39
 	bl PlaySound
 	movs r0, #0xff
@@ -1438,7 +1438,7 @@ _080575C0:
 	adds r0, r5, #0
 	bl UpdateMotionGraphic
 	movs r0, #0x63
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r5, #0x12]
 	movs r1, #7
 	ands r1, r0
@@ -1480,7 +1480,7 @@ _0805760E:
 	cmp r0, #0
 	beq _08057628
 	movs r0, #0x63
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0
 	strb r4, [r5, #0xd]
 	strb r0, [r5, #0xe]
@@ -1538,7 +1538,7 @@ copyx_0805763c: @ 0x0805763C
 	movs r1, #0xa0
 	lsls r1, r1, #2
 	movs r0, #0x64
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r2, _080576F0 @ =gStageRun
 	ldrb r1, [r2, #0x12]
 	movs r0, #2
@@ -1559,7 +1559,7 @@ _080576B4:
 	cmp r0, #1
 	bhi _0805773C
 	movs r0, #0x64
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r1, [r4, #0x13]
 	adds r0, r1, #4
 	cmp r0, #0xff
@@ -1613,7 +1613,7 @@ _0805771A:
 	cmp r0, #0xff
 	bne _0805773C
 	movs r0, #0x64
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r0, [r5]
 	adds r0, #0x77
 	movs r1, #1

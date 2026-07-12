@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "entity.h"
 #include "gfx.h"
 #include "global.h"
@@ -116,7 +116,7 @@ static void updateMissionXXX(struct VFX* vfx) {
     case 0: {
       (vfx->s).work[2]++;
       if ((vfx->s).work[2] == 39) {
-        LoadBlink(u8_ARRAY_0836e810[(vfx->s).work[0]], 32);
+        StartPaletteAnimation(u8_ARRAY_0836e810[(vfx->s).work[0]], 32);
         (vfx->s).work[2] = 38;
         (vfx->s).mode[2]++;
       }
@@ -124,7 +124,7 @@ static void updateMissionXXX(struct VFX* vfx) {
     }
 
     case 1: {
-      UpdateBlinkMotionState(u8_ARRAY_0836e810[(vfx->s).work[0]]);
+      StepPaletteAnimation(u8_ARRAY_0836e810[(vfx->s).work[0]]);
       (vfx->s).work[2]--;
       if ((vfx->s).work[2] == 0xFF) {
         if ((vfx->s).work[0] != 0) {
@@ -137,7 +137,7 @@ static void updateMissionXXX(struct VFX* vfx) {
     }
 
     case 2: {
-      UpdateBlinkMotionState(u8_ARRAY_0836e810[(vfx->s).work[0]]);
+      StepPaletteAnimation(u8_ARRAY_0836e810[(vfx->s).work[0]]);
       (vfx->s).work[2]--;
       if ((vfx->s).work[2] == 0xFF) {
         (vfx->s).mode[2]++;
@@ -147,10 +147,10 @@ static void updateMissionXXX(struct VFX* vfx) {
     }
 
     case 3: {
-      UpdateBlinkMotionState(u8_ARRAY_0836e810[(vfx->s).work[0]]);
+      StepPaletteAnimation(u8_ARRAY_0836e810[(vfx->s).work[0]]);
       (vfx->s).work[2]++;
       if ((vfx->s).work[2] == 33) {
-        ClearBlink(u8_ARRAY_0836e810[(vfx->s).work[0]]);
+        RemovePaletteAnimation(u8_ARRAY_0836e810[(vfx->s).work[0]]);
         SET_VFX_ROUTINE(vfx, ENTITY_DIE);
         MissionAlert_Die(vfx);
       }

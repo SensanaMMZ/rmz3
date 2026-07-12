@@ -10,7 +10,7 @@
 	strh r0, [r1]
 	bl ClearVRAM
 	bl InitPaletteManager
-	bl ClearBlinkings
+	bl RemoveAllPaletteAnimations
 	bl ResetVideoRegister
 	bl ResetOAM
 	bl ClearBLDCLT_1

@@ -102,10 +102,10 @@ _080F26CA:\n\
 	bl PrintOptionMessage2\n\
 	movs r0, #0x97\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x98\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldrb r0, [r6, #3]\n\
 	adds r0, #1\n\
 	strb r0, [r6, #3]\n\
@@ -466,9 +466,9 @@ _080F29AC:\n\
 	b _080F2BF8\n\
 _080F29BA:\n\
 	movs r0, #0x97\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	movs r0, #0x98\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	ldr r4, _080F2A00 @ =0x087044BC\n\
 	ldr r0, [r4]\n\
 	ldr r5, _080F2A04 @ =0x08704520\n\
@@ -739,9 +739,9 @@ _080F2BF6:\n\
 	strb r0, [r6, #3]\n\
 _080F2BF8:\n\
 	movs r0, #0x97\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x98\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	add sp, #0x20\n\
 	pop {r3, r4, r5}\n\
 	mov r8, r3\n\

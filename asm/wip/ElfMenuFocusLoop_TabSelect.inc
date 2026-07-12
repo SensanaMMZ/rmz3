@@ -9,7 +9,7 @@
 	bne _080F6BB8
 	movs r0, #0x4f
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r0, _080F6C04 @ =0x00000DFC
 	adds r1, r7, r0
 	ldrb r0, [r1, #8]
@@ -19,7 +19,7 @@
 	strb r0, [r6]
 _080F6BB8:
 	movs r0, #0x4f
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldr r0, _080F6C04 @ =0x00000DFC
 	adds r4, r7, r0
 	ldrb r3, [r4, #0xd]
@@ -48,7 +48,7 @@ _080F6BDE:
 	strb r0, [r7, #3]
 	strb r1, [r6]
 	movs r0, #0x4f
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #2
 	bl PlaySound
 	b _080F6CB6
@@ -66,13 +66,13 @@ _080F6C10:
 	beq _080F6C50
 	strb r5, [r7, #3]
 	movs r0, #0x4f
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x4e
 	strb r0, [r4, #0xc]
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r4, #0xc]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	strb r5, [r4, #8]
 	ldr r2, _080F6C48 @ =gWindowRegBuffer
 	ldrh r1, [r2]
@@ -113,12 +113,12 @@ _080F6C7E:
 	cmp r8, r0
 	beq _080F6CB6
 	movs r0, #0x4f
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x4f
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x4f
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r4, #8]
 	strb r0, [r4, #0xa]
 	strb r6, [r4, #6]

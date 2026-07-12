@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
@@ -12,14 +12,14 @@ static const BossFunc sDeads[1];
 INCASM("asm/boss/reactor_core_p1_pre.inc");
 
 void ReactorCore_Die(struct Boss* p) {
-  UpdateBlinkMotionState(0xcb);
-  UpdateBlinkMotionState(0xcc);
+  StepPaletteAnimation(0xcb);
+  StepPaletteAnimation(0xcc);
   (sDeads[(p->s).mode[1]])(p);
 }
 
 void ReactorCore_Disappear(struct Boss* p) {
-  ClearBlink(0xcb);
-  ClearBlink(0xcc);
+  RemovePaletteAnimation(0xcb);
+  RemovePaletteAnimation(0xcc);
   DeleteBoss(p);
 }
 

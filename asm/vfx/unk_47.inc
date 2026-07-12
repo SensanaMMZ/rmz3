@@ -48,7 +48,7 @@ _080BF664:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x46
-	bl LoadBlink
+	bl StartPaletteAnimation
 _080BF690:
 	ldrb r0, [r4, #0xe]
 	adds r0, #1
@@ -77,7 +77,7 @@ _080BF696:
 	strb r0, [r4, #0xe]
 _080BF6C0:
 	movs r0, #0x46
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 _080BF6CC:
@@ -119,7 +119,7 @@ _080BF71C:
 	movs r0, #0x80
 	bl PlaySound
 	movs r0, #0x46
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	adds r0, r4, #0
 	bl GetEntityPalID
 	adds r1, r0, #0
@@ -130,7 +130,7 @@ _080BF71C:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x47
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r1, [r4, #0x54]
 	ldr r0, _080BF788 @ =0xFFFFF600
 	adds r1, r1, r0
@@ -259,7 +259,7 @@ _080BF81A:
 	strb r0, [r4, #0xe]
 _080BF82C:
 	movs r0, #0x47
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	b _080BF886
@@ -271,7 +271,7 @@ _080BF83A:
 	strb r0, [r4, #0xe]
 _080BF844:
 	movs r0, #0x47
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	ldr r0, [r4, #0x58]
@@ -284,7 +284,7 @@ _080BF844:
 	cmp r0, #0
 	bne _080BF886
 	movs r0, #0x47
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldrb r1, [r4, #0xa]
 	movs r0, #0xfe
 	ands r0, r1

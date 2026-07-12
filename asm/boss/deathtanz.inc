@@ -176,7 +176,7 @@ _08049200:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x29
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r4, #0xe]
 	adds r0, #1
 	strb r0, [r4, #0xe]
@@ -210,7 +210,7 @@ _08049254:
 	adds r0, r4, #0
 	bl SetMotion
 	movs r0, #0x29
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	adds r0, r4, #0
 	bl GetEntityPalID
 	adds r1, r0, #0
@@ -221,7 +221,7 @@ _08049254:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x2a
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x45
 	bl PlaySound
 	ldr r0, [r4, #0x54]
@@ -261,7 +261,7 @@ _080492BC:
 	strb r0, [r4, #0x12]
 	movs r0, #0x2a
 _080492C4:
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 _080492CE:
@@ -287,7 +287,7 @@ _080492E4:
 	strb r0, [r1]
 _080492F2:
 	movs r0, #0x2a
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r1, _08049328 @ =0x0000A706
 	adds r0, r4, #0
 	bl SetMotion

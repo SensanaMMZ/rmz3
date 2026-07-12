@@ -14,7 +14,7 @@
 	subs r6, r7, #1
 _08001994:
 	bl PrintAllStrings
-	bl ExecBlink
+	bl TransferAnimatedPalettesToPaletteBuffer
 	movs r2, #0
 	ldr r1, _08001A78 @ =0x00001202
 	add r1, r8

@@ -1,26 +1,26 @@
 	push {r4, r5, lr}
 	movs r0, #0xe5
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xe6
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xe7
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xe8
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xe9
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xea
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xeb
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xec
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xed
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xee
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xef
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0
 	movs r4, #0
 	ldr r5, _0800D108 @ =gSolidFnTable

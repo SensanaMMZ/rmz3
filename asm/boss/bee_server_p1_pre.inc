@@ -254,7 +254,7 @@ _0804D046:
 	adds r0, r4, #0
 	bl _call_via_r1
 	movs r0, #0x45
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 _0804D078:
 	pop {r4, r5}
 	pop {r0}

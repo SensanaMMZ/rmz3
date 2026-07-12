@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "game.h"
 #include "gfx.h"
 #include "global.h"
@@ -69,10 +69,10 @@ NAKED static void ExMenuLoop_Init(struct GameState* g) {
 	bl RequestBgMapTransfer\n\
 	movs r0, #0x3e\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r0, #0x3f\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	adds r0, r6, #0\n\
 	movs r1, #1\n\
 	movs r2, #0\n\
@@ -173,9 +173,9 @@ NAKED static void ExMenuLoop_Update(struct GameState* g) {
 	b _080F7CD2\n\
 _080F7B46:\n\
 	movs r0, #0x3e\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0x3f\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	movs r0, #0xdf\n\
 	lsls r0, r0, #4\n\
 	adds r4, r6, r0\n\
@@ -394,7 +394,7 @@ static void ExMenuLoop_SlideOut(struct GameState* g) {
 static void ExMenuLoop_Exit(struct GameState* g) {
   struct ExSkillMenuState* m = &((g->sceneState).menu).exskill;
   m->inactive = TRUE;
-  ClearBlink(0x3E);
-  ClearBlink(0x3F);
+  RemovePaletteAnimation(0x3E);
+  RemovePaletteAnimation(0x3F);
   ((struct ExSkillIcons*)(m->w))->unk_004[0] = 1;
 }

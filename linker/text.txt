@@ -5,7 +5,7 @@
 
     /* Graphics */
 		src/gfx.o (.text);
-		src/blink.o (.text);
+		src/palette_animation.o (.text);
 		src/gpu_regs.o (.text);
 		src/sound.o (.text);
 		src/sprite.o (.text);

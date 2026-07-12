@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "global.h"
 #include "overworld.h"
 
@@ -21,12 +21,12 @@ static void initAreaX2(struct Coord* _ UNUSED) {
   gOverworld.state[0] = 0;
   gOverworld.work.areaX2.unk_004[0] = 0;
   gOverworld.work.areaX2.unk_004[1] = 0;
-  LoadBlink(0x22, 0);
-  LoadBlink(0x23, 0);
-  LoadBlink(0x24, 0);
-  LoadBlink(0x25, 0);
-  LoadBlink(0x8f, 0);
-  LoadBlink(0x90, 0);
+  StartPaletteAnimation(0x22, 0);
+  StartPaletteAnimation(0x23, 0);
+  StartPaletteAnimation(0x24, 0);
+  StartPaletteAnimation(0x25, 0);
+  StartPaletteAnimation(0x8f, 0);
+  StartPaletteAnimation(0x90, 0);
 }
 
 static void FUN_080115b8(struct Coord* _ UNUSED) {
@@ -36,63 +36,63 @@ static void FUN_080115b8(struct Coord* _ UNUSED) {
   if ((TILESET_ID(1) == STAGE_AREA_X2) && (TILESET_IDX(1) == 1)) {
     if ((gOverworld.work.areaX2.unk_000 & (1 << 0)) == 0) {
       gOverworld.work.areaX2.unk_000 |= (1 << 0);
-      LoadBlink(32, 0);
-      LoadBlink(33, 0);
-      LoadBlink(38, 0);
-      LoadBlink(39, 0);
-      LoadBlink(40, 0);
-      LoadBlink(142, 0);
+      StartPaletteAnimation(32, 0);
+      StartPaletteAnimation(33, 0);
+      StartPaletteAnimation(38, 0);
+      StartPaletteAnimation(39, 0);
+      StartPaletteAnimation(40, 0);
+      StartPaletteAnimation(142, 0);
     }
-    UpdateBlinkMotionState(32);
-    UpdateBlinkMotionState(33);
-    UpdateBlinkMotionState(38);
-    UpdateBlinkMotionState(39);
-    UpdateBlinkMotionState(40);
-    UpdateBlinkMotionState(142);
+    StepPaletteAnimation(32);
+    StepPaletteAnimation(33);
+    StepPaletteAnimation(38);
+    StepPaletteAnimation(39);
+    StepPaletteAnimation(40);
+    StepPaletteAnimation(142);
 
   } else if ((gOverworld.work.areaX2.unk_000 & (1 << 0))) {
     gOverworld.work.areaX2.unk_000 ^= (1 << 0);
-    ClearBlink(32);
-    ClearBlink(33);
-    ClearBlink(38);
-    ClearBlink(39);
-    ClearBlink(40);
-    ClearBlink(142);
+    RemovePaletteAnimation(32);
+    RemovePaletteAnimation(33);
+    RemovePaletteAnimation(38);
+    RemovePaletteAnimation(39);
+    RemovePaletteAnimation(40);
+    RemovePaletteAnimation(142);
   }
 
   if ((TILESET_ID(1) == STAGE_AREA_X2) && (TILESET_IDX(1) == 2)) {
     if ((gOverworld.work.areaX2.unk_000 & (1 << 1)) == 0) {
       gOverworld.work.areaX2.unk_000 |= (1 << 1);
-      LoadBlink(147, 0);
+      StartPaletteAnimation(147, 0);
     }
-    UpdateBlinkMotionState(147);
+    StepPaletteAnimation(147);
 
   } else if ((gOverworld.work.areaX2.unk_000 & (1 << 1))) {
     gOverworld.work.areaX2.unk_000 ^= (1 << 1);
-    ClearBlink(147);
+    RemovePaletteAnimation(147);
   }
 
   if ((TILESET_ID(1) == STAGE_AREA_X2) && (TILESET_IDX(1) == 3)) {
     if ((gOverworld.work.areaX2.unk_000 & (1 << 2)) == 0) {
       gOverworld.work.areaX2.unk_000 |= (1 << 2);
-      LoadBlink(145, 0);
-      LoadBlink(146, 0);
+      StartPaletteAnimation(145, 0);
+      StartPaletteAnimation(146, 0);
     }
-    UpdateBlinkMotionState(145);
-    UpdateBlinkMotionState(146);
+    StepPaletteAnimation(145);
+    StepPaletteAnimation(146);
 
   } else if ((gOverworld.work.areaX2.unk_000 & (1 << 2))) {
     gOverworld.work.areaX2.unk_000 ^= (1 << 2);
-    ClearBlink(145);
-    ClearBlink(146);
+    RemovePaletteAnimation(145);
+    RemovePaletteAnimation(146);
   }
 
-  UpdateBlinkMotionState(34);
-  UpdateBlinkMotionState(35);
-  UpdateBlinkMotionState(36);
-  UpdateBlinkMotionState(37);
-  UpdateBlinkMotionState(143);
-  UpdateBlinkMotionState(144);
+  StepPaletteAnimation(34);
+  StepPaletteAnimation(35);
+  StepPaletteAnimation(36);
+  StepPaletteAnimation(37);
+  StepPaletteAnimation(143);
+  StepPaletteAnimation(144);
 }
 
 static void nop_0801179c(struct Coord* _ UNUSED) {
@@ -101,21 +101,21 @@ static void nop_0801179c(struct Coord* _ UNUSED) {
 }
 
 static void exitAreaX2(struct Coord* _ UNUSED) {
-  ClearBlink(32);
-  ClearBlink(33);
-  ClearBlink(34);
-  ClearBlink(35);
-  ClearBlink(36);
-  ClearBlink(37);
-  ClearBlink(38);
-  ClearBlink(39);
-  ClearBlink(40);
-  ClearBlink(142);
-  ClearBlink(143);
-  ClearBlink(144);
-  ClearBlink(145);
-  ClearBlink(146);
-  ClearBlink(147);
+  RemovePaletteAnimation(32);
+  RemovePaletteAnimation(33);
+  RemovePaletteAnimation(34);
+  RemovePaletteAnimation(35);
+  RemovePaletteAnimation(36);
+  RemovePaletteAnimation(37);
+  RemovePaletteAnimation(38);
+  RemovePaletteAnimation(39);
+  RemovePaletteAnimation(40);
+  RemovePaletteAnimation(142);
+  RemovePaletteAnimation(143);
+  RemovePaletteAnimation(144);
+  RemovePaletteAnimation(145);
+  RemovePaletteAnimation(146);
+  RemovePaletteAnimation(147);
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------

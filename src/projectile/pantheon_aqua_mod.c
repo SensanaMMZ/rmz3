@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "collision.h"
 #include "global.h"
 #include "metatile.h"
@@ -63,14 +63,14 @@ void FUN_080a5cfc(struct Projectile* p) {
     case 0:
       SetDDP(&p->body, &sCollisions[0]);
       SetMotion(&p->s, sMotions[(p->s).work[2]]);
-      LoadBlink(0x57, ((u8)GetEntityPalID(&p->s) << 5) | 0x200);
+      StartPaletteAnimation(0x57, ((u8)GetEntityPalID(&p->s) << 5) | 0x200);
       (p->s).d.x = gSineTable[(u8)(-0x40 - (p->s).work[2] * 0x20)] * 3;
       (p->s).d.y = gSineTable[(u8)(-0x80 - (p->s).work[2] * 0x20)] * 3;
       SET_XFLIP(p, (p->s).work[2] > 2);
       (p->s).mode[2]++;
       // fallthrough
     case 1:
-      UpdateBlinkMotionState(0x57);
+      StepPaletteAnimation(0x57);
       (p->s).coord.x += (p->s).d.x;
       (p->s).coord.y += (p->s).d.y;
       UpdateMotionGraphic(&p->s);
@@ -94,7 +94,7 @@ void FUN_080a5e00(struct Projectile* p) {
       // fallthrough
     }
     case 1:
-      UpdateBlinkMotionState(0x57);
+      StepPaletteAnimation(0x57);
       UpdateMotionGraphic(&p->s);
       if (--(p->s).work[3] == 0) {
         (p->s).mode[1] = 2;
@@ -122,7 +122,7 @@ void FUN_080a5e64(struct Projectile* p) {
         (p->s).flags |= DISPLAY;
       }
       if (--(p->s).work[3] == 0) {
-        ClearBlink(0x57);
+        RemovePaletteAnimation(0x57);
         (p->s).flags &= ~DISPLAY;
         (p->s).flags &= ~FLIPABLE;
         EXIT_BODY(p);

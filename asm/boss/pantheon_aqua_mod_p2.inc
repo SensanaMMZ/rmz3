@@ -29,7 +29,7 @@ _08051638:
 	cmp r1, #0
 	beq _08051658
 	ldrb r0, [r6]
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	strb r5, [r6]
 _08051658:
 	adds r0, r4, #0
@@ -42,7 +42,7 @@ _08051658:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x54
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x54
 	strb r0, [r6]
 	ldrb r0, [r4, #0xe]
@@ -176,7 +176,7 @@ _0805176E:
 	adds r0, r4, #0
 	bl paquam_080512f8
 	ldrb r0, [r6]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	b _08051794
@@ -613,12 +613,12 @@ _08051AE4:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x52
-	bl LoadBlink
+	bl StartPaletteAnimation
 	adds r1, r4, #0
 	adds r1, #0xb8
 	movs r0, #0x52
 	strb r0, [r1]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x60
 	strb r0, [r4, #0x12]
 	ldrb r0, [r4, #0xe]
@@ -673,7 +673,7 @@ _08051B64:
 	adds r0, r4, #0
 	adds r0, #0xb8
 	ldrb r0, [r0]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	lsls r0, r0, #0x18
 	lsrs r1, r0, #0x18
 	cmp r1, #3
@@ -732,7 +732,7 @@ _08051BAC:
 	ldrb r0, [r5]
 	cmp r0, #0
 	beq _08051BDE
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	strb r6, [r5]
 _08051BDE:
 	adds r0, r4, #0
@@ -745,7 +745,7 @@ _08051BDE:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x58
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x58
 	strb r0, [r5]
 	ldr r1, _08051C68 @ =0x00004D01
@@ -768,7 +768,7 @@ _08051C0A:
 	ldrb r0, [r5]
 	cmp r0, #0
 	beq _08051C2C
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0
 	strb r0, [r5]
 _08051C2C:
@@ -782,7 +782,7 @@ _08051C2C:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x59
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x59
 	strb r0, [r5]
 _08051C4A:
@@ -796,7 +796,7 @@ _08051C4A:
 	strb r0, [r4, #0xe]
 _08051C5A:
 	ldrb r0, [r5]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	b _08051CD6
@@ -814,7 +814,7 @@ _08051C6C:
 	ldrb r0, [r5]
 	cmp r0, #0
 	beq _08051C8E
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0
 	strb r0, [r5]
 _08051C8E:
@@ -828,7 +828,7 @@ _08051C8E:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x54
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x54
 	strb r0, [r5]
 	ldrb r0, [r4, #0xe]
@@ -849,7 +849,7 @@ _08051CC6:
 	adds r0, r4, #0
 	adds r0, #0xb8
 	ldrb r0, [r0]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 _08051CD6:
@@ -898,7 +898,7 @@ _08051CFA:
 	ldrb r0, [r6]
 	cmp r0, #0
 	beq _08051D2E
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	strb r5, [r6]
 _08051D2E:
 	adds r0, r4, #0
@@ -911,7 +911,7 @@ _08051D2E:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x54
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x54
 	strb r0, [r6]
 	ldrb r0, [r4, #0xe]
@@ -933,7 +933,7 @@ _08051D64:
 	adds r0, r4, #0
 	adds r0, #0xb8
 	ldrb r0, [r0]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	b _08051DB0
@@ -960,7 +960,7 @@ _08051D9A:
 	adds r0, r4, #0
 	adds r0, #0xb8
 	ldrb r0, [r0]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 _08051DB0:
@@ -1095,7 +1095,7 @@ _08051FDA:
 	adds r0, r4, #0
 	adds r0, #0xb8
 	ldrb r0, [r0]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	b _080520A6
@@ -1183,7 +1183,7 @@ _08052096:
 	adds r0, r4, #0
 	adds r0, #0xb8
 	ldrb r0, [r0]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 _080520A6:
@@ -1335,7 +1335,7 @@ _080521C8:
 	adds r0, r4, #0
 	adds r0, #0xb8
 	ldrb r0, [r0]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 	b _08052236
@@ -1371,7 +1371,7 @@ _08052226:
 	adds r0, r4, #0
 	adds r0, #0xb8
 	ldrb r0, [r0]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
 	bl UpdateMotionGraphic
 _08052236:
@@ -1457,7 +1457,7 @@ _080523D6:
 	ldrb r0, [r5]
 	cmp r0, #0
 	beq _080523F4
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	strb r4, [r5]
 _080523F4:
 	adds r0, r7, #0
@@ -1470,10 +1470,10 @@ _080523F4:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x54
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x54
 	strb r0, [r5]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldr r3, _08052558 @ =gStageRun
 	ldrh r2, [r3, #8]
 	movs r4, #1
@@ -1522,7 +1522,7 @@ _0805245E:
 	ldrb r0, [r4]
 	cmp r0, #0
 	beq _0805247A
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0
 	strb r0, [r4]
 _0805247A:

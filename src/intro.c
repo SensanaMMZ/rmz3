@@ -1,6 +1,6 @@
 #include "intro.h"
 
-#include "blink.h"
+#include "palette_animation.h"
 #include "gfx.h"
 #include "global.h"
 #include "gpu_regs.h"
@@ -177,7 +177,7 @@ static void IntroLoop_DemoPlay1(struct Intro* p) {
     case 0: {
       gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
       gPaletteManager.post_process = NULL;
-      ClearBlinkings();
+      RemoveAllPaletteAnimations();
       gBlendRegBuffer.bldclt = 0;
       gWindowRegBuffer.dispcnt = 0;
       gWindowRegBuffer.winin[2] = 0xFF;
@@ -203,7 +203,7 @@ static void IntroLoop_DemoPlay1(struct Intro* p) {
       if (gProcessManager.processes[1].status == PROCESS_DISABLED) {
         gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
         gPaletteManager.post_process = NULL;
-        ClearBlinkings();
+        RemoveAllPaletteAnimations();
         gBlendRegBuffer.bldclt = 0;
         gWindowRegBuffer.dispcnt = 0;
         gWindowRegBuffer.winin[2] = 0xFF;
@@ -283,7 +283,7 @@ static void IntroLoop_DemoPlay2(struct Intro* p) {
     case 0: {
       gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
       gPaletteManager.post_process = NULL;
-      ClearBlinkings();
+      RemoveAllPaletteAnimations();
       gBlendRegBuffer.bldclt = 0;
       gWindowRegBuffer.dispcnt = 0;
       gWindowRegBuffer.winin[2] = 0xFF;
@@ -315,7 +315,7 @@ static void IntroLoop_DemoPlay2(struct Intro* p) {
       if (gProcessManager.processes[1].status == PROCESS_DISABLED) {
         gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
         gPaletteManager.post_process = NULL;
-        ClearBlinkings();
+        RemoveAllPaletteAnimations();
         gBlendRegBuffer.bldclt = 0;
         gWindowRegBuffer.dispcnt = 0;
         gWindowRegBuffer.winin[2] = 0xFF;
@@ -378,7 +378,7 @@ static void InitTitleAnimation(struct Intro* p) {
   DisableBG0();
   gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
   gPaletteManager.post_process = NULL;
-  ClearBlinkings();
+  RemoveAllPaletteAnimations();
   gBlendRegBuffer.bldclt = 0;
   gWindowRegBuffer.dispcnt = 0;
   gWindowRegBuffer.winin[2] = 0xFF;
@@ -601,7 +601,7 @@ NAKED static void InitTitleScreen(struct Intro* p) {
 	movs r1, #0xd0\n\
 	lsls r1, r1, #1\n\
 	movs r0, #0xf0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldr r2, _080EC34C @ =gWindowRegBuffer\n\
 	ldrh r0, [r2]\n\
 	orrs r6, r0\n\
@@ -675,7 +675,7 @@ static void HandleTitleAction(struct Intro* p) {
   gWindowRegBuffer.dispcnt &= 0xBFFF;
   gWindowRegBuffer.winin[2] |= 0xE;
   gBlendRegBuffer.bldclt = 0;
-  ClearBlink(0xf0);
+  RemovePaletteAnimation(0xf0);
   SioLink_SendDisconnect();
   EReader_SioAbortSession();
   switch (p->cursor) {
@@ -1504,7 +1504,7 @@ static void IntroLoop_StartMainGame(struct Intro* p) {
     case 0: {
       gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
       gPaletteManager.post_process = NULL;
-      ClearBlinkings();
+      RemoveAllPaletteAnimations();
       gBlendRegBuffer.bldclt = 0;
       gWindowRegBuffer.dispcnt = 0;
       gWindowRegBuffer.winin[2] = 0xFF;
@@ -1586,7 +1586,7 @@ static void IntroLoop_Minigame(struct Intro* p) {
 static void FUN_080ed9c0(struct Intro* p) {
   gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
   gPaletteManager.post_process = NULL;
-  ClearBlinkings();
+  RemoveAllPaletteAnimations();
   gBlendRegBuffer.bldclt = 0;
   gWindowRegBuffer.dispcnt = 0;
   gWindowRegBuffer.winin[2] = 0xFF;
@@ -1673,7 +1673,7 @@ _080EDA8E:\n\
 	bl LoadBgMap\n\
 	movs r0, #0x40\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	ldr r1, _080EDC08 @ =gBlendRegBuffer\n\
 	ldr r0, _080EDC0C @ =0x00003E41\n\
 	strh r0, [r1]\n\
@@ -1852,7 +1852,7 @@ _080EDC38:\n\
 	movs r0, #3\n\
 	bl PlaySound\n\
 	movs r0, #0x40\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	ldrb r0, [r5, #6]\n\
 	adds r0, #1\n\
 	strb r0, [r5, #6]\n\
@@ -1886,7 +1886,7 @@ _080EDC80: .4byte gPaletteManager\n\
 _080EDC84: .4byte 0x00000402\n\
 _080EDC88:\n\
 	movs r0, #0x40\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 	adds r0, r5, #0\n\
 	movs r1, #4\n\
 	bl SetIntroMode\n\
@@ -1917,7 +1917,7 @@ _080EDCBC:\n\
 	strb r0, [r5, #5]\n\
 _080EDCC4:\n\
 	movs r0, #0x40\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	mov r1, sb\n\
 	lsls r4, r1, #0x10\n\
 	asrs r1, r4, #0x10\n\
@@ -2070,7 +2070,7 @@ static void FUN_080eddb8(struct Intro* p) {
         p->frame--;
         gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = p->frame;
       } else {
-        ClearBlink(0x40);
+        RemovePaletteAnimation(0x40);
         gBlendRegBuffer.bldclt = 0;
         p->mode[2] = 0;
         p->mode[1] = 3;
@@ -2092,7 +2092,7 @@ static void FUN_080eddb8(struct Intro* p) {
     }
   }
 
-  UpdateBlinkMotionState(0x40);
+  StepPaletteAnimation(0x40);
   PrintString(STRING(1088), 13, 2);  // sMinigameRules (0x083763c4)
   PrintString(STRING(sMinigameRuleStrings[p->unk_242]), 3, 4);
 }
@@ -2102,7 +2102,7 @@ static void FUN_080edf04(struct Intro* p) {
     case 0: {
       gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
       gPaletteManager.post_process = NULL;
-      ClearBlinkings();
+      RemoveAllPaletteAnimations();
       gBlendRegBuffer.bldclt = 0;
       gWindowRegBuffer.dispcnt = 0;
       gWindowRegBuffer.winin[2] = 0xFF;

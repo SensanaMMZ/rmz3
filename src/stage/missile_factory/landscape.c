@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "global.h"
 #include "overworld.h"
 #include "story.h"
@@ -41,12 +41,12 @@ static void FUN_0800e460(struct Coord* c) {
   if ((TILESET_ID(0) == STAGE_MISSILE_FACTORY) && (TILESET_IDX(0) == 0)) {
     if ((gOverworld.work.missileFactory.unk_000 & (1 << 0)) == 0) {
       gOverworld.work.missileFactory.unk_000 |= (1 << 0);
-      LoadBlink(211, 0);
-      LoadBlink(212, 0);
+      StartPaletteAnimation(211, 0);
+      StartPaletteAnimation(212, 0);
       gOverworld.work.missileFactory.unk_001 = 0;
     }
-    UpdateBlinkMotionState(211);
-    UpdateBlinkMotionState(212);
+    StepPaletteAnimation(211);
+    StepPaletteAnimation(212);
     gOverworld.work.missileFactory.unk_001++;
     if (gOverworld.work.missileFactory.unk_001 == 20) {
       gOverworld.work.missileFactory.unk_001 = 0;
@@ -54,32 +54,32 @@ static void FUN_0800e460(struct Coord* c) {
 
   } else if (gOverworld.work.missileFactory.unk_000 & (1 << 0)) {
     gOverworld.work.missileFactory.unk_000 ^= (1 << 0);
-    ClearBlink(211);
-    ClearBlink(212);
+    RemovePaletteAnimation(211);
+    RemovePaletteAnimation(212);
   }
 
   if ((TILESET_ID(1) == STAGE_MISSILE_FACTORY) && (TILESET_IDX(1) == 4)) {
     if ((gOverworld.work.missileFactory.unk_000 & (1 << 1)) == 0) {
       gOverworld.work.missileFactory.unk_000 |= (1 << 1);
-      LoadBlink(209, 0);
+      StartPaletteAnimation(209, 0);
     }
-    UpdateBlinkMotionState(209);
+    StepPaletteAnimation(209);
 
   } else if (gOverworld.work.missileFactory.unk_000 & (1 << 1)) {
     gOverworld.work.missileFactory.unk_000 ^= (1 << 1);
-    ClearBlink(209);
+    RemovePaletteAnimation(209);
   }
 
   if ((TILESET_ID(0) == STAGE_MISSILE_FACTORY) && (TILESET_IDX(0) == 5)) {
     if ((gOverworld.work.missileFactory.unk_000 & (1 << 2)) == 0) {
       gOverworld.work.missileFactory.unk_000 |= (1 << 2);
-      LoadBlink(210, 0);
+      StartPaletteAnimation(210, 0);
     }
-    UpdateBlinkMotionState(210);
+    StepPaletteAnimation(210);
 
   } else if (gOverworld.work.missileFactory.unk_000 & (1 << 2)) {
     gOverworld.work.missileFactory.unk_000 ^= (1 << 2);
-    ClearBlink(210);
+    RemovePaletteAnimation(210);
   }
 
   if ((TILESET_ID(1) == STAGE_MISSILE_FACTORY) && (TILESET_IDX(1) == 1)) {
@@ -145,12 +145,12 @@ static void FUN_0800e6f8(struct Coord* _ UNUSED) {
 }
 
 static void exitMissileFactory(struct Coord* _ UNUSED) {
-  ClearBlink(207);
-  ClearBlink(208);
-  ClearBlink(209);
-  ClearBlink(210);
-  ClearBlink(211);
-  ClearBlink(212);
+  RemovePaletteAnimation(207);
+  RemovePaletteAnimation(208);
+  RemovePaletteAnimation(209);
+  RemovePaletteAnimation(210);
+  RemovePaletteAnimation(211);
+  RemovePaletteAnimation(212);
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
@@ -328,8 +328,8 @@ void FUN_0800f2e0(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED)
 INCASM("asm/stage_gfx/missile_factory_p1_p2.inc");
 
 void FUN_0800f54c(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED) {
-  ClearBlink(0xcf);
-  ClearBlink(0xd0);
+  RemovePaletteAnimation(0xcf);
+  RemovePaletteAnimation(0xd0);
 }
 
 INCASM("asm/stage_gfx/missile_factory_p2_p1.inc");

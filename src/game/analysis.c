@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "disk.h"
 #include "game.h"
 #include "global.h"
@@ -204,7 +204,7 @@ _080F7E7E:\n\
 	bl createSecretDiskModalBorder\n\
 	movs r0, #0x40\n\
 	movs r1, #0\n\
-	bl LoadBlink\n\
+	bl StartPaletteAnimation\n\
 	movs r2, #0\n\
 	ldr r3, _080F7F94 @ =0x03002BE0\n\
 	adds r4, r3, #0\n\
@@ -604,7 +604,7 @@ _080F82BC:\n\
 	strb r1, [r5, #0x12]\n\
 _080F82CE:\n\
 	movs r0, #0x40\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 	ldr r0, _080F82F8 @ =0x00000DCC\n\
 	add r0, sb\n\
 	ldrb r0, [r0, #0xc]\n\
@@ -639,7 +639,7 @@ static void DiskLoop_BlackOut(struct GameState* g) {
 
 static void DiskLoop_Exit(struct GameState* g) {
   u8* s;
-  ClearBlink(64);
+  RemovePaletteAnimation(64);
   gWindowRegBuffer.dispcnt &= 0xDFFF;
   PALETTE16(0) = 0;
   s = (u8*)&(g->sceneState).menu;

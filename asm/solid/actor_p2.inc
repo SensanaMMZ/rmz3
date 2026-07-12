@@ -656,11 +656,11 @@ _080D619E:
 	lsls r0, r0, #1
 	movs r1, #0xa8
 	lsls r1, r1, #2
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x8b
 	lsls r0, r0, #1
 	movs r1, #0xe0
-	bl LoadBlink
+	bl StartPaletteAnimation
 _080D61CC:
 	ldrb r0, [r7, #0x12]
 	cmp r0, #8
@@ -755,10 +755,10 @@ _080D6254:
 _080D627A:
 	movs r0, #0x8a
 	lsls r0, r0, #1
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x8b
 	lsls r0, r0, #1
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldr r0, [r7, #0x18]
 	ldrb r1, [r0, #9]
 	movs r0, #4
@@ -784,11 +784,11 @@ _080D62B4:
 	movs r5, #0x8a
 	lsls r5, r5, #1
 	adds r0, r5, #0
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r4, #0x8b
 	lsls r4, r4, #1
 	adds r0, r4, #0
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #4
@@ -801,19 +801,19 @@ _080D62D2:
 	b _080D6446
 _080D62DA:
 	adds r0, r5, #0
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	adds r0, r4, #0
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	b _080D6398
 _080D62E8:
 	movs r0, #0x88
 	lsls r0, r0, #1
 	movs r1, #0xa8
 	lsls r1, r1, #2
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r0, _080D6334 @ =0x00000117
 	movs r1, #0xe0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r7, #0xd]
 	adds r0, #1
 	strb r0, [r7, #0xd]
@@ -823,10 +823,10 @@ _080D6302:
 	movs r5, #0x88
 	lsls r5, r5, #1
 	adds r0, r5, #0
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldr r4, _080D6334 @ =0x00000117
 	adds r0, r4, #0
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r0, #3
@@ -834,9 +834,9 @@ _080D6302:
 	b _080D6446
 _080D6324:
 	adds r0, r5, #0
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	adds r0, r4, #0
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	b _080D6398
 	.align 2, 0
 _080D6334: .4byte 0x00000117
@@ -845,19 +845,19 @@ _080D6338:
 	movs r1, #0xa8
 	lsls r1, r1, #2
 	adds r0, r5, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r4, _080D63A4 @ =0x00000115
 	adds r0, r4, #0
 	movs r1, #0xe0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	adds r0, r5, #0
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r4, #0
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	adds r0, r5, #0
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	adds r0, r4, #0
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x3c
 	strb r0, [r7, #0x13]
 	ldrb r0, [r7, #0xd]

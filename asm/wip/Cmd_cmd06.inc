@@ -70,7 +70,7 @@ _08022640:
 	adds r1, r3, #0
 	orrs r0, r1
 	strh r0, [r2]
-	bl ResumeAllBlinks
+	bl ResumeAllPaletteAnimations
 	b _08022800
 	.align 2, 0
 _08022658: .4byte gVideoRegBuffer
@@ -134,7 +134,7 @@ _08022660:
 	adds r1, r5, #0
 	movs r3, #0
 	bl loadBgMap_08004248
-	bl PauseAllBlinks
+	bl PauseAllPaletteAnimations
 	b _08022800
 	.align 2, 0
 _080226E4: .4byte gVideoRegBuffer+6
@@ -188,7 +188,7 @@ _08022746:
 	movs r0, #0x12
 	movs r3, #0
 	bl LoadBgMap
-	bl PauseAllBlinks
+	bl PauseAllPaletteAnimations
 	b _08022800
 	.align 2, 0
 _08022760: .4byte gVideoRegBuffer+6
@@ -261,7 +261,7 @@ _080227A8:
 	movs r0, #0x12
 	movs r3, #0
 	bl LoadBgMap
-	bl PauseAllBlinks
+	bl PauseAllPaletteAnimations
 _08022800:
 	movs r0, #0
 _08022802:

@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "game.h"
 #include "gfx.h"
 #include "global.h"
@@ -69,7 +69,7 @@ NON_MATCH static void ElfMenuItem_Init(struct Widget* w) {
   (w->s).unk_coord.x = (w->s).coord.x;
   (w->s).unk_coord.y = (w->s).coord.y;
   if ((w->s).work[0] == 0) {
-    LoadBlink(0x5B, 0x300);
+    StartPaletteAnimation(0x5B, 0x300);
   }
   ElfMenuItem_Update(w);
 #else
@@ -99,7 +99,7 @@ NAKED static void ElfMenuItem_Update(struct Widget* w) {
 	cmp r0, #0\n\
 	bne _080E739C\n\
 	movs r0, #0x5b\n\
-	bl ClearBlink\n\
+	bl RemovePaletteAnimation\n\
 _080E739C:\n\
 	ldrb r1, [r4, #0xa]\n\
 	movs r0, #0xfe\n\
@@ -126,7 +126,7 @@ _080E73C8:\n\
 	cmp r0, #0\n\
 	bne _080E73D4\n\
 	movs r0, #0x5b\n\
-	bl UpdateBlinkMotionState\n\
+	bl StepPaletteAnimation\n\
 _080E73D4:\n\
 	ldr r0, [r4, #0x64]\n\
 	ldr r1, [r4, #0x68]\n\

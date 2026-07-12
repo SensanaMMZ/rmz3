@@ -28,7 +28,7 @@ FUN_080d0024: @ 0x080D0024
 _080D0048: .4byte 0x00008902
 _080D004C:
 	ldrb r0, [r4, #0x12]
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xbc
 	strb r0, [r4, #0x12]
 	adds r0, r4, #0
@@ -40,7 +40,7 @@ _080D004C:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0xbc
-	bl LoadBlink
+	bl StartPaletteAnimation
 	b _080D009E
 _080D006E:
 	cmp r2, #1
@@ -53,7 +53,7 @@ _080D0076:
 	b _080D009E
 _080D007E:
 	ldrb r0, [r4, #0x12]
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0xbb
 	strb r0, [r4, #0x12]
 	adds r0, r4, #0
@@ -65,7 +65,7 @@ _080D007E:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0xbb
-	bl LoadBlink
+	bl StartPaletteAnimation
 _080D009E:
 	ldrb r0, [r5, #0xd]
 	strb r0, [r4, #0xd]
@@ -73,7 +73,7 @@ _080D009E:
 	bl UpdateMotionGraphic
 _080D00A8:
 	ldrb r0, [r4, #0x12]
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldr r0, [r5, #0x54]
 	ldr r1, [r5, #0x58]
 	str r0, [r4, #0x54]
@@ -84,7 +84,7 @@ _080D00A8:
 	ldrb r0, [r4, #0x12]
 	cmp r0, #0
 	beq _080D00C6
-	bl ClearBlink
+	bl RemovePaletteAnimation
 _080D00C6:
 	ldr r1, _080D00E0 @ =gSolidFnTable
 	ldrb r0, [r4, #9]

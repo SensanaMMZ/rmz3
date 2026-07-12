@@ -373,7 +373,7 @@ _080F9B1E:
 	strb r4, [r1]
 	movs r0, #0xd6
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldr r2, _080F9C70 @ =gWindowRegBuffer
 	ldrh r0, [r2]
 	movs r3, #0x80
@@ -473,7 +473,7 @@ cielMinigame: @ 0x080F9C80
 	rsbs r0, r0, #0
 	strh r0, [r1, #2]
 	movs r0, #0xd6
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r4, #4]
 	cmp r0, #2
 	bhi _080F9CE0

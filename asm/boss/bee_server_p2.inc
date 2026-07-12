@@ -171,7 +171,7 @@ _0804D1CA:
 	adds r0, r2, #0
 	orrs r1, r0
 	movs r0, #0x45
-	bl LoadBlink
+	bl StartPaletteAnimation
 	ldrb r0, [r4, #0xe]
 	adds r0, #1
 	strb r0, [r4, #0xe]
@@ -530,7 +530,7 @@ _0804D4A6:
 	b _0804D5D0
 _0804D4AC:
 	movs r0, #0x45
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r3, _0804D58C @ =gStageRun
 	ldrh r2, [r3, #8]
 	movs r4, #1

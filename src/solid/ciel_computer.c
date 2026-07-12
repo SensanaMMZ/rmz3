@@ -1,5 +1,5 @@
 #include "collision.h"
-#include "blink.h"
+#include "palette_animation.h"
 #include "game.h"
 #include "gfx.h"
 #include "global.h"
@@ -80,22 +80,22 @@ static void CielComputer_Update(struct Solid* p) {
       if (gSystemSavedataManager.cielComputer <= 3) {
         SetMotion(&p->s, sMotions[gSystemSavedataManager.cielComputer] | 1);
         if (gSystemSavedataManager.cielComputer == 3) {
-          LoadBlink(0xF1, ((u8)GetEntityPalID(&p->s) << 5) | 0x200);
+          StartPaletteAnimation(0xF1, ((u8)GetEntityPalID(&p->s) << 5) | 0x200);
         }
       }
       if (gSystemSavedataManager.cielComputer == 4) {
-        LoadBlink(0xF2, ((u8)GetEntityPalID(&p->s) << 5) | 0x200);
+        StartPaletteAnimation(0xF2, ((u8)GetEntityPalID(&p->s) << 5) | 0x200);
       }
       PlaySound(0x12A);
       SetGameMode(&gGameState, 0x00060400);
       (p->s).mode[1]++;
       break;
     case 1:
-      UpdateBlinkMotionState(0xF1);
-      UpdateBlinkMotionState(0xF2);
+      StepPaletteAnimation(0xF1);
+      StepPaletteAnimation(0xF2);
       if (gGameState.mode[2] == 0) {
-        ClearBlink(0xF1);
-        ClearBlink(0xF2);
+        RemovePaletteAnimation(0xF1);
+        RemovePaletteAnimation(0xF2);
         if (gSystemSavedataManager.cielComputer > 2) {
           motion_id_t id = sMotions[gSystemSavedataManager.cielComputer] >> 8;
           REQUEST_STATIC_GRAPHIC(id);

@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
@@ -47,8 +47,8 @@ INCASM("asm/solid/light_switch_pre.inc");
 void Solid32_Die(struct Solid* p) {}
 
 void Solid32_Disappear(struct Solid* p) {
-  ClearBlink(0xbd);
-  ClearBlink(0xbe);
+  RemovePaletteAnimation(0xbd);
+  RemovePaletteAnimation(0xbe);
   DeleteSolid((Object*)p);
 }
 

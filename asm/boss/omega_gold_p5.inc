@@ -106,7 +106,7 @@ _0805B698:
 	bl createGoldOmega1Laser
 _0805B6AE:
 	movs r0, #0xb
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r4, #0xe]
 	adds r0, #1
 	strb r0, [r4, #0xe]
@@ -155,13 +155,13 @@ _0805B70A:
 	strb r0, [r4, #0xe]
 _0805B70C:
 	movs r0, #0xb
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	b _0805B738
 _0805B714:
 	adds r0, r4, #0
 	bl floatGoldOmega1
 	movs r0, #0xb
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r4, #0x12]
 	cmp r0, #0
 	beq _0805B738

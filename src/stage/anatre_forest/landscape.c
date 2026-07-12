@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "global.h"
 #include "overworld.h"
 #include "solid.h"
@@ -31,47 +31,47 @@ static void FUN_080101f0(struct Coord* _ UNUSED) {
   if ((W_TERRAIN_V2.tilesets[0] >> 8 == STAGE_ANATRE_FOREST) && ((W_TERRAIN_V2.tilesets[0] & 0xFF) == 0)) {
     if ((gOverworld.work.anatreForest.unk_00c & 1) == 0) {
       gOverworld.work.anatreForest.unk_00c |= 1;
-      LoadBlink(218, 0);
-      LoadBlink(219, 0);
-      LoadBlink(220, 0);
+      StartPaletteAnimation(218, 0);
+      StartPaletteAnimation(219, 0);
+      StartPaletteAnimation(220, 0);
     }
-    UpdateBlinkMotionState(218);
-    UpdateBlinkMotionState(219);
-    UpdateBlinkMotionState(220);
+    StepPaletteAnimation(218);
+    StepPaletteAnimation(219);
+    StepPaletteAnimation(220);
 
   } else if ((gOverworld.work.anatreForest.unk_00c & 1)) {
     gOverworld.work.anatreForest.unk_00c ^= 1;
-    ClearBlink(218);
-    ClearBlink(219);
-    ClearBlink(220);
+    RemovePaletteAnimation(218);
+    RemovePaletteAnimation(219);
+    RemovePaletteAnimation(220);
   }
 
   if ((W_TERRAIN_V2.tilesets[1] >> 8 == STAGE_ANATRE_FOREST) && ((W_TERRAIN_V2.tilesets[1] & 0xFF) == 1)) {
     if ((gOverworld.work.anatreForest.unk_00c & (1 << 1)) == 0) {
       gOverworld.work.anatreForest.unk_00c |= (1 << 1);
-      LoadBlink(221, 0);
+      StartPaletteAnimation(221, 0);
     }
-    UpdateBlinkMotionState(221);
+    StepPaletteAnimation(221);
 
   } else if ((gOverworld.work.anatreForest.unk_00c & (1 << 1))) {
     gOverworld.work.anatreForest.unk_00c ^= (1 << 1);
-    ClearBlink(221);
+    RemovePaletteAnimation(221);
   }
 
   if ((W_TERRAIN_V2.tilesets[0] >> 8 == STAGE_ANATRE_FOREST) && ((W_TERRAIN_V2.tilesets[0] & 0xFF) == 2)) {
     if ((gOverworld.work.anatreForest.unk_00c & (1 << 2)) == 0) {
       gOverworld.work.anatreForest.unk_00c |= (1 << 2);
-      LoadBlink(222, 0);
-      LoadBlink(223, 0);
-      LoadBlink(224, 0);
-      LoadBlink(225, 0);
-      LoadBlink(226, 0);
+      StartPaletteAnimation(222, 0);
+      StartPaletteAnimation(223, 0);
+      StartPaletteAnimation(224, 0);
+      StartPaletteAnimation(225, 0);
+      StartPaletteAnimation(226, 0);
     }
-    UpdateBlinkMotionState(222);
-    UpdateBlinkMotionState(223);
-    UpdateBlinkMotionState(224);
-    UpdateBlinkMotionState(225);
-    UpdateBlinkMotionState(226);
+    StepPaletteAnimation(222);
+    StepPaletteAnimation(223);
+    StepPaletteAnimation(224);
+    StepPaletteAnimation(225);
+    StepPaletteAnimation(226);
     gOverworld.work.anatreForest.unk_00d++;
     if (gOverworld.work.anatreForest.unk_00d == 190) {
       gOverworld.work.anatreForest.unk_00d = 0;
@@ -79,26 +79,26 @@ static void FUN_080101f0(struct Coord* _ UNUSED) {
 
   } else if ((gOverworld.work.anatreForest.unk_00c & (1 << 2))) {
     gOverworld.work.anatreForest.unk_00c ^= (1 << 2);
-    ClearBlink(222);
-    ClearBlink(223);
-    ClearBlink(224);
-    ClearBlink(225);
-    ClearBlink(226);
+    RemovePaletteAnimation(222);
+    RemovePaletteAnimation(223);
+    RemovePaletteAnimation(224);
+    RemovePaletteAnimation(225);
+    RemovePaletteAnimation(226);
   }
 
   if ((W_TERRAIN_V2.tilesets[1] >> 8 == STAGE_ANATRE_FOREST) && ((W_TERRAIN_V2.tilesets[1] & 0xFF) == 3)) {
     if ((gOverworld.work.anatreForest.unk_00c & (1 << 3)) == 0) {
       gOverworld.work.anatreForest.unk_00c |= (1 << 3);
-      LoadBlink(227, 0);
-      LoadBlink(228, 0);
+      StartPaletteAnimation(227, 0);
+      StartPaletteAnimation(228, 0);
     }
-    UpdateBlinkMotionState(227);
-    UpdateBlinkMotionState(228);
+    StepPaletteAnimation(227);
+    StepPaletteAnimation(228);
 
   } else if ((gOverworld.work.anatreForest.unk_00c & (1 << 3))) {
     gOverworld.work.anatreForest.unk_00c ^= (1 << 3);
-    ClearBlink(227);
-    ClearBlink(228);
+    RemovePaletteAnimation(227);
+    RemovePaletteAnimation(228);
   }
 }
 
@@ -127,17 +127,17 @@ static void FUN_080104d4(struct Coord* _ UNUSED) {
     EXIT_BODY(leaf);
     SET_SOLID_ROUTINE(leaf, ENTITY_DISAPPEAR);
   }
-  ClearBlink(218);
-  ClearBlink(219);
-  ClearBlink(220);
-  ClearBlink(221);
-  ClearBlink(222);
-  ClearBlink(223);
-  ClearBlink(224);
-  ClearBlink(225);
-  ClearBlink(226);
-  ClearBlink(227);
-  ClearBlink(228);
+  RemovePaletteAnimation(218);
+  RemovePaletteAnimation(219);
+  RemovePaletteAnimation(220);
+  RemovePaletteAnimation(221);
+  RemovePaletteAnimation(222);
+  RemovePaletteAnimation(223);
+  RemovePaletteAnimation(224);
+  RemovePaletteAnimation(225);
+  RemovePaletteAnimation(226);
+  RemovePaletteAnimation(227);
+  RemovePaletteAnimation(228);
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------

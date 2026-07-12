@@ -1,6 +1,6 @@
 #include "minigame.h"
 
-#include "blink.h"
+#include "palette_animation.h"
 #include "global.h"
 #include "hud.h"
 #include "pickup.h"
@@ -49,7 +49,7 @@ static void MinigameLoop_InitMinigame(struct GameState* g) {
   struct Pivot* pivot = &g->unk_0db8;
   gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
   gPaletteManager.post_process = NULL;
-  ClearBlinkings();
+  RemoveAllPaletteAnimations();
   gBlendRegBuffer.bldclt = 0;
   gWindowRegBuffer.dispcnt = 0;
   gWindowRegBuffer.winin[2] = 0xFF;
@@ -400,7 +400,7 @@ static void MinigameLoop_ExitMinigame(struct GameState* g) {
   result = (sMinigameDeinitializers[g->mode[1]])(g);
   if (result == FALSE) {
     ExitStageLandscape();
-    ClearBlinkings();
+    RemoveAllPaletteAnimations();
     ExitProcess();
   }
 }

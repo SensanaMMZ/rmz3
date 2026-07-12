@@ -93,7 +93,7 @@ _080EF082:
 	strh r0, [r5]
 	ldr r0, _080EF138 @ =wMOSAIC
 	strh r6, [r0]
-	bl PauseAllBlinks
+	bl PauseAllPaletteAnimations
 	movs r3, #0x81
 	lsls r3, r3, #2
 	adds r0, r3, #0
@@ -261,7 +261,7 @@ _080EF1D2:
 	strb r3, [r0, #0xf]
 	adds r0, r7, #0
 	bl RestoreGraphicState
-	bl ResumeAllBlinks
+	bl ResumeAllPaletteAnimations
 	ldr r0, _080EF240 @ =gStageRun+288
 	bl UpdateStageEntities
 	ldr r0, _080EF244 @ =gSolidHeaderPtr

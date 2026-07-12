@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "global.h"
 #include "overworld.h"
 
@@ -24,7 +24,7 @@ static void initSunkenLib(struct Coord* _ UNUSED) {
   STAGE.theta = 0;
   STAGE.rng = 0;
   SEA = PIXEL(568);
-  LoadBlink(150, 0);
+  StartPaletteAnimation(150, 0);
 }
 
 NON_MATCH static void updateSunkenLib(struct Coord* _ UNUSED) {
@@ -32,31 +32,31 @@ NON_MATCH static void updateSunkenLib(struct Coord* _ UNUSED) {
   if ((TILESET_ID(0) == STAGE_SUNKEN_LIBRARY) && (TILESET_IDX(0) == 4)) {
     if ((STAGE.unk_000 & (1 << 0)) == 0) {
       STAGE.unk_000 |= (1 << 0);
-      LoadBlink(148, 0);
-      LoadBlink(149, 0);
+      StartPaletteAnimation(148, 0);
+      StartPaletteAnimation(149, 0);
     }
-    UpdateBlinkMotionState(148);
-    UpdateBlinkMotionState(149);
+    StepPaletteAnimation(148);
+    StepPaletteAnimation(149);
 
   } else if ((STAGE.unk_000 & (1 << 0))) {
     STAGE.unk_000 ^= (1 << 0);
-    ClearBlink(148);
-    ClearBlink(149);
+    RemovePaletteAnimation(148);
+    RemovePaletteAnimation(149);
   }
 
   if ((TILESET_ID(1) == STAGE_SUNKEN_LIBRARY) && (TILESET_IDX(1) == 5)) {
     if ((STAGE.unk_000 & (1 << 1)) == 0) {
       STAGE.unk_000 |= (1 << 1);
-      LoadBlink(153, 0);
+      StartPaletteAnimation(153, 0);
     }
-    UpdateBlinkMotionState(153);
+    StepPaletteAnimation(153);
 
   } else if ((STAGE.unk_000 & (1 << 1))) {
     STAGE.unk_000 ^= (1 << 1);
-    ClearBlink(153);
+    RemovePaletteAnimation(153);
   }
 
-  UpdateBlinkMotionState(150);
+  StepPaletteAnimation(150);
 
   if (STAGE.unk_001 == 0) {
     if (STAGE.unk_002 == 0) {
@@ -93,12 +93,12 @@ static void FUN_080136a0(struct Coord* _ UNUSED) {
 
 static void exitSunkenLibrary(struct Coord* _ UNUSED) {
   SEA = PIXEL(10240);
-  ClearBlink(148);
-  ClearBlink(149);
-  ClearBlink(150);
-  ClearBlink(151);
-  ClearBlink(152);
-  ClearBlink(153);
+  RemovePaletteAnimation(148);
+  RemovePaletteAnimation(149);
+  RemovePaletteAnimation(150);
+  RemovePaletteAnimation(151);
+  RemovePaletteAnimation(152);
+  RemovePaletteAnimation(153);
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------

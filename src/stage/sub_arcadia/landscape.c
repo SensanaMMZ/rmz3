@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "global.h"
 #include "overworld.h"
 
@@ -25,97 +25,97 @@ static void subAracadia_08014b48(struct Coord* _ UNUSED) {
   if ((W_TERRAIN_V2.tilesets[0] >> 8 == STAGE_SUB_ARCADIA) && ((W_TERRAIN_V2.tilesets[0] & 0xFF) == 0)) {
     if ((STAGE.unk_000 & (1 << 0)) == 0) {
       STAGE.unk_000 |= (1 << 0);
-      LoadBlink(124, 0);
-      LoadBlink(125, 0);
-      LoadBlink(126, 0);
-      LoadBlink(130, 0);
-      LoadBlink(166, 0);
+      StartPaletteAnimation(124, 0);
+      StartPaletteAnimation(125, 0);
+      StartPaletteAnimation(126, 0);
+      StartPaletteAnimation(130, 0);
+      StartPaletteAnimation(166, 0);
     }
-    UpdateBlinkMotionState(124);
-    UpdateBlinkMotionState(125);
-    UpdateBlinkMotionState(126);
-    UpdateBlinkMotionState(130);
-    UpdateBlinkMotionState(166);
+    StepPaletteAnimation(124);
+    StepPaletteAnimation(125);
+    StepPaletteAnimation(126);
+    StepPaletteAnimation(130);
+    StepPaletteAnimation(166);
 
   } else if (STAGE.unk_000 & (1 << 0)) {
     STAGE.unk_000 ^= (1 << 0);
-    ClearBlink(124);
-    ClearBlink(125);
-    ClearBlink(126);
-    ClearBlink(130);
-    ClearBlink(166);
+    RemovePaletteAnimation(124);
+    RemovePaletteAnimation(125);
+    RemovePaletteAnimation(126);
+    RemovePaletteAnimation(130);
+    RemovePaletteAnimation(166);
   }
 
   if ((W_TERRAIN_V2.tilesets[1] >> 8 == STAGE_SUB_ARCADIA) && ((W_TERRAIN_V2.tilesets[1] & 0xFF) == 1)) {
     if ((STAGE.unk_000 & (1 << 1)) == 0) {
       STAGE.unk_000 |= (1 << 1);
-      LoadBlink(127, 0);
-      LoadBlink(128, 0);
-      LoadBlink(129, 0);
+      StartPaletteAnimation(127, 0);
+      StartPaletteAnimation(128, 0);
+      StartPaletteAnimation(129, 0);
     }
-    UpdateBlinkMotionState(127);
-    UpdateBlinkMotionState(128);
-    UpdateBlinkMotionState(129);
+    StepPaletteAnimation(127);
+    StepPaletteAnimation(128);
+    StepPaletteAnimation(129);
 
   } else if (STAGE.unk_000 & (1 << 1)) {
     STAGE.unk_000 ^= (1 << 1);
-    ClearBlink(127);
-    ClearBlink(128);
-    ClearBlink(129);
+    RemovePaletteAnimation(127);
+    RemovePaletteAnimation(128);
+    RemovePaletteAnimation(129);
   }
 
   if ((W_TERRAIN_V2.tilesets[0] >> 8 == STAGE_SUB_ARCADIA) && ((W_TERRAIN_V2.tilesets[0] & 0xFF) == 2)) {
     if ((STAGE.unk_000 & (1 << 2)) == 0) {
       STAGE.unk_000 |= (1 << 2);
-      LoadBlink(161, 0);
-      LoadBlink(162, 0);
-      LoadBlink(163, 0);
-      LoadBlink(164, 0);
-      LoadBlink(165, 0);
+      StartPaletteAnimation(161, 0);
+      StartPaletteAnimation(162, 0);
+      StartPaletteAnimation(163, 0);
+      StartPaletteAnimation(164, 0);
+      StartPaletteAnimation(165, 0);
     }
-    UpdateBlinkMotionState(161);
-    UpdateBlinkMotionState(162);
-    UpdateBlinkMotionState(163);
-    UpdateBlinkMotionState(164);
-    UpdateBlinkMotionState(165);
+    StepPaletteAnimation(161);
+    StepPaletteAnimation(162);
+    StepPaletteAnimation(163);
+    StepPaletteAnimation(164);
+    StepPaletteAnimation(165);
 
   } else if (STAGE.unk_000 & (1 << 2)) {
     STAGE.unk_000 ^= (1 << 2);
-    ClearBlink(161);
-    ClearBlink(162);
-    ClearBlink(163);
-    ClearBlink(164);
-    ClearBlink(165);
+    RemovePaletteAnimation(161);
+    RemovePaletteAnimation(162);
+    RemovePaletteAnimation(163);
+    RemovePaletteAnimation(164);
+    RemovePaletteAnimation(165);
   }
 
   if ((W_TERRAIN_V2.tilesets[1] >> 8 == STAGE_SUB_ARCADIA) && ((W_TERRAIN_V2.tilesets[1] & 0xFF) == 3)) {
     if ((STAGE.unk_000 & (1 << 3)) == 0) {
       STAGE.unk_000 |= (1 << 3);
-      LoadBlink(154, 0);
-      LoadBlink(155, 0);
-      LoadBlink(156, 0);
-      LoadBlink(157, 0);
-      LoadBlink(158, 0);
-      LoadBlink(159, 0);
-      LoadBlink(160, 0);
+      StartPaletteAnimation(154, 0);
+      StartPaletteAnimation(155, 0);
+      StartPaletteAnimation(156, 0);
+      StartPaletteAnimation(157, 0);
+      StartPaletteAnimation(158, 0);
+      StartPaletteAnimation(159, 0);
+      StartPaletteAnimation(160, 0);
     }
-    UpdateBlinkMotionState(154);
-    UpdateBlinkMotionState(155);
-    UpdateBlinkMotionState(156);
-    UpdateBlinkMotionState(157);
-    UpdateBlinkMotionState(158);
-    UpdateBlinkMotionState(159);
-    UpdateBlinkMotionState(160);
+    StepPaletteAnimation(154);
+    StepPaletteAnimation(155);
+    StepPaletteAnimation(156);
+    StepPaletteAnimation(157);
+    StepPaletteAnimation(158);
+    StepPaletteAnimation(159);
+    StepPaletteAnimation(160);
 
   } else if (STAGE.unk_000 & (1 << 3)) {
     STAGE.unk_000 ^= (1 << 3);
-    ClearBlink(154);
-    ClearBlink(155);
-    ClearBlink(156);
-    ClearBlink(157);
-    ClearBlink(158);
-    ClearBlink(159);
-    ClearBlink(160);
+    RemovePaletteAnimation(154);
+    RemovePaletteAnimation(155);
+    RemovePaletteAnimation(156);
+    RemovePaletteAnimation(157);
+    RemovePaletteAnimation(158);
+    RemovePaletteAnimation(159);
+    RemovePaletteAnimation(160);
   }
 
   if (STAGE.unk_001 == 0) {
@@ -137,26 +137,26 @@ static void subAracadia_08014b48(struct Coord* _ UNUSED) {
 static void nop_08014e78(struct Coord* _ UNUSED) { return; }
 
 static void FUN_08014e7c(struct Coord* _ UNUSED) {
-  ClearBlink(0x7c);
-  ClearBlink(0x7d);
-  ClearBlink(0x7e);
-  ClearBlink(0x7f);
-  ClearBlink(0x80);
-  ClearBlink(0x81);
-  ClearBlink(0x82);
-  ClearBlink(0x9a);
-  ClearBlink(0x9b);
-  ClearBlink(0x9c);
-  ClearBlink(0x9d);
-  ClearBlink(0x9e);
-  ClearBlink(0x9f);
-  ClearBlink(0xa0);
-  ClearBlink(0xa1);
-  ClearBlink(0xa2);
-  ClearBlink(0xa3);
-  ClearBlink(0xa4);
-  ClearBlink(0xa5);
-  ClearBlink(0xa6);
+  RemovePaletteAnimation(0x7c);
+  RemovePaletteAnimation(0x7d);
+  RemovePaletteAnimation(0x7e);
+  RemovePaletteAnimation(0x7f);
+  RemovePaletteAnimation(0x80);
+  RemovePaletteAnimation(0x81);
+  RemovePaletteAnimation(0x82);
+  RemovePaletteAnimation(0x9a);
+  RemovePaletteAnimation(0x9b);
+  RemovePaletteAnimation(0x9c);
+  RemovePaletteAnimation(0x9d);
+  RemovePaletteAnimation(0x9e);
+  RemovePaletteAnimation(0x9f);
+  RemovePaletteAnimation(0xa0);
+  RemovePaletteAnimation(0xa1);
+  RemovePaletteAnimation(0xa2);
+  RemovePaletteAnimation(0xa3);
+  RemovePaletteAnimation(0xa4);
+  RemovePaletteAnimation(0xa5);
+  RemovePaletteAnimation(0xa6);
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------

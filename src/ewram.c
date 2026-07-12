@@ -1,4 +1,4 @@
-#include "blink.h"
+#include "palette_animation.h"
 #include "element.h"
 #include "entity.h"
 #include "game.h"
@@ -93,7 +93,7 @@ EWRAM_DATA struct SramState gSramState = {};  // 02001ee0
 
 EWRAM_DATA ALIGNED(16) struct GraphicTransferManager gGraphicTransferManager = {};
 
-EWRAM_DATA ALIGNED(16) struct BlinkManager gBlinkManager = {};
+EWRAM_DATA ALIGNED(16) struct PaletteAnimationManager gPaletteAnimationManager = {};
 
 EWRAM_DATA struct WramVideoRegister gVideoRegBuffer = {};
 EWRAM_DATA u8 Unk_0200215c[36] = {};  // 0x0200215c..0x0200217F

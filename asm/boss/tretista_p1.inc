@@ -9,13 +9,13 @@ FUN_0804d804: @ 0x0804D804
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	movs r0, #0x49
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x4a
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x4b
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x4c
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r4, #0xe]
 	cmp r0, #1
 	beq _0804D8AE
@@ -127,13 +127,13 @@ tretista_0804d8e8: @ 0x0804D8E8
 	sub sp, #0x18
 	adds r7, r0, #0
 	movs r0, #0x49
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x4a
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x4b
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x4c
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldrb r0, [r7, #0xe]
 	cmp r0, #0x19
 	bls _0804D912
@@ -510,13 +510,13 @@ _0804DC38:
 	movs r0, #0x48
 	strb r0, [r7, #0x12]
 	movs r0, #0x49
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x4a
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x4b
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x4c
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	ldr r2, _0804DC88 @ =gStageRun
 	ldrb r1, [r2, #0x12]
 	movs r0, #2

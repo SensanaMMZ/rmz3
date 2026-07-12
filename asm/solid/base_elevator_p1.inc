@@ -51,7 +51,7 @@ _080CFF80:
 	lsls r3, r3, #2
 	adds r2, r3, #0
 	orrs r1, r2
-	bl LoadBlink
+	bl StartPaletteAnimation
 _080CFFAC:
 	movs r2, #0
 	ldrb r1, [r4, #0xa]

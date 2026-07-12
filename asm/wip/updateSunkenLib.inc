@@ -22,15 +22,15 @@
 	strb r0, [r2]
 	movs r0, #0x94
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 	movs r0, #0x95
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 _08013510:
 	movs r0, #0x94
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	movs r0, #0x95
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	b _0801354E
 	.align 2, 0
 _08013520: .4byte gOverworld
@@ -49,9 +49,9 @@ _0801352C:
 	eors r0, r1
 	strb r0, [r2]
 	movs r0, #0x94
-	bl ClearBlink
+	bl RemovePaletteAnimation
 	movs r0, #0x95
-	bl ClearBlink
+	bl RemovePaletteAnimation
 _0801354E:
 	ldr r2, _08013588 @ =gOverworld
 	ldr r3, _08013590 @ =0x000007D6
@@ -76,10 +76,10 @@ _0801354E:
 	strb r0, [r2]
 	movs r0, #0x99
 	movs r1, #0
-	bl LoadBlink
+	bl StartPaletteAnimation
 _08013580:
 	movs r0, #0x99
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	b _080135B0
 	.align 2, 0
 _08013588: .4byte gOverworld
@@ -98,10 +98,10 @@ _08013594:
 	eors r0, r1
 	strb r0, [r2]
 	movs r0, #0x99
-	bl ClearBlink
+	bl RemovePaletteAnimation
 _080135B0:
 	movs r0, #0x96
-	bl UpdateBlinkMotionState
+	bl StepPaletteAnimation
 	ldr r2, _080135F0 @ =gOverworld
 	ldr r3, _080135F8 @ =0x0002D029
 	adds r4, r2, r3
