@@ -419,9 +419,7 @@ void zeroAir2(struct Zero* z) {
   gZeroJumpSeq[(z->s).mode[2]](z);
 }
 
-NON_MATCH static void initZeroJump(struct Zero* z) {
-#if MODERN
-  zero_input_t* key;
+static void initZeroJump(struct Zero* z) {
   struct Zero_b4* b4;
   s32 dx;
 
@@ -439,9 +437,8 @@ NON_MATCH static void initZeroJump(struct Zero* z) {
     case DOUBLE_JUMP: {
       SetMotion(&z->s, MOTION(DM004_ZERO_AIR, 0));
       (z->s).d.y = -getZeroRisingDy(z);
-      b4 = &z->unk_b4;
-      if (b4->blownSpeed != 0) {
-        b4->blownSpeed = 0;
+      if ((&z->unk_b4)->blownSpeed != 0) {
+        (&z->unk_b4)->blownSpeed = 0;
         (z->s).d.x = CalcDx(z);
       }
       if (abs((z->s).d.x) < CalcDx(z)) {
@@ -451,12 +448,11 @@ NON_MATCH static void initZeroJump(struct Zero* z) {
     }
 
     case WALL_JUMP: {
-      FUN_080b388c(&(z->s).coord, ((z->s).flags >> 4) & 1);
-      key = &(z->input).val;
-      if (*key & ZERO_INPUT_DASH) {
+      FUN_080b388c(&(z->s).coord, ((z->s).flags & X_FLIP) != 0);
+      if ((&z->input)->val & ZERO_INPUT_DASH) {
         SetMotion(&z->s, MOTION(DM006_ZERO_WALL_AIR, 1));
         if ((z->s).flags & X_FLIP) {
-          if (*key & DPAD_RIGHT) {
+          if ((&z->input)->val & DPAD_RIGHT) {
             (z->s).coord.x += PIXEL(16);
             (z->s).coord.x += (PushoutToLeft2((z->s).coord.x, (z->s).coord.y) - PIXEL(7));
           }
@@ -465,7 +461,7 @@ NON_MATCH static void initZeroJump(struct Zero* z) {
           (z->s).flags &= ~X_FLIP;
           dx = -GetDashSpeed(z);
         } else {
-          if (*key & DPAD_LEFT) {
+          if ((&z->input)->val & DPAD_LEFT) {
             (z->s).coord.x -= PIXEL(16);
             (z->s).coord.x += (PushoutToRight2((z->s).coord.x, (z->s).coord.y) + PIXEL(7));
           }
@@ -475,9 +471,8 @@ NON_MATCH static void initZeroJump(struct Zero* z) {
           dx = GetDashSpeed(z);
         }
         (z->s).d.x = dx;
-        b4 = &z->unk_b4;
-        if (b4->shadow == NULL) {
-          b4->shadow = CreateAfterImages(&z->s);
+        if ((&z->unk_b4)->shadow == NULL) {
+          (&z->unk_b4)->shadow = CreateAfterImages(&z->s);
         }
       } else {
         SetMotion(&z->s, MOTION(DM005_ZERO_WALL, 1));
@@ -488,10 +483,9 @@ NON_MATCH static void initZeroJump(struct Zero* z) {
         }
         (z->s).d.x = dx;
       }
-      b4 = &z->unk_b4;
       (z->unk_b4).unk_111 = 7;
       (z->s).d.y = -FUN_08032bac(z);
-      b4->blownSpeed = 0;
+      (&z->unk_b4)->blownSpeed = 0;
       PlaySound(SE_WALLJUMP);
       break;
     }
@@ -511,7 +505,7 @@ NON_MATCH static void initZeroJump(struct Zero* z) {
     }
 
     case SPLIT_HEAVENS_JUMP: {
-      b4 = &z->unk_b4;
+      struct Zero_b4* b4 = &z->unk_b4;
       z->splitHeavensWait = 0;
       if ((b4->status).element == ELEMENT_FLAME) {
         (z->s).d.y = -FUN_08032c30(z);
@@ -528,9 +522,6 @@ NON_MATCH static void initZeroJump(struct Zero* z) {
   }
   (z->s).mode[2] = 1;
   zeroJumpRise(z);
-#else
-  INCCODE("asm/wip/initZeroJump.inc");
-#endif
 }
 
 // --------------------------------------------
@@ -670,8 +661,7 @@ static void zeroDoubleJumpRise(struct Zero* z) {
   }
 }
 
-NON_MATCH static void zeroWallJumpRise(struct Zero* z) {
-#if MODERN
+static void zeroWallJumpRise(struct Zero* z) {
   s16 dx;
   struct Zero_b4* b4;
   metatile_attr_t attr;
@@ -679,20 +669,16 @@ NON_MATCH static void zeroWallJumpRise(struct Zero* z) {
   // Dash jump from wall
   motion_t m = MOTION_VALUE(z);
   if ((m == MOTION(DM005_ZERO_WALL, 1)) && ((z->s).motion.cmdIdx == 0) && ((z->input).val & ZERO_INPUT_DASH)) {
-    struct Zero_b4* b4;
     GotoMotion(&z->s, MOTION(DM006_ZERO_WALL_AIR, 1), 1, 4);
     if ((z->s).flags & X_FLIP) {
-      (z->s).spr.xflip = FALSE;
-      (z->s).spr.oam.xflip = FALSE;
+      SET_PLAYER_XFLIP(z, FALSE);
       (z->s).d.x = -GetDashSpeed(z);
     } else {
-      (z->s).spr.xflip = TRUE;
-      (z->s).spr.oam.xflip = TRUE;
+      SET_PLAYER_XFLIP(z, TRUE);
       (z->s).d.x = GetDashSpeed(z);
     }
-    b4 = &(z->unk_b4);
-    if (b4->shadow == NULL) {
-      b4->shadow = CreateAfterImages(&z->s);
+    if ((&z->unk_b4)->shadow == NULL) {
+      (&z->unk_b4)->shadow = CreateAfterImages(&z->s);
     }
   }
 
@@ -700,55 +686,48 @@ NON_MATCH static void zeroWallJumpRise(struct Zero* z) {
     (z->unk_b4).unk_111--;
     dx = (z->s).d.x;
   } else {
-    u8 flags = (z->s).flags;
+    u8 xflip = ((z->s).flags & X_FLIP) != 0;
 
-    if ((z->input).val & DPAD_LEFT) {
+    if ((z->input).val & ZERO_INPUT_DPAD_LEFT) {
       dx = -abs((z->s).d.x);
       (z->s).spr.xflip = FALSE;
       (z->s).spr.oam.xflip = FALSE;
       (z->s).flags &= ~X_FLIP;
-
-    } else if ((z->input).val & DPAD_RIGHT) {
+    } else if ((z->input).val & ZERO_INPUT_DPAD_RIGHT) {
       dx = abs((z->s).d.x);
       (z->s).spr.xflip = TRUE;
       (z->s).spr.oam.xflip = TRUE;
       (z->s).flags |= X_FLIP;
+    } else {
+      dx = 0;
     }
 
-    b4 = &(z->unk_b4);
-    if (b4->shadow == NULL) {
-      if (((flags >> 4) & 1) != (((z->s).flags >> 4) & 1)) {
+    if ((&z->unk_b4)->shadow == NULL) {
+      if (xflip != (((z->s).flags & X_FLIP) != 0)) {
         SetMotion(&z->s, MOTION(DM005_ZERO_WALL, 2));
         (z->s).mode[3] = 0;
       }
-
-    } else if (dx != (z->s).d.x) {
-      SetMotion(&z->s, MOTION(DM006_ZERO_WALL_AIR, 2));
-      (z->s).mode[3] = 0;
+    } else {
+      if (dx != (z->s).d.x) {
+        SetMotion(&z->s, MOTION(DM006_ZERO_WALL_AIR, 2));
+        (z->s).mode[3] = 0;
+      }
     }
   }
-  (z->s).coord.x += dx;
 
-  b4 = &(z->unk_b4);
-  if (PushoutWallX(z, &gZeroRanges[z->posture], FALSE) != 0) {
-    b4->blownSpeed = 0;
-  }
-  if (PushoutWallX(z, &gZeroRanges[z->posture], TRUE) != 0) {
-    b4->blownSpeed = 0;
-  }
+  b4 = (&z->unk_b4);
+  (z->s).coord.x += dx;
+  if (PushoutWallX(z, &gZeroRanges[z->posture], FALSE) != 0) b4->blownSpeed = 0;
+  if (PushoutWallX(z, &gZeroRanges[z->posture], TRUE) != 0) b4->blownSpeed = 0;
+
   (z->s).coord.y += (z->s).d.y;
   (z->s).d.y += getFallAcceleration(z);
+
   attr = PushoutByCeiling(z, &gZeroRanges[z->posture], FALSE);
-  if (attr == 0) {
-    attr = PushoutByFloor2(z, &gZeroRanges[z->posture], TRUE);
-  }
+  if (attr == 0) attr = PushoutByFloor2(z, &gZeroRanges[z->posture], TRUE);
   if (((z->s).d.y > 0) || (attr != 0)) {
-    (z->s).mode[2] = 2;
-    (z->s).mode[3] = 0;
+    (z->s).mode[2] = 2, (z->s).mode[3] = 0;
   }
-#else
-  INCCODE("asm/wip/zeroWallJumpRise.inc");
-#endif
 }
 
 static void zeroRecoilJumpRise(struct Zero* z) {
