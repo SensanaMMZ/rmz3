@@ -211,11 +211,24 @@ passes with an hours-long run — low confidence.
 ## 4. Porting from upstream `mmzret/rmz3`
 
 Both forks decompile the same byte-identical ROM, so `FUN_<addr>` and named functions
-share names — directly comparable. This fork is **well ahead overall** (≈625 functions
-are C here but asm upstream), and **56 functions are genuine C upstream and still asm
-here** — free ports (mind **signature drift**: upstream uses `Player*`/`Object*` where
-this fork uses its own structs; adapt types and re-verify the SHA). Fetch bodies from
-`raw.githubusercontent.com/mmzret/rmz3/main/<path>`.
+share names — directly comparable. Add upstream as a remote for fast checks:
+`git remote add upstream https://github.com/mmzret/rmz3 && git fetch upstream` (active
+branch is `upstream/dev`). Upstream is **low-cadence** (≈monthly commits, resumed 2026
+after a ~2yr gap) and has **no dual-form / `NONMATCH` / `INCLUDE_ASM` mechanism** — a
+function there is either plain *matching* C or still `NAKED`.
+
+Measured 2026-07-12 (by name-diff of each fork's non-`NAKED` C defs): this fork has
+**~3,341** functions decompiled vs upstream's **~2,413** — **~928 ahead net**
+(~1,175 we've done that upstream hasn't; ~2,166 shared). **~241 functions are matched C
+upstream and still asm here** — free ports (the stale "56" above was pre-2026; upstream's
+resumption grew it). The full verified list is in **`notes/upstream-free-ports.md`**
+(53 already stubbed `NAKED`/dual-form here — drop-in; 188 not in our `src/` yet). Since
+upstream has no dual-form, the entries we `NON_MATCH` are ones **upstream found the
+matching source for** — porting their construction can convert our dual-form to a match
+(e.g. `MenuLoop_BlackOut`'s chained `filter[0]=filter[1]=filter[2]=g->frames`). Mind
+**signature drift** (upstream `Player*`/`Object*` vs our structs; adapt types) and
+re-verify `make compare` after every port. Fetch bodies from
+`raw.githubusercontent.com/mmzret/rmz3/dev/<path>` or `git show upstream/dev:<path>`.
 
 **Caveat when generating the list:** exclude `NAKED`/`asm(...)`-bodied upstream
 functions — they're asm there too (a naive "has a `name(...) {` definition" scan
