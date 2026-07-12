@@ -4,6 +4,7 @@
 #include "overworld.h"
 #include "solid.h"
 #include "vfx.h"
+#include "vfx/after_image.h"
 #include "zero.h"
 
 /*
@@ -560,209 +561,75 @@ static void loadNeutralZeroColor(struct Solid* p) {
 
 // --------------------------------------------
 
-NAKED static void Actor1_Update(struct Solid* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	adds r6, r0, #0\n\
-	ldrb r0, [r6, #0xd]\n\
-	cmp r0, #6\n\
-	bls _080D0D50\n\
-	b _080D0EDC\n\
-_080D0D50:\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _080D0D5C @ =_080D0D60\n\
-	adds r0, r0, r1\n\
-	ldr r0, [r0]\n\
-	mov pc, r0\n\
-	.align 2, 0\n\
-_080D0D5C: .4byte _080D0D60\n\
-_080D0D60: @ jump table\n\
-	.4byte _080D0D7C @ case 0\n\
-	.4byte _080D0DAA @ case 1\n\
-	.4byte _080D0DE0 @ case 2\n\
-	.4byte _080D0E12 @ case 3\n\
-	.4byte _080D0E34 @ case 4\n\
-	.4byte _080D0E48 @ case 5\n\
-	.4byte _080D0EA8 @ case 6\n\
-_080D0D7C:\n\
-	adds r7, r6, #0\n\
-	adds r7, #0x25\n\
-	movs r5, #0\n\
-	movs r4, #0x10\n\
-	strb r4, [r7]\n\
-	ldr r0, [r6, #0x54]\n\
-	movs r1, #0xf0\n\
-	lsls r1, r1, #8\n\
-	adds r0, r0, r1\n\
-	ldr r1, [r6, #0x58]\n\
-	bl FUN_08009f6c\n\
-	str r0, [r6, #0x58]\n\
-	str r5, [r6, #0x2c]\n\
-	strb r4, [r7]\n\
-	movs r1, #0xc4\n\
-	lsls r1, r1, #8\n\
-	adds r0, r6, #0\n\
-	bl SetMotion\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080D0DAA:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldr r0, [r6, #0x54]\n\
-	adds r0, #0x50\n\
-	str r0, [r6, #0x54]\n\
-	ldr r0, [r6, #0x18]\n\
-	ldrb r1, [r0, #9]\n\
-	movs r0, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080D0DC4\n\
-	b _080D0EDC\n\
-_080D0DC4:\n\
-	adds r0, r6, #0\n\
-	adds r0, #0x73\n\
-	ldrb r0, [r0]\n\
-	cmp r0, #4\n\
-	beq _080D0DD0\n\
-	b _080D0EDC\n\
-_080D0DD0:\n\
-	ldr r1, _080D0DDC @ =0x00003303\n\
-	adds r0, r6, #0\n\
-	bl SetMotion\n\
-	movs r0, #0x10\n\
-	b _080D0E9E\n\
-	.align 2, 0\n\
-_080D0DDC: .4byte 0x00003303\n\
-_080D0DE0:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldrb r0, [r6, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r6, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r2, r0, #0x18\n\
-	cmp r2, #0\n\
-	bne _080D0EDC\n\
-	ldrb r1, [r6, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r6, #0xa]\n\
-	adds r0, r6, #0\n\
-	adds r0, #0x4c\n\
-	strb r2, [r0]\n\
-	adds r2, r6, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	b _080D0EA0\n\
-_080D0E12:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldr r0, [r6, #0x18]\n\
-	ldrb r1, [r0, #9]\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080D0EDC\n\
-	ldr r1, _080D0E30 @ =0x00003301\n\
-	adds r0, r6, #0\n\
-	bl SetMotion\n\
-	b _080D0EA0\n\
-	.align 2, 0\n\
-_080D0E30: .4byte 0x00003301\n\
-_080D0E34:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	adds r0, r6, #0\n\
-	adds r0, #0x73\n\
-	ldrb r0, [r0]\n\
-	cmp r0, #3\n\
-	bne _080D0EDC\n\
-	movs r0, #8\n\
-	b _080D0E9E\n\
-_080D0E48:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldrb r0, [r6, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r6, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	cmp r0, #0\n\
-	bne _080D0EDC\n\
-	movs r4, #1\n\
-	ldrb r0, [r6, #0xa]\n\
-	movs r1, #0x10\n\
-	orrs r0, r1\n\
-	strb r0, [r6, #0xa]\n\
-	adds r0, r6, #0\n\
-	adds r0, #0x4c\n\
-	strb r4, [r0]\n\
-	adds r3, r6, #0\n\
-	adds r3, #0x4a\n\
-	movs r2, #0x10\n\
-	ldrb r1, [r3]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	orrs r0, r2\n\
-	strb r0, [r3]\n\
-	movs r1, #0xc0\n\
-	lsls r1, r1, #2\n\
-	adds r0, r6, #0\n\
-	bl SetMotion\n\
-	adds r0, r6, #0\n\
-	adds r0, #0x54\n\
-	ldrb r2, [r6, #0xa]\n\
-	lsrs r2, r2, #4\n\
-	ands r2, r4\n\
-	movs r1, #0\n\
-	bl CreateParticle\n\
-	movs r0, #8\n\
-	bl PlaySound\n\
-	movs r0, #0x20\n\
-_080D0E9E:\n\
-	strb r0, [r6, #0x12]\n\
-_080D0EA0:\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-	b _080D0EDC\n\
-_080D0EA8:\n\
-	adds r0, r6, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldrb r0, [r6, #0x12]\n\
-	cmp r0, #0\n\
-	beq _080D0EC8\n\
-	subs r0, #1\n\
-	strb r0, [r6, #0x12]\n\
-	ldr r0, [r6, #0x2c]\n\
-	cmp r0, #0\n\
-	bne _080D0ED2\n\
-	adds r0, r6, #0\n\
-	bl CreateAfterImages\n\
-	str r0, [r6, #0x2c]\n\
-	b _080D0ED2\n\
-_080D0EC8:\n\
-	ldr r1, [r6, #0x2c]\n\
-	cmp r1, #0\n\
-	beq _080D0ED2\n\
-	movs r0, #1\n\
-	strb r0, [r1, #0x11]\n\
-_080D0ED2:\n\
-	ldr r0, [r6, #0x54]\n\
-	movs r1, #0xe0\n\
-	lsls r1, r1, #2\n\
-	adds r0, r0, r1\n\
-	str r0, [r6, #0x54]\n\
-_080D0EDC:\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+static void Actor1_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      (p->s).taskCol = 0x10;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x + PIXEL(240), (p->s).coord.y);
+      (p->s).unk_2c = NULL;
+      (p->s).taskCol = 0x10;
+      SetMotion(&p->s, MOTION(DM196_ZERO_WALK, 0));
+      (p->s).mode[1]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += 0x50;
+      if ((p->s).scriptEntity->flags & 1) {
+        if ((p->s).motion.state == 4) {
+          SetMotion(&p->s, MOTION(DM051_ZERO_UNK, 3));
+          (p->s).work[2] = 0x10;
+          (p->s).mode[1]++;
+        }
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] == 0) {
+        SET_XFLIP(&p->s, 0);
+        (p->s).mode[1]++;
+      }
+      break;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).scriptEntity->flags & 2) {
+        SetMotion(&p->s, MOTION(DM051_ZERO_UNK, 1));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).work[2] = 8;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] == 0) {
+        bool8 isRight = 1;
+        SET_XFLIP(&p->s, isRight);
+        SetMotion(&p->s, MOTION(DM003_ZERO_DASH, 0));
+        CreateParticle(&(p->s).coord, 0, ((p->s).flags >> 4) & isRight);
+        PlaySound(SE_DASH_1);
+        (p->s).work[2] = 0x20;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+        if ((p->s).unk_2c == NULL) {
+          (p->s).unk_2c = CreateAfterImages(&p->s);
+        }
+      } else if ((p->s).unk_2c != NULL) {
+        (p->s).unk_2c->work[1] = 1;
+      }
+      (p->s).coord.x += 0x380;
+      break;
+  }
 }
 
 // --------------------------------------------
