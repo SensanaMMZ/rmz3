@@ -431,219 +431,55 @@ _0801F08C: .4byte 0x0000FFFE\n\
  .syntax divided\n");
 }
 
-NAKED s16 SnowyPlains_FreeUpdate(struct StageRun* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r2, r0, #0\n\
-	ldr r3, [r2, #0x20]\n\
-	movs r0, #0xbe\n\
-	lsls r0, r0, #1\n\
-	adds r5, r2, r0\n\
-	ldrb r0, [r5]\n\
-	cmp r0, #0\n\
-	bne _0801F10C\n\
-	ldr r1, _0801F0CC @ =gStageRun\n\
-	ldrh r0, [r1, #8]\n\
-	movs r6, #1\n\
-	orrs r0, r6\n\
-	strh r0, [r1, #8]\n\
-	ldrb r4, [r1, #2]\n\
-	cmp r4, #0\n\
-	bne _0801F0D4\n\
-	adds r0, r1, #0\n\
-	adds r0, #0x10\n\
-	ldr r1, _0801F0D0 @ =gStageScriptList\n\
-	ldr r1, [r1, #0x30]\n\
-	ldr r1, [r1, #0x30]\n\
-	bl SetScript\n\
-	movs r0, #1\n\
-	bl setStageCheckpoint\n\
-	strb r6, [r5]\n\
-	b _0801F238\n\
-	.align 2, 0\n\
-_0801F0CC: .4byte gStageRun\n\
-_0801F0D0: .4byte gStageScriptList\n\
-_0801F0D4:\n\
-	cmp r4, #2\n\
-	bne _0801F0F0\n\
-	adds r0, r1, #0\n\
-	adds r0, #0x10\n\
-	ldr r1, _0801F0EC @ =gStageScriptList\n\
-	ldr r1, [r1, #0x30]\n\
-	ldr r1, [r1, #8]\n\
-	bl SetScript\n\
-	strb r4, [r5]\n\
-	b _0801F238\n\
-	.align 2, 0\n\
-_0801F0EC: .4byte gStageScriptList\n\
-_0801F0F0:\n\
-	cmp r4, #3\n\
-	beq _0801F0F6\n\
-	b _0801F238\n\
-_0801F0F6:\n\
-	adds r0, r1, #0\n\
-	adds r0, #0x10\n\
-	ldr r1, _0801F108 @ =gStageScriptList\n\
-	ldr r1, [r1, #0x30]\n\
-	ldr r1, [r1, #0x14]\n\
-	bl SetScript\n\
-	movs r0, #6\n\
-	b _0801F236\n\
-	.align 2, 0\n\
-_0801F108: .4byte gStageScriptList\n\
-_0801F10C:\n\
-	cmp r0, #1\n\
-	bne _0801F11A\n\
-	movs r0, #2\n\
-	bl setStageCheckpoint\n\
-	movs r0, #2\n\
-	b _0801F236\n\
-_0801F11A:\n\
-	cmp r0, #2\n\
-	bne _0801F13C\n\
-	ldr r1, [r3, #0x54]\n\
-	ldr r0, _0801F134 @ =0x001FFFFF\n\
-	cmp r1, r0\n\
-	ble _0801F13C\n\
-	ldr r2, _0801F138 @ =gCollisionManager\n\
-	ldrb r1, [r2, #1]\n\
-	movs r0, #2\n\
-	orrs r0, r1\n\
-	strb r0, [r2, #1]\n\
-	movs r0, #3\n\
-	b _0801F236\n\
-	.align 2, 0\n\
-_0801F134: .4byte 0x001FFFFF\n\
-_0801F138: .4byte gCollisionManager\n\
-_0801F13C:\n\
-	movs r0, #0xbe\n\
-	lsls r0, r0, #1\n\
-	adds r5, r2, r0\n\
-	ldrb r0, [r5]\n\
-	cmp r0, #3\n\
-	bne _0801F16C\n\
-	ldr r1, _0801F160 @ =gCollisionManager\n\
-	movs r0, #0\n\
-	strb r0, [r1, #1]\n\
-	ldr r0, _0801F164 @ =gStageRun+16\n\
-	ldr r1, _0801F168 @ =gStageScriptList\n\
-	ldr r1, [r1, #0x30]\n\
-	ldr r1, [r1, #0xc]\n\
-	bl SetScript\n\
-	movs r0, #4\n\
-	b _0801F236\n\
-	.align 2, 0\n\
-_0801F160: .4byte gCollisionManager\n\
-_0801F164: .4byte gStageRun+16\n\
-_0801F168: .4byte gStageScriptList\n\
-_0801F16C:\n\
-	cmp r0, #4\n\
-	bne _0801F1C4\n\
-	ldr r4, _0801F1B4 @ =gStageRun\n\
-	ldrh r1, [r4, #8]\n\
-	movs r0, #0x10\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0801F1C4\n\
-	ldr r1, _0801F1B8 @ =gCollisionManager\n\
-	ldrb r2, [r1]\n\
-	movs r0, #0x80\n\
-	orrs r0, r2\n\
-	strb r0, [r1]\n\
-	ldrb r2, [r1, #1]\n\
-	movs r0, #2\n\
-	orrs r0, r2\n\
-	strb r0, [r1, #1]\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x10\n\
-	ldr r1, _0801F1BC @ =gStageScriptList\n\
-	ldr r1, [r1, #0x30]\n\
-	ldr r1, [r1, #0x10]\n\
-	bl SetScript\n\
-	ldrh r0, [r4, #8]\n\
-	ldr r1, _0801F1C0 @ =0x0000FFEF\n\
-	ands r1, r0\n\
-	ldrb r2, [r4, #0x12]\n\
-	movs r0, #0xfd\n\
-	ands r0, r2\n\
-	strb r0, [r4, #0x12]\n\
-	movs r0, #1\n\
-	orrs r1, r0\n\
-	strh r1, [r4, #8]\n\
-	movs r0, #5\n\
-	b _0801F236\n\
-	.align 2, 0\n\
-_0801F1B4: .4byte gStageRun\n\
-_0801F1B8: .4byte gCollisionManager\n\
-_0801F1BC: .4byte gStageScriptList\n\
-_0801F1C0: .4byte 0x0000FFEF\n\
-_0801F1C4:\n\
-	movs r0, #0xbe\n\
-	lsls r0, r0, #1\n\
-	adds r5, r2, r0\n\
-	ldrb r0, [r5]\n\
-	cmp r0, #5\n\
-	bne _0801F1EC\n\
-	ldr r1, _0801F1E8 @ =gCollisionManager\n\
-	ldrb r2, [r1]\n\
-	movs r0, #0x7f\n\
-	ands r0, r2\n\
-	movs r2, #0\n\
-	strb r0, [r1]\n\
-	strb r2, [r1, #1]\n\
-	movs r0, #3\n\
-	bl setStageCheckpoint\n\
-	movs r0, #6\n\
-	b _0801F236\n\
-	.align 2, 0\n\
-_0801F1E8: .4byte gCollisionManager\n\
-_0801F1EC:\n\
-	cmp r0, #6\n\
-	bne _0801F210\n\
-	ldr r1, [r3, #0x54]\n\
-	ldr r0, _0801F208 @ =0x00337FFF\n\
-	cmp r1, r0\n\
-	ble _0801F238\n\
-	ldr r2, _0801F20C @ =gCollisionManager\n\
-	ldrb r1, [r2, #1]\n\
-	movs r0, #2\n\
-	orrs r0, r1\n\
-	strb r0, [r2, #1]\n\
-	movs r0, #7\n\
-	b _0801F236\n\
-	.align 2, 0\n\
-_0801F208: .4byte 0x00337FFF\n\
-_0801F20C: .4byte gCollisionManager\n\
-_0801F210:\n\
-	cmp r0, #7\n\
-	bne _0801F238\n\
-	ldr r1, [r3, #0x54]\n\
-	ldr r0, _0801F240 @ =0x00347FFF\n\
-	cmp r1, r0\n\
-	ble _0801F238\n\
-	ldr r4, _0801F244 @ =gStageRun+16\n\
-	ldr r0, _0801F248 @ =gStageScriptList\n\
-	ldr r0, [r0, #0x30]\n\
-	ldr r1, [r0, #0x34]\n\
-	adds r0, r4, #0\n\
-	bl SetScript\n\
-	subs r4, #0x10\n\
-	ldrh r1, [r4, #8]\n\
-	ldr r0, _0801F24C @ =0x0000FFFE\n\
-	ands r0, r1\n\
-	strh r0, [r4, #8]\n\
-	movs r0, #9\n\
-_0801F236:\n\
-	strb r0, [r5]\n\
-_0801F238:\n\
-	movs r0, #0\n\
-	pop {r4, r5, r6}\n\
-	pop {r1}\n\
-	bx r1\n\
-	.align 2, 0\n\
-_0801F240: .4byte 0x00347FFF\n\
-_0801F244: .4byte gStageRun+16\n\
-_0801F248: .4byte gStageScriptList\n\
-_0801F24C: .4byte 0x0000FFFE\n\
- .syntax divided\n");
+s16 SnowyPlains_FreeUpdate(struct StageRun* p) {
+  struct Entity* z = (p->vm).entities[0].entity;
+  if (p->stageEventPhase == 0) {
+    gStageRun.missionStatus |= MISSION_STAY;
+    if (gStageRun.checkpoint == 0) {
+      SetScript(&gStageRun.vm, gStageScriptList[STAGE_SNOWY_PLAINS][12]);
+      setStageCheckpoint(1);
+      p->stageEventPhase = 1;
+    } else if (gStageRun.checkpoint == 2) {
+      SetScript(&gStageRun.vm, gStageScriptList[STAGE_SNOWY_PLAINS][2]);
+      p->stageEventPhase = 2;
+    } else if (gStageRun.checkpoint == 3) {
+      SetScript(&gStageRun.vm, gStageScriptList[STAGE_SNOWY_PLAINS][5]);
+      p->stageEventPhase = 6;
+    }
+  } else if (p->stageEventPhase == 1) {
+    setStageCheckpoint(2);
+    p->stageEventPhase = 2;
+  } else if (p->stageEventPhase == 2 && ((z->coord).x >= PIXEL(8192))) {
+    gCollisionManager.sweep |= SWEEP_ALL_ENEMY;
+    p->stageEventPhase = 3;
+  } else if (p->stageEventPhase == 3) {
+    gCollisionManager.sweep = 0;
+    SetScript(&gStageRun.vm, gStageScriptList[STAGE_SNOWY_PLAINS][3]);
+    p->stageEventPhase = 4;
+  } else if (p->stageEventPhase == 4 && (gStageRun.missionStatus & MISSION_SUCCESS)) {
+    gCollisionManager.disabled |= COLLMAN_DISABLED;
+    gCollisionManager.sweep |= SWEEP_ALL_ENEMY;
+    SetScript(&gStageRun.vm, gStageScriptList[STAGE_SNOWY_PLAINS][4]);
+    gStageRun.missionStatus &= ~MISSION_SUCCESS;
+    gStageRun.vm.active &= ~VM_FLAG1;
+    gStageRun.missionStatus |= MISSION_STAY;
+    p->stageEventPhase = 5;
+  } else if (p->stageEventPhase == 5) {
+    gCollisionManager.disabled &= ~COLLMAN_DISABLED;
+    gCollisionManager.sweep = 0;
+    setStageCheckpoint(3);
+    p->stageEventPhase = 6;
+  } else if (p->stageEventPhase == 6) {
+    if ((z->coord).x >= PIXEL(13184)) {
+      gCollisionManager.sweep |= SWEEP_ALL_ENEMY;
+      p->stageEventPhase = 7;
+    }
+  } else if (p->stageEventPhase == 7) {
+    if ((z->coord).x >= PIXEL(13440)) {
+      SetScript(&gStageRun.vm, gStageScriptList[STAGE_SNOWY_PLAINS][13]);
+      gStageRun.missionStatus &= ~MISSION_STAY;
+      p->stageEventPhase = 9;
+    }
+  }
+  return 0;
 }

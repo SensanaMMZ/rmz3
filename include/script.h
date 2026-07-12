@@ -65,6 +65,9 @@ union ScriptString {
   u8 y;
 };
 
+// VM.active フラグ
+#define VM_FLAG1 (1 << 1)
+
 // フィールドスクリプト実行VM
 struct VM {
   u8 unk_000;

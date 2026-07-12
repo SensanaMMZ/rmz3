@@ -6,6 +6,9 @@
 
 #define SWEEP_ALL_ENEMY (1 << 1)
 
+// CollisionManager.disabled
+#define COLLMAN_DISABLED (1 << 7)
+
 // Collision.special
 #define HALFABLE 1
 #define CS_BOSS 2
