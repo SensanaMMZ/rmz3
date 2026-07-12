@@ -2367,36 +2367,39 @@ static void zeroTalk0(struct Zero* z) {
   zeroTalk1(z);
 }
 
-NON_MATCH static void zeroTalk1(struct Zero* z) {
-#if MODERN
-  struct Body* body = gCollisionManager.talkTo;  // 話し相手
-  if ((body != NULL) && (body->parent != NULL)) {
-    const bool8 isRight = (z->s).coord.x < ((body->parent)->s).coord.x;
-    (z->s).spr.oam.xflip = (z->s).spr.xflip = isRight;
-    if (isRight) {
-      (z->s).flags |= X_FLIP;
-    } else {
-      (z->s).flags &= ~X_FLIP;
+static void zeroTalk1(struct Zero* z) {
+  bool8 isRight;
+  struct Body* body = gCollisionManager.talkTo;
+  if (body != NULL) {
+    if (body->parent != NULL) {
+      (z->s).spr.xflip = (((body->parent)->s).coord.x > (z->s).coord.x);
+      isRight = (z->s).spr.oam.xflip = ((body->parent)->s).coord.x > (z->s).coord.x;
+      if (isRight) {
+        u8 flags = (z->s).flags | X_FLIP;
+        (z->s).flags = flags;
+      } else {
+        u8 flags = (z->s).flags & ~X_FLIP;
+        (z->s).flags = flags;
+      }
     }
   }
 
-  if ((z->s).mode[3] == 0) {
-    if (!gInChat) {
-      SetMotion(&z->s, MOTION(DM051_ZERO_UNK, 0x01));
-      (z->s).mode[3]++;
+  switch ((z->s).mode[3]) {
+    case 0: {
+      if (!gInChat) {
+        SetMotion(&z->s, MOTION(DM051_ZERO_UNK, 1));
+        (z->s).mode[3]++;
+      }
+      break;
     }
-    return;
+    default: {
+      if ((z->s).motion.state == MOTION_END) {
+        (z->s).mode[1] = ZERO_GROUND, (z->s).mode[2] = 0, (z->s).mode[3] = 0;
+        (z->s).d.x = 0;
+      }
+      break;
+    }
   }
-
-  if ((z->s).motion.state == MOTION_END) {
-    (z->s).mode[1] = ZERO_GROUND;
-    (z->s).mode[2] = 0;
-    (z->s).mode[3] = 0;
-    (z->s).d.x = 0;
-  }
-#else
-  INCCODE("asm/wip/zeroTalk1.inc");
-#endif
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
