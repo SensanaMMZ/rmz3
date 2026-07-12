@@ -393,6 +393,8 @@ _080242EA:\n\
  .syntax divided\n");
 }
 
+#undef PLAYER_STATE
+
 NAKED static bool32 printPlayerAllScore(struct ResultState* p) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, lr}\n\
@@ -1031,80 +1033,29 @@ static bool32 getStageRewardChip(struct ResultState* p) {
   return FALSE;
 }
 
-#undef PLAYER_STATE
+static bool32 getStageRewardExSkill(struct ResultState* p) {
+  struct GameState* g = &gGameState;
+  struct Zero* player = g->z2;
 
-NAKED static bool32 getStageRewardExSkill(struct ResultState* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	adds r5, r0, #0\n\
-	ldr r0, _080248D0 @ =gGameState\n\
-	ldr r1, _080248D4 @ =0x000064AC\n\
-	adds r0, r0, r1\n\
-	ldr r0, [r0]\n\
-	adds r4, r0, #0\n\
-	adds r4, #0xb4\n\
-	ldrb r0, [r4, #0x1a]\n\
-	cmp r0, #1\n\
-	beq _080248CC\n\
-	ldrb r0, [r5, #1]\n\
-	cmp r0, #0\n\
-	bne _080248C4\n\
-	ldr r1, _080248D8 @ =sStageRewardExSkills\n\
-	ldr r7, _080248DC @ =gStageRun\n\
-	ldrh r0, [r7]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	ldr r3, [r0]\n\
-	cmp r3, #0xff\n\
-	beq _080248BE\n\
-	ldr r0, [r5, #0x10]\n\
-	cmp r0, #4\n\
-	bls _080248BE\n\
-	ldrh r2, [r4, #0x14]\n\
-	movs r6, #1\n\
-	adds r1, r6, #0\n\
-	lsls r1, r3\n\
-	adds r0, r2, #0\n\
-	ands r0, r1\n\
-	asrs r0, r3\n\
-	cmp r0, #0\n\
-	bne _080248CC\n\
-	orrs r2, r1\n\
-	strh r2, [r4, #0x14]\n\
-	ldr r0, _080248E0 @ =sUnlockExSkillTextIDs\n\
-	ldrh r1, [r7]\n\
-	lsls r1, r1, #1\n\
-	adds r1, r1, r0\n\
-	ldrh r0, [r1]\n\
-	movs r1, #0\n\
-	bl PrintResultInline\n\
-	str r6, [r5, #0xc]\n\
-_080248BE:\n\
-	ldrb r0, [r5, #1]\n\
-	adds r0, #1\n\
-	strb r0, [r5, #1]\n\
-_080248C4:\n\
-	ldr r0, _080248E4 @ =gTextWindow+8\n\
-	ldrh r0, [r0, #2]\n\
-	cmp r0, #0\n\
-	bne _080248E8\n\
-_080248CC:\n\
-	movs r0, #0\n\
-	b _080248EA\n\
-	.align 2, 0\n\
-_080248D0: .4byte gGameState\n\
-_080248D4: .4byte 0x000064AC\n\
-_080248D8: .4byte sStageRewardExSkills\n\
-_080248DC: .4byte gStageRun\n\
-_080248E0: .4byte sUnlockExSkillTextIDs\n\
-_080248E4: .4byte gTextWindow+8\n\
-_080248E8:\n\
-	movs r0, #1\n\
-_080248EA:\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r1}\n\
-	bx r1\n\
- .syntax divided\n");
+  if ((PLAYER_STATE(player)->status).menuZeroColor == MZC_HARD) return FALSE;
+
+  if (p->mode[1] == 0) {
+    u32 id = sStageRewardExSkills[gStageRun.id];
+    if ((id != EXSKILL_ID_NONE) && (p->rank >= RANK_A)) {
+      if (((PLAYER_STATE(player)->status).unlockedExSkill & (1 << id)) >> id) {
+        return FALSE;
+      }
+      (PLAYER_STATE(player)->status).unlockedExSkill |= (1 << id);
+      PrintResultInline(sUnlockExSkillTextIDs[gStageRun.id], 0);
+      p->unk_0c = 1;
+    }
+    p->mode[1]++;
+  }
+
+  if (((&gTextWindow.text)->mode) != 0) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 NAKED static bool32 FUN_080248f0(struct ResultState* p) {
