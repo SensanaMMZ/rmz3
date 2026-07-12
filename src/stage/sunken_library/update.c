@@ -580,36 +580,15 @@ _0801F6BE:\n\
 
 s16 SunkenLib_FreeUpdate(struct StageRun* p) { return SunkenLib_MissionUpdate(p); }
 
-NAKED struct Coord* getSunkenLibRoomCoord(u8 idx) {
-  asm(".syntax unified\n\
-	push {lr}\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r1, r0, #0x18\n\
-	cmp r1, #7\n\
-	bls _0801F6FC\n\
-	ldr r0, _0801F6F4 @ =0x0202FFF4\n\
-	adds r0, r1, r0\n\
-	ldrb r0, [r0]\n\
-	lsls r0, r0, #3\n\
-	ldr r1, _0801F6F8 @ =sSunkenLibRoom\n\
-	b _0801F706\n\
-	.align 2, 0\n\
-_0801F6F4: .4byte 0x0202FFF4\n\
-_0801F6F8: .4byte sSunkenLibRoom\n\
-_0801F6FC:\n\
-	ldr r0, _0801F70C @ =0x0202FFF4\n\
-	adds r0, r1, r0\n\
-	ldrb r0, [r0]\n\
-	lsls r0, r0, #3\n\
-	ldr r1, _0801F710 @ =sSunkenLibRoom\n\
-_0801F706:\n\
-	adds r0, r0, r1\n\
-	pop {r1}\n\
-	bx r1\n\
-	.align 2, 0\n\
-_0801F70C: .4byte 0x0202FFF4\n\
-_0801F710: .4byte sSunkenLibRoom\n\
- .syntax divided\n");
+// Retail duplicates the sSunkenLibRoom[roomOrder[idx]] lookup across an
+// idx>7 guard whose two arms are byte-identical; agbcc folds any
+// fold-surviving C back into a single block, so keep the exact asm.
+NON_MATCH struct Coord* getSunkenLibRoomCoord(u8 idx) {
+#if MODERN
+  return (struct Coord*)&sSunkenLibRoom[((u8*)0x0202FFF4)[idx]];
+#else
+  INCCODE("asm/wip/getSunkenLibRoomCoord.inc");
+#endif
 }
 
 NAKED struct Coord* FUN_0801f714(struct Coord* c) {
