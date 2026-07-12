@@ -69,24 +69,16 @@ static void MenuLoop_InitMenu(struct GameState* g) {
 }
 
 // 01 01 xx xx
-NON_MATCH static void MenuLoop_OpenMenu(struct GameState* m) {
-#if MODERN
+static void MenuLoop_OpenMenu(struct GameState* m) {
   m->frames++;
-  if (m->frames > 0xF) {
-    gPaletteManager.filter[2] = 0x20;
-    gPaletteManager.filter[1] = 0x20;
-    gPaletteManager.filter[0] = 0x20;
+  if (m->frames >= 16) {
+    gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0x20;
     m->mode[1] = 2;
     MenuLoop_Update(m);
   } else {
-    gPaletteManager.filter[2] = m->frames;
-    gPaletteManager.filter[1] = m->frames;
-    gPaletteManager.filter[0] = m->frames;
+    gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = m->frames;
   }
   menu_080f39a8(m);
-#else
-  INCCODE("asm/wip/MenuLoop_OpenMenu.inc");
-#endif
 }
 
 // 01 02 xx xx
@@ -100,23 +92,15 @@ static void MenuLoop_Update(struct GameState* g) {
 }
 
 // 01 03 xx xx
-NON_MATCH static void MenuLoop_BlackOut(struct GameState* m) {
-#if MODERN
+static void MenuLoop_BlackOut(struct GameState* m) {
   m->frames--;
   if (m->frames == 0) {
-    gPaletteManager.filter[2] = 0;
-    gPaletteManager.filter[1] = 0;
-    gPaletteManager.filter[0] = 0;
+    gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = 0;
     m->mode[1] = 4;
     MenuLoop_ExitMenu(m);
   } else {
-    gPaletteManager.filter[2] = m->frames;
-    gPaletteManager.filter[1] = m->frames;
-    gPaletteManager.filter[0] = m->frames;
+    gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = m->frames;
   }
-#else
-  INCCODE("asm/wip/MenuLoop_BlackOut.inc");
-#endif
 }
 
 // --------------------------------------------
