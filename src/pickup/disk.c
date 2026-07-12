@@ -27,101 +27,36 @@ const PickupRoutine gPickupDiskRoutine = {
 };
 // clang-format on
 
-NAKED struct Entity* CreateMapDisk(u8 diskNo, struct Coord* c, u8 r2) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	mov r7, sl\n\
-	mov r6, sb\n\
-	mov r5, r8\n\
-	push {r5, r6, r7}\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	mov sl, r0\n\
-	lsls r2, r2, #0x18\n\
-	lsrs r2, r2, #0x18\n\
-	mov sb, r2\n\
-	ldr r7, [r1]\n\
-	ldr r1, [r1, #4]\n\
-	mov r8, r1\n\
-	mov r6, r8\n\
-	ldr r0, _080E0FBC @ =gPickupHeaderPtr\n\
-	ldr r0, [r0]\n\
-	bl AllocEntityFirst\n\
-	adds r4, r0, #0\n\
-	cmp r4, #0\n\
-	beq _080E0FFC\n\
-	adds r1, r4, #0\n\
-	adds r1, #0x25\n\
-	movs r2, #0\n\
-	movs r0, #1\n\
-	strb r0, [r1]\n\
-	ldr r1, _080E0FC0 @ =gPickupFnTable\n\
-	strb r0, [r4, #9]\n\
-	ldr r0, [r1, #4]\n\
-	ldr r0, [r0]\n\
-	str r0, [r4, #0x14]\n\
-	movs r0, #0\n\
-	strh r2, [r4, #0x20]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0x22\n\
-	strb r0, [r1]\n\
-	ldrb r1, [r4, #0xb]\n\
-	movs r0, #0x10\n\
-	orrs r0, r1\n\
-	strb r0, [r4, #0xb]\n\
-	ldrb r0, [r4, #0x1c]\n\
-	strb r0, [r4, #0x1d]\n\
-	ldrb r0, [r4, #0x11]\n\
-	cmp r0, #1\n\
-	bls _080E0FC4\n\
-	str r7, [r4, #0x54]\n\
-	adds r0, r7, #0\n\
-	mov r1, r8\n\
-	bl FUN_080e1394\n\
-	b _080E0FF2\n\
-	.align 2, 0\n\
-_080E0FBC: .4byte gPickupHeaderPtr\n\
-_080E0FC0: .4byte gPickupFnTable\n\
-_080E0FC4:\n\
-	adds r0, r7, #0\n\
-	mov r1, r8\n\
-	bl FUN_080e1360\n\
-	lsls r0, r0, #0x10\n\
-	cmp r0, #0\n\
-	beq _080E0FEE\n\
-	adds r0, r7, #0\n\
-	mov r1, r8\n\
-	bl FUN_080e1394\n\
-	str r0, [r4, #0x58]\n\
-	cmp r0, r6\n\
-	ble _080E0FEA\n\
-	adds r0, r7, #0\n\
-	mov r1, r8\n\
-	bl FUN_080e13c4\n\
-	str r0, [r4, #0x58]\n\
-_080E0FEA:\n\
-	str r7, [r4, #0x54]\n\
-	b _080E0FF4\n\
-_080E0FEE:\n\
-	str r7, [r4, #0x54]\n\
-	mov r0, r8\n\
-_080E0FF2:\n\
-	str r0, [r4, #0x58]\n\
-_080E0FF4:\n\
-	mov r0, sl\n\
-	strb r0, [r4, #0x10]\n\
-	mov r0, sb\n\
-	strb r0, [r4, #0x11]\n\
-_080E0FFC:\n\
-	adds r0, r4, #0\n\
-	pop {r3, r4, r5}\n\
-	mov r8, r3\n\
-	mov sb, r4\n\
-	mov sl, r5\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r1}\n\
-	bx r1\n\
- .syntax divided\n");
+metatile_attr_t FUN_080e1360(s32 x, s32 y);
+s32 FUN_080e1394(s32 x, s32 y);
+s32 FUN_080e13c4(s32 x, s32 y);
+
+struct Entity* CreateMapDisk(u8 diskNo, struct Coord* _c, u8 r2) {
+  struct Coord c = {_c->x, _c->y};
+
+  struct Entity* p = AllocEntityFirst(gPickupHeaderPtr);
+  if (p != NULL) {
+    p->taskCol = 1;
+    INIT_ITEM_ROUTINE(p, ITEM_DISK);
+    p->tileNum = 0, p->palID = 0;
+    p->flags2 |= WHITE_PAINTABLE;
+    p->invincibleID = p->uniqueID;
+    if (p->work[1] >= 2) {
+      (p->coord).x = c.x;
+      (p->coord).y = FUN_080e1394(c.x, c.y);
+    } else if (FUN_080e1360(c.x, c.y) != 0) {
+      (p->coord).y = FUN_080e1394(c.x, c.y);
+      if ((p->coord).y > c.y) {
+        (p->coord).y = FUN_080e13c4(c.x, c.y);
+      }
+      (p->coord).x = c.x;
+    } else {
+      (p->coord).x = c.x;
+      (p->coord).y = c.y;
+    }
+    p->work[0] = diskNo, p->work[1] = r2;
+  }
+  return p;
 }
 
 static void MapDisk_Init(struct Pickup* p) {
