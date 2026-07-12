@@ -132,52 +132,35 @@ NON_MATCH static void inIdle(struct Zero* z) {
   - (梯子とかの)床に立っている時に下ボタンが押されたら、すり抜ける処理(空中モード)
   - エリア移動フラグが立っていたら、2Dドアモードにする
 */
-NON_MATCH static void inWalk(struct Zero* z) {
-#if MODERN
-  zero_input_t key;
-  struct Zero_b4* b4 = &(z->unk_b4);
+static void inWalk(struct Zero* z) {
+  struct Zero_b4* b4 = &z->unk_b4;
 
   if (z->isAreaChange) {
-    (z->s).mode[1] = ZERO_DOOR_2D;
-    (z->s).mode[2] = 0;
-    (z->s).mode[3] = 0;
+    (z->s).mode[1] = ZERO_DOOR_2D, (z->s).mode[2] = 0, (z->s).mode[3] = 0;
     return;
   }
 
   if ((z->restriction).move) return;
 
-  key = (z->input).val;
-  if (key & ZERO_INPUT_PRESS_JUMP) {
-    if ((key & DPAD_DOWN) && (IsOnSoftPlatform(z, &gZeroRanges[0], 0) != 0)) {
+  if ((&z->input)->val & ZERO_INPUT_PRESS_JUMP) {
+    if (((&z->input)->val & DPAD_DOWN) && (IsOnSoftPlatform(z, &gZeroRanges[0], 0) != 0)) {
       z->unk_b4.softPlatform = TRUE;
       b4->softPlatformY = (z->s).coord.y + PIXEL(13);
-      (z->s).mode[1] = ZERO_AIR;
-      (z->s).mode[2] = 2;
-      (z->s).mode[3] = 0;
+      (z->s).mode[1] = ZERO_AIR, (z->s).mode[2] = 2, (z->s).mode[3] = 0;
       return;
     }
-
-    (z->s).mode[1] = ZERO_AIR;
-    (z->s).mode[2] = 0;
-    (z->s).mode[3] = 0;
+    (z->s).mode[1] = ZERO_AIR, (z->s).mode[2] = 0, (z->s).mode[3] = 0;
     return;
   }
-
   if (!(z->restriction).dash) {
-    if ((key & ZERO_INPUT_PRESS_DASH) && TryGroundDash(z, &gZeroRanges[1])) {
-      (z->s).mode[2] = GROUND_DASH;
-      (z->s).mode[3] = 0;
+    if (((&z->input)->val & ZERO_INPUT_PRESS_DASH) && TryGroundDash(z, &gZeroRanges[1])) {
+      (z->s).mode[2] = GROUND_DASH, (z->s).mode[3] = 0;
       return;
     }
   }
-
-  if (!(key & (DPAD_RIGHT | DPAD_LEFT))) {
-    (z->s).mode[2] = GROUND_IDLE;
-    (z->s).mode[3] = 0;
+  if (!((&z->input)->val & (DPAD_RIGHT | DPAD_LEFT))) {
+    (z->s).mode[2] = GROUND_IDLE, (z->s).mode[3] = 0;
   }
-#else
-  INCCODE("asm/wip/inWalk.inc");
-#endif
 }
 
 // --------------------------------------------
@@ -319,23 +302,18 @@ DONE:
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
-NON_MATCH void HandlePlayerInput_Wall(struct Zero* z) {
-#if MODERN
+void HandlePlayerInput_Wall(struct Zero* z) {
   motion_t m;
   u8 state;
 
   if (z->isAreaChange) {
-    (z->s).mode[1] = ZERO_DOOR_2D;
-    (z->s).mode[2] = 0;
-    (z->s).mode[3] = 0;
+    (z->s).mode[1] = ZERO_DOOR_2D, (z->s).mode[2] = 0, (z->s).mode[3] = 0;
     return;
   }
 
   if ((z->input).val & ZERO_INPUT_PRESS_JUMP) {
     PushoutWallX(z, &gZeroRanges[z->posture], 0);
-    (z->s).mode[1] = ZERO_AIR;
-    (z->s).mode[2] = 0;
-    (z->s).mode[3] = 2;
+    (z->s).mode[1] = ZERO_AIR, (z->s).mode[2] = 0, (z->s).mode[3] = 2;
     zero_08032724(z);
     return;
   }
@@ -356,26 +334,14 @@ NON_MATCH void HandlePlayerInput_Wall(struct Zero* z) {
 
   // sprite face is reversed in Wall slide
   m = MOTION_VALUE(z);
-  if (m == MOTION(DM005_ZERO_WALL, 0x0)) {
-    if ((z->s).motion.cmdIdx < 3) {
-      goto _DONE;
+  if (m == MOTION(DM005_ZERO_WALL, 0)) {
+    if ((z->s).motion.cmdIdx >= 3) {
+      SET_PLAYER_XFLIP(z, (!((z->s).flags & X_FLIP)));
     }
-  }
-
-  (z->s).spr.oam.xflip = (z->s).spr.xflip = (((z->s).flags >> X_FLIP) ^ 1) & 1;
-  if ((z->s).spr.oam.xflip) {
-    (z->s).flags |= X_FLIP;
   } else {
-    (z->s).flags &= ~X_FLIP;
+    SET_PLAYER_XFLIP(z, (!((z->s).flags & X_FLIP)));
   }
-
-_DONE:
-  (z->s).mode[1] = ZERO_AIR;
-  (z->s).mode[2] = 2;
-  (z->s).mode[3] = 0;
-#else
-  INCCODE("asm/wip/HandlePlayerInput_Wall.inc");
-#endif
+  (z->s).mode[1] = ZERO_AIR, (z->s).mode[2] = 2, (z->s).mode[3] = 0;
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
