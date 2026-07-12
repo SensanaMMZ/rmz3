@@ -783,21 +783,19 @@ s32 howFarBlazin(struct Boss* p) {
 INCASM("asm/boss/blazin_p12_p2_p2.inc");
 
 // 0x080403c4
-NON_MATCH static void setBlazinDirection(struct Entity* p) {
-#if MODERN
+static void setBlazinDirection(struct Entity* p) {
   struct Entity* z = (struct Entity*)pZero2;
   if ((z->coord).x > (p->coord).x) {
     if (!(p->flags & X_FLIP)) {
-      SET_XFLIP(p, TRUE);
+      (p->spr).xflip = TRUE, (p->spr).oam.xflip = TRUE;
+      p->flags |= X_FLIP;
     }
   } else {
     if (p->flags & X_FLIP) {
-      SET_XFLIP(p, FALSE);
+      (p->spr).xflip = FALSE, (p->spr).oam.xflip = FALSE;
+      p->flags &= ~X_FLIP;
     }
   }
-#else
-  INCCODE("asm/wip/setBlazinDirection.inc");
-#endif
 }
 
 // --------------------------------------------
