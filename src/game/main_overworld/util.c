@@ -1,5 +1,7 @@
 #include "game.h"
 #include "global.h"
+#include "text.h"
+#include "text_window.h"
 
 NAKED u16 handleWrapTwoChoice(struct GameState* p) {
   asm(".syntax unified\n\
@@ -102,101 +104,37 @@ _080F32F2:\n\
  .syntax divided\n");
 }
 
-NAKED u16 save_080f32f8(struct GameState* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r4, r0, #0\n\
-	ldr r5, _080F3388 @ =gJoypad\n\
-	ldrh r1, [r5, #6]\n\
-	movs r0, #0x80\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F331C\n\
-	movs r0, #1\n\
-	bl PlaySound\n\
-	movs r1, #0xa\n\
-	ldrsh r0, [r4, r1]\n\
-	adds r0, #1\n\
-	movs r1, #3\n\
-	bl __modsi3\n\
-	strh r0, [r4, #0xa]\n\
-_080F331C:\n\
-	ldrh r1, [r5, #6]\n\
-	movs r0, #0x40\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F333A\n\
-	movs r0, #1\n\
-	bl PlaySound\n\
-	movs r1, #0xa\n\
-	ldrsh r0, [r4, r1]\n\
-	adds r0, #2\n\
-	movs r1, #3\n\
-	bl __modsi3\n\
-	strh r0, [r4, #0xa]\n\
-_080F333A:\n\
-	ldr r0, _080F338C @ =StringOfsTable\n\
-	ldrh r1, [r0]\n\
-	ldr r0, _080F3390 @ =gStringData\n\
-	adds r5, r1, r0\n\
-	movs r2, #0\n\
-	ldr r0, _080F3394 @ =gTextWindow+8\n\
-	ldrb r1, [r0, #6]\n\
-	adds r3, r0, #0\n\
-	cmp r1, #0\n\
-	bne _080F3354\n\
-	ldrb r0, [r3, #4]\n\
-	cmp r0, #1\n\
-	bne _080F3356\n\
-_080F3354:\n\
-	movs r2, #1\n\
-_080F3356:\n\
-	lsls r0, r2, #3\n\
-	subs r0, r0, r2\n\
-	movs r1, #8\n\
-	subs r1, r1, r0\n\
-	movs r0, #0xa\n\
-	ldrsh r2, [r4, r0]\n\
-	lsls r2, r2, #1\n\
-	ldrb r3, [r3, #5]\n\
-	adds r2, r2, r3\n\
-	adds r0, r5, #0\n\
-	bl PrintString\n\
-	ldr r0, _080F3388 @ =gJoypad\n\
-	ldrh r1, [r0, #4]\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080F3398\n\
-	movs r0, #3\n\
-	bl PlaySound\n\
-	movs r0, #2\n\
-	rsbs r0, r0, #0\n\
-	b _080F33B2\n\
-	.align 2, 0\n\
-_080F3388: .4byte gJoypad\n\
-_080F338C: .4byte StringOfsTable\n\
-_080F3390: .4byte gStringData\n\
-_080F3394: .4byte gTextWindow+8\n\
-_080F3398:\n\
-	movs r0, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080F33A4\n\
-	movs r0, #0\n\
-	b _080F33B2\n\
-_080F33A4:\n\
-	movs r0, #2\n\
-	bl PlaySound\n\
-	ldrh r0, [r4, #0xa]\n\
-	adds r0, #1\n\
-	lsls r0, r0, #0x10\n\
-	asrs r0, r0, #0x10\n\
-_080F33B2:\n\
-	pop {r4, r5}\n\
-	pop {r1}\n\
-	bx r1\n\
- .syntax divided\n");
+s16 save_080f32f8(struct GameState* g) {
+  // Handle Dpad input
+  if (gJoypad[0].field3_0x6 & DPAD_DOWN) {
+    PlaySound(SE_CURSOR);
+    g->unk_008[1] = (g->unk_008[1] + 1) % 3;
+  }
+  if (gJoypad[0].field3_0x6 & DPAD_UP) {
+    PlaySound(SE_CURSOR);
+    g->unk_008[1] = (g->unk_008[1] + 2) % 3;
+  }
+
+  {
+    // Draw the cursor
+    const char* s = STRING(0);
+    s32 no_left_mugshot = 0;
+    if ((&gTextWindow.text)->mugshotRight || (&gTextWindow.text)->mugshot == NO_MUGSHOT) {
+      no_left_mugshot = 1;
+    }
+    PrintString(s, 8 - (no_left_mugshot * 7), (&gTextWindow.text)->y + (g->unk_008[1] * 2));
+  }
+
+  // Handle A/B input
+  if (gJoypad[0].pressed & B_BUTTON) {
+    PlaySound(SE_NO);
+    return -2;
+  }
+  if (gJoypad[0].pressed & A_BUTTON) {
+    PlaySound(SE_YES);
+    return g->unk_008[1] + 1;
+  }
+  return 0;
 }
 
 NAKED void PrintSaveDataRow(s32 idx, u8 rank, u32 playTime, u8 playLaps, u32 mode, u8 y) {
