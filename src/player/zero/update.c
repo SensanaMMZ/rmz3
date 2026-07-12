@@ -2180,159 +2180,34 @@ static void zeroFloat1(struct Zero* z) {
   }
 }
 
-NAKED static void zeroFloat2(struct Zero* z) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	mov r7, r8\n\
-	push {r7}\n\
-	adds r4, r0, #0\n\
-	ldr r0, [r4, #0x58]\n\
-	mov r8, r0\n\
-	movs r1, #0x86\n\
-	lsls r1, r1, #2\n\
-	adds r7, r4, r1\n\
-	ldr r0, [r7]\n\
-	movs r1, #0x10\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0802C8EC\n\
-	ldr r0, [r4, #0x54]\n\
-	movs r1, #0xc0\n\
-	lsls r1, r1, #1\n\
-	adds r0, r0, r1\n\
-	str r0, [r4, #0x54]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0x4c\n\
-	movs r0, #1\n\
-	strb r0, [r1]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r0, [r2]\n\
-	movs r1, #0x10\n\
-	orrs r0, r1\n\
-	strb r0, [r2]\n\
-	ldrb r0, [r4, #0xa]\n\
-	orrs r1, r0\n\
-	strb r1, [r4, #0xa]\n\
-_0802C8EC:\n\
-	ldr r0, [r7]\n\
-	movs r1, #0x20\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0802C91A\n\
-	ldr r0, [r4, #0x54]\n\
-	ldr r1, _0802C9CC @ =0xFFFFFE80\n\
-	adds r0, r0, r1\n\
-	str r0, [r4, #0x54]\n\
-	adds r1, r4, #0\n\
-	adds r1, #0x4c\n\
-	movs r0, #0\n\
-	strb r0, [r1]\n\
-	adds r2, r4, #0\n\
-	adds r2, #0x4a\n\
-	ldrb r1, [r2]\n\
-	subs r0, #0x11\n\
-	ands r0, r1\n\
-	strb r0, [r2]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-_0802C91A:\n\
-	ldr r0, _0802C9D0 @ =0x00000147\n\
-	adds r5, r4, r0\n\
-	ldrb r1, [r5]\n\
-	lsls r1, r1, #3\n\
-	ldr r6, _0802C9D4 @ =gZeroRanges\n\
-	adds r1, r1, r6\n\
-	adds r0, r4, #0\n\
-	movs r2, #0\n\
-	bl PushoutWallX\n\
-	ldrb r1, [r5]\n\
-	lsls r1, r1, #3\n\
-	adds r1, r1, r6\n\
-	adds r0, r4, #0\n\
-	movs r2, #1\n\
-	bl PushoutWallX\n\
-	ldr r0, [r7]\n\
-	movs r1, #0x40\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0802C94E\n\
-	ldr r0, [r4, #0x58]\n\
-	ldr r1, _0802C9CC @ =0xFFFFFE80\n\
-	adds r0, r0, r1\n\
-	str r0, [r4, #0x58]\n\
-_0802C94E:\n\
-	ldr r0, [r7]\n\
-	movs r1, #0x80\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0802C962\n\
-	ldr r0, [r4, #0x58]\n\
-	movs r1, #0xc0\n\
-	lsls r1, r1, #1\n\
-	adds r0, r0, r1\n\
-	str r0, [r4, #0x58]\n\
-_0802C962:\n\
-	ldrb r1, [r5]\n\
-	lsls r1, r1, #3\n\
-	adds r1, r1, r6\n\
-	adds r0, r4, #0\n\
-	movs r2, #0\n\
-	bl PushoutByCeiling\n\
-	ldrb r1, [r5]\n\
-	lsls r1, r1, #3\n\
-	adds r1, r1, r6\n\
-	adds r0, r4, #0\n\
-	movs r2, #1\n\
-	bl PushoutByFloor1\n\
-	ldrb r1, [r5]\n\
-	lsls r1, r1, #3\n\
-	adds r1, r1, r6\n\
-	adds r0, r4, #0\n\
-	movs r2, #1\n\
-	bl PushoutByFloor2\n\
-	lsls r0, r0, #0x10\n\
-	cmp r0, #0\n\
-	beq _0802C996\n\
-	mov r0, r8\n\
-	str r0, [r4, #0x58]\n\
-_0802C996:\n\
-	movs r0, #0x90\n\
-	lsls r0, r0, #1\n\
-	adds r1, r4, r0\n\
-	ldrb r0, [r1]\n\
-	subs r0, #1\n\
-	movs r2, #0\n\
-	strb r0, [r1]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r0, #0xff\n\
-	beq _0802C9B6\n\
-	ldr r0, [r7]\n\
-	movs r1, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0802C9C2\n\
-_0802C9B6:\n\
-	movs r0, #1\n\
-	strb r0, [r4, #0xd]\n\
-	movs r0, #2\n\
-	strb r0, [r4, #0xe]\n\
-	strb r2, [r4, #0xf]\n\
-	str r2, [r4, #0x60]\n\
-_0802C9C2:\n\
-	pop {r3}\n\
-	mov r8, r3\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_0802C9CC: .4byte 0xFFFFFE80\n\
-_0802C9D0: .4byte 0x00000147\n\
-_0802C9D4: .4byte gZeroRanges\n\
- .syntax divided\n");
+static void zeroFloat2(struct Zero* z) {
+  s32 y = (z->s).coord.y;
+
+  if ((z->input).val & ZERO_INPUT_DPAD_RIGHT) {
+    (z->s).coord.x += PIXEL(3) / 2;
+    (z->s).spr.xflip = TRUE, (z->s).spr.oam.xflip = TRUE;
+    (z->s).flags |= X_FLIP;
+  }
+  if ((z->input).val & ZERO_INPUT_DPAD_LEFT) {
+    (z->s).coord.x -= PIXEL(3) / 2;
+    (z->s).spr.xflip = FALSE, (z->s).spr.oam.xflip = FALSE;
+    (z->s).flags &= ~X_FLIP;
+  }
+  PushoutWallX(z, &gZeroRanges[z->posture], 0);
+  PushoutWallX(z, &gZeroRanges[z->posture], 1);
+
+  if ((z->input).val & ZERO_INPUT_DPAD_UP) (z->s).coord.y -= PIXEL(3) / 2;
+  if ((z->input).val & ZERO_INPUT_DPAD_DOWN) (z->s).coord.y += PIXEL(3) / 2;
+  PushoutByCeiling(z, &gZeroRanges[z->posture], 0);
+  PushoutByFloor1(z, &gZeroRanges[z->posture], 1);
+  if (PushoutByFloor2(z, &gZeroRanges[z->posture], 1)) {
+    (z->s).coord.y = y;
+  }
+
+  if ((--z->floatTimer == 0xFF) || ((z->input).val & ZERO_INPUT_PRESS_JUMP)) {
+    (z->s).mode[1] = ZERO_AIR, (z->s).mode[2] = 2, (z->s).mode[3] = 0;
+    (z->s).d.y = 0;
+  }
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
