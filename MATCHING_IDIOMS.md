@@ -242,6 +242,79 @@ against `thumb_func_start` names across the two trees.
 
 ---
 
+## 5. Addendum (2026-06 → 07) — newer idioms & corrections
+
+### The dual-form fallback (the sanctioned "won't match" resolution)
+When a function is byte-correct logically but blocked by a **C-unreachable** codegen
+decision (a register-allocation tie, a fold that erases a retail duplicate, a
+loop-invariant hoist), don't leave it `NAKED`. **Dual-form it:**
+```c
+NON_MATCH void foo(struct X* p) {
+#if MODERN
+  <clean, readable C — the real decompilation>
+#else
+  INCCODE("asm/wip/foo.inc");   // the exact carved asm, byte-identical
+#endif
+}
+```
+Carve the asm body to `asm/wip/foo.inc` (strip the `\n\` C-string continuations and
+the `.syntax unified/divided` wrapper — do it with a script using `chr(92)`, a bash
+heredoc mangles the backslashes). Verify BOTH paths: `diff2.sh` MATCH on the INCCODE
+build **and** the MODERN branch compiles (`cpp … -DMODERN=1 | agbcc … -o /dev/null`
+with no errors). This keeps the ROM byte-perfect while preserving a clean, reviewable
+decompilation. Commit dual-forms like matches.
+
+### CORRECTION to §2.3 — jump-table state machines match CLEANLY
+The "brittle, reshape case labels" pessimism is wrong. A `mode`-dispatched `*_Update`
+reproduces agbcc's dispatch exactly if you pick the C construct by the asm shape:
+- **Dense jump table** (`cmp #N; bhi default; lsls #2; ldr =tbl; mov pc, r0`) ⇒ a
+  `switch ((p->s).mode[1])` over cases `0..N`. **An empty trailing `case N: break;`
+  extends the table's range** — agbcc sizes the table by the max case label, so a hole
+  at the top needs the explicit case to get `cmp #N`. Fall-through (no `break`) works;
+  agbcc auto tail-merges shared case tails (`SetMotion(m); mode[1]++`).
+- **2-few cases via sequential compares** (`cmp #0;beq;cmp #1;beq;b default`) ⇒ ALSO
+  a `switch`, **NOT** `if(m==0){}else if(m==1){}` (the if/else-if defers the 2nd
+  compare after the 1st block — wrong layout).
+- **Function-pointer TABLE call** (`ldr =tbl; ldrb idx; lsls #2; adds; ldr; bl _call_via_r1`)
+  ⇒ `tbl[(p->s).mode[1]](p)` with `tbl` a file-scope `const XxxFunc[]`.
+These branchy `*_Update`/dispatcher machines are one of the richest CLEAN veins (actor
+scripts, enemy/boss updates). Sub-idioms: `if (scriptEntity->flags & BIT)`;
+`(p->s).motion.state` (Entity.motion@0x6c + 7); `SET_XFLIP(&p->s,0)` inside
+`if((u8)work==0)` reuses the known-0 reg.
+
+### The bitfield-extraction lever — cracks the "bitfield wall" with NO struct change
+When the asm extracts a packed field with `lsls #(32-hi); lsrs #(32-width)` (agbcc's
+unsigned bitfield extract) but the field lives in a shared `u8`/`u32` you can't safely
+convert to a bitfield struct, reproduce it inline: a field at bits `[lo, lo+w)` of `x`
+is `((u32)x << (32-lo-w)) >> (32-w)` (e.g. bits 0-2 → `(u32)x<<29>>29`; bits 3-4 →
+`x<<27>>30`). The `(u32)` cast is REQUIRED (forces `lsrs`, not arithmetic `asrs`). When
+two fields are compared, bind each `<<` to its own temp so both left-shifts precede
+both right-shifts. This cracked functions previously flagged as needing risky struct
+edits, with zero shared-type changes.
+
+### Smaller levers
+- **`c ? x : x` and `if(c) return x; return x;` FOLD to one block.** agbcc's fold
+  collapses identical arms, so no fold-surviving C reproduces a retail *duplicated*
+  block guarded by a condition. Dual-form those.
+- **Ternary condition for a single shared block.** An either-side range test whose two
+  sign-branches run the SAME block matches as ONE ternary condition:
+  `if (diff>0 ? diff>K : x-zx>K) { <shared block> }` (agbcc emits one block reached by
+  both; the nested-if form lays the branch out differently).
+- **Macro-arg-as-a-local when a macro re-uses its parameter.** A loader macro that
+  substitutes `n` at several sites (`STATIC_GRAPHIC_LOADER`) re-evaluates an inline
+  expression per use with divergent codegen. Compute it once:
+  `motion_id_t id = sMotions[idx] >> 8; REQUEST_STATIC_GRAPHIC(id);`.
+- **Shared flip-value local.** For `SET_XFLIP(p, V)` then `f(..., (flags>>4)&V)`,
+  declare `bool8 v = 1;` and use it in BOTH so the constant coalesces into one reg
+  (else it materializes twice, +1 instr).
+- **RNG is the `LCG(s)` macro, not a wall.** `LCG(s) = (((s*0x343FD+0x269EC3)<<1)>>1)`
+  applied as `RNG_0202f388 = LCG(RNG_0202f388)`; `rand = (RNG_0202f388 >> N) & mask`.
+  What can still tie an RNG picker is register allocation around the loop (a
+  loop-invariant table base hoisted to a callee-saved reg vs retail re-loading it, in
+  a call-free function that also keeps its ptr in `ip`) → dual-form.
+
+---
+
 *Maintained alongside the agent memory notes (`reference_agbcc_match_idioms`,
 `reference_decomp_tooling`, `project_open_todos`). Add an idiom here every time a new
 agbcc quirk is cracked.*
