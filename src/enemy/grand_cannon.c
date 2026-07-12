@@ -152,8 +152,7 @@ static void FUN_0806910c(struct GrandCannon* p) {
 
 // --------------------------------------------
 
-NON_MATCH static void GrandCannon_Init(struct GrandCannon* p) {
-#if MODERN
+static void GrandCannon_Init(struct GrandCannon* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
   (p->s).mode[1] = sInitModes[(p->s).work[0]];
   (p->s).flags |= FLIPABLE;
@@ -163,15 +162,24 @@ NON_MATCH static void GrandCannon_Init(struct GrandCannon* p) {
   if ((p->s).work[0] == GRAND_CANNON_TURRET) {
     (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
     if (MOD_ENABLED(gSystemSavedataManager.mods, 105) && !FLAG(gCurStory.s.gameflags, DEMO_PLAY)) {
+      struct Body* body;
       (p->s).flags |= COLLIDABLE;
-      InitBody(&p->body, sCollisions, &(p->s).coord, 12);
+      body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 12);
+      body->parent = (void*)p;
+      body->fn = NULL;
     } else {
+      struct Body* body;
       (p->s).flags |= COLLIDABLE;
-      InitBody(&p->body, sCollisions, &(p->s).coord, 8);
+      body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 8);
+      body->parent = (void*)p;
+      body->fn = NULL;
     }
-    (&p->body)->parent = (struct CollidableEntity*)p;
-    (&p->body)->fn = NULL;
-    (&p->body)->fn = onCollision;
+    {
+      struct Body* body = &p->body;
+      body->fn = onCollision;
+    }
     CreateGrandCannonBattery((struct Entity*)p);
     (p->props).elementEffect = NULL;
   } else {
@@ -179,9 +187,6 @@ NON_MATCH static void GrandCannon_Init(struct GrandCannon* p) {
   }
 
   GrandCannon_Update((void*)p);
-#else
-  INCCODE("asm/wip/GrandCannon_Init.inc");
-#endif
 }
 
 NON_MATCH static void GrandCannon_Update(struct Enemy* p) {
