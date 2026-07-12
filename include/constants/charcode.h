@@ -2,8 +2,13 @@
 #define GUARD_RMZ3_CHARCODE_H
 
 #define CHAR_KANJI 0xF0
-#define CHAR_MUGSHOT 0xF3
+#define CHAR_MUGSHOT 0xF3  // = upstream CHAR_WINDOW
+#define CHAR_ANSWER 0xF4
+#define CHAR_F5 0xF5
+#define CHAR_F6 0xF6
 #define CHAR_VARIABLE 0xF9
+#define CHAR_TOP 0xFA
+#define CHAR_BOTTOM 0xFB
 #define CHAR_LF 0xFC
 #define CHAR_NEXT 0xFD
 

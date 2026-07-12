@@ -155,118 +155,51 @@ static void resetTextWindow(struct TextWindowText* t) {
   - TOP: w.y を 1 に
   - BOTTOM: w.y を 13
 */
-NAKED static void setupTextWindow(struct TextWindowText* t) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r3, r0, #0\n\
-	ldr r2, [r3, #0x1c]\n\
-	movs r4, #0xff\n\
-	movs r6, #0xff\n\
-	movs r0, #0\n\
-	str r0, [r3, #0x24]\n\
-	ldrb r0, [r2]\n\
-	cmp r0, #0xfc\n\
-	bhi _080EA884\n\
-	movs r5, #1\n\
-_080EA846:\n\
-	cmp r0, #0xf3\n\
-	bne _080EA858\n\
-	adds r2, #1\n\
-	ldrb r1, [r2]\n\
-	lsrs r0, r1, #1\n\
-	strb r0, [r3, #4]\n\
-	ands r1, r5\n\
-	strb r1, [r3, #6]\n\
-	b _080EA87C\n\
-_080EA858:\n\
-	cmp r0, #0xf5\n\
-	bne _080EA862\n\
-	adds r2, #1\n\
-	ldrb r4, [r2]\n\
-	b _080EA87C\n\
-_080EA862:\n\
-	cmp r0, #0xf6\n\
-	bne _080EA86C\n\
-	adds r2, #1\n\
-	ldrb r6, [r2]\n\
-	b _080EA87C\n\
-_080EA86C:\n\
-	cmp r0, #0xfa\n\
-	bne _080EA874\n\
-	strb r5, [r3, #5]\n\
-	b _080EA87C\n\
-_080EA874:\n\
-	cmp r0, #0xfb\n\
-	bne _080EA87C\n\
-	movs r0, #0xd\n\
-	strb r0, [r3, #5]\n\
-_080EA87C:\n\
-	adds r2, #1\n\
-	ldrb r0, [r2]\n\
-	cmp r0, #0xfc\n\
-	bls _080EA846\n\
-_080EA884:\n\
-	cmp r4, #0xff\n\
-	beq _080EA8AC\n\
-	strh r4, [r3, #0x16]\n\
-	ldr r2, [r3, #0x18]\n\
-	b _080EA890\n\
-_080EA88E:\n\
-	adds r2, #1\n\
-_080EA890:\n\
-	ldrb r0, [r2]\n\
-	cmp r0, #0xfe\n\
-	bhi _080EA8A4\n\
-	cmp r0, #0xf4\n\
-	bne _080EA88E\n\
-	ldrb r0, [r2, #1]\n\
-	cmp r0, r4\n\
-	bne _080EA88E\n\
-	adds r0, r2, #2\n\
-	str r0, [r3, #0x20]\n\
-_080EA8A4:\n\
-	ldrb r0, [r2]\n\
-	cmp r0, #0xff\n\
-	bne _080EA8BA\n\
-	b _080EA8B6\n\
-_080EA8AC:\n\
-	ldrb r0, [r2]\n\
-	cmp r0, #0xfd\n\
-	bhi _080EA8B6\n\
-	adds r0, r2, #1\n\
-	b _080EA8B8\n\
-_080EA8B6:\n\
-	movs r0, #0\n\
-_080EA8B8:\n\
-	str r0, [r3, #0x20]\n\
-_080EA8BA:\n\
-	cmp r6, #0xff\n\
-	beq _080EA8E2\n\
-	ldrb r0, [r3, #7]\n\
-	lsrs r0, r0, #4\n\
-	movs r1, #0x10\n\
-	orrs r0, r1\n\
-	strb r0, [r3, #7]\n\
-	ldr r2, [r3, #0x18]\n\
-	b _080EA8CE\n\
-_080EA8CC:\n\
-	adds r2, #1\n\
-_080EA8CE:\n\
-	ldrb r0, [r2]\n\
-	cmp r0, #0xfe\n\
-	bhi _080EA8E2\n\
-	cmp r0, #0xf4\n\
-	bne _080EA8CC\n\
-	ldrb r0, [r2, #1]\n\
-	cmp r0, r6\n\
-	bne _080EA8CC\n\
-	adds r0, r2, #2\n\
-	str r0, [r3, #0x24]\n\
-_080EA8E2:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+static void setupTextWindow(struct TextWindowText* t) {
+  char_t* s = t->current;
+  char_t unk_16 = 0xFF;
+  char_t c2 = 0xFF;
+  t->optional_next = NULL;
+  while (*s < CHAR_NEXT) {
+    if (*s == CHAR_MUGSHOT) {
+      char_t c = *(++s);
+      t->mugshot = c >> 1;
+      t->mugshotRight = c & 1;
+    } else if (*s == CHAR_F5) {
+      s++;
+      unk_16 = *s;
+    } else if (*s == CHAR_F6) {
+      s++;
+      c2 = *s;
+    } else if (*s == CHAR_TOP) {
+      t->y = 1;
+    } else if (*s == CHAR_BOTTOM) {
+      t->y = 13;
+    }
+    s++;
+  }
+
+  if (unk_16 != 0xFF) {
+    t->unk_16 = unk_16;
+    for (s = t->start; *s < 0xFF; s++) {
+      if (s[0] == CHAR_ANSWER && s[1] == unk_16) {
+        t->next = s + 2;
+        break;
+      }
+    }
+    if (*s == 0xFF) t->next = NULL;
+  } else {
+    t->next = (*s <= CHAR_NEXT) ? ++s : NULL;
+  }
+  if (c2 != 0xFF) {
+    t->optionID = (t->optionID >> 4) | (1 << 4);
+    for (s = t->start; *s < 0xFF; s++) {
+      if (s[0] == CHAR_ANSWER && s[1] == c2) {
+        t->optional_next = s + 2;
+        break;
+      }
+    }
+  }
 }
 
 // --------------------------------------------
