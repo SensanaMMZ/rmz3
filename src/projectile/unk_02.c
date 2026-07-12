@@ -47,22 +47,20 @@ struct Projectile* CreateProjectile2(struct Coord* c1, struct Coord* c2, u8 n) {
 // pointers separately; agbcc-from-clean-C (SET_XFLIP, which shares the post-if
 // writes, or the pointer-reused form) is several instr shorter — a retail-
 // suboptimal codegen quirk clean C can't reproduce. INCCODE for the byte-match.
-NON_MATCH static void Projectile2_Init(struct Projectile* p) {
-#if MODERN
+static void Projectile2_Init(struct Projectile* p) {
   InitNonAffineMotion(&p->s);
   (p->s).flags |= DISPLAY;
   (p->s).flags |= FLIPABLE;
   INIT_BODY(p, &sCollision, 1, NULL);
-  SET_XFLIP(p, (p->s).work[0]);
-  (p->s).work[2] = 0xff;
+  if ((p->s).work[0] == 0) {
+    SET_XFLIP(p, FALSE);
+  } else {
+    SET_XFLIP(p, TRUE);
+  }
+  (p->s).work[2] = 0xFF;
   SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
-  (p->s).mode[1] = 0;
-  (p->s).mode[2] = 0;
-  (p->s).mode[3] = 0;
+  (p->s).mode[1] = 0, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
   Projectile2_Update(p);
-#else
-  INCCODE("asm/wip/Projectile2_Init.inc");
-#endif
 }
 
 static void updateProjectile2(struct Projectile* p);
