@@ -114,98 +114,40 @@ _080E634C: .4byte gWidgetFnTable\n\
  .syntax divided\n");
 }
 
-NAKED static void MenuComp1_Update(struct Widget* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r4, r0, #0\n\
-	ldr r5, [r4, #0x28]\n\
-	ldr r0, _080E6380 @ =0x00000DCC\n\
-	adds r2, r5, r0\n\
-	ldrb r0, [r2, #4]\n\
-	cmp r0, #0\n\
-	beq _080E6388\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0xfe\n\
-	ands r0, r1\n\
-	movs r1, #0xfd\n\
-	ands r0, r1\n\
-	strb r0, [r4, #0xa]\n\
-	ldr r1, _080E6384 @ =gWidgetFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #3\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #0xc]\n\
-	str r0, [r4, #0x14]\n\
-	b _080E63F4\n\
-	.align 2, 0\n\
-_080E6380: .4byte 0x00000DCC\n\
-_080E6384: .4byte gWidgetFnTable\n\
-_080E6388:\n\
-	ldr r0, [r4, #0x64]\n\
-	ldr r1, [r4, #0x68]\n\
-	str r0, [r4, #0x54]\n\
-	str r1, [r4, #0x58]\n\
-	ldrb r0, [r4, #0x12]\n\
-	ldrb r1, [r2]\n\
-	cmp r0, r1\n\
-	beq _080E63D0\n\
-	ldrb r0, [r4, #0x10]\n\
-	cmp r0, r1\n\
-	bne _080E63B8\n\
-	ldr r0, _080E63B4 @ =sMenuComp1Motions\n\
-	ldrb r1, [r4, #0x10]\n\
-	lsls r1, r1, #2\n\
-	adds r0, #2\n\
-	adds r1, r1, r0\n\
-	ldrh r1, [r1]\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	b _080E63C8\n\
-	.align 2, 0\n\
-_080E63B4: .4byte sMenuComp1Motions\n\
-_080E63B8:\n\
-	ldr r0, _080E63FC @ =sMenuComp1Motions\n\
-	ldrb r1, [r4, #0x10]\n\
-	lsls r1, r1, #2\n\
-	adds r1, r1, r0\n\
-	ldrh r1, [r1]\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-_080E63C8:\n\
-	ldr r1, _080E6400 @ =0x00000DCC\n\
-	adds r0, r5, r1\n\
-	ldrb r0, [r0]\n\
-	strb r0, [r4, #0x12]\n\
-_080E63D0:\n\
-	adds r0, r4, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldr r0, [r4, #0x54]\n\
-	ldr r1, [r4, #0x58]\n\
-	str r0, [r4, #0x64]\n\
-	str r1, [r4, #0x68]\n\
-	ldr r0, _080E6404 @ =gVideoRegBuffer+16\n\
-	ldrh r1, [r0]\n\
-	movs r0, #0x80\n\
-	lsls r0, r0, #1\n\
-	cmp r1, r0\n\
-	bls _080E63F4\n\
-	ldr r0, [r4, #0x54]\n\
-	movs r1, #0x80\n\
-	lsls r1, r1, #0xa\n\
-	adds r0, r0, r1\n\
-	str r0, [r4, #0x54]\n\
-_080E63F4:\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080E63FC: .4byte sMenuComp1Motions\n\
-_080E6400: .4byte 0x00000DCC\n\
-_080E6404: .4byte gVideoRegBuffer+16\n\
- .syntax divided\n");
+extern const motion_t sMenuComp1Motions[14];
+
+// Fully decoded. Residual is a 2-instruction tie in the selected-motion arm:
+// retail re-loads work[0] and adds 2 to the freshly-loaded table base at
+// runtime, where agbcc-from-clean-C reuses work[0] and folds the +2 into the
+// pool literal (2 instr shorter). INCCODE for the byte-match.
+NON_MATCH static void MenuComp1_Update(struct Widget* p) {
+#if MODERN
+  struct GameState* g = (struct GameState*)(p->s).unk_28;
+  struct MenuState* m = MENU;
+
+  if (((u8*)m)[4] != 0) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    SET_WIDGET_ROUTINE(p, ENTITY_DISAPPEAR);
+  } else {
+    (p->s).coord = (p->s).unk_coord;
+    if ((p->s).work[2] != m->unk_00[0]) {
+      if ((p->s).work[0] == m->unk_00[0]) {
+        SetMotion(&p->s, sMenuComp1Motions[(p->s).work[0] * 2 + 1]);
+      } else {
+        SetMotion(&p->s, sMenuComp1Motions[(p->s).work[0] * 2]);
+      }
+      (p->s).work[2] = MENU->unk_00[0];
+    }
+    UpdateMotionGraphic(&p->s);
+    (p->s).unk_coord = (p->s).coord;
+    if (*(u16*)((u8*)&gVideoRegBuffer + 16) > 0x100) {
+      (p->s).coord.x += 0x20000;
+    }
+  }
+#else
+  INCCODE("asm/wip/MenuComp1_Update.inc");
+#endif
 }
 
 static void MenuComp1_Die(struct Widget* w) {
