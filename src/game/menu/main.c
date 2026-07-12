@@ -2906,29 +2906,23 @@ _080F5438: .4byte 0x00000E1D\n\
 // (mode[3]=0, SE 3). Matches structurally but retail keeps g in scratch r3 with
 // a redundant-load layout that clean C either CSEs (2 instr shorter) or trades
 // for a callee-saved reg — a register/CSE tie.
-NON_MATCH static void MainMenuFocusLoop_Escape(struct GameState* g) {
-#if MODERN
-  s32 x = MENU->unk_4b;
-  switch (x) {
+static void MainMenuFocusLoop_Escape(struct GameState* g) {
+  switch (MENU->unk_4b) {
     case 0:
       MENU->unk_4b = 1;
       break;
     case 1:
-      x &= gJoypad[0].pressed;
-      if (x) {
-        gStageRun.missionStatus = (gStageRun.missionStatus & 0xFFFE) | 0x20;
-        g->mode[1] = 3;
-        g->mode[2] = 3;
-        PlaySound(2);
+      if (gJoypad[0].pressed & A_BUTTON) {
+        gStageRun.missionStatus &= ~MISSION_STAY;
+        gStageRun.missionStatus |= MISSION_ESCAPE;
+        g->mode[1] = 3, g->mode[2] = 3;
+        PlaySound(SE_YES);
       } else if (gJoypad[0].pressed & B_BUTTON) {
-        g->mode[3] = x;
-        PlaySound(3);
+        g->mode[3] = 0;
+        PlaySound(SE_NO);
       }
       break;
   }
-#else
-  INCCODE("asm/wip/MainMenuFocusLoop_Escape.inc");
-#endif
 }
 
 // --------------------------------------------

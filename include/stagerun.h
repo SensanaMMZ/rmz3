@@ -21,7 +21,7 @@
 #define STOP_TIME_COUNT (1 << 2)
 #define MISSION_FAIL (1 << 3)
 #define MISSION_SUCCESS (1 << 4)
-#define MISSION_B5 (1 << 5)
+#define MISSION_ESCAPE (1 << 5)  // メニュー画面でエスケープを決定すると MISSION_STAY のクリアと共に セットされるフラグ
 #define DISABLE_MENU (1 << 6)
 #define EVENT_SCENE (1 << 7)
 

@@ -527,7 +527,7 @@ NON_MATCH static void GameLoop_CloseMenu(struct GameState* p) {
       LoadZeroPalette(&z->s, color);
     }
 
-    if (gStageRun.missionStatus & MISSION_B5) {
+    if (gStageRun.missionStatus & MISSION_ESCAPE) {
       gVideoRegBuffer.dispcnt &= ~DISPCNT_BG_ALL_ON;
       gVideoRegBuffer.dispcnt |= DISPCNT_BG0_ON;
       SetGameMode(p, GAMEMODE(MAINGAME, CHANGE_MAP, 0, 0));
