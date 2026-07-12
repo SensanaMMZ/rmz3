@@ -3,9 +3,12 @@
 #include "global.h"
 #include "motion.h"
 #include "stagerun.h"
+#include "zero.h"
 
 static const u8 sInitModes[4];
 static const struct Collision sCollisions[];
+extern const u8 u8_ARRAY_ARRAY_0836202c[3][16];
+extern const u8 u8_ARRAY_0836205c[4];
 
 static void Childre_Init(struct Boss* p);
 static void Childre_Update(struct Boss* p);
@@ -21,106 +24,45 @@ const BossRoutine gChildreRoutine = {
 };
 // clang-format on
 
-NAKED void childre_08040428(struct Boss* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	mov ip, r0\n\
-	ldr r0, _0804044C @ =pZero2\n\
-	ldr r0, [r0]\n\
-	ldr r1, [r0, #0x54]\n\
-	mov r2, ip\n\
-	ldr r0, [r2, #0x54]\n\
-	subs r3, r1, r0\n\
-	cmp r3, #0\n\
-	bge _0804043E\n\
-	rsbs r3, r3, #0\n\
-_0804043E:\n\
-	mov r4, ip\n\
-	adds r4, #0xc5\n\
-	ldr r6, _08040450 @ =RNG_0202f388\n\
-	mov r5, ip\n\
-	adds r5, #0xc4\n\
-	ldr r7, _08040454 @ =u8_ARRAY_0836205c\n\
-	b _0804045E\n\
-	.align 2, 0\n\
-_0804044C: .4byte pZero2\n\
-_08040450: .4byte RNG_0202f388\n\
-_08040454: .4byte u8_ARRAY_0836205c\n\
-_08040458:\n\
-	ldrb r0, [r4]\n\
-	cmp r0, #1\n\
-	bls _080404B4\n\
-_0804045E:\n\
-	ldr r1, [r6]\n\
-	ldr r0, _08040484 @ =0x000343FD\n\
-	muls r0, r1, r0\n\
-	ldr r1, _08040488 @ =0x00269EC3\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #1\n\
-	lsrs r1, r0, #1\n\
-	str r1, [r6]\n\
-	lsrs r1, r0, #0x11\n\
-	movs r0, #0xf\n\
-	ands r1, r0\n\
-	adds r2, r1, #0\n\
-	ldr r0, _0804048C @ =0x00004FFF\n\
-	cmp r3, r0\n\
-	bgt _08040494\n\
-	ldr r0, _08040490 @ =u8_ARRAY_ARRAY_0836202c\n\
-	adds r0, r1, r0\n\
-	b _080404AC\n\
-	.align 2, 0\n\
-_08040484: .4byte 0x000343FD\n\
-_08040488: .4byte 0x00269EC3\n\
-_0804048C: .4byte 0x00004FFF\n\
-_08040490: .4byte u8_ARRAY_ARRAY_0836202c\n\
-_08040494:\n\
-	ldr r0, _080404A0 @ =0x00008FFF\n\
-	cmp r3, r0\n\
-	bgt _080404A8\n\
-	ldr r0, _080404A4 @ =u8_ARRAY_ARRAY_0836202c+16\n\
-	adds r0, r1, r0\n\
-	b _080404AC\n\
-	.align 2, 0\n\
-_080404A0: .4byte 0x00008FFF\n\
-_080404A4: .4byte u8_ARRAY_ARRAY_0836202c+16\n\
-_080404A8:\n\
-	ldr r0, _080404C0 @ =u8_ARRAY_ARRAY_0836202c+32\n\
-	adds r0, r2, r0\n\
-_080404AC:\n\
-	ldrb r1, [r0]\n\
-	ldrb r0, [r5]\n\
-	cmp r0, r1\n\
-	beq _08040458\n\
-_080404B4:\n\
-	ldrb r0, [r5]\n\
-	cmp r0, r1\n\
-	bne _080404C4\n\
-	ldrb r0, [r4]\n\
-	adds r0, #1\n\
-	b _080404C8\n\
-	.align 2, 0\n\
-_080404C0: .4byte u8_ARRAY_ARRAY_0836202c+32\n\
-_080404C4:\n\
-	movs r0, #0\n\
-	strb r1, [r5]\n\
-_080404C8:\n\
-	strb r0, [r4]\n\
-	adds r0, r1, r7\n\
-	ldrb r0, [r0]\n\
-	mov r2, ip\n\
-	strb r0, [r2, #0xd]\n\
-	cmp r1, #1\n\
-	bhi _080404D8\n\
-	strb r1, [r2, #0x12]\n\
-_080404D8:\n\
-	movs r0, #0\n\
-	mov r1, ip\n\
-	strb r0, [r1, #0xe]\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// Picks the next childre action: an RNG index into a distance-selected row of
+// u8_ARRAY_ARRAY_0836202c, retried while it repeats the last action (up to the
+// repeat counter), then maps it to a motion via u8_ARRAY_0836205c. Retail keeps
+// the boss ptr in ip and re-loads the row-table base each loop iteration; agbcc
+// hoists that loop-invariant base into a callee-saved reg, an allocation it
+// won't reproduce from clean C, so dual-form it.
+NON_MATCH void childre_08040428(struct Boss* p) {
+#if MODERN
+  u8 action;
+  s32 dx = pZero2->s.coord.x - (p->s).coord.x;
+  if (dx < 0) {
+    dx = -dx;
+  }
+  do {
+    u32 rand;
+    RNG_0202f388 = LCG(RNG_0202f388);
+    rand = (RNG_0202f388 >> 17) & 0xf;
+    if (dx <= 0x4FFF) {
+      action = u8_ARRAY_ARRAY_0836202c[0][rand];
+    } else if (dx <= 0x8FFF) {
+      action = u8_ARRAY_ARRAY_0836202c[1][rand];
+    } else {
+      action = u8_ARRAY_ARRAY_0836202c[2][rand];
+    }
+  } while (action == ((p->props).childre).unk_c4 && ((p->props).childre).unk_c5 > 1);
+  if (((p->props).childre).unk_c4 == action) {
+    ((p->props).childre).unk_c5++;
+  } else {
+    ((p->props).childre).unk_c4 = action;
+    ((p->props).childre).unk_c5 = 0;
+  }
+  (p->s).mode[1] = u8_ARRAY_0836205c[action];
+  if (action <= 1) {
+    (p->s).work[2] = action;
+  }
+  (p->s).mode[2] = 0;
+#else
+  INCCODE("asm/wip/childre_08040428.inc");
+#endif
 }
 
 static void onCollision(struct Body* body, struct Coord* c1, struct Coord* c2) {
