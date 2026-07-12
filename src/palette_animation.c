@@ -23,113 +23,30 @@ void RemoveAllPaletteAnimations(void) {
  * @brief CMD室の世界地図のような時間経過で色が変わるオブジェクトの色を変える処理(つまり点滅処理)を行う
  * @note 0x08003df4
  */
-NAKED void TransferAnimatedPalettesToPaletteBuffer(void) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	mov r7, r8\n\
-	push {r7}\n\
-	movs r7, #0\n\
-	ldr r0, _08003E68 @ =gPaletteAnimationManager\n\
-	mov r8, r0\n\
-	mov r5, r8\n\
-	adds r5, #0x20\n\
-	adds r6, r5, #0\n\
-_08003E06:\n\
-	lsls r0, r7, #1\n\
-	add r0, r8\n\
-	ldrh r0, [r0]\n\
-	cmp r0, #0\n\
-	beq _08003EAE\n\
-	ldrh r0, [r5, #0x10]\n\
-	cmp r0, #0\n\
-	bne _08003EAE\n\
-	ldr r2, [r5]\n\
-	ldrb r0, [r2, #2]\n\
-	ldrb r4, [r2, #1]\n\
-	subs r0, r0, r4\n\
-	adds r0, #1\n\
-	lsls r0, r0, #0x10\n\
-	lsrs r3, r0, #0x10\n\
-	ldrh r1, [r5, #0x12]\n\
-	mov ip, r1\n\
-	ldr r1, _08003E6C @ =0x000001FF\n\
-	adds r0, r1, #0\n\
-	mov r1, ip\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _08003E78\n\
-	ldrb r1, [r5, #0xc]\n\
-	ldr r0, [r5, #8]\n\
-	lsls r1, r1, #2\n\
-	adds r1, r1, r0\n\
-	movs r0, #0xd\n\
-	ldrsb r0, [r5, r0]\n\
-	ldr r1, [r1]\n\
-	lsls r0, r0, #1\n\
-	adds r0, r0, r1\n\
-	ldrb r0, [r0]\n\
-	lsls r3, r3, #0x10\n\
-	asrs r3, r3, #0x10\n\
-	muls r0, r3, r0\n\
-	lsls r0, r0, #1\n\
-	adds r0, #4\n\
-	adds r0, r2, r0\n\
-	lsls r1, r4, #1\n\
-	ldrh r2, [r5, #0x12]\n\
-	adds r1, r1, r2\n\
-	ldr r2, _08003E70 @ =gPaletteManager\n\
-	adds r1, r1, r2\n\
-	ldr r2, _08003E74 @ =0x001FFFFF\n\
-	ands r2, r3\n\
-	bl CpuSet\n\
-	b _08003EAE\n\
-	.align 2, 0\n\
-_08003E68: .4byte gPaletteAnimationManager\n\
-_08003E6C: .4byte 0x000001FF\n\
-_08003E70: .4byte gPaletteManager\n\
-_08003E74: .4byte 0x001FFFFF\n\
-_08003E78:\n\
-	ldrb r1, [r6, #0xc]\n\
-	ldr r0, [r6, #8]\n\
-	lsls r1, r1, #2\n\
-	adds r1, r1, r0\n\
-	movs r0, #0xd\n\
-	ldrsb r0, [r6, r0]\n\
-	ldr r1, [r1]\n\
-	lsls r0, r0, #1\n\
-	adds r0, r0, r1\n\
-	ldrb r0, [r0]\n\
-	lsls r3, r3, #0x10\n\
-	asrs r3, r3, #0x10\n\
-	muls r0, r3, r0\n\
-	lsls r0, r0, #1\n\
-	adds r0, #4\n\
-	adds r0, r2, r0\n\
-	lsls r1, r4, #1\n\
-	movs r2, #0x1f\n\
-	ands r1, r2\n\
-	ldrh r2, [r6, #0x12]\n\
-	adds r1, r1, r2\n\
-	ldr r2, _08003EC4 @ =gPaletteManager\n\
-	adds r1, r1, r2\n\
-	ldr r2, _08003EC8 @ =0x001FFFFF\n\
-	ands r2, r3\n\
-	bl CpuSet\n\
-_08003EAE:\n\
-	adds r5, #0x14\n\
-	adds r6, #0x14\n\
-	adds r7, #1\n\
-	cmp r7, #0xf\n\
-	ble _08003E06\n\
-	pop {r3}\n\
-	mov r8, r3\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_08003EC4: .4byte gPaletteManager\n\
-_08003EC8: .4byte 0x001FFFFF\n\
-	 .syntax divided\n");
+static inline void TransferPalettes(struct PaletteAnimation* b) {
+  struct MotionPltt* pal = b->pal;
+  s16 len = (pal->end - pal->start) + 1;  // number of colors (len*2 = bytes)
+  if ((b->palIdx & 0x1FF) == 0) {
+    s16 idx = (b->m).cmds[(b->m).step][(b->m).cmdIdx].spriteIdx;  // palette index to transfer
+    u16* src = (u16*)(pal + 1) + (idx * len);
+    s32 dst_byte_offset = b->palIdx + (pal->start << 1);
+    CpuCopy16(src, ((u8*)gPaletteManager.buf + dst_byte_offset), (len << 1));
+  } else {
+    s16 idx = (b->m).cmds[(b->m).step][(b->m).cmdIdx].spriteIdx;  // palette index to transfer
+    u16* src = (u16*)(pal + 1) + (idx * len);
+    s32 dst_byte_offset = b->palIdx + ((pal->start << 1) & 0x1F);
+    CpuCopy16(src, ((u8*)gPaletteManager.buf + dst_byte_offset), (len << 1));
+  }
+}
+
+void TransferAnimatedPalettesToPaletteBuffer(void) {
+  s32 i;
+  for (i = 0; i < MAX_PLTT_ANIM; i++) {
+    if (gPaletteAnimationManager.ids[i] != 0) {
+      struct PaletteAnimation* b = &gPaletteAnimationManager.blinks[i];
+      if (!b->paused) TransferPalettes(b);
+    }
+  }
 }
 
 /**
