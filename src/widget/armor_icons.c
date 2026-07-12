@@ -1,6 +1,7 @@
 #include "game.h"
 #include "global.h"
 #include "widget.h"
+#include "zero.h"
 
 /*
   ヘッド、ボディ、フットのチップリスト
@@ -101,128 +102,48 @@ static void ArmorIcons_Die(struct Entity* p) { SET_WIDGET_ROUTINE(p, ENTITY_EXIT
 
 // --------------------------------------------
 
-NAKED static void FUN_080e6ab8(struct Widget* w) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r5, r0, #0\n\
-	ldr r0, [r5, #0x28]\n\
-	ldr r1, _080E6B0C @ =0x000064AC\n\
-	adds r0, r0, r1\n\
-	ldr r4, [r0]\n\
-	ldr r1, _080E6B10 @ =gWidgetFnTable\n\
-	ldrb r0, [r5, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #1\n\
-	str r1, [r5, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #4]\n\
-	str r0, [r5, #0x14]\n\
-	adds r0, r5, #0\n\
-	bl InitNonAffineMotion\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #1\n\
-	orrs r0, r1\n\
-	movs r1, #2\n\
-	orrs r0, r1\n\
-	strb r0, [r5, #0xa]\n\
-	ldrb r0, [r5, #0x11]\n\
-	cmp r0, #0\n\
-	bne _080E6B18\n\
-	ldr r1, _080E6B14 @ =sHeadChipMotions\n\
-	adds r0, r4, #0\n\
-	adds r0, #0xb4\n\
-	ldrb r0, [r0, #0xf]\n\
-	lsls r0, r0, #1\n\
-	adds r0, r0, r1\n\
-	ldrh r1, [r0]\n\
-	adds r0, r5, #0\n\
-	bl SetMotion\n\
-	adds r0, r5, #0\n\
-	movs r1, #5\n\
-	bl ForceEntityPalette\n\
-	b _080E6B64\n\
-	.align 2, 0\n\
-_080E6B0C: .4byte 0x000064AC\n\
-_080E6B10: .4byte gWidgetFnTable\n\
-_080E6B14: .4byte sHeadChipMotions\n\
-_080E6B18:\n\
-	cmp r0, #1\n\
-	bne _080E6B48\n\
-	ldr r1, _080E6B40 @ =sBodyChipMotions\n\
-	adds r4, #0xb4\n\
-	ldrb r0, [r4, #0x10]\n\
-	lsls r0, r0, #1\n\
-	adds r0, r0, r1\n\
-	ldrh r1, [r0]\n\
-	adds r0, r5, #0\n\
-	bl SetMotion\n\
-	ldr r1, _080E6B44 @ =sBodyChipPalIDs\n\
-	ldrb r0, [r4, #0x10]\n\
-	adds r0, r0, r1\n\
-	ldrb r1, [r0]\n\
-	adds r0, r5, #0\n\
-	bl ForceEntityPalette\n\
-	b _080E6B64\n\
-	.align 2, 0\n\
-_080E6B40: .4byte sBodyChipMotions\n\
-_080E6B44: .4byte sBodyChipPalIDs\n\
-_080E6B48:\n\
-	ldr r1, _080E6BB0 @ =sFootChipMotions\n\
-	adds r0, r4, #0\n\
-	adds r0, #0xb4\n\
-	ldrb r0, [r0, #0x11]\n\
-	lsls r0, r0, #1\n\
-	adds r0, r0, r1\n\
-	ldrh r1, [r0]\n\
-	adds r0, r5, #0\n\
-	bl SetMotion\n\
-	adds r0, r5, #0\n\
-	movs r1, #5\n\
-	bl ForceEntityPalette\n\
-_080E6B64:\n\
-	adds r0, r5, #0\n\
-	adds r0, #0x4c\n\
-	movs r2, #0\n\
-	strb r2, [r0]\n\
-	adds r3, r5, #0\n\
-	adds r3, #0x4a\n\
-	ldrb r1, [r3]\n\
-	movs r0, #0x11\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	strb r0, [r3]\n\
-	ldrb r1, [r5, #0xa]\n\
-	movs r0, #0xef\n\
-	ands r0, r1\n\
-	strb r0, [r5, #0xa]\n\
-	subs r3, #1\n\
-	ldrb r1, [r3]\n\
-	movs r0, #0xd\n\
-	rsbs r0, r0, #0\n\
-	ands r0, r1\n\
-	movs r1, #8\n\
-	orrs r0, r1\n\
-	strb r0, [r3]\n\
-	movs r0, #0x9c\n\
-	lsls r0, r0, #8\n\
-	str r0, [r5, #0x54]\n\
-	ldr r1, _080E6BB4 @ =sChipHeight\n\
-	ldrb r0, [r5, #0x11]\n\
-	adds r0, r0, r1\n\
-	ldrb r0, [r0]\n\
-	lsls r0, r0, #8\n\
-	str r0, [r5, #0x58]\n\
-	adds r0, r5, #0\n\
-	adds r0, #0x79\n\
-	strb r2, [r0]\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080E6BB0: .4byte sFootChipMotions\n\
-_080E6BB4: .4byte sChipHeight\n\
- .syntax divided\n");
+extern const motion_t sHeadChipMotions[4];
+extern const motion_t sBodyChipMotions[6];
+extern const motion_t sFootChipMotions[8];
+extern const u8 sBodyChipPalIDs[6];
+extern const u8 sChipHeight[3];
+
+// Init the equipped-armor chip icon: show the player's currently-worn
+// head/body/foot chip (from z->unk_b4.status) using this icon's part
+// (work[1]). Then unflip, priority 2, fixed column x 0x9C00, row height per
+// part. Retail expands `flags |= DISPLAY | FLIPABLE` into two bit-ORs where
+// clean C folds to |3 (retail-suboptimal as in Weapon16_Init); INCCODE for the
+// byte-match.
+NON_MATCH static void FUN_080e6ab8(struct Widget* w) {
+#if MODERN
+  struct GameState* g = (struct GameState*)(w->s).unk_28;
+  struct Zero* z = *(struct Zero**)((u8*)g + 0x64AC);
+
+  SET_WIDGET_ROUTINE(w, ENTITY_UPDATE);
+  InitNonAffineMotion(&w->s);
+  (w->s).flags |= DISPLAY | FLIPABLE;
+  switch ((w->s).work[1]) {
+    case 0:
+      SetMotion(&w->s, sHeadChipMotions[HEAD]);
+      ForceEntityPalette(&w->s, 5);
+      break;
+    case 1:
+      SetMotion(&w->s, sBodyChipMotions[BODY(z)]);
+      ForceEntityPalette(&w->s, sBodyChipPalIDs[BODY(z)]);
+      break;
+    default:
+      SetMotion(&w->s, sFootChipMotions[FOOT]);
+      ForceEntityPalette(&w->s, 5);
+      break;
+  }
+  SET_XFLIP(w, 0);
+  (w->s).spr.oam.priority = 2;
+  (w->s).coord.x = 0x9C00;
+  (w->s).coord.y = sChipHeight[(w->s).work[1]] << 8;
+  w->props[5] = 0;
+#else
+  INCCODE("asm/wip/FUN_080e6ab8.inc");
+#endif
 }
 
 extern const motion_t sHeadChipMotions[4];
