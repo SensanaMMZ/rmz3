@@ -25,15 +25,11 @@ EWRAM_DATA struct MusicPlayerInfo gMPlayInfo_12 = {};
 EWRAM_DATA struct MusicPlayerInfo gMPlayInfo_13 = {};
 EWRAM_DATA struct MusicPlayerInfo gMPlayInfo_14 = {};
 
-NON_MATCH void InitSound(void) {
-#if MODERN
+void InitSound(void) {
   m4aSoundInit();
-  gSongCount = ARRAY_COUNT(gSongTable);
+  gSongCount = (u16)gNumSongs;
   SoundID1 = MUS_DUMMY;
   SoundID2 = MUS_DUMMY;
-#else
-  INCCODE("asm/wip/InitSound.inc");
-#endif
 }
 
 void StopAllMusics(void) {

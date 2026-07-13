@@ -9,6 +9,7 @@
 extern SoundID SoundID1;
 extern SoundID SoundID2;
 extern u32 gSongCount;
+extern char gNumSongs[];  // 絶対リンカシンボル(= 336); (u16)gNumSongs で 336 のランタイムキャストになる
 
 extern struct MusicPlayerTrack gMPlayTracks[21];
 
