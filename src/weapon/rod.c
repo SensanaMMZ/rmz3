@@ -1797,10 +1797,8 @@ const u8 u8_ARRAY_08361260[12] = {
 };
 
 // r4,r5 の reg swapが解決できないだけ
-NON_MATCH static void Rod_Init(struct Weapon* w) {
-#if MODERN
+static void Rod_Init(struct Weapon* w) {
   const struct Collision* collisions;
-  struct Body* body;
   struct Zero* z = (&PROP)->z;
 
   SET_WEAPON_ROUTINE(w, ENTITY_UPDATE);
@@ -1809,8 +1807,10 @@ NON_MATCH static void Rod_Init(struct Weapon* w) {
   (w->s).flags |= DISPLAY;
   (w->s).flags |= FLIPABLE;
   SetMotion(&w->s, sMotions[(w->s).work[0]]);
-  collisions = *gRodHitboxes[(w->s).work[0]];
+
+  collisions = gRodHitboxes[(w->s).work[0]][0];
   INIT_BODY(w, collisions, 1, NULL);
+
   if ((w->s).work[0] == 21) {
     PlaySound(SE_THOUSAND);
   } else if ((w->s).work[0] < 11) {
@@ -1818,43 +1818,46 @@ NON_MATCH static void Rod_Init(struct Weapon* w) {
   } else {
     PlaySound(SE_CHARGE_RECOIL);
   }
-  (&PROP)->comboLv = 1;
-  if ((gRodHitboxes[(w->s).work[0]][1]->nature) & (1 << 1)) {
-    (&PROP)->element = gRodElement[((&z->unk_b4)->status).element];
-    (&PROP)->atk = 8;
-  } else {
-    (&PROP)->element = gRodElement[0];
-    (&PROP)->atk = 8;
-    if (sMotions[(w->s).work[0]] & 1) {
-      (&PROP)->comboLv = 2;
+
+  {
+    (&PROP)->comboLv = 1;
+    if (gRodHitboxes[(w->s).work[0]][1]->nature & (1 << 1)) {
+      (&PROP)->element = gRodElement[((&z->unk_b4)->status).element];
+      (&PROP)->atk = 8;
+    } else {
+      (&PROP)->element = gRodElement[0];
+      (&PROP)->atk = 8;
+      if (sMotions[(w->s).work[0]] & 1) (&PROP)->comboLv = 2;
     }
-  }
-  if ((w->s).work[0] == 21) {
-    (&PROP)->atk = 6;
+    if ((w->s).work[0] == 21) (&PROP)->atk = 6;
+    (&PROP)->atk += CalcRodBonus(z);
   }
 
-  (&PROP)->atk += CalcRodBonus(z);
-  if ((&PROP)->comboLv != 0) {
-    body = &w->body;
-    InitWeaponBody(body, collisions, (&PROP)->atk, (&PROP)->element, -1, (&PROP)->comboLv);
-  } else {
-    body = &w->body;
-    InitWeaponBody(body, collisions, (&PROP)->atk, (&PROP)->element, -1, -1);
-  }
-  (&PROP)->unk_06 = 0;
-  if ((((&z->unk_b4)->status).exSkill & (1 << EXSKILL_ID_SOUL)) && (((w->s).work[0] == 12) || ((w->s).work[0] == 15))) {
-    if (((&z->unk_b4)->status).element == ELEMENT_FLAME) {
-      (&PROP)->unk_06 = 1;
-    } else {
-      (&PROP)->unk_06 = 2;
-    }
-  }
-  (&PROP)->unk_08 = 1;
-  body->fn = FUN_08039960;
-  Rod_Update(w);
+  {
+#if MODERN
+    struct Body* body;
 #else
-  INCCODE("asm/wip/Rod_Init.inc");
+    register struct Body* body asm("r4");
 #endif
+    if ((&PROP)->comboLv != 0) {
+      body = &w->body;
+      InitWeaponBody(body, collisions, (&PROP)->atk, (&PROP)->element, -1, (&PROP)->comboLv);
+    } else {
+      body = &w->body;
+      InitWeaponBody(body, collisions, (&PROP)->atk, (&PROP)->element, -1, -1);
+    }
+    (&PROP)->unk_06 = 0;
+    if ((((&z->unk_b4)->status).exSkill & (1 << EXSKILL_ID_SOUL)) && ((w->s).work[0] == 12 || (w->s).work[0] == 15)) {
+      if (((&z->unk_b4)->status).element == ELEMENT_FLAME) {
+        (&PROP)->unk_06 = 1;
+      } else {
+        (&PROP)->unk_06 = 2;
+      }
+    }
+    (&PROP)->unk_08 = 1;
+    body->fn = FUN_08039960;
+  }
+  Rod_Update((void*)w);
 }
 
 INCASM("asm/weapon/rod_pre.inc");

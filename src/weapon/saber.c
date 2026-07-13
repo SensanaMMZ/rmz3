@@ -513,34 +513,18 @@ static void saberDashRolling(struct Weapon* w) {
   }
 }
 
-NON_MATCH static void saberSmash(struct Weapon* w) {
-#if MODERN
-  const struct Saber_b4* b4 = &PROP;
-  struct Zero* z = b4->z;
+static void saberSmash(struct Weapon* w) {
+  struct Zero* z = PROP.z;
 
   if ((w->s).mode[2] == 0) {
-    switch (MOTION_VALUE(z)) {
-      case MOTION(DM027_ZERO_SABER_SMASH, 0x00): {
-        (w->s).flags &= ~DISPLAY;
-        if ((w->s).work[2] > 1) {
-          UpdateMotionGraphic(&w->s);
-          (w->s).flags |= DISPLAY;
-          InitWeaponBody(&w->body, gSaberCollisions[(w->s).work[0]][(w->s).motion.cmdIdx], b4->atk, b4->element, b4->nature, -1);
-          (w->s).mode[3]++;
-          break;
-        }
-        (w->s).work[2]++;
-        break;
-      }
-
-      case MOTION(DM027_ZERO_SABER_SMASH, 0x01): {
+    motion_t m = MOTION_VALUE(z);
+    switch (m) {
+      case MOTION(DM027_ZERO_SABER_SMASH, 1): {
         if ((w->s).work[0] == SABER_SMASH) {
-          SetMotion(&w->s, MOTION(DM100_RAKUSAIGA, 0x01));
+          SetMotion(&w->s, MOTION(DM100_RAKUSAIGA, 1));
         } else {
-          struct Zero_b4* b4;
-          SetMotion(&w->s, MOTION(DM100_RAKUSAIGA, 0x03));
-          b4 = &z->unk_b4;
-          if (((b4->status).element == ELEMENT_THUNDER) && (z->unk_13a == 0)) {
+          SetMotion(&w->s, MOTION(DM100_RAKUSAIGA, 3));
+          if ((((&z->unk_b4)->status).element == ELEMENT_THUNDER) && (z->unk_13a == 0)) {
             CreateSmashElec(z, &(w->s).coord, 0);
             CreateSmashElec(z, &(w->s).coord, 1);
           }
@@ -558,18 +542,26 @@ NON_MATCH static void saberSmash(struct Weapon* w) {
         SET_WEAPON_ROUTINE(w, ENTITY_DISAPPEAR);
         break;
       }
+
+      case MOTION(DM027_ZERO_SABER_SMASH, 0): {
+        (w->s).flags &= ~DISPLAY;
+        if ((w->s).work[2] > 1) {
+          UpdateMotionGraphic(&w->s);
+          (w->s).flags |= DISPLAY;
+          InitWeaponBody(&w->body, gSaberCollisions[(w->s).work[0]][(w->s).motion.cmdIdx], (&PROP)->atk, (&PROP)->element, (&PROP)->nature, -1);
+          (w->s).mode[3]++;
+          break;
+        }
+        (w->s).work[2]++;
+        break;
+      }
     }
 
     return;
   }
 
   UpdateMotionGraphic(&w->s);
-  if ((w->s).motion.state == MOTION_END) {
-    SET_WEAPON_ROUTINE(w, ENTITY_DIE);
-  }
-#else
-  INCCODE("asm/wip/saberSmash.inc");
-#endif
+  if ((w->s).motion.state == MOTION_END) SET_WEAPON_ROUTINE(w, ENTITY_DIE);
 }
 
 // --------------------------------------------
