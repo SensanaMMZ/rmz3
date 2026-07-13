@@ -8,7 +8,7 @@ static const struct Stage* UpdateStageTileset(struct Coord* c);
 static void loadStageLandscape(const struct Stage* p, const struct ChunkMap* map);
 static void TaskCB_UpdateOwGraphic(struct Overworld* ow, struct DrawPivot* tc);
 static void UpdateStageLayer(struct StageLayer* l, const struct Stage* s, struct Coord* c);
-static u8 FUN_080094f0(s32 x, s32 y);
+static u32 FUN_080094f0(s32 x, s32 y);
 static void ResetStageLayer(s32 n, const struct Stage* s);
 
 void ResetTerrain(struct TerrainROMPointer* terrain, metatile_attr_t* attr, Metatile* tiles, Screen* m, const struct ChunkMap* map);
@@ -274,7 +274,7 @@ metatile_attr_t GetMetatileAttr(s32 x, s32 y) {
     - シュリンポリンの潜伏空間
     - etc...
 */
-bool8 IsVoidSpace(s32 x, s32 y) { return FUN_080094f0(x, y) == 0xF0; }
+bool8 IsVoidSpace(s32 x, s32 y) { return ((u8)FUN_080094f0(x, y)) == 0xF0; }
 
 /*
   ゼロが3Dドアの有効範囲にいるかをチェックするのに使用
@@ -289,40 +289,42 @@ void FUN_08008eb8(s32 x, s32 y, struct Coord* c) {
 }
 
 // カメラの位置に関係
-NON_MATCH void CalcCameraDelta(struct Coord* c, struct Coord* d) {
-#if MODERN
-  u32 a, b;
+void CalcCameraDelta(struct Coord* c, struct Coord* d) {
   d->x = d->y = 0;
-  a = FUN_080094f0(c->x, c->y);
-
-  b = FUN_080094f0(c->x - (SCREEN_WIDTH / 2), c->y) - 1;
-  if (2 < (u8)(a - b)) {
-    d->x += (SCREEN_WIDTH / 2) - (c->x % (SCREEN_WIDTH / 2));
-  }
-  b = FUN_080094f0(c->x + (SCREEN_WIDTH / 2), c->y) - 1;
-  if (2 < (u8)(a - b)) {
-    d->x -= (c->x % (SCREEN_WIDTH / 2));
-  }
-
-  if (a < 14) {
-    b = FUN_080094f0(c->x, c->y - (SCREEN_HEIGHT / 2)) - 1;
-    if (2 < (u8)(a - b)) {
-      d->y += (SCREEN_HEIGHT / 2) - (c->y % (SCREEN_HEIGHT / 2));
+  {
+    u8 a = FUN_080094f0(c->x, c->y);
+    {
+      u32 b = FUN_080094f0(c->x - PIXEL(120), c->y) - 1;
+      if ((u8)(a - b) > 2) {
+        d->x += PIXEL(120) - (c->x % PIXEL(120));
+      }
     }
-    b = FUN_080094f0(c->x, c->y + (SCREEN_HEIGHT / 2)) - 1;
-    if (2 < (u8)(a - b)) {
-      d->y -= (c->y % (SCREEN_HEIGHT / 2));
+    {
+      u32 b = FUN_080094f0(c->x + PIXEL(120), c->y) - 1;
+      if ((u8)(a - b) > 2) {
+        d->x -= c->x % PIXEL(120);
+      }
     }
 
-  } else if (a == 14) {
-    d->y = 0xF000 - (c->y % SCREEN_HEIGHT);
-
-  } else {
-    d->y = -(SCREEN_HEIGHT / 2) - (c->y % SCREEN_HEIGHT);
+    if (a < 14) {
+      {
+        u32 b = FUN_080094f0(c->x, c->y - PIXEL(80)) - 1;
+        if ((u8)(a - b) > 2) {
+          d->y += PIXEL(80) - (c->y % PIXEL(80));
+        }
+      }
+      {
+        u32 b = FUN_080094f0(c->x, c->y + PIXEL(80)) - 1;
+        if ((u8)(a - b) > 2) {
+          d->y -= c->y % PIXEL(80);
+        }
+      }
+    } else if (a == 14) {
+      d->y = PIXEL(240) - (c->y % PIXEL(160));
+    } else {
+      d->y = -PIXEL(80) - (c->y % PIXEL(160));
+    }
   }
-#else
-  INCCODE("asm/wip/CalcCameraDelta.inc");
-#endif
 }
 
 /*
@@ -372,24 +374,22 @@ NON_MATCH static void loadStageLandscape(const struct Stage* p, const struct Chu
 }
 
 // (s.x, s.row+s.y) -> (x, s.row+y) にメタタイルをずらす
-NON_MATCH void ShiftMetatile(s32 x, s32 y, const struct MetatileShift* s) {
-#if MODERN
+void ShiftMetatile(s32 x16, s32 y16, const struct MetatileShift* s) {
   s32 i;
-  u8 id = W_TERRAIN_V2.id & 0x7F;
+  const u8 id = gOverworld.terrain.id & 0x7F;
   const struct Stage* stage = gStageLandscape[id];
-  u16* map = &gOverworld.terrain.tilemap[2];
-  u32 w = (u32)((stage->maps[0])->width) * 15;
-  u16* dst = &map[((s->row + y) * w) + x];
-  u16* src = &map[((s->row + s->y) * w) + s->x];
+  u16* dst = &gOverworld.terrain.tilemap[2];
+  u16* src = &gOverworld.terrain.tilemap[2];
+
+  // 1番下の行から上にコピーしていく
+  u32 w = (u32)((stage->maps[0])->width) * 15;  // ステージの横幅(メタタイル単位)
+  dst = &dst[(w * (y16 + s->row)) + x16];
+  src = &src[(w * (s->y + s->row)) + s->x];
   for (i = 0; i < s->row; i++) {
-    dst -= w;
-    src -= w;
+    dst -= w, src -= w;  // 上の行へ (-16px)
     CopyMemory(src, dst, s->block << 1);
   }
   gOverworld.terrain.tilemap_duty = TRUE;
-#else
-  INCCODE("asm/wip/ShiftMetatile.inc");
-#endif
 }
 
 /*
@@ -537,7 +537,7 @@ void DrawGeneralStageLayer(struct StageLayer* l, const struct Stage* _) {
 /**
  * @return 0..15: カメラに関する値, 0xF0: Void Space
  */
-static u8 FUN_080094f0(s32 x, s32 y) {
+static u32 FUN_080094f0(s32 x, s32 y) {
   const u16* arr;
   u32 row, col;
   u16 result;
