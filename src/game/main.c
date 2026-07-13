@@ -12,6 +12,7 @@
 #include "overworld.h"
 #include "pickup.h"
 #include "sound.h"
+#include "sram.h"
 #include "story.h"
 #include "system.h"
 #include "renderer.h"
@@ -729,7 +730,118 @@ xx (02030b62):
 
 02030b62 (処理フェイズ)に関わらず、選択肢の文字を描画する処理は行う(画面が真っ黒のときでも)
 */
-NAKED static void GameLoop_GameOver(struct GameState* p) { INCCODE("asm/todo/GameLoop_GameOver.inc"); }
+static void GameLoop_GameOver(struct GameState* g) {
+  switch (g->mode[2]) {
+    case 0: {
+      s16 i;
+      g->mode[3] = FALSE;
+      for (i = 0; i < 5; i++) {
+        if (CheckSavedataCorrect(i, SAVE_SLOT_SIZE)) g->mode[3] = TRUE;
+      }
+      gVideoRegBuffer.dispcnt &= 0xFFF8;
+      gVideoRegBuffer.dispcnt &= ~DISPCNT_BG_ALL_ON;
+      gVideoRegBuffer.dispcnt |= DISPCNT_WIN0_ON | DISPCNT_OBJ_ON | DISPCNT_BG3_ON | DISPCNT_BG2_ON | DISPCNT_BG0_ON;
+      BGCNT16(2) = BGCNT_PRIORITY(2) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(4);
+      *(u32*)gVideoRegBuffer.bgofs[2] = 0;
+      BGCNT16(3) = BGCNT_PRIORITY(2) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(6);
+      *(u32*)gVideoRegBuffer.bgofs[3] = 0;
+      LoadGraphic(BG_GRAPHIC(102), (void*)0x4000);
+      LoadPalette(BG_PALETTE(102), 0);
+      LoadBgMap(USE_BG2, gBgMapOffsets, 103, 0, 0);
+      LoadBgMap(USE_BG3, gBgMapOffsets, BG_GAMEOVER_KATAKANA, 0, 0);
+      LoadAsciiBold();
+      FUN_080e981c();
+      g->frames = 0;
+      g->mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      g->frames++;
+      gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = g->frames;
+      if (g->frames < 0x20) {
+        break;
+      }
+      playBGM(BGM_GUARDER_ROOM);
+      g->unk_006 = 0;
+      g->mode[2]++;
+      FALLTHROUGH;
+    }
+    case 2: {
+      if (gJoypad[0].field3_0x6 & DPAD_UP) {
+        PlaySound(SE_CURSOR);
+        g->unk_006 = (g->unk_006 + 2) % 3;
+        if ((g->unk_006 == 1) && (g->mode[3] == 0)) g->unk_006--;
+      }
+      if (gJoypad[0].field3_0x6 & DPAD_DOWN) {
+        PlaySound(SE_CURSOR);
+        g->unk_006 = (g->unk_006 + 1) % 3;
+        if ((g->unk_006 == 1) && (g->mode[3] == 0)) g->unk_006++;
+      }
+      if (gJoypad[0].field3_0x6 & (A_BUTTON | START_BUTTON)) {
+        PlaySound(SE_YES);
+        fadeoutBGM(BGM_GUARDER_ROOM);
+        g->frames = 0x20;
+        g->mode[2]++;
+      }
+      break;
+    }
+    case 3: {
+      g->frames--;
+      gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = g->frames;
+      if (g->frames != 0) {
+        break;
+      }
+      gVideoRegBuffer.dispcnt &= ~(DISPCNT_BG2_ON | DISPCNT_BG3_ON | DISPCNT_OBJ_ON | DISPCNT_WIN0_ON);
+      g->frames = 96;
+      g->mode[2]++;
+      FALLTHROUGH;
+    }
+    case 4: {
+      g->frames--;
+      if (g->frames == -1 || !_isSoundPlaying(BGM_GUARDER_ROOM)) {
+        if (g->unk_006 == 0) {
+          (gMission.unk_00)->extraLife = 2;
+          (gMission.unk_00)->rank = (g->save).savedRank;
+          {
+            void* src = &(g->save).zeroAsset;
+            void* dst = &(g->save).status;
+            u32 bytesize = sizeof(struct ZeroAsset);
+            MemCopy32(src, dst, bytesize);
+          }
+          resetCurStory((g->save).stageID, &(g->save).savedStory);
+          saveCurStory(&(g->save).story);
+          {
+            void* src = (g->save).savedDisk;
+            void* dst = (g->save).disk;
+            u32 bytesize = 48;
+            MemCopy32(src, dst, bytesize);
+          }
+          {
+            void* src = (g->save).savedElf;
+            void* dst = (g->save).elf;
+            u32 bytesize = 76;
+            MemCopy32(src, dst, bytesize);
+          }
+          InitStageRun((g->save).stageID);
+          SetGameMode(g, GAMEMODE(MAINGAME, PRE_OVERWORLD, 0, 0));
+        } else if (g->unk_006 == 1) {
+          SetGameMode(g, GAMEMODE(MAINGAME, CONTINUE_GAME, 0, 0));
+        } else {
+          ExitProcess();
+        }
+      }
+      break;
+    }
+  }
+  PrintString(STRING((g->unk_006 != 0) ? 521 : 520), 0, 8);
+  PrintString(STRING((g->unk_006 != 1) ? 523 : 522), 0, 10);
+  PrintString(STRING((g->unk_006 != 2) ? 525 : 524), 0, 12);
+  if (gProcessManager.masterFrame & 1) {
+    struct BgOfs* bg3ofs = (struct BgOfs*)gVideoRegBuffer.bgofs[3];
+    bg3ofs->x++;
+    bg3ofs->y--;
+  }
+}
 
 static void GameLoop_Nop10(struct GameState* p) { return; }  // 00 0a -- --
 
