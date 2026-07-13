@@ -2,7 +2,7 @@
 #include "gfx.h"
 #include "global.h"
 #include "overworld.h"
-#include "task.h"
+#include "renderer.h"
 
 extern s32 gConveyor;
 

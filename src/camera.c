@@ -8,9 +8,9 @@ static void focus(struct Camera* camera, u8 r1);
 
 void CalcCameraDelta(struct Coord* c1, struct Coord* c2);
 
-void Camera_Reset(struct Camera* camera, const struct CameraTemplate* template, struct TaskManager* tm) {
+void Camera_Reset(struct Camera* camera, const struct CameraTemplate* template, struct Renderer* tm) {
   camera->template = template;
-  camera->taskManager = tm;
+  camera->rendererMain = tm;
   (camera->viewport).x = 0;
   (camera->viewport).y = 0;
   ResetPivot(&camera->pivot, &camera->viewport, 0, 0);
@@ -32,10 +32,10 @@ void Camera_Shake(struct Camera* camera) {
 }
 
 void Camera_Render(struct Camera* camera) {
-  struct TaskManager* tm = camera->taskManager;
+  struct Renderer* tm = camera->rendererMain;
   if (camera->mode != 0) {
-    SetTaskPivot(tm, &camera->pivot);
-    RunAllTasks(tm);
+    Renderer_SetPivot(tm, &camera->pivot);
+    Renderer_Flush(tm);
   }
 }
 

@@ -654,8 +654,8 @@ static void sd_analysis_080f83ac(struct GameState* g) {
   c->x = PIXEL(120);
   c->y = PIXEL(80);
   ResetPivot(&g->unk_0db8, c, 0, 0);
-  ResetTaskManager(&g->taskManager2);
-  SetTaskPivot(&g->taskManager2, &g->unk_0db8);
+  Renderer_Init(&g->rendererUI);
+  Renderer_SetPivot(&g->rendererUI, &g->unk_0db8);
   InitWidgetHeader(&g->entityHeaders[ENTITY_WIDGET], gWidgets, 64);
 }
 
@@ -663,10 +663,10 @@ static void sd_analysis_080f8408(struct GameState* g) {
   struct Coord* c = &g->unk_0dc4;
   const u16* bg1ofs = gVideoRegBuffer.bgofs[1];
   c->x = PIXEL(bg1ofs[0] & 0x1FF) + PIXEL(120);
-  ClearTaskBuffer(&g->taskManager2);
+  Renderer_Clear(&g->rendererUI);
   UpdateEntities(gWidgetHeaderPtr);
-  DrawEntity(gWidgetHeaderPtr, &g->taskManager2);
-  RunAllTasks(&g->taskManager2);
+  DrawEntity(gWidgetHeaderPtr, &g->rendererUI);
+  Renderer_Flush(&g->rendererUI);
 }
 
 NAKED static void setSecretDiskPalette(struct GameState* g) {

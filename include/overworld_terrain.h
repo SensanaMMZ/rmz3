@@ -81,8 +81,8 @@ struct Terrain {
 
 // gOverworld, ステージの動的な地形情報
 struct Overworld {
-  struct Task task;
-  struct Task* p;
+  struct RenderNode task;
+  struct RenderNode* p;
   u8 unk_0c[20];
   struct StageLayer layer[STAGE_LAYER_NUM];
   struct Terrain terrain;  // 0x020023b8, 現在のステージの地形データ
@@ -139,7 +139,7 @@ extern const struct TerrainHeader gStageTerrains[STAGE_COUNT];
 
 void ResetLandscape(s32 stageID, struct Coord* c);
 void UpdateStageLandscape(struct Coord* c);
-void DrawOverworld(struct TaskManager* p);
+void DrawOverworld(struct Renderer* p);
 void SaveDispRegister(void);
 void RestoreBackground(void);
 void ExitStageLandscape(void);

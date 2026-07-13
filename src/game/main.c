@@ -14,7 +14,7 @@
 #include "sound.h"
 #include "story.h"
 #include "system.h"
-#include "task.h"
+#include "renderer.h"
 #include "text.h"
 #include "weapon.h"
 #include "zero.h"
@@ -331,7 +331,7 @@ static void GameLoop_PreOverworld(struct GameState* p) {
   *(u32*)gVideoRegBuffer.bgofs[0] = 0;
   p->unk_1ed8 = 0xFFFFFFFF;
   p->inMenu = FALSE;
-  ResetTaskManager(&p->taskManager);
+  Renderer_Init(&p->rendererMain);
   ResetCollisionManager();
   ResetEntityEnvironment();
   RNG_0202f388 = (u32)(p->save).stageID;
@@ -351,7 +351,7 @@ static void GameLoop_PreOverworld(struct GameState* p) {
   ResetHUD((u16*)gGameState.bg0);
   ClearTextWindow((u16*)gGameState.bg0);
   SaveZeroStatus(p->z2, &(p->save).status);
-  ClearStageRun(&p->taskManager);
+  ClearStageRun(&p->rendererMain);
   p->mode[1]++;  // -> OVERWORLD
 }
 
@@ -366,7 +366,7 @@ NON_MATCH static void GameLoop_Overworld(struct GameState* p) {
   }
 
   p->unk_1ed8++;
-  ClearTaskBuffer(&p->taskManager);
+  Renderer_Clear(&p->rendererMain);
   gMatrixCount = 0;
   CpuFastFill(0, gWhitePaintFlags, 32);
 
@@ -447,7 +447,7 @@ NON_MATCH static void GameLoop_Overworld(struct GameState* p) {
   RunDamageEffect(gZeroHeaderPtr);
   RunDamageEffect(gPickupHeaderPtr);
 
-  struct TaskManager* tm = &p->taskManager;
+  struct Renderer* tm = &p->rendererMain;
   DrawCollidableEntity(gSolidHeaderPtr, tm);
   DrawCollidableEntity(gBossHeaderPtr, tm);
   DrawCollidableEntity(gEnemyHeaderPtr, tm);
@@ -498,8 +498,8 @@ static void GameLoop_OpenMenu(struct GameState* p) {
     SetGameMode(p, GAMEMODE(MODE_MENU, 0, 0, 0));
   } else {
     void* dst;
-    struct TaskManager* tm = &(p->taskManager);
-    ClearTaskBuffer(tm);
+    struct Renderer* tm = &(p->rendererMain);
+    Renderer_Clear(tm);
     ClearAllHitboxes();
     gMatrixCount = 0;
     dst = gWhitePaintFlags;
@@ -525,7 +525,7 @@ static void GameLoop_OpenMenu(struct GameState* p) {
 
 NON_MATCH static void GameLoop_CloseMenu(struct GameState* p) {
 #if MODERN
-  struct TaskManager* tm;
+  struct Renderer* tm;
   void* dst;
   s16 frames;
 
@@ -564,8 +564,8 @@ NON_MATCH static void GameLoop_CloseMenu(struct GameState* p) {
     p->mode[3]++;
   }
 
-  tm = &p->taskManager;
-  ClearTaskBuffer(tm);
+  tm = &p->rendererMain;
+  Renderer_Clear(tm);
   ClearAllHitboxes();
   gMatrixCount = 0;
   dst = gWhitePaintFlags;

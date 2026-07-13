@@ -1,7 +1,7 @@
 #include "entity.h"
 #include "gfx.h"
 #include "global.h"
-#include "task.h"
+#include "renderer.h"
 
 // リンクされる場所的に カプコン か インティクリエイツ で使いまわしてるライブラリの可能性がある (= ビルドフラグとか色々違う可能性がある)
 

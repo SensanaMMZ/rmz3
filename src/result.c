@@ -1551,18 +1551,18 @@ static void FUN_08024db4(void) {
   c->x = PIXEL(120);
   c->y = PIXEL(80);
   ResetPivot(&gGameState.unk_0db8, c, 0, 0);
-  ResetTaskManager(&gGameState.taskManager2);
-  SetTaskPivot(&gGameState.taskManager2, &gGameState.unk_0db8);
+  Renderer_Init(&gGameState.rendererUI);
+  Renderer_SetPivot(&gGameState.rendererUI, &gGameState.unk_0db8);
   InitWidgetHeader(&gGameState.entityHeaders[ENTITY_WIDGET], gWidgets, 64);
 }
 
 static void result_08024e0c(void) {
   struct Coord* c = &gGameState.unk_0dc4;
   c->x = PIXEL(BGOFS(1)->x & 0x1FF) + PIXEL(120);
-  ClearTaskBuffer(&gGameState.taskManager2);
+  Renderer_Clear(&gGameState.rendererUI);
   UpdateEntities(gWidgetHeaderPtr);
-  DrawEntity(gWidgetHeaderPtr, &gGameState.taskManager2);
-  RunAllTasks(&gGameState.taskManager2);
+  DrawEntity(gWidgetHeaderPtr, &gGameState.rendererUI);
+  Renderer_Flush(&gGameState.rendererUI);
 }
 
 // clang-format off

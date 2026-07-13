@@ -5,7 +5,7 @@
 #include "entity.h"
 #include "gba/types.h"
 
-struct TaskManager;
+struct Renderer;
 struct Camera;
 
 typedef void (*CameraFunc)(struct Camera*);
@@ -31,7 +31,7 @@ struct CameraTemplate {
 struct Camera {
   struct Pivot pivot;
   const struct CameraTemplate* template;
-  struct TaskManager* taskManager;
+  struct Renderer* rendererMain;
   CameraFunc callback;  // 毎フレーム呼び出される
   s8 mode;
   u8 chaseMode;  // .target に .coord を近づける挙動モード
@@ -58,6 +58,6 @@ struct Camera {
 void Camera_Update(struct Camera* p);
 void Camera_Render(struct Camera* p);
 void Camera_Shake(struct Camera* p);
-void Camera_Reset(struct Camera* camera, const struct CameraTemplate* template, struct TaskManager* tm);
+void Camera_Reset(struct Camera* camera, const struct CameraTemplate* template, struct Renderer* tm);
 
 #endif  // GUARD_RMZ3_CAMERA_H

@@ -5,7 +5,7 @@
 #include "gfx.h"
 #include "global.h"
 #include "sound.h"
-#include "task.h"
+#include "renderer.h"
 #include "zero.h"
 
 static const struct PlttData gWeaponPalettes[5][SLOT_4BPP];
@@ -25,7 +25,7 @@ void InitWeaponHeader(struct EntityHeader *h, struct Weapon *w, s16 len) {
   }
 }
 
-void DrawWeapon(struct TaskManager *tm) {
+void DrawWeapon(struct Renderer *tm) {
   u16 i;
   for (i = 0; i < 4; i++) {
     if (gLastWeaponElements[i] != gWeaponElements[i]) {

@@ -4,7 +4,7 @@
 #include "global.h"
 #include "motion.h"
 #include "overworld.h"
-#include "task.h"
+#include "renderer.h"
 
 // 0x08016db4
 void ResetEntityEnvironment(void) {
@@ -113,7 +113,7 @@ NON_MATCH void RunDamageEffect(struct EntityHeader* h) {
 #endif
 }
 
-NON_MATCH void DrawEntity(struct EntityHeader* h, struct TaskManager* tm) {
+NON_MATCH void DrawEntity(struct EntityHeader* h, struct Renderer* tm) {
 #if MODERN
   struct Entity* p;
 
@@ -142,9 +142,9 @@ NON_MATCH void DrawEntity(struct EntityHeader* h, struct TaskManager* tm) {
         }
       }
       if (p->flags & OAM_PRIO) {
-        AppendTask(tm, (struct Task*)spr, (spr->oam).priority, p->taskCol);
+        Renderer_SendTask(tm, (struct RenderNode*)spr, (spr->oam).priority, p->taskCol);
       } else {
-        AppendTask(tm, (struct Task*)spr, 0, p->taskCol);
+        Renderer_SendTask(tm, (struct RenderNode*)spr, 0, p->taskCol);
       }
     }
     p = h->last->prev;
@@ -156,7 +156,7 @@ NON_MATCH void DrawEntity(struct EntityHeader* h, struct TaskManager* tm) {
 }
 
 // gWhitePaintFlags を見て白塗りにするか以外は DrawEntity と同じ
-NON_MATCH void DrawCollidableEntity(struct EntityHeader* h, struct TaskManager* tm) {
+NON_MATCH void DrawCollidableEntity(struct EntityHeader* h, struct Renderer* tm) {
 #if MODERN
   struct Entity* p;
 
@@ -190,9 +190,9 @@ NON_MATCH void DrawCollidableEntity(struct EntityHeader* h, struct TaskManager* 
             RotateSprite(spr, p->angle);
           }
         }
-        AppendTask(tm, (struct Task*)spr, (spr->oam).priority, p->taskCol);
+        Renderer_SendTask(tm, (struct RenderNode*)spr, (spr->oam).priority, p->taskCol);
       } else {
-        AppendTask(tm, (struct Task*)spr, 0, p->taskCol);
+        Renderer_SendTask(tm, (struct RenderNode*)spr, 0, p->taskCol);
       }
     }
 

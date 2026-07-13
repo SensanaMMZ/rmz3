@@ -401,7 +401,7 @@ _080EF32C:
 	lsls r3, r3, #4
 	adds r4, r7, r3
 	adds r0, r4, #0
-	bl ClearTaskBuffer
+	bl Renderer_Clear
 	bl ClearAllHitboxes
 	ldr r1, _080EF3D4 @ =0x0202F354
 	movs r0, #0

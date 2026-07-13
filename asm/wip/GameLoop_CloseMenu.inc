@@ -93,7 +93,7 @@ _080EEEB2:
 	lsls r0, r0, #4
 	adds r4, r5, r0
 	adds r0, r4, #0
-	bl ClearTaskBuffer
+	bl Renderer_Clear
 	bl ClearAllHitboxes
 	ldr r1, _080EEF84 @ =0x0202F354
 	movs r0, #0

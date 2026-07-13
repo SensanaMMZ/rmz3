@@ -7,7 +7,7 @@
 #include "game.h"
 #include "gba/types.h"
 #include "script.h"
-#include "task.h"
+#include "renderer.h"
 
 #define IS_DISK_UNLOCKED(flagbits, disk_id) ((flagbits[disk_id >> 2] & 0x0F) >> (disk_id & 3))
 
@@ -44,7 +44,7 @@ struct StageRun {
   u16 unk_0a;
   u32 frame;  // チェックポイントに降り立ってからステージ内で経過したフレーム、リトライするとリセット
   struct VM vm;
-  struct TaskManager* taskManager;
+  struct Renderer* rendererMain;
   u8 stageEventPhase;
   u8 unk_17d;
 
@@ -84,7 +84,7 @@ typedef s16 (*StageRunFunc)(struct StageRun*);  // s16 を返す根拠は 0x0801
 
 void InitStageRun(u8 stageID);
 void LoadStageRun(u8 stageID, u8 checkPoint);
-void ClearStageRun(struct TaskManager* tm);
+void ClearStageRun(struct Renderer* tm);
 bool32 OverworldUpdate(bool8 paused);
 void CameraUpdate(bool8 paused);
 void UpdateStoryFlag(void);

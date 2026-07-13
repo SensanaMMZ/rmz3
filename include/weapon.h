@@ -47,7 +47,7 @@ extern u16 gWeaponElements[WEAPON_KINDS];
 extern const u16 gWeaponTileNum[WEAPON_KINDS];
 extern const u8 gWeaponPalIDs[WEAPON_KINDS];
 
-void DrawWeapon(struct TaskManager* p);
+void DrawWeapon(struct Renderer* p);
 void DeleteWeapon(struct Weapon* w);
 void SetWeaponElement(u16 n, u16 val);
 void KillAllWeapons(WeaponFunc fn);

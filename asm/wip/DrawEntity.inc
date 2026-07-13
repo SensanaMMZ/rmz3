@@ -89,7 +89,7 @@ _0801703E:
 	ldrb r3, [r0]
 	mov r0, sb
 	adds r1, r5, #0
-	bl AppendTask
+	bl Renderer_SendTask
 	b _0801706E
 _0801705E:
 	adds r0, r4, #0
@@ -98,7 +98,7 @@ _0801705E:
 	mov r0, sb
 	adds r1, r5, #0
 	movs r2, #0
-	bl AppendTask
+	bl Renderer_SendTask
 _0801706E:
 	ldr r0, [r6, #0xc]
 	ldr r0, [r0, #4]

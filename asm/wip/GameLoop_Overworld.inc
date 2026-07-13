@@ -34,7 +34,7 @@ _080EE89A:
 	movs r1, #0x9a
 	lsls r1, r1, #4
 	adds r0, r7, r1
-	bl ClearTaskBuffer
+	bl Renderer_Clear
 	ldr r1, _080EE918 @ =0x0202F354
 	movs r0, #0
 	strb r0, [r1]

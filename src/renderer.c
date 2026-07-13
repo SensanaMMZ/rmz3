@@ -1,4 +1,4 @@
-#include "task.h"
+#include "renderer.h"
 
 #include "entity.h"
 #include "global.h"
@@ -6,7 +6,7 @@
 #include "sprite.h"
 #include "story.h"
 
-void ResetTaskManager(struct TaskManager* tm) {
+void Renderer_Init(struct Renderer* tm) {
   CpuFastFill(0, tm->buffer, TASK_LENGTH * 4);
   {
     vu32 _;
@@ -16,23 +16,23 @@ void ResetTaskManager(struct TaskManager* tm) {
   tm->_ = NULL;
 }
 
-void SetTaskPivot(struct TaskManager* tm, struct Pivot* pivot) {
+void Renderer_SetPivot(struct Renderer* tm, struct Pivot* pivot) {
   tm->pivot = pivot;
   return;
 }
 
-static void unused_08004e58(struct TaskManager* tm, void* r1) {
+static void unused_08004e58(struct Renderer* tm, void* r1) {
   tm->_ = r1;
   return;
 }
 
-void PrependTask(struct TaskManager* tm, struct Task* task) {
+void Renderer_PrependTask(struct Renderer* tm, struct RenderNode* task) {
   task->next = (*tm->tasks)[0];
   (*tm->tasks)[0] = task;
 }
 
-static void unused_08004e74(struct TaskManager* tm, struct Task* task, s16 row) {
-  struct Task* cur = (*tm->tasks)[row * 32];
+static void unused_08004e74(struct Renderer* tm, struct RenderNode* task, s16 row) {
+  struct RenderNode* cur = (*tm->tasks)[row * 32];
   task->next = cur;
   (*tm->tasks)[row * 32] = task;
 }
@@ -49,23 +49,23 @@ tn は タスク1つではなくタスクのリンクリスト (t0なら t0 -> t
 
 (row*32) + col が　0 に近いものが先に描画され、後から描画するものがそれを上書きしていく
 */
-void AppendTask(struct TaskManager* tm, struct Task* task, s16 row, s16 col) {
-  struct Task* cur = (&((*tm->tasks)[row * 32]))[col];
+void Renderer_SendTask(struct Renderer* tm, struct RenderNode* task, s16 row, s16 col) {
+  struct RenderNode* cur = (&((*tm->tasks)[row * 32]))[col];
   task->next = cur;
   (&((*tm->tasks)[row * 32]))[col] = task;
 }
 
-void RunAllTasks(struct TaskManager* tm) {
+void Renderer_Flush(struct Renderer* tm) {
   s32 i;
-  struct Task** list;
+  struct RenderNode** list;
   struct DrawPivot c;
 
   if (tm->pivot != NULL) {
     CreateDrawPivot(&c, tm->pivot, tm->_);
-    list = (struct Task**)(*tm->tasks);
+    list = (struct RenderNode**)(*tm->tasks);
 
     for (i = 0; i < TASK_LENGTH; i++) {
-      struct Task* task = list[0];
+      struct RenderNode* task = list[0];
       list = &list[1];
       for (; task != NULL; task = task->next) {
         (task->fn)(task, &c);
@@ -74,8 +74,8 @@ void RunAllTasks(struct TaskManager* tm) {
   }
 }
 
-void ClearTaskBuffer(struct TaskManager* tm) {
-  struct Task*(*heap)[TASK_LENGTH] = Malloc(TASK_LENGTH * 4);
+void Renderer_Clear(struct Renderer* tm) {
+  struct RenderNode*(*heap)[TASK_LENGTH] = Malloc(TASK_LENGTH * 4);
 
   tm->tasks = heap;
   if (heap == NULL) {

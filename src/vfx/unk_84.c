@@ -1,6 +1,6 @@
 #include "entity.h"
 #include "global.h"
-#include "task.h"
+#include "renderer.h"
 #include "vfx.h"
 #include "zero.h"
 
@@ -39,7 +39,7 @@ struct VFX* CreateGhost84(struct Entity* p) {
 static void FUN_080c9d20(struct Sprite* p, struct DrawPivot* _);
 
 static void Ghost84_Init(struct VFX* p) {
-  SetTaskCallback((struct Task*)&(p->s).spr, FUN_080c9d20);
+  SetTaskCallback((struct RenderNode*)&(p->s).spr, FUN_080c9d20);
   (p->s).spr.sprites = (struct MetaspriteHeader*)p;
   (p->s).flags &= 0xF7;
   (p->s).flags |= DISPLAY;

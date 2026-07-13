@@ -6,7 +6,7 @@
 #include "mission.h"
 #include "overworld.h"
 #include "story.h"
-#include "task.h"
+#include "renderer.h"
 #include "zero.h"
 
 static bool8 CheckMissionFail(struct StageRun* p);
@@ -112,11 +112,11 @@ void LoadStageRun(u8 stageID, u8 checkPoint) {
   CpuCopy32(&gGameState.save.elf[64], &gGameState.save.savedElf[64], 12);
 }
 
-void ClearStageRun(struct TaskManager* tm) {
+void ClearStageRun(struct Renderer* tm) {
   const u8 id = gStageRun.id;
   gStageRun.checkpointBuffer = 0xFF;
   gStageRun.frame = 0;
-  gStageRun.taskManager = tm;
+  gStageRun.rendererMain = tm;
   gStageRun.missionStatus = 0;
   gStageRun.unk_17d = 0;
   gStageRun.stageEventPhase = 0;
@@ -204,7 +204,7 @@ NON_MATCH bool32 OverworldUpdate(bool8 paused) {
 void CameraUpdate(bool8 paused) {
   struct Camera* camera;
   struct StageRun* ow = &gStageRun;
-  struct TaskManager* tm = ow->taskManager;
+  struct Renderer* tm = ow->rendererMain;
 
   if (!paused) {
     Camera_Shake(&(ow->vm).camera);

@@ -62,8 +62,8 @@ static void MinigameLoop_InitMinigame(struct GameState* g) {
   g->unk_1ed8 = 0xFFFFFFFF;
   g->inMenu = FALSE;
   ResetPivot(pivot, &g->unk_0dc4, 0, 0);
-  ResetTaskManager(&g->taskManager);
-  SetTaskPivot(&g->taskManager, pivot);
+  Renderer_Init(&g->rendererMain);
+  Renderer_SetPivot(&g->rendererMain, pivot);
   ResetCollisionManager();
   ResetEntityEnvironment();
   RNG_0202f388 = (g->save).stageID;
@@ -165,7 +165,7 @@ _080F8FB4:\n\
 	movs r3, #0x9a\n\
 	lsls r3, r3, #4\n\
 	adds r0, r6, r3\n\
-	bl ClearTaskBuffer\n\
+	bl Renderer_Clear\n\
 	ldr r1, _080F917C @ =0x0202F354\n\
 	movs r0, #0\n\
 	strb r0, [r1]\n\
@@ -325,7 +325,7 @@ _080F90CA:\n\
 	bl DrawOverworld\n\
 _080F913A:\n\
 	adds r0, r4, #0\n\
-	bl RunAllTasks\n\
+	bl Renderer_Flush\n\
 	ldr r0, _080F91B4 @ =0x0202F330\n\
 	ldrb r0, [r0]\n\
 	cmp r0, #0\n\

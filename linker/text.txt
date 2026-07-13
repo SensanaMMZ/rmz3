@@ -9,7 +9,7 @@
 		src/gpu_regs.o (.text);
 		src/sound.o (.text);
 		src/sprite.o (.text);
-		src/task.o (.text);
+		src/renderer.o (.text);
 		src/motion.o (.text);
 		src/overworld_layer.o (.text);
 

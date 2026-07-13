@@ -4,7 +4,7 @@
 #include "global.h"
 #include "overworld.h"
 #include "story.h"
-#include "task.h"
+#include "renderer.h"
 
 void ResetPivot(struct Pivot* pivot, struct Coord* c, u32 _, void* nullVal) {
   static const struct Coord offset = {0x0, 0x0};
@@ -58,7 +58,7 @@ void CreateDrawPivot(struct DrawPivot* dp, struct Pivot* p, void* _ UNUSED) {
   (dp->offset).x = (dp->offset).y = 0;
 }
 
-void SetTaskCallback(struct Task* t, void* cb) {
+void SetTaskCallback(struct RenderNode* t, void* cb) {
   t->fn = cb;
   return;
 }
@@ -95,7 +95,7 @@ void InitNonAffineSprite(struct Sprite* s, struct MetaspriteHeader* sprites, str
   CpuFastFill(src, dest, 0);
   CpuFill32(src, dest, 24);
 
-  SetTaskCallback((struct Task*)s, TaskCB_DrawNoAffineSprite);
+  SetTaskCallback((struct RenderNode*)s, TaskCB_DrawNoAffineSprite);
   (s->oam).mosaic = 1;
   (s->oam).priority = 2;
   s->sprites = sprites;
@@ -109,7 +109,7 @@ void InitRotatableSprite(struct Sprite* s, struct MetaspriteHeader* sprites, str
   CpuFastFill(src, dest, 0);
   CpuFill32(src, dest, 24);
 
-  SetTaskCallback((struct Task*)s, TaskCB_DrawRotatableSprite);
+  SetTaskCallback((struct RenderNode*)s, TaskCB_DrawRotatableSprite);
   (s->oam).mosaic = 1;
   (s->oam).priority = 2;
   s->sprites = sprites;
@@ -124,7 +124,7 @@ void InitScalerotSprite1(struct Sprite* s, struct MetaspriteHeader* sprites, str
   CpuFastFill(src, dest, 0);
   CpuFill32(src, dest, 24);
 
-  SetTaskCallback((struct Task*)s, TaskCB_SetMetaspriteTileNum1);
+  SetTaskCallback((struct RenderNode*)s, TaskCB_SetMetaspriteTileNum1);
   (s->oam).mosaic = 1;
   (s->oam).priority = 2;
   s->sprites = sprites;
@@ -139,7 +139,7 @@ void InitScalerotSprite2(struct Sprite* s, struct MetaspriteHeader* sprites, str
   {
     vu8 _;
   }
-  SetTaskCallback((struct Task*)s, TaskCB_SetMetaspriteTileNum2);
+  SetTaskCallback((struct RenderNode*)s, TaskCB_SetMetaspriteTileNum2);
   (s->oam).mosaic = 1;
   (s->oam).priority = 2;
   s->sprites = sprites;

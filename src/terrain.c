@@ -2,7 +2,7 @@
 #include "global.h"
 #include "overworld.h"
 #include "system.h"
-#include "task.h"
+#include "renderer.h"
 
 static const struct Stage* UpdateStageTileset(struct Coord* c);
 static void loadStageLandscape(const struct Stage* p, const struct ChunkMap* map);
@@ -136,8 +136,8 @@ void UpdateStageLandscape(struct Coord* viewport) {
   }
 }
 
-void DrawOverworld(struct TaskManager* tm) {
-  PrependTask(tm, &gOverworld.task);  // -> TaskCB_UpdateOwGraphic
+void DrawOverworld(struct Renderer* tm) {
+  Renderer_PrependTask(tm, &gOverworld.task);  // -> TaskCB_UpdateOwGraphic
   return;
 }
 

@@ -13,7 +13,7 @@
 #include "entity/vfx.h"
 #include "entity/weapon.h"
 #include "entity_manager.h"
-#include "task.h"
+#include "renderer.h"
 
 extern struct EntityHeader* pCurEntityHeader;
 extern struct EntityHeader* gZeroHeaderPtr;
@@ -46,8 +46,8 @@ void ignoreEntityFn(struct EntityHeader* h);
 void RunDamageEffect(struct EntityHeader* h);
 void RegisterHitboxes(struct EntityHeader* h);
 
-void DrawEntity(struct EntityHeader* h, struct TaskManager* r1);
-void DrawCollidableEntity(struct EntityHeader* h, struct TaskManager* r1);
+void DrawEntity(struct EntityHeader* h, struct Renderer* r1);
+void DrawCollidableEntity(struct EntityHeader* h, struct Renderer* r1);
 struct Entity* GetNearestEntity(struct EntityHeader* h, struct Coord* c);
 void InitNonAffineMotion(struct Entity* e);
 void InitRotatableMotion(struct Entity* e);

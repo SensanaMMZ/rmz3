@@ -1,6 +1,6 @@
 #include "gfx.h"
 #include "global.h"
-#include "task.h"
+#include "renderer.h"
 #include "trig.h"
 #include "vfx.h"
 
@@ -35,7 +35,7 @@ struct VFX* CreateExlifeIndicator(u8 extraLife) {
 }
 
 static void ExlifeIndicator_Init(struct Entity* p) {
-  SetTaskCallback((struct Task*)&p->spr, TaskCB_080be5d0);
+  SetTaskCallback((struct RenderNode*)&p->spr, TaskCB_080be5d0);
   (p->spr).sprites = (struct MetaspriteHeader*)p;
   p->flags &= ~OAM_PRIO;
   p->flags |= DISPLAY;
@@ -100,7 +100,7 @@ static void TaskCB_080be5d0(struct Sprite* s, struct DrawPivot* c) {
   UpdateMotionGraphic((struct Entity*)p);
   (p->s).spr.c = &coord;
   (s->fn)(s, c);
-  SetTaskCallback((struct Task*)&(p->s).spr, TaskCB_080be5d0);
+  SetTaskCallback((struct RenderNode*)&(p->s).spr, TaskCB_080be5d0);
   (p->s).spr.sprites = (struct MetaspriteHeader*)p;
   (p->s).flags &= ~OAM_PRIO;
 }

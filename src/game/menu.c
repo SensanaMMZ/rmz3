@@ -303,17 +303,17 @@ static void menu_080f394c(struct GameState* g) {
   c->x = PIXEL(120);
   c->y = PIXEL(80);
   ResetPivot(&g->unk_0db8, c, 0, 0);
-  ResetTaskManager(&g->taskManager2);
-  SetTaskPivot(&g->taskManager2, &g->unk_0db8);
+  Renderer_Init(&g->rendererUI);
+  Renderer_SetPivot(&g->rendererUI, &g->unk_0db8);
   InitWidgetHeader(&g->entityHeaders[ENTITY_WIDGET], gWidgets, 64);
 }
 
 static void menu_080f39a8(struct GameState* g) {
   g->unk_0dc4.x = PIXEL(BGOFS(1)->x & 0x1FF) + PIXEL(120);
-  ClearTaskBuffer(&g->taskManager2);
+  Renderer_Clear(&g->rendererUI);
   UpdateEntities(gWidgetHeaderPtr);
-  DrawEntity(gWidgetHeaderPtr, &g->taskManager2);
-  RunAllTasks(&g->taskManager2);
+  DrawEntity(gWidgetHeaderPtr, &g->rendererUI);
+  Renderer_Flush(&g->rendererUI);
 }
 
 NAKED void menu_080f39fc(struct GameState* m) {
