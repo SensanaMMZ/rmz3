@@ -27,31 +27,28 @@ static void initSunkenLib(struct Coord* _ UNUSED) {
   StartPaletteAnimation(150, 0);
 }
 
-NON_MATCH static void updateSunkenLib(struct Coord* _ UNUSED) {
-#if MODERN
+static void updateSunkenLib(struct Coord* _ UNUSED) {
   if ((TILESET_ID(0) == STAGE_SUNKEN_LIBRARY) && (TILESET_IDX(0) == 4)) {
-    if ((STAGE.unk_000 & (1 << 0)) == 0) {
+    if (!(STAGE.unk_000 & (1 << 0))) {
       STAGE.unk_000 |= (1 << 0);
       StartPaletteAnimation(148, 0);
       StartPaletteAnimation(149, 0);
     }
     StepPaletteAnimation(148);
     StepPaletteAnimation(149);
-
-  } else if ((STAGE.unk_000 & (1 << 0))) {
+  } else if (STAGE.unk_000 & (1 << 0)) {
     STAGE.unk_000 ^= (1 << 0);
     RemovePaletteAnimation(148);
     RemovePaletteAnimation(149);
   }
 
   if ((TILESET_ID(1) == STAGE_SUNKEN_LIBRARY) && (TILESET_IDX(1) == 5)) {
-    if ((STAGE.unk_000 & (1 << 1)) == 0) {
+    if (!(STAGE.unk_000 & (1 << 1))) {
       STAGE.unk_000 |= (1 << 1);
       StartPaletteAnimation(153, 0);
     }
     StepPaletteAnimation(153);
-
-  } else if ((STAGE.unk_000 & (1 << 1))) {
+  } else if (STAGE.unk_000 & (1 << 1)) {
     STAGE.unk_000 ^= (1 << 1);
     RemovePaletteAnimation(153);
   }
@@ -60,23 +57,18 @@ NON_MATCH static void updateSunkenLib(struct Coord* _ UNUSED) {
 
   if (STAGE.unk_001 == 0) {
     if (STAGE.unk_002 == 0) {
-      STAGE.rng = LCG(STAGE.rng);
-      STAGE.unk_002 = ((STAGE.rng >> 16) & 1) + 1;
+      STAGE.unk_002 = (((STAGE.rng = LCG(STAGE.rng)) >> 16) & 1) + 1;
       STAGE.unk_001 = 8;
     } else {
       STAGE.unk_002 = 0;
-      STAGE.rng = LCG(STAGE.rng);
-      STAGE.unk_001 = (((STAGE.rng >> 16) % 58) & 0xF8) + 7;
+      STAGE.unk_001 = ((((STAGE.rng = LCG(STAGE.rng)) >> 16) % 58) & 0xF8) + 7;
     }
   }
 
   STAGE.unk_001--;
   STAGE.theta++;
-  SEA = gSineTable[STAGE.theta] * 24 + PIXEL(568);
-  gBlendRegBuffer.bldalpha = 0xC04;
-#else
-  INCCODE("asm/wip/updateSunkenLib.inc");
-#endif
+  SEA = (SIN(STAGE.theta >> 1) * 24) + PIXEL(568);
+  gBlendRegBuffer.bldalpha = BLDALPHA_BLEND(4, 12);
 }
 
 static void FUN_080136a0(struct Coord* _ UNUSED) {

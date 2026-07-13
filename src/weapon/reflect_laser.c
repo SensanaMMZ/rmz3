@@ -48,18 +48,21 @@ const WeaponRoutine gReflectLaserRoutine = {
 };
 // clang-format on
 
-NON_MATCH void MenuExit_ReflectLaser(struct Weapon* w) {
-#if MODERN
-  struct Zero* z = (struct Zero*)(w->s).unk_28;
-  if ((((&z->unk_b4)->status).element != 0) || (z->unk_136 & (1 << 0))) {
-    (w->s).flags &= ~DISPLAY;
-    (w->s).flags &= ~FLIPABLE;
-    EXIT_BODY(w);
-    SET_WEAPON_ROUTINE(w, ENTITY_DISAPPEAR);
+void MenuExit_ReflectLaser(struct Weapon* p) {
+  struct Zero* z = (struct Zero*)(p->s).unk_28;
+  if (((&z->unk_b4)->status).element != 0) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_WEAPON_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
   }
-#else
-  INCCODE("asm/wip/MenuExit_ReflectLaser.inc");
-#endif
+  if (z->unk_136 & (1 << WEAPON_BUSTER)) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_WEAPON_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
 }
 
 struct Weapon* CreateReflectLaser(struct Zero* z, struct Entity* p, u8 n) {
