@@ -523,36 +523,26 @@ static void GameLoop_OpenMenu(struct GameState* p) {
   }
 }
 
-NON_MATCH static void GameLoop_CloseMenu(struct GameState* p) {
-#if MODERN
-  struct Renderer* tm;
-  void* dst;
-  s16 frames;
-
+static void GameLoop_CloseMenu(struct GameState* p) {
   if (p->mode[3] == 0) {
-    struct Zero* z;
-    struct Zero_b4* b4 = &p->z2->unk_b4;
-    u8 color = (b4->status).body;
+    u8 color = ((&(p->z2)->unk_b4)->status).body;
 
-    if (FLAG(gCurStory.s.gameflags, IN_CYBERSPACE)) {
-      EnableCyberSpaceColorFilter();
-    }
+    if (FLAG(gCurStory.s.gameflags, IN_CYBERSPACE)) EnableCyberSpaceColorFilter();
     RestoreGraphicState(p);
     ResumeAllPaletteAnimations();
     p->frames = 0;
 
-    if ((p->save).gamemode == 1) {
+    if ((&p->save)->gamemode == 1) {
       color = BODY_CHIP_PROTO;
-    } else if ((p->save).gamemode == 2) {
+    } else if ((&p->save)->gamemode == 2) {
       color = BODY_CHIP_ULTIMA;
     }
 
-    z = p->z2;
-    if (z->posture == POSTURE_SHADOW) {
-      LoadZeroPalette(&z->s, color);
+    if ((p->z2)->posture == POSTURE_SHADOW) {
+      LoadZeroPalette(&(p->z2)->s, color);
       LoadShadowDashPalette(p->z2, color);
     } else {
-      LoadZeroPalette(&z->s, color);
+      LoadZeroPalette(&(p->z2)->s, color);
     }
 
     if (gStageRun.missionStatus & MISSION_ESCAPE) {
@@ -564,34 +554,34 @@ NON_MATCH static void GameLoop_CloseMenu(struct GameState* p) {
     p->mode[3]++;
   }
 
-  tm = &p->rendererMain;
-  Renderer_Clear(tm);
+  Renderer_Clear(&p->rendererMain);
   ClearAllHitboxes();
   gMatrixCount = 0;
-  dst = gWhitePaintFlags;
-  CpuFastFill(0, dst, 32);
+  {
+    u32 fillval = 0;
+    void* dst = gWhitePaintFlags;
+    u32 bytesize = 32;
+    _CpuFastFill(fillval, dst, bytesize);
+  }
   OverworldUpdate(TRUE);
-  DrawCollidableEntity(gSolidHeaderPtr, tm);
-  DrawCollidableEntity(gBossHeaderPtr, tm);
-  DrawCollidableEntity(gEnemyHeaderPtr, tm);
-  DrawCollidableEntity(gZeroHeaderPtr, tm);
-  DrawEntity(gElfHeaderPtr, tm);
-  DrawWeapon(tm);
-  DrawEntity(gProjectileHeaderPtr, tm);
-  DrawEntity(gVFXHeaderPtr, tm);
-  DrawCollidableEntity(gPickupHeaderPtr, tm);
+  DrawCollidableEntity(gSolidHeaderPtr, &p->rendererMain);
+  DrawCollidableEntity(gBossHeaderPtr, &p->rendererMain);
+  DrawCollidableEntity(gEnemyHeaderPtr, &p->rendererMain);
+  DrawCollidableEntity(gZeroHeaderPtr, &p->rendererMain);
+  DrawEntity(gElfHeaderPtr, &p->rendererMain);
+  DrawWeapon(&p->rendererMain);
+  DrawEntity(gProjectileHeaderPtr, &p->rendererMain);
+  DrawEntity(gVFXHeaderPtr, &p->rendererMain);
+  DrawCollidableEntity(gPickupHeaderPtr, &p->rendererMain);
   CameraUpdate(TRUE);
   DrawHUD(p);
   UpdateTextWindow();
-  {
-    vu32 _;
-  }
 
   p->frames += 2;
   gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = p->frames;
   if (p->frames == 32) {
     p->inMenu = FALSE;
-    if (FLAG(gCurStory.s.gameflags, TIME_ELF_ENABLED) == 0) {
+    if (!FLAG(gCurStory.s.gameflags, TIME_ELF_ENABLED)) {
       TurnUpBGM();
     } else {
       SetStageNoiseVolume(SE_TIME_ELF);
@@ -599,9 +589,6 @@ NON_MATCH static void GameLoop_CloseMenu(struct GameState* p) {
     }
     SetGameMode(p, GAMEMODE(MAINGAME, OVERWORLD, 0, 0));
   }
-#else
-  INCCODE("asm/wip/GameLoop_CloseMenu.inc");
-#endif
 }
 
 NAKED static void GameLoop_SwitchCyberSpace(struct GameState* p) { INCCODE("asm/todo/GameLoop_SwitchCyberSpace.inc"); }

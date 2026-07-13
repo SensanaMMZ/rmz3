@@ -21,6 +21,15 @@
     CpuFastSet((void *)&tmp, dest, CPU_FAST_SET_SRC_FIXED | ((bytesize) / (32 / 8) & 0x1FFFFF)); \
   }
 
+// CpuFastFill だが、末尾に空の vu32 を積むことで retail のスタックフレームを再現する
+#define _CpuFastFill(value, dest, bytesize) \
+  {                                         \
+    CpuFastFill(value, dest, bytesize);     \
+    {                                       \
+      vu32 _;                               \
+    }                                       \
+  }
+
 #define CpuFastFill16(value, dest, size) CpuFastFill(((value) << 16) | (value), (dest), (size))
 
 #define CpuFastCopy(src, dest, bytesize) CpuFastSet(src, dest, ((bytesize) / (32 / 8) & 0x1FFFFF))
