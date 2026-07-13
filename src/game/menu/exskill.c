@@ -25,134 +25,31 @@ void EachMenuLoop_ExSkill(struct GameState* g) {
   return;
 }
 
-NAKED static void ExMenuLoop_Init(struct GameState* g) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	adds r6, r0, #0\n\
-	ldr r1, _080F7AF4 @ =0x000064AC\n\
-	adds r0, r6, r1\n\
-	ldr r7, [r0]\n\
-	movs r2, #0xdf\n\
-	lsls r2, r2, #4\n\
-	adds r4, r6, r2\n\
-	movs r0, #0\n\
-	strb r0, [r4, #4]\n\
-	strb r0, [r4, #5]\n\
-	ldr r0, _080F7AF8 @ =gGraphic_Capcom+(21*20)\n\
-	ldr r5, _080F7AFC @ =gVideoRegBuffer+6\n\
-	ldrh r2, [r5]\n\
-	movs r1, #0xc\n\
-	ands r1, r2\n\
-	lsls r1, r1, #0xc\n\
-	bl LoadGraphic\n\
-	ldr r0, _080F7B00 @ =gGraphic_Capcom+(21*20)+12\n\
-	movs r1, #0\n\
-	bl LoadPalette\n\
-	ldr r0, _080F7B04 @ =0x085222F4\n\
-	ldr r0, [r0]\n\
-	ldr r1, _080F7B08 @ =0x085222FC\n\
-	adds r0, r0, r1\n\
-	ldr r2, _080F7B0C @ =0x000016D8\n\
-	adds r1, r6, r2\n\
-	movs r2, #0xf0\n\
-	lsls r2, r2, #1\n\
-	bl CpuFastSet\n\
-	ldr r1, _080F7B10 @ =0x00000ED8\n\
-	adds r0, r6, r1\n\
-	ldrh r2, [r5]\n\
-	movs r1, #0xf8\n\
-	lsls r1, r1, #5\n\
-	ands r1, r2\n\
-	lsls r1, r1, #3\n\
-	movs r2, #0x80\n\
-	lsls r2, r2, #5\n\
-	bl RequestBgMapTransfer\n\
-	movs r0, #0x3e\n\
-	movs r1, #0\n\
-	bl StartPaletteAnimation\n\
-	movs r0, #0x3f\n\
-	movs r1, #0\n\
-	bl StartPaletteAnimation\n\
-	adds r0, r6, #0\n\
-	movs r1, #1\n\
-	movs r2, #0\n\
-	bl CreateMenuComp2\n\
-	str r0, [r4]\n\
-	adds r0, #0x74\n\
-	movs r1, #0x8e\n\
-	lsls r1, r1, #1\n\
-	strh r1, [r0]\n\
-	ldr r0, [r4]\n\
-	adds r0, #0x76\n\
-	movs r1, #0x28\n\
-	strh r1, [r0]\n\
-	ldr r4, _080F7B14 @ =0x00000564\n\
-	ldr r2, _080F7B18 @ =gStaticMotionGraphics\n\
-	adds r0, r4, r2\n\
-	ldr r1, _080F7B1C @ =wStaticGraphicTilenums\n\
-	adds r1, #0x8a\n\
-	ldrh r1, [r1]\n\
-	ldrh r2, [r0, #6]\n\
-	lsrs r2, r2, #6\n\
-	subs r1, r1, r2\n\
-	lsls r1, r1, #5\n\
-	movs r2, #0x80\n\
-	lsls r2, r2, #9\n\
-	adds r1, r1, r2\n\
-	bl LoadGraphic\n\
-	ldr r0, _080F7B20 @ =gStaticMotionGraphics+12\n\
-	adds r4, r4, r0\n\
-	ldr r0, _080F7B24 @ =wStaticMotionPalIDs\n\
-	adds r0, #0x8a\n\
-	ldrh r1, [r0]\n\
-	ldrb r0, [r4, #7]\n\
-	subs r1, r1, r0\n\
-	lsls r1, r1, #5\n\
-	movs r2, #0x80\n\
-	lsls r2, r2, #2\n\
-	adds r1, r1, r2\n\
-	adds r0, r4, #0\n\
-	bl LoadPalette\n\
-	movs r4, #0\n\
-_080F7AC4:\n\
-	adds r0, r7, #0\n\
-	adds r0, #0xb4\n\
-	ldrh r1, [r0, #0x14]\n\
-	movs r0, #1\n\
-	lsls r0, r4\n\
-	ands r1, r0\n\
-	asrs r1, r4\n\
-	cmp r1, #0\n\
-	beq _080F7ADE\n\
-	adds r0, r6, #0\n\
-	adds r1, r4, #0\n\
-	bl CreateExSkillIcon\n\
-_080F7ADE:\n\
-	adds r0, r4, #1\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r4, r0, #0x18\n\
-	cmp r4, #0xb\n\
-	bls _080F7AC4\n\
-	movs r0, #2\n\
-	strb r0, [r6, #2]\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080F7AF4: .4byte 0x000064AC\n\
-_080F7AF8: .4byte gGraphic_Capcom+(21*20)\n\
-_080F7AFC: .4byte gVideoRegBuffer+6\n\
-_080F7B00: .4byte gGraphic_Capcom+(21*20)+12\n\
-_080F7B04: .4byte gBgMapOffsets+(21*4)\n\
-_080F7B08: .4byte gBgMapOffsets+(23*4)\n\
-_080F7B0C: .4byte 0x000016D8\n\
-_080F7B10: .4byte 0x00000ED8\n\
-_080F7B14: .4byte 0x00000564\n\
-_080F7B18: .4byte gStaticMotionGraphics\n\
-_080F7B1C: .4byte wStaticGraphicTilenums\n\
-_080F7B20: .4byte gStaticMotionGraphics+12\n\
-_080F7B24: .4byte wStaticMotionPalIDs\n\
- .syntax divided\n");
+#include "widget.h"
+struct Entity* CreateMenuComp2(struct GameState* g, u8 kind, u8 r2);
+struct Widget* CreateExSkillIcon(struct GameState* g, u8 kind);
+
+static void ExMenuLoop_Init(struct GameState* g) {
+  u8 i;
+  struct Zero* z = g->z2;
+  struct ExSkillMenuState* exskill = &((g->sceneState).menu).exskill;
+  exskill->selected = 0;
+  exskill->inactive = FALSE;
+  LoadGraphic(BG_GRAPHIC(BG_EXSKILL_MENU), (void*)CHAR_BASE(1));
+  LoadPalette(BG_PALETTE(BG_EXSKILL_MENU), 0);
+  CpuFastCopy(BGMAP(BG_EXSKILL_MENU), g->menuBgMap2, 960 * 2);
+  RequestBgMapTransfer(g->menuBgMap1, (void*)SCREEN_BASE_16(1), 0x1000);
+  StartPaletteAnimation(62, 0);
+  StartPaletteAnimation(63, 0);
+  exskill->w = (struct Widget*)CreateMenuComp2(g, TRUE, 0);
+  ((struct SquareCursorWidget*)exskill->w)->px = 284;
+  ((struct SquareCursorWidget*)exskill->w)->py = 40;
+  LOAD_STATIC_GRAPHIC(SM069_EXSKILL_ICON);
+  for (i = 0; i < 12; i++) {
+    u16 exskill = ((&z->unk_b4)->status).unlockedExSkill;
+    if ((exskill & (1 << i)) >> i) CreateExSkillIcon(g, i);
+  }
+  g->mode[2] = 2;
 }
 
 NAKED static void ExMenuLoop_Update(struct GameState* g) {

@@ -67,8 +67,8 @@ static void ElfMenuLoop_Init(struct GameState* g) {
   struct Zero* z = g->z2;
   LoadGraphic(BG_GRAPHIC(BG_ELF_MENU), (void*)CHAR_BASE(1));
   LoadPalette(BG_PALETTE(BG_ELF_MENU), 0);
-  CpuFastCopy(BGMAP(BG_ELF_MENU), g->unk_16d8, 1920);
-  RequestBgMapTransfer(g->unk_0ed8, (void*)SCREEN_BASE_16(1), 0x1000);
+  CpuFastCopy(BGMAP(BG_ELF_MENU), g->menuBgMap2, 1920);
+  RequestBgMapTransfer(g->menuBgMap1, (void*)SCREEN_BASE_16(1), 0x1000);
   for (i = 0; i < 6; i++) {
     (&((g->sceneState).menu).elf)->displayed[i] = 0;
   }
@@ -145,7 +145,7 @@ static void ElfMenuLoop_Update(struct GameState* g) {
     printElfNames(g);
     printElfMenuDescription(g);
     printElfMenuBottomString(g);
-    RequestBgMapTransfer(g->unk_0ed8, (void*)SCREEN_BASE_16(1), 0x1000);
+    RequestBgMapTransfer(g->menuBgMap1, (void*)SCREEN_BASE_16(1), 0x1000);
   }
 }
 

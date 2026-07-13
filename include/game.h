@@ -99,8 +99,8 @@ struct GameState {
   // 02031a2c
   struct Solid* sunkinLibCursor;
   u8 unk_0ed0[8];
-  u16 unk_0ed8[1024];
-  u16 unk_16d8[1024];
+  u16 menuBgMap1[1024];
+  u16 menuBgMap2[1024];
   u32 unk_1ed8;
   bool16 inMenu;
   u16 unk_1ede;
