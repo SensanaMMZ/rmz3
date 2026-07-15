@@ -10,6 +10,7 @@
 
 #define BGCNT16(n) *((u16*)&gVideoRegBuffer.bgcnt[n])
 #define BGOFS(n) ((struct BgOfs*)gVideoRegBuffer.bgofs[(n)])
+#define RESET_BGOFS(n) *((u32*)&gVideoRegBuffer.bgofs[(n)]) = 0
 #define CHAR_BASE(n) ((*((u16*)&gVideoRegBuffer.bgcnt[n]) & 0xc) << 0xc)
 #define SCREEN_BASE(n) (gVideoRegBuffer.bgcnt[n].screenBaseBlock * 0x800)
 #define SCREEN_BASE_16(n) ((BGCNT16(n) & 0x1F00) << 3)

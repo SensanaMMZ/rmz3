@@ -5,6 +5,8 @@
 #include "text_window.h"
 #include "types.h"
 
+#define STR_CURSOR 0  // "▷"
+
 #define STRING(n) (&gStringData[StringOfsTable[n]])
 
 // gTextWindow.text.flag
