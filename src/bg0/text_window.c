@@ -1052,556 +1052,202 @@ static void mugshotMessage(struct TextWindowText* t) {
   }
 }
 
-NAKED static void inlineMessage(struct TextWindowText* t) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r6, r0, #0\n\
-	ldrb r0, [r6, #0xd]\n\
-	cmp r0, #6\n\
-	bls _080EB480\n\
-	b _080EB6E0\n\
-_080EB480:\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _080EB48C @ =_080EB490\n\
-	adds r0, r0, r1\n\
-	ldr r0, [r0]\n\
-	mov pc, r0\n\
-	.align 2, 0\n\
-_080EB48C: .4byte _080EB490\n\
-_080EB490: @ jump table\n\
-	.4byte _080EB4AC @ case 0\n\
-	.4byte _080EB4F6 @ case 1\n\
-	.4byte _080EB51C @ case 2\n\
-	.4byte _080EB538 @ case 3\n\
-	.4byte _080EB5E6 @ case 4\n\
-	.4byte _080EB650 @ case 5\n\
-	.4byte _080EB6A6 @ case 6\n\
-_080EB4AC:\n\
-	ldrb r1, [r6, #4]\n\
-	adds r0, r6, #0\n\
-	bl loadMugshot\n\
-	ldr r1, _080EB5C4 @ =gVideoRegBuffer\n\
-	ldrh r2, [r1]\n\
-	movs r3, #0x80\n\
-	lsls r3, r3, #1\n\
-	adds r0, r3, #0\n\
-	movs r3, #0\n\
-	orrs r0, r2\n\
-	strh r0, [r1]\n\
-	str r3, [r1, #0xc]\n\
-	ldr r0, _080EB5C8 @ =gPaletteManager\n\
-	strh r3, [r0]\n\
-	ldr r2, _080EB5CC @ =gWindowRegBuffer\n\
-	ldrh r0, [r2]\n\
-	movs r4, #0x80\n\
-	lsls r4, r4, #6\n\
-	adds r1, r4, #0\n\
-	orrs r0, r1\n\
-	strh r0, [r2]\n\
-	movs r1, #1\n\
-	movs r0, #1\n\
-	strb r0, [r2, #0xc]\n\
-	ldrb r0, [r2, #0xe]\n\
-	orrs r0, r1\n\
-	strb r0, [r2, #0xe]\n\
-	ldrb r0, [r2, #0xd]\n\
-	orrs r1, r0\n\
-	strb r1, [r2, #0xd]\n\
-	ldr r0, _080EB5D0 @ =0x0000869A\n\
-	strh r0, [r2, #8]\n\
-	strh r3, [r6, #0x10]\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080EB4F6:\n\
-	ldrh r1, [r6, #0x10]\n\
-	adds r0, r6, #0\n\
-	bl text_080eaefc\n\
-	ldrh r0, [r6, #0x10]\n\
-	adds r0, #4\n\
-	strh r0, [r6, #0x10]\n\
-	lsls r0, r0, #0x10\n\
-	asrs r0, r0, #0x10\n\
-	cmp r0, #0x3f\n\
-	bgt _080EB50E\n\
-	b _080EB6E0\n\
-_080EB50E:\n\
-	ldr r1, _080EB5CC @ =gWindowRegBuffer\n\
-	movs r0, #0x87\n\
-	lsls r0, r0, #5\n\
-	strh r0, [r1, #4]\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080EB51C:\n\
-	movs r5, #0\n\
-	movs r4, #1\n\
-	strh r4, [r6, #2]\n\
-	ldr r0, [r6, #0x1c]\n\
-	bl getStringLength\n\
-	strh r0, [r6, #0x10]\n\
-	strh r4, [r6, #0x12]\n\
-	movs r0, #4\n\
-	strh r0, [r6, #0x14]\n\
-	strb r5, [r6, #0xe]\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080EB538:\n\
-	adds r0, r6, #0\n\
-	movs r1, #0x40\n\
-	bl text_080eaefc\n\
-	ldr r0, [r6, #8]\n\
-	cmp r0, #0\n\
-	beq _080EB550\n\
-	ldrh r1, [r6]\n\
-	movs r0, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB560\n\
-_080EB550:\n\
-	ldr r0, _080EB5D4 @ =gJoypad\n\
-	ldrh r1, [r0, #4]\n\
-	movs r0, #3\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB560\n\
-	movs r0, #1\n\
-	strb r0, [r6, #0xe]\n\
-_080EB560:\n\
-	ldrb r0, [r6, #0xe]\n\
-	cmp r0, #0\n\
-	bne _080EB572\n\
-	ldr r0, _080EB5D8 @ =gTextWindow+8\n\
-	ldrh r1, [r0]\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB576\n\
-_080EB572:\n\
-	movs r0, #0\n\
-	strh r0, [r6, #0x14]\n\
-_080EB576:\n\
-	ldr r0, [r6, #0x1c]\n\
-	ldrh r3, [r6, #0x12]\n\
-	movs r1, #1\n\
-	movs r2, #0x11\n\
-	bl text_080e9b40\n\
-	ldr r0, [r6, #0x1c]\n\
-	movs r2, #0x12\n\
-	ldrsh r1, [r6, r2]\n\
-	subs r1, #1\n\
-	bl SkipString\n\
-	ldrh r0, [r6, #0x14]\n\
-	subs r0, #1\n\
-	strh r0, [r6, #0x14]\n\
-	lsls r0, r0, #0x10\n\
-	asrs r0, r0, #0x10\n\
-	movs r1, #1\n\
-	rsbs r1, r1, #0\n\
-	cmp r0, r1\n\
-	beq _080EB5A2\n\
-	b _080EB6E0\n\
-_080EB5A2:\n\
-	ldrh r1, [r6, #0x12]\n\
-	adds r0, r1, #1\n\
-	strh r0, [r6, #0x12]\n\
-	ldrb r0, [r6, #0xe]\n\
-	cmp r0, #0\n\
-	beq _080EB5B2\n\
-	adds r0, r1, #4\n\
-	strh r0, [r6, #0x12]\n\
-_080EB5B2:\n\
-	movs r3, #0x12\n\
-	ldrsh r1, [r6, r3]\n\
-	movs r4, #0x10\n\
-	ldrsh r0, [r6, r4]\n\
-	cmp r1, r0\n\
-	bge _080EB5DC\n\
-	movs r0, #3\n\
-	strh r0, [r6, #0x14]\n\
-	b _080EB6E0\n\
-	.align 2, 0\n\
-_080EB5C4: .4byte gVideoRegBuffer\n\
-_080EB5C8: .4byte gPaletteManager\n\
-_080EB5CC: .4byte gWindowRegBuffer\n\
-_080EB5D0: .4byte 0x0000869A\n\
-_080EB5D4: .4byte gJoypad\n\
-_080EB5D8: .4byte gTextWindow+8\n\
-_080EB5DC:\n\
-	movs r0, #0\n\
-	strh r0, [r6, #0x14]\n\
-	movs r0, #2\n\
-	strh r0, [r6, #2]\n\
-	b _080EB63A\n\
-_080EB5E6:\n\
-	adds r0, r6, #0\n\
-	movs r1, #0x40\n\
-	bl text_080eaefc\n\
-	ldr r0, [r6, #0x1c]\n\
-	movs r1, #1\n\
-	movs r2, #0x11\n\
-	bl PrintString\n\
-	ldrh r0, [r6, #0x14]\n\
-	adds r1, r0, #1\n\
-	strh r1, [r6, #0x14]\n\
-	ldr r2, [r6, #8]\n\
-	cmp r2, #0\n\
-	beq _080EB610\n\
-	movs r1, #0x14\n\
-	ldrsh r0, [r6, r1]\n\
-	cmp r0, r2\n\
-	bgt _080EB63A\n\
-	ldrh r1, [r6]\n\
-	b _080EB632\n\
-_080EB610:\n\
-	movs r0, #0x10\n\
-	ands r1, r0\n\
-	cmp r1, #0\n\
-	bne _080EB622\n\
-	ldr r0, _080EB644 @ =Unicode_Prompt\n\
-	movs r1, #0x1c\n\
-	movs r2, #0x12\n\
-	bl PrintUnicodeString\n\
-_080EB622:\n\
-	ldr r0, _080EB648 @ =gJoypad\n\
-	ldrh r1, [r0, #4]\n\
-	movs r0, #3\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080EB63A\n\
-	ldr r0, _080EB64C @ =gTextWindow+8\n\
-	ldrh r1, [r0]\n\
-_080EB632:\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB6E0\n\
-_080EB63A:\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-	b _080EB6E0\n\
-	.align 2, 0\n\
-_080EB644: .4byte Unicode_Prompt\n\
-_080EB648: .4byte gJoypad\n\
-_080EB64C: .4byte gTextWindow+8\n\
-_080EB650:\n\
-	adds r0, r6, #0\n\
-	movs r1, #0x40\n\
-	bl text_080eaefc\n\
-	ldrh r1, [r6]\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080EB698\n\
-	movs r0, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB680\n\
-	ldr r0, [r6, #0x20]\n\
-	cmp r0, #0\n\
-	bne _080EB686\n\
-	ldr r0, [r6, #0x1c]\n\
-	movs r1, #1\n\
-	movs r2, #0x11\n\
-	bl PrintString\n\
-	movs r0, #4\n\
-	strh r0, [r6, #2]\n\
-	b _080EB6E0\n\
-_080EB680:\n\
-	ldr r0, [r6, #0x20]\n\
-	cmp r0, #0\n\
-	beq _080EB698\n\
-_080EB686:\n\
-	str r0, [r6, #0x1c]\n\
-	adds r0, r6, #0\n\
-	bl setupTextWindow\n\
-	movs r0, #1\n\
-	strh r0, [r6, #2]\n\
-	movs r0, #2\n\
-	strb r0, [r6, #0xd]\n\
-	b _080EB6E0\n\
-_080EB698:\n\
-	movs r0, #5\n\
-	strh r0, [r6, #2]\n\
-	movs r0, #0x40\n\
-	strh r0, [r6, #0x10]\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080EB6A6:\n\
-	ldrh r0, [r6, #0x10]\n\
-	subs r0, #4\n\
-	strh r0, [r6, #0x10]\n\
-	lsls r0, r0, #0x10\n\
-	asrs r3, r0, #0x10\n\
-	cmp r3, #0\n\
-	bne _080EB6D8\n\
-	ldr r2, _080EB6D0 @ =gWindowRegBuffer\n\
-	ldrh r1, [r2]\n\
-	ldr r0, _080EB6D4 @ =0x0000DFFF\n\
-	ands r0, r1\n\
-	strh r0, [r2]\n\
-	ldrb r1, [r2, #0xe]\n\
-	movs r0, #1\n\
-	orrs r1, r0\n\
-	strb r1, [r2, #0xe]\n\
-	ldrb r1, [r2, #0xd]\n\
-	orrs r0, r1\n\
-	strb r0, [r2, #0xd]\n\
-	str r3, [r6, #0xc]\n\
-	b _080EB6E0\n\
-	.align 2, 0\n\
-_080EB6D0: .4byte gWindowRegBuffer\n\
-_080EB6D4: .4byte 0x0000DFFF\n\
-_080EB6D8:\n\
-	ldrh r1, [r6, #0x10]\n\
-	adds r0, r6, #0\n\
-	bl text_080eaefc\n\
-_080EB6E0:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// 0x080eb474
+static void inlineMessage(struct TextWindowText* t) {
+  switch (t->props.phase) {
+    case 0: {
+      loadMugshot(t, t->mugshot);
+      gVideoRegBuffer.dispcnt |= DISPCNT_BG0_ON;
+      RESET_BGOFS(0);
+      PALETTE16(0) = RGB_BLACK;
+      gWindowRegBuffer.dispcnt |= DISPCNT_WIN0_ON;
+      gWindowRegBuffer.winin[0] = WININ_WIN0_BG0;
+      gWindowRegBuffer.winin[2] |= 1;
+      gWindowRegBuffer.winin[1] |= 1;
+      gWindowRegBuffer.winV.half[0] = WIN_RANGE(134, 154);
+      t->len = 0;
+      t->props.phase++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      text_080eaefc(t, (u16)t->len);
+      t->len += 4;
+      if (t->len < 64) break;
+      gWindowRegBuffer.winH.half[0] = WIN_RANGE(16, 224);
+      t->props.phase++;
+      FALLTHROUGH;
+    }
+    case 2: {
+      t->mode = TWM_TYPING;
+      t->len = getStringLength(t->current);
+      t->done = 1;
+      t->frame = 4;
+      t->props.prompt = 0;
+      t->props.phase++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      text_080eaefc(t, 64);
+      if (t->textType == TW_NORMAL || (t->flag & TEXT_FLAG_UNK0)) {
+        if (gJoypad[0].pressed & (A_BUTTON | B_BUTTON)) t->props.prompt = 1;
+      }
+      if (t->props.prompt != 0 || ((&gTextWindow.text)->flag & TEXT_FLAG_TERMINATE)) t->frame = 0;
+      text_080e9b40(t->current, 1, 17, t->done);
+      SkipString(t->current, t->done - 1);
+      if (--t->frame == -1) {
+        t->done++;
+        if (t->props.prompt != 0) t->done += 3;
+        if (t->done < t->len) {
+          t->frame = 3;
+        } else {
+          t->frame = 0;
+          t->mode = TWM_WAITING;
+          t->props.phase++;
+        }
+      }
+      break;
+    }
+    case 4: {
+      text_080eaefc(t, 64);
+      PrintString(t->current, 1, 17);
+      t->frame++;
+      if (t->textType != TW_NORMAL) {
+        if ((t->frame <= t->textType) && !(t->flag & TEXT_FLAG_TERMINATE)) break;
+      } else {
+        if ((t->frame & 0x10) == 0) PrintUnicodeString(Unicode_Prompt, 28, 18);
+        if (!(gJoypad[0].pressed & (A_BUTTON | B_BUTTON)) && !((&gTextWindow.text)->flag & TEXT_FLAG_TERMINATE)) break;
+      }
+      t->props.phase++;
+      break;
+    }
+    case 5: {
+      text_080eaefc(t, 64);
+      if (!(t->flag & TEXT_FLAG_TERMINATE)) {
+        if (t->flag & TEXT_FLAG_UNK0) {
+          if (!t->next) {
+            PrintString(t->current, 1, 17);
+            t->mode = TEXT_MODE_OPTION;
+            break;
+          }
+        } else if (!t->next) {
+          goto _NEXT;
+        }
+        t->current = t->next;
+        setupTextWindow(t);
+        t->mode = TWM_TYPING;
+        t->props.phase = 2;
+        break;
+      }
+    _NEXT:
+      t->mode = TEXT_MODE_OPTION | TWM_TYPING;
+      t->len = 64;
+      t->props.phase++;
+      FALLTHROUGH;
+    }
+    case 6: {
+      t->len -= 4;
+      if (t->len == 0) {
+        gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN0_ON;
+        gWindowRegBuffer.winin[2] |= 1;
+        gWindowRegBuffer.winin[1] |= 1;
+        *(u32*)&t->props = 0;
+      } else {
+        text_080eaefc(t, (u16)t->len);
+      }
+      break;
+    }
+    default: {
+      break;
+    }
+  }
 }
 
-NAKED static void text_080eb6e8(struct TextWindowText* t) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r6, r0, #0\n\
-	ldrb r0, [r6, #0xd]\n\
-	cmp r0, #6\n\
-	bls _080EB6F4\n\
-	b _080EB8B2\n\
-_080EB6F4:\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _080EB700 @ =_080EB704\n\
-	adds r0, r0, r1\n\
-	ldr r0, [r0]\n\
-	mov pc, r0\n\
-	.align 2, 0\n\
-_080EB700: .4byte _080EB704\n\
-_080EB704: @ jump table\n\
-	.4byte _080EB720 @ case 0\n\
-	.4byte _080EB744 @ case 1\n\
-	.4byte _080EB74A @ case 2\n\
-	.4byte _080EB766 @ case 3\n\
-	.4byte _080EB802 @ case 4\n\
-	.4byte _080EB864 @ case 5\n\
-	.4byte _080EB8AE @ case 6\n\
-_080EB720:\n\
-	ldrb r1, [r6, #4]\n\
-	adds r0, r6, #0\n\
-	bl loadMugshot\n\
-	ldr r1, _080EB7E8 @ =gVideoRegBuffer\n\
-	ldrh r2, [r1]\n\
-	movs r3, #0x80\n\
-	lsls r3, r3, #1\n\
-	adds r0, r3, #0\n\
-	movs r3, #0\n\
-	orrs r0, r2\n\
-	strh r0, [r1]\n\
-	str r3, [r1, #0xc]\n\
-	ldr r0, _080EB7EC @ =gPaletteManager\n\
-	strh r3, [r0]\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080EB744:\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080EB74A:\n\
-	movs r5, #0\n\
-	movs r4, #1\n\
-	strh r4, [r6, #2]\n\
-	ldr r0, [r6, #0x1c]\n\
-	bl getStringLength\n\
-	strh r0, [r6, #0x10]\n\
-	strh r4, [r6, #0x12]\n\
-	movs r0, #4\n\
-	strh r0, [r6, #0x14]\n\
-	strb r5, [r6, #0xe]\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080EB766:\n\
-	ldr r0, [r6, #8]\n\
-	cmp r0, #0\n\
-	beq _080EB776\n\
-	ldrh r1, [r6]\n\
-	movs r0, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB786\n\
-_080EB776:\n\
-	ldr r0, _080EB7F0 @ =gJoypad\n\
-	ldrh r1, [r0, #4]\n\
-	movs r0, #3\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB786\n\
-	movs r0, #1\n\
-	strb r0, [r6, #0xe]\n\
-_080EB786:\n\
-	ldrb r0, [r6, #0xe]\n\
-	cmp r0, #0\n\
-	bne _080EB798\n\
-	ldr r0, _080EB7F4 @ =gTextWindow+8\n\
-	ldrh r1, [r0]\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB79C\n\
-_080EB798:\n\
-	movs r0, #0\n\
-	strh r0, [r6, #0x14]\n\
-_080EB79C:\n\
-	ldr r0, [r6, #0x1c]\n\
-	ldrh r3, [r6, #0x12]\n\
-	movs r1, #1\n\
-	movs r2, #0x12\n\
-	bl text_080e9b40\n\
-	ldr r0, [r6, #0x1c]\n\
-	movs r2, #0x12\n\
-	ldrsh r1, [r6, r2]\n\
-	subs r1, #1\n\
-	bl SkipString\n\
-	ldrh r0, [r6, #0x14]\n\
-	subs r0, #1\n\
-	strh r0, [r6, #0x14]\n\
-	lsls r0, r0, #0x10\n\
-	asrs r0, r0, #0x10\n\
-	movs r1, #1\n\
-	rsbs r1, r1, #0\n\
-	cmp r0, r1\n\
-	bne _080EB8B2\n\
-	ldrh r1, [r6, #0x12]\n\
-	adds r0, r1, #1\n\
-	strh r0, [r6, #0x12]\n\
-	ldrb r0, [r6, #0xe]\n\
-	cmp r0, #0\n\
-	beq _080EB7D6\n\
-	adds r0, r1, #4\n\
-	strh r0, [r6, #0x12]\n\
-_080EB7D6:\n\
-	movs r3, #0x12\n\
-	ldrsh r1, [r6, r3]\n\
-	movs r2, #0x10\n\
-	ldrsh r0, [r6, r2]\n\
-	cmp r1, r0\n\
-	bge _080EB7F8\n\
-	movs r0, #3\n\
-	strh r0, [r6, #0x14]\n\
-	b _080EB8B2\n\
-	.align 2, 0\n\
-_080EB7E8: .4byte gVideoRegBuffer\n\
-_080EB7EC: .4byte gPaletteManager\n\
-_080EB7F0: .4byte gJoypad\n\
-_080EB7F4: .4byte gTextWindow+8\n\
-_080EB7F8:\n\
-	movs r0, #0\n\
-	strh r0, [r6, #0x14]\n\
-	movs r0, #2\n\
-	strh r0, [r6, #2]\n\
-	b _080EB84E\n\
-_080EB802:\n\
-	ldr r0, [r6, #0x1c]\n\
-	movs r1, #1\n\
-	movs r2, #0x12\n\
-	bl PrintString\n\
-	ldrh r0, [r6, #0x14]\n\
-	adds r1, r0, #1\n\
-	strh r1, [r6, #0x14]\n\
-	ldr r2, [r6, #8]\n\
-	cmp r2, #0\n\
-	beq _080EB824\n\
-	movs r3, #0x14\n\
-	ldrsh r0, [r6, r3]\n\
-	cmp r0, r2\n\
-	bgt _080EB84E\n\
-	ldrh r1, [r6]\n\
-	b _080EB846\n\
-_080EB824:\n\
-	movs r0, #0x10\n\
-	ands r1, r0\n\
-	cmp r1, #0\n\
-	bne _080EB836\n\
-	ldr r0, _080EB858 @ =Unicode_Prompt\n\
-	movs r1, #0x1c\n\
-	movs r2, #0x13\n\
-	bl PrintUnicodeString\n\
-_080EB836:\n\
-	ldr r0, _080EB85C @ =gJoypad\n\
-	ldrh r1, [r0, #4]\n\
-	movs r0, #3\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080EB84E\n\
-	ldr r0, _080EB860 @ =gTextWindow+8\n\
-	ldrh r1, [r0]\n\
-_080EB846:\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB8B2\n\
-_080EB84E:\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-	b _080EB8B2\n\
-	.align 2, 0\n\
-_080EB858: .4byte Unicode_Prompt\n\
-_080EB85C: .4byte gJoypad\n\
-_080EB860: .4byte gTextWindow+8\n\
-_080EB864:\n\
-	ldrh r1, [r6]\n\
-	movs r0, #2\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	bne _080EB8A4\n\
-	movs r0, #1\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _080EB88C\n\
-	ldr r0, [r6, #0x20]\n\
-	cmp r0, #0\n\
-	bne _080EB892\n\
-	ldr r0, [r6, #0x1c]\n\
-	movs r1, #1\n\
-	movs r2, #0x12\n\
-	bl PrintString\n\
-	movs r0, #4\n\
-	strh r0, [r6, #2]\n\
-	b _080EB8B2\n\
-_080EB88C:\n\
-	ldr r0, [r6, #0x20]\n\
-	cmp r0, #0\n\
-	beq _080EB8A4\n\
-_080EB892:\n\
-	str r0, [r6, #0x1c]\n\
-	adds r0, r6, #0\n\
-	bl setupTextWindow\n\
-	movs r0, #1\n\
-	strh r0, [r6, #2]\n\
-	movs r0, #2\n\
-	strb r0, [r6, #0xd]\n\
-	b _080EB8B2\n\
-_080EB8A4:\n\
-	movs r0, #5\n\
-	strh r0, [r6, #2]\n\
-	ldrb r0, [r6, #0xd]\n\
-	adds r0, #1\n\
-	strb r0, [r6, #0xd]\n\
-_080EB8AE:\n\
-	movs r0, #0\n\
-	str r0, [r6, #0xc]\n\
-_080EB8B2:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
- .syntax divided\n");
+// 0x080eb6e8
+static void text_080eb6e8(struct TextWindowText* t) {
+  switch (t->props.phase) {
+    case 0: {
+      loadMugshot(t, t->mugshot);
+      gVideoRegBuffer.dispcnt |= DISPCNT_BG0_ON;
+      RESET_BGOFS(0);
+      PALETTE16(0) = RGB_BLACK;
+      t->props.phase++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      t->props.phase++;
+      FALLTHROUGH;
+    }
+    case 2: {
+      t->mode = TWM_TYPING;
+      t->len = getStringLength(t->current);
+      t->done = 1;
+      t->frame = 4;
+      t->props.prompt = 0;
+      t->props.phase++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      if (t->textType == TW_NORMAL || (t->flag & TEXT_FLAG_UNK0)) {
+        if (gJoypad[0].pressed & (A_BUTTON | B_BUTTON)) t->props.prompt = 1;
+      }
+      if (t->props.prompt != 0 || ((&gTextWindow.text)->flag & TEXT_FLAG_TERMINATE)) t->frame = 0;
+      text_080e9b40(t->current, 1, 18, t->done);
+      SkipString(t->current, t->done - 1);
+      if (--t->frame == -1) {
+        t->done++;
+        if (t->props.prompt != 0) t->done += 3;
+        if (t->done < t->len) {
+          t->frame = 3;
+        } else {
+          t->frame = 0;
+          t->mode = TWM_WAITING;
+          t->props.phase++;
+        }
+      }
+      break;
+    }
+    case 4: {
+      PrintString(t->current, 1, 18);
+      t->frame++;
+      if (t->textType != TW_NORMAL) {
+        if ((t->frame <= t->textType) && !(t->flag & TEXT_FLAG_TERMINATE)) break;
+      } else {
+        if ((t->frame & 0x10) == 0) PrintUnicodeString(Unicode_Prompt, 28, 19);
+        if (!(gJoypad[0].pressed & (A_BUTTON | B_BUTTON)) && !((&gTextWindow.text)->flag & TEXT_FLAG_TERMINATE)) break;
+      }
+      t->props.phase++;
+      break;
+    }
+    case 5: {
+      if (!(t->flag & TEXT_FLAG_TERMINATE)) {
+        if (t->flag & TEXT_FLAG_UNK0) {
+          if (!t->next) {
+            PrintString(t->current, 1, 18);
+            t->mode = TEXT_MODE_OPTION;
+            break;
+          }
+        } else if (!t->next) {
+          goto _NEXT;
+        }
+        t->current = t->next;
+        setupTextWindow(t);
+        t->mode = TWM_TYPING;
+        t->props.phase = 2;
+        break;
+      }
+    _NEXT:
+      t->mode = TEXT_MODE_OPTION | TWM_TYPING;
+      t->props.phase++;
+      FALLTHROUGH;
+    }
+    case 6: {
+      *(u32*)&t->props = 0;
+      break;
+    }
+    default: {
+      break;
+    }
+  }
 }
 
 // --------------------------------------------
