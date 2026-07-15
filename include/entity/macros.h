@@ -76,6 +76,14 @@
     body->fn = onCollision;                        \
   }
 
+// INIT_BODY(p, cols, hp, NULL) の後に当たり判定ハンドラを設定する (upstream: SET_BODY_INTERSECT_HANDLER)
+// ポインタ経由で書くことで agbcc が INIT_BODY の &p->body (r4) を再利用する
+#define SET_BODY_INTERSECT_HANDLER(obj, handler)   \
+  {                                                \
+    struct Body* body = &(((Object*)(obj))->body); \
+    body->fn = (void*)(handler);                   \
+  }
+
 // この書き方が非常によく使われるので、マクロとして定義されてる可能性がありそう
 #define EXIT_BODY(enti)                       \
   (((Object*)enti)->body).status = 0;         \

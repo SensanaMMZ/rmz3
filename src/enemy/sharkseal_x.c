@@ -1,7 +1,22 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mod.h"
 #include "overworld_terrain.h"
+#include "story.h"
+
+struct SharksealX {
+  OBJECT_HDR;
+  // props (16bytes, offset: 0xB4..)
+  s32 x_b4;               // 0xB4
+  u8 unk_b8[4];           // 0xB8
+  u8 unk_bc;              // 0xBC
+  u8 unk_bd;              // 0xBD
+  u8 unk_be;              // 0xBE
+  u8 unk_bf;              // 0xBF
+  struct Entity* unk_c0;  // 0xC0
+};
+static_assert(sizeof(struct SharksealX) == sizeof(struct Enemy));
 
 static const struct Collision sCollisions[5];
 
@@ -20,7 +35,47 @@ struct Enemy* CreateSharksealX(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/sharkseal_x_p1_p2.inc");
+void SharksealX_Update(struct Enemy* p);
+void FUN_080711d8(struct Body* body, struct Coord* r1, struct Coord* r2);
+
+// 0x08070084
+void SharksealX_Init(struct SharksealX* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  if (FLAG(gSystemSavedataManager.mods, MOD_121) && !FLAG(gCurStory.s.gameflags, DEMO_PLAY)) {
+    INIT_BODY(p, sCollisions, 10, NULL);
+  } else {
+    INIT_BODY(p, sCollisions, 6, NULL);
+  }
+  SET_BODY_INTERSECT_HANDLER(p, FUN_080711d8);
+
+  if (gOverworld.sea > (p->s).coord.y) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  p->x_b4 = (p->s).coord.x;
+  (&(p->s).d)->x = (&(p->s).d)->y = 0;
+  p->unk_c0 = NULL;
+  p->unk_bd = 0;
+  p->x_b4 = (p->s).coord.x;
+  (p->s).unk_coord.y = (p->s).coord.y;
+  (&(p->s).d)->x = (&(p->s).d)->y = 0;
+  p->unk_bc = 0;
+  if (IsFrozen(&p->s)) {
+    SetMotion(&p->s, MOTION(SM024_SHARKSEAL_X, 0));
+    UpdateMotionGraphic(&p->s);
+  }
+  p->unk_bf = 0;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 1, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
+  SharksealX_Update((struct Enemy*)p);
+}
+
+INCASM("asm/enemy/sharkseal_x_p2.inc");
 
 bool8 FUN_080707d0(struct Enemy* p) { return TRUE; }
 
@@ -119,13 +174,11 @@ short forceWaterLanding(struct Entity* p) {
   }
 }
 
-void SharksealX_Init(struct Enemy* p);
-void SharksealX_Update(struct Enemy* p);
 void SharksealX_Die(struct Enemy* p);
 
 // clang-format off
 const EnemyRoutine gSharksealXRoutine = {
-    [ENTITY_INIT] =      SharksealX_Init,
+    [ENTITY_INIT] =      (void*)SharksealX_Init,
     [ENTITY_UPDATE] =    SharksealX_Update,
     [ENTITY_DIE] =       SharksealX_Die,
     [ENTITY_DISAPPEAR] = (void*)DeleteEnemy,
