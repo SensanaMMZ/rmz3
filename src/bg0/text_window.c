@@ -235,170 +235,62 @@ static bool32 isMugshotChanged(struct TextWindowText* t) {
 }
 
 // 0x080ea930
-NAKED static void loadMugshot(struct TextWindowText* t, u8 mugshot) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, lr}\n\
-	adds r6, r0, #0\n\
-	lsls r1, r1, #0x18\n\
-	lsrs r5, r1, #0x18\n\
-	ldr r0, _080EA95C @ =gSystemSavedataManager\n\
-	adds r4, r0, #0\n\
-	adds r4, #0x44\n\
-	ldrb r0, [r4]\n\
-	cmp r0, #0\n\
-	bne _080EA96C\n\
-	ldr r0, _080EA960 @ =gDialogGraphics\n\
-	ldr r1, _080EA964 @ =gVideoRegBuffer+4\n\
-	ldrh r2, [r1]\n\
-	movs r1, #0xc\n\
-	ands r1, r2\n\
-	lsls r1, r1, #0xc\n\
-	ldr r2, _080EA968 @ =sVramOffsets\n\
-	ldr r2, [r2, #4]\n\
-	adds r1, r1, r2\n\
-	bl RequestGraphicTransfer\n\
-	b _080EA99E\n\
-	.align 2, 0\n\
-_080EA95C: .4byte gSystemSavedataManager\n\
-_080EA960: .4byte gDialogGraphics\n\
-_080EA964: .4byte gVideoRegBuffer+4\n\
-_080EA968: .4byte sVramOffsets\n\
-_080EA96C:\n\
-	ldrb r1, [r4]\n\
-	lsls r0, r1, #2\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _080EA9D8 @ =0x085A8338\n\
-	adds r0, r0, r1\n\
-	ldr r1, _080EA9DC @ =gVideoRegBuffer+4\n\
-	ldrh r2, [r1]\n\
-	movs r1, #0xc\n\
-	ands r1, r2\n\
-	lsls r1, r1, #0xc\n\
-	ldr r2, _080EA9E0 @ =sVramOffsets\n\
-	ldr r2, [r2, #4]\n\
-	adds r1, r1, r2\n\
-	bl RequestGraphicTransfer\n\
-	ldrb r1, [r4]\n\
-	lsls r0, r1, #2\n\
-	adds r0, r0, r1\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _080EA9E4 @ =0x085A8344\n\
-	adds r0, r0, r1\n\
-	movs r1, #0\n\
-	bl LoadPalette\n\
-_080EA99E:\n\
-	ldrb r0, [r6, #4]\n\
-	cmp r0, #1\n\
-	beq _080EA9D2\n\
-	cmp r5, #0\n\
-	beq _080EA9D2\n\
-	lsls r4, r5, #2\n\
-	adds r4, r4, r5\n\
-	lsls r4, r4, #2\n\
-	ldr r1, _080EA9E8 @ =gDialogGraphics\n\
-	adds r0, r4, r1\n\
-	ldr r1, _080EA9DC @ =gVideoRegBuffer+4\n\
-	ldrh r2, [r1]\n\
-	movs r1, #0xc\n\
-	ands r1, r2\n\
-	lsls r1, r1, #0xc\n\
-	ldr r2, _080EA9E0 @ =sVramOffsets\n\
-	ldr r2, [r2]\n\
-	adds r1, r1, r2\n\
-	bl RequestGraphicTransfer\n\
-	ldr r0, _080EA9EC @ =0x085A7ED0\n\
-	adds r4, r4, r0\n\
-	adds r0, r4, #0\n\
-	movs r1, #0x20\n\
-	bl LoadPalette\n\
-_080EA9D2:\n\
-	pop {r4, r5, r6}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080EA9D8: .4byte gDialogGraphics+(57*20)\n\
-_080EA9DC: .4byte gVideoRegBuffer+4\n\
-_080EA9E0: .4byte sVramOffsets\n\
-_080EA9E4: .4byte gDialogGraphics+(57*20)+12\n\
-_080EA9E8: .4byte gDialogGraphics\n\
-_080EA9EC: .4byte gDialogGraphics+12\n\
- .syntax divided\n");
+// シンボル演算(&gDialogGraphics[base+n])だと agbcc が graphic/palette のベース (共有 symbol_ref) を
+// CSE してしまいプール定数が1つになる。retail は別々のプール定数なので整数リテラルで書く (upstream 準拠)。
+#if MODERN
+#define DIALOG_GRAPHIC(base, n) ((void*)&gDialogGraphics[(base) + (n)])
+#define DIALOG_PALETTE(base, n) ((void*)&gDialogGraphics[(base) + (n)].pal)
+#else
+#define _gDialogGraphics 0x085a7ec4
+#define _gDialogPalettes (0x085a7ec4 + 12)
+#define DIALOG_GRAPHIC(base, n) ((void*)(_gDialogGraphics + ((base) * sizeof(struct ColorGraphic)) + ((n) * sizeof(struct ColorGraphic))))
+#define DIALOG_PALETTE(base, n) ((void*)((_gDialogPalettes + ((base) * sizeof(struct ColorGraphic))) + ((n) * sizeof(struct ColorGraphic))))
+#endif
+
+/**
+ * @brief Load msgbox and mugshot tile data into VRAM
+ * @note 0x080ea930
+ */
+static void loadMugshot(struct TextWindowText* t, u8 mugshot) {
+  // msgbox
+  if (gSystemSavedataManager.msgbox == 0) {
+    RequestGraphicTransfer(DIALOG_GRAPHIC(0, 0), (void*)(CHAR_BASE(0) + sVramOffsets[1]));
+  } else {
+    // e-card: msgbox
+    RequestGraphicTransfer(DIALOG_GRAPHIC(57, gSystemSavedataManager.msgbox), (void*)(CHAR_BASE(0) + sVramOffsets[1]));
+    LoadPalette(DIALOG_PALETTE(57, gSystemSavedataManager.msgbox), 0);
+  }
+  // mugshot
+  if ((t->mugshot != NO_MUGSHOT) && (mugshot != 0)) {
+    RequestGraphicTransfer(DIALOG_GRAPHIC(0, mugshot), (void*)(CHAR_BASE(0) + sVramOffsets[0]));
+    LoadPalette(DIALOG_PALETTE(0, mugshot), 32);
+  }
 }
 
-NAKED void transferMugshotTileMap(struct TextWindowText* t) {
-  asm(".syntax unified\n\
-	push {r4, r5, lr}\n\
-	adds r1, r0, #0\n\
-	ldr r0, _080EAA3C @ =0x020308D0\n\
-	ldr r5, [r0, #4]\n\
-	ldrb r0, [r0, #0x14]\n\
-	cmp r0, #1\n\
-	bne _080EAA72\n\
-	ldrb r0, [r1, #4]\n\
-	cmp r0, #1\n\
-	beq _080EAA72\n\
-	ldrb r0, [r1, #6]\n\
-	cmp r0, #0\n\
-	bne _080EAA44\n\
-	ldrb r0, [r1, #5]\n\
-	lsls r0, r0, #6\n\
-	adds r0, #2\n\
-	adds r5, r5, r0\n\
-	movs r0, #0\n\
-_080EAA14:\n\
-	lsls r4, r0, #0x10\n\
-	asrs r4, r4, #0x10\n\
-	lsls r0, r4, #1\n\
-	adds r0, r0, r4\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _080EAA40 @ =MugshotLeftTileMasks\n\
-	adds r0, r0, r1\n\
-	adds r1, r5, #0\n\
-	movs r2, #0xc\n\
-	bl CopyMemory\n\
-	adds r4, #1\n\
-	lsls r4, r4, #0x10\n\
-	adds r5, #0x40\n\
-	lsrs r0, r4, #0x10\n\
-	asrs r4, r4, #0x10\n\
-	cmp r4, #5\n\
-	ble _080EAA14\n\
-	b _080EAA72\n\
-	.align 2, 0\n\
-_080EAA3C: .4byte 0x020308D0\n\
-_080EAA40: .4byte MugshotLeftTileMasks\n\
-_080EAA44:\n\
-	ldrb r0, [r1, #5]\n\
-	lsls r0, r0, #6\n\
-	adds r0, #0x2e\n\
-	adds r5, r5, r0\n\
-	movs r0, #0\n\
-_080EAA4E:\n\
-	lsls r4, r0, #0x10\n\
-	asrs r4, r4, #0x10\n\
-	lsls r0, r4, #1\n\
-	adds r0, r0, r4\n\
-	lsls r0, r0, #2\n\
-	ldr r1, _080EAA78 @ =MugshotRightTileMasks\n\
-	adds r0, r0, r1\n\
-	adds r1, r5, #0\n\
-	movs r2, #0xc\n\
-	bl CopyMemory\n\
-	adds r4, #1\n\
-	lsls r4, r4, #0x10\n\
-	adds r5, #0x40\n\
-	lsrs r0, r4, #0x10\n\
-	asrs r4, r4, #0x10\n\
-	cmp r4, #5\n\
-	ble _080EAA4E\n\
-_080EAA72:\n\
-	pop {r4, r5}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_080EAA78: .4byte MugshotRightTileMasks\n\
- .syntax divided\n");
+static const u16 MugshotLeftTileMasks[];
+static const u16 MugshotRightTileMasks[];
+
+/**
+ * @brief Draw mugshot tilemap (タイルデータは loadMugshot でVRAMにロード)
+ * @note 0x080ea9f0
+ */
+void transferMugshotTileMap(struct TextWindowText* t) {
+  s16 i;
+  u16* bgmap = gTextWindow.bg0Mask;
+
+  if (gTextWindow.text.props.kind == 1 && (t->mugshot != NO_MUGSHOT)) {
+    if (t->mugshotRight == 0) {
+      bgmap += 1 + (t->y * 32);
+      for (i = 0; i < 6; i++, bgmap += 32) {
+        CopyMemory((void*)&MugshotLeftTileMasks[6 * i], bgmap, 6 * sizeof(u16));
+      }
+    } else {
+      bgmap += 23 + (t->y * 32);
+      for (i = 0; i < 6; i++, bgmap += 32) {
+        CopyMemory((void*)&MugshotRightTileMasks[6 * i], bgmap, 6 * sizeof(u16));
+      }
+    }
+  }
 }
 
 NAKED void text_080eaa7c(struct TextWindowText* t, u16 r1) {
