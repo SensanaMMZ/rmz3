@@ -41,7 +41,36 @@ struct VFX* FUN_080c07e4(struct Coord* c1, struct Coord* c2, u8 a2, u8 a3) {
   return p;
 }
 
-INCASM("asm/vfx/unk_50_pre_pre_p2_p2.inc");
+void VFX50_Update(struct VFX* vfx);
+
+// 0x080c08d0
+void VFX50_Init(struct VFX* vfx) {
+  InitNonAffineMotion(&vfx->s);
+  (vfx->s).flags |= DISPLAY;
+  (vfx->s).flags |= FLIPABLE;
+  ResetDynamicMotion((void*)vfx);
+
+  if ((vfx->s).work[0] == 0) {
+    SET_XFLIP(vfx, FALSE);
+    (vfx->s).d.x = PIXEL(1) / 2;
+  } else {
+    SET_XFLIP(vfx, TRUE);
+    (vfx->s).d.x = -PIXEL(1) / 2;
+  }
+  (vfx->s).d.y = 0;
+
+  if ((vfx->s).work[1] == 0) {
+    SET_VFX_ROUTINE(vfx, ENTITY_UPDATE);
+    (vfx->s).mode[1] = 1, (vfx->s).mode[2] = 0, (vfx->s).mode[3] = 0;
+  } else {
+    SET_VFX_ROUTINE(vfx, ENTITY_UPDATE);
+    (vfx->s).mode[1] = 0, (vfx->s).mode[2] = 0, (vfx->s).mode[3] = 0;
+  }
+
+  (vfx->s).d.y = 0;
+  (vfx->s).work[2] = 0xFF;
+  VFX50_Update(vfx);
+}
 
 void VFX50_Update(struct VFX* vfx) {
   (sUpdates[(vfx->s).mode[1]])(vfx);
