@@ -1,5 +1,7 @@
 #include "palette_animation.h"
 #include "global.h"
+#include "metatile.h"
+#include "trig.h"
 #include "gpu_regs.h"
 #include "overworld.h"
 #include "solid.h"
@@ -518,7 +520,42 @@ static void exitOcean(struct Coord* _ UNUSED) {
   }
 }
 
-INCASM("asm/stage_gfx/ocean_p1_p1.inc");
+// 0x0800d110
+void ocean_0800d110(struct StageLayer* l, const struct Stage* stage UNUSED) {
+  if (l->phase == 0) {
+    const u16 n = (l->bgIdx << 16) >> 20;
+    BGCNT16(n) = (l->prio | l->screenBase) | BGCNT_CHARBASE(1) | BGCNT_MOSAIC | BGCNT_TXT256x512;
+    RESET_BGOFS(n);
+    CpuFastCopy(BGMAP(45), (void*)(VRAM + SCREEN_BASE_16(n)), 2048);
+    CpuFastCopy(BGMAP(46), (void*)(VRAM + 0x800 + SCREEN_BASE_16(n)), 2048);
+    gBlendRegBuffer.bldclt = BLDCNT_TGT1_BG2 | BLDCNT_EFFECT_BLEND | (BLDCNT_TGT2_BG0 | BLDCNT_TGT2_BG1 | BLDCNT_TGT2_BG3 | BLDCNT_TGT2_OBJ | BLDCNT_TGT2_BD);  // 0x3B44
+    gBlendRegBuffer.bldalpha = BLDALPHA_BLEND(4, 12);  // 0x0C04
+    (l->work).ocean.frameCounter = 0;
+    l->phase++;
+  }
+  (l->work).ocean.frameCounter++;
+}
+
+/**
+ * @note 水面の処理 (LayerUpdate_SunkenLibrary_2 と類似)
+ * @note 0x0800d1c8
+ */
+void FUN_0800d1c8(struct StageLayer* l, const struct Stage* stage UNUSED) {
+  u16 n = l->bgIdx;
+  s32 scy = ((l->viewportCenterPixel).y - (gOverworld.sea >> 8)) + 5 - (SIN((l->work).ocean.frameCounter) >> 6);
+  if (scy < -180) scy = -180;
+  if (scy < 0) {
+    gWindowRegBuffer.dispcnt |= DISPCNT_WIN1_ON;
+    gWindowRegBuffer.winin[1] = 0xFB;
+    gWindowRegBuffer.winin[2] |= 0x0E;
+    gWindowRegBuffer.winH.half[1] = 0xFF;
+    gWindowRegBuffer.winV.half[1] = (-scy) & 0xFF;
+  } else {
+    gWindowRegBuffer.winV.half[1] = 0;
+  }
+  BGnHOFS(n >> 4) = (l->viewportCenterPixel).x;
+  BGnVOFS(n >> 4) = scy;
+}
 
 void FUN_0800d264(struct StageLayer* l, const struct Stage* stage) {
   gBlendRegBuffer.bldclt = 0;
@@ -526,7 +563,38 @@ void FUN_0800d264(struct StageLayer* l, const struct Stage* stage) {
   gWindowRegBuffer.winin[2] |= 0xe;
 }
 
-INCASM("asm/stage_gfx/ocean_p1_p2_p1.inc");
+// 0x0800d28c
+void ocean_0800d28c(struct StageLayer* l, const struct Stage* stage UNUSED) {
+  if (l->phase == 0) {
+    const u16 n = (l->bgIdx << 16) >> 20;
+    BGCNT16(n) = (l->prio | l->screenBase) | BGCNT_CHARBASE(1) | BGCNT_MOSAIC | BGCNT_TXT256x512;  // 0x8044
+    RESET_BGOFS(n);
+    CpuFastCopy(BGMAP(43), (void*)(VRAM + SCREEN_BASE_16(n)), 2048);
+    CpuFastCopy(BGMAP(44), (void*)(VRAM + 0x800 + SCREEN_BASE_16(n)), 2048);
+    l->phase++;
+  }
+}
+
+INCASM("asm/stage_gfx/ocean_ctrl_bg3.inc");
+
+// 0x0800d488
+void ocean_0800d488(struct StageLayer* l, const struct Stage* stage UNUSED) {
+  if (l->phase == 0) {
+    const u16 n = (l->bgIdx << 16) >> 20;
+    BGCNT16(n) = (l->prio | l->screenBase) | BGCNT_CHARBASE(1) | BGCNT_MOSAIC | BGCNT_TXT256x512;  // 0x8044
+    RESET_BGOFS(n);
+    CpuFastCopy(BGMAP(57), (void*)(VRAM + SCREEN_BASE_16(n)), 2048);
+    CpuFastCopy(BGMAP(56), (void*)(VRAM + 0x800 + SCREEN_BASE_16(n)), 2048);
+    l->phase++;
+  }
+}
+
+// 0x0800d518
+void setOceanBGScroll(struct StageLayer* l, const struct Stage* stage UNUSED) {
+  const u16 n = (l->bgIdx << 16) >> 20;
+  BGnHOFS(n) = (l->viewportCenterPixel).x >> 1;
+  BGnVOFS(n) = ((l->viewportCenterPixel).y >> 1) - 96;
+}
 
 void ocean_0800d544(struct StageLayer* l, const struct Stage* stage) {
   if (l->phase == 0) {
@@ -555,7 +623,28 @@ void FUN_0800d5a8(void) {
   PatchMetatileMap(31, 37, (struct MetatilePatch*)0x0833CDA8);
 }
 
-INCASM("asm/stage_gfx/ocean_p2.inc");
+extern const struct Coord Coord_080fecc4;  // 実体は struct MetatileShift (data_080fea74.c)
+
+// 0x0800d5bc
+bool16 FUN_0800d5bc(s32 x, s32 y) {
+  if (y >= PIXEL(480) && y < PIXEL(960)) {
+    struct Overworld* ow = &gOverworld;
+    return GET_METATILE(&ow->terrain, x >> 12, y >> 12) != GET_METATILE(&ow->terrain, x >> 12, (y + PIXEL(800)) >> 12);
+  }
+  return FALSE;
+}
+
+// childre ship
+// 0x0800d61c
+bool16 FUN_0800d61c(s32 x, s32 y) {
+  struct MetatileShift val = *(struct MetatileShift*)&Coord_080fecc4;
+  if (!FUN_0800d5bc(x, y)) return FALSE;
+
+  val.x = x >> 12;
+  val.y = (y + PIXEL(800)) >> 12;
+  ShiftMetatile(x >> 12, y >> 12, (const struct MetatileShift*)&val);
+  return TRUE;
+}
 
 void ocean_0800d110(struct StageLayer* l, const struct Stage* stage);
 void FUN_0800d1c8(struct StageLayer* l, const struct Stage* stage);

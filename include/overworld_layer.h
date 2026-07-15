@@ -60,6 +60,11 @@ struct StageLayer {
       u8 unk_6c[28];
     } spacecraft;
     struct {
+      u8 frameCounter;  // 水面の揺れ
+      u8 _[3];
+      u8 unk_6c[28];
+    } ocean;
+    struct {
       s32 eruptionX[3];
       u8 unk_74[20];
     } volcano;

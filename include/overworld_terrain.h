@@ -130,6 +130,9 @@ struct Overworld {
   } work;  // ステージごとに用途が変わる
 };  // 184360 bytes
 
+#define MAP_OFFSET(map, mx, my) (((map)[0] * (my)) + (mx) + 2)
+#define GET_METATILE(terrain, mx, my) ((terrain)->tilemap[MAP_OFFSET((terrain)->tilemap, (mx), (my))])
+
 #define SEA (gOverworld.sea)
 
 extern struct Overworld gOverworld;
