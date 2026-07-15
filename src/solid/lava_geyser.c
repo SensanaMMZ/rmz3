@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "overworld.h"
 #include "solid.h"
 
 void CreateLavaGeyserPlatform(struct Solid* s);
@@ -136,7 +137,30 @@ void FUN_080cc934(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/lava_geyser_p3_p2.inc");
+// 0x080cc968
+void FUN_080cc968(struct LavaGeyserObject* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      (p->s).unk_coord.x = (p->s).coord.x;
+      SetDDP(&p->body, sCollisions);
+      SetMotion(&p->s, MOTION(SM057_GEYSER, 0));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 val = (gOverworld.work.volcano.unk_004 - (67 * ((p->s).work[0] % 4)) + 1) % 268;
+      if (val > 236) {
+        (p->s).coord.x = (p->unk_c0_x - PIXEL(2));
+        (p->s).coord.x += (RANDOM(RNG_0202f388) & 0x3FF);
+      }
+      if (val == 0) (p->s).mode[1] = 1, (p->s).mode[2] = 0;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/lava_geyser_p4.inc");
 
 // --------------------------------------------
 
@@ -156,7 +180,6 @@ const SolidFunc sSolid7Updates1[6] = {
 
 // --------------------------------------------
 
-void FUN_080cc968(struct Solid* p);
 void FUN_080cca14(struct Solid* p);
 void FUN_080ccae0(struct Solid* p);
 void FUN_080ccb50(struct Solid* p);
@@ -165,7 +188,7 @@ void FUN_080ccca4(struct Solid* p);
 
 // clang-format off
 const SolidFunc sSolid7Updates2[6] = {
-    FUN_080cc968,
+    (SolidFunc)FUN_080cc968,
     FUN_080cca14,
     FUN_080ccae0,
     FUN_080ccb50,

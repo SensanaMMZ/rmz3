@@ -76,6 +76,7 @@
 #define STAGE_COUNT 18       // Stage0 + ベース含む
 
 #define LCG(s) (((s * 0x343FD + 0x269EC3) << 1) >> 1)
+#define RANDOM(rng) ((rng = LCG(rng)) >> 16)
 #define HIHALF(n) (((n) & 0xFFFF0000) >> 16)
 #define LOHALF(n) ((n) & 0xFFFF)
 #define HI_NIBBLE(byte) (((u8)byte) >> 4)
