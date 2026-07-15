@@ -69,7 +69,7 @@ void FUN_080ca700(struct Solid* p);
 static void nop_080ca6fc(struct Solid* p);
 void FUN_080ca76c(struct Solid* p);
 
-void FUN_080ca7d8(struct Solid* p);
+void FUN_080ca7d8(struct IcebonIceObject* p);
 void FUN_080ca880(struct Solid* p);
 void FUN_080ca988(struct Solid* p);
 void FUN_080caafc(struct Solid* p);
@@ -90,7 +90,7 @@ static void IcebonIce_Update(struct Solid* p) {
 
   // clang-format off
   static const SolidFunc sUpdates2[6] = {
-      FUN_080ca7d8,
+      (SolidFunc)FUN_080ca7d8,
       FUN_080ca880,
       FUN_080ca988,
       FUN_080caafc,
@@ -134,7 +134,73 @@ static void nop_080ca6fc(struct Solid* p) {
 
 // --------------------------------------------
 
-INCASM("asm/solid/icebon_ice.inc");
+extern const struct Rect Rect_0836fd58;
+
+// 0x080ca700
+void FUN_080ca700(struct Solid* p) {
+  struct Entity* icebon = (p->s).unk_28;
+  if (icebon->mode[0] >= ENTITY_DISAPPEAR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  if (icebon->mode[0] >= ENTITY_DIE) {
+    SET_SOLID_ROUTINE(p, ENTITY_DIE);
+    (p->s).mode[1] = 0;
+  }
+}
+
+// 0x080ca700 と全く同じ
+void FUN_080ca76c(struct Solid* p) {
+  struct Entity* icebon = (p->s).unk_28;
+  if (icebon->mode[0] >= ENTITY_DISAPPEAR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  if (icebon->mode[0] >= ENTITY_DIE) {
+    SET_SOLID_ROUTINE(p, ENTITY_DIE);
+    (p->s).mode[1] = 0;
+  }
+}
+
+// 0x080ca7d8
+void FUN_080ca7d8(struct IcebonIceObject* p) {
+  if ((p->body).hp >= 5) {
+    SetMotion(&p->s, MOTION(SM017_ICEBON_ICE, 0));
+  } else {
+    SetMotion(&p->s, MOTION(SM017_ICEBON_ICE, 2));
+  }
+  UpdateMotionGraphic(&p->s);
+
+  switch ((p->s).mode[2]) {
+    case 0: {
+      p->y = (p->s).coord.y;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      (p->s).flags2 |= ENTITY_HAZARD;
+      (p->s).size = (struct Rect*)&Rect_0836fd58;
+      (p->s).hazardAttr = 0x801;
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 y;
+      p->y -= PIXEL(1) / 2;
+      y = p->y - (p->s).coord.y;
+      if (y < 0) y += 7;
+      (p->s).coord.y += y >> 3;
+      if ((p->s).coord.y - (p->s).unk_coord.y <= -PIXEL(15)) (p->s).mode[1] = 1, (p->s).mode[2] = 0;
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/icebon_ice_p2.inc");
 
 static const struct Collision sCollisions[5] = {
     {
