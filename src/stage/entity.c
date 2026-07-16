@@ -1310,6 +1310,66 @@ static void ReleaseStageEntity(struct StageEntity* p) {
   gStageEntityManager.remaining++;
 }
 
+#if MODERN
+static void FUN_08018848(u8 stageID, u8 area) {
+  struct StageEntityManager* sman;
+
+  const struct PreloadEntity* preload = sStagePreloadEntities[stageID];
+  if (gStageEntityManager.area == 0xFF) {
+    LOAD_STATIC_GRAPHIC(SM000_BATTLE_EFFECT);
+    LOAD_STATIC_GRAPHIC(SM002_LEMON);
+    LOAD_STATIC_GRAPHIC(SM003_EMOTION_BUBBLE);
+    LOAD_STATIC_GRAPHIC(SM209_NUMBER);
+    LOAD_STATIC_GRAPHIC(SM167_LIFE_ENERGY + gSystemSavedataManager.lifeEnergy);
+    LOAD_STATIC_GRAPHIC(SM170_ECRYSTAL + gSystemSavedataManager.crystal);
+    LOAD_STATIC_GRAPHIC(SM173_EXLIFE + gSystemSavedataManager.extraLife);
+    LOAD_STATIC_GRAPHIC(SM176_RESULT_DISK + gSystemSavedataManager.disk);
+    CpuFastFill(0xFFFFFFFF, (void*)&gPaletteManager.buf[(16 + 13) * 16], 32);  // OBP13 を白で埋める
+    gStageEntityManager.area = 0xFE;
+  }
+  sman = &gStageEntityManager;
+  if (!(sman->unk_20e & 1)) {  // spawnDisabled
+    if (gStageEntityManager.area == 0xFE) {
+      while (preload->id != 0xFF) {
+        wStaticGraphicTilenums[preload->id] = preload->tileBase;
+        wStaticMotionPalIDs[preload->id] = preload->palID;
+        preload = &preload[1];
+      }
+    }
+    sman->unk_22a = 0;  // cyberOBPs
+    preload = sStagePreloadEntities[stageID];  // 先頭を指し直す
+    while (preload->id != 0xFF) {
+      if (preload->habitat & (1 << area)) {
+        u32 val, mask;
+        if (sman->unk_226[1]) {  // mettaursEnabled
+          val = preload->unk_05, mask = (1 << 1);
+        } else {
+          val = preload->unk_05, mask = (1 << 0);
+        }
+        if (val & mask) {
+          if (sman->unk_226[3]) {  // mmbn4EnemiesEnabled
+            val = preload->unk_06, mask = (1 << 1);
+          } else {
+            val = preload->unk_06, mask = (1 << 0);
+          }
+          if (val & mask) {
+            if (preload->unk_07) {  // cyberColor
+              sman->unk_22a |= (1 << preload->palID);
+            } else {
+              sman->unk_22a &= ~(1 << preload->palID);
+            }
+            wStaticGraphicTilenums[preload->id] = preload->tileBase;
+            wStaticMotionPalIDs[preload->id] = preload->palID;
+            LOAD_STATIC_GRAPHIC(preload->id);
+          }
+        }
+      }
+      preload = &preload[1];
+    }
+    sman->area = area;
+  }
+}
+#else
 NAKED static void FUN_08018848(u8 stageID, u8 area) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
@@ -1769,6 +1829,7 @@ _08018BF8: .4byte gStageEntityManager\n\
 _08018BFC: .4byte 0x00000211\n\
  .syntax divided\n");
 }
+#endif
 
 NON_MATCH static void FUN_08018c00(u8 stageID, u8 area) {
 #if MODERN

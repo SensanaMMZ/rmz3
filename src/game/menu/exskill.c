@@ -52,6 +52,56 @@ static void ExMenuLoop_Init(struct GameState* g) {
   g->mode[2] = 2;
 }
 
+#if MODERN
+static void ExMenuLoop_Update(struct GameState* g) {
+  struct Zero* z = g->z2;
+  struct ExSkillMenuState* exskill = &((g->sceneState).menu).exskill;
+  if (!TrySlideMenu(g)) {
+    u8 prev;
+    StepPaletteAnimation(62);
+    StepPaletteAnimation(63);
+    prev = exskill->selected;
+    if (gJoypad[0].field3_0x6 & DPAD_UP) {
+      exskill->selected = (exskill->selected + 8) % 12;  // -4
+    }
+    if (gJoypad[0].field3_0x6 & DPAD_DOWN) {
+      exskill->selected = (exskill->selected + 4) % 12;  // 1行にEXSKILLアイコンは4つ
+    }
+    if (gJoypad[0].field3_0x6 & DPAD_LEFT) {
+      s32 selected = exskill->selected;
+      exskill->selected = (((u32)selected >> 2) << 2) + ((selected + 3) % 4);  // -1
+    }
+    if (gJoypad[0].field3_0x6 & DPAD_RIGHT) {
+      s32 selected = exskill->selected;
+      exskill->selected = (((u32)selected >> 2) << 2) + ((selected + 1) % 4);  // +1
+    }
+    if (prev != exskill->selected) PlaySound(SE_CURSOR);
+    if (gJoypad[0].pressed & A_BUTTON) {
+      if ((((&z->unk_b4)->status).unlockedExSkill & (1 << exskill->selected)) >> exskill->selected) {
+        if (((&z->unk_b4)->status).exSkill & (1 << exskill->selected)) {
+          ((&z->unk_b4)->status).exSkill ^= (1 << exskill->selected);
+          PlaySound(SE_NO);
+        } else {
+          ((&z->unk_b4)->status).exSkill |= (1 << exskill->selected);
+          PlaySound(SE_YES);
+        }
+      } else {
+        PlaySound(SE_NOT_ALLOWED);
+      }
+    }
+    ((struct SquareCursorWidget*)exskill->w)->px = (exskill->selected & 3) * 24 + 256 + 28;
+    ((struct SquareCursorWidget*)exskill->w)->py = (exskill->selected >> 2) * 24 + 40;
+
+    if ((((&z->unk_b4)->status).unlockedExSkill & (1 << exskill->selected)) >> exskill->selected) {
+      PrintString(STRING(450 + exskill->selected), 2, 14);
+      PrintString(STRING(463 + exskill->selected), 17, 1);
+    } else {
+      PrintString(STRING(462), 2, 14);
+      PrintString(STRING(475), 17, 1);
+    }
+  }
+}
+#else
 NAKED static void ExMenuLoop_Update(struct GameState* g) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
@@ -273,6 +323,7 @@ _080F7CE0: .4byte gStringData\n\
 _080F7CE4: .4byte 0x000003B6\n\
  .syntax divided\n");
 }
+#endif
 
 static void ExMenuLoop_SlideOut(struct GameState* g) {
   if (MENU->unk_4d == 2) {
