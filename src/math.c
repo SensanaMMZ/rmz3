@@ -40,8 +40,21 @@ s32 CalcAngleBetweenPoints(s32 x1, s32 y1, s32 x2, s32 y2) { return CalcAngle(x2
 
 s32 CalcAngleBetweenCoords(struct Coord* c1, struct Coord* c2) { return CalcAngleBetweenPoints(c1->x, c1->y, c2->x, c2->y); }
 
-NAKED u8 FUN_080e964c(u32 r0, s32 r1, s32 r2) {
+/**
+ * @brief 角度aを角度bへ、最大ステップcずつ近づける (u8角度系: 256 = 360度)
+ * @note b±c の範囲内なら a をそのまま返す。レジスタ割り当てが合わないため NON_MATCH
+ * @note 0x080e964c
+ */
+NON_MATCH u8 FUN_080e964c(u32 a, s32 b, s32 c) {
+#if MODERN
+  if ((((a - b) + c) & 0xFF) > (u32)(c << 1)) {
+    s32 dir = (((a - b) & 0xFF) > 0x7F) ? -1 : 1;
+    return (b + c * dir) & 0xFF;
+  }
+  return a;
+#else
   INCCODE("asm/math/math_080e964c.inc");
+#endif
 }
 
 #if MODERN == 0
