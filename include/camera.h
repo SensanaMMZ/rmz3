@@ -36,9 +36,9 @@ struct Camera {
   s8 mode;
   u8 chaseMode;  // .target に .coord を近づける挙動モード
   s16 unk_1a;
-  bool8 unk_1c;
+  bool8 isCallbackOnce;  // .mode が変わったら FALSE になって、 .callback が呼び出されると TRUE になるフラグ
   u16 ALIGNED(4) unk_20;
-  s16 unk_22;
+  s16 unk_22;  // Lerp用のフレームカウンタ (upstream: counter)
   u8 unk_24[4];
   struct Coord base;              // カメラの始点 画面の振動で利用
   struct Coord target;            // .coordがあるべき位置 .flagsによって、ここに.coordを徐々に近づけたり、一気にここに.coordがワープするよう設定する

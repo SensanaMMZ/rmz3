@@ -62,7 +62,7 @@ void Camera_SetMode(struct Camera* camera, u32 mode) {
   };
   // clang-format on
   camera->mode = mode;
-  *(u32*)&camera->unk_1c = 0;
+  *(u32*)&camera->isCallbackOnce = 0;
   camera->unk_20 = 0;
   camera->unk_1a = 0;
   camera->callback = sUpdates[mode];
@@ -219,9 +219,9 @@ u32 CalcFromCamera(struct Camera* camera, struct Coord* c) {
 static void CameraMode0Callback(struct Camera* _) { return; }
 
 static void CameraMode1Callback_ForceScroll(struct Camera* camera) {
-  if (camera->unk_1c == FALSE) {
+  if (camera->isCallbackOnce == FALSE) {
     camera->unk_22 = 0;
-    camera->unk_1c++;
+    camera->isCallbackOnce++;
   }
   (camera->target).x += (camera->forceScrollSpeed).x;
   (camera->target).y += (camera->forceScrollSpeed).y;
@@ -230,9 +230,9 @@ static void CameraMode1Callback_ForceScroll(struct Camera* camera) {
 
 static void CameraMode2Callback(struct Camera* camera) {
   s32 left, top;
-  if (camera->unk_1c == FALSE) {
+  if (camera->isCallbackOnce == FALSE) {
     camera->unk_22 = 0;
-    camera->unk_1c++;
+    camera->isCallbackOnce++;
   }
   left = camera->unk_left + camera->unk_right;
   camera->unk_left = left;
@@ -251,9 +251,9 @@ NON_MATCH static void CameraMode3Callback(struct Camera* camera) {
 #if MODERN
   s32 zx, zy, tmp;
   struct Coord c, d, target;
-  if (camera->unk_1c == 0) {
+  if (camera->isCallbackOnce == 0) {
     camera->unk_22 = 0;
-    camera->unk_1c++;
+    camera->isCallbackOnce++;
   }
   zx = camera->zero->x + camera->unk_left;
   zy = camera->zero->y + camera->unk_top;
