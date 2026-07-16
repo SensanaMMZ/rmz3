@@ -3312,6 +3312,30 @@ static metatile_attr_t AppendHazardID_2(struct Zero* z, s32 x, s32 y) {
   return 0;
 }
 
+#if MODERN
+static bool16 hazard_08028338(struct Zero* z, s32 x, s32 y) {
+  u8 i;
+  for (i = 0; i < z->hazardCount; i++) {
+    const u8 n = z->hazard[i];
+    const s32 cx = (gOverworld.terrain.objects[n].start).x;
+    const u32 ofs_x = (u32)(x - cx);
+    const u32 hw = gOverworld.terrain.objects[n].w;
+    if ((ofs_x + hw) < (hw << 1)) {  // (x > (cx - hw)) && (x < (cx + hw))
+      const s32 cy = (gOverworld.terrain.objects[n].start).y;
+      const u32 ofs_y = (u32)(y - cy);
+      const u32 hh = gOverworld.terrain.objects[n].h;
+      if ((ofs_y + hh) < (hh << 1)) {
+        if (cx == (gOverworld.terrain.objects[n].unk_10).x) {
+          if (cy != (gOverworld.terrain.objects[n].unk_10).y) {  // NOTE: ここは !=
+            return TRUE;
+          }
+        }
+      }
+    }
+  }
+  return FALSE;
+}
+#else
 NAKED static bool16 hazard_08028338(struct Zero* z, s32 x, s32 y) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
@@ -3404,6 +3428,7 @@ _080283DC:\n\
 	bx r1\n\
  .syntax divided\n");
 }
+#endif
 
 // ゼロが Hazard の中にいる(めり込んでいる)場合は、そのMetatileAttr、そうでないなら0を返す
 NON_MATCH static metatile_attr_t IsInHazard(struct Zero* z, s32 x, s32 y) {
@@ -4301,6 +4326,76 @@ _08028BBC:\n\
 
 NAKED bool8 unused_08028bcc(struct Zero* z, const struct Rect* range) { INCCODE("asm/unused/unused_08028bcc.inc"); }
 
+#if MODERN
+bool8 TryGroundDash(struct Zero* z, const struct Rect* range) {
+  s32 x1, x2;
+  if ((z->s).flags & X_FLIP) {
+    x1 = (z->s).coord.x - range->x + (range->w >> 1);
+    x2 = (z->s).coord.x - range->x - (range->w >> 1);
+  } else {
+    x1 = (z->s).coord.x + range->x + (range->w >> 1);
+    x2 = (z->s).coord.x + range->x - (range->w >> 1);
+  }
+
+  {
+    s32 y;
+    if ((GetGroundMetatileAttr((z->s).coord.x, (z->s).coord.y + 1) & 0xF) == SHAPE_BLOCK) {
+      y = ((z->s).coord.y + range->y) + (range->h >> 1);
+    } else {
+      y = ((z->s).coord.y + range->y);
+    }
+    {
+      s32 dx = PushoutToLeft2(x1, y);
+      if (dx < 0 || hazard_0802802c(z, x1, y) < 0) {
+        metatile_attr_t attr = GetGroundMetatileAttr(dx + x2, y);
+        if (!(attr & (METATILE_SOFT_PLATFORM | METATILE_ANTTRAP))) {
+          if (((attr & 0x0F) == SHAPE_BLOCK) || IsInHazard(z, dx + x2, y)) {
+            return FALSE;
+          }
+        }
+      }
+    }
+    {
+      s32 dx = PushoutToRight2(x2, y);
+      if (dx > 0 || hazard_0802802c(z, x2, y) > 0) {
+        metatile_attr_t attr = GetGroundMetatileAttr(dx + x1, y);
+        if (!(attr & (METATILE_SOFT_PLATFORM | METATILE_ANTTRAP))) {
+          if (((attr & 0x0F) == SHAPE_BLOCK) || IsInHazard(z, dx + x1, y)) {
+            return FALSE;
+          }
+        }
+      }
+    }
+  }
+
+  {
+    s32 y = ((z->s).coord.y + range->y) - (range->h >> 1);
+    {
+      s32 dx = PushoutToLeft2(x1, y);
+      if (dx < 0 || hazard_0802802c(z, x1, y) < 0) {
+        metatile_attr_t attr = GetGroundMetatileAttr(dx + x2, y);
+        if (!(attr & (METATILE_SOFT_PLATFORM | METATILE_ANTTRAP))) {
+          if (((attr & 0x0F) == SHAPE_BLOCK) || IsInHazard(z, dx + x2, y)) {
+            return FALSE;
+          }
+        }
+      }
+    }
+    {
+      s32 dx = PushoutToRight2(x2, y);
+      if (dx > 0 || hazard_0802802c(z, x2, y) > 0) {
+        metatile_attr_t attr = GetGroundMetatileAttr(dx + x1, y);
+        if (!(attr & (METATILE_SOFT_PLATFORM | METATILE_ANTTRAP))) {
+          if (((attr & 0x0F) == SHAPE_BLOCK) || IsInHazard(z, dx + x1, y)) {
+            return FALSE;
+          }
+        }
+      }
+    }
+  }
+  return TRUE;
+}
+#else
 NAKED bool8 TryGroundDash(struct Zero* z, const struct Rect* range) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
@@ -4522,6 +4617,7 @@ _08028F5E:\n\
 	bx r1\n\
    .syntax divided\n");
 }
+#endif
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 

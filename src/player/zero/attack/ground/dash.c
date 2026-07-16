@@ -370,6 +370,52 @@ NON_MATCH static void dash_saber(struct Zero* z) {
 #endif
 }
 
+#if MODERN
+static void gale_attack(struct Zero* z) {
+  switch ((z->unk_b4).attackMode[2]) {
+    case 0: {
+      SetMotion(&z->s, MOTION(DM024_ZERO_GALE, 0));
+      z->atkCooltime = 24;
+      (z->unk_b4).attackMode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 duration;
+      KeepMotion(z, MOTION(DM024_ZERO_GALE, 0));
+      duration = (z->s).motion.duration;
+      if (duration < 2) {
+        CreateWeaponSaber(z, 18);
+        (z->unk_b4).attackMode[2]++;
+      }
+      break;
+    }
+    case 2: {
+      KeepMotion(z, MOTION(DM024_ZERO_GALE, 0));
+      if (z->atkCooltime < 9) {
+        SetMotion(&z->s, MOTION(DM024_ZERO_GALE, 1));
+        (z->unk_b4).attackMode[2]++;
+      }
+      break;
+    }
+    case 3: {
+      if ((z->s).motion.state == MOTION_END) {
+        z->restriction.move = FALSE;
+        (z->s).mode[1] = ZERO_GROUND, (z->s).mode[2] = 0, (z->s).mode[3] = 0;
+        (z->unk_b4).attackMode[0] = 0;
+      }
+      break;
+    }
+  }
+  if (z->atkCooltime > 0) {
+    z->atkCooltime--;
+    if ((z->s).flags & X_FLIP) {
+      (z->s).d.x = CalcDx(z) + ((GetDashSpeed(z) - CalcDx(z)) * (s32)(z->atkCooltime)) / 24;
+    } else {
+      (z->s).d.x = -CalcDx(z) - ((GetDashSpeed(z) - CalcDx(z)) * (s32)(z->atkCooltime)) / 24;
+    }
+  }
+}
+#else
 NAKED static void gale_attack(struct Zero* z) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
@@ -553,6 +599,7 @@ _0802F29E:\n\
 	bx r0\n\
  .syntax divided\n");
 }
+#endif
 
 NAKED static void dash_rolling_saber(struct Zero* z) {
   asm(".syntax unified\n\

@@ -84,6 +84,31 @@ void ResumeAllPaletteAnimations(void) {
  * @param ofs Paletteオフセット (詳細はTODO)
  * @note 0x08003f2c
  */
+#if MODERN
+void StartPaletteAnimation(u16 blinkID, u16 ofs) {
+  s32 i;
+
+  for (i = 0; i < MAX_PLTT_ANIM; i++) {
+    if (gPaletteAnimationManager.ids[i] == (blinkID + 1)) {
+      return;
+    }
+  }
+  for (i = 0; i < MAX_PLTT_ANIM; i++) {
+    if (gPaletteAnimationManager.ids[i] == 0) break;
+  }
+  if (i != MAX_PLTT_ANIM) {
+    struct PaletteAnimation* b = &gPaletteAnimationManager.blinks[i];
+    b->pal = SELF_REL_PTR(&gBlinkMotionColorOffsets[blinkID]);  // NOTE: ここのレジスタ割り当てだけが合わない (NON_MATCH の原因)
+    b->cmds = (struct MotionCmd**)gBlinkMotionCmdTable[blinkID];
+    b->paused = FALSE;
+    b->palIdx = ofs;
+    ResetMotion(&b->m, (const struct MotionCmd* const*)b->cmds);
+    SetMotionSubID(&b->m, 0);
+    TransferPalettes(b);
+    gPaletteAnimationManager.ids[i] = (blinkID + 1);  // 0 は空きエントリを意味するので blinkID+1
+  }
+}
+#else
 NAKED void StartPaletteAnimation(u16 blinkID, u16 ofs) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
@@ -240,6 +265,7 @@ _08004060: .4byte 0x001FFFFF\n\
 _08004064: .4byte gPaletteAnimationManager\n\
 	 .syntax divided\n");
 }
+#endif
 
 /**
  * @note 0x08004068

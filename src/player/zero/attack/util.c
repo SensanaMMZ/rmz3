@@ -146,6 +146,67 @@ static bool8 isShieldOK(struct Zero* z) {
   return TRUE;
 }
 
+#if MODERN
+struct Weapon* CreateBuster(struct Zero* z, s32 x, s32 y, bool8 isDirRight) {
+  u8 kind;
+  struct Coord c;
+  struct Weapon* w;
+  if (((&z->unk_b4)->status).mainWeapon == WEAPON_BUSTER) {
+    kind = GetWeaponCharge(z, FALSE);
+  } else {
+    kind = GetWeaponCharge(z, TRUE);
+  }
+
+  if ((kind != FULL_CHARGE) && (((z->input).ultimateCommand_224)[1] == 3)) {
+    if ((z->s).mode[1] == ZERO_LADDER) {
+      SET_PLAYER_XFLIP(z, (z->input).ultimateCommand_224[2]);
+      isDirRight = (z->input).ultimateCommand_224[2];
+    }
+    kind = SEMI_CHARGE;
+    ((z->input).ultimateCommand_224)[1] = 0;
+  }
+  if (((z->input).ultimateCommand_227)[1] == 6) {
+    if ((z->s).mode[1] == ZERO_LADDER) {
+      SET_PLAYER_XFLIP(z, (z->input).ultimateCommand_227[2]);
+      isDirRight = (z->input).ultimateCommand_227[2];
+    }
+    kind = FULL_CHARGE;
+    ((z->input).ultimateCommand_227)[1] = 0;
+  }
+
+  if (isDirRight) x = -x;
+  if (kind == FULL_CHARGE) {
+    u8 elem = ((&z->unk_b4)->status).element;
+    switch (elem) {
+      case ELEMENT_NONE: {
+        if (((&z->unk_b4)->status).exSkill & (1 << EXSKILL_ID_LASER)) kind = 3;
+        break;
+      }
+      case ELEMENT_FLAME: {
+        if (((&z->unk_b4)->status).exSkill & (1 << EXSKILL_ID_BURST)) kind = 4;
+        break;
+      }
+      case ELEMENT_ICE: {
+        if (((&z->unk_b4)->status).exSkill & (1 << EXSKILL_ID_BLIZZ)) kind = 5;
+        break;
+      }
+      case ELEMENT_THUNDER:
+      default: {
+        break;
+      }
+    }
+  }
+
+  c.x = x, c.y = y;
+  w = CreateWeaponBuster(z, &c, kind, isDirRight, FALSE);
+  if (((&z->unk_b4)->status).element == ELEMENT_THUNDER) {
+    if (((&z->unk_b4)->status).exSkill & (1 << EXSKILL_ID_VSHOT)) {
+      CreateWeaponBuster(z, &c, kind, isDirRight, TRUE);
+    }
+  }
+  return w;
+}
+#else
 NAKED struct Weapon* CreateBuster(struct Zero* z, s32 x, s32 y, bool8 isDirRight) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
@@ -375,6 +436,7 @@ _080342D2:\n\
 	bx r1\n\
  .syntax divided\n");
 }
+#endif
 
 void KeepMotion(struct Zero* z, motion_t m) {
   motion_t cur = MOTION_VALUE(z);

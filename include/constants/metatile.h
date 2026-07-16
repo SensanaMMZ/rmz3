@@ -3,6 +3,9 @@
 
 // metatile_attr_t (Metatileの属性)
 
+// 全部地形(◼)
+#define SHAPE_BLOCK 1
+
 // 地面に立っている？
 #define METATILE_GROUND (1 << 0)
 
