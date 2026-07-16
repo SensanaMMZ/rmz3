@@ -198,7 +198,24 @@ void FUN_080bab54(struct VFX* p) {
   (p->s).mode[1] = 1, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
 }
 
-INCASM("asm/vfx/unk_32_pre_pre.inc");
+INCASM("asm/vfx/unk_32_pre_pre_a.inc");
+
+// 0x080bac5c
+NON_MATCH void FUN_080bac5c(struct VFX* p) {
+#if MODERN
+  InitScalerotMotion1(&p->s);
+  ((struct Unk32Props*)(p->props).raw)->unk_8 = 0x100;
+  (p->s).spr.mag.x = 0x100;
+  (p->s).spr.mag.y = ((struct Unk32Props*)(p->props).raw)->unk_8;
+  (p->s).angle = 0;
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 4, (p->s).mode[2] = 0, (p->s).mode[3] = 0;  // なんかここのレジスタ割り当てが合わない (NON_MATCH の原因)
+#else
+  INCCODE("asm/wip/FUN_080bac5c.inc");
+#endif
+}
+
+INCASM("asm/vfx/unk_32_pre_pre_b.inc");
 
 void Ghost32_Update(struct VFX* p) {
   if (IS_METTAUR) {

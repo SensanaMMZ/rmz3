@@ -96,7 +96,59 @@ void FUN_08091790(struct Body* body) {
 
 void FUN_08091810(struct Enemy* p) {}
 
-INCASM("asm/enemy/unk_59_post.inc");
+INCASM("asm/enemy/unk_59_post_a.inc");
+
+struct VFX* CreateGhost18(struct Coord* c, u8 r1, bool8 isRight, u8 r3);
+
+// 0x080922e0
+NON_MATCH void FUN_080922e0(struct Enemy* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      InitNonAffineMotion(&p->s);
+      SET_XFLIP(p, (p->s).work[3]);
+      SetMotion(&p->s, MOTION(SM019_PANTHEON_HUNTER, 3));  // 分身のハズレ枠
+      (p->s).work[2] = 18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if (((p->s).work[2] & 3) == 0) FUN_08091280(&p->s);
+      if ((p->s).work[2] == 0) (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) PlaySound(SE_ZAKO_EXPLODE);
+      (p->s).work[2]++;
+      {
+        register struct Coord* c asm("r4") = &(p->s).coord;
+        CreateGhost18(c, 0, ((p->s).flags & X_FLIP) != 0, (p->s).work[3]);
+        {
+          register const struct SlashedEnemy* tmp asm("r6") = &sSlashedEnemies[3];
+          u8 work3 = (p->s).work[3];
+          if ((p->s).flags & X_FLIP) work3 |= (p->s).flags & X_FLIP;
+          CreateSlashedEnemy(c, tmp, 0, work3);
+        }
+      }
+      SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+#else
+  INCCODE("asm/wip/FUN_080922e0.inc");
+#endif
+}
 
 void FUN_080923ec(struct Enemy* p) {
   struct Coord c;
