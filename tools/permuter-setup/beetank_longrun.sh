@@ -5,9 +5,9 @@
 # candidate aside and EXITS (so the background-task layer notifies us).
 # Otherwise it grinds forever. Best candidates land in output-<score>-N/.
 set -u
-REPO="/c/Users/user/MMZ5-X8-Base/rmz3"
+REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 SET="$REPO/tools/permuter-setup/Beetank_Update"
-PYEXE="/c/Users/user/AppData/Local/Programs/Python/Python313/python.exe"
+PYEXE="python3"
 export PATH="/c/devkitPro/devkitARM/bin:$PATH"
 cd "$REPO"
 

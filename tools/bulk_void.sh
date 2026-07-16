@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Bulk-extract empty void stubs
 set -e
-cd /c/Users/user/MMZ5-X8-Base/rmz3
+cd "$(dirname "$0")/.."
 
 # Format: c_path inc_path fn1 [fn2 ...]
 declare -a JOBS=(
@@ -96,5 +96,5 @@ declare -a JOBS=(
 for job in "${JOBS[@]}"; do
   set -- $job
   echo "=== $1 -> $@ ==="
-  /c/Users/user/AppData/Local/Programs/Python/Python313/python.exe tools/auto_void_stubs.py "$@" || echo "FAILED: $@"
+  python3 tools/auto_void_stubs.py "$@" || echo "FAILED: $@"
 done

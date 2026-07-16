@@ -7,7 +7,7 @@
 # Works both as the permuter's compile.sh AND as a standalone:
 #   tools/permuter_compile.sh [flags...] <input.c> [flags...] -o <output.o>
 set -e
-REPO="C:/Users/user/MMZ5-X8-Base/rmz3"
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
 DKA="C:/devkitPro/devkitARM"
 AGBCC="$REPO/tools/agbcc/bin/agbcc"
 
