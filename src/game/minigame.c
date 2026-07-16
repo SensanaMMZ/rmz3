@@ -110,6 +110,74 @@ static const MinigameFunc sEachMinigameLoops[MINIGAME_COUNT] = {
 };
 // clang-format on
 
+#if MODERN
+static void MinigameLoop_Main(struct GameState* g) {
+  if (g->frames < 32) {
+    g->frames++;
+    gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = g->frames;
+  } else if (g->frames > 32) {
+    g->frames--;
+    gPaletteManager.filter[0] = gPaletteManager.filter[1] = gPaletteManager.filter[2] = g->frames - 32;
+  }
+  g->unk_1ed8++;
+
+  Renderer_Clear(&g->rendererMain);
+  gMatrixCount = 0;
+  {
+    void* dst = gWhitePaintFlags;
+    u32 bytesize = sizeof(gWhitePaintFlags);
+    _CpuFastFill(0, dst, bytesize);
+  }
+
+  if ((sEachMinigameLoops[g->mode[1]])(g) == 0) g->mode[2]++;
+
+  // ここのレジスタ割り当てがうまくいかない以外は問題なさそう (NON_MATCH の原因)
+  if (g->mode[1] != MINIGAME_CIEL) {
+    void* src = gOverworld.terrain.objects;
+    void* dst = gOverworld.terrain.objectsPrev;
+    u32 bytesize = gOverworld.terrain.objectLen * sizeof(struct Hazard);
+    u32 fastsize = bytesize & ~31;
+    CpuFastCopy(src, dst, fastsize);
+    if (bytesize & 31) CpuCopy32((u8*)src + fastsize, (u8*)dst + fastsize, bytesize & 31);
+    gOverworld.terrain.objectLenPrev = gOverworld.terrain.objectLen;
+    gOverworld.terrain.objectLen = 0;
+  }
+
+  UpdateHazardEntities(gSolidHeaderPtr);
+  UpdateHazardEntities(gEnemyHeaderPtr);
+  UpdateEntities(gZeroHeaderPtr);
+  UpdateProjectiles();
+  UpdateEntities(gWeaponHeaderPtr);
+  UpdateEntities(gPickupHeaderPtr);
+  UpdateVFXs();
+  ClearAllHitboxes();
+  RegisterHitboxes(gSolidHeaderPtr);
+  RegisterHitboxes(gEnemyHeaderPtr);
+  RegisterHitboxes(gZeroHeaderPtr);
+  RegisterHitboxes(gProjectileHeaderPtr);
+  RegisterHitboxes(gWeaponHeaderPtr);
+  RegisterHitboxes(gPickupHeaderPtr);
+  if (g->mode[1] != MINIGAME_CIEL) UpdateStageLandscape(&g->unk_0dc4);
+  CheckCollision();
+  RunDamageEffect(gSolidHeaderPtr);
+  RunDamageEffect(gEnemyHeaderPtr);
+  RunDamageEffect(gZeroHeaderPtr);
+  RunDamageEffect(gPickupHeaderPtr);
+
+  DrawCollidableEntity(gSolidHeaderPtr, &g->rendererMain);
+  DrawCollidableEntity(gEnemyHeaderPtr, &g->rendererMain);
+  DrawCollidableEntity(gZeroHeaderPtr, &g->rendererMain);
+  DrawWeapon(&g->rendererMain);
+  DrawEntity(gProjectileHeaderPtr, &g->rendererMain);
+  DrawEntity(gVFXHeaderPtr, &g->rendererMain);
+  DrawCollidableEntity(gPickupHeaderPtr, &g->rendererMain);
+  if (g->mode[1] != MINIGAME_CIEL) DrawOverworld(&g->rendererMain);
+  Renderer_Flush(&g->rendererMain);
+
+  if (gIsPlayDamageSE && (!(gCollisionManager.sweep & SWEEP_ALL_ENEMY))) PlaySound(SE_ZAKO_STUN);
+  gIsPlayDamageSE = FALSE;
+}
+#else
 NAKED static void MinigameLoop_Main(struct GameState* g) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
@@ -372,6 +440,7 @@ _080F91B4: .4byte 0x0202F330\n\
 _080F91B8: .4byte gCollisionManager\n\
  .syntax divided\n");
 }
+#endif
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 

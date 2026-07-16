@@ -44,6 +44,118 @@ void FUN_080251a8(void) {
 }
 
 // おそらく引数のEntityに属性攻撃のエフェクト(氷や電撃)をつける関数
+extern const ALIGNED(4) u8 WeakElements[34][4];
+extern const struct Coord Coord_ARRAY_0835e01c[7];
+extern const struct Coord Coord_ARRAY_0835e054[];
+
+// elemented の値 (1: 雷, 2: 炎, 3: 氷)
+#define ELFX_NONE 0
+#define ELFX_THUNDER 1
+#define ELFX_FIRE 2
+#define ELFX_ICE 3
+
+#if MODERN
+struct VFX* ApplyElementEffect(u8 idx, struct Entity* p, const struct Coord* base) {
+  struct VFX* fx = NULL;
+  struct Coord c;
+  u8 elfx = ELFX_NONE;
+  c.x = base->x;
+  c.y = base->y;
+
+  if (((Object*)p)->body.elemented == 1) {
+    elfx = ELFX_THUNDER;
+  } else if (((Object*)p)->body.elemented == 2) {
+    elfx = ELFX_FIRE;
+  } else if (((Object*)p)->body.elemented == 3) {
+    elfx = ELFX_ICE;
+  }
+
+  if (WeakElements[idx][elfx] != 0) {
+    if (idx < 7) {
+      if (elfx == ELFX_THUNDER) {
+        fx = CreateThunderEffect(p, &c, 90);
+      } else if (elfx == ELFX_FIRE) {
+        c.x += PIXEL(6), c.y -= PIXEL(12);
+        fx = CreateFlameEffect(p, &c, 90);
+        c.x -= PIXEL(14), c.y += PIXEL(6), CreateFlameEffect(p, &c, 90);
+        c.x += PIXEL(16), c.y += PIXEL(8), CreateFlameEffect(p, &c, 90);
+        c.x -= PIXEL(10), c.y += PIXEL(2), CreateFlameEffect(p, &c, 90);
+      } else if (elfx == ELFX_ICE) {
+        c.x += PIXEL(6), c.y -= PIXEL(12);
+        fx = CreateIceEffect(p, &c, 90);
+        c.x -= PIXEL(14), c.y += PIXEL(6), CreateIceEffect(p, &c, 90);
+        c.x += PIXEL(16), c.y += PIXEL(8), CreateIceEffect(p, &c, 90);
+        c.x -= PIXEL(10), c.y += PIXEL(2), CreateIceEffect(p, &c, 90);
+      }
+    } else {
+      u8 lifetime = 30;
+
+      if (elfx == ELFX_THUNDER) {
+        struct Coord _c;
+        s32 i;
+        for (i = 0; i < (s32)ARRAY_COUNT(Coord_ARRAY_0835e01c); i++) {
+          _c.x = c.x + (Coord_ARRAY_0835e01c[i]).x;
+          _c.y = c.y + (Coord_ARRAY_0835e01c[i]).y;
+          if (fx == NULL) {
+            fx = CreateThunderEffect(p, &_c, lifetime);
+          } else {
+            CreateThunderEffect(p, &_c, lifetime);
+          }
+        }
+      } else if (elfx == ELFX_FIRE) {
+        struct Coord _c;
+        s32 i;
+        for (i = 0; i < (s32)ARRAY_COUNT(Coord_ARRAY_0835e054); i++) {
+          _c.x = c.x + (Coord_ARRAY_0835e054[i]).x;
+          _c.y = c.y + (Coord_ARRAY_0835e054[i]).y;
+          _c.x += PIXEL(6), _c.y -= PIXEL(12);
+          if (fx == NULL) {
+            fx = CreateFlameEffect(p, &_c, lifetime);
+          } else {
+            CreateFlameEffect(p, &_c, lifetime);
+          }
+          _c.x -= PIXEL(14), _c.y += PIXEL(6), CreateFlameEffect(p, &_c, lifetime);
+          _c.x += PIXEL(16), _c.y += PIXEL(8), CreateFlameEffect(p, &_c, lifetime);
+          _c.x -= PIXEL(10), _c.y += PIXEL(2), CreateFlameEffect(p, &_c, lifetime);
+        }
+      } else if (elfx == ELFX_ICE) {
+        struct Coord _c;
+        s32 i;
+        for (i = 0; i < (s32)ARRAY_COUNT(Coord_ARRAY_0835e054); i++) {
+          _c.x = c.x + (Coord_ARRAY_0835e054[i]).x;
+          _c.y = c.y + (Coord_ARRAY_0835e054[i]).y;
+          _c.x += PIXEL(6), _c.y -= PIXEL(12);
+          if (fx == NULL) {
+            fx = CreateIceEffect(p, &_c, lifetime);
+          } else {
+            CreateIceEffect(p, &_c, lifetime);
+          }
+          _c.x -= PIXEL(14), _c.y += PIXEL(6), CreateIceEffect(p, &_c, lifetime);
+          _c.x += PIXEL(16), _c.y += PIXEL(8), CreateIceEffect(p, &_c, lifetime);
+          _c.x -= PIXEL(10), _c.y += PIXEL(2), CreateIceEffect(p, &_c, lifetime);
+        }
+      }
+    }
+
+    if (fx != NULL) {
+      if (elfx == ELFX_THUNDER) {
+        PlaySound(SE_ELECTRIC);
+        ((Object*)p)->body.invincibleTime += 30;
+      }
+      if (elfx == ELFX_FIRE) {
+        PlaySound(SE_FLAME);
+        return NULL;
+      }
+      if (elfx == ELFX_ICE) {
+        PlaySound(SE_ICE_40);
+        ((Object*)p)->body.invincibleTime += 30;
+      }
+    }
+  }
+
+  return fx;
+}
+#else
 NAKED struct VFX* ApplyElementEffect(u8 idx, struct Entity* p, const struct Coord* c) {
   asm(".syntax unified\n\
 	push {r4, r5, r6, r7, lr}\n\
@@ -516,6 +628,7 @@ _080255FC:\n\
 	bx r1\n\
  .syntax divided\n");
 }
+#endif
 
 bool32 isKilled(struct Entity* p) {
   if (p != NULL) {

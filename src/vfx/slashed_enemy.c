@@ -109,6 +109,45 @@ static void SlashedEnemy_Die(struct Ghost16* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
+#if MODERN
+static void FUN_080b6744(struct Ghost16* p) {
+  const struct SlashedEnemy* data = p->data;
+  UpdateMotionGraphic(&p->s);
+  if (data->unk_02[1] & (1 << 4)) {
+    if ((p->s).work[2] & (1 << 0)) {
+      (p->s).flags |= DISPLAY;
+    } else {
+      (p->s).flags &= ~DISPLAY;
+    }
+  }
+  (p->s).d.y += (p->s).unk_coord.y;
+  (p->s).coord.y += (p->s).d.y;
+  if (!(data->unk_02[1] & (1 << 5))) {  // ここのコンパイル結果が合わない (NON_MATCH の原因)
+    s32 x, y;
+    if ((p->s).d.y > 0) {
+      y = (p->s).coord.y + p->unk_74[1];
+    } else {
+      y = (p->s).coord.y - p->unk_74[1];
+    }
+    if (FUN_080098a4((p->s).coord.x, y)) (p->s).work[2] = 0;
+    (p->s).d.x += (p->s).unk_coord.x;
+    (p->s).coord.x += (p->s).d.x;
+    if ((p->s).d.x > 0) {
+      x = (p->s).coord.x + p->unk_74[0];
+    } else {
+      x = (p->s).coord.x - p->unk_74[0];
+    }
+    if (FUN_080098a4(x, (p->s).coord.y)) (p->s).work[2] = 0;
+  } else {
+    (p->s).d.x += (p->s).unk_coord.x;
+    (p->s).coord.x += (p->s).d.x;
+  }
+  if (--(p->s).work[2] == 0xFF) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    SlashedEnemy_Die(p);
+  }
+}
+#else
 NAKED static void FUN_080b6744(struct Ghost16* p) {
   asm(".syntax unified\n\
 	push {r4, r5, lr}\n\
@@ -240,5 +279,6 @@ _080B682A:\n\
 _080B6830: .4byte gVFXFnTable\n\
  .syntax divided\n");
 }
+#endif
 
 static void FUN_080b6834(struct Ghost16* _ UNUSED) { return; }
