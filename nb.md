@@ -39,7 +39,7 @@ Remaining files per subsystem (the long tail to grind through):
 
 ### Practical accelerators
 
-- A working `m2c`-style ARMv4t-to-C transpiler (none is as mature as the MIPS one; `mwccgap`/`asm-differ` from the pret ecosystem is what people use).
+- m2c supports GBA ARM/Thumb (`--target arm-gcc-c`; it's what decomp.me uses for GBA scratches). Driver + idiom normalizer: tools/m2c_drafts.py -> build/m2c-drafts/.
 - `asm-differ` for side-by-side diff of your candidate vs original on each iteration.
 - mGBA with GDB stub for runtime checks before the SHA1 matches.
 

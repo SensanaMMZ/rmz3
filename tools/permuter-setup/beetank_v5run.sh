@@ -6,7 +6,7 @@
 # Otherwise it grinds forever. Best candidates land in output-<score>-N/.
 set -u
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
-SET="$REPO/tools/permuter-setup/Beetank_Update"
+SET="$REPO/tools/permuter-setup/Beetank_Update_v5"
 PYEXE="python3"
 export PATH="/c/devkitPro/devkitARM/bin:$PATH"
 cd "$REPO"
@@ -16,7 +16,7 @@ cd "$REPO"
 # scores only the bl-to-undefined residual, well under this).
 THRESH=120
 
-"$PYEXE" tools/decomp-permuter/permuter.py -j 12 "$SET" >> /tmp/perm_beetank_long.log 2>&1 &
+"$PYEXE" tools/decomp-permuter/permuter.py -j 6 "$SET" >> /tmp/perm_beetank_v5.log 2>&1 &
 PERMPID=$!
 echo "permuter pid $PERMPID launched; threshold=$THRESH; $(date)"
 
