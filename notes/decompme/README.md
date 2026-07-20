@@ -8,10 +8,9 @@ matching community (the pret / GCC 2.9 crowd) the allocator question.
 1. https://decomp.me/new
 2. Platform: **GBA**. Skip the game presets (they are just compiler+flag
    bundles named after games); set Compiler directly to **agbcc** — NOT
-   "old agbcc" and NOT "agbcc++". This is the pret GCC 2.9 reconstruction,
-   byte-identical to our tools/agbcc (verified against the genuine SDK
-   2.9-arm-000512 cc1). Then paste our flags (step 3) over whatever the
-   flags box contains.
+   "old agbcc" and NOT "agbcc++". This is the pret GCC 2.9 reconstruction —
+   the same binary as our tools/agbcc. Then paste our flags (step 3) over
+   whatever the flags box contains.
 3. Compiler flags: `-mthumb-interwork -Wimplicit -Wparentheses -O2 -fshort-enums`
 4. Target asm: paste `beetank_target.s`
 5. Context: paste `beetank_context.h`

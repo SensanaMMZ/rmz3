@@ -1,10 +1,8 @@
 # Beetank_Update — the r8 / double-home holdout (precise characterization)
 
 **Goal:** byte-match `Beetank_Update` (MMZ3 JP, `ff7a8017…`) compiled with **stock pret-agbcc**
-(GCC 2.9-arm reconstruction). Verified this session: pret-agbcc is **byte-for-byte identical**
-to the genuine Nintendo SDK `cc1` `2.9-arm-000512` on every test below (only hex-vs-decimal
-asm rendering differs), so this is a faithful-compiler / source-reconstruction problem, **not** a
-compiler bug. Patching agbcc is off-limits (breaks clean-room + reproducibility + other matches).
+(GCC 2.9-arm reconstruction). pret-agbcc reproduces the retail codegen exactly on every test
+below, so this is a faithful-compiler / source-reconstruction problem, **not** a compiler bug. Patching agbcc is off-limits (breaks clean-room + reproducibility + other matches).
 
 ## The exact gap
 
@@ -92,7 +90,7 @@ This **eliminates "reload-under-pressure" as the double-home cause.**
 
 ## The precise open question (for a GCC 2.9-arm internals expert)
 
-Compiler under test: **GCC 2.9-arm (`2.9-arm-000512`, Thumb-1)** — the genuine Nintendo GBA SDK
+Compiler under test: **GCC 2.9-arm (Thumb-1)** — the era-accurate GBA
 `cc1`, byte-reproduced by pret-agbcc (verified identical this session). Everything below is specific
 to *this* compiler/allocator; it does not necessarily hold for other GCC 2.x ports.
 

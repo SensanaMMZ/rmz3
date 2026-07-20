@@ -27,8 +27,8 @@ agent must confirm before relying on them.
 ## 1. What you inherit from rmz3 (the head start)
 
 ### Toolchain (near-certainly identical across the series — but VERIFY per game)
-- **agbcc** — pret's GCC 2.9 Thumb-1 compiler. In rmz3 it is *byte-identical* to the real Nintendo
-  SDK compiler `2.9-arm-000512` (confirmed against the `nincompilers` archive). All four games are
+- **agbcc** — pret's GCC 2.9 Thumb-1 compiler, which reproduces rmz3's retail codegen
+  exactly. All four games are
   the same SDK era, so agbcc is the prime candidate for each.
 - **devkitARM** — `arm-none-eabi-as` / `ld` / `objcopy` for assembly, linking, and binary output.
 - Build pipeline (per translation unit):
