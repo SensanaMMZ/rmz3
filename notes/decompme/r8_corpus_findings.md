@@ -80,3 +80,26 @@ retail used a helper/idiom we haven't seen. The r8 part (constant -0x600
 as the lowest-priority call-crosser) still needs the pressure raised by
 one more live value; E2's ca/cb do exactly that, which may push -0x600
 into r8 in some permuted variant.
+
+
+## 2026-07-20 — the community channel produced its first match
+
+readKeyInput MATCHED by TsilaAllaoui on the companion scratch (score 0). The
+idiom: a **long-long temp at function top** for the bit extraction —
+
+    s64 pressed;
+    ...
+    pressed = j->pressed >> i;
+    j->unk_0a[i] = (pressed & 1) ? j->field6_0x14 : j->field7_0x15;
+
+The s64 forces the live-range split that emits the extra `adds r1,r2,#0`; the
+high word is dead-eliminated. Verified byte-identical in the real build,
+shipped upstream (PR #46).
+
+Scope of the idiom: it ADDS a copy, so it only applies to ties where our
+output is MISSING one. Tested on blizzackMode0 (whose tie needs a copy
+REMOVED) — makes it worse, as expected.
+
+Gotcha found while promoting the dual-form: `NON_MATCH` expands to
+`__attribute__((naked))` at MODERN=0, so the marker must be deleted when a
+function becomes a real match or it silently compiles with no prologue.
