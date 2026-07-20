@@ -1,0 +1,181 @@
+- r8: src/bard_music.c :: GetWordPhonemes 
+- r8: src/battle/anim/battle_intro.c :: BattleIntroTask_80E4C34 BattleIntroTask_FadeScenery BattleIntroTask_ScrollAndFadeScenery BattleIntroTask_ScrollScenery sub_80E4EF8 unref_sub_80E4FDC 
+- r8: src/battle/anim/bubble.c :: sub_80D32E8 
+- r8: src/battle/anim/bug.c :: AnimMissileArcStep 
+- r8: src/battle/anim/current.c :: sub_80D6874 
+- r8: src/battle/anim/dark.c :: sub_80E079C sub_80E0918 sub_80E0A4C 
+- r8: src/battle/anim/dragon.c :: sub_80DFAB0 sub_80DFB28 
+- r8: src/battle/anim/evasion.c :: sub_80CE7E0 
+- r8: src/battle/anim/fight.c :: sub_80D90F4 sub_80D9934 
+- r8: src/battle/anim/fire_2.c :: sub_80D57C4 
+- r8: src/battle/anim/flash.c :: sub_80CE3EC sub_80CE4D4 
+- r8: src/battle/anim/flying.c :: AnimFallingFeather DestroyAnimSpriteAfterTimer sub_80DAF0C sub_80DB0E8 sub_80DB5E4 
+- r8: src/battle/anim/flying_path.c :: sub_80CC358 
+- r8: src/battle/anim/ghost.c :: InitAnimShadowBall sub_80DE3D4 sub_80DE7B8 sub_80DE918 sub_80DED60 sub_80DF1A4 
+- r8: src/battle/anim/grip.c :: sub_80D0178 
+- r8: src/battle/anim/ground.c :: AnimDirtScatter 
+- r8: src/battle/anim/guillotine.c :: sub_80D0228 
+- r8: src/battle/anim/hop.c :: sub_80CB814 
+- r8: src/battle/anim/ice.c :: AnimTask_Haze2 AnimTask_OverlayFogTiles InitPoisonGasCloudAnim sub_80D7704 sub_80D8BA8 
+- r8: src/battle/anim/love_bg.c :: sub_80D21F0 
+- r8: src/battle/anim/musical.c :: sub_80CEA20 sub_80CEBC4 
+- r8: src/battle/anim/normal.c :: AnimTask_BlendSpriteColor_Step2 sub_80E2324 sub_80E2F2C sub_80E3194 sub_80E32E0 sub_80E3338 sub_80E3C4C UnpackSelectedBattleAnimPalettes unref_sub_80E23A8 
+- r8: src/battle/anim/psychic.c :: sub_80DC3F4 sub_80DC4F4 
+- r8: src/battle/anim/ring.c :: sub_80D10B8 
+- r8: src/battle/anim/rock.c :: sub_80DD190 sub_80DD4D4 
+- r8: src/battle/anim/roots.c :: sub_80CB620 
+- r8: src/battle/anim/scary_face.c :: sub_80D24E0 
+- r8: src/battle/anim/sfx.c :: sub_812B058 sub_812B374 
+- r8: src/battle/anim/shadow_minimize.c :: CreateMinimizeSprite 
+- r8: src/battle/anim/slice.c :: sub_80CC9BC 
+- r8: src/battle/anim/sonic.c :: AnimSonicBoomProjectile sub_80CF8B8 sub_80CFB04 
+- r8: src/battle/anim/water.c :: AnimTask_CreateSurfWave sub_80D3B60 sub_80D4418 sub_80D463C sub_80D4D64 
+- r8: src/battle/anim/wisp_fire.c :: sub_80D60B4 
+- r8: src/battle_ai_script_commands.c :: BattleAI_GetAIActionToUse BattleAICmd_count_alive_pokemon BattleAICmd_get_highest_possible_damage BattleAICmd_if_can_faint BattleAICmd_if_status_in_party BattleAICmd_if_status_not_in_party BattleAICmd_is_most_powerful_move 
+- r8: src/battle_ai_switch_items.c :: FindMonThatAbsorbsOpponentsMove FindMonWithFlagsAndSuperEffective GetMostSuitableMonToSwitchInto HasSuperEffectiveMoveAgainstOpponents ModulateByTypeEffectiveness ShouldSwitch ShouldSwitchIfWonderGuard ShouldUseItem 
+- r8: src/battle_anim.c :: ClearBattleAnimationVars LaunchBattleAnimation MoveBattlerSpriteToBG ScriptCmd_end ScriptCmd_fadetobgfromset ScriptCmd_loopsewithpan ScriptCmd_panse_1B ScriptCmd_panse_26 ScriptCmd_panse_27 ScriptCmd_waitplaysewithpan sub_80763FC sub_8076464 
+- r8: src/battle_anim_effects_3.c :: _08131EA0 AnimTask_RolePlaySilhouette AnimTask_SnatchOpposingMonMove sub_812C588 sub_812C64C sub_812D06C sub_812D7E8 sub_812DB84 sub_812DEAC sub_812E8B4 sub_812EB10 sub_812F474 sub_812F804 sub_812F9B0 sub_812FAF8 sub_812FC68 sub_812FEB8 sub_81302E4 sub_8130424 sub_8130554 sub_81312E4 sub_81316F8 
+- r8: src/battle_anim_mon_movement.c :: AnimTask_ShakeMon2Step AnimTask_SwayMonStep AnimTask_TranslateMonElliptical sub_80A8E04 sub_80A8EFC sub_80A9058 
+- r8: src/battle_anim_special.c :: AnimateBallOpenParticles DiveBallOpenParticleAnimation GreatBallOpenParticleAnimation MasterBallOpenParticleAnimation PokeBallOpenParticleAnimation PremierBallOpenParticleAnimation RepeatBallOpenParticleAnimation SafariBallOpenParticleAnimation sub_813F300 sub_813F4EC sub_813F5E8 sub_813F844 sub_813FA94 sub_813FBB8 sub_8141314 sub_814151C sub_814191C TimerBallOpenParticleAnimation TryShinyAnimation UltraBallOpenParticleAnimation unref_sub_813F0F4 
+- r8: src/battle_anim_status_effects.c :: unref_sub_807B69C 
+- r8: src/battle_bg.c :: InitLinkBattleVsScreen 
+- r8: src/battle_controllers.c :: BtlController_EmitMoveAnimation BtlController_EmitPrintSelectionString BtlController_EmitPrintString InitLinkBtlControllers PrepareBufferDataTransferLink SetBattlePartyIds sub_800C35C Task_HandleCopyReceivedLinkBuffersData 
+- r8: src/battle_controller_link_opponent.c :: dp01_getattr_by_ch1_for_player_pokemon__ LinkOpponentHandleHealthBarUpdate LinkOpponentHandleLoadPokeSprite LinkOpponentHandleTrainerThrow sub_8037840 sub_8038900 sub_8039430 sub_8039B64 sub_803A2C4 
+- r8: src/battle_controller_link_partner.c :: dp01_getattr_by_ch1_for_player_pokemon LinkPartnerHandleHealthBarUpdate LinkPartnerHandleLoadPokeSprite LinkPartnerHandleTrainerBallThrow LinkPartnerHandleTrainerThrow sub_811E0CC sub_811EC68 sub_811F864 sub_811FF30 sub_812071C 
+- r8: src/battle_controller_opponent.c :: OpponentHandleHealthBarUpdate OpponentHandleLoadPokeSprite OpponentHandleTrainerSlide OpponentHandleTrainerThrow sub_8032E2C sub_8033598 sub_8033E24 sub_803495C sub_8035238 sub_8035C44 
+- r8: src/battle_controller_player.c :: dp01_getattr_by_ch1_for_player_pokemon_ dp01_setattr_by_ch1_for_player_pokemon HandleAction_ChooseMove PlayerHandleHealthBarUpdate PlayerHandleStatusXor PlayerHandleTrainerThrow sub_802C098 sub_802CA60 sub_802D924 sub_802DA9C sub_802DB6C sub_802F934 sub_8030190 task05_08033660 
+- r8: src/battle_controller_wally.c :: CopyWallyMonData SetWallyMonData StartSendOutAnim WallyDoMoveAnimation WallyHandleHealthBarUpdate 
+- r8: src/battle_gfx_sfx_util.c :: BattleLoadOpponentMonSprite BattleLoadPlayerMonSprite CopyAllBattleSpritesInvisibilities DecompressTrainerBackPic SetBattlerSpriteAffineMode sub_8031FC4 sub_8032638 sub_80327CC sub_80328A4 TryHandleLaunchBattleTableAnimation 
+- r8: src/battle_interface.c :: battle_make_oam_normal_battle battle_make_oam_safari_battle CreatePartyStatusSummarySprites draw_status_ailment_maybe MoveBattleBar PrintSafariMonInfo sub_8043740 sub_8044210 sub_804454C sub_8044CA0 sub_80451A0 sub_80458B0 sub_8045998 sub_8045D58 sub_8045F58 sub_80460C8 sub_8046128 UpdateHealthboxAttribute UpdateHpTextInHealthbox UpdateOamPriorityInAllHealthboxes 
+- DOUBLE-HOME: src/battle_interface.c :: MoveBattleBar 
+- r8: src/battle_main.c :: BattleBeginFirstTurn BattleStartClearSetData BattleTurnPassed bc_801333C BufferPartyVsScreenHealth_AtStart CB2_HandleStartMultiBattle CreateNPCTrainerParty dp11b_obj_instanciate GetWhoStrikesFirst HandleAction_UseItem HandleAction_UseMove PrepareOwnMultiPartnerBuffer SetActionsAndBanksTurnOrder SetAllPlayersBerryData sub_800F104 sub_800FE40 sub_8010384 sub_8011384 sub_8012324 SwitchInClearSetData TurnValuesCleanUp UndoEffectsAfterFainting 
+- r8: src/battle_message.c :: BattleStringExpandPlaceholders BufferStringBattle ExpandBattleTextBuffPlaceholders 
+- r8: src/battle_party_menu.c :: Task_BattlePartyMenuShift unref_sub_8094DB0 
+- r8: src/battle_records.c :: FindLinkBattleRecord SortLinkBattleRecords UpdateLinkBattleRecords_ 
+- r8: src/battle_script_commands.c :: _08026C0C _08026E40 AI_CalcDmg AI_TypeCalc atk00_attackcanceler atk01_accuracycheck atk03_ppreduce atk05_damagecalc atk06_typecalc atk09_attackanimation atk19_tryfaintmon atk1E_jumpifability atk23_getexp atk24 atk48_playstatchangeanimation atk49_moveend atk4A_typecalc2 atk4F_jumpifcantswitch atk50_openpartyscreen atk51_switchhandleorder atk52_switchineffects atk59_handlelearnnewmove atk5A_yesnoboxlearnmove atk5D_getmoneyreward atk5E atk61_drawpartystatussummary atk6C_drawlvlupbox atk77_setprotectlike atk78_faintifabilitynotdamp atk7F_setseeded atk86_stockpiletobasedamage atk87_stockpiletohpheal atk8F_forcerandomswitch atk90_tryconversiontypechange atk97_tryinfatuating atk9B_transformdataexecution atk9D_mimicattackcopy atk9E_metronome atkA3_disablelastusedattack atkA4_trysetencore atkA5_painsplitdmgcalc atkA6_settypetorandomresistance atkA8_copymovepermanently atkA9_trychoosesleeptalkmove atkAD_tryspiteppreduce atkAE_healpartystatus atkB2_trysetperishsong atkB3_rolloutdamagecalculation atkB9_magnitudedamagecalculation atkBA_jumpifnopursuitswitchdmg atkC1_hiddenpowercalc atkC2_selectfirstvalidtarget atkC3_trysetfutureattack atkC4_trydobeatup atkD2_tryswapitems atkDB_tryimprison atkDD_weightdamagecalculation atkDE_assistattackselect atkE5_pickup atkEB_settypetoenvironment atkF0_givecaughtmon atkF3_trygivecaughtmonnick ChangeStatBuffs CheckWonderGuardAndLevitate SetMoveEffect sub_802BBD4 TypeCalc UproarWakeUpCheck 
+- DOUBLE-HOME: src/battle_script_commands.c :: atkEF_handleballthrow 
+- r8: src/battle_transition.c :: CreatePhase1Task Mugshots_CreateOpponentPlayerSprites Phase2_Mugshot_Func2 Phase2_Mugshot_Func6 Phase2_Transition_BigPokeball_Func2 Phase2_Transition_Clockwise_BlackFade_Func3 Phase2_Transition_Clockwise_BlackFade_Func5 Phase2_Transition_PokeballsTrail_Func2 Phase2_Transition_Ripple_Func2 Phase2_Transition_Shards_Func2 Phase2_Transition_Shards_Func3 Phase2_Transition_Slice_Func2 Phase2_Transition_Wave_Func2 sub_811D6E8 sub_811D764 sub_811D978 
+- r8: src/battle_util.c :: AbilityBattleEffects AtkCanceller_UnableToUseMove CheckMoveLimitations DoFieldEndTurnEffects GetMoveTarget HandleFaintedMonActions HandleWishPerishSongOnTurnEnd IsImprisoned IsMonDisobedient ItemBattleEffects PressurePPLoseOnUsingImprision PressurePPLoseOnUsingPerishSong sub_8015740 sub_8018018 TrySetCantSelectMoveBattleScript TurnBasedEffects unref_sub_801B40C 
+- r8: src/berry.c :: ResetBerryTreeSparkleFlags 
+- r8: src/berry_blender.c :: Blender_CalculatePokeblock Blender_GetPokeblockColor Blender_PrintBlendingRanking Blender_PrintBlendingResults Blender_SortBasedOnPoints Blender_SortScores BlenderDebug_PrintBerryData ShowBerryBlenderRecordWindow sub_804E7C0 sub_804E9F8 sub_804F2A8 sub_804F378 sub_804FC48 sub_804FE70 sub_805156C sub_80527BC 
+- r8: src/berry_tag_screen.c :: sub_81466E8 
+- r8: src/bike.c :: AcroBikeHandleInputBunnyHop AcroBikeHandleInputSidewaysJump AcroBikeHandleInputWheelieMoving 
+- r8: src/blend_palette.c :: BlendPalette 
+- r8: src/cable_car_util.c :: CableCarUtil_CopyWrapped CableCarUtil_FillWrapped 
+- r8: src/cable_club.c :: sub_808303C 
+- r8: src/calculate_base_damage.c :: CalculateBaseDamage 
+- r8: src/choose_party.c :: sub_81220C8 sub_8122B10 
+- r8: src/coins.c :: ShowCoinsWindow 
+- r8: src/contest_ai.c :: ContestAICmd_check_combo_finisher ContestAICmd_check_combo_starter 
+- r8: src/contest_effect.c :: ContestEffect_BetterIfDiffType ContestEffect_MakeFollowingMonsNervous ContestEffect_NextAppealEarlier ContestEffect_NextAppealLater ContestEffect_ShiftJudgeAttention ContestEffect_StartleMonWithJudgesAttention ContestEffect_StartlePrevMons2 ContestEffect_WorsenConditionOfPrevMons JamByMoveCategory 
+- r8: src/contest_link.c :: sub_80C8734 Task_LinkContest_CommunicateCategory Task_LinkContest_CommunicateLeaderIds 
+- r8: src/contest_link_util.c :: _080C3218 _080C3382 _080C3B5C _080C3B82 _080C4198 _080C42AA sub_80C2A8C sub_80C3158 sub_80C34CC sub_80C3D04 sub_80C3F00 sub_80C40D4 sub_80C42C0 Task_LinkContest_SetUpContest 
+- r8: src/contest_painting.c :: _InitContestMonPixels InitContestMonPixels 
+- r8: src/credits.c :: CB2_StartCreditsSequence CreateCreditsMonSprite DeterminePokemonToShow DrawLetterMapTiles SetBikeScene Task_LoadShowMons Task_ShowMons Task_UpdatePage 
+- r8: src/daycare.c :: BuildEggMoveset CreateEgg DetermineEggSpeciesAndParentSlots GetDaycareCompatibilityScore GetDaycareLevelMenuLevelText GetDaycareLevelMenuText GetEggMoves GetEggSpecies GetNumLevelsGainedFromSteps InheritIVs InitDaycareMailRecordMixing SetInitialEggData StorePokemonInDaycare TakeSelectedPokemonFromDaycare 
+- r8: src/debug/crash.c :: Crash 
+- r8: src/debug/matsuda_debug_menu.c :: sub_80AA10C sub_80AA280 sub_80AA4F0 sub_80AAD84 sub_80AAF30 
+- r8: src/debug/sound_check_menu.c :: PrintSignedNumber 
+- r8: src/decompress.c :: unref_sub_800D42C 
+- r8: src/decoration_inventory.c :: SortDecorationInventory 
+- r8: src/dewford_trend.c :: InitDewfordTrend ReceiveDewfordTrendData sub_80FA46C UpdateDewfordTrendPerDay 
+- r8: src/diploma.c :: CB2_ShowDiploma 
+- r8: src/easy_chat_1.c :: sub_80E77C8 sub_80E7E50 sub_80E7F00 sub_80E7FA8 sub_80E810C 
+- r8: src/egg_hatch.c :: CB2_EggHatch_1 CreatedHatchedMon CreateEggShardSprite EggHatchCreateMonSprite 
+- r8: src/evolution_graphics.c :: CreatePostEvoSparkleSet2 PreEvoInVisible_PostEvoVisible_KillTask PreEvoVisible_PostEvoInvisible_KillTask sub_8149E7C 
+- r8: src/evolution_scene.c :: _08113B9C _08113D4A _08113E66 _08114004 _08114104 _081141CE _08114410 _08114D9A BeginEvolutionScene CB2_EvolutionSceneLoadGraphics CreateShedinja EvolutionScene sub_81141F0 sub_811430C Task_EvolutionScene Task_TradeEvolutionScene TradeEvolutionScene unref_sub_8113B50 
+- r8: src/fieldmap.c :: CameraMove FillConnection GetIncomingConnection GetMapConnectionAtPos InitBackupMapLayoutData IsPosInIncomingConnectingMap LoadSavedMapView MoveMapViewToBackup SaveMapView 
+- r8: src/field_camera.c :: CameraUpdate DrawMetatile DrawMetatileAt DrawWholeMapViewInternal RedrawMapSliceEast RedrawMapSliceNorth RedrawMapSliceSouth RedrawMapSliceWest 
+- r8: src/field_door.c :: StartDoorAnimationTask 
+- r8: src/field_effect.c :: CreateMonSprite_FieldMove CreateMonSprite_PicBox CreatePokeballGlowSprite CreateTrainerSprite MultiplyInvertedPaletteRGBComponents MultiplyPaletteRGBComponents PokeballGlowEffect_2 PokeballGlowEffect_3 sub_80867AC sub_80884E8 sub_8088708 sub_8088984 
+- r8: src/field_effect_helpers.c :: FindTallGrassFieldEffectSpriteId InitObjectReflectionSprite ShowDisguiseFieldEffect ShowWarpArrowSprite sub_812800C UpdateLongGrassFieldEffect UpdateObjectReflectionSprite UpdateShortGrassFieldEffect UpdateTallGrassFieldEffect 
+- r8: src/field_screen_effect.c :: SetFlashScanlineEffectWindowBoundaries sub_8081534 
+- r8: src/field_tasks.c :: PerStepCallback_8069AA0 SetSootopolisGymCrackedIceMetatiles sub_8069638 sub_806972C sub_80697C8 Task_MuddySlope 
+- DOUBLE-HOME: src/field_tasks.c :: sub_8069638 
+- r8: src/field_weather.c :: ApplyDroughtGammaShiftWithBlend ApplyFogBlend ApplyGammaShift ApplyGammaShiftWithBlend BuildGammaShiftTables LoadDroughtWeatherPalette Task_WeatherMain 
+- r8: src/field_weather_effects.c :: CreateRainSprite CreateSandstormSprites_2 Snow_InitAll sub_807E4EC sub_807E6F0 
+- r8: src/fldeff_escalator.c :: sub_80B45B4 
+- r8: src/fldeff_softboiled.c :: SetUpFieldMove_SoftBoiled sub_8133D50 
+- r8: src/hall_of_fame.c :: HallOfFame_LoadPokemonPic HallOfFame_LoadTrainerPic HallOfFame_PrintMonInfo HallOfFame_PrintPlayerInfo sub_8141FF8 sub_8142320 sub_8142484 sub_8142570 sub_8142618 sub_8142B04 sub_8142CC8 sub_8142DF4 sub_81433E0 Task_Hof_InitTeamSaveData 
+- r8: src/image_processing_effects.c :: AddPointillismPoints ApplyImageEffect_BlackAndWhite ApplyImageEffect_BlackOutline ApplyImageEffect_Blur ApplyImageEffect_BlurDown ApplyImageEffect_BlurRight ApplyImageEffect_Grayscale ApplyImageEffect_Invert ApplyImageEffect_PersonalityColor ApplyImageEffect_RedChannelGrayscale ApplyImageEffect_RedChannelGrayscaleHighlight ApplyImageEffect_Shimmer ConvertImageProcessingToGBA GetCoolColorFromPersonality QuantizePalette_BlackAndWhite QuantizePalette_Grayscale QuantizePalette_GrayscaleSmall QuantizePalette_PrimaryColors QuantizePalette_Standard QuantizePixel_Blur QuantizePixel_BlurHard 
+- r8: src/intro.c :: CreateGameFreakLogo CreateWaterDrop sub_813CE88 sub_813CFA8 sub_813D220 sub_813DE70 sub_813E6C0 sub_813EA60 sub_813EC90 Task_IntroLoadPart1Graphics Task_IntroLoadPart3Streaks Task_IntroPokemonBattle 
+- r8: src/intro_credits_graphics.c :: intro_create_latias_sprite intro_create_latios_sprite sub_8148EC0 sub_8149174 
+- r8: src/item.c :: AddBagItem CheckBagHasSpace RemoveBagItem 
+- r8: src/item_menu.c :: DisplayCannotUseItemMessage DrawBerryPic RemoveEmptyItemSlots SortItemSlots sub_80A36B8 sub_80A39E4 sub_80A3D5C sub_80A3FA0 sub_80A418C sub_80A41E0 sub_80A42B0 sub_80A4380 sub_80A444C sub_80A4548 sub_80A46FC sub_80A4DD8 sub_80A6A84 sub_80A6B64 sub_80A7230 sub_80A7DEC 
+- r8: src/libs/agb_flash.c :: ReadFlash StartFlashTimer VerifyFlashSectorNBytes 
+- r8: src/libs/agb_flash_1m.c :: WaitForFlashWrite_Common 
+- r8: src/libs/agb_flash_mx.c :: ProgramFlashByte_MX ProgramFlashSector_MX 
+- r8: src/libs/m4a.c :: CgbSound m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl MPlayStart SetPokemonCryTone 
+- r8: src/libs/siirtc.c :: SiiRtcGetStatus WriteCommand 
+- r8: src/link.c :: DequeueRecvCmds DoHandshake DoRecv EnqueueSendCmd InitLinkTestBG InitLinkTestBG_Unused InitLocalLinkPlayer ProcessRecvCmds sub_800826C TestBlockTransfer 
+- r8: src/lottery_corner.c :: GetMatchingDigits PickLotteryCornerTicket 
+- r8: src/mail.c :: sub_80F8DA0 sub_80F8E80 
+- r8: src/mail_data.c :: GiveMailToMon TakeMailFromMon2 
+- r8: src/main.c :: AgbMain 
+- r8: src/main_menu.c :: AddBirchSpeechObjects StartSpriteFadeIn StartSpriteFadeOut Task_MainMenuCheckSave 
+- r8: src/menu.c :: DisplayYesNoMenu InitMenu IsGridCursorMovementClamped Menu_PrintItems Menu_PrintItemsReordered MenuPrint_AlignedToRightOfReferenceString sub_8072484 sub_80724F4 sub_8072620 sub_807274C sub_8072AB0 unref_sub_8072A5C 
+- r8: src/menu_cursor.c :: _0814AA98 CreateBlendedOutlineCursor MenuCursor_Create814A5C0 sub_814A958 sub_814AAF8 
+- r8: src/money.c :: _080B7BAA Draw10000Sprite OpenMoneyWindow 
+- r8: src/mon_markings.c :: sub_80F761C sub_80F7960 
+- r8: src/move_tutor_menu.c :: DrawContestMoveInfoHeaders DrawMoveInfoWindow DrawMoveSelectionWindow InitMoveTutorMenuSprites MoveTutorMain 
+- r8: src/mystery_event_script.c :: MEScrCmd_givepokemon MEScrCmd_initramscript MEScrCmd_setenigmaberry 
+- r8: src/naming_screen.c :: StoreNamingScreenParameters sub_80B6C48 
+- r8: src/option_menu.c :: CB2_InitOptionMenu FrameType_DrawChoices 
+- r8: src/palette.c :: BeginNormalPaletteFade TintPlttBuffer UnfadePlttBuffer unref_sub_8073D3C unused_sub_8073DFC UpdateFastPaletteFade 
+- r8: src/party_menu.c :: ChangeBattleTowerPartyMenuSelection ChangePartyMenuSelection CreateHeldItemIcon CreateHeldItemIcons_806DC34 CreateItemUseMoveMenu CreateMonIcon_LinkMultiBattle CreatePartyMenuMonIcon DoPPRecoveryItemEffect DrawMonDescriptorStatus InitPartyMenu PartyMenuDrawHPBar PartyMenuPrintGenderIcon PartyMenuPrintHP PartyMenuTryGiveMonHeldItem PrintNewStatsInLevelUpWindow PrintStatGrowthsInLevelUpWindow ShowPartyPopupMenu sub_806B9A4 sub_806BA34 sub_806BA94 sub_806BB3C sub_806CC74 sub_806CD5C sub_806D198 sub_806D3B4 sub_806D5B8 sub_806D668 sub_8070088 TryCreatePartyMenuMonIcon UseMedicine 
+- r8: src/player_pc.c :: ItemStorage_DoItemToss ItemStorage_DrawItemList ItemStorage_HandleQuantityRolling Mailbox_DrawMailList Mailbox_UpdateMailList 
+- r8: src/pokeball.c :: CreatePokeballSprite objc_0804ABD4 SendOutMonAnimation SendOutPlayerMonAnimation_Step1 sub_8046C78 sub_80473D0 sub_8047580 sub_8047638 
+- r8: src/pokeblock.c :: PokeblockGetGain sub_810BB88 sub_810BC98 sub_810BDAC sub_810C788 
+- r8: src/pokeblock_feed.c :: PokeblockFeed_CreatePokeSprite sub_8148108 sub_814862C sub_8148710 
+- r8: src/pokedex.c :: _080905B2 _08090600 _0809065C _080906C8 CB2_InitPokedex CreateInterfaceSprites CreateMonDexNum CreateMonListEntry CreateMonSpriteFromNationalDexNumber CreateMonSpritesAtPos CreatePokedexMonSprite CreateSearchParameterScrollArrows CreateSizeScreenTrainerPic DoPokedexSearch PrintCryScreenSpeciesName PrintEntryScreenDexNum PrintFootprint PrintSearchParameterText PrintSelectedSearchParameters SortPokedex sub_8090A3C sub_8091458 sub_8091564 Task_HandleSearchParameterInput Task_LoadSearchMenu Task_PokedexMainScreen Task_PokedexResultsScreen Task_StartPokedexSearch TryDoPokedexScroll UpdateDexListScroll 
+- r8: src/pokedex_cry_screen.c :: DrawWaveformSegment LoadCryWaveformWindow ShowPokedexCryScreen 
+- r8: src/pokemon_1.c :: CalculateBoxMonChecksum CalculateMonStats CreateBoxMon CreateMaleMon CreateMon CreateMonWithEVSpread CreateMonWithGenderNatureLetter CreateMonWithNature DeleteFirstMoveAndGiveMoveToBoxMon DeleteFirstMoveAndGiveMoveToMon GiveBoxMonInitialMoveset MonTryLearningNewMove sub_803ADE8 sub_803AF78 
+- r8: src/pokemon_2.c :: CopyPlayerPartyMonToBattleData CreateSecretBaseEnemyParty GetBoxMonData GetSubstruct SendMonToPC SetBoxMonData 
+- r8: src/pokemon_3.c :: DrawSpindaSpots EvolutionRenameMon GetEvolutionTargetSpecies GetMoveTutorMoves MonGainEVs sub_803F378 sub_8040574 unref_sub_803F938 
+- r8: src/pokemon_icon.c :: CreateMonIcon CreateMonIconSprite sub_809D3A4 unref_sub_809D26C UpdateMonIconFrame 
+- r8: src/pokemon_item_effect.c :: PokemonUseItemEffects 
+- r8: src/pokemon_menu.c :: sub_8089A8C sub_8089BDC sub_808B3EC 
+- r8: src/pokemon_size_record.c :: GetMonSizeHash GiveGiftRibbonToParty 
+- r8: src/pokemon_storage_system.c :: StorageSystemGetNextMonIndex sub_8095C8C sub_8096264 sub_80966F4 unref_sub_8095D08 
+- r8: src/pokemon_storage_system_2.c :: sub_80981F0 sub_80985CC 
+- r8: src/pokemon_storage_system_3.c :: PSS_SpawnMonIconSprite SpawnBoxIconSprites sub_8098D20 sub_8098EE0 sub_8099200 sub_8099310 
+- r8: src/pokemon_storage_system_4.c :: CompactPartySlots CopyWallpaperTilemap sub_809A23C sub_809A3D0 sub_809A9A0 sub_809B960 sub_809C04C sub_809C464 sub_809C664 sub_809CE84 sub_809D034 sub_809D0BC sub_809D104 sub_809D1C4 
+- r8: src/pokenav.c :: DrawMonRibbonIcons sub_80EEFBC sub_80EF624 sub_80EFC64 sub_80EFDE4 sub_80F02A0 sub_80F098C sub_80F1BC8 sub_80F1E84 sub_80F1F10 sub_80F29B8 sub_80F2E18 sub_80F33A8 sub_80F37D0 sub_80F3F20 sub_80F468C sub_80F4824 sub_80F4944 sub_80F49F4 sub_80F4BD0 sub_80F4D88 sub_80F53EC sub_80F55AC sub_80F5688 sub_80F58DC sub_80F5A1C sub_80F5BF0 sub_80F5CDC sub_80F6250 sub_80F6514 sub_80F66E0 
+- r8: src/record_mixing.c :: ReceiveBattleTowerData ReceiveDaycareMailData ReceiveOldManData RecordMixing_ReceiveExchangePacket sub_80B9BC4 Task_RecordMixing_CopyReceiveBuffer 
+- r8: src/reset_rtc_screen.c :: ResetRtcScreen_CreateCursor ResetRtcScreen_PrintTime ResetRtcScreen_ShowChooseTimeWindow Task_ResetRtc_0 Task_ResetRtc_1 
+- r8: src/reshow_battle_screen.c :: sub_807B184 
+- r8: src/roamer.c :: CreateInitialRoamerMon 
+- r8: src/rom_8077ABC.c :: GetBattlerSpriteCoordAttr InitAnimLinearTranslation PrepareBattlerSpriteForRotScale SetAverageBattlerPositions sub_807867C sub_8078C28 sub_8078FDC sub_80791A8 sub_80792C0 sub_8079C08 sub_8079F44 sub_807A4A0 sub_807A850 unref_sub_8079D20 
+- r8: src/roulette.c :: sub_8115A94 sub_8115B58 sub_8116100 sub_8116880 sub_8116D54 sub_8116EF8 sub_8117158 Task_Roulette_0 
+- r8: src/roulette_gfx.c :: sub_8117900 sub_8117AA8 sub_8117BBC sub_8117C60 sub_8117DF4 sub_8117F2C sub_81180F4 sub_81182F8 sub_81185E8 sub_8118724 sub_81189A8 sub_8118DE4 sub_8118F8C sub_8119224 sub_81193D4 sub_811952C 
+- r8: src/roulette_util.c :: sub_81249E4 
+- r8: src/rtc.c :: ConvertDateToDayCount RtcCheckInfo 
+- r8: src/safari_zone.c :: SafariZoneActivatePokeblockFeeder 
+- r8: src/save.c :: GetSaveValidStatus sub_81255B8 sub_81258BC WriteSingleChunk 
+- r8: src/save_failed_screen.c :: CB2_SaveFailedScreen WipeSector 
+- r8: src/save_menu_util.c :: HandleCloseSaveWindow 
+- r8: src/scanline_effect.c :: ScanlineEffect_InitWave TaskFunc_UpdateWavePerFrame 
+- r8: src/script.c :: InitRamScript 
+- r8: src/script_menu.c :: DrawMultichoiceMenu ScriptMenu_MultichoiceGrid ScriptMenu_MultichoiceWithDefault StartScriptMenuTask sub_80B53B4 
+- r8: src/script_movement.c :: sub_80A21F4 sub_80A23C8 sub_80A2490 
+- r8: src/script_pokemon_util_80F99CC.c :: DeleteMonMove SwapMoveSlots 
+- r8: src/shop.c :: _080B3FFC _080B40B4 BuyMenuDrawGraphics BuyMenuDrawMapPartialMetatile Shop_AnimViewportObjects Shop_DisplayDecorationPriceInList Shop_DisplayNormalPriceInList Shop_DoCursorAction Shop_DrawViewportTiles Shop_LoadViewportObjects Shop_MoveItemListDown Shop_MoveItemListUp Shop_PrintPrice Task_UpdatePurchaseHistory 
+- r8: src/slot_machine.c :: LoadSlotMachineWheelOverlay SlotMachineSetup_0_1 sub_81025BC sub_8103154 sub_81031B4 sub_81032E8 sub_810341C sub_810347C sub_8103564 sub_8103910 sub_8103A78 sub_810423C sub_8104498 sub_8104CAC sub_8104D30 sub_8104FF4 sub_81051C0 sub_81053A0 sub_8105578 sub_81056F0 
+- r8: src/smokescreen.c :: sub_8046234 
+- r8: src/sound.c :: PlayCryInternal PlaySE12WithPanning 
+- r8: src/sprite.c :: AddSubspritesToOamBuffer AllocSpriteTiles AnimCmd_frame AnimCmd_jump BeginAnim CreateSpriteAndAnimate CreateSpriteAt CreateSpriteAtEnd DrawPartyMenuMonText FreeSpriteTilesByTag SetOamMatrixRotationScaling SetSpriteOamFlipBits SortSprites 
+- r8: src/starter_choose.c :: CB2_ChooseStarter CreatePokemonFrontSprite CreateStarterPokemonLabel 
+- r8: src/start_menu.c :: PrintStartMenuItemsMultistep sub_80719FC 
+- r8: src/string_util.c :: ConvertIntToDecimalString ConvertIntToDecimalStringN ConvertIntToDecimalStringN_DigitWidth6 ConvertIntToHexStringN 
+- r8: src/task.c :: InsertTask 
+- r8: src/text.c :: ClearWindowTextLines_TextMode2 Contest_StartTextPrinter DoScroll_TextMode0 DoScroll_TextMode2 DoScroll_TextModeMonospace GetStringWidth ShiftGlyphTile_ShadowedFont_Width1 ShiftGlyphTile_ShadowedFont_Width2 ShiftGlyphTile_ShadowedFont_Width3 ShiftGlyphTile_ShadowedFont_Width4 ShiftGlyphTile_ShadowedFont_Width5 ShiftGlyphTile_ShadowedFont_Width6 ShiftGlyphTile_ShadowedFont_Width7 ShiftGlyphTile_ShadowedFont_Width8 ShiftGlyphTile_UnshadowedFont_Width2 ShiftGlyphTile_UnshadowedFont_Width3 ShiftGlyphTile_UnshadowedFont_Width4 ShiftGlyphTile_UnshadowedFont_Width5 ShiftGlyphTile_UnshadowedFont_Width6 ShiftGlyphTile_UnshadowedFont_Width7 ShiftGlyphTile_UnshadowedFont_Width8 sub_8002FA0 sub_8003504 sub_8003558 sub_8004FD0 Text_BlankWindowRect Text_FillWindowBorder Text_FillWindowRect Text_InitWindow Text_InitWindow_Centered Text_InitWindow_RightAligned UpdateTilemap 
+- DOUBLE-HOME: src/text.c :: DoScroll_TextModeMonospace sub_8004FD0 
+- r8: src/text_window.c :: DrawDialogueFrame DrawStandardFrame 
+- r8: src/trade.c :: _08049EFE _0804A294 _0804A504 sub_8047D58 sub_8047EC0 sub_80484F4 sub_8048C70 sub_804A33C sub_804A41C sub_804A51C sub_804A740 sub_804A96C sub_804AA0C sub_804AA88 sub_804ACF4 sub_804AF10 sub_804AFB8 sub_804B2D0 sub_804B790 sub_804BA94 sub_804C29C sub_804D588 
+- r8: src/trader.c :: CreateAvailableDecorationsMenu sub_810993C 
+- r8: src/trainer_card.c :: TrainerCard_DisplayBadges TrainerCard_ScaleDownFlipAnimation TrainerCard_ScaleUpFlipAnimation 
+- r8: src/trainer_see.c :: CheckPathBetweenTrainerAndPlayer TrainerCanApproachPlayer 
+- r8: src/unk_text_8095904.c :: sub_8095904 unref_sub_8095A48 
+- r8: src/use_pokeblock.c :: sub_8136E40 sub_8136F74 sub_8137138 
+- r8: src/util.c :: CopySpriteTiles DoBgAffineSet SetBgAffineStruct 
+- r8: src/wallclock.c :: CB2_StartWallClock CB2_ViewWallClock LoadWallClockGraphics 
