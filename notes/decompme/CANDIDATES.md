@@ -23,3 +23,22 @@ ties where an outside solver is most likely to find the missing lever.
   up mainly to document the question, not because clean C can reach it.
 - gOverworld/packed-struct readers (IsInHazard, onRod caveat): permuter-poisoned;
   a scratch is fine but the sandbox strips packing.
+
+## objdiff-ranked additions (2026-07-20) — highest match%, best post candidates
+
+Measured with `tools/objdiff_rank.sh` (objdiff per-symbol match%). Post the
+top ones — a solver starting at 90%+ has a real shot.
+
+| match% | function | file | note |
+|---|---|---|---|
+| 97.1 | CopyX_Update | src/boss/copy_x.c | boss main dispatch |
+| 95.3 | Blazin_Update | src/boss/blazin.c | boss main dispatch |
+| 92.6 | tryKillGlacierle / tryKillDeathtanz / tryKillChildre | boss/*.c | **same shape ×3 — crack one, crack three** |
+| 90.8 | blizzackMode0 | src/boss/blizzack.c | const 0x6400 copy tie |
+| 89.9 | loadMugshot | src/bg0/text_window.c | |
+| 89.9 | blizzackMode1 | src/boss/blizzack.c | |
+| 88.0 | blizzackNextMode | src/boss/blizzack.c | |
+| 85.4 | DrawStatus | src/bg0/hud.c | |
+
+The `tryKill*` trio being byte-identical-shape across three bosses is the
+highest-leverage target: one solution ports to all three.
