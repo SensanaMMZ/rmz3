@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "pyghidra": {
+      "command": "python3",
+      "args": [
+        "-m",
+        "pyghidra_mcp",
+        "-t",
+        "stdio",
+        "C:/Users/SaroGamingPC/MMZ5-X8-Base/rmz3/baseimg.gba"
+      ],
+      "env": {
+        "GHIDRA_INSTALL_DIR": "C:/Users/SaroGamingPC/decomp-tools/ghidra_12.1.2_PUBLIC",
+        "JAVA_HOME": "C:/Users/SaroGamingPC/decomp-tools/jdk-21.0.11+10"
+      }
+    }
+  }
+}
