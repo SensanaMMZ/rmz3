@@ -97,3 +97,30 @@ pseudo) instead of by diffing output.
 - Priority ordering also depends on `reg_preferred_class` and the conflict
   graph, which are not yet logged. If a case resists, log
   `allocno_preferred_class` next.
+
+
+## Applied to beetank — a rigorous negative result (2026-07-20)
+
+Trace-driven, three hypotheses to get `-0x600` to cross the two calls:
+- **H1** shared `yoff = coord.y - 0x600` → 103; CSE had already merged the two
+  `coord.y - 0x600`, so sharing changed nothing (kept the *sum*, not the constant).
+- **H2** `volatile s32 k = -0x600` → 107, but volatile forces a **stack slot**.
+- **H3** recompute the offset before each call → 103; CSE re-merges it.
+
+Every form shows the offset pseudo at `calls_crossed 0`. The lock: (1) CSE merges
+the duplicate `coord.y - 0x600` to one value; (2) it is cheap, so agbcc
+**rematerializes** rather than keeping it live; (3) rematerialized values never
+cross the calls, so it never enters the low-reg race it must lose to reach r8.
+This is a mechanism-level proof that beetank's r8 is unreachable from clean C
+via agbcc's CSE+remat interaction. Stays INCASM.
+
+## Applied to CountRodButton — near-match via merge-blocking (2026-07-20)
+
+48 vs 48 with one missing copy (`adds r0, r3, #0`): the type-A and type-C
+branches both set `input = main`, and agbcc cross-jumps them while the target
+keeps them separate (same tail-merge class as the FUN_0802e338 family). A
+distinct-but-equal expression for one branch blocks the merge and reaches **2
+non-pool diffs** — the closest this function has been — but the only form found
+so far is an ugly pointer-arithmetic no-op. A clean merge-blocking construct
+would finish it. (`count = count;` does NOT block the merge; the expression must
+differ in the *assigned value*, not add a dead statement.)
