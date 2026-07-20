@@ -124,3 +124,24 @@ non-pool diffs** — the closest this function has been — but the only form fo
 so far is an ugly pointer-arithmetic no-op. A clean merge-blocking construct
 would finish it. (`count = count;` does NOT block the merge; the expression must
 differ in the *assigned value*, not add a dead statement.)
+
+
+## CountRodButton — one instruction from a match (2026-07-20, trace-guided)
+
+Refined the tail-merge block. The winning clean form is an explicit split that
+agbcc cannot cross-jump:
+
+```c
+u8 mode = (z->unk_b4).status.keyMap.attackMode;
+if (mode == 0)      input = (z->input).mapping.main;   // type A
+else if (mode == 1) input = (z->input).mapping.sub;    // type B
+else if (mode >= 2) input = (z->input).mapping.main;   // type C
+else                input = (z->input).mapping.main;   // unreachable, blocks merge
+```
+
+This reaches **1 instruction off (2 diff lines)** — the best ever. The only
+residual is a register-name tie: the target keeps `z` in r3 (`adds r0,r3,#0`),
+mine keeps it in r0 (`adds r1,r0,#0`). Pinning `z` to r3 cascades the whole
+allocation (32 diffs), so it is the coalescer/allocation-tie class that resists
+both pins and the permuter. Left as INCASM at 1 instruction; if the instrumented
+allocator later gains a `preferred_class` probe, this is the test case.
