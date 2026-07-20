@@ -12,6 +12,3 @@ md) — agbcc is BYTE-IDENTICAL to the real 2. holdouts are source-reconstructio
 - [Permuter packed-struct caveat](reference_permuter_packed_caveat.md) — permuter sandbox strips packing → FALSE matches for gOverworld/packed-struct readers; always confirm in real make build
 - [RESUME STATE](project_resume_state.md) — 2026-07-12: upstream porting wired + ~10 dual-forms/NAKEDs retired (ports + register-asm trick); Blink→PaletteAnimation subsystem rename done; next = Camera/Renderer renames to unblock §A + per-tie register-asm on the backlog
 - [NON_MATCH backlog](reference_nonmatch_backlog.md) — ranked closeness of all holdouts (modern_sweep.sh); which are 1-shot permuter targets vs need reconstruction
-
-- [Upstream decomp policy](feedback_upstream_decomp_policy.md) — mmzret's rules: flatten entity layout (COLLISION_OBJECT_HDR, no (p->s).x), wrapper macros for Entity args, typedef struct names, Motion→SpriteAnimation
-- [Instrumented agbcc allocator](reference_agbcc_allocator_traced.md) — high regs = find_reg RETRY after losing the low-reg race (long live range + few refs); beetank's constant is rematerialized so it never competes
