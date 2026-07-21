@@ -17,7 +17,7 @@
 # So the verdict depends on which population a function is in, and the report
 # labels both.
 #
-# Usage: tools/verify_rank.sh   ->  build/rank-verified.md
+# Usage: tools/verify_rank.sh   ->  notes/rank-verified.md
 set -u
 cd /c/Users/SaroGamingPC/MMZ5-X8-Base/rmz3
 export PATH=/c/devkitPro/devkitARM/bin:$PATH
