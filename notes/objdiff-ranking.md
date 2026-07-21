@@ -1,5 +1,19 @@
 # objdiff holdout ranking (closest first)
 
+> **⚠ Read `notes/backlog-truth.md` before using this table.**
+>
+> These numbers come from `tools/objdiff_rank.sh`, which compiles at
+> `MODERN=1`. `MODERN` swaps `SET_ENTITY_ROUTINE` for a form that schedules
+> differently, so **functions that already match the shipped ROM appear here as
+> 85-97% near-misses**. Verified already matching: CopyX_Update, Blazin_Update,
+> tryKill{Childre,Deathtanz,Glacierle}, CreateBlazin, CreateCopyX,
+> CreateBlizzack, loadMugshot, DrawStatus, and more.
+>
+> The match% is only meaningful for functions actually declared
+> `NON_MATCH`/`NAKED`. Run `tools/verify_rank.sh` for the labelled version
+> (`build/rank-verified.md`).
+
+
 | match% | function | file |
 |---|---|---|
 | 97.12% | CopyX_Update | src/boss/copy_x.c |
