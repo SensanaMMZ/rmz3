@@ -124,3 +124,56 @@ search, not a guess-the-spelling one.
 
 Verified: the `MODERN=0` object is byte-identical to expected, so the ROM is
 unaffected by this edit.
+
+## Two findings from working the small end of the stub list
+
+Ranked the 362 pure stubs by size (exact, from the symbol map): 22 are 64 bytes
+or less, 138 are 256 or less. Small functions should be the cheapest matches, so
+that is where to start.
+
+### src/mmbn4.c is not our compiler's output -- deprioritize its 18 stubs
+
+The tiny SIO helpers there use `push {r7, lr}` / `pop {r7, pc}` with **r7** as
+the scratch base, plus oddities like `movs r0, r0` and `tst r0, r0` for a bool
+return. That is frame-pointer codegen, not agbcc `-O2`.
+
+Checked across the whole ROM: `push {r7, lr}` appears **3 times, all in mmbn4**.
+agbcc never emits that form anywhere else in the game.
+
+mmbn4.c is the MMBN4 link-cable and e-Reader code -- a separately-built library
+rather than game code. Attacking those 18 stubs with our standard agbcc
+invocation cannot work, and mmbn4.c is the single largest cluster in
+`notes/holdouts-pure.md` (18 of 362). It should be treated as out of scope
+until someone works out what built it.
+
+### unused_080e14d4 (cyberelf.c) -- 46 of 52 bytes, blocked on a dead compare
+
+A circular-list search, reconstructed from the Ghidra draft. `gElfHeaderPtr`,
+the `&h->next` sentinel and the backwards `prev` walk all read straight off the
+draft, and the neighbouring `close_menu_080e1540` confirms the idiom.
+
+Everything up to the loop matches byte for byte. The gap is six bytes at the
+tail. Reading the target's offsets:
+
+```
+0x18  beq  -> 0x24        sentinel exit, threaded straight to `return NULL`
+0x1e  bne  -> 0x14        id mismatch, loop back
+0x20  cmp  r1, r2         <-- reached only on the found path, where r1 != r2
+0x22  bne  -> 0x2c            is already established. Provably dead.
+```
+
+So the ROM keeps a comparison it does not need, on a path where agbcc had
+already proved the answer. Four loop shapes were tried -- `do/while` with a
+compound condition, `for(;;)` with two breaks, assign-then-return, ternary --
+and agbcc threads the compare away in every one, landing at 46 bytes. Writing
+the sentinel expression inline instead of via a variable is worse (56 bytes,
+spills to r4).
+
+This is the "no C knob" class: the target contains a redundancy that agbcc will
+not reproduce from any arrangement tried. Left as asm. It is an `unused_`
+function, so the payoff is low -- recorded so nobody repeats the four attempts.
+
+`tools/fnbytes.py` came out of this: byte comparison is the final arbiter, and
+disassembly framing lies. This function is stored as raw data in the expected
+object (it came from an INCCODE'd `.inc`), so `objdump -d` renders it as
+`.word`s and a disassembly diff is meaningless.
