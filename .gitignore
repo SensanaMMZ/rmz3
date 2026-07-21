@@ -35,3 +35,8 @@ expected/
 baseimg.gba
 __pycache__/
 nonmatchings/
+
+# generated Ghidra projects (contain the local username)
+pyghidra_mcp_projects/
+*.gba_ghidra/
+*_ghidra/

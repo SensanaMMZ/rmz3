@@ -5,7 +5,7 @@
 #
 # Usage: tools/objdiff_rank.sh [limit]   ->  build/objdiff-rank.md
 set -u
-cd /c/Users/SaroGamingPC/MMZ5-X8-Base/rmz3
+cd "$(dirname "$0")/.."
 export PATH=/c/devkitPro/devkitARM/bin:$PATH
 AGBCC=tools/agbcc/bin/agbcc.exe
 AS=arm-none-eabi-as

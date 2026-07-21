@@ -8,10 +8,10 @@ Two commands, ~15 seconds:
 ```sh
 export PATH=/c/devkitPro/devkitARM/bin:$PATH        # needs arm-none-eabi-objdump
 python3 tools/ghidra/map_symbols.py                 # -> rom_symbols.txt, rom_data_symbols.txt
-python3 tools/ghidra/build_sym_elf.py C:/Users/SaroGamingPC/decomp-tools/rmz3_sym.elf
+python3 tools/ghidra/build_sym_elf.py            # -> build/rmz3_sym.elf
 ```
 
-Then `import_binary C:/Users/SaroGamingPC/decomp-tools/rmz3_sym.elf`, wait for
+Then `import_binary <repo>/build/rmz3_sym.elf`, wait for
 `list_project_binaries` to report `analysis_complete: true` (a few minutes for
 8 MB), and `decompile_function <binary> Beetank_Update`.
 
@@ -85,10 +85,10 @@ binutils is an independent parser — use it before spending a multi-minute
 analysis pass:
 
 ```sh
-arm-none-eabi-readelf -sW rmz3_sym.elf | grep ' Beetank_Update$'
+arm-none-eabi-readelf -sW build/rmz3_sym.elf | grep ' Beetank_Update$'
 #   -> 0807b9f1   248 FUNC    GLOBAL DEFAULT    7 Beetank_Update
 #      odd value = Thumb, non-zero size = bounded body
-arm-none-eabi-objdump -d --start-address=0x0807b9f0 --stop-address=0x0807ba1c rmz3_sym.elf
+arm-none-eabi-objdump -d --start-address=0x0807b9f0 --stop-address=0x0807ba1c build/rmz3_sym.elf
 #   -> real Thumb, with branch targets shown as <Beetank_Update+0x34>
 ```
 

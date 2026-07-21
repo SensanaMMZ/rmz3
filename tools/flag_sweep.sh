@@ -3,7 +3,7 @@
 # optimization switch appended; report the holdout fn's diff count AND whether
 # control (already-matched) fns in the same TU stay matched.
 # Usage: tools/flag_sweep.sh <src.c> <holdout_fn> <control_fn> [control_fn2]
-REPO="/c/Users/SaroGamingPC/MMZ5-X8-Base/rmz3"; cd "$REPO"
+cd "$(dirname "$0")/.."; REPO="$PWD"
 export PATH=/c/devkitPro/devkitARM/bin:$PATH
 AGBCC="$REPO/tools/agbcc/bin/agbcc.exe"
 AS="/c/devkitPro/devkitARM/bin/arm-none-eabi-as"

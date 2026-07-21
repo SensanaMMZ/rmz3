@@ -10,7 +10,7 @@ Usage: python3 tools/m2c_drafts.py [limit]
 import io, os, re, subprocess, sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-M2C = 'C:/Users/SaroGamingPC/.claude/jobs/7ac7f6e2/tmp/m2c/m2c.py'
+M2C = os.environ.get('M2C', os.path.join(os.path.expanduser('~'), 'm2c', 'm2c.py'))
 OUT = os.path.join(REPO, 'build', 'm2c-drafts')
 
 # ---- idiom normalizer (post-pass "plugins") ----
