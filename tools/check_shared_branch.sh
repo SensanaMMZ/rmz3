@@ -25,8 +25,10 @@ if [ -n "$REF" ]; then
   list() { git ls-tree -r --name-only "$REF"; }
   content() { git grep -inE "$1" "$REF" -- "$2" 2>/dev/null; }
 else
-  list() { git ls-files; }
-  content() { git grep -inE "$1" -- "$2" 2>/dev/null; }
+  # --untracked so a newly added, not-yet-committed file still gets checked;
+  # plain `git grep` only looks at tracked paths and would miss it.
+  list() { git ls-files; git ls-files --others --exclude-standard; }
+  content() { git grep --untracked -inE "$1" -- "$2" 2>/dev/null; }
 fi
 
 echo "checking ${REF:-working tree}"
@@ -37,9 +39,15 @@ if list | grep -qE "^($BANNED_PATHS)$"; then
   fail=1
 fi
 
+# Exclusions: src/rom_header.s is a real GBA header field, the agbcc-debug
+# dumps carry GCC 2.x's own "CYGNUS LOCAL" comments, and the two guard scripts
+# necessarily contain the very patterns they search for.
+# `git grep` prefixes the path with "ref:" only when given a ref, so anchor the
+# exclusions with (^|:) to match both invocations.
 hits=$(content "$BANNED_TEXT" '.' \
-  | grep -vE ':src/rom_header\.s:' \
-  | grep -vE 'tools/agbcc-debug/.*\.instrumented:')
+  | grep -vE '(^|:)src/rom_header\.s:' \
+  | grep -vE '(^|:)tools/agbcc-debug/.*\.instrumented:' \
+  | grep -vE '(^|:)tools/(check_shared_branch|refresh_memory_snapshot)\.sh:')
 if [ -n "$hits" ]; then
   echo "FAIL: compiler-provenance text present:"
   echo "$hits" | cut -c1-140 | sed 's/^/  /'
