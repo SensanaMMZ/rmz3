@@ -87,3 +87,40 @@ InitMotionLocation -> wStaticGraphicTilenums, wDynamicMotionPalIDs,
 FlushOAM           -> gOamManager, and the DMA3 register writes
 IsInHazard         -> the 0x0200_23xx hazard array, stride 0xc
 ```
+
+## Worked example: FlushOAM (still open)
+
+First reconstruction driven by the Ghidra harness. Ghidra named the pool
+literals (`gOamManager`, the DMA3 registers) that m2c reported as `M2C_ERROR`,
+which made the shape readable immediately.
+
+Two real corrections to the MODERN body came out of it, both now in:
+
+- The write pointer lives in a **local variable**, not `gOamManager.p` re-read
+  each iteration. The target keeps it in `r4` across the loop and stores it back
+  only at the end; our version reloaded it every pass.
+- The loop bound is a second local (`end`), and the buffer base is derived from
+  it as `end - 128`, which is what produces the `0xfffffc00` pool constant.
+
+That fixed the loop shape and the register roles (`r4` = pointer, `r5` = bound).
+
+**What is still wrong:** the target's literal pool holds exactly *one*
+`gOamManager` relocation — `gOamManager + 0x400`, i.e. the address of the tail
+— and reaches everything from it: `[r5,#0]` is `p`, `[r5,#4]` is `dispcnt`, and
+the buffer is `r5 - 0x400`. Ours emits **two** relocations, anchoring on
+`gOamManager` itself (offset 0) and computing the tail at runtime.
+
+Six spellings of that address were tried — `&gOamManager.p`,
+`&gOamManager.buf[128]`, `gOamManager.buf + 128`, each crossed with naming vs
+deriving the DMA source — and all six give the same two-relocation result. So
+the anchoring is not controlled by how the address is *written*.
+
+The remaining question is what makes agbcc route every reference to a global
+through a single non-zero offset into it. Deriving `buf` via a pool-loaded
+`-0x400` is *more* expensive than anchoring at offset 0, so the compiler only
+does it when nothing names offset 0 directly — which suggests the original
+source never mentions `gOamManager.buf` at all. That is a permuter-shaped
+search, not a guess-the-spelling one.
+
+Verified: the `MODERN=0` object is byte-identical to expected, so the ROM is
+unaffected by this edit.

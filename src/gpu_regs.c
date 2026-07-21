@@ -89,16 +89,19 @@ void ResetOAM(void) {
 NON_MATCH void FlushOAM(void) {
 #if MODERN
   vu16 dispcnt = REG_DISPCNT;
+  struct OamData* p = gOamManager.p;
+  struct OamData* end = (struct OamData*)&gOamManager.p;
+
   dispcnt &= ~(DISPCNT_OBJ_ON);
   dispcnt |= gOamManager.dispcnt;
   REG_DISPCNT = dispcnt;
 
-  while (PTR_U32(gOamManager.p) < PTR_U32(&gOamManager.p)) {
-    *((u16*)gOamManager.p) = 0x200;
-    gOamManager.p = &gOamManager.p[1];
+  while (PTR_U32(p) < PTR_U32(end)) {
+    *((u16*)p) = 0x200;
+    p++;
   }
-  DmaCopy32(3, gOamManager.buf, OAM, 1024);
-  gOamManager.p = gOamManager.buf;
+  DmaCopy32(3, end - 128, OAM, 1024);
+  gOamManager.p = end - 128;
 #else
   INCCODE("asm/wip/FlushOAM.inc");
 #endif
