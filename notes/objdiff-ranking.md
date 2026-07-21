@@ -11,7 +11,7 @@
 >
 > The match% is only meaningful for functions actually declared
 > `NON_MATCH`/`NAKED`. Run `tools/verify_rank.sh` for the labelled version
-> (`build/rank-verified.md`).
+> (`notes/rank-verified.md`).
 
 
 | match% | function | file |

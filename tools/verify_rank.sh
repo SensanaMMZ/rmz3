@@ -23,7 +23,7 @@ cd /c/Users/SaroGamingPC/MMZ5-X8-Base/rmz3
 export PATH=/c/devkitPro/devkitARM/bin:$PATH
 AGBCC=tools/agbcc/bin/agbcc.exe
 OBJ=build/rankobj; mkdir -p "$OBJ" build
-OUT=build/rank-verified.md
+OUT=notes/rank-verified.md
 
 norm() {  # mnemonics only: drop addresses and symbolic branch targets
   arm-none-eabi-objdump -d --no-show-raw-insn "$1" \
