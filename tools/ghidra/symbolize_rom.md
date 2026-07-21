@@ -12,13 +12,22 @@ functions on analysis.
   `FUN_08xxxxxx` names. Covers every asm-bodied function (all the NAKED/INCASM
   holdouts). Addresses are the ROM VMA; the ELF is already based at 0x08000000
   (`C:\Users\SaroGamingPC\decomp-tools\baseimg.elf`, section `.rom`).
-- **Gap:** C-matched NON_MATCH holdouts (Beetank_Update, CopyBgMap, CopyX_Update,
-  Blazin_Update, tryKill*, CountRodButton…) are NOT in that list — their MODERN
-  bodies are C, so their asm fragments lack the `label: @ addr` line. Get those
-  addresses from the built objects: `arm-none-eabi-nm expected/build/rmz3/<file>.o`
-  gives the symbol, and the linker map (build the ROM once, or
-  `linker/text.txt` order + section sizes) gives the VMA. Or just look each one
-  up individually with `tools/ghidra_decompile.py` (which finds them by address).
+- **Gap: CLOSED** for most holdouts by `tools/ghidra/resolve_holdout_addrs.py`.
+  C-bodied holdouts have no `label: @ addr` in asm, but their object contains
+  them beside siblings that *are* mapped, and link order == source order, so
+  `VMA(fn) = knownVMA(anchor) - offset(anchor) + offset(fn)` with both offsets
+  read exactly from the object symbol table. Resolved and merged (map now 2,208):
+  Beetank_Update 0807B9F0, CopyX_Update 08055650, Blazin_Update 0803E9F0,
+  tryKillChildre 0804051C, tryKillDeathtanz 08048E5C, tryKillGlacierle 08057A70,
+  blizzackMode0 08059DB8, blizzackMode1 08059E00, blizzackNextMode 0805A1E0.
+  Validated: the computed Beetank_Update start (0807B9F0) is the function that
+  contains 0807B9F8, the address that decompiled successfully earlier.
+- **Still unanchored** (every function in the file is C-matched, so no sibling
+  has a known address): `src/game/menu.c` (CopyBgMap), `src/player/zero/input/util.c`
+  (CountRodButton), `src/bg0/hud.c` (DrawStatus), `src/bg0/text_window.c`
+  (loadMugshot). Resolve by chaining across objects in `linker/text.txt` order
+  (nearest preceding mapped object + cumulative .text sizes), or by probing with
+  `tools/ghidra_decompile.py` and reading the function start Ghidra reports.
 
 ## The build recipe
 
