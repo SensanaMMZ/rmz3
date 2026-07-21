@@ -9,7 +9,10 @@
 # Usage: tools/refresh_memory_snapshot.sh
 set -eu
 cd "$(dirname "$0")/.."
-SRC="C:/Users/SaroGamingPC/.claude/projects/C--Users-SaroGamingPC-MMZ5-X8-Base-rmz3/memory"
+# Claude Code slugs the project dir by replacing : \ / with -; derive it rather
+# than hardcoding a home path into the repo.
+SLUG=$(pwd -W 2>/dev/null || pwd); SLUG=$(echo "$SLUG" | sed 's/[:\/]/-/g')
+SRC="${CLAUDE_MEMORY_DIR:-$HOME/.claude/projects/$SLUG/memory}"
 DST=notes/memory-snapshot
 
 # Never publish: this memory is entirely about compiler provenance.

@@ -6,8 +6,8 @@ control flow. Use it as a second opinion on the ~6 structural reconstructions.
 
 ## Installed
 
-- **Ghidra 12.1.2** — `C:\Users\SaroGamingPC\decomp-tools\ghidra_12.1.2_PUBLIC`
-- **JDK 21.0.11** (Temurin) — `C:\Users\SaroGamingPC\decomp-tools\jdk-21.0.11+10`
+- **Ghidra 12.1.2** — install anywhere; point `GHIDRA_INSTALL_DIR` at it
+- **JDK 21.0.11** (Temurin) — point `JAVA_HOME` at it
   (Ghidra 12.x wants JDK 21; the system JDK 25 is too new.)
 - **pyghidra 3.1.0** + **pyghidra-mcp 0.2.3** — `pip install pyghidra-mcp`
 

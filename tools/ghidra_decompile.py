@@ -6,13 +6,18 @@ address, creates the function, analyzes, and prints the pseudo-C. Second-opinion
 decompiler for structural holdouts m2c can't decode (PC-relative literals, etc).
 """
 import os, sys
-os.environ['GHIDRA_INSTALL_DIR'] = r'C:\Users\SaroGamingPC\decomp-tools\ghidra_12.1.2_PUBLIC'
-os.environ['JAVA_HOME'] = r'C:\Users\SaroGamingPC\decomp-tools\jdk-21.0.11+10'
+
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# GHIDRA_INSTALL_DIR / JAVA_HOME come from the environment (.mcp.json sets both
+# for the MCP server); no install path is baked into the repo.
+for _v in ('GHIDRA_INSTALL_DIR', 'JAVA_HOME'):
+    if not os.environ.get(_v):
+        sys.exit('%s is not set -- export it, or copy the value from .mcp.json' % _v)
 
 import pyghidra
 pyghidra.start()
 
-rom = r'C:\Users\SaroGamingPC\MMZ5-X8-Base\rmz3\baseimg.gba'
+rom = os.path.join(REPO, 'baseimg.gba')
 addr_hex = sys.argv[1] if len(sys.argv) > 1 else '0x08050090'  # FUN_08050090 (anubis holdout)
 thumb = True
 

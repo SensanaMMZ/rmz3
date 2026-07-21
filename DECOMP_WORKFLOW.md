@@ -27,7 +27,7 @@ Compiler: agbcc (legacy GCC 2.x), Thumb-1, `-O2`.
    - METTAUR flag dispatch (vfx Update fns)
 2. **Split**: `python tools/split_inc_multi.py asm/<file>.inc <fn1> [<fn2> ...]` carves stubs out and produces `<file>_p1.inc`, `<file>_p2.inc`, etc. with parts between each named fn.
 3. **Edit `.c`**: replace the single `INCASM(...)` with a sequence `INCASM(_p1); <C fn body>; INCASM(_p2); ...`. Add forward decls of arrays/helpers used.
-4. **Build**: `& 'C:\devkitPro\msys2\usr\bin\bash.exe' -lc "cd /c/Users/SaroGamingPC/MMZ5-X8-Base/rmz3 && make 2>&1 | tail -3"` (PowerShell tool).
+4. **Build**: `& 'C:\devkitPro\msys2\usr\bin\bash.exe' -lc "cd <repo> && make 2>&1 | tail -3"` (PowerShell tool).
 5. **If SHA1 fails**: `bash tools/diff.sh <fn>` to compare against `expected/`. Common failures and fixes:
    - **wrong array name** (`sUpdates` vs actual `sGhostXUpdates`/`PTR_ARRAY_xxx`): inspect `build/rmz3/src/.../<file>.s` to see the real symbol the compiler emitted.
    - **wrong sCollisions index**: compute via rmz3.map rodata start + sum of `.size` from `.s` file — see python snippet below.
@@ -115,7 +115,7 @@ def find_layout(name):
 
 ## How to resume
 
-1. Run `make` from `/c/Users/SaroGamingPC/MMZ5-X8-Base/rmz3` to confirm current state (should be SHA1 OK on latest commit; 5 fns mid-stream as noted above need a build+refresh+commit).
+1. Run `make` from `<repo>` to confirm current state (should be SHA1 OK on latest commit; 5 fns mid-stream as noted above need a build+refresh+commit).
 2. If the in-progress 5 fns build OK, `bash tools/refresh-expected.sh && git add -A && git commit -m "Decompile 5 body.status flag-check fns (petatria x2, unk_63, wormer_snow_ball, locomo_if proj)"`.
 3. Continue hunting with the python regex scanners under "High-yield patterns" above.
 4. User wants continuous progress with milestone updates only — no pausing for confirmation.

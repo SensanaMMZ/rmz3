@@ -21,6 +21,10 @@ BANNED_PATHS='notes/clean-room-agbcc-improvement\.md'
 # source comments) are legitimate and excluded.
 BANNED_TEXT='nincompilers|arm-000512|genuine SDK|genuine Nintendo|Nintendo/Cygnus|genuine compiler'
 
+# Identity tells. The history rewrite removed these and required tool scripts to
+# use relative paths; they crept back into 11 tool files, so check for them too.
+BANNED_ID='SaroGamingPC|saro9564|lyleaigbedion|Saro_95'
+
 if [ -n "$REF" ]; then
   list() { git ls-tree -r --name-only "$REF"; }
   content() { git grep -inE "$1" "$REF" -- "$2" 2>/dev/null; }
@@ -51,6 +55,17 @@ hits=$(content "$BANNED_TEXT" '.' \
 if [ -n "$hits" ]; then
   echo "FAIL: compiler-provenance text present:"
   echo "$hits" | cut -c1-140 | sed 's/^/  /'
+  fail=1
+fi
+
+# The guard scripts name the identity strings they search for; the memory
+# snapshot records the project path as history and is published deliberately.
+idhits=$(content "$BANNED_ID" '.' \
+  | grep -vE '(^|:)tools/(check_shared_branch|refresh_memory_snapshot)\.sh:' \
+  | grep -vE '(^|:)notes/memory-snapshot/')
+if [ -n "$idhits" ]; then
+  echo "FAIL: identity path/handle present:"
+  echo "$idhits" | cut -c1-140 | sed 's/^/  /'
   fail=1
 fi
 

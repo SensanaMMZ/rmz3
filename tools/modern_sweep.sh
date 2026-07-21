@@ -4,7 +4,7 @@
 # then count real instruction diffs vs the expected target .o.
 # Ranks candidates by closeness so single-cause cracks surface first.
 set -o pipefail
-REPO="/c/Users/SaroGamingPC/MMZ5-X8-Base/rmz3"
+cd "$(dirname "$0")/.."; REPO="$PWD"
 cd "$REPO"
 export PATH=/c/devkitPro/devkitARM/bin:$PATH
 AGBCC="$REPO/tools/agbcc/bin/agbcc.exe"

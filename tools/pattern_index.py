@@ -14,7 +14,7 @@ import io, os, re, sys, json, subprocess
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IDX = os.path.join(REPO, 'build', 'pattern-index')
-PK = 'C:/Users/SaroGamingPC/.claude/jobs/7ac7f6e2/tmp/pokeruby'
+PK = os.environ.get('POKERUBY', os.path.join(os.path.expanduser('~'), 'pokeruby'))
 
 def fns_from_s(path, text):
     """Split a GCC .s file into (fn, body) pairs; skip NAKED (.syntax unified)."""

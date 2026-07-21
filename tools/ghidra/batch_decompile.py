@@ -19,16 +19,17 @@ Output: build/ghidra-drafts/<name>.c  (plus _index.md summarising the run)
 import io, os, re, sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-ELF = r'C:\Users\SaroGamingPC\decomp-tools\rmz3_sym.elf'
+ELF = os.environ.get('RMZ3_SYM_ELF', os.path.join(REPO, 'build', 'rmz3_sym.elf'))
 PROJ = os.path.join(REPO, 'build', 'ghidra-proj')
 OUT = os.path.join(REPO, 'build', 'ghidra-drafts')
 SYMS = os.path.join(REPO, 'tools', 'ghidra', 'rom_symbols.txt')
 STUBS = os.path.join(REPO, 'notes', 'holdouts-pure.md')
 
-os.environ.setdefault('GHIDRA_INSTALL_DIR',
-                      r'C:\Users\SaroGamingPC\decomp-tools\ghidra_12.1.2_PUBLIC')
-os.environ.setdefault('JAVA_HOME',
-                      r'C:\Users\SaroGamingPC\decomp-tools\jdk-21.0.11+10')
+# GHIDRA_INSTALL_DIR / JAVA_HOME come from the environment (.mcp.json sets both
+# for the MCP server); no install path is baked into the repo.
+for _v in ('GHIDRA_INSTALL_DIR', 'JAVA_HOME'):
+    if not os.environ.get(_v):
+        sys.exit('%s is not set -- export it, or copy the value from .mcp.json' % _v)
 
 # `| NAKED static void drawZeroHPWeaponIcon(void* p)` -> drawZeroHPWeaponIcon
 SIG = re.compile(r'`(?:NON_MATCH|NAKED)\b[^`]*?([A-Za-z_][A-Za-z_0-9]*)\s*\(')

@@ -6,7 +6,7 @@
 # active in the real build). mdiff GUARDS against empty compiles: if the symbol
 # is absent from either object (failed compile), it reports FAIL, not a bogus
 # empty "0-diff" match.
-REPO="/c/Users/SaroGamingPC/MMZ5-X8-Base/rmz3"; cd "$REPO"
+cd "$(dirname "$0")/.."; REPO="$PWD"
 export PATH=/c/devkitPro/devkitARM/bin:$PATH
 AGBCC="$REPO/tools/agbcc/bin/agbcc.exe"
 AS="/c/devkitPro/devkitARM/bin/arm-none-eabi-as"

@@ -24,7 +24,7 @@ ROM = os.path.join(REPO, 'baseimg.gba')
 CODE = os.path.join(REPO, 'tools', 'ghidra', 'rom_symbols.txt')
 DATA = os.path.join(REPO, 'tools', 'ghidra', 'rom_data_symbols.txt')
 OUT = sys.argv[1] if len(sys.argv) > 1 else \
-    'C:/Users/SaroGamingPC/decomp-tools/baseimg_sym.elf'
+    os.environ.get('RMZ3_SYM_ELF', os.path.join(REPO, 'build', 'rmz3_sym.elf'))
 
 SHT_PROGBITS, SHT_SYMTAB, SHT_STRTAB, SHT_NOBITS = 1, 2, 3, 8
 SHF_WRITE, SHF_ALLOC, SHF_EXECINSTR = 1, 2, 4
