@@ -177,3 +177,25 @@ function, so the payoff is low -- recorded so nobody repeats the four attempts.
 disassembly framing lies. This function is stored as raw data in the expected
 object (it came from an INCCODE'd `.inc`), so `objdump -d` renders it as
 `.word`s and a disassembly diff is meaningless.
+
+### FUN_080ee328 (game/main.c) -- hand-written asm, never C
+
+The existing comment on it guessed this, and the assembly confirms it:
+
+```
+lsrs r1, r1, #1          <-- work
+push {r4, r5, r6, r7}    <-- prologue, second
+```
+
+A compiler always emits the prologue first, so this was written by hand and
+there is no C source to recover.
+
+`tools/detect_handwritten_asm.py` looks for that signature across the whole
+backlog. It reports its own coverage on every run, because a detector that
+silently parses nothing would otherwise report a clean bill of health -- the
+current run scans **2,409 function segments, 2,353 of them with a prologue**.
+
+The result is a useful negative: only **4** functions are hand-written
+(`FUN_080ee328` plus three `push {r7, lr}` cases in mmbn4.c). The
+reconstruction backlog is essentially all compiler output, so it is reachable
+in principle. Full list: `notes/handwritten-asm.md`.
