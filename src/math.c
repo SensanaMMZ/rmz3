@@ -45,7 +45,7 @@ s32 CalcAngleBetweenCoords(struct Coord* c1, struct Coord* c2) { return CalcAngl
  * @note b±c の範囲内なら a をそのまま返す。レジスタ割り当てが合わないため NON_MATCH
  * @note 0x080e964c
  */
-NON_MATCH u8 FUN_080e964c(u32 a, s32 b, s32 c) {
+NON_MATCH u32 FUN_080e964c(u32 a, s32 b, s32 c) {
 #if MODERN
   if ((((a - b) + c) & 0xFF) > (u32)(c << 1)) {
     s32 dir = (((a - b) & 0xFF) > 0x7F) ? -1 : 1;
@@ -58,11 +58,15 @@ NON_MATCH u8 FUN_080e964c(u32 a, s32 b, s32 c) {
 }
 
 #if MODERN == 0
-NAKED static void unused_080e9680(void* param_1, void* param_2, void* param_3, void* param_4, void* param_5, void* param_6) { INCCODE("asm/unused/unused_080e9680.inc"); }
+static u32 unused_080e9680(s32 x1, s32 y1, s32 x2, s32 y2, s32 b, s32 c) {
+  return FUN_080e964c(CalcAngleBetweenPoints(x1, y1, x2, y2), b, c);
+}
 #endif
 
 #if MODERN == 0
-NAKED static void unused_080e9698(void* param_1, void* param_2, u32 param_3, u32 param_4) { INCCODE("asm/unused/unused_080e9698.inc"); }
+static u32 unused_080e9698(struct Coord* c1, struct Coord* c2, s32 b, s32 c) {
+  return unused_080e9680(c1->x, c1->y, c2->x, c2->y, b, c);
+}
 #endif
 
 #if MODERN == 0
