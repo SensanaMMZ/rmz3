@@ -131,7 +131,58 @@ Ranked the 362 pure stubs by size (exact, from the symbol map): 22 are 64 bytes
 or less, 138 are 256 or less. Small functions should be the cheapest matches, so
 that is where to start.
 
-### src/mmbn4.c is not our compiler's output -- deprioritize its 18 stubs
+### src/mmbn4.c -- CORRECTED: I was wrong, it is not out of scope
+
+**Retracted.** An earlier version of this note said mmbn4.c "is not our
+compiler's output" and told people to treat its 18 stubs as out of scope. That
+conclusion was wrong, and the way it was reached is worth recording.
+
+The evidence looked strong: the SIO helpers use `push {r7, lr}` / `pop {r7, pc}`
+with r7 as the scratch base, and that form appears only 3 times in the whole
+ROM, all in mmbn4. So it plainly is not built like the rest of the game.
+
+The error was jumping from *"different from the rest of the game"* to *"outside
+our toolchain"* without testing it. Three things falsify it:
+
+1. **The Makefile already compiles mmbn4.c differently** and always has:
+   ```make
+   $(BUILD_DIR)/src/mmbn4.o: CFLAGS := -O -mno-thumb-interwork
+   ```
+   Every probe used the default `-mthumb-interwork -O2`. The codegen looked
+   foreign because it was compiled with the wrong flags -- by me, not by Capcom.
+   `-mno-thumb-interwork` is exactly what produces `pop {r7, pc}` instead of
+   `pop {r1}; bx r1`.
+2. **agbcc reproduces the prologue.** `-O -mno-thumb-interwork
+   -fno-omit-frame-pointer` emits `push {r7, lr}` ... `pop {r7, pc}`. `-O2`
+   turns frame pointers off, which is the only reason it never appeared
+   elsewhere.
+3. **`tools/agbcc/bin/old_agbcc.exe` exists** and the Makefile already uses it
+   for `src/libs/m4a.o`. The Klonoa GBA project reports that old_agbcc
+   allocates literal-pool loads to a different register than agbcc and that
+   `-ftst` makes it emit `tst` instead of `ands`+`cmp` -- and the target here
+   ends with exactly `movs r0, r0` / `tst r0, r0`.
+
+What is still genuinely unexplained: the target puts the *global's address* in
+r7 (`ldr r7, =gUnk02000d50`) rather than using r7 as a frame pointer, and ends
+with a redundant `movs r0, r0` / `tst r0, r0` that looks like a
+result-in-flags convention. Neither agbcc nor old_agbcc reproduced that in the
+flag combinations tried so far.
+
+So the honest status is **unknown and worth investigating**, not ruled out. The
+next steps are to probe old_agbcc's `-ftst` against a function whose target
+actually contains `ands`+`cmp`, and to sweep flag combinations against several
+mmbn4 functions at once rather than one.
+
+**General lesson: always compile a holdout with the flags its own object uses.**
+`tools/verify_rank.sh`, `tools/objdiff_rank.sh` and every ad-hoc probe in this
+session hardcode `-mthumb-interwork -O2`, so their verdicts are invalid for
+`src/mmbn4.c` and `src/libs/agb_sram.o` (`-O -mthumb-interwork`) and for
+`src/libs/m4a.o` (old_agbcc). Read the per-file overrides near the bottom of the
+Makefile before trusting any diff.
+
+### original note (kept for the record, conclusion retracted above)
+
+#### how the wrong conclusion looked at the time
 
 The tiny SIO helpers there use `push {r7, lr}` / `pop {r7, pc}` with **r7** as
 the scratch base, plus oddities like `movs r0, r0` and `tst r0, r0` for a bool
