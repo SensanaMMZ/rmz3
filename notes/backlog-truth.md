@@ -124,3 +124,129 @@ search, not a guess-the-spelling one.
 
 Verified: the `MODERN=0` object is byte-identical to expected, so the ROM is
 unaffected by this edit.
+
+## Two findings from working the small end of the stub list
+
+Ranked the 362 pure stubs by size (exact, from the symbol map): 22 are 64 bytes
+or less, 138 are 256 or less. Small functions should be the cheapest matches, so
+that is where to start.
+
+### src/mmbn4.c -- CORRECTED: I was wrong, it is not out of scope
+
+**Retracted.** An earlier version of this note said mmbn4.c "is not our
+compiler's output" and told people to treat its 18 stubs as out of scope. That
+conclusion was wrong, and the way it was reached is worth recording.
+
+The evidence looked strong: the SIO helpers use `push {r7, lr}` / `pop {r7, pc}`
+with r7 as the scratch base, and that form appears only 3 times in the whole
+ROM, all in mmbn4. So it plainly is not built like the rest of the game.
+
+The error was jumping from *"different from the rest of the game"* to *"outside
+our toolchain"* without testing it. Three things falsify it:
+
+1. **The Makefile already compiles mmbn4.c differently** and always has:
+   ```make
+   $(BUILD_DIR)/src/mmbn4.o: CFLAGS := -O -mno-thumb-interwork
+   ```
+   Every probe used the default `-mthumb-interwork -O2`. The codegen looked
+   foreign because it was compiled with the wrong flags -- by me, not by Capcom.
+   `-mno-thumb-interwork` is exactly what produces `pop {r7, pc}` instead of
+   `pop {r1}; bx r1`.
+2. **agbcc reproduces the prologue.** `-O -mno-thumb-interwork
+   -fno-omit-frame-pointer` emits `push {r7, lr}` ... `pop {r7, pc}`. `-O2`
+   turns frame pointers off, which is the only reason it never appeared
+   elsewhere.
+3. **`tools/agbcc/bin/old_agbcc.exe` exists** and the Makefile already uses it
+   for `src/libs/m4a.o`. The Klonoa GBA project reports that old_agbcc
+   allocates literal-pool loads to a different register than agbcc and that
+   `-ftst` makes it emit `tst` instead of `ands`+`cmp` -- and the target here
+   ends with exactly `movs r0, r0` / `tst r0, r0`.
+
+What is still genuinely unexplained: the target puts the *global's address* in
+r7 (`ldr r7, =gUnk02000d50`) rather than using r7 as a frame pointer, and ends
+with a redundant `movs r0, r0` / `tst r0, r0` that looks like a
+result-in-flags convention. Neither agbcc nor old_agbcc reproduced that in the
+flag combinations tried so far.
+
+So the honest status is **unknown and worth investigating**, not ruled out. The
+next steps are to probe old_agbcc's `-ftst` against a function whose target
+actually contains `ands`+`cmp`, and to sweep flag combinations against several
+mmbn4 functions at once rather than one.
+
+**General lesson: always compile a holdout with the flags its own object uses.**
+`tools/verify_rank.sh`, `tools/objdiff_rank.sh` and every ad-hoc probe in this
+session hardcode `-mthumb-interwork -O2`, so their verdicts are invalid for
+`src/mmbn4.c` and `src/libs/agb_sram.o` (`-O -mthumb-interwork`) and for
+`src/libs/m4a.o` (old_agbcc). Read the per-file overrides near the bottom of the
+Makefile before trusting any diff.
+
+### original note (kept for the record, conclusion retracted above)
+
+#### how the wrong conclusion looked at the time
+
+The tiny SIO helpers there use `push {r7, lr}` / `pop {r7, pc}` with **r7** as
+the scratch base, plus oddities like `movs r0, r0` and `tst r0, r0` for a bool
+return. That is frame-pointer codegen, not agbcc `-O2`.
+
+Checked across the whole ROM: `push {r7, lr}` appears **3 times, all in mmbn4**.
+agbcc never emits that form anywhere else in the game.
+
+mmbn4.c is the MMBN4 link-cable and e-Reader code -- a separately-built library
+rather than game code. Attacking those 18 stubs with our standard agbcc
+invocation cannot work, and mmbn4.c is the single largest cluster in
+`notes/holdouts-pure.md` (18 of 362). It should be treated as out of scope
+until someone works out what built it.
+
+### unused_080e14d4 (cyberelf.c) -- 46 of 52 bytes, blocked on a dead compare
+
+A circular-list search, reconstructed from the Ghidra draft. `gElfHeaderPtr`,
+the `&h->next` sentinel and the backwards `prev` walk all read straight off the
+draft, and the neighbouring `close_menu_080e1540` confirms the idiom.
+
+Everything up to the loop matches byte for byte. The gap is six bytes at the
+tail. Reading the target's offsets:
+
+```
+0x18  beq  -> 0x24        sentinel exit, threaded straight to `return NULL`
+0x1e  bne  -> 0x14        id mismatch, loop back
+0x20  cmp  r1, r2         <-- reached only on the found path, where r1 != r2
+0x22  bne  -> 0x2c            is already established. Provably dead.
+```
+
+So the ROM keeps a comparison it does not need, on a path where agbcc had
+already proved the answer. Four loop shapes were tried -- `do/while` with a
+compound condition, `for(;;)` with two breaks, assign-then-return, ternary --
+and agbcc threads the compare away in every one, landing at 46 bytes. Writing
+the sentinel expression inline instead of via a variable is worse (56 bytes,
+spills to r4).
+
+This is the "no C knob" class: the target contains a redundancy that agbcc will
+not reproduce from any arrangement tried. Left as asm. It is an `unused_`
+function, so the payoff is low -- recorded so nobody repeats the four attempts.
+
+`tools/fnbytes.py` came out of this: byte comparison is the final arbiter, and
+disassembly framing lies. This function is stored as raw data in the expected
+object (it came from an INCCODE'd `.inc`), so `objdump -d` renders it as
+`.word`s and a disassembly diff is meaningless.
+
+### FUN_080ee328 (game/main.c) -- hand-written asm, never C
+
+The existing comment on it guessed this, and the assembly confirms it:
+
+```
+lsrs r1, r1, #1          <-- work
+push {r4, r5, r6, r7}    <-- prologue, second
+```
+
+A compiler always emits the prologue first, so this was written by hand and
+there is no C source to recover.
+
+`tools/detect_handwritten_asm.py` looks for that signature across the whole
+backlog. It reports its own coverage on every run, because a detector that
+silently parses nothing would otherwise report a clean bill of health -- the
+current run scans **2,409 function segments, 2,353 of them with a prologue**.
+
+The result is a useful negative: only **4** functions are hand-written
+(`FUN_080ee328` plus three `push {r7, lr}` cases in mmbn4.c). The
+reconstruction backlog is essentially all compiler output, so it is reachable
+in principle. Full list: `notes/handwritten-asm.md`.
