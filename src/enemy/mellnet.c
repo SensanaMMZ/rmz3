@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
 #include "motion.h"
 
 static const struct Collision sCollisions[4];
@@ -23,6 +24,24 @@ void FUN_0807d6c0(s32 x, s32 y, u8 a2) {
 }
 
 void FUN_0807d720(struct Enemy* p) {}
+
+void Mellnet_Die(struct Enemy* p);
+
+bool8 FUN_0807d724(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if ((p->body).status & BODY_STATUS_SLASHED) {
+      (p->s).mode[1] = 1;
+    } else if ((p->body).status & BODY_STATUS_RECOILED) {
+      (p->s).mode[1] = 2;
+    } else {
+      (p->s).mode[1] = 0;
+    }
+    Mellnet_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
 
 INCASM("asm/enemy/mellnet_pre_p2_a.inc");
 

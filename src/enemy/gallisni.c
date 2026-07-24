@@ -31,7 +31,27 @@ void CreateGallisni(s32 x, s32 y, u8 a2) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p1_pre_p2_a_a.inc");
+INCASM("asm/enemy/gallisni_p1_pre_p2_a_a_x.inc");
+
+void Gallisni_Die(struct Enemy* p);
+
+bool8 gallisni_080870bc(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if ((p->body).status & BODY_STATUS_SLASHED) {
+      (p->s).mode[1] = 1;
+    } else if ((p->body).status & BODY_STATUS_RECOILED) {
+      (p->s).mode[1] = 2;
+    } else {
+      (p->s).mode[1] = 0;
+    }
+    Gallisni_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+INCASM("asm/enemy/gallisni_p1_pre_p2_a_a_y.inc");
 
 struct GallisniObject {
   OBJECT_HDR;
