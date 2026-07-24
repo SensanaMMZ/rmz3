@@ -1,9 +1,25 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
 #include "motion.h"
 
-INCASM("asm/enemy/shellcrawler_pre_p1_p1.inc");
+INCASM("asm/enemy/shellcrawler_pre_p1_p1_a.inc");
+
+static const EnemyFunc sDeads[4];
+
+void Shellcrawler_Die(struct Enemy* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (sDeads[(p->s).mode[1]])(p);
+}
+
+INCASM("asm/enemy/shellcrawler_pre_p1_p1_b.inc");
 
 bool8 FUN_08095d80(struct Enemy* p);
 

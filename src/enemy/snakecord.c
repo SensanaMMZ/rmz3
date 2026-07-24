@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
 
 INCASM("asm/enemy/snakecord_p1_p1_a_p1.inc");
 
@@ -56,7 +57,18 @@ void Snakecord_Update(struct Enemy* p) {
   (PTR_ARRAY_08366e60[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/snakecord_p1_p1_b_p1.inc");
+extern const EnemyFunc PTR_ARRAY_08366e90[3];
+
+void Snakecord_Die(struct Enemy* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (PTR_ARRAY_08366e90[(p->s).mode[1]])(p);
+}
 
 void FUN_08074618(struct Enemy* p) {}
 

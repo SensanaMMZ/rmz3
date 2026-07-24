@@ -78,7 +78,18 @@ void GeneratorCannon_Update(struct Enemy* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/generator_cannon_pre_b.inc");
+static const EnemyFunc sDeads[4];
+
+void GeneratorCannon_Die(struct Enemy* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (sDeads[(p->s).mode[1]])(p);
+}
 
 void FUN_0808c760(struct Enemy* p) {}
 
