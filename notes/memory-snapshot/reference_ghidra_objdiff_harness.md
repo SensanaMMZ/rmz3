@@ -10,7 +10,7 @@ metadata:
 
 # Ghidra harness — WORKING END TO END (2026-07-21)
 
-Ghidra 12.1.2 @ `C:\Users\SaroGamingPC\decomp-tools\ghidra_12.1.2_PUBLIC`,
+Ghidra 12.1.2 @ `~\decomp-tools\ghidra_12.1.2_PUBLIC`,
 JDK 21.0.11 @ `...\jdk-21.0.11+10` (12.x needs 21; system JDK 25 too new),
 pyghidra 3.1.0 + pyghidra-mcp 0.2.3, registered in `.mcp.json`.
 
@@ -24,7 +24,7 @@ callees AND named globals (`gOamManager`, `gBeetankRoutine`,
 ```sh
 export PATH=/c/devkitPro/devkitARM/bin:$PATH
 python3 tools/ghidra/map_symbols.py      # 5,835 funcs + 3,561 data globals
-python3 tools/ghidra/build_sym_elf.py C:/Users/SaroGamingPC/decomp-tools/rmz3_sym.elf
+python3 tools/ghidra/build_sym_elf.py ~/decomp-tools/rmz3_sym.elf
 ```
 then `import_binary` that path. Recipe: `tools/ghidra/symbolize_rom.md`.
 

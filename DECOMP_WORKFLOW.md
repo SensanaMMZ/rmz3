@@ -3,21 +3,25 @@
 Target: SHA1 `ff7a801776dc76e6d8c7ef73a6660ae732934a3f` (Mega Man Zero 3 JP, GBA).
 Compiler: agbcc (legacy GCC 2.x), Thumb-1, `-O2`.
 
-## Current state (where I left off)
+## Current state (refreshed 2026-07-24)
 
-- Branch: `main`, ~165 commits ahead of `3f40d15` (counting this session).
-- Build: SHA1 matches as of latest commit.
-- This session decomped ~60 fns across vfx (Ghost33/68/69/70/73, Ripple, etc), boss (phantom helpers x14, copy_x), enemy (snakecord, hammer, pantheon_*, carry_arm), projectile (unk_46 routine setters), stage_gfx (missile_factory, giant_elevator), solid (actor48, base_elevator dispatcher, CielMinigameObj_Init/Update), cyberelf (Elf5/10/11 Die fns + Elf1/Elf7 helpers + BirdElf_Die + NurseB_Die + unk_0 FUN_080e1fb8 + unk_7 FUN_080e3f24).
-- Key cross-session learning: `--p->s.work[N] == 0` needs `u32 w = p->s.work[N] - 1; p->s.work[N] = w; if (w == 0)` to avoid the redundant lsl extension agbcc emits otherwise.
-- **In-progress, NOT committed**: 5 body.status flag-check fns from the last batch:
-  - `src/enemy/petatria.c` — `FUN_080902a8`, `FUN_080906ec` (both `BODY_STATUS_B3 → mode[1]=4/5`, return TRUE; declared as `bool8`, called via `(EnemyFunc)` cast in `sUpdates1`)
-  - `src/enemy/unk_63.c` — `FUN_08094bd0` (`BODY_STATUS_BINDING` → mode[1]=3) — **just fixed** wrong constant from `BINDED` to `BINDING` (1<<11, not 1<<10)
-  - `src/enemy/wormer_snow_ball.c` — `FUN_0807b30c` (`BODY_STATUS_B2` → mode[1]=2)
-  - `src/projectile/locomo_if.c` — `FUN_080a7dec` (`BODY_STATUS_BINDING` → mode[1]=2) — **just fixed** same constant issue
-- Need to rebuild + verify SHA1, then `tools/refresh-expected.sh` + commit as one batch.
-- `git status -s` will show: 5 modified `.c` files + 10 new `_p1.inc`/`_p2.inc` (+ a couple `_p3.inc` for cannon_hopper) + 4 deleted parent `.inc`s.
+This section is refreshed periodically; the live numbers come from
+`python3 tools/progress.py` and `python3 tools/classify_holdouts.py`.
 
-## The workflow (battle-tested this session)
+- Build: SHA1 matches on every commit of `main` (that is the gate).
+- Matched C: 3,536 functions (28.2% of code bytes).
+- Declared holdouts: 485 (127 with a MODERN C draft, 358 pure INCCODE stubs).
+- Undeclared asm (functions with no C stub at all): 1,819 (~51.5% of code
+  bytes) -- this population is being retired via the duplicate scan
+  (`tools/dup_scan.py`, work list in `notes/dup-scan.md`).
+- Upstream PRs #49-#62 open against mmzret/rmz3.
+- The procedure of record is `notes/matching-workflow.md`; the end-to-end
+  pipeline description is `notes/workflow-complete.md`. Per-function
+  findings, retractions, and parked functions: `notes/backlog-truth.md`.
+- Nothing is in progress uncommitted; every match lands with a ROM-verified
+  commit.
+
+## The workflow (battle-tested)
 
 1. **Hunt**: find a code pattern in `asm/*.inc` that recurs across files. Examples:
    - `(arr[(p->s).mode[1]])(p)` — single-array dispatcher (~10 lines)

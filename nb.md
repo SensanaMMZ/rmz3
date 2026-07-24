@@ -2,28 +2,22 @@
 
 ## State of the decompilation
 
-The project builds a byte-matching ROM (SHA1 `ff7a801776dc76e6d8c7ef73a6660ae732934a3f`) using agbcc — the makefile's `compare` target gates correctness. A lot has already been done: 499 `.c` files in `src/`, 268 in `include/`, all assets extracted, build script wired through Deno + a custom preproc.
+(Refreshed 2026-07-24 -- live numbers from `tools/progress.py`.)
 
-What's still in raw ARM is split across three places:
+The project builds a byte-matching ROM (SHA1
+`ff7a801776dc76e6d8c7ef73a6660ae732934a3f`); the makefile's `compare`
+target gates correctness. Current accounting over the 5,835 functions in
+the symbol map:
 
-1. **`NAKED` stubs inside existing C files** — 495 occurrences in 198 files. The C wrapper exists with the right signature, but the body is `asm(".syntax unified\n...")`. Example: `src/enemy/batring.c:43` (`Batring_Init`).
-2. **`INCASM("asm/.../foo.inc")` blocks** — 266 lines, each pasting a whole standalone function from `asm/{boss,enemy,cyberelf,minigame,player,projectile,solid,stage_gfx,vfx,weapon}/`. That's ~264 `.inc` files across those subsystem dirs.
-3. **Unwired asm** — `asm/wip` (135 files), `asm/todo` (15), `asm/unused` (23). These aren't even called from any C file yet; they're sitting outside the linked code path.
+1. **Matched C**: 3,536 functions, 28.2% of code bytes.
+2. **Declared holdouts** (NON_MATCH/NAKED in src/): 485 -- 127 carry a
+   `#if MODERN` C draft, 358 are pure `INCCODE` stubs.
+3. **Undeclared asm**: 1,819 functions that live only in `asm/*.inc` with
+   no C stub at all (~51.5% of code bytes). The duplicate scanner
+   (`tools/dup_scan.py`) retires these in clusters; see `notes/dup-scan.md`.
 
-Remaining files per subsystem (the long tail to grind through):
-
-| Subsystem  | Files |
-| ---------- | ----- |
-| enemy      | 70    |
-| vfx        | 48    |
-| solid      | 39    |
-| projectile | 37    |
-| boss       | 23    |
-| weapon     | 13    |
-| stage_gfx  | 12    |
-| cyberelf   | 11    |
-| minigame   | 7     |
-| player     | 4     |
+Recent progress and the current queue are tracked in
+`notes/backlog-truth.md` and the notes/ knowledge base generally.
 
 ## What it would take to continue
 
