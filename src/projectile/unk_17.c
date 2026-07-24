@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "story.h"
 #include "motion.h"
 #include "projectile.h"
 
@@ -52,6 +53,20 @@ struct Projectile* FUN_080a2838(struct Entity* e, struct Coord* c1, struct Coord
 }
 
 INCASM("asm/projectile/unk_17_pre_p4_p1.inc");
+
+static const ProjectileFunc PTR_ARRAY_0836b3b4[3];
+
+void Projectile17_Update(struct Projectile* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+
+  (PTR_ARRAY_0836b3b4[(p->s).mode[1]])(p);
+}
 
 void Projectile17_Die(struct Projectile* p) {
   (p->s).flags &= ~DISPLAY;
