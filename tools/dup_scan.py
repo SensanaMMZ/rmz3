@@ -1,22 +1,24 @@
-"""Find holdout functions whose ROM bytes duplicate other functions.
+"""Find unmatched functions whose ROM bytes duplicate matched C.
 
-MMZ engine code repeats heavily; a declared holdout that is byte-identical
-(or identical modulo call targets and pool literals) to an already-matched
-function inherits that function's C body nearly verbatim. Scanning for this
-first is cheaper than reconstructing from scratch.
+MMZ engine code repeats heavily; a declared holdout OR an undeclared
+asm-resident function that is byte-identical (or identical modulo call
+targets and pool literals) to an already-matched function inherits that
+function's C body nearly verbatim. Scanning for this first is cheaper
+than reconstructing from scratch. The undeclared-asm population is the
+big one: ~1,864 functions / 52% of code bytes (tools/progress.py).
 
 Three signatures per function, strict to loose:
   exact   raw bytes
   bl      bl offset bits masked (same code, different callee addresses)
   full    bl bits + likely pool words (RAM/IO/ROM addresses) masked
 
-A cluster is reported when it holds at least one holdout. "holdout+matched"
-clusters are candidate free matches; holdout-only clusters mean solving one
-member solves them all.
+A cluster is reported when it holds at least one unmatched function.
+Clusters that also hold a matched-C function are candidate free matches;
+unmatched-only clusters mean solving one member solves them all.
 
 Usage: python3 tools/dup_scan.py            # writes notes/dup-scan.md
 """
-import hashlib, io, os, re, struct, sys
+import hashlib, io, os, re, struct, subprocess, sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROM = os.path.join(REPO, 'baseimg.gba')
@@ -74,6 +76,16 @@ def load_holdouts(sym_names):
     return names, kind, ambiguous
 
 
+def asm_resident():
+    """function labels defined in asm/ (thumb_func_start NAME) -- the
+    undeclared population when not also a declared holdout"""
+    txt = subprocess.run(
+        ['git', 'grep', '-hE', r'^\s*thumb_func_start\s+\S+', '--', 'asm/'],
+        capture_output=True, text=True, cwd=REPO,
+        encoding='utf-8', errors='replace').stdout
+    return set(l.split()[-1] for l in txt.splitlines())
+
+
 def mask_bl(b):
     out = bytearray(b)
     i = 0
@@ -107,9 +119,18 @@ def main():
         sys.exit('baseimg.gba sha1 mismatch -- refusing to scan the wrong ROM')
     syms = load_symbols()
     holdouts, kind, ambiguous = load_holdouts([n for n, _, _ in syms])
+    in_asm = asm_resident()
 
     matched_names = set(n for n, _, _ in syms)
     missing = sorted(holdouts - matched_names)
+
+    def tag(n):
+        """holdout / asm (undeclared, body only in asm/) / C (matched)"""
+        if n in holdouts:
+            return 'holdout'
+        if n in in_asm:
+            return 'asm'
+        return 'C'
 
     sigs = {'exact': {}, 'bl': {}, 'full': {}}
     n_bytes = 0
@@ -133,17 +154,17 @@ def main():
                             if 0 <= a - 0x08000000 <= len(rom) - s), level
 
     def clusters(level, tighter_keys):
-        """clusters at `level` that hold a holdout and are new vs tighter level"""
+        """clusters at `level` holding an unmatched fn, new vs tighter level"""
         out = []
         for key, names in sorted(sigs[level].items()):
             if len(names) < 2:
                 continue
-            hs = [n for n in names if n in holdouts]
-            if not hs:
+            un = [n for n in names if tag(n) != 'C']
+            if not un:
                 continue
             if tighter_keys is not None and key in tighter_keys:
                 continue
-            out.append((key[0], names, hs))
+            out.append((key[0], names, un))
         return out
 
     tight_exact = set(k for k, v in sigs['exact'].items() if len(v) > 1)
@@ -167,15 +188,30 @@ def main():
             ('Identical modulo calls and pool literals', fu,
              'bl bits and address-like pool words masked'),
         ):
-            w.write(u'## %s (%d clusters) — %s\n\n' % (title, len(rows), note))
-            for size, names, hs in rows:
-                ms = [n for n in names if n not in holdouts]
-                tag = 'FREE-MATCH CANDIDATE' if ms else 'solve-one-get-%d' % len(hs)
-                w.write(u'- **%s** (%d B): holdouts %s%s\n'
-                        % (tag, size,
-                           ', '.join('`%s`' % (h + ('*' if kind.get(h) == 'withc' else ''))
-                                     for h in hs),
-                           ('; matched ' + ', '.join('`%s`' % m for m in ms)) if ms else ''))
+            big = [r for r in rows if r[0] >= 8]
+            small = [r for r in rows if r[0] < 8]
+            w.write(u'## %s (%d clusters) — %s\n\n' % (title, len(big), note))
+            if small:
+                w.write(u'(%d trivial clusters under 8 bytes omitted: '
+                        u'%d unmatched nop-class functions)\n\n'
+                        % (len(small), sum(len(u_) for _, _, u_ in small)))
+            for size, names, un in big:
+                cs = [n for n in names if tag(n) == 'C']
+                hs = [n for n in un if n in holdouts]
+                an = [n for n in un if n not in holdouts]
+                label = ('FREE via C twin' if cs
+                         else 'solve-one-get-%d' % len(un))
+                parts = []
+                if hs:
+                    parts.append('holdouts ' + ', '.join(
+                        '`%s`%s' % (h, '*' if kind.get(h) == 'withc' else '')
+                        for h in hs))
+                if an:
+                    parts.append('asm ' + ', '.join('`%s`' % a for a in an))
+                if cs:
+                    parts.append('C ' + ', '.join('`%s`' % c for c in cs[:6])
+                                 + (' (+%d more)' % (len(cs) - 6) if len(cs) > 6 else ''))
+                w.write(u'- **%s** (%d B): %s\n' % (label, size, '; '.join(parts)))
             w.write(u'\n')
         w.write(u'`*` = holdout already has a C body (withc list).\n')
         if ambiguous:
@@ -191,13 +227,20 @@ def main():
             for n in missing:
                 w.write(u'- `%s`\n' % n)
 
-    free = sum(1 for _, names, hs in ex + bl + fu
-               for h in hs if any(n not in holdouts for n in names))
+    free_h = free_a = 0
+    for _, names, un in ex + bl + fu:
+        if any(tag(n) == 'C' for n in names):
+            free_h += sum(1 for u_ in un if u_ in holdouts)
+            free_a += sum(1 for u_ in un if u_ not in holdouts)
     print('scanned %d functions (%d bytes), %d holdout names resolved, %d missing'
           % (len(syms), n_bytes, len(holdouts) - len(missing), len(missing)))
-    print('clusters with a holdout: exact=%d bl-masked=%d fully-masked=%d'
+    print('unmatched population: %d declared + %d undeclared-asm'
+          % (len(holdouts), len(set(n for n, _, _ in syms)
+                                 & in_asm - holdouts)))
+    print('clusters with unmatched fns: exact=%d bl-masked=%d fully-masked=%d'
           % (len(ex), len(bl), len(fu)))
-    print('holdout entries in a cluster with a matched fn: %d' % free)
+    print('free-via-C-twin candidates: %d holdouts, %d undeclared-asm fns'
+          % (free_h, free_a))
     print('-> %s' % os.path.relpath(OUT, REPO))
 
 
