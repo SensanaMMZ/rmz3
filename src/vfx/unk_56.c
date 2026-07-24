@@ -51,8 +51,8 @@ static void VFX56_Init(struct Entity* p) {
 }
 
 void FUN_080c17e8(struct VFX* vfx);
-void FUN_080c182c(struct VFX* vfx);
-void FUN_080c188c(struct VFX* vfx);
+void FUN_080c182c(struct Entity* p);
+void FUN_080c188c(struct Entity* p);
 
 static void VFX56_Update(struct Entity* p) {
   static const VFXFunc sUpdates[3] = {
@@ -71,3 +71,41 @@ static void VFX56_Die(struct Entity* p) {
 // --------------------------------------------
 
 INCASM("asm/vfx/unk_56.inc");
+
+void FUN_080c182c(struct Entity* p) {
+  u32 c = p->work[2];
+  if (c == 0) {
+    UpdateMotionGraphic(p);
+    c = p->work[3];
+  } else {
+    c--;
+  }
+  p->work[2] = c;
+  (p->coord).x += (p->d).x;
+  (p->coord).y += (p->d).y;
+  (p->d).x -= (p->unk_coord).x;
+  (p->d).y -= (p->unk_coord).y;
+  if ((p->motion).state == 3) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    VFX56_Die(p);
+  }
+}
+
+void FUN_080c188c(struct Entity* p) {
+  u32 c = p->work[2];
+  if (c == 0) {
+    UpdateMotionGraphic(p);
+    c = p->work[3];
+  } else {
+    c--;
+  }
+  p->work[2] = c;
+  (p->coord).x += (p->d).x;
+  (p->coord).y += (p->d).y;
+  (p->d).x -= (p->unk_coord).x;
+  (p->d).y -= (p->unk_coord).y;
+  if ((p->motion).state == 3) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    VFX56_Die(p);
+  }
+}
