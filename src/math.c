@@ -45,16 +45,20 @@ s32 CalcAngleBetweenCoords(struct Coord* c1, struct Coord* c2) { return CalcAngl
  * @note b±c の範囲内なら a をそのまま返す。レジスタ割り当てが合わないため NON_MATCH
  * @note 0x080e964c
  */
-NON_MATCH u32 FUN_080e964c(u32 a, s32 b, s32 c) {
-#if MODERN
-  if ((((a - b) + c) & 0xFF) > (u32)(c << 1)) {
-    s32 dir = (((a - b) & 0xFF) > 0x7F) ? -1 : 1;
-    return (b + c * dir) & 0xFF;
+u32 FUN_080e964c(u32 a, s32 b, s32 c) {
+  s32 diff = a - b;
+  if ((u32)((diff + c) & 0xFF) <= (u32)(c << 1)) {
+    b = a;
+  } else {
+    s32 masked = diff & 0xFF;
+    s32 dir = -1;
+    if (masked <= 0x7F) {
+      dir = 1;
+    }
+    b += c * dir;
+    b &= 0xFF;
   }
-  return a;
-#else
-  INCCODE("asm/math/math_080e964c.inc");
-#endif
+  return b;
 }
 
 #if MODERN == 0
