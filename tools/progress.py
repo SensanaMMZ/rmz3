@@ -30,7 +30,8 @@ def declared_holdouts():
     # top-level files (src/mmbn4.c, src/player.c: 130+ declarations missed)
     txt = subprocess.run(
         ['git', 'grep', '-nE', r'^(NON_MATCH|NAKED)\b', '--', 'src'],
-        capture_output=True, text=True, cwd=REPO).stdout
+        capture_output=True, text=True, cwd=REPO,
+        encoding='utf-8', errors='replace').stdout
     for l in txt.splitlines():
         parts = l.split(':', 2)
         if len(parts) < 3 or not parts[0].endswith('.c'):
@@ -56,7 +57,8 @@ def asm_functions():
     """function labels defined in asm/ (thumb_func_start NAME)"""
     txt = subprocess.run(
         ['git', 'grep', '-hE', r'^\s*thumb_func_start\s+\S+', '--', 'asm/'],
-        capture_output=True, text=True, cwd=REPO).stdout
+        capture_output=True, text=True, cwd=REPO,
+        encoding='utf-8', errors='replace').stdout
     return set(l.split()[-1] for l in txt.splitlines())
 
 

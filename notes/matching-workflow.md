@@ -65,6 +65,7 @@ The byte diff names the source-level property. From the two matches:
 | an extra `lsls #24; lsrs #24` | a **`u8` return** forcing truncation → the type is a word |
 | our size 46 vs their 48 | trailing **alignment padding** counted inside the asm symbol, not a real difference |
 | `fff7 feff` vs `fff7 cbff` on a `bl` | **link-equivalent**: compiled code emits a relocation, the `.inc` baked the final offset in as `.byte` data |
+| pool word `symbol+0xNNN` (one reloc), other addresses derived by runtime adds | the source anchors a **local pointer at that offset** (`T** ep = &g.member;`) and derives everything else arithmetically from it. `&g.member`/`&arr[N]` pools the addend in place (REL: word holds 0xNNN + R_ARM_ABS32). `ep - K` pools `-0xNNN` instead of folding back to `symbol+0` when the anchor is a local. Proven on FlushOAM (120/120); applies to the `gOverworld+0x1DC` hazard cluster. **Method: write tiny probe TUs to learn which shape produces the pool form before touching the real function.** |
 
 `tools/fnbytes.py` and `build/scratch/cmp_text.py` classify the last one
 automatically; check relocations before calling a `bl` difference real.

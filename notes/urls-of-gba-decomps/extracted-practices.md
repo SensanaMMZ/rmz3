@@ -123,9 +123,26 @@ gives it a documented precedent.
 Second-pass addition: Dream-Atelier's `legacy-works` branch has
 **`-fno-fold-addr`** ("don't fold base_address + offset into a single
 constant", implemented in cse.c) — the first compiler-side knob found that
-touches this exact fold. Whether the target corresponds to folding ON
-(symbol+0x400 pooled as one constant) while our two-reloc output is the
-unfolded form is testable directly with that branch.
+touches this exact fold.
+
+**RESOLVED (same day): FlushOAM matched with stock agbcc** — no fork needed.
+Probe TUs established the rules, then the shape fell out:
+
+- `&g.member` / `&arr[N]` at a large offset **does** pool `symbol+addend`
+  (the addend stored in place, one R_ARM_ABS32) — when it is the anchor.
+- Deriving other addresses **from that anchor pointer** keeps ONE pool
+  entry: `buf = (OD*)ep - 128` pools `-0x400` and adds at runtime instead
+  of folding back to `symbol+0`, *if* the anchor is a local pointer.
+- A store through recomputed arithmetic (`*(OD**)(buf + 128) = buf;`)
+  reproduces the target's rematerialized tail address.
+- The old draft's remaining diffs were the missing `dmaRegs[2]` readback
+  (the real DmaSet macro has it) and buffer precompute position.
+
+Recipe for the rest of the family (`gOverworld+0x1DC/0x1E0/0x7E0` — the
+CheckZeroHazard / IsAgainstHazard / IsInHazard cluster, all NON_MATCH here
+AND upstream): anchor a local pointer at the pooled offset, derive every
+other address arithmetically from it, and write tiny probe TUs first to
+confirm each shape's pool form before touching the real function.
 
 ## 6. Tools worth importing
 
@@ -254,12 +271,15 @@ Status markers added as items are executed.
    `legacy-works` branch) and `-mtpcs-frame` (StanHash branch). Use
    [dism-exe/exe4rs](https://github.com/dism-exe/exe4rs)'s EXE4 ROM
    disassembly as a byte-locator for the shared library.
-3. Re-attempt FlushOAM with the §5 single-base arithmetic shapes; if no C
-   shape lands it, A/B `-fno-fold-addr` (legacy-works) to identify whether
-   the fold is the mechanism.
-4. Re-attempt unused_080e14d4 with `asm("" : "=r"(var))` value laundering
-   and the `if (1)`-style kept-compare trick, and A/B `-f2003-patch` /
-   `-foptimize-comparisons` / `-g` on it.
+3. ~~Re-attempt FlushOAM with the §5 single-base arithmetic shapes~~
+   **DONE — MATCHED** (120/120 bytes, ROM verified, upstream PR #52). See
+   §5 for the recipe; stock agbcc, no fork needed. Next applications: the
+   `gOverworld+0x1DC` hazard cluster.
+4. Re-attempt unused_080e14d4 — **flags ruled out**: `-foptimize-comparisons`
+   and `-g` (alone or together) leave the compare threaded away (48 B vs
+   the target's 52 in all variants). Remaining levers: `-f2003-patch`
+   (fork), or an undiscovered source shape. The laundering idiom would
+   fake-match it but our convention keeps honest asm instead.
 5. ~~Run samefunc-style dup detection~~ **DONE**: `tools/dup_scan.py`
    (ROM-level, three masking levels) → notes/dup-scan.md. First run found
    Ghost28_Init (free via VFX59_Init's C), FUN_080e964c ≡ FUN_0803a5c8,
