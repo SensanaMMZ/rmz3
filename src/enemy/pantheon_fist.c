@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "definition.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 
@@ -41,17 +42,43 @@ INCASM("asm/enemy/pantheon_fist_pre_p1_p2_p2.inc");
 
 void nop_080950cc(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_fist_pre_p2_a.inc");
+INCASM("asm/enemy/pantheon_fist_pre_p2_a_a.inc");
+
+struct PantheonFistObject {
+  OBJECT_HDR;
+  // props (16bytes, offset: 0xB4..)
+  struct VFX* elementEffect;
+  u8 unk_004[12];
+};
+static_assert(sizeof(struct PantheonFistObject) == sizeof(struct Enemy));
+
+static const struct Coord sElementCoord;
+
+void FUN_080951b4(struct PantheonFistObject* p) {
+  if (p->elementEffect == NULL && ((p->body).status & BODY_STATUS_WHITE)) {
+    if (((p->body).status & BODY_STATUS_RECOILED)) {
+      (p->s).mode[1] = 7;
+      (p->s).mode[2] = 0;
+    } else {
+      p->elementEffect = ApplyElementEffect(0, &p->s, &sElementCoord);
+      if (p->elementEffect != NULL) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_fist_pre_p2_a_b.inc");
 
 extern const EnemyFunc sUpdates1[9];
 extern const EnemyFunc sUpdates2[9];
 bool8 FUN_080950d0(struct Enemy* p);
 bool8 FUN_08095124(struct Enemy* p);
-void FUN_080951b4(struct Enemy* p);
 
 void PantheonFist_Update(struct Enemy* p) {
   if (!FUN_080950d0(p)) {
-    FUN_080951b4(p);
+    FUN_080951b4((struct PantheonFistObject*)p);
     if (!FUN_08095124(p)) {
       (sUpdates1[(p->s).mode[1]])(p);
       (sUpdates2[(p->s).mode[1]])(p);

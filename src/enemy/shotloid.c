@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "definition.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 
@@ -24,18 +25,44 @@ INCASM("asm/enemy/shotloid_pre_p1_p2.inc");
 
 void nop_08093af8(struct Enemy* p) {}
 
-INCASM("asm/enemy/shotloid_pre_p2_a.inc");
+INCASM("asm/enemy/shotloid_pre_p2_a_a.inc");
+
+struct ShotloidObject {
+  OBJECT_HDR;
+  // props (16bytes, offset: 0xB4..)
+  struct VFX* elementEffect;
+  u8 unk_004[12];
+};
+static_assert(sizeof(struct ShotloidObject) == sizeof(struct Enemy));
+
+static const struct Coord sElementCoord;
+
+void FUN_08093be0(struct ShotloidObject* p) {
+  if (p->elementEffect == NULL && ((p->body).status & BODY_STATUS_WHITE)) {
+    if (((p->body).status & BODY_STATUS_RECOILED)) {
+      (p->s).mode[1] = 7;
+      (p->s).mode[2] = 0;
+    } else {
+      p->elementEffect = ApplyElementEffect(0, &p->s, &sElementCoord);
+      if (p->elementEffect != NULL) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/shotloid_pre_p2_a_b.inc");
 
 extern const EnemyFunc sUpdates1[9];
 extern const EnemyFunc sUpdates2[9];
 bool8 FUN_08093afc(struct Enemy* p);
 bool8 FUN_08093b50(struct Enemy* p);
-void FUN_08093be0(struct Enemy* p);
 
 void Shotloid_Update(struct Enemy* p) {
   if (!FUN_08093afc(p)) {
     if ((p->s).work[0] == 0) {
-      FUN_08093be0(p);
+      FUN_08093be0((struct ShotloidObject*)p);
       if (FUN_08093b50(p)) {
         return;
       }
