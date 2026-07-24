@@ -59,7 +59,34 @@ struct VFX* FUN_080c44a8(struct Coord* c, u8 a1, u16 a2, s32 a3) {
   return p;
 }
 
-INCASM("asm/vfx/unk_66_p1_pre_pre_p2.inc");
+void Ghost66_Init(struct VFX* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  if ((p->s).work[0] == 0) {
+    SET_XFLIP(p, FALSE);
+  } else {
+    SET_XFLIP(p, TRUE);
+  }
+  if ((p->s).work[0] == 0) {
+    (p->s).d.x = -PIXEL(3) / 4;
+  } else {
+    (p->s).d.x = PIXEL(3) / 4;
+  }
+  (p->s).d.y = 0;
+
+  if ((p->s).work[1] == 0) {
+    (p->s).work[2] = 0xFF;
+    SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = 1, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
+  } else {
+    RNG_0202f388 = LCG(RNG_0202f388);
+    (p->s).work[2] = 127 + ((RNG_0202f388 >> 16) & 7);
+    SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = 2, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
+  }
+  Ghost66_Update(p);
+}
 
 void Ghost66_Update(struct VFX* p) {
   if (IS_METTAUR) {
@@ -80,6 +107,49 @@ void Ghost66_Die(struct VFX* p) {
 void nop_080c4668(struct VFX* p) {}
 
 INCASM("asm/vfx/unk_66_p2.inc");
+
+extern const s32* const PTR_ARRAY_0836f62c[3];
+
+void FUN_080c47e0(struct VFX* p) {
+  u16 attr;
+  (p->s).work[2]--;
+  if ((p->s).work[2] == 0 ||
+      ((attr = FUN_080098a4((p->s).coord.x, (p->s).coord.y)) != 0 &&
+       !(attr & 0x8000) && (p->s).d.y > 0)) {
+    CreateSmoke(2, &(p->s).coord);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  } else {
+    switch ((p->s).mode[2]) {
+      case 0: {
+        const s32* const* tbl = PTR_ARRAY_0836f62c;
+        u16* mp = &((struct Unk66Props*)(p->props).raw)->unk_0;
+        u32 base = (u32)tbl[*mp % 3];
+        const s32* pair = (const s32*)(((struct Unk66Props*)(p->props).raw)->unk_4 * 8 + base);
+        (p->s).d.y = pair[1] + (RANDOM(RNG_0202f388) & 0x1F);
+        (p->s).d.x = pair[0] - (RANDOM(RNG_0202f388) & 0x3F);
+        SetMotion(&p->s, *mp);
+        (p->s).work[3] = 0;
+        (p->s).mode[2]++;
+        FALLTHROUGH;
+      }
+      case 1: {
+        if ((u8)++(p->s).work[3] & 1) {
+          (p->s).flags |= DISPLAY;
+        } else {
+          (p->s).flags &= ~DISPLAY;
+        }
+        (p->s).d.y += 0x20;
+        if ((p->s).d.y > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        (p->s).coord.x += (p->s).d.x;
+        UpdateMotionGraphic(&p->s);
+        break;
+      }
+    }
+  }
+}
 
 // --------------------------------------------
 

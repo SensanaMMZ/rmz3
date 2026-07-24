@@ -230,7 +230,18 @@ dispatch:
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/volcaire_p1_b.inc");
+static const EnemyFunc sDeads[3];
+
+void Volcaire_Die(struct Enemy* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (sDeads[(p->s).mode[1]])(p);
+}
 
 void nop_08077608(struct Enemy* p) {}
 

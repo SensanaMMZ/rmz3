@@ -129,6 +129,21 @@ void FUN_08068eb4(struct Enemy* p) {}
 
 bool8 FUN_08068eb8(struct Enemy* p) { return TRUE; }
 
+void FUN_08068ebc(struct Enemy* p) {
+  struct Entity** slot;
+  if ((p->s).mode[2] == 0) {
+    SetDDP(&p->body, &sCollisions[12]);
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    SetDDP(&p->body, &sCollisions[11]);
+    *slot = NULL;
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
+
 INCASM("asm/enemy/piller_cannon_p10.inc");
 
 bool8 FUN_0806860c(struct Enemy* p);

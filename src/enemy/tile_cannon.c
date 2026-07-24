@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
@@ -52,11 +53,25 @@ static bool8 tilecannon_08078174(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/tile_cannon_p2_post_a.inc");
+INCASM("asm/enemy/tile_cannon_p2_post_a_a.inc");
+
+static const struct Coord sElementCoord;
+
+void tilecannon_08078210(struct Enemy* p) {
+  if (*(struct VFX**)&p->props[0] == NULL && ((p->body).status & 1)) {
+    struct VFX* e = ApplyElementEffect(0, &p->s, &sElementCoord);
+    *(struct VFX**)&p->props[0] = e;
+    if (e != NULL) {
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/tile_cannon_p2_post_a_b.inc");
 
 extern const EnemyFunc sUpdates1[9];
 extern const EnemyFunc sUpdates2[9];
-void tilecannon_08078210(struct Enemy* p);
 bool8 tilecannon_08078198(struct Enemy* p);
 
 void TileCannon_Update(struct Enemy* p) {

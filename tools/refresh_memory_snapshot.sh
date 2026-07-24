@@ -50,9 +50,23 @@ SUBS = [
     (r'compiler-provenance scrub — Nintendo/SDK/nincompilers mentions removed from',
      'compiler-provenance scrub applied to'),
     (r'the "genuine SDK cc1" wording', 'the old compiler-provenance wording'),
+    # Identity tells. Memory files legitimately hold absolute local paths and
+    # handles (they are private); the published snapshot must not.
+    (r'\(SaroGamingPC/saro9564/lyleaigbedion/Saro_95\)\s*', ''),
+    (r'old remote = lyle-origin', 'old remote kept under a local alias'),
+    (r'`lyleaigbedion/rmz3` fork', 'pre-fork local tree'),
+    (r'"?/c/Users/SaroGamingPC/AppData/Local/Programs/Python/Python313/'
+     r'python\.exe"?', '"$LOCALAPPDATA/Programs/Python/Python313/python.exe"'),
+    (r'(?i)/c/Users/SaroGamingPC', '~'),
+    (r'(?i)C:[/\\]Users[/\\]SaroGamingPC', '~'),
+    # Never publish a live credential, whatever kind it is.
+    (r'\bghp_[A-Za-z0-9]{20,}\b', '<token-redacted>'),
+    (r'\bgithub_pat_[A-Za-z0-9_]{20,}\b', '<token-redacted>'),
 ]
 BANNED = re.compile(r'nincompilers|arm-000512|genuine SDK|genuine Nintendo|'
-                    r'Nintendo/Cygnus|genuine compiler', re.I)
+                    r'Nintendo/Cygnus|genuine compiler|'
+                    r'SaroGamingPC|saro9564|lyleaigbedion|Saro_95|'
+                    r'\bghp_[A-Za-z0-9]{20,}\b', re.I)
 changed, flagged = 0, []
 for b in sorted(os.listdir(dst)):
     if not b.endswith('.md'):

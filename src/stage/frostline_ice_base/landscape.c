@@ -161,7 +161,20 @@ static const StageLayerRoutine sLayerRoutine[7] = {
 };
 // clang-format on
 
-INCASM("asm/stage_gfx/frostline_ice_base_p1.inc");
+INCASM("asm/stage_gfx/frostline_ice_base_p1_a.inc");
+
+void icebase_080111dc(struct StageLayer* l, const struct Stage* stage UNUSED) {
+  if (l->phase == 0) {
+    const u16 n = (l->bgIdx << 16) >> 20;
+    BGCNT16(n) = (l->prio | l->screenBase) | BGCNT_CHARBASE(1) | BGCNT_MOSAIC | BGCNT_TXT256x512;
+    RESET_BGOFS(n);
+    CpuFastCopy(BGMAP(63), (void*)(VRAM + SCREEN_BASE_16(n)), 2048);
+    CpuFastCopy(BGMAP(64), (void*)(VRAM + 0x800 + SCREEN_BASE_16(n)), 2048);
+    l->phase++;
+  }
+}
+
+INCASM("asm/stage_gfx/frostline_ice_base_p1_b.inc");
 
 void FUN_080113dc(struct StageLayer* l, const struct Stage* stage) {
   if (l->phase == 0) {

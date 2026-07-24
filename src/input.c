@@ -41,9 +41,9 @@ void PollKeyInput(void) {
 // at +1 instr over ~20k iters). INCCODE for the byte-match. See the (s8) cast:
 // retail loads the counter signed for the ==0 test (ldrsb) but unsigned for the
 // decrement (ldrb).
-NON_MATCH static void readKeyInput(struct KeyState *j, s32 retry) {
-#if MODERN
+static void readKeyInput(struct KeyState *j, s32 retry) {
   s16 i;
+  s64 pressed;
 
   j->last = j->input;
   if (retry != 0) {
@@ -58,16 +58,14 @@ NON_MATCH static void readKeyInput(struct KeyState *j, s32 retry) {
     if ((j->input >> i) & 1) {
       if ((s8)j->unk_0a[i] == 0) {
         j->field3_0x6 |= 1 << i;
-        j->unk_0a[i] = ((j->pressed >> i) & 1) ? j->field6_0x14 : j->field7_0x15;
+        pressed = j->pressed >> i;
+        j->unk_0a[i] = (pressed & 1) ? j->field6_0x14 : j->field7_0x15;
       }
       j->unk_0a[i]--;
     } else {
       j->unk_0a[i] = 0;
     }
   }
-#else
-  INCCODE("asm/wip/readKeyInput.inc");
-#endif
 }
 
 static void resetKeyState(struct KeyState *p) {

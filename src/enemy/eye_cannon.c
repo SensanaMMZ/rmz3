@@ -44,9 +44,31 @@ static const EnemyFunc sUpdates1[6];
 static const EnemyFunc sUpdates2[6];
 
 void FUN_080847b8(struct Enemy* p);
-bool8 FUN_08084744(struct Enemy* p);
 
-INCASM("asm/enemy/eye_cannon_pre_pre_p1_p1.inc");
+bool8 FUN_08084744(struct Enemy* p) {
+  if (*(struct VFX**)((u8*)p + 0xb4) == NULL) {
+    switch ((p->s).mode[3]) {
+      case 0: {
+        if (IsFrozen((void*)p)) {
+          (sUpdates1[(p->s).mode[1]])(p);
+          (sUpdates2[(p->s).mode[1]])(p);
+          (p->s).mode[3]++;
+          UpdateMotionGraphic(&p->s);
+          return TRUE;
+        }
+        break;
+      }
+      case 1: {
+        if (IsFrozen((void*)p)) {
+          return TRUE;
+        }
+        (p->s).mode[3] = 0;
+        break;
+      }
+    }
+  }
+  return FALSE;
+}
 
 extern const struct Coord sElementCoord;
 

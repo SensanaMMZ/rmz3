@@ -55,3 +55,13 @@ static const struct Collision sCollision = {
 };
 
 static const u8 u8_ARRAY_0836d730[4] = {0, 0, 0, 0};
+
+void Projectile42_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_0836d730[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, &sCollision, 1, (void*)FUN_080b1298);
+  Projectile42_Update(p);
+}

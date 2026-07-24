@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
@@ -11,7 +12,6 @@ static const EnemyFunc sDeads[3];
 
 bool8 gallisni_080870bc(struct Enemy* p);
 bool8 gallisni_08087118(struct Enemy* p);
-void gallisni_080871b4(struct Enemy* p);
 static const EnemyFunc sUpdates1[8];
 static const EnemyFunc sUpdates2[8];
 
@@ -31,7 +31,34 @@ void CreateGallisni(s32 x, s32 y, u8 a2) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p1_pre_p2_a.inc");
+INCASM("asm/enemy/gallisni_p1_pre_p2_a_a.inc");
+
+struct GallisniObject {
+  OBJECT_HDR;
+  // props (16bytes, offset: 0xB4..)
+  struct VFX* elementEffect;
+  u8 unk_004[12];
+};
+static_assert(sizeof(struct GallisniObject) == sizeof(struct Enemy));
+
+static const struct Coord sElementCoord;
+
+void gallisni_080871b4(struct GallisniObject* p) {
+  if (p->elementEffect == NULL && ((p->body).status & BODY_STATUS_WHITE)) {
+    if (((p->body).status & BODY_STATUS_RECOILED)) {
+      (p->s).mode[1] = 7;
+      (p->s).mode[2] = 0;
+    } else {
+      p->elementEffect = ApplyElementEffect(0, &p->s, &sElementCoord);
+      if (p->elementEffect != NULL) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/gallisni_p1_pre_p2_a_b.inc");
 
 void Gallisni_Update(struct Enemy* p) {
   if ((p->s).work[0] == 1) {
@@ -62,7 +89,7 @@ void Gallisni_Update(struct Enemy* p) {
   if (gallisni_080870bc(p)) {
     return;
   }
-  gallisni_080871b4(p);
+  gallisni_080871b4((struct GallisniObject*)p);
   if (gallisni_08087118(p)) {
     return;
   }

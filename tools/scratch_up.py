@@ -9,6 +9,7 @@ Usage:
       --source notes/decompme/foo_source.c --context notes/decompme/foo_context.h \
       [--desc-file notes/decompme/foo_ask.md] [--name "Foo_Update"]
 
+  # NOTE anonymous scratches EXPIRE if never claimed (JxrgW lesson) -- claim right away
   # or with an already-prepared target .s (must contain `glabel <fn>`):
   python3 tools/scratch_up.py --target notes/decompme/beetank_target.s --fn Beetank_Update ...
 

@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "story.h"
 #include "projectile.h"
 
 struct Projectile* FUN_080ada80(struct Entity* e, u8 a1) {
@@ -32,6 +33,20 @@ struct Projectile* FUN_080adad0(struct Coord* c, u8 a1) {
 }
 
 INCASM("asm/projectile/unk_37_p3_p1.inc");
+
+static const ProjectileFunc sUpdates[2];
+void Projectile37_Die(struct Projectile* p);
+
+void Projectile37_Update(struct Projectile* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    EXIT_BODY(p);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    Projectile37_Die(p);
+    return;
+  }
+  (sUpdates[(p->s).mode[1]])(p);
+}
 
 void Projectile37_Die(struct Projectile* p) {
   (p->s).flags &= ~DISPLAY;

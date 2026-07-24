@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/encounter/objdiff/main/config.schema.json",
+  "target_dir": "expected/build/rmz3",
+  "build_target": false,
+  "base_dir": "build/rmz3",
+  "build_base": true,
+  "custom_make": "make",
+  "custom_args": ["DEVKITARM=/c/devkitPro/devkitARM"],
+  "watch_patterns": [
+    "*.c",
+    "*.h",
+    "*.s",
+    "*.inc"
+  ]
+}

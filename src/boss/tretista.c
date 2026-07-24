@@ -335,6 +335,25 @@ bool8 FUN_0804fc6c(struct Boss* p) { return TRUE; }
 
 INCASM("asm/boss/tretista_p13_p1.inc");
 
+extern const u16 u16_ARRAY_080fef2c[6];
+
+u16 tretista_0804fecc(void* _, u32 a, bool32 rankAS) {
+  s32 i;
+  if (rankAS == 1) {
+    for (i = 0; i < (s32)ARRAY_COUNT(u16_ARRAY_080fef2c); i++) {
+      if (u16_ARRAY_080fef2c[i] == a) {
+        return u16_ARRAY_080fef2c[(i + 1) % 6];
+      }
+    }
+  } else {
+    for (i = 0; i < (s32)ARRAY_COUNT(u16_ARRAY_080fef2c) - 1; i++) {
+      if (u16_ARRAY_080fef2c[i] == a) {
+        return u16_ARRAY_080fef2c[(i + 1) % 5];
+      }
+    }
+  }
+}
+
 bool8 isTretistaFarAway(struct Boss* p) {
   s32 zx = (pZero2->s).coord.x;
   s32 sx = (p->s).coord.x;

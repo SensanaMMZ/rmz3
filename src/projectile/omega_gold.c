@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "vfx.h"
 
 static const ProjectileFunc sUpdates[3];
 
@@ -46,6 +47,29 @@ void OmegaGoldProjectile_Die(struct Projectile* p) {
   (p->s).flags &= ~DISPLAY;
   EXIT_BODY(p);
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+void doGoldOmega1Laser1(struct Projectile* p) {
+  if ((p->s).unk_28->mode[0] > 1) {
+    CreateSmoke(3, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else {
+    switch ((p->s).mode[2]) {
+      case 0:
+        SetMotion(&p->s, 0xa06);
+        (p->s).mode[2]++;
+        // fallthrough
+      case 1:
+        (p->s).coord.x = (p->s).unk_28->coord.x;
+        (p->s).coord.y = (p->s).unk_28->coord.y - 0x6600;
+        UpdateMotionGraphic(&p->s);
+        break;
+    }
+    if ((p->prevCoord).y == 0 || --(p->prevCoord).y == 0) {
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+    }
+  }
 }
 
 INCASM("asm/projectile/omega_gold_post_p2.inc");

@@ -1,4 +1,4 @@
-# Holdouts with a reconstructed C body (129)
+# Holdouts with a reconstructed C body (128)
 
 These have a `#if MODERN` body, so `tools/objdiff_rank.sh` gives a
 meaningful match%% for them and the permuter has something to chew on.
@@ -47,7 +47,6 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/enemy/unk_59.c | 1 |
 | src/game/menu.c | 1 |
 | src/game/menu/elf.c | 1 |
-| src/gpu_regs.c | 1 |
 | src/intro.c | 1 |
 | src/main.c | 1 |
 | src/math.c | 1 |
@@ -120,10 +119,9 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/game/menu/elf.c:266 | `NON_MATCH static void ElfMenuFocusLoop_TabSelect(struct GameState* g)` |
 | src/game/menu/main.c:1179 | `NON_MATCH static void MainMenuLoop_Update(struct GameState* m)` |
 | src/game/menu/main.c:3359 | `NON_MATCH u8 CheckUnlockedHead(struct GameState* g, u8 idx)` |
-| src/gpu_regs.c:89 | `NON_MATCH void FlushOAM(void)` |
 | src/intro.c:405 | `NON_MATCH static void updateTitleAnimation(struct Intro* p)` |
 | src/main.c:23 | `NON_MATCH void AgbMain(void)` |
-| src/math.c:48 | `NON_MATCH u8 FUN_080e964c(u32 a, s32 b, s32 c)` |
+| src/math.c:48 | `NON_MATCH u32 FUN_080e964c(u32 a, s32 b, s32 c)` |
 | src/mission.c:54 | `NON_MATCH void calcStageScore(void)` |
 | src/motion.c:48 | `NON_MATCH void UpdateMotionState(struct Motion* m)` |
 | src/physics/pushout.c:133 | `NON_MATCH s32 PushoutToDown2(s32 x, s32 y)` |

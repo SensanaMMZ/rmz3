@@ -4,47 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080c2124
-FUN_080c2124: @ 0x080C2124
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0x12]
-	subs r0, #1
-	strb r0, [r4, #0x12]
-	lsls r0, r0, #0x18
-	lsrs r1, r0, #0x18
-	cmp r1, #0
-	bne _080C2142
-	movs r0, #8
-	strb r0, [r4, #0x12]
-	movs r0, #1
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-	b _080C2162
-_080C2142:
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _080C214E
-	cmp r0, #1
-	beq _080C215C
-	b _080C2162
-_080C214E:
-	ldr r1, _080C2168 @ =0x00000A08
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_080C215C:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_080C2162:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C2168: .4byte 0x00000A08
-
 	thumb_func_start FUN_080c216c
 FUN_080c216c: @ 0x080C216C
 	push {r4, lr}
@@ -317,3 +276,4 @@ _080C2358:
 	bx r0
 	.align 2, 0
 _080C2360: .4byte gWhitePaintFlags
+

@@ -107,7 +107,41 @@ static void LayerUpdate_3(struct StageLayer* l, const struct Stage* _ UNUSED) {
   }
 }
 
-INCASM("asm/stage_gfx/snowy_plains.inc");
+void snowyPlains_08012b9c(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    const u16 n = l->bgIdx;
+    BGCNT16(n >> 4) = l->prio | l->screenBase | (BGCNT_MOSAIC | BGCNT_CHARBASE(1));
+    *(u32*)gVideoRegBuffer.bgofs[n >> 4] = 0;
+    CpuFastCopy(BGMAP(78), (void*)(VRAM + SCREEN_BASE_16(n >> 4)), 2048);
+    l->phase++;
+  }
+}
+
+INCASM("asm/stage_gfx/snowy_plains_a.inc");
+
+void snowyPlains_08012fec(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    const u16 n = l->bgIdx;
+    BGCNT16(n >> 4) = l->prio | l->screenBase | (BGCNT_MOSAIC | BGCNT_CHARBASE(1));
+    *(u32*)gVideoRegBuffer.bgofs[n >> 4] = 0;
+    CpuFastCopy(BGMAP(77), (void*)(VRAM + SCREEN_BASE_16(n >> 4)), 2048);
+    l->phase++;
+  }
+}
+
+INCASM("asm/stage_gfx/snowy_plains_b.inc");
+
+void snowyplains_0801320c(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    const u16 n = l->bgIdx;
+    BGCNT16(n >> 4) = l->prio | l->screenBase | (BGCNT_MOSAIC | BGCNT_CHARBASE(1));
+    *(u32*)gVideoRegBuffer.bgofs[n >> 4] = 0;
+    CpuFastCopy(BGMAP(77), (void*)(VRAM + SCREEN_BASE_16(n >> 4)), 2048);
+    l->phase++;
+  }
+}
+
+INCASM("asm/stage_gfx/snowy_plains_c.inc");
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
