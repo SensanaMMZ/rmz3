@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "global.h"
+#include "gpu_regs.h"
 #include "projectile.h"
+#include "sound.h"
 
 static const ProjectileFunc sUpdates[9];
 
@@ -38,7 +40,29 @@ void FUN_080ab178(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_32_p4_p2.inc");
+INCASM("asm/projectile/unk_32_p4_p2_s1.inc");
+
+void FUN_080ab724(struct Projectile* p) {
+  gVideoRegBuffer.dispcnt &= ~(DISPCNT_WIN0_ON | DISPCNT_BG2_ON);
+  gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN1_ON;
+  gWindowRegBuffer.winin[2] |= 0xFE;
+  StopSound(*(s16*)((u8*)p + 0xC0));
+  (p->s).flags &= ~DISPLAY;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_32_p4_p2_s2.inc");
+
+void FUN_080ab990(struct Projectile* p) {
+  gVideoRegBuffer.dispcnt &= ~(DISPCNT_WIN0_ON | DISPCNT_BG2_ON);
+  gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN1_ON;
+  gWindowRegBuffer.winin[2] |= 0xFE;
+  StopSound(*(s16*)((u8*)p + 0xC0));
+  (p->s).flags &= ~DISPLAY;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/projectile/unk_32_p4_p2_s3.inc");
 
 void FUN_080abb2c(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
