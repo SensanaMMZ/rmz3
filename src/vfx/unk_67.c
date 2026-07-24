@@ -73,7 +73,48 @@ void Ghost67_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_67_post.inc");
+extern const s32* const PTR_ARRAY_0836f6b0[3];
+
+void FUN_080c4aac(struct VFX* p) {
+  u16 attr;
+  (p->s).work[2]--;
+  if ((p->s).work[2] == 0 ||
+      ((attr = FUN_080098a4((p->s).coord.x, (p->s).coord.y)) != 0 &&
+       !(attr & 0x8000) && (p->s).d.y > 0)) {
+    CreateSmoke(2, &(p->s).coord);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  } else {
+    switch ((p->s).mode[2]) {
+      case 0: {
+        const s32* const* tbl = PTR_ARRAY_0836f6b0;
+        u16* mp = &((struct Unk67Props*)(p->props).raw)->unk_0;
+        u32 base = (u32)tbl[*mp % 3];
+        const s32* pair = (const s32*)(((struct Unk67Props*)(p->props).raw)->unk_4 * 8 + base);
+        (p->s).d.y = pair[1] + (RANDOM(RNG_0202f388) & 0x1F);
+        (p->s).d.x = pair[0] - (RANDOM(RNG_0202f388) & 0x3F);
+        SetMotion(&p->s, *mp);
+        (p->s).work[3] = 0;
+        (p->s).mode[2]++;
+        FALLTHROUGH;
+      }
+      case 1: {
+        if ((u8)++(p->s).work[3] & 1) {
+          (p->s).flags |= DISPLAY;
+        } else {
+          (p->s).flags &= ~DISPLAY;
+        }
+        (p->s).d.y += 0x20;
+        if ((p->s).d.y > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        (p->s).coord.x += (p->s).d.x;
+        UpdateMotionGraphic(&p->s);
+        break;
+      }
+    }
+  }
+}
 
 void Ghost67_Init(struct VFX* p);
 void Ghost67_Update(struct VFX* p);
