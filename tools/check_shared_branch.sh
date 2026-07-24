@@ -58,11 +58,12 @@ if [ -n "$hits" ]; then
   fail=1
 fi
 
-# The guard scripts name the identity strings they search for; the memory
-# snapshot records the project path as history and is published deliberately.
+# The guard scripts name the identity strings they search for. The memory
+# snapshot is NOT exempt: refresh_memory_snapshot.sh scrubs identity from the
+# copies, so any hit there is a scrub gap that must be fixed, not waved off
+# (an earlier exemption here let four identity lines onto the branch).
 idhits=$(content "$BANNED_ID" '.' \
-  | grep -vE '(^|:)tools/(check_shared_branch|refresh_memory_snapshot)\.sh:' \
-  | grep -vE '(^|:)notes/memory-snapshot/')
+  | grep -vE '(^|:)tools/(check_shared_branch|refresh_memory_snapshot)\.sh:')
 if [ -n "$idhits" ]; then
   echo "FAIL: identity path/handle present:"
   echo "$idhits" | cut -c1-140 | sed 's/^/  /'
