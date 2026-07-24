@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
@@ -24,7 +25,22 @@ struct Enemy* FUN_0808a0ec(struct Entity* e) {
 
 void nop_0808a140(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_base_p2_pre.inc");
+INCASM("asm/enemy/pantheon_base_p2_pre_a.inc");
+
+static const struct Coord sElementCoord;
+
+void pBase_0808a210(struct Enemy* p) {
+  if (*(struct VFX**)&p->props[0] == NULL && ((p->body).status & 1)) {
+    struct VFX* e = ApplyElementEffect(0, &p->s, &sElementCoord);
+    *(struct VFX**)&p->props[0] = e;
+    if (e != NULL) {
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_base_p2_pre_b.inc");
 
 void PantheonBase_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
