@@ -4,77 +4,6 @@
 
 	.text
 
-	thumb_func_start doGoldOmega1Laser1
-doGoldOmega1Laser1: @ 0x080AC55C
-	push {r4, lr}
-	adds r4, r0, #0
-	ldr r0, [r4, #0x28]
-	ldrb r0, [r0, #0xc]
-	cmp r0, #1
-	bls _080AC58C
-	adds r1, r4, #0
-	adds r1, #0x54
-	movs r0, #3
-	bl CreateSmoke
-	ldr r1, _080AC588 @ =gProjectileFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r4, #0x14]
-	b _080AC5D4
-	.align 2, 0
-_080AC588: .4byte gProjectileFnTable
-_080AC58C:
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _080AC598
-	cmp r0, #1
-	beq _080AC5A6
-	b _080AC5BA
-_080AC598:
-	ldr r1, _080AC5DC @ =0x00000A06
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_080AC5A6:
-	ldr r1, [r4, #0x28]
-	ldr r0, [r1, #0x54]
-	str r0, [r4, #0x54]
-	ldr r0, [r1, #0x58]
-	ldr r1, _080AC5E0 @ =0xFFFF9A00
-	adds r0, r0, r1
-	str r0, [r4, #0x58]
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_080AC5BA:
-	adds r1, r4, #0
-	adds r1, #0xbc
-	ldr r0, [r1]
-	cmp r0, #0
-	beq _080AC5CC
-	subs r0, #1
-	str r0, [r1]
-	cmp r0, #0
-	bne _080AC5D4
-_080AC5CC:
-	movs r1, #0
-	movs r0, #1
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_080AC5D4:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080AC5DC: .4byte 0x00000A06
-_080AC5E0: .4byte 0xFFFF9A00
-
 	thumb_func_start doGoldOmega1Laser2
 doGoldOmega1Laser2: @ 0x080AC5E4
 	push {r4, r5, r6, lr}
@@ -354,3 +283,4 @@ _080AC808: .4byte 0x00269EC3
 _080AC80C: .4byte 0x00000C01
 _080AC810: .4byte 0x0836C644
 _080AC814: .4byte gProjectileFnTable
+
