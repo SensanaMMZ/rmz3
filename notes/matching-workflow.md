@@ -5,6 +5,9 @@ Written after the first match produced by the Ghidra harness
 
 Read `notes/backlog-truth.md` alongside this — it holds the per-function
 findings. This file is the procedure and the mistakes.
+`notes/urls-of-gba-decomps/extracted-practices.md` is the companion knowledge
+base: flag levers, C nudge catalog, and tooling surveyed from 17 other GBA
+decomps (2026-07-23). Consult it when a function resists step 4.
 
 ## 0. Before anything: know which flags the file uses
 
