@@ -93,6 +93,26 @@ void VFX58_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
+void FUN_080c2124(struct VFX* vfx) {
+  (vfx->s).work[2]--;
+  if ((vfx->s).work[2] == 0) {
+    (vfx->s).work[2] = 8, (vfx->s).mode[1] = 1, (vfx->s).mode[2] = 0;
+    return;
+  }
+
+  switch ((vfx->s).mode[2]) {
+    case 0: {
+      SetMotion(&vfx->s, MOTION(SM010_OMEGA_RING, 8));
+      (vfx->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      UpdateMotionGraphic(&vfx->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/vfx/unk_58_post_p1.inc");
 
 void FUN_080c2364(struct VFX* p) {
