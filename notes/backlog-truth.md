@@ -250,3 +250,35 @@ The result is a useful negative: only **4** functions are hand-written
 (`FUN_080ee328` plus three `push {r7, lr}` cases in mmbn4.c). The
 reconstruction backlog is essentially all compiler output, so it is reachable
 in principle. Full list: `notes/handwritten-asm.md`.
+
+## The player attack-dispatch 5-cluster (2026-07-24 session findings)
+
+`_zeroTryAttack`, `FUN_0802e338`, `air1`, `zero_wall_080303d4`,
+`zero_ladder_08030ee0` — five declared NON_MATCH twins (116 B each,
+identical modulo their IsAttackOK/attack callees). Structural facts
+recovered from the byte diff (the MODERN drafts were wrong about all
+three):
+
+1. The early-return path is `z->forceWeapon |= 0xFF; return;` — an OR
+   of the already-0xFF value (`movs #0xFF; orrs; strb`), not a plain
+   return.
+2. The attackMode stores are duplicated in BOTH arms of the if/else
+   (no shared tail): the if-arm's `attackMode[1] = 0` materializes a
+   fresh zero; the else-arm stores the IsAttackOK bool register
+   (provably 0 there) — i.e. the original wrote `attackMode[1] = ok;`
+   in the else arm, which also prevents the arms from cross-jumping.
+3. THE REMAINING BLOCKER: our build CSEs `&z->usingWeapon` (z+0x128)
+   from the call argument into callee-saved r5 (push {r4,r5,lr});
+   the target recomputes it (`movs #0x94; lsls #1`) in the else arm
+   (push {r4,lr}). With the address kept, our arms' stores become
+   register-identical and cross-jump collapses them (96 B vs 116).
+   `-fno-cse-follow-jumps -fno-cse-skip-blocks` together shift the
+   result (98 B) proving the mechanism, but this file builds with
+   stock flags, so the original source shape must break the CSE some
+   other way. Tried and failed: do{}while(0) separator after the call,
+   `= ok` alone, plain duplication. Next: decomp.me with root-cause
+   tag `cse-keep / cross-jump`, or a source shape where the call
+   argument expression is not visible to the else-arm store.
+
+Solving any one of the five solves all five (verify per-file callee
+names with build/scratch/twin_diff.py).
