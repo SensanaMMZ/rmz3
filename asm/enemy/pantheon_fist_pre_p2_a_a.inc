@@ -4,56 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080950d0
-FUN_080950d0: @ 0x080950D0
-	push {r4, lr}
-	adds r2, r0, #0
-	adds r3, r2, #0
-	adds r3, #0x8c
-	ldr r0, [r3]
-	movs r1, #0x80
-	lsls r1, r1, #2
-	ands r0, r1
-	cmp r0, #0
-	beq _0809511C
-	ldr r1, _08095110 @ =gEnemyFnTable
-	ldrb r0, [r2, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r4, #2
-	str r4, [r2, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r2, #0x14]
-	ldr r1, [r3]
-	movs r0, #0x80
-	lsls r0, r0, #9
-	ands r0, r1
-	cmp r0, #0
-	bne _08095114
-	movs r0, #0x80
-	lsls r0, r0, #0xa
-	ands r0, r1
-	cmp r0, #0
-	beq _08095116
-	strb r4, [r2, #0xd]
-	b _08095118
-	.align 2, 0
-_08095110: .4byte gEnemyFnTable
-_08095114:
-	movs r0, #1
-_08095116:
-	strb r0, [r2, #0xd]
-_08095118:
-	movs r0, #1
-	b _0809511E
-_0809511C:
-	movs r0, #0
-_0809511E:
-	pop {r4}
-	pop {r1}
-	bx r1
-
 	thumb_func_start FUN_08095124
 FUN_08095124: @ 0x08095124
 	push {r4, r5, lr}
@@ -127,3 +77,4 @@ _080951AC:
 	pop {r1}
 	bx r1
 	.align 2, 0
+

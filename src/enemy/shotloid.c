@@ -25,6 +25,21 @@ INCASM("asm/enemy/shotloid_pre_p1_p2.inc");
 
 void nop_08093af8(struct Enemy* p) {}
 
+bool8 FUN_08093afc(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if ((p->body).status & BODY_STATUS_SLASHED) {
+      (p->s).mode[1] = 1;
+    } else if ((p->body).status & BODY_STATUS_RECOILED) {
+      (p->s).mode[1] = 2;
+    } else {
+      (p->s).mode[1] = 0;
+    }
+    return TRUE;
+  }
+  return FALSE;
+}
+
 INCASM("asm/enemy/shotloid_pre_p2_a_a.inc");
 
 struct ShotloidObject {
@@ -56,7 +71,6 @@ INCASM("asm/enemy/shotloid_pre_p2_a_b.inc");
 
 extern const EnemyFunc sUpdates1[9];
 extern const EnemyFunc sUpdates2[9];
-bool8 FUN_08093afc(struct Enemy* p);
 bool8 FUN_08093b50(struct Enemy* p);
 
 void Shotloid_Update(struct Enemy* p) {

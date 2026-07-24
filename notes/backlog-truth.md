@@ -282,3 +282,16 @@ three):
 
 Solving any one of the five solves all five (verify per-file callee
 names with build/scratch/twin_diff.py).
+
+## FUN_080e58bc (bird.c) + twins FUN_080e2510/FUN_080e2b78 — 24-byte regalloc tie
+
+Structure is fully correct at MODERN=0 (108/108 bytes, tail exact once
+compiled with the real macro form; per-branch `u8* buf = e->buffer;`
+reproduces the base+offset-1 load). The ONLY surviving diff is a
+pseudo-register swap: ours allocates the p-copy to r2 and z to r3, the
+target the reverse (fl follows: r1 vs r0). Tried and failed: e/z
+declaration order swap (worse), fl-first declaration (no change),
+Body-pointer block for the stores (much worse), explicit p-copy local
+(macro conflicts). Root cause tag: regalloc-tie / pseudo-priority.
+decomp.me candidate; solving it retires 3 functions (108 B each).
+Test harness: build/scratch/e58bc/v3.c (best variant).
