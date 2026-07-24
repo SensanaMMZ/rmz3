@@ -1,4 +1,4 @@
-# Holdouts that are pure INCCODE stubs (362)
+# Holdouts that are pure INCCODE stubs (358)
 
 No C body at all -- these need source reconstruction before any
 matching work can start. This is what the Ghidra harness is for; see
@@ -12,8 +12,8 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 |---|---|
 | src/mmbn4.c | 18 |
 | src/boss/omega_zero.c | 15 |
-| src/overworld_layer.c | 14 |
 | src/player.c | 14 |
+| src/overworld_layer.c | 13 |
 | src/game/menu/main.c | 12 |
 | src/intro.c | 9 |
 | src/game/analysis.c | 7 |
@@ -58,7 +58,6 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/game/main_overworld/util.c | 2 |
 | src/gfx.c | 2 |
 | src/link.c | 2 |
-| src/math.c | 2 |
 | src/player/zero/attack/air.c | 2 |
 | src/player/zero/attack/ground/idle.c | 2 |
 | src/player/zero/update.c | 2 |
@@ -156,7 +155,6 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/vfx/unk_17.c | 1 |
 | src/vfx/unk_18.c | 1 |
 | src/vfx/unk_19.c | 1 |
-| src/vfx/unk_28.c | 1 |
 | src/vfx/unk_31.c | 1 |
 | src/vfx/unk_43.c | 1 |
 | src/vfx/unk_52.c | 1 |
@@ -306,8 +304,6 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/intro.c:1611 | `NAKED static void minigameSelectScript(struct Intro* p)` |
 | src/link.c:70 | `NAKED u32 LinkMain1(u8* shouldAdvanceLinkState, u16* sendCmd, u16 (*recvCmds)[CMD_LENGTH])` |
 | src/link.c:382 | `NAKED static bool8 DoHandshake(void)` |
-| src/math.c:61 | `NAKED static void unused_080e9680(void* param_1, void* param_2, void* param_3, void* param_4, void* param_5, void* param_6) { INCCODE("asm/unused/unused_080e9680.inc"); }` |
-| src/math.c:65 | `NAKED static void unused_080e9698(void* param_1, void* param_2, u32 param_3, u32 param_4) { INCCODE("asm/unused/unused_080e9698.inc"); }` |
 | src/mission.c:143 | `NAKED static void calcCodename(void)` |
 | src/mmbn4.c:22 | `NAKED static void clearMemory16(void* dst, u32 bytesize)` |
 | src/mmbn4.c:42 | `NAKED static void mmbn4_08000738(u32 r0, u32 r1, u32 r2, u32 r3)` |
@@ -336,11 +332,10 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/overworld_layer.c:1037 | `NAKED static void unused_080061a4(void) { INCCODE("asm/unused/unused_080061a4.inc"); }` |
 | src/overworld_layer.c:1038 | `NAKED static void unused_08006474(void) { INCCODE("asm/unused/unused_08006474.inc"); }` |
 | src/overworld_layer.c:1039 | `NAKED static void unused_08006738(void) { INCCODE("asm/unused/unused_08006738.inc"); }` |
-| src/overworld_layer.c:1040 | `NAKED static void unused_080069e0(void) { INCCODE("asm/unused/unused_080069e0.inc"); }` |
-| src/overworld_layer.c:1043 | `NAKED void FUN_08006a10(struct LayerGraphic* l, struct Coord* c, u32* bgmap, MetatileMap* mm)` |
-| src/overworld_layer.c:1182 | `NAKED void FUN_08006bb4(struct LayerGraphic* l, struct Coord* c, u32* bgmap, MetatileMap* mm)` |
-| src/overworld_layer.c:1434 | `NAKED static u8 unused_08006dcc(void* p, struct Coord* c) { INCCODE("asm/unused/unused_08006dcc.inc"); }` |
-| src/overworld_layer.c:1436 | `NAKED static u8 unused_08006e3c(void* p, u32 unk_x, u32 unk_y) { INCCODE("asm/unused/unused_08006e3c.inc"); }  // unk_x, unk_y の単位不明(pixel?)` |
+| src/overworld_layer.c:1062 | `NAKED void FUN_08006a10(struct LayerGraphic* l, struct Coord* c, u32* bgmap, MetatileMap* mm)` |
+| src/overworld_layer.c:1201 | `NAKED void FUN_08006bb4(struct LayerGraphic* l, struct Coord* c, u32* bgmap, MetatileMap* mm)` |
+| src/overworld_layer.c:1453 | `NAKED static u8 unused_08006dcc(void* p, struct Coord* c) { INCCODE("asm/unused/unused_08006dcc.inc"); }` |
+| src/overworld_layer.c:1455 | `NAKED static u8 unused_08006e3c(void* p, u32 unk_x, u32 unk_y) { INCCODE("asm/unused/unused_08006e3c.inc"); }  // unk_x, unk_y の単位不明(pixel?)` |
 | src/palette_animation.c:112 | `NAKED void StartPaletteAnimation(u16 blinkID, u16 ofs)` |
 | src/physics/hazard.c:7 | `NAKED metatile_attr_t GetHazardMetatileAttr(s32 x, s32 y)` |
 | src/physics/hazard.c:187 | `NAKED s32 FUN_0800af30(s32 x, s32 y, s32 r2)` |
@@ -507,7 +502,6 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/vfx/unk_17.c:94 | `NAKED static void FUN_080b6970(struct VFX* p)` |
 | src/vfx/unk_18.c:62 | `NAKED static void Ghost18_Update(struct VFX* p)` |
 | src/vfx/unk_19.c:123 | `NAKED static void FUN_080b705c(struct VFX* p)` |
-| src/vfx/unk_28.c:58 | `NAKED static void Ghost28_Init(struct VFX* p)` |
 | src/vfx/unk_31.c:94 | `NAKED static void FUN_080ba6a4(struct VFX* p)` |
 | src/vfx/unk_43.c:68 | `NAKED static void FUN_080be72c(struct Entity* p)` |
 | src/vfx/unk_52.c:48 | `NAKED static void VFX52_Update(struct Entity* p)` |

@@ -123,7 +123,7 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/gpu_regs.c:89 | `NON_MATCH void FlushOAM(void)` |
 | src/intro.c:405 | `NON_MATCH static void updateTitleAnimation(struct Intro* p)` |
 | src/main.c:23 | `NON_MATCH void AgbMain(void)` |
-| src/math.c:48 | `NON_MATCH u8 FUN_080e964c(u32 a, s32 b, s32 c)` |
+| src/math.c:48 | `NON_MATCH u32 FUN_080e964c(u32 a, s32 b, s32 c)` |
 | src/mission.c:54 | `NON_MATCH void calcStageScore(void)` |
 | src/motion.c:48 | `NON_MATCH void UpdateMotionState(struct Motion* m)` |
 | src/physics/pushout.c:133 | `NON_MATCH s32 PushoutToDown2(s32 x, s32 y)` |
