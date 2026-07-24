@@ -20,7 +20,8 @@ forks' patches should graft cleanly.
 |---|---|---|
 | spurious `push {lr}` / prologue-shape diffs | `-fprologue-bugfix` — newer agbcc caches `current_function_has_far_jump` and the stale value forces lr saves; the flag restores old behavior. Documented: "needed to produce matching code for certain GBA games". Likely already in our binary (pret family). Does NOT work with old_agbcc (SAT-R's makefile comment). | [pret/agbcc gcc/toplev.c](https://github.com/pret/agbcc/blob/master/gcc/toplev.c) ~L735, gcc/thumb.c ~L719 |
 | redundant compares the compiler jump-threads away; shift-then-compare folds; wrong-signedness conditions | `-f2003-patch` — models a vendor compiler patch dated 03-OCT-2003. One hunk in `combine.c simplify_comparison` (~L10181): changes when `(x >> N) cmp C` folds to `x cmp (C << N)` (stricter overflow check, unsigned-condition conversion for logical shifts). **rmz3 shipped 2004-04, after this patch date** — same era as MZM (2004-02) and katam, which both need it. | [jiangzhengwenjz/agbcc](https://github.com/jiangzhengwenjz/agbcc) branch `new_newlib_pret`, gcc/flags.h "thumb_patch03-OCT-03" |
-| mmbn4 `tst r0,r0` tails instead of `ands`+`cmp` | `-ftst` — exists as a real flag in the Klonoa: Empire of Dreams fork; their m4a_1.c is compiled `old_agbcc -ftst`. Their README also states the pool-load regalloc fact we observed: "old_agbcc assigns the first literal pool load to **r2**, while agbcc assigns it to **r3**". | [Dream-Atelier/kl-eod-decomp](https://github.com/Dream-Atelier/kl-eod-decomp) README, [Dream-Atelier/agbcc](https://github.com/Dream-Atelier/agbcc) |
+| mmbn4 `tst r0,r0` tails instead of `ands`+`cmp` | `-ftst` — on the Dream-Atelier/agbcc **`legacy-works` branch** (not master): `thumb.md` gains `*andsi3_tst` ((set (cc0) (and a b)) → `tst`) and `*andsi3_setflags` (AND with implicit flag set, no cmp). Klonoa compiles m4a_1.c `old_agbcc -ftst`. Their README also states the pool-load regalloc fact we observed: "old_agbcc assigns the first literal pool load to **r2**, while agbcc assigns it to **r3**". Same branch carries three more uncatalogued flags: **`-fcmp-elim`** (drop redundant `cmp #0` after flag-setting insns), **`-fsigned-compare`** (bge/blt/bgt/ble instead of bhs/blo/bhi/bls — remaps GEU/LTU/GTU/LEU), **`-fno-fold-addr`** (cse.c: don't fold base+offset into one constant). | [Dream-Atelier/kl-eod-decomp](https://github.com/Dream-Atelier/kl-eod-decomp) README, [Dream-Atelier/agbcc](https://github.com/Dream-Atelier/agbcc) branch `legacy-works` (toplev.c:753, thumb.md, thumb.c thumb_notice_update_cc) |
+| JP-ROM sub-word signedness: stubborn `lsl/asr #24/#16` diffs | **`-mjp-promote`** — laqieer's patch to pret/agbcc (`scripts/agbcc_jp_promote.patch` on pinned `da598c1`): enables PROMOTE_FUNCTION_ARGS and makes PROMOTE_MODE preserve sub-word signedness (stock agbcc forces unsigned). Applied per-TU (8 TUs) in **fireemblem8j — a 100% complete JP GBA agbcc game**. Same patch family: `-mjp-regorder` (high-reg pushes r8→r12 ascending), `-mjp-nocrossjump` (disable cross-jumping — the regalloc-changing tail merge from the Decompedia lore). Shipped as decomp.me's `agbcc-fe8j` compiler. rmz3 is a JP ROM of the same era — test on sign-extension mismatches. | [laqieer/fireemblem8j](https://github.com/laqieer/fireemblem8j), [laqieer/agbcc](https://github.com/laqieer/agbcc) release `fe8j-v1` |
 | mmbn4 `push {r7, lr}` frame form under `-O -mno-thumb-interwork` | `-mtpcs-frame` — FE6 hit exactly one file with a frame-pointer prologue and solved it by restoring GCC 2.9's `-mtpcs-frame` option in a fork, applied per-file (`%/main.o: CFLAGS += -mtpcs-frame`). | [FireEmblemUniverse/fireemblem6j Makefile](https://github.com/FireEmblemUniverse/fireemblem6j/blob/main/Makefile) L308+, [StanHash/agbcc branch tpcs_frame](https://github.com/StanHash/agbcc/commits/tpcs_frame) |
 | dead compares (unused_080e14d4 class) | `-foptimize-comparisons` — off-by-default comparison-sequence flag present in the pret-family flag table, wired into fold-const.c. Worth an A/B on the dead-compare holdouts. | pret/agbcc toplev.c f_options |
 | cross-statement optimization we can't block | **`-g` is a codegen input on this compiler.** pokeruby/pokeemerald only match WITH `-g` (line notes act as optimization barriers; several "one line required to match with -g" comments), pokefirered matches WITHOUT it. Corollary: under `-g`, joining/splitting statements across lines is a legitimate matching lever. We build without `-g`; if the target kept redundancy we can't reproduce, try the function with `-g`. | pokeruby src/battle_message.c:463 et al.; pokeemerald Makefile L119 |
@@ -119,6 +120,13 @@ negative offsets), possibly with a `({ })` fence to stop re-materialization.
 This matches our earlier inference ("nothing names offset 0 directly") and
 gives it a documented precedent.
 
+Second-pass addition: Dream-Atelier's `legacy-works` branch has
+**`-fno-fold-addr`** ("don't fold base_address + offset into a single
+constant", implemented in cse.c) — the first compiler-side knob found that
+touches this exact fold. Whether the target corresponds to folding ON
+(symbol+0x400 pooled as one constant) while our two-reloc output is the
+unfolded form is testable directly with that branch.
+
 ## 6. Tools worth importing
 
 | tool | what it does | why us |
@@ -173,6 +181,49 @@ diffs at TU boundaries, this is the fix.
    -quiet`) for one interrupt-handling file; if we ever meet an ARM-mode
    holdout, that is the precedent.
 
+## 7b. Second-pass gap crawl (same day) — what the first pass missed
+
+- **No MMBN/EXE game has a matched-C decomp** — our 18 mmbn4.c stubs are
+  first-decompilation work, no donor library exists. Closest assets:
+  [dism-exe/exe4rs](https://github.com/dism-exe/exe4rs) is a disassembly of
+  Rockman EXE 4 Red Sun — **the exact game whose link library is embedded in
+  rmz3** — usable as a byte-locator (find our stub bytes in the EXE4 ROM for
+  surrounding call context); [tangobattle](https://github.com/tangobattle)
+  implements BN2–6 netplay over emulated SIO and encodes the BN4 handshake
+  semantics; dism-exe/bn6f's `docs/decomp/*.c` are raw Hex-Rays dumps
+  (reference only, not compilable).
+- **mmzret org has no sister decomps** (only rmz3 + an editor + a text tool);
+  no MMZ1/2/4 decomp exists anywhere. Only third-party symbol source for the
+  sister games: [Ajarmar/zeroprac](https://github.com/Ajarmar/zeroprac)
+  practice-hack address notes (Zero 2/3/4). Sister-ROM cross-validation for
+  us means raw ROM comparison, not repo comparison.
+- **decomp.dev tracks 4 GBA projects we hadn't surveyed**:
+  [laqieer/fireemblem8j](https://github.com/laqieer/fireemblem8j) — **100.00%
+  matched, JP ROM, agbcc** (its per-function codegen-reasoning commit style is
+  worth copying); TsilaAllaoui/warioland4 — 65%, agbcc `-O2 -fhex-asm
+  -fprologue-bugfix`, old_agbcc m4a, `-O1` sram (our scratch-forker's own
+  project); ShaffySwitcher/wariowareinc — 31%, agbcc -O2;
+  MokhaLeee/FireEmblem7J — 16%, JP ROM.
+- **Dream-Atelier/agbcc master** (what Klonoa actually builds with — it does
+  NOT use -ftst by default) adds four **byte-neutral diagnostic flags** built
+  for agent workflows: `-finstrument-src-locs` (per-insn `@ src:file:line`
+  comments), `-fdump-function-size`, `-fdump-reg-lifetimes`,
+  `-fdump-pool-literals` (flags pool entries that look like unnamed
+  addresses). Zero risk to adopt; kl-eod turns all four on by default.
+- **decomp.me's full GBA compiler roster** (from the decomp.me source):
+  agbcc, `agbcc-fe8j` (the jp-promote build), old_agbcc, agbcc_arm, agbccpp,
+  gcc2.96. We can A/B `-mjp-promote` hypotheses on decomp.me without building
+  anything, by switching a scratch to `agbcc-fe8j`.
+- **Permuter vs agent evidence**: macabeus' Mizuchi benchmark (60 functions,
+  half Sonic Advance 3/agbcc): **decomp-permuter alone matched 0 of 30 agbcc
+  functions; an LLM-agent pipeline matched 74%**. Weight agent attempts and
+  targeted reasoning over long permuter runs for our remaining holdouts
+  (consistent with our own experience: permuter plateaus, byte-diff-driven
+  reasoning matches). [Mizuchi](https://github.com/macabeus/mizuchi) itself
+  is an m2c→objdiff→permuter→agent pipeline worth watching.
+- decomp.wiki: JS-rendered, empty sitemap, nothing fetchable — confirmed
+  dead end for crawling (matches §8).
+
 ## 8. Negative findings (so nobody re-searches)
 
 - **No repo documents the single-reloc pool-anchor problem as such.** §5 is
@@ -191,18 +242,41 @@ diffs at TU boundaries, this is the fix.
 
 ## 9. Experiment queue distilled from this survey
 
-1. Check our agbcc binary for `-fprologue-bugfix` / `-foptimize-comparisons`
-   support (it accepts `-fhex-asm`, so it is pret-family); if absent, the
-   patches are small and public.
+Status markers added as items are executed.
+
+1. ~~Check our agbcc binary for the pret-family flags~~ **DONE**: ours
+   accepts `-fprologue-bugfix`, `-foptimize-comparisons`, `-ffix-debug-line`
+   (and old_agbcc rejects `-fprologue-bugfix`, as documented). It rejects
+   `-f2003-patch`, `-ftst`, `-fcaller-saved-preference`, `-mtpcs-frame` —
+   those need the fork builds.
 2. mmbn4 sweep (§2): flags × compilers matrix over several functions at
-   once, including `-ftst` (build the Klonoa fork) and `-mtpcs-frame`
-   (StanHash branch).
-3. Re-attempt FlushOAM with the §5 single-base arithmetic shapes.
+   once, including `-ftst`/`-fcmp-elim`/`-fsigned-compare` (Dream-Atelier
+   `legacy-works` branch) and `-mtpcs-frame` (StanHash branch). Use
+   [dism-exe/exe4rs](https://github.com/dism-exe/exe4rs)'s EXE4 ROM
+   disassembly as a byte-locator for the shared library.
+3. Re-attempt FlushOAM with the §5 single-base arithmetic shapes; if no C
+   shape lands it, A/B `-fno-fold-addr` (legacy-works) to identify whether
+   the fold is the mechanism.
 4. Re-attempt unused_080e14d4 with `asm("" : "=r"(var))` value laundering
    and the `if (1)`-style kept-compare trick, and A/B `-f2003-patch` /
    `-foptimize-comparisons` / `-g` on it.
-5. Run samefunc over our ELF for free stub matches.
+5. ~~Run samefunc-style dup detection~~ **DONE**: `tools/dup_scan.py`
+   (ROM-level, three masking levels) → notes/dup-scan.md. First run found
+   Ghost28_Init (free via VFX59_Init's C), FUN_080e964c ≡ FUN_0803a5c8,
+   FUN_080e58bc ≡ FUN_080e2510 ≡ FUN_080e2b78, and a 5-holdout player
+   cluster. Also exposed the static-name-collision trap (fixed: ambiguous
+   names are excluded and listed).
 6. Audit small "stubs" adjacent to large functions for the false-boundary
    `bl` artifact before attempting them as standalone functions.
-7. Port a calcrom-style progress script over our linker map (matching vs
-   nonmatching curves).
+7. ~~Port a calcrom-style progress script~~ **DONE**: `tools/progress.py`
+   (declared-withc / declared-pure / undeclared-asm / matched, by count and
+   bytes).
+8. Test `-mjp-promote` hypotheses free of charge by switching a decomp.me
+   scratch to the `agbcc-fe8j` compiler (it IS the jp-promote build) on any
+   holdout with sign-extension diffs.
+9. Mine [laqieer/fireemblem8j](https://github.com/laqieer/fireemblem8j)
+   (100% matched JP agbcc game) for source shapes when a JP-idiom question
+   comes up — it replaces the missing pret-wiki lore for JP ROMs.
+10. Adopt Dream-Atelier master's byte-neutral diagnostic flags
+    (`-fdump-pool-literals` etc.) if/when we rebuild our agbcc — zero risk,
+    made for this workflow.
