@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "story.h"
 #include "projectile.h"
 
 struct Projectile* createPantheonBomb(struct Coord* c1, struct Coord* c2, u8 a2) {
@@ -35,6 +36,20 @@ struct Projectile* createPantheonBombBlast(struct Coord* c, u8 a1) {
 }
 
 INCASM("asm/projectile/pantheon_bomber_p3_p1.inc");
+
+static const ProjectileFunc sUpdates[2];
+void PantheonBombProjectile_Die(struct Projectile* p);
+
+void PantheonBombProjectile_Update(struct Projectile* p) {
+  if (IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    EXIT_BODY(p);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    PantheonBombProjectile_Die(p);
+    return;
+  }
+  (sUpdates[(p->s).mode[1]])(p);
+}
 
 void PantheonBombProjectile_Die(struct Projectile* p) {
   (p->s).flags &= ~DISPLAY;
