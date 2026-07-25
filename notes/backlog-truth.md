@@ -1551,3 +1551,15 @@ the unk_32 inits (4) and these hellbat spawners (3) each cost one probe total.
   unk_64: `SET_VFX_ROUTINE(v, ENTITY_DISAPPEAR)` reuses the register holding
   `motion.state` (== 3 after the guard), so the guard needs a `u8 state` local —
   same lever as FUN_080966fc.
+- **FUN_080ce710** (0x50) MATCHED first probe; retires locomoif_platform_part3_a.inc.
+- **FUN_080a2ea0** (0x48) **PARKED** at 6 bytes. Body is exact; only the three
+  loop-preheader setup instructions are ordered differently:
+  ROM `movs r5,#0 / ldr r6,=gProjectileFnTable / movs r4,#4`, ours
+  `movs r4,#4 / movs r5,#0 / ldr r6,=...`. i.e. agbcc placed the LICM-hoisted
+  invariants *before* the for-init; we get the for-init first. Tried: for-loop,
+  do/while with `--i >= 0`, and swapping the declaration order — all identical.
+  Preheader scheduling, not source shape.
+
+**Two more "same size != same family" false positives** this round
+(unk_55 FUN_080c123c/FUN_080c13c8, unk_1_p1_b pair). Always disassemble two
+before writing. The check costs one objdump and has now saved three wasted probes.
