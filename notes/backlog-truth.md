@@ -363,3 +363,19 @@ statements with BLOCK_CROSS_JUMP between costs ldrb/strb pairs — no);
 or accept the two-OR fuse is downstream of something else and try
 transcribing the zero park via `struct Entity* n = NULL;` used for
 BOTH xflip stores and unk_2c.
+
+## doOmega1BallLaser2 / doGoldOmega1Laser2 — 284 B pair (close, in progress)
+
+The old carve sketch (omega_white.c:196) is structurally right and the
+old blocker is now understood: the "redundant (u8) truncation" is the
+`(u8)(p->s).work[3]++ & 1` post-increment cast lever. Two corrections
+found this round: the sine angle and bounce flag are the PROJECTILE's
+own work[] at 0xB4 (`p->work[0]`, `p->work[1]`), NOT (p->s).work; and
+the angle reads go through a KEPT pointer (`u8* ang` in r2, both
+gSineTable reads via *ang, gSineTable held in r3, ldrsh index zero in
+r6 — hence push {r4,r5,r6,lr}). Harnesses: build/scratch/laser2/t1.c
+(head-exact, 268/284, no ang), t3.c (280/284 but head broken by the
+case-0 brace scope). Next: declare ang in the else-scope (not inside
+braced case 0), or at top; if head still breaks, transcribe register
+roles from the disasm at 0x9D688. Solving retires both twins +
+doOmega1Hoopshot (113/115, same file, same levers likely).
