@@ -1,4 +1,4 @@
-<!-- mzm :: trait=umod :: crawled 2026-07-25 :: 199/654 files compiled -->
+<!-- mzm :: trait=umod :: crawled 2026-07-25 :: 501/662 files compiled -->
 - umod: src/haze.c :: HazeCalculateGradient 
 - umod: src/hud.c :: HudDrawEnergy HudDrawMissiles HudDrawPowerBomb HudDrawSuperMissiles 
 - umod: src/menus/boot_debug.c :: BootDebugDrawNumber BootDebugDrawSubMenuOptionText BootDebugSectionMapDrawRoomAndDoorIds 

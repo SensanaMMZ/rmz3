@@ -1,0 +1,398 @@
+<!-- sa2 :: trait=shift_24 :: crawled 2026-07-25 :: 477/846 files compiled -->
+- shift_24: multi_boot/programs/subgame_loader/src/multi_sio.c :: MultiSioMain MultiSioRecvDataCheck 
+- shift_24: src/background.c :: DrawBackground RenderText UpdateBgAnimationTiles UpdateSpriteAnimation_BG animCmd_GetPalette_BG 
+- shift_24: src/bg_triangles.c :: sub_8006228 sub_80064A8 sub_8006DB4 sub_800724C sub_80075D0 sub_8007738 sub_8007858 sub_80078D4 sub_8007958 sub_8007A08 sub_8007AC0 
+- shift_24: src/core.c :: GetInput HBlankIntr ProcessVramGraphicsCopyQueue UpdateScreenCpuSet UpdateScreenDma VBlankIntr 
+- shift_24: src/game/math.c :: sub_8084904 sub_8084964 sub_80849C4 sub_8084A24 sub_8085530 sub_808558C sub_80855C0 sub_80855F8 sub_8085654 sub_8085698 sub_808572C sub_808575C sub_80857A4 sub_80857EC sub_80858A4 sub_8085A9C sub_8085B00 sub_8085B34 sub_8085CA8 sub_8085CC0 sub_8085CE4 sub_8085D14 sub_8085E64 
+- shift_24: src/game/sa1/menus/mp_mode_select.c :: Task_800E648 Task_800F058 Task_MultiPak 
+- shift_24: src/game/sa1/menus/mp_mode_select_2.c :: sub_8081200 sub_80818B8 
+- shift_24: src/game/sa1/menus/options.c :: CreateOptionsMenu TaskDestructor_OptionsMenu Task_OptionsMenuMain sub_8010CB4 sub_801176C 
+- shift_24: src/game/sa1/menus/player_data.c :: CreatePlayerDataMenu TaskDestructor_PlayerDataMenu Task_PlayerDataMenuInit sub_8011C94 
+- shift_24: src/game/sa1/menus/time_attack.c :: Task_80103C4 Task_TimeAttackMenu 
+- shift_24: src/game/sa1/menus/title_screen.c :: Task_800D11C Task_800D268 Task_800DE44 Task_800DEE4 Task_MainMenuInit Task_MainMenu_Select Task_SegaLogoInit 
+- shift_24: src/game/sa1/multiplayer/chao_message.c :: CreateMultiplayerResultsScreen Task_803B7AC Task_ChaoMessageInit sub_803B944 sub_803BAD4 sub_803BE0C sub_803BEB8 sub_803BFE8 
+- shift_24: src/game/sa1/save.c :: SaveGameExists WriteSaveGame sub_8012F6C 
+- shift_24: src/game/sa1/special_stage/main.c :: CreateCheckpointMessage Task_802A560 Task_802AC50 Task_802AD9C Task_802AE40 Task_802B3E4 sub_802B008 sub_802B18C sub_802C488 sub_802C934 sub_802D3E4 sub_802D4C4 sub_802D58C sub_802D6B4 
+- shift_24: src/game/sa1/stage/backgrounds/zone_6.inc.c :: StageBgUpdate_Zone6Act1 
+- shift_24: src/game/sa1/stage/backgrounds/zone_7_act_2.inc.c :: StageBgUpdate_Zone7Act2 
+- shift_24: src/game/sa1/stage/egg_rocket_transitions.c :: Task_8028F20 Task_8029070 
+- shift_24: src/game/sa1/stage/enemies/boss_1_egg_hammer_tank.c :: CreateEHTArm CreateEntity_EggHammerTank CreateEntity_EggHammerTank_Intro Task_8025CC4 Task_8025D80 Task_802611C Task_EggHammerTankMain 
+- shift_24: src/game/sa1/stage/enemies/boss_2_egg_press.c :: CreateEntity_EggPress Task_802DEFC Task_802E130 Task_802E290 Task_802E500 sub_802D748 sub_802D870 sub_802D908 
+- shift_24: src/game/sa1/stage/enemies/boss_3_egg_ball.c :: CreateEntity_EggBall Task_802F0D0 Task_802F9F8 Task_803020C Task_PipeExtend Task_PipeInitialDelay sub_802EF94 sub_8030778 
+- shift_24: src/game/sa1/stage/enemies/boss_4_egg_spider.c :: CreateEntity_EggSpider Task_8031480 Task_EggSpiderInit sub_80308A4 sub_80309CC sub_8030EE4 sub_803170C sub_8031AB4 sub_8031D0C 
+- shift_24: src/game/sa1/stage/enemies/boss_5_mecha_knuckles.c :: CreateEntity_MechaKnuckles Task_MechaKnucklesPartsInit sub_804E8D4 sub_804EB04 sub_804EB90 sub_804ED80 sub_804FDD4 
+- shift_24: src/game/sa1/stage/enemies/boss_6_egg_snake.c :: Task_8033480 Task_8033730 sub_8031D88 sub_8031ED0 sub_80339BC 
+- shift_24: src/game/sa1/stage/enemies/boss_x1_egg_wrecker.c :: CreateEntity_EggWrecker Task_8034CA0 sub_80342A0 sub_80343E0 sub_8035010 sub_803582C 
+- shift_24: src/game/sa1/stage/enemies/boss_x2_egg_drillster.c :: CreateEntity_EggDrillster CreateFalloffComponents Task_803623C Task_8036B94 Task_Drill sub_803596C sub_8035AAC sub_803673C sub_8036CF4 
+- shift_24: src/game/sa1/stage/enemies/boss_x3_egg_x.c :: CreateEntity_EggX Task_8038154 Task_8038554 Task_8039264 Task_80397A8 Task_803A2F8 Task_Strc10_803891C sub_8036E20 sub_8036F9C sub_80370B4 sub_803711C sub_8039074 sub_803918C sub_803A650 sub_803A7D4 sub_803A900 
+- shift_24: src/game/sa1/stage/enemies/boss_xtra_super_egg_robot.c :: CreateEntity_SuperEggRobot Task_SuperEggRobotInit sub_80520B8 
+- shift_24: src/game/sa1/stage/enemies/bosses_misc.c :: Task_8016650 Task_8016A14 Task_8016B6C Task_8017334 Task_8017400 sub_80168F0 sub_8016D80 sub_8016F44 sub_8017054 
+- shift_24: src/game/sa1/stage/enemies/buzzer.c :: CreateEntity_Buzzer Task_Buzzer_801E190 
+- shift_24: src/game/sa1/stage/enemies/drisame.c :: CreateEntity_Drisame CreateIceBlock Task_IceBlock_8073364 
+- shift_24: src/game/sa1/stage/enemies/gamigami.c :: CreateEntity_GamiGami 
+- shift_24: src/game/sa1/stage/enemies/hanabii.c :: CreateEntity_Hanabii Task_HanabiiProjectile2 
+- shift_24: src/game/sa1/stage/enemies/kerokero.c :: CreateEntity_KeroKero Task_806D124 Task_KeroKeroInit 
+- shift_24: src/game/sa1/stage/enemies/kiki.c :: CreateEntity_Kiki Task_KikiMain Task_ProjPieceMain sa2__Task_8053A38 
+- shift_24: src/game/sa1/stage/enemies/kuraa.c :: CreateEntity_Kuraa 
+- shift_24: src/game/sa1/stage/enemies/leon.c :: CreateEntity_Leon Task_806EEA4 
+- shift_24: src/game/sa1/stage/enemies/mirror.c :: CreateEntity_Mirror CreateMirrorProjectile Task_Mirror 
+- shift_24: src/game/sa1/stage/enemies/mole.c :: CreateEntity_Mole 
+- shift_24: src/game/sa1/stage/enemies/oct.c :: CreateEntity_Oct 
+- shift_24: src/game/sa1/stage/enemies/pen_mk1.c :: CreateEntity_PenMk1 CreatePenMk1Snowball 
+- shift_24: src/game/sa1/stage/enemies/pierrot.c :: CreateEntity_Pierrot 
+- shift_24: src/game/sa1/stage/enemies/rhinotank.c :: CreateEntity_Rhinotank 
+- shift_24: src/game/sa1/stage/enemies/senbon.c :: CreateEntity_Senbon Task_8070CB4 
+- shift_24: src/game/sa1/stage/enemies/slot.c :: CreateEntity_Slot sub_806E7E0 
+- shift_24: src/game/sa1/stage/enemies/tentou.c :: CreateEntity_Tentou 
+- shift_24: src/game/sa1/stage/enemies/wamu.c :: CreateEntity_Wamu 
+- shift_24: src/game/sa1/stage/enemies/yukimaru.c :: CreateEntity_Yukimaru CreateEntity_Yukimaru_Wall CreateSnowball2 
+- shift_24: src/game/sa1/stage/interactables/096.c :: CreateEntity_Interactable096 
+- shift_24: src/game/sa1/stage/interactables/107.c :: CreateEntity_Interactable107 
+- shift_24: src/game/sa1/stage/interactables/113.c :: CreateEntity_Interactable113 
+- shift_24: src/game/sa1/stage/interactables/air_bubbles.c :: CreateBubbleContainingAir CreateEntity_AirBubbles Task_809141C Task_AirBubbles sub_80914F8 
+- shift_24: src/game/sa1/stage/interactables/booster.c :: CreateEntity_Booster CreateEntity_Booster_SlightLeft CreateEntity_Booster_SlightRight CreateEntity_Booster_Steep CreateEntity_Booster_Steep2 CreateEntity_Booster_Wall Task_Booster 
+- shift_24: src/game/sa1/stage/interactables/boulder_spawner.c :: CreateEntity_BoulderSpawner Task_BoulderDebris 
+- shift_24: src/game/sa1/stage/interactables/bounce_block.c :: CreateEntity_BounceBlock Task_80752A4 
+- shift_24: src/game/sa1/stage/interactables/bowl.c :: CreateEntity_Bowl 
+- shift_24: src/game/sa1/stage/interactables/breakable_wall.c :: CreateEntity_BreakableWall 
+- shift_24: src/game/sa1/stage/interactables/bumpers.c :: BumperCheckCollAndPosA1 BumperCheckCollAndPosA2 BumperCheckCollAndPosB BumperCheckCollAndPosC2 CreateEntity_BumperHexagon CreateEntity_BumperRound_CircularMov CreateEntity_BumperRound_LinearMov CreateEntity_BumperTriBig CreateEntity_BumperTriHorizontal CreateEntity_BumperTriVertical Task_BumperHexagon2 Task_BumperRound_CircularMov Task_BumperRound_CircularMov2 Task_BumperRound_LinearMov2 Task_BumperTriBig2 Task_BumperTriHorizontal2 Task_BumperTriVertical2 
+- shift_24: src/game/sa1/stage/interactables/carousel.c :: CreateEntity_Carousel 
+- shift_24: src/game/sa1/stage/interactables/checkpoint.c :: CreateEntity_Checkpoint Task_Checkpoint1 Task_Checkpoint2 Task_CheckpointMain 
+- shift_24: src/game/sa1/stage/interactables/conveyor_belt_movement.c :: CreateEntity_ConveyorBelt Task_ConveyorBeltMvt 
+- shift_24: src/game/sa1/stage/interactables/conveyor_belt_object.c :: CreateEntity_ConveyorBeltObject 
+- shift_24: src/game/sa1/stage/interactables/crane_claw_and_lift.c :: CreateEntity_CraneClaw CreateEntity_Lift Task_Lift3 
+- shift_24: src/game/sa1/stage/interactables/decoration.c :: CreateEntity_Decoration Task_DecorationDebrisMain 
+- shift_24: src/game/sa1/stage/interactables/ferris_wheel.c :: CreateEntity_FerrisWheel Task_FerrisWheel 
+- shift_24: src/game/sa1/stage/interactables/flipper_small_blue.c :: CreateEntity_Flipper_SmallBlue Task_Flipper_SmallBlue 
+- shift_24: src/game/sa1/stage/interactables/flippers.c :: CreateEntity_Flipper CreateEntity_Flipper_Vertical Task_Flipper_Horizontal Task_Flipper_Horizontal_2 Task_Flipper_Vertical_2 
+- shift_24: src/game/sa1/stage/interactables/forced_slide.c :: CreateEntity_ForcedSlide 
+- shift_24: src/game/sa1/stage/interactables/grind_rail.c :: Task_GrindRailEnd 
+- shift_24: src/game/sa1/stage/interactables/half_pipe.c :: Task_HalfPipeEnd Task_HalfPipeStart 
+- shift_24: src/game/sa1/stage/interactables/hang_bar.c :: CreateEntity_HangBar Task_HangBar 
+- shift_24: src/game/sa1/stage/interactables/hook_rail.c :: CreateEntity_HookRail 
+- shift_24: src/game/sa1/stage/interactables/ice_block.c :: CreateEntity_IceBlock Task_IceBlockShards sub_8091E88 
+- shift_24: src/game/sa1/stage/interactables/iron_ball.c :: CreateEntity_IronBall 
+- shift_24: src/game/sa1/stage/interactables/marble_track.c :: CreateEntity_MarbleTrack_Dir CreateEntity_MarbleTrack_Entrance CreateEntity_MarbleTrack_Exit CreateEntity_MarbleTrack_Pipe Task_MarbleTrack_Entrance 
+- shift_24: src/game/sa1/stage/interactables/maze_air_corner.c :: CreateEntity_TrackAirCorner 
+- shift_24: src/game/sa1/stage/interactables/moving_spring.c :: CreateEntity_MovingSpring Task_808B5AC sub_808B7A0 sub_808BB44 
+- shift_24: src/game/sa1/stage/interactables/panel_gate.c :: CreateEntity_PanelGate_Horizontal CreateEntity_PanelGate_Vertical Task_PanelGate_Horizontal2 Task_PanelGate_Vertical2 
+- shift_24: src/game/sa1/stage/interactables/party_balloon.c :: CreateEntity_PartyBalloon Task_PartyBalloonPopped 
+- shift_24: src/game/sa1/stage/interactables/pipe.c :: CreateEntity_PipeEntrance CreateEntity_PipeExit Task_8095D28 Task_8095E90 Task_PipeEntrance 
+- shift_24: src/game/sa1/stage/interactables/platform_crumbling.c :: CreateEntity_PlatformCrumbling Task_8025190 Task_8025400 
+- shift_24: src/game/sa1/stage/interactables/platform_spiked.c :: CreateEntity_Platform_Spiked 
+- shift_24: src/game/sa1/stage/interactables/platform_square.c :: CreateEntity_BarrelOfDoomMini CreateEntity_Platform_Square Task_Platform_Square 
+- shift_24: src/game/sa1/stage/interactables/platform_thin.c :: CreateEntity_PlatformThin CreateEntity_PlatformThin_Falling 
+- shift_24: src/game/sa1/stage/interactables/platforms_085_089.c :: CreateEntity_Platform089 CreateEntity_Platform_SlowDescent Task_Platform085 
+- shift_24: src/game/sa1/stage/interactables/propeller.c :: CreateEntity_Propeller 
+- shift_24: src/game/sa1/stage/interactables/red_flag_and_pole.c :: CreateEntity_RedFlag CreateEntity_WallPole_Left CreateEntity_WallPole_Right Task_8077760 Task_8077918 Task_8077D1C Task_8077E9C 
+- shift_24: src/game/sa1/stage/interactables/run_wheel.c :: CreateEntity_RunWheel sub_808EA80 
+- shift_24: src/game/sa1/stage/interactables/security_gate.c :: Task_SecurityGate1 
+- shift_24: src/game/sa1/stage/interactables/ship_swing.c :: CreateEntity_ShipSwing Task_ShipSwing 
+- shift_24: src/game/sa1/stage/interactables/shrubbery.c :: CreateEntity_Shrubbery Task_ShrubberyParticles 
+- shift_24: src/game/sa1/stage/interactables/skating_stone.c :: CreateEntity_SkatingStone CreateSkatingStoneDebris Task_SkatingStone2 Task_SkatingStoneDebris 
+- shift_24: src/game/sa1/stage/interactables/special_spring.c :: CreateEntity_SpecialSpring Task_SpecialSpringMain Task_TransitionSpStage 
+- shift_24: src/game/sa1/stage/interactables/spiked_barrel.c :: CreateEntity_SpikedBarrel 
+- shift_24: src/game/sa1/stage/interactables/spikes.c :: CreateEntity_Spikes_Down CreateEntity_Spikes_HidingDown CreateEntity_Spikes_HidingUp CreateEntity_Spikes_Horizontal CreateEntity_Spikes_Up Task_Spikes_Horizontal sub_8020D44 sub_8020F2C sub_8021208 
+- shift_24: src/game/sa1/stage/interactables/spring.c :: CreateEntity_Spring_Big_Up CreateEntity_Spring_Horizontal CreateEntity_Spring_Normal_Down CreateEntity_Spring_Normal_Up CreateEntity_Spring_Small_Up Task_8021BC0 Task_8021E70 Task_80220FC Task_8022354 Task_8022594 sub_8022804 sub_80228D0 sub_8022AB4 sub_8022E14 
+- shift_24: src/game/sa1/stage/interactables/spring_hiding.c :: CreateEntity_Spring_Hiding Task_8095158 
+- shift_24: src/game/sa1/stage/interactables/stage_goal.c :: CreateEntity_StageGoal Task_StageGoal2 Task_StageGoal4 
+- shift_24: src/game/sa1/stage/interactables/steam_exhaust.c :: CreateEntity_SteamExhaust Task_SteamExhaust2 
+- shift_24: src/game/sa1/stage/interactables/swing_rope.c :: CreateEntity_SwingRope 
+- shift_24: src/game/sa1/stage/interactables/swinging_hook.c :: CreateEntity_SwingingHook 
+- shift_24: src/game/sa1/stage/interactables/teleport_orb.c :: CreateEntity_TeleportOrb 
+- shift_24: src/game/sa1/stage/interactables/toggle_gravity.c :: CreateEntity_ToggleGravity 
+- shift_24: src/game/sa1/stage/interactables/toggle_player_visibility.c :: CreateEntity_Toggle_PlayerVisibility Task_Toggle_PlayerVisibility 
+- shift_24: src/game/sa1/stage/interactables/torch.c :: CreateEntity_Torch 
+- shift_24: src/game/sa1/stage/interactables/track.c :: CreateEntity_Track 
+- shift_24: src/game/sa1/stage/interactables/trampoline.c :: CreateEntity_Trampoline Task_Trampoline1 sub_8074FB0 
+- shift_24: src/game/sa1/stage/interactables/underwater_lava_platform.c :: CreateEntity_UnderwaterLavaPlatform 
+- shift_24: src/game/sa1/stage/interactables/updraft.c :: CreateEntity_Interactable097 
+- shift_24: src/game/sa1/stage/interactables/wall_bumper.c :: CreateEntity_WallBumper Task_WallBumper 
+- shift_24: src/game/sa1/stage/interactables/waterfall.c :: CreateEntity_Waterfall Task_WaterfallZone5 
+- shift_24: src/game/sa1/stage/mp_chao.c :: CreateMultiplayerChao Task_802816C Task_8028388 Task_8028518 Task_80286B0 Task_8028A1C 
+- shift_24: src/game/sa1/stage/mp_unk_0.c :: Task_801C770 Task_801C810 Task_801C8D4 sub_801C9C0 
+- shift_24: src/game/sa1/stage/mp_unk_1.c :: Task_801CB80 Task_801CD80 sub_801CF08 sub_801D0CC 
+- shift_24: src/game/sa1/stage/mystery_itembox.c :: CreateEntity_MysteryItemBox Task_801C2FC Task_801C3A0 Task_801C4EC Task_MysteryItemBox_Main0 sub_801C130 sub_801C5C4 
+- shift_24: src/game/sa1/stage/nuts_and_bolts_task.c :: CreateNutsAndBoltsTask Task_NutsAndBolts 
+- shift_24: src/game/sa1/stage/player_amy.c :: Player_Amy_8049370 Player_Amy_80494E8 
+- shift_24: src/game/sa1/stage/player_knuckles.c :: Player_Knuckles_GlideUpdateAnim sub_80484CC sub_80486E8 sub_8048ADC sub_8048B38 sub_8048CB0 sub_8048E34 
+- shift_24: src/game/sa1/stage/player_sonic.c :: Player_Sonic_80473AC Player_Sonic_StartRoll sub_8047668 sub_8047774 
+- shift_24: src/game/sa1/stage/player_super_sonic.c :: ExtraBoss__CapsuleGetCaptureState Player_SuperSonic_8049AB8 Task_804A3C0 Task_804A71C Task_804AAC4 Task_804B0D8 Task_804B420 
+- shift_24: src/game/sa1/stage/player_tails.c :: Player_Tails_8047A3C Player_Tails_8047B04 Player_Tails_8047BA0 Task_8047D04 sub_8047E94 sub_8047F2C sub_80480C4 
+- shift_24: src/game/sa1/stage/some_task_manager.c :: sub_804CDF8 
+- shift_24: src/game/sa1/stage/stage_ui.c :: Task_SpecialStageUIMain Task_StageUIMain sub_805423C sub_80543A4 
+- shift_24: src/game/sa1/stage/stage_ui_z.c :: Task_8055904 Task_8055998 sub_80549FC sub_8054A28 sub_8054A54 
+- shift_24: src/game/sa1/stage/to_be_continued_screen.c :: CreateToBeContinuedScreen sub_80125C0 
+- shift_24: src/game/sa1/stage/trapped_animals.c :: CreateTrappedAnimal 
+- shift_24: src/game/sa1/stage/ui_rendering.c :: sub_80528AC sub_8052C84 sub_8052E40 sub_8053520 sub_80535C8 
+- shift_24: src/game/sa1/ui/character_select.c :: Task_8059F9C Task_805AAF8 Task_805AC00 
+- shift_24: src/game/sa1/ui/collect_chaos_emeralds_msg.c :: sub_8069964 
+- shift_24: src/game/sa1/ui/course_select.c :: CreateCourseSelect Task_8062140 Task_8062540 Task_80628A4 Task_8062A80 Task_8062B38 Task_8062C28 Task_8062CB4 
+- shift_24: src/game/sa1/ui/edit_language_screen.c :: CreateEditLanguageScreen TaskDestructor_EditLanguageScreen Task_806ABD4 Task_EditLanguageScreenInit sub_806AD44 
+- shift_24: src/game/sa1/ui/extra_stage_results.c :: CreateCongratulationsAnimation CreateExtraStageResults Task_8065F5C_48 Task_8066768 Task_8066A5C_164 Task_8066ACC Task_8066BA4 Task_8066C78_164 Task_806806C 
+- shift_24: src/game/sa1/ui/game_2_0.c :: sub_805C448 
+- shift_24: src/game/sa1/ui/game_2_1.c :: sub_805C900 sub_805C994 sub_805D81C sub_805D9E4 sub_805DBF0 sub_805DE0C sub_805E018 
+- shift_24: src/game/sa1/ui/game_2_3.c :: Task_80632B4 Task_80634EC Task_8063824 sub_8062F90 
+- shift_24: src/game/sa1/ui/game_over.c :: CreateGameOverScreen Task_8056218 Task_80565C4 Task_8056970 
+- shift_24: src/game/sa1/ui/intro_animation.c :: CreateIntroAnimation Task_IntroRenderAmy Task_IntroRenderKnuckles Task_IntroRenderTails Task_RenderSonic sub_8063E8C sub_8064244 sub_80645E4 sub_80648D4 sub_8064BB4 
+- shift_24: src/game/sa1/ui/multiplayer_continue_screen.c :: CreateMultiplayerContinueScreen TaskDestructor_MultiplayerContinueScreen Task_MultiplayerContinueScreen sub_806B534 sub_806B5A4 
+- shift_24: src/game/sa1/ui/sound_test.c :: CreateSoundTest Task_SoundTestInit sub_805FC88 
+- shift_24: src/game/sa1/ui/special_stage_intro.c :: CreateSpecialStageIntro Task_8068BB0 Task_8069100 Task_8069634 sub_8068D0C 
+- shift_24: src/game/sa1/ui/staff_credits.c :: Task_805E698 Task_805E758 
+- shift_24: src/game/sa1/ui/stage_results.c :: Task_8057888 Task_8057B74 Task_8057D30 Task_805803C 
+- shift_24: src/game/sa1/ui/time_attack_lobby.c :: CreateTimeAttackLobbyScreen TaskDestructor_806A698 Task_806A508 Task_HandleInput sub_806A5BC 
+- shift_24: src/game/sa1/ui/time_attack_record.c :: CreateTimeAttackRecord sub_80613D0 
+- shift_24: src/game/sa1/ui/time_attack_records.c :: CreateTimeAttackRecords sub_806BD24 sub_806BDC4 
+- shift_24: src/game/sa1/ui/time_over.c :: Task_TimeOverTimerUpdate 
+- shift_24: src/game/sa1/ui/vs_record.c :: CreateVsRecord SwapRecords sub_805FF38 
+- shift_24: src/game/sa2/bg_palette_effects.c :: BgPaletteEffectGradient sub_808D988 
+- shift_24: src/game/sa2/collect_rings/singlepak_connection.c :: StartSinglePakConnect sub_8081200 sub_8081604 sub_8081D70 sub_8081DF0 sub_8081E38 sub_8081E90 
+- shift_24: src/game/sa2/cutscenes/credits.c :: CreateCreditsCutScene sub_808EBC4 sub_808EC28 sub_808ECB4 
+- shift_24: src/game/sa2/cutscenes/credits_end.c :: CreateCreditsEndCutScene Task_FadeIn Task_FadeOut Task_HandleGameCompletion 
+- shift_24: src/game/sa2/cutscenes/credits_slides.c :: CreateCreditsSlidesCutScene sub_808EF38 sub_808F004 sub_808F0BC 
+- shift_24: src/game/sa2/cutscenes/endings.c :: sub_808E8F8 sub_808E95C sub_808E9AC sub_808E9FC 
+- shift_24: src/game/sa2/cutscenes/extra_ending_fall.c :: CreateExtraEndingFallCutScene sub_8090480 sub_8090520 sub_8090904 sub_8090CA0 sub_8090D60 sub_8090E18 sub_8090EB4 sub_8091044 
+- shift_24: src/game/sa2/cutscenes/extra_ending_slides.c :: sub_8091590 sub_80915CC 
+- shift_24: src/game/sa2/cutscenes/final_ending_fall.c :: CreateFinalEndingFallCutScene sub_8091CB0 sub_809205C sub_80921E8 sub_80923AC sub_8092690 sub_8092714 sub_8092850 
+- shift_24: src/game/sa2/cutscenes/final_ending_land.c :: CreateFinalEndingLandingCutScene sub_80932C8 sub_809334C sub_80934B8 sub_8093638 sub_8093740 sub_8093868 sub_8093EDC sub_8094060 sub_80940BC 
+- shift_24: src/game/sa2/cutscenes/level_endings.c :: CreateCharacterUnlockCutScene CreateStageResultsCutscene sub_808E35C sub_808E424 sub_808E4C8 sub_808E6B0 
+- shift_24: src/game/sa2/cutscenes/missing_emeralds.c :: CreateMissingChaosEmaraldsCutScene sub_809449C sub_80944EC 
+- shift_24: src/game/sa2/multiplayer/mode_select.c :: Task_EnterAnimPart1 Task_EnterAnimPart2 Task_FadeInAndStartEnterAnim Task_FadeOutAndExitToTitleScreen Task_FadeOutToSelectedMode 
+- shift_24: src/game/sa2/multiplayer/multipak_connection.c :: StartMultiPakConnect sub_805ADAC sub_805B4C0 
+- shift_24: src/game/sa2/multiplayer/results.c :: CreateMultiplayerResultsScreen sub_805C0F0 sub_805C3D0 sub_805C504 sub_805C69C 
+- shift_24: src/game/sa2/multiplayer/team_play.c :: CreateMultiplayerTeamPlayScreen sub_805CB34 sub_805CC34 sub_805D1F8 sub_805D644 
+- shift_24: src/game/sa2/options_screen.c :: ButtonConfigMenuCreateUI LanguageScreenCreateUI LanguageScreenHandleLanguageChanged MaxSpriteSize MultiplayerRecordsScreenCreatePlayerRowUI MultiplayerRecordsScreenCreateTableRowUI OptionsInitBackground OptionsScreenCreateUI OptionsScreenOpenSelectedSubMenu PlayerDataMenuCreateUI ProfileNameScreenCreateInputDisplayUI ProfileNameScreenCreateUIContextElements ProfileNameScreenFadeOutAndExit ProfileNameScreenHandleDpadInput ProfileNameScreenRenderUI Task_ButtonConfigMenuOpenAnimWait Task_ButtonMenuConfigCloseAnim Task_DeleteScreenAbsoluteConfirmMain Task_DeleteScreenConfrimationMain Task_DeleteScreenCreateAbsoluteConfirmation Task_DeleteScreenFadeIn Task_DeleteScreenFadeOutAndExit Task_DifficultyMenuCloseAnim Task_DifficultyMenuMain Task_DifficultyMenuOpenAnimWait Task_LanguageScreenFadeIn Task_LanguageScreenFadeOutAndExit Task_MultiplayerRecordsScreenCreateNextTableRowUI Task_MultiplayerRecordsScreenFadeIn Task_MultiplayerRecordsScreenFadeOutAndExit Task_OptionScreenFadeIn Task_OptionScreenFadeOutToSoundTest Task_OptionsScreenFadeInFromDeleteScreen Task_OptionsScreenFadeInFromLanguageScreen Task_OptionsScreenFadeInFromSoundTest Task_OptionsScreenFadeOutAndExit Task_OptionsScreenFadeOutToDeleteScreen Task_OptionsScreenFadeOutToLanguageScreen Task_OptionsScreenMain Task_OptionsScreenMenuCursorMoveAnim Task_OptionsScreenSubMenuCloseAnim Task_OptionsScreenSubMenuOpenAnim Task_PlayerDataMenuCloseAnim Task_PlayerDataMenuFadeInFromMultiplayerRecordsScreen Task_PlayerDataMenuFadeInFromProfileNameScreen Task_PlayerDataMenuFadeInFromTimeRecordsScreen Task_PlayerDataMenuFadeOutToMultiplayerRecordsScreen Task_PlayerDataMenuFadeOutToProfileNameScreen Task_PlayerDataMenuFadeOutToTimeRecordsScreen Task_PlayerDataMenuMain Task_PlayerDataMenuOpenAnimWait Task_ProfileNameScreenFadeIn Task_ProfileNameScreenMain Task_TimeLimitMenuCloseAnim Task_TimeLimitMenuMain Task_TimeLimitMenuOpenAnimWait Task_TimeRecordsScreenCharacterChangeAnimIn Task_TimeRecordsScreenChoiceViewFadeIn Task_TimeRecordsScreenCoursesViewFadeIn Task_TimeRecordsScreenFadeOutAndExit Task_TimeRecordsScreenFadeOutToSelectedCourse Task_TimeRecordsScreenFadeToPrevious TimeRecordsScreenFadeOutToCoursesView sub_806A568 
+- shift_24: src/game/sa2/save.c :: UnpackSaveSectorData 
+- shift_24: src/game/sa2/sound_test.c :: SoundTestScreenCreateUI SoundTestScreenRenderUI SoundTestScreenSetCreamAnim SoundTestScreenSetNameDisplay SoundTestScreenUpdateCreamAnim Task_SoundTestScreenInOutTransition Task_SoundTestScreenMain 
+- shift_24: src/game/sa2/special_stage/collectables.c :: SpecialStageHandleCollectRings SpecialStageHandleLoseRings sub_806DE10 sub_806E038 sub_806E4FC 
+- shift_24: src/game/sa2/special_stage/guard_robo.c :: RenderGuardRobo sub_8071380 
+- shift_24: src/game/sa2/special_stage/main.c :: CreateSpecialStage Task_FadeInSpecialStage Task_FadeToResultScreen Task_SpecialStageMain sub_806C25C sub_806C338 sub_806C49C sub_806C560 sub_806C638 sub_806C6A4 
+- shift_24: src/game/sa2/special_stage/player.c :: sub_806D548 
+- shift_24: src/game/sa2/special_stage/ui.c :: CreateRingCounter CreateStageTime RenderRingCounters SpecialStageResultsScreenCreateUI UpdateRingCounters UpdateStageTime 
+- shift_24: src/game/sa2/special_stage/utils.c :: SpecialStageDrawBackground sub_806CA88 
+- shift_24: src/game/sa2/stage/backgrounds/zone_1_boss.inc.c :: StageBgUpdate_Zone1ActBoss 
+- shift_24: src/game/sa2/stage/backgrounds/zone_5.inc.c :: StageBgUpdate_Zone5Acts12 
+- shift_24: src/game/sa2/stage/backgrounds/zone_5_boss.inc.c :: StageBgUpdate_Zone5ActBoss 
+- shift_24: src/game/sa2/stage/backgrounds/zone_7_init.inc.c :: Zone7BgUpdate_Outside 
+- shift_24: src/game/sa2/stage/backgrounds/zone_8.inc.c :: CreateStageBg_ZoneFinal_0 
+- shift_24: src/game/sa2/stage/backgrounds/zone_extra_boss.inc.c :: StageBgUpdate_ZoneFinalActTA53 
+- shift_24: src/game/sa2/stage/backgrounds/zone_final_boss.inc.c :: StageBgUpdate_ZoneFinalActXX 
+- shift_24: src/game/sa2/stage/boost_effect.c :: BoostEffect_StorePlayerState CreateBoostEffectTasks GetPreviousFramePlayerState GetPreviousPlayerPos Task_80159C8 sub_801561C sub_8015B64 
+- shift_24: src/game/sa2/stage/boost_mode_particles.c :: CreateBoostModeParticles sub_8089E54 
+- shift_24: src/game/sa2/stage/boss_results_transition.c :: SetBgOffsetsInRange Task_802ED98 Task_802EE78 Task_802F06C sub_802EF68 
+- shift_24: src/game/sa2/stage/bosses/boss_1.c :: CreateEggHammerTankII DestructionScene_Render DestructionScene_UpdateComponents EggHammerTankIIMove HandleBossHit HandleBossHitPalette HandlePilotAnim InitDestructionScene Render StateHandler_HammerExtend StateHandler_HammerHold StateHandler_HammerPlunge StateHandler_HammerReset StateHandler_HammerRetract Task_DestructionSceneOutro Task_EggHammerTankII_Main Task_EggHammerTankII_RollIn UpdateArmSegments 
+- shift_24: src/game/sa2/stage/bosses/boss_2.c :: BreakWheels CheckBossDestruction CreateBomberTankBomb CreateDestructionExplosions CreateEggBomberTank HandleCannonBombTrigger RenderCannon RenderEggBomberTank RenderEscapeBomberTank Task_BombExplosionMain Task_BomberTankCannonReload Task_BomberTankMain Task_EggBomberTankBombExplosion UpdateBomberTankPalette UpdatePilotAnimation UpdatePosition UpdateWheelPositions 
+- shift_24: src/game/sa2/stage/bosses/boss_3.c :: CreateEggTotem EggTotemMove TaskDestructor_EggTotemMain Task_8041138 sub_803F4B8 sub_803F698 sub_803F878 sub_803FB88 sub_803FC14 sub_803FF44 sub_804063C sub_80407A4 sub_80408C4 sub_8040A00 sub_8040B30 sub_8040D74 sub_8040E78 sub_8040F14 sub_8041264 
+- shift_24: src/game/sa2/stage/bosses/boss_4.c :: AeroEggMove AeroEgg_InitPartsDefeated AeroEgg_UpdateBossSpritesOnDefeat AeroEgg_UpdatePartsAfterBossDefeated Task_AeroEggBombHitGround Task_AeroEggExploding sub_8041880 sub_80423EC sub_80424EC sub_8042560 
+- shift_24: src/game/sa2/stage/bosses/boss_5.c :: CreateEggSaucer EggSaucerMove HandleCollision sub_80435BC sub_80436E4 sub_80438C4 sub_8043BEC sub_8043D94 sub_8043E2C sub_8044540 sub_8044784 sub_8044CBC sub_8044EB0 sub_8044FE4 sub_80451C4 sub_80452F8 sub_8045368 sub_80454A4 sub_8045898 
+- shift_24: src/game/sa2/stage/bosses/boss_6.c :: CreateEggGoRound EggGoRoundMove HandleHit Render SetPalette UpdatePilotAnim UpdateProjectiles sub_8045E78 sub_804655C sub_804683C sub_8046C28 sub_8046F00 sub_804732C 
+- shift_24: src/game/sa2/stage/bosses/boss_7.c :: CreateEggFrog Render Task_80497E0 sub_8048654 sub_8048858 sub_8048A4C sub_8048BF0 sub_8048D78 sub_8048E64 sub_8048FF4 sub_804911C sub_80491C4 sub_804920C sub_80492B8 sub_804931C sub_80493F8 sub_8049658 sub_80496FC 
+- shift_24: src/game/sa2/stage/bosses/boss_8.c :: CreateBossRunManager CreateSuperEggRoboZ CreateSuperEggRoboZTowers Task_804A9D8 Task_804AB24 Task_804AD68 Task_BossRunManagerMain Task_SuperEggRoboZTowersMain sub_8049F1C sub_804A070 sub_804A1C0 sub_804A398 sub_804A53C sub_804AE40 sub_804B0EC sub_804B2EC sub_804B43C sub_804B594 sub_804B734 sub_804B984 sub_804BAC0 sub_804BC44 sub_804BE6C sub_804C080 sub_804C240 sub_804C3AC sub_804C5B8 sub_804C830 sub_804C9B4 sub_804CA08 sub_804CA70 
+- shift_24: src/game/sa2/stage/bosses/boss_9.c :: SetupEggmanKidnapsVanillaTask TaskDestructor_TrueArea53BossGfx Task_804DB34 Task_EggmanKidnapsVanilla TrueArea53BossMove sub_804D8E0 sub_804DD9C sub_804DE5C sub_804DEEC sub_804DFB0 sub_804E078 sub_804E15C sub_804E4CC sub_804E66C sub_804E74C sub_804E8E8 sub_804EE84 sub_804EF68 sub_804F010 sub_804F1EC sub_804F5BC sub_804F6AC sub_804F768 sub_804F850 sub_804F9BC sub_804FAA4 sub_804FC10 sub_804FD58 sub_804FE24 sub_8050030 sub_8050104 sub_80501D4 sub_80505B8 sub_80508C4 sub_8050958 sub_8050BFC sub_8050CBC sub_8050D24 
+- shift_24: src/game/sa2/stage/bosses/common.c :: CreateZoneBoss sub_8039ED4 sub_8039F14 sub_8039F50 
+- shift_24: src/game/sa2/stage/bosses/explosion_parts.c :: Task_BossParticleStatic Task_BossParticleWithExplosionUpdate 
+- shift_24: src/game/sa2/stage/bosses/final_intro.c :: CreateActor CreateOrbitingEmeraldsSequence CreateSuperSonicSpark CreateTrueArea53Intro IntroRenderSprites Task_ActorSonicRunIn Task_ActorSonicSlowDownTilStop Task_OrbitingEmeraldsContractAndFadeScreenWhite Task_OrbitingEmeraldsMoveOutwards Task_OrbitingEmeraldsRotate sub_8037744 sub_8037818 sub_80378BC sub_803796C sub_8037A38 sub_8037B04 sub_8037BD0 sub_8037CEC sub_8037E08 sub_80380B0 sub_8038168 sub_8038238 sub_80382F0 sub_80383B8 sub_803845C sub_8038500 sub_80385A4 sub_8038664 sub_803872C sub_80387F4 sub_8038898 sub_803893C sub_80389E0 sub_8038AA0 sub_8038B6C sub_8038C34 sub_8038CD8 sub_8038D7C sub_8038E20 sub_8038EE4 sub_8038FBC sub_8039084 sub_8039144 sub_8039208 sub_80393A4 
+- shift_24: src/game/sa2/stage/cheese.c :: CreateCheese sub_801412C sub_801420C sub_8014350 sub_80144CC sub_801464C sub_8014834 sub_80148B8 sub_80149EC sub_8014C60 sub_8014CC8 sub_8014EFC sub_8015118 sub_8015378 sub_8015464 
+- shift_24: src/game/sa2/stage/debug_text_printer.c :: Debug_PrintTextAt 
+- shift_24: src/game/sa2/stage/enemies/balloon.c :: CreateEntity_Balloon Task_BalloonMain sub_805879C 
+- shift_24: src/game/sa2/stage/enemies/bell.c :: CreateEntity_Bell Task_BellMain sub_8054D20 
+- shift_24: src/game/sa2/stage/enemies/bullet_buzzer.c :: CreateEntity_BulletBuzzer Task_BulletBuzzerMain sub_8059B04 
+- shift_24: src/game/sa2/stage/enemies/buzzer.c :: CreateEntity_Buzzer Task_BuzzerMain sub_80533B4 
+- shift_24: src/game/sa2/stage/enemies/circus.c :: CreateEntity_Circus Task_8055AB8 Task_8055C0C Task_8055D7C Task_CircusMain 
+- shift_24: src/game/sa2/stage/enemies/flickey.c :: CreateEntity_Flickey Flickey_RenderIronBalls Task_FlickeyMain sub_8058EDC sub_80591FC 
+- shift_24: src/game/sa2/stage/enemies/geji_geji.c :: CreateEntity_GejiGeji sub_8057F80 sub_8058264 
+- shift_24: src/game/sa2/stage/enemies/gohla.c :: CreateEntity_Gohla RenderProjectiles sub_8051928 sub_8051AF0 
+- shift_24: src/game/sa2/stage/enemies/hammerhead.c :: CreateEntity_Hammerhead Task_Hammerhead 
+- shift_24: src/game/sa2/stage/enemies/kiki.c :: CreateEntity_Kiki Task_KikiMain Task_ProjPieceMain sub_8053A38 
+- shift_24: src/game/sa2/stage/enemies/koura.c :: CreateEntity_Koura sub_805462C sub_8054904 
+- shift_24: src/game/sa2/stage/enemies/kubinaga.c :: CreateEntity_Kubinaga sub_8052CC8 
+- shift_24: src/game/sa2/stage/enemies/kura_kura.c :: CreateEntity_KuraKura sub_805213C 
+- shift_24: src/game/sa2/stage/enemies/kyura.c :: CreateEntity_Kyura Task_KyuraMain Task_KyuraRecover 
+- shift_24: src/game/sa2/stage/enemies/madillo.c :: CreateEntity_Madillo Task_8056230 Task_80564BC 
+- shift_24: src/game/sa2/stage/enemies/mon.c :: CreateEntity_Mon Task_Mon_2 Task_Mon_4 
+- shift_24: src/game/sa2/stage/enemies/mouse.c :: CreateEntity_Mouse sub_8057618 
+- shift_24: src/game/sa2/stage/enemies/pen.c :: CreateEntity_Pen Task_PenTurn 
+- shift_24: src/game/sa2/stage/enemies/piko_piko.c :: CreateEntity_PikoPiko 
+- shift_24: src/game/sa2/stage/enemies/projectiles.c :: CreateSeveralProjectiles Task_80510B0 
+- shift_24: src/game/sa2/stage/enemies/spinner.c :: CreateEntity_Spinner Task_EnemySpinner 
+- shift_24: src/game/sa2/stage/enemies/star.c :: CreateEntity_Star Task_StarClose Task_StarIdle Task_StarOpen Task_StarSpin 
+- shift_24: src/game/sa2/stage/enemies/straw.c :: CreateEntity_Straw Task_StrawMain sub_80567F8 
+- shift_24: src/game/sa2/stage/enemies/yado.c :: CreateEntity_Yado Task_8055084 Task_8055378 Task_YadoMain 
+- shift_24: src/game/sa2/stage/heart_particles_effect.c :: CreateHeartParticles sub_8086A0C sub_8086A88 sub_8086B38 sub_8086BE8 sub_8086CBC 
+- shift_24: src/game/sa2/stage/input_buffer.c :: InputBuffer_HandleFrameInput InputBuffer_NewFrameInput 
+- shift_24: src/game/sa2/stage/interactables/105.c :: CreateEntity_Interactable105 
+- shift_24: src/game/sa2/stage/interactables/collect_rings_lap_trigger.c :: HandleLap 
+- shift_24: src/game/sa2/stage/interactables/egg_utopia/cannon.c :: CreateEntity_Cannon MovePlayerIntoCannon Render 
+- shift_24: src/game/sa2/stage/interactables/egg_utopia/flying_handle.c :: CreateEntity_FlyingHandle 
+- shift_24: src/game/sa2/stage/interactables/egg_utopia/gravity_toggle.c :: CreateEntity_Toggle_Gravity CreateEntity_Toggle_Gravity__Down CreateEntity_Toggle_Gravity__Toggle CreateEntity_Toggle_Gravity__Up 
+- shift_24: src/game/sa2/stage/interactables/egg_utopia/iron_ball.c :: CreateEntity_IronBall 
+- shift_24: src/game/sa2/stage/interactables/egg_utopia/launcher.c :: CreateEntity_Launcher CreateEntity_Launcher_Left_GDown CreateEntity_Launcher_Left_GUp CreateEntity_Launcher_Right_GDown CreateEntity_Launcher_Right_GUp 
+- shift_24: src/game/sa2/stage/interactables/egg_utopia/pole.c :: CreateEntity_Pole 
+- shift_24: src/game/sa2/stage/interactables/egg_utopia/speeding_platform.c :: CreateEntity_SpeedingPlatform sub_807FD0C 
+- shift_24: src/game/sa2/stage/interactables/grind_rail.c :: CreateEntity_GrindRail CreateEntity_GrindRail_Air CreateEntity_GrindRail_EndAir CreateEntity_GrindRail_EndAir_Left CreateEntity_GrindRail_EndAlternate CreateEntity_GrindRail_EndGround CreateEntity_GrindRail_EndGround_Left CreateEntity_GrindRail_End_ForcedJump CreateEntity_GrindRail_Start CreateEntity_GrindRail_StartAir Task_GrindRail Task_GrindRail_Air 
+- shift_24: src/game/sa2/stage/interactables/hot_crater/crane.c :: CreateEntity_Crane Render UpdatePartScreenPositions sub_8074448 sub_8074490 
+- shift_24: src/game/sa2/stage/interactables/hot_crater/dash_ring.c :: CreateEntity_DashRing DashRing_PlayerIsColliding 
+- shift_24: src/game/sa2/stage/interactables/hot_crater/floating_spring.c :: CreateEntity_FloatingSpring_Up sub_8074EF4 sub_8074FD8 sub_8075048 sub_8075284 
+- shift_24: src/game/sa2/stage/interactables/hot_crater/hook_rail.c :: CreateEntity_HookRail CreateEntity_HookRail_End CreateEntity_HookRail_Start CreateEntity_HookRail_Unused 
+- shift_24: src/game/sa2/stage/interactables/hot_crater/turnaround_bar.c :: CreateEntity_TurnAroundBar 
+- shift_24: src/game/sa2/stage/interactables/hot_crater/windup_stick.c :: CreateEntity_WindUpStick sub_8072650 sub_8072998 
+- shift_24: src/game/sa2/stage/interactables/ice_paradise/big_snowball.c :: CreateEntity_BigSnowball sub_8078E48 sub_80791B4 sub_80792AC sub_8079510 sub_8079560 
+- shift_24: src/game/sa2/stage/interactables/ice_paradise/funnel_sphere.c :: CreateEntity_FunnelSphere sub_8077F7C sub_8078254 sub_80782FC 
+- shift_24: src/game/sa2/stage/interactables/ice_paradise/half_pipe.c :: CreateEntity_HalfPipe CreateEntity_HalfPipe_End CreateEntity_HalfPipe_Start 
+- shift_24: src/game/sa2/stage/interactables/ice_paradise/slowing_snow.c :: CreateEntity_SlowingSnow 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/booster.c :: CreateEntity_Booster 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/bouncy_bar.c :: CreateEntity_BouncyBar Task_BouncyBarIdle Task_BouncyBarLaunch 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/checkpoint.c :: CreateEntity_Checkpoint CreateEntity_Toggle_Checkpoint TaskDestructor_PaletteLoader_Checkpoint Task_StageCheckpointMain_Activated 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/corkscrew.c :: sub_8060ED0 sub_8061228 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/corkscrew_3d.c :: Task_8061DA4 Task_8062100 Task_8062414 sub_8061AB0 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/decoration.c :: CreateEntity_Decoration 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/gapped_loop.c :: Task_JumpSequenceForwards Task_JumpSequenceReverse 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/platform_crumbling.c :: CreateEntity_PlatformCrumbling Task_805E480 Task_805E6A4 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/rotating_handle.c :: CreateEntity_RotatingHandle Task_AfterJump 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/spikes.c :: CreateEntity_Spikes_Down CreateEntity_Spikes_HidingDown CreateEntity_Spikes_HidingUp CreateEntity_Spikes_LeftRight CreateEntity_Spikes_Up HandleSpikeMovementDown HandleSpikeMovementHidingDown HandleSpikeMovementHidingUp HandleSpikeMovementUp Task_SpikesLeftRightMain 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/spring_bouncy.c :: CreateEntity_BouncySpring Task_805E02C Task_Interactable_BouncySpring 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/stage_goal.c :: CreateEntity_StageGoal StageGoalToggle_ForceMultiplayerFinish StageGoalToggle_HandleMultiplayerFinish 
+- shift_24: src/game/sa2/stage/interactables/leaf_forest/windmill.c :: CreateEntity_Windmill Task_WindmillMain 
+- shift_24: src/game/sa2/stage/interactables/music_plant/chord.c :: CreateEntity_Chord Render ResetChordAndHandleBounce Task_Bounce Task_Vibrate 
+- shift_24: src/game/sa2/stage/interactables/music_plant/french_horn.c :: CreateEntity_FrenchHorn_Entry 
+- shift_24: src/game/sa2/stage/interactables/music_plant/german_flute.c :: CreateEntity_GermanFlute 
+- shift_24: src/game/sa2/stage/interactables/music_plant/keyboard.c :: BouncePlayer CreateEntity_Keyboard CreateEntity_Keyboard_Horizontal_PushLeft CreateEntity_Keyboard_Horizontal_PushRight CreateEntity_Keyboard_Vertical 
+- shift_24: src/game/sa2/stage/interactables/music_plant/note_block.c :: CreateEntity_NoteBlock LaunchPlayer Task_Bounce 
+- shift_24: src/game/sa2/stage/interactables/music_plant/note_sphere.c :: CreateEntity_NoteSphere NoteSphere_BouncePlayer Task_Vibrate 
+- shift_24: src/game/sa2/stage/interactables/music_plant/pipe_horn.c :: CreateEntity_PipeInstrument_Entry 
+- shift_24: src/game/sa2/stage/interactables/note_particle.c :: CreateAngledNoteParticle CreateNoteParticle 
+- shift_24: src/game/sa2/stage/interactables/platform.c :: CreateEntity_FallingPlatform CreateEntity_Platform Task_FallingPlatformMain_FallDelay Task_FallingPlatformMain_Falling Task_FallingPlatformMain_Idle Task_PlatformMain 
+- shift_24: src/game/sa2/stage/interactables/platform_square.c :: CreateEntity_Platform_Square Task_Platform_Square 
+- shift_24: src/game/sa2/stage/interactables/platform_thin.c :: CreateEntity_PlatformThin CreatePlatformBreakParticles Task_PlatformBreakParticlesMain Task_PlatformThinMain 
+- shift_24: src/game/sa2/stage/interactables/ramp.c :: CreateEntity_Ramp Task_Ramp 
+- shift_24: src/game/sa2/stage/interactables/sky_canyon/fan.c :: CreateEntity_Fan CreateEntity_Fan_Left CreateEntity_Fan_Left_Periodic CreateEntity_Fan_Right CreateEntity_Fan_Right_Periodic 
+- shift_24: src/game/sa2/stage/interactables/sky_canyon/flying_spring.c :: CreateEntity_PropellerSpring sub_807C2E0 sub_807C360 sub_807C6E4 sub_807C744 
+- shift_24: src/game/sa2/stage/interactables/sky_canyon/propeller.c :: CreateEntity_Propeller sub_807B7BC 
+- shift_24: src/game/sa2/stage/interactables/sky_canyon/small_windmill.c :: CreateEntity_SmallWindmill SlowWindmillToStop Task_SmallSpinnyWindmill 
+- shift_24: src/game/sa2/stage/interactables/sky_canyon/whirlwind.c :: CreateEntity_Whirlwind CreateEntity_Whirlwind_A CreateEntity_Whirlwind_B sub_807CA64 sub_807CCBC sub_807CE94 sub_807D1BC 
+- shift_24: src/game/sa2/stage/interactables/special_ring.c :: CreateEntity_SpecialRing Task_SpecialRingVisible 
+- shift_24: src/game/sa2/stage/interactables/spring.c :: CheckSpringPlayerCollisions CreateEntity_Spring CreateEntity_Spring_Big_DownLeft CreateEntity_Spring_Big_DownRight CreateEntity_Spring_Big_UpLeft CreateEntity_Spring_Big_UpRight CreateEntity_Spring_Normal_Down CreateEntity_Spring_Normal_Left CreateEntity_Spring_Normal_Right CreateEntity_Spring_Normal_Up CreateEntity_Spring_Small_UpLeft CreateEntity_Spring_Small_UpRight TaskDestructor_Spring Task_Spring_Activated Task_Spring_Idle 
+- shift_24: src/game/sa2/stage/interactables/techno_base/arrow_platform.c :: CreateEntity_ArrowPlatform_Left CreateEntity_ArrowPlatform_Right CreateEntity_ArrowPlatform_Up sub_807A33C sub_807A99C 
+- shift_24: src/game/sa2/stage/interactables/techno_base/bounce_block.c :: CreateEntity_BounceBlock sub_80799FC sub_8079AC4 
+- shift_24: src/game/sa2/stage/interactables/techno_base/light_bridge.c :: CreateEntity_LightBridge RenderCurvedBridge RenderStraightBridge 
+- shift_24: src/game/sa2/stage/interactables/techno_base/light_globe.c :: CreateEntity_LightGlobe 
+- shift_24: src/game/sa2/stage/interactables/techno_base/spike_platform.c :: CreateEntity_SpikePlatform sub_807ACF4 sub_807AE60 
+- shift_24: src/game/sa2/stage/itembox.c :: ApplyItemboxEffect CreateEntity_ItemBox InitItemBoxGraphics Task_ItemBoxIconMain_Idle Task_ItemBoxIconMain_Rise_MP Task_ItemBoxIconMain_Rising 
+- shift_24: src/game/sa2/stage/mp_attack_1_effect.c :: Task_MPAttackEffect sub_8087088 sub_80870E8 sub_80871C4 
+- shift_24: src/game/sa2/stage/mp_attack_2_effect.c :: CreateMPAttack2Effect 
+- shift_24: src/game/sa2/stage/mystery_itembox.c :: CreateEntity_MysteryItemBox sub_808623C sub_808636C sub_8086504 sub_80865E4 sub_808665C sub_80866AC sub_80866FC 
+- shift_24: src/game/sa2/stage/player_callbacks.c :: CreateKnucklesFireEffect CreateSonicAmySkidAttackEffect CreateTailsTailSwipeEffect Knuckles_Glide_UpdateSpeed Player_Cream_Flying Player_Knuckles_Climb_80136E8 Player_Knuckles_GlideSoftFall Player_Knuckles_Glide_MainUpdate Player_Knuckles_Glide_UpdateFrames Player_SonicAmy_InitStopNSlam Player_SonicAmy_StopNSlam Player_SonicAmy_WindupStopNSlam Player_Sonic_TryForwardThrust Player_Tails_8012C2C 
+- shift_24: src/game/sa2/stage/player_super_sonic.c :: Task_802BC10 sub_802BE1C sub_802C058 sub_802C55C sub_802C704 
+- shift_24: src/game/sa2/stage/race_progress.c :: CreateRaceProgressIndicator CreateUI RaceProgressIndicatorOnDestroy RenderUI Task_UpdateAvatarPositions 
+- shift_24: src/game/sa2/stage/screen_mask.c :: ScreenMask_CreateShape ScreenMask_Lower_OriginLeft ScreenMask_Lower_OriginRight ScreenMask_Upper_OriginLeft ScreenMask_Upper_OriginRight sub_802E278 sub_802E49C 
+- shift_24: src/game/sa2/stage/simple_sprite_particle.c :: CreateSimpleSpriteParticle Task_SimpleSpriteParticleMain 
+- shift_24: src/game/sa2/stage/stage_ui.c :: StageUI_PrintIntegerAt 
+- shift_24: src/game/sa2/stage/trapped_animals.c :: CreateTrappedAnimal 
+- shift_24: src/game/sa2/title_screen.c :: CreateMenuItemTransition InitTitleScreenUI Task_BirdAnim Task_HandleTitleScreenExit Task_IntroStartSegaLogoAnim Task_JumpToPlayModeMenu Task_JumpToSinglePlayerMenu Task_LensFlareAnim Task_MenuItemTransitionInAnim Task_MenuItemTransitionOutAnim Task_PlayModeMenuMain Task_ShowPressStartMenu Task_SinglePlayerMenuMain WavesBackgroundAnim sub_808CDB0 
+- shift_24: src/game/sa2/ui/character_select.c :: CharacterSelectScreenOnDestroy CreateCharacterSelectionScreen RenderCarouselRollInAnim RenderCarouselScrollAnim RenderTransitionInUIAnim RenderUI Task_CarouselScrollCompleteAnim Task_CharacterSelectMain Task_FadeOutAndExitToPrevious Task_HandleCarouselScrollDown Task_HandleCarouselScrollUp Task_MultiplayerVerifySelections Task_MultiplayerWaitForSelections Task_SelectionCompleteFadeOutAndExit 
+- shift_24: src/game/sa2/ui/countdown.c :: CreateCourseStartCountdown CreateRaceStartMessage Task_RaceStartMessageMain 
+- shift_24: src/game/sa2/ui/course_select.c :: AnimateNewZonePath CreateCourseSelectionScreen DestroyUI RenderUI RenderZoneMapPathsAndUI Task_CourseSelectMain Task_DisplayZoneNameAnim Task_FadeInIntro Task_FadeInIntroAndStartUnlockCutScene Task_FadeOutAndExitToCharacterSelect Task_FadeOutAndExitToSelectedLevel Task_FadeOutAndExitToSelectedMultiplayerLevel Task_ScrollToNextLevelAnim Task_ScrollToPreviousLevelAnim Task_UnlockCutSceneNewPathAnim Task_UnlockCutSceneNextCoursePause 
+- shift_24: src/game/sa2/ui/game_over.c :: CreateGameOverScreen InitOverScreen Task_FadeoutToOverScreen Task_OverScreenFadeTextUpdate 
+- shift_24: src/game/sa2/ui/multiplayer_lobby.c :: CreateUI MultiplayerLobbyScreenOnDestroy RenderUI ScreenMain Task_FadeInOrHandleExit Task_ListenForExit Task_NotifyExit 
+- shift_24: src/game/sa2/ui/stage_intro.c :: SetupStageIntro TaskDestructor_IntroController Task_802F9F8 Task_IntroActLettersAnimations Task_IntroControllerMain Task_IntroZoneNameAndIconAnimations Task_UpdateStageLoadingScreen sub_8030488 
+- shift_24: src/game/sa2/ui/stage_results.c :: AnimateResults CreateStageResults Task_UpdateStageResults 
+- shift_24: src/game/sa2/ui/time_attack_lobby.c :: sub_8088944 sub_8088CC4 sub_8088D60 
+- shift_24: src/game/sa2/ui/time_attack_mode_select.c :: CreateTimeAttackModeSelectionScreen Task_FadeInAndStartIntro Task_FadeOutModeSelected Task_FadeOutToTitleScreen Task_HandleModeSelectedExit Task_IntroSweepAnim Task_IntroUIAnim Task_ScreenMain 
+- shift_24: src/game/sa2/ui/time_attack_results.c :: AnimateResults CreateTimeAttackResults StoreRecord Task_HandleExit 
+- shift_24: src/game/shared/collect_rings/results.c :: Task_MultiplayerSinglePakResultsScreenInit sub_808267C sub_8082788 sub_8082B80 sub_8082BF8 sub_8082C58 
+- shift_24: src/game/shared/multiplayer/communication_outcome.c :: CreateMultipackOutcomeScreen 
+- shift_24: src/game/shared/stage/amy_attack_heart_effect.c :: CreateAmyAttackHeartEffect HandleAnimFrame TaskDestructor_AmyAttackHeartEffect Task_AmyAttackHeartEffect 
+- shift_24: src/game/shared/stage/camera.c :: CreateStageBg_ZoneFinal_0 HBlankCB_801E434 HBlankCB_801E454 HBlankCB_BgUpdateZone5ActBoss HBlankCB_BgUpdateZoneFinalActXX InitCamera RenderMetatileLayers StageBgUpdate_Zone1ActBoss StageBgUpdate_Zone5ActBoss StageBgUpdate_Zone5Acts12 StageBgUpdate_Zone7Acts12 StageBgUpdate_ZoneFinalActTA53 StageBgUpdate_ZoneFinalActXX Task_CallUpdateCamera UpdateCamera Zone7BgUpdate_Outside 
+- shift_24: src/game/shared/stage/collect_ring_effect.c :: Task_CollectRingEffect 
+- shift_24: src/game/shared/stage/collision_1.c :: Coll_Player_Interactable Coll_Player_Platform sub_800CE94 sub_800DA4C 
+- shift_24: src/game/shared/stage/collision_3.c :: Coll_Cheese_Enemy_Attack Coll_Player_Boss_Attack Coll_Player_Enemy Coll_Player_Enemy_AdjustSpeed Coll_Player_Enemy_Attack Coll_Player_Entity_HitboxN Coll_Player_Entity_RectIntersection Coll_Player_ItemBox Coll_Player_PlatformCrumbling Coll_Player_Projectile 
+- shift_24: src/game/shared/stage/demo_manager.c :: CreateDemoManager 
+- shift_24: src/game/shared/stage/dust_cloud.c :: Task_CreateDustCloud 
+- shift_24: src/game/shared/stage/entities_manager.c :: CreateEnemyDefeatScoreAndManageLives SpawnMapEntities Task_8008DCC 
+- shift_24: src/game/shared/stage/item_tasks.c :: CreateItemTask_Confusion CreateItemTask_Invincibility CreateItemTask_Shield_Magnetic CreateItemTask_Shield_Normal Task_Item_Confusion Task_Item_Invincibility Task_Item_Shield_Magnetic 
+- shift_24: src/game/shared/stage/magnetic_ring.c :: Task_MagneticRing 
+- shift_24: src/game/shared/stage/mp_event_mgr.c :: ReceiveRoomEvent_ItemEffect ReceiveRoomEvent_ReachedStageGoal Task_MultiplayerEventMgr_Receive Task_MultiplayerEventMgr_Send 
+- shift_24: src/game/shared/stage/mp_finish.c :: CreateMultiplayerFinishResult CreateMultiplayerFinishTransition Task_TransitionToResultsScreen 
+- shift_24: src/game/shared/stage/mp_indicators.c :: CreateOpponentPositionIndicator Task_801951C Task_8019898 
+- shift_24: src/game/shared/stage/mp_player.c :: CreateMultiplayerPlayer Task_CreateMultiplayerPlayer sub_8016D20 sub_801707C sub_8017670 sub_8017C28 sub_80181E0 sub_8018300 
+- shift_24: src/game/shared/stage/mp_sprite_task.c :: CreateMultiplayerSpriteTask 
+- shift_24: src/game/shared/stage/music_manager.c :: Task_StageMusicManager 
+- shift_24: src/game/shared/stage/palette_loader.c :: CreatePaletteLoaderTask 
+- shift_24: src/game/shared/stage/pause_menu.c :: CreatePauseMenu 
+- shift_24: src/game/shared/stage/player.c :: ContinueLevelSongAfterDrowning DoTrickIfButtonPressed Player_8025F84 Player_8026060 Player_8028D74 Player_Crouch Player_DefaultTrick Player_GoalBrake Player_GrindRailEndAir Player_HandleGroundMovement Player_HandleInputs Player_HandleMultiplayerFinish Player_HandleSpriteYOffsetChange Player_HandleWater Player_InitAttack Player_InitJump Player_InitReachedGoal Player_InitUncurl Player_InitVictoryPoseTransition Player_Jumping Player_SpinAttack Player_Spindash Player_Taunt Player_TouchGround Player_TouchNormalSpring Player_TryAttack Player_TryJump Player_TryMidAirAction Player_Uncurl Player_WindupDefaultTrick TaskDestructor_Player Task_PlayerHandleDeath Task_PlayerMain sub_8021C4C sub_8021DB8 sub_8022190 sub_8022284 sub_8022318 sub_8022838 sub_80228C0 sub_80229EC sub_8022B18 sub_8022C44 sub_8022D6C sub_8022F58 sub_802302C sub_8023128 sub_80231C0 sub_80232D0 sub_8023748 sub_80246DC sub_802486C sub_8024B10 sub_8024F74 sub_80282EC 
+- shift_24: src/game/shared/stage/rings_manager.c :: Task_RingsMgrMain 
+- shift_24: src/game/shared/stage/rings_scatter.c :: RingsScatterSingleplayer_FlippedGravity RingsScatterSingleplayer_NormalGravity 
+- shift_24: src/game/shared/stage/spot_lights_manager.c :: Task_800A8E0 
+- shift_24: src/game/shared/stage/stage.c :: ApplyGameStageSettings CreateGameStage GameStageStart GoToNextLevel HandleDeath HandleLifeLost StageInit_31 StageInit_32 StageInit_33 StageInit_CollectRings StageInit_Dummy StageInit_MultiplayerSinglePak StageInit_SetMusic StageInit_Zone1Act1 StageInit_Zone1Act2 StageInit_Zone1ActBoss StageInit_Zone2Act1 StageInit_Zone2Act2 StageInit_Zone2ActBoss StageInit_Zone3Act1 StageInit_Zone3Act2 StageInit_Zone3ActBoss StageInit_Zone4Act1 StageInit_Zone4Act2 StageInit_Zone4ActBoss StageInit_Zone5Act1 StageInit_Zone5Act2 StageInit_Zone5ActBoss StageInit_Zone6Act1 StageInit_Zone6Act2 StageInit_Zone6ActBoss StageInit_Zone7Act1 StageInit_Zone7Act2 StageInit_Zone7ActBoss StageInit_ZoneFinalActTA53 StageInit_ZoneFinalActXX Task_GameStage 
+- shift_24: src/game/shared/stage/terrain_collision.c :: sub_801ED24 sub_801EE64 
+- shift_24: src/game/shared/stage/underwater_effects.c :: Task_DrowningCountdown Task_SpawnAirBubbles 
+- shift_24: src/game/shared/stage/water_effects.c :: InitWaterPalettes Task_StageWaterTask sub_8011A4C 
+- shift_24: src/multi_boot.c :: MultiBootHandShake MultiBootMain MultiBootStartMaster 
+- shift_24: src/multi_sio.c :: MultiSioMain MultiSioRecvDataCheck 
+- shift_24: src/platform/shared/audio/cgb_audio.c :: cgb_set_envelope cgb_set_length cgb_set_sweep cgb_toggle_length cgb_trigger_note 
+- shift_24: src/platform/shared/audio/m4a_sound_mixer.c :: ChnVolSetAsm MP2KPlayerMain MP2K_event_lfos MP2K_event_mod MP2K_event_modt MP2K_event_nxx MP2K_event_pend MP2K_event_rept MP2K_event_tempo SampleMixer m4aSoundVSync 
+- shift_24: src/platform/win32/win32.c :: Win32_KeyboardKeyToGameKey 
+- shift_24: src/sprite.c :: Base10DigitsToHexNibbles DisplaySprite DisplaySprites OamMalloc ProcessOamBuffers UpdateSpriteAnimation animCmd_GetPalette numToASCII sub_8004418 
+- shift_24: src/task.c :: sub_80028DC 
+- DOUBLE-HOME: src/game/sa2/ui/stage_results.c src/game/sa2/ui/time_attack_results.c :: AnimateResults
+- DOUBLE-HOME: src/game/sa1/ui/edit_language_screen.c src/game/sa2/options_screen.c :: CreateEditLanguageScreen
+- DOUBLE-HOME: src/game/sa1/stage/interactables/booster.c src/game/sa2/stage/interactables/leaf_forest/booster.c :: CreateEntity_Booster
+- DOUBLE-HOME: src/game/sa1/stage/interactables/bounce_block.c src/game/sa2/stage/interactables/techno_base/bounce_block.c :: CreateEntity_BounceBlock
+- DOUBLE-HOME: src/game/sa1/stage/enemies/buzzer.c src/game/sa2/stage/enemies/buzzer.c :: CreateEntity_Buzzer
+- DOUBLE-HOME: src/game/sa1/stage/interactables/checkpoint.c src/game/sa2/stage/interactables/leaf_forest/checkpoint.c :: CreateEntity_Checkpoint
+- DOUBLE-HOME: src/game/sa1/stage/interactables/decoration.c src/game/sa2/stage/interactables/leaf_forest/decoration.c :: CreateEntity_Decoration
+- DOUBLE-HOME: src/game/sa1/stage/interactables/grind_rail.c src/game/sa2/stage/interactables/grind_rail.c :: CreateEntity_GrindRail_Start
+- DOUBLE-HOME: src/game/sa1/stage/interactables/hook_rail.c src/game/sa2/stage/interactables/hot_crater/hook_rail.c :: CreateEntity_HookRail
+- DOUBLE-HOME: src/game/sa1/stage/interactables/iron_ball.c src/game/sa2/stage/interactables/egg_utopia/iron_ball.c :: CreateEntity_IronBall
+- DOUBLE-HOME: src/game/sa1/stage/enemies/kiki.c src/game/sa2/stage/enemies/kiki.c :: CreateEntity_Kiki
+- DOUBLE-HOME: src/game/sa1/stage/mystery_itembox.c src/game/sa2/stage/mystery_itembox.c :: CreateEntity_MysteryItemBox
+- DOUBLE-HOME: src/game/sa1/stage/interactables/platform_crumbling.c src/game/sa2/stage/interactables/leaf_forest/platform_crumbling.c :: CreateEntity_PlatformCrumbling
+- DOUBLE-HOME: src/game/sa1/stage/interactables/platform_thin.c src/game/sa2/stage/interactables/platform_thin.c :: CreateEntity_PlatformThin
+- DOUBLE-HOME: src/game/sa1/stage/interactables/platform_square.c src/game/sa2/stage/interactables/platform_square.c :: CreateEntity_Platform_Square
+- DOUBLE-HOME: src/game/sa1/stage/interactables/propeller.c src/game/sa2/stage/interactables/sky_canyon/propeller.c :: CreateEntity_Propeller
+- DOUBLE-HOME: src/game/sa1/stage/interactables/spikes.c src/game/sa2/stage/interactables/leaf_forest/spikes.c :: CreateEntity_Spikes_Down
+- DOUBLE-HOME: src/game/sa1/stage/interactables/spikes.c src/game/sa2/stage/interactables/leaf_forest/spikes.c :: CreateEntity_Spikes_HidingDown
+- DOUBLE-HOME: src/game/sa1/stage/interactables/spikes.c src/game/sa2/stage/interactables/leaf_forest/spikes.c :: CreateEntity_Spikes_HidingUp
+- DOUBLE-HOME: src/game/sa1/stage/interactables/spikes.c src/game/sa2/stage/interactables/leaf_forest/spikes.c :: CreateEntity_Spikes_Up
+- DOUBLE-HOME: src/game/sa1/stage/interactables/spring.c src/game/sa2/stage/interactables/spring.c :: CreateEntity_Spring_Normal_Down
+- DOUBLE-HOME: src/game/sa1/stage/interactables/spring.c src/game/sa2/stage/interactables/spring.c :: CreateEntity_Spring_Normal_Up
+- DOUBLE-HOME: src/game/sa1/stage/interactables/stage_goal.c src/game/sa2/stage/interactables/leaf_forest/stage_goal.c :: CreateEntity_StageGoal
+- DOUBLE-HOME: src/game/sa1/ui/game_over.c src/game/sa2/ui/game_over.c :: CreateGameOverScreen
+- DOUBLE-HOME: src/game/sa1/multiplayer/chao_message.c src/game/sa2/multiplayer/results.c :: CreateMultiplayerResultsScreen
+- DOUBLE-HOME: src/game/sa1/menus/player_data.c src/game/sa2/options_screen.c :: CreatePlayerDataMenu
+- DOUBLE-HOME: src/game/sa1/special_stage/main.c src/game/sa2/special_stage/main.c :: CreateSpecialStage
+- DOUBLE-HOME: src/game/sa2/stage/backgrounds/zone_8.inc.c src/game/shared/stage/camera.c :: CreateStageBg_ZoneFinal_0
+- DOUBLE-HOME: src/game/sa1/ui/time_attack_lobby.c src/game/sa2/ui/time_attack_lobby.c :: CreateTimeAttackLobbyScreen
+- DOUBLE-HOME: src/game/sa1/stage/trapped_animals.c src/game/sa2/stage/trapped_animals.c :: CreateTrappedAnimal
+- DOUBLE-HOME: src/game/sa2/stage/race_progress.c src/game/sa2/ui/multiplayer_lobby.c :: CreateUI
+- DOUBLE-HOME: src/game/sa2/stage/bosses/boss_1.c src/game/sa2/stage/bosses/boss_2.c :: HandleBossHit
+- DOUBLE-HOME: src/game/sa2/stage/bosses/boss_1.c src/game/sa2/stage/bosses/boss_5.c :: HandleCollision
+- DOUBLE-HOME: src/game/sa2/stage/interactables/music_plant/chord.c src/game/sa2/stage/interactables/music_plant/note_block.c src/game/shared/stage/mp_player.c :: LaunchPlayer
+- DOUBLE-HOME: src/game/sa2/options_screen.c src/game/sa2/special_stage/utils.c :: MaxSpriteSize
+- DOUBLE-HOME: multi_boot/programs/subgame_loader/src/multi_sio.c src/multi_sio.c :: MultiSioMain
+- DOUBLE-HOME: multi_boot/programs/subgame_loader/src/multi_sio.c src/multi_sio.c :: MultiSioRecvDataCheck
+- DOUBLE-HOME: src/game/sa2/stage/bosses/boss_1.c src/game/sa2/stage/bosses/boss_6.c src/game/sa2/stage/bosses/boss_7.c src/game/sa2/stage/interactables/egg_utopia/cannon.c src/game/sa2/stage/interactables/egg_utopia/flying_handle.c src/game/sa2/stage/interactables/egg_utopia/iron_ball.c src/game/sa2/stage/interactables/hot_crater/crane.c src/game/sa2/stage/interactables/music_plant/chord.c src/game/sa2/stage/interactables/music_plant/note_block.c src/game/sa2/stage/interactables/music_plant/note_sphere.c src/game/sa2/stage/interactables/sky_canyon/propeller.c src/game/sa2/stage/interactables/special_ring.c :: Render
+- DOUBLE-HOME: src/game/sa2/multiplayer/mode_select.c src/game/sa2/stage/race_progress.c src/game/sa2/ui/character_select.c src/game/sa2/ui/course_select.c src/game/sa2/ui/multiplayer_lobby.c src/game/sa2/ui/time_attack_mode_select.c :: RenderUI
+- DOUBLE-HOME: src/game/sa1/save.c src/game/sa2/save.c :: SaveGameExists
+- DOUBLE-HOME: src/game/sa2/stage/backgrounds/zone_1_boss.inc.c src/game/shared/stage/camera.c :: StageBgUpdate_Zone1ActBoss
+- DOUBLE-HOME: src/game/sa2/stage/backgrounds/zone_5_boss.inc.c src/game/shared/stage/camera.c :: StageBgUpdate_Zone5ActBoss
+- DOUBLE-HOME: src/game/sa1/stage/backgrounds/zone_5.inc.c src/game/sa2/stage/backgrounds/zone_5.inc.c src/game/shared/stage/camera.c :: StageBgUpdate_Zone5Acts12
+- DOUBLE-HOME: src/game/sa2/stage/backgrounds/zone_7.inc.c src/game/shared/stage/camera.c :: StageBgUpdate_Zone7Acts12
+- DOUBLE-HOME: src/game/sa2/stage/backgrounds/zone_extra_boss.inc.c src/game/shared/stage/camera.c :: StageBgUpdate_ZoneFinalActTA53
+- DOUBLE-HOME: src/game/sa2/stage/backgrounds/zone_final_boss.inc.c src/game/shared/stage/camera.c :: StageBgUpdate_ZoneFinalActXX
+- DOUBLE-HOME: src/game/sa1/stage/interactables/spring.c src/game/sa2/stage/interactables/spring.c :: TaskDestructor_Spring
+- DOUBLE-HOME: src/game/sa1/stage/enemies/boss_3_egg_ball.c src/game/sa2/ui/stage_intro.c :: Task_802F9F8
+- DOUBLE-HOME: src/game/sa2/stage/interactables/music_plant/chord.c src/game/sa2/stage/interactables/music_plant/note_block.c :: Task_Bounce
+- DOUBLE-HOME: src/game/sa1/stage/enemies/kiki.c src/game/sa2/stage/enemies/kiki.c :: Task_KikiMain
+- DOUBLE-HOME: src/game/sa1/stage/interactables/platform_square.c src/game/sa2/stage/interactables/platform_square.c :: Task_Platform_Square
+- DOUBLE-HOME: src/game/sa1/stage/enemies/kiki.c src/game/sa2/stage/enemies/kiki.c :: Task_ProjPieceMain
+- DOUBLE-HOME: src/game/sa2/multiplayer/mode_select.c src/game/sa2/ui/time_attack_mode_select.c :: Task_ScreenMain
+- DOUBLE-HOME: src/game/sa1/stage/stage_ui.c src/game/sa2/stage/stage_ui.c :: Task_StageUIMain
+- DOUBLE-HOME: src/game/sa2/stage/interactables/music_plant/chord.c src/game/sa2/stage/interactables/music_plant/note_sphere.c :: Task_Vibrate
+- DOUBLE-HOME: src/game/sa2/stage/bosses/boss_2.c src/game/sa2/stage/interactables/egg_utopia/flying_handle.c src/game/sa2/stage/interactables/egg_utopia/iron_ball.c :: UpdatePosition
+- DOUBLE-HOME: src/game/sa1/save.c src/game/sa2/save.c :: WriteSaveGame
+- DOUBLE-HOME: src/game/sa2/stage/backgrounds/zone_7_init.inc.c src/game/shared/stage/camera.c :: Zone7BgUpdate_Outside
+- DOUBLE-HOME: src/game/sa1/stage/player_knuckles.c src/game/sa2/stage/bosses/boss_7.c :: sub_80491C4
+- DOUBLE-HOME: src/game/sa1/stage/ui_rendering.c src/game/sa2/stage/enemies/kubinaga.c :: sub_80528AC
+- DOUBLE-HOME: src/game/sa1/menus/mp_mode_select_2.c src/game/sa2/collect_rings/singlepak_connection.c :: sub_8081200
+- DOUBLE-HOME: src/game/sa1/menus/mp_mode_select_2.c src/game/sa2/collect_rings/singlepak_connection.c :: sub_80818B8

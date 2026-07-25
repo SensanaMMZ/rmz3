@@ -1,4 +1,4 @@
-<!-- mzm :: trait=udiv :: crawled 2026-07-25 :: 199/654 files compiled -->
+<!-- mzm :: trait=udiv :: crawled 2026-07-25 :: 501/662 files compiled -->
 - udiv: src/audio.c :: unk_1ccc 
 - udiv: src/audio_wrappers.c :: ApplyMusicSoundFading ApplyRawMusicSoundFading InitFadingMusic SetupSoundTransfer unk_2e34 unk_2f00 unk_3028 
 - udiv: src/chozodia_escape.c :: ChozodiaEscapeGetItemCountAndEndingNumber ChozodiaEscapeUpdateExplosionHaze 

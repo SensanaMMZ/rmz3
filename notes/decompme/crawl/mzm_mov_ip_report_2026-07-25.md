@@ -1,4 +1,6 @@
-<!-- mzm :: trait=mov_ip :: crawled 2026-07-25 :: 199/654 files compiled -->
+<!-- mzm :: trait=mov_ip :: crawled 2026-07-25 :: 501/662 files compiled -->
+- mov_ip: nes_metroid/emulator/src/part5.c :: sub_0600E048 
+- mov_ip: nes_metroid/emulator/src/part6.c :: EmulatorFillPasswordWithSaved 
 - mov_ip: src/animated_graphics.c :: AnimatedGraphicsLoad AnimatedPaletteUpdate 
 - mov_ip: src/audio.c :: unk_1e2c 
 - mov_ip: src/audio_wrappers.c :: InitializeAudio unk_2f00 unk_30b4 

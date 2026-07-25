@@ -1,4 +1,5 @@
-<!-- mzm :: trait=mul :: crawled 2026-07-25 :: 199/654 files compiled -->
+<!-- mzm :: trait=mul :: crawled 2026-07-25 :: 501/662 files compiled -->
+- mul: nes_metroid/emulator/src/part5.c :: sub_0600E048 
 - mul: src/audio.c :: GetNoteDelay UpdateMusic UpdatePsgSounds UpdateTrack unk_1e2c 
 - mul: src/audio_wrappers.c :: DoSoundAction InitializeAudio SetupSoundTransfer unk_3028 
 - mul: src/bg_clip.c :: BgClipApplyClipdataChangingTransparency BgClipCheckGrabbingCrumbleBlock BgClipCheckTouchingTransitionOnElevator BgClipCheckTouchingTransitionOrTank BgClipCheckWalkingOnCrumbleBlock BgClipRemoveCollectedTanks BgClipSetBg1BlockValue BgClipSetBgBlockValue BgClipSetClipdataBlockValue BgClipSetRawBg1BlockValue 

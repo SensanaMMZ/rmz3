@@ -1,4 +1,4 @@
-<!-- pokefirered :: trait=udiv :: crawled 2026-07-25 :: 225/283 files compiled -->
+<!-- pokefirered :: trait=udiv :: crawled 2026-07-25 :: 279/283 files compiled -->
 - udiv: src/battle_ai_script_commands.c :: Cmd_get_how_powerful_move_is Cmd_if_can_faint Cmd_if_cant_faint Cmd_if_hp_equal Cmd_if_hp_less_than Cmd_if_hp_more_than Cmd_if_hp_not_equal 
 - udiv: src/battle_ai_switch_items.c :: ModulateByTypeEffectiveness 
 - udiv: src/battle_anim_dark.c :: DoMementoShadowEffect 
@@ -19,14 +19,19 @@
 - udiv: src/battle_anim_water.c :: AnimToTargetInSinWave AnimWaterPulseBubble_Step AnimWaterPulseRing_Step 
 - udiv: src/battle_interface.c :: CalcBarFilledPixels CalcNewBarValue Debug_DrawNumber GetReceivedValueInPixels GetScaledHPFraction MoveBattleBar 
 - udiv: src/battle_main.c :: BattleStartClearSetData CreateNPCTrainerParty GetWhoStrikesFirst HandleAction_WatchesCarefully TryRunFromBattle 
+- udiv: src/battle_script_commands.c :: AI_CalcDmg Cmd_accuracycheck Cmd_adjustnormaldamage Cmd_adjustnormaldamage2 Cmd_damagecalc Cmd_friendshiptodamagecalculation Cmd_getexp Cmd_handleballthrow Cmd_hiddenpowercalc Cmd_hpthresholds Cmd_hpthresholds2 Cmd_psywavedamageeffect Cmd_recoverbasedonsunlight Cmd_scaledamagebyhealthratio Cmd_stockpiletobasedamage Cmd_stockpiletohpheal Cmd_switchineffects Cmd_trydobeatup Cmd_trysetfutureattack Cmd_typecalc ModulateDmgByType ModulateDmgByType2 SetMoveEffect TypeCalc Unused_ApplyRandomDmgMultiplier 
 - udiv: src/battle_util.c :: ItemBattleEffects 
 - udiv: src/berry_crush.c :: Cmd_TabulateResults FramesToMinSec PrintResultsText Task_ShowBerryCrushRankings UpdateInputEffects printCrushingResults 
+- udiv: src/daycare.c :: TryProduceOrHatchEgg 
 - udiv: src/digit_obj_util.c :: DrawNumObjsLeadingZeros DrawNumObjsMinusInBack DrawNumObjsMinusInFront 
 - udiv: src/dodrio_berry_picking.c :: DoDodrioIntroAnim HandlePickBerries TryIncrementDifficulty UpdateFallingBerries 
 - udiv: src/evolution_graphics.c :: CycleEvolutionMonSprite EvoTask_ShrinkOrExpandEvoSprites SpriteCB_PostEvoSparkleSet2 SpriteCB_PreEvoSparkleSet1 SpriteCB_PreEvoSparkleSet2 
+- udiv: src/fame_checker.c :: CreateAllFlavorTextIcons 
 - udiv: src/field_effect.c :: Task_MoveDeoxysRock_Step 
+- udiv: src/field_specials.c :: CountDigits 
 - udiv: src/field_weather_effects.c :: CreateAshSprites CreateFogDiagonalSprites CreateFogHorizontalSprites CreateSandstormSprites InitRainSpriteMovement StartRainSpriteFall 
 - udiv: src/fldeff_softboiled.c :: SetUpFieldMove_SoftBoiled Task_SoftboiledRestoreHealth Task_TryUseSoftboiledOnPartyMon 
+- udiv: src/hall_of_fame.c :: HallOfFame_PrintMonInfo HallOfFame_PrintPlayerInfo 
 - udiv: src/image_processing_effects.c :: ConvertColorToGrayscale GetColorFromPersonality QuantizePixel_Blur QuantizePixel_BlurHard QuantizePixel_Grayscale QuantizePixel_GrayscaleSmall QuantizePixel_MotionBlur 
 - udiv: src/intro.c :: Scene3_StartNidorinoEntrance Scene3_StartNidorinoHop 
 - udiv: src/link_rfu_2.c :: Rfu_InitBlockSend 
@@ -41,7 +46,9 @@
 - udiv: src/pokemon_storage_system_data.c :: GetCursorBoxColumnAndRow GetCursorCoordsByPos HandleInput_InBox_GrabbingMultiple HandleInput_InBox_Normal InitCursorMove 
 - udiv: src/pokemon_storage_system_graphics.c :: CreateBoxMonIconAtPos 
 - udiv: src/pokemon_storage_system_misc.c :: SetItemIconPosition 
+- udiv: src/pokemon_summary_screen.c :: UpdateHpBarObjs 
 - udiv: src/quest_log_battle.c :: TrySetQuestLogBattleEvent 
+- udiv: src/region_map.c :: InitMapOpenAnim RegionMap_DarkenPalette 
 - udiv: src/scanline_effect.c :: ScanlineEffect_InitWave 
 - udiv: src/script_menu.c :: ScriptMenu_MultichoiceGrid 
 - udiv: src/shop.c :: Task_BuyHowManyDialogueInit 
@@ -52,5 +59,8 @@
 - udiv: src/tileset_anims.c :: TilesetAnim_CeladonCity TilesetAnim_SilphCo 
 - udiv: src/tm_case.c :: SetDiscSpritePosition 
 - udiv: src/trade.c :: PrintLevelAndGender SetSelectedMon 
+- udiv: src/trade_scene.c :: DoTradeAnim_Cable DoTradeAnim_Wireless SpriteCB_BouncingPokeball 
 - udiv: src/trainer_card.c :: Task_AnimateCardFlipDown Task_AnimateCardFlipUp UpdateCardFlipRegs 
+- udiv: src/trainer_tower.c :: GetCurrentTime PrintTrainerTowerRecords ShowResultsBoard 
 - udiv: src/trig.c :: Sin2 
+- udiv: src/wild_encounter.c :: ApplyCleanseTagEncounterRateMod DoWildEncounterRateTest GetMapBaseEncounterCooldown HandleWildEncounterCooldown 

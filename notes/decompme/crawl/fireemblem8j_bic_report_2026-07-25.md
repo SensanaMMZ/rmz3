@@ -1,0 +1,19 @@
+<!-- fireemblem8j :: trait=bic :: crawled 2026-07-25 :: 4323/7479 files compiled -->
+- bic: src/ApplyUnitSpriteImage16x16.c :: ApplyUnitSpriteImage16x16 
+- bic: src/ApplyUnitSpriteImage16x32.c :: ApplyUnitSpriteImage16x32 
+- bic: src/ApplyUnitSpriteImage32x32.c :: ApplyUnitSpriteImage32x32 
+- bic: src/ApplyUnitSpriteUiImage16x16.c :: ApplyUnitSpriteUiImage16x16 
+- bic: src/CgbSound.c :: CgbSound 
+- bic: src/Event02_EvBitAndIdMod.c :: Event02_EvBitAndIdMod 
+- bic: src/Event0F_CounterOps.c :: Event0F_CounterOps 
+- bic: src/OpAnim1_UpdateScrollOneLine.c :: OpAnim1_UpdateScrollOneLine 
+- bic: src/StartGmScrollManage.c :: StartGmScrollManage 
+- bic: src/TornOutUnitSprite.c :: TornOutUnitSprite 
+- bic: src/UpdateBestGlobalSupportValue.c :: UpdateBestGlobalSupportValue 
+- bic: src/_UpdateKeyStatus.c :: _UpdateKeyStatus 
+- bic: src/bmsave-lib_080A7BB4.c :: ReadSupplyItems 
+- bic: src/masked_0807c0dc.c :: ClearEventMoveBuffer 
+- bic: src/masked_080874ec.c :: Uidebug_IsActiveUnitMale 
+- bic: src/scene.c :: ClearTalkFlag 
+- bic: src/worldmap_entry.c :: GmapBaseEntry_OnEnd 
+- bic: src/worldmap_entry_080C476C.c :: GmapBaseEntry_1 

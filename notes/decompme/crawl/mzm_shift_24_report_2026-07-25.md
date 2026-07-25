@@ -1,4 +1,5 @@
-<!-- mzm :: trait=shift_24 :: crawled 2026-07-25 :: 199/654 files compiled -->
+<!-- mzm :: trait=shift_24 :: crawled 2026-07-25 :: 501/662 files compiled -->
+- shift_24: nes_metroid/emulator/src/sram/sram.c :: SramWriteChecked 
 - shift_24: src/agbmain.c :: agbmain 
 - shift_24: src/animated_graphics.c :: AnimatedGraphicsCheckPlayLightningEffect AnimatedGraphicsTanksAnimationUpdate AnimatedGraphicsUpdate AnimatedPaletteUpdate BackgroundEffectStart 
 - shift_24: src/audio.c :: AudioCommand_EndOfTie AudioCommand_Fine AudioCommand_PatternEnd AudioCommand_Repeat AudioCommand_Voice ClearRegistersForPsg ClearRegistersForPsg_Unused GetNoteDelay UpdateMusic UpdatePsgSounds UpdateTrack unk_1c18 unk_1c3c unk_1ccc unk_1d78 unk_1de8 unk_1e2c unk_1f3c unk_1f90 unk_1fe0 unk_2030 unk_21b0 
@@ -156,3 +157,4 @@
 - shift_24: src/tourian_escape.c :: TourianEscapeSamusChasedByPirates TourianEscapeSamusChasedByPiratesFiring TourianEscapeSamusGettingShot TourianEscapeSamusGoingToCrash TourianEscapeSamusInHerShip TourianEscapeSamusLookingAround TourianEscapeSamusLookingAtMotherShip TourianEscapeSamusLookingAtSky TourianEscapeUpdateStage TourianEscapeZebesExploding unk_81788 unk_81ad8 
 - shift_24: src/transfer.c :: TransferDetermineSendRecvState TransferHandleTransfer 
 - shift_24: src/transparency.c :: TransparencyApplyNewBLDALPHA TransparencyApplyNewBLDY TransparencyGetBgSizeFlag TransparencySpriteUpdateBLDY TransparencySpriteUpdateBldalpha TransparencyUpdateBLDY TransparencyUpdateBldalpha TransparencyUpdateBldcnt unk_55e60 
+- DOUBLE-HOME: nes_metroid/emulator/src/sram/sram.c src/sram/sram.c :: SramWriteChecked

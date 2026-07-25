@@ -1,4 +1,4 @@
-<!-- pokefirered :: trait=bic :: crawled 2026-07-25 :: 225/283 files compiled -->
+<!-- pokefirered :: trait=bic :: crawled 2026-07-25 :: 279/283 files compiled -->
 - bic: src/AgbRfu_LinkManager.c :: rfu_LMAN_CHILD_checkSendChildName rfu_LMAN_CHILD_checkSendChildName2 rfu_LMAN_PARENT_checkRecvChildName rfu_LMAN_PARENT_stopWaitLinkRecoveryAndDisconnect rfu_LMAN_REQ_callback rfu_LMAN_linkWatcher rfu_LMAN_reflectCommunicationStatus 
 - bic: src/agb_flash.c :: StopFlashTimer 
 - bic: src/battle_controller_link_opponent.c :: LinkOpponentBufferExecCompleted 
@@ -10,6 +10,7 @@
 - bic: src/battle_controller_safari.c :: SafariBufferExecCompleted 
 - bic: src/battle_controllers.c :: PrepareBufferDataTransferLink Task_HandleCopyReceivedLinkBuffersData 
 - bic: src/battle_main.c :: FaintClearSetData SwitchInClearSetData TryEvolvePokemon 
+- bic: src/battle_script_commands.c :: Cmd_bicbyte Cmd_bichalfword Cmd_bicword Cmd_clearstatusfromeffect Cmd_openpartyscreen Cmd_switchinanim Cmd_switchineffects 
 - bic: src/battle_util.c :: HandleFaintedMonActions MarkBattlerReceivedLinkData 
 - bic: src/bg.c :: BgTileAllocOp HideBgInternal IsDma3ManagerBusyWithBgCopy 
 - bic: src/easy_chat_3.c :: ModeIconsSpriteAnimIsEnded 
@@ -26,6 +27,7 @@
 - bic: src/palette_util.c :: RouletteFlash_Stop UnmarkUsedPulseBlendPalettes 
 - bic: src/party_menu_specials.c :: ShiftMoveSlot 
 - bic: src/pokemon.c :: PokemonUseItemEffects 
+- bic: src/pokemon_summary_screen.c :: SwapBoxMonMoveSlots SwapMonMoveSlots 
 - bic: src/save.c :: SetDamagedSectorBits 
 - bic: src/save_failed_screen.c :: WipeDamagedSectors 
 - bic: src/sprite.c :: AllocSpriteTiles DestroySprite FreeOamMatrix FreeSpriteTilesByTag FreeSpriteTilesIfNotUsingSheet 

@@ -71,9 +71,19 @@ def load_manifest():
 
 
 def save_manifest(m):
+    """Merge-on-write.
+
+    A long index run holds its in-memory copy for hours; a concurrent run
+    finishing later used to clobber everything the first one recorded (this
+    silently reverted pokeemerald/pokefirered/mzm once). Re-read from disk and
+    merge per project so parallel crawls compose instead of racing.
+    """
     os.makedirs(CORPUS, exist_ok=True)
+    cur = load_manifest()
+    for k, v in m.items():
+        cur.setdefault(k, {}).update(v)
     io.open(manifest_path(), 'w', encoding='utf-8', newline='\n').write(
-        json.dumps(m, indent=2, sort_keys=True))
+        json.dumps(cur, indent=2, sort_keys=True))
 
 
 def run(cmd, cwd=None, timeout=1800):
@@ -171,6 +181,12 @@ def shim(names):
         print('%-16s shims: %d' % (name, len(made)))
 
 
+PROJECT_DEFINES = {
+    'sa2': ['-D', 'GAME=2', '-D', 'PLATFORM_GBA=1', '-D', 'ENGINE=2'],
+    'katam': ['-D', 'GAME=4', '-D', 'PLATFORM_GBA=1'],
+}
+
+
 def guess_cpp_args(root):
     """Include dirs / defines that most agbcc-era GBA decomps want."""
     args = ['-I', AGBINC, '-nostdinc', '-undef', '-std=gnu89']
@@ -186,6 +202,10 @@ def guess_cpp_args(root):
     for d in ('MODERN=0', 'NONMATCHING=0', 'REVISION=0', 'ENGLISH', 'RUBY',
               'DEBUG=0', 'DEBUG_FIX=0', 'GERMAN=0', 'PORTUGUESE=0'):
         args += ['-D', d]
+    # A few projects gate their headers on a project-specific define and
+    # #error out without it. Cheaper to carry the handful than to fail whole
+    # repos: sa2's config.h refuses to compile unless GAME is set.
+    args += PROJECT_DEFINES.get(name, [])
     return args
 
 

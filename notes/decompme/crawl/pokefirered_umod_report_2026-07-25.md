@@ -1,4 +1,4 @@
-<!-- pokefirered :: trait=umod :: crawled 2026-07-25 :: 225/283 files compiled -->
+<!-- pokefirered :: trait=umod :: crawled 2026-07-25 :: 279/283 files compiled -->
 - umod: src/AgbRfu_LinkManager.c :: rfu_LMAN_settingPCSWITCH 
 - umod: src/battle_ai_script_commands.c :: BattleAI_ChooseMoveOrAction Cmd_if_random_safari_flee 
 - umod: src/battle_ai_switch_items.c :: FindMonThatAbsorbsOpponentsMove FindMonWithFlagsAndSuperEffective HasSuperEffectiveMoveAgainstOpponents ShouldSwitchIfWonderGuard 
@@ -13,21 +13,32 @@
 - umod: src/battle_anim_water.c :: AnimSmallWaterOrb AnimTask_CreateRaindrops CreateWaterPulseRingBubbles CreateWaterSpoutRainDroplet 
 - umod: src/battle_interface.c :: Debug_DrawNumber 
 - umod: src/battle_main.c :: HandleAction_ThrowBait HandleAction_ThrowRock SpriteCB_FaintOpponentMon 
+- umod: src/battle_script_commands.c :: Cmd_accuracycheck Cmd_adjustnormaldamage Cmd_adjustnormaldamage2 Cmd_adjustsetdamage Cmd_critcalc Cmd_forcerandomswitch Cmd_magnitudedamagecalculation Cmd_pickup Cmd_seteffectwithchance Cmd_tryKO Cmd_trymirrormove SetMoveEffect 
+- umod: src/battle_tower.c :: ChooseSpecialBattleTowerTrainer Debug_FillEReaderTrainerWithPlayerData DetermineBattleTowerPrize SetPlayerBattleTowerRecord UpdateOrInsertReceivedBattleTowerRecord 
 - umod: src/battle_util.c :: AbilityBattleEffects AtkCanceller_UnableToUseMove GetMoveTarget ItemBattleEffects 
 - umod: src/berry_crush.c :: Cmd_TabulateResults FramesToMinSec HandlePlayerInput UpdateInputEffects 
+- umod: src/daycare.c :: InheritIVs _TriggerPendingDaycareEgg 
 - umod: src/decompress.c :: LoadSpecialPokePic LoadSpecialPokePic_DontHandleDeoxys 
 - umod: src/dodrio_berry_picking.c :: DoDodrioIntroAnim GetNewBerryIdByDifficulty InitDodrioGame SetRandomPrize TryIncrementDifficulty 
 - umod: src/easy_chat.c :: GetRandomECPokemon GetRandomUnlockedTrendySaying GetRandomWordFromGroup UnlockRandomTrendySaying 
 - umod: src/evolution_graphics.c :: CreatePostEvoSparkleSet2 
+- umod: src/fame_checker.c :: CreateAllFlavorTextIcons CreateFlavorTextIconSelectorCursorSprite Task_FlavorTextDisplayHandleInput 
+- umod: src/field_control_avatar.c :: UpdatePoisonStepCounter 
+- umod: src/field_player_avatar.c :: Fishing2 Fishing4 Fishing9 
+- umod: src/field_specials.c :: GetPlayerTrainerIdOnesDigit GetRandomSlotMachineId SampleResortGorgeousMon SampleResortGorgeousReward SetVermilionTrashCans Task_AnimateElevatorWindowView Task_ElevatorShake Task_ShakeScreen 
 - umod: src/field_weather_effects.c :: CreateAshSprites CreateFogDiagonalSprites CreateFogHorizontalSprites CreateSandstormSprites InitRainSpriteMovement InitSnowflakeSpriteMovement SetThunderCounter StartRainSpriteFall Thunderstorm_Main 
 - umod: src/fieldmap.c :: GetMapBorderIdAt MapGridGetCollisionAt MapGridGetElevationAt MapGridGetMetatileIdAt 
+- umod: src/hall_of_fame.c :: HallOfFame_PrintMonInfo HallOfFame_PrintPlayerInfo Hof_SpawnConfetti 
 - umod: src/image_processing_effects.c :: AddPointillismPoints GetColorFromPersonality 
 - umod: src/intro.c :: CreateNidorinoRecoilDustSprites SpriteCB_Star 
 - umod: src/itemfinder.c :: Task_ItemfinderResponseSoundsAndAnims Task_ItemfinderUnderfootSoundsAndAnims 
 - umod: src/link_rfu_2.c :: Rfu_InitBlockSend 
 - umod: src/link_rfu_3.c :: RfuRecvQueue_Dequeue RfuRecvQueue_Enqueue RfuSendQueue_Dequeue RfuSendQueue_Enqueue 
+- umod: src/map_preview_screen.c :: Task_RunMapPreviewScreenForest 
 - umod: src/menu.c :: MultichoiceGrid_MoveCursor MultichoiceGrid_MoveCursorIfValid MultichoiceGrid_RedrawCursor 
+- umod: src/naming_screen.c :: MainState_WaitPageSwap PageSwapSprite_SlideOff 
 - umod: src/oak_speech.c :: GetDefaultName Task_OakSpeech_ShrinkPlayerPic 
+- umod: src/overworld.c :: PlayAmbientCry UpdateAmbientCry 
 - umod: src/pokeball.c :: SpriteCB_PlayerMonSendOut_2 
 - umod: src/pokedex_screen.c :: DexScreen_PrintMonHeight DexScreen_PrintMonWeight DexScreen_PrintNum3LeadingZeroes DexScreen_PrintNum3RightAlign 
 - umod: src/pokemon.c :: CreateMonWithGenderNatureLetter GetEvolutionTargetSpecies GetNature GetNatureFromPersonality GetSecretBaseTrainerNameIndex GetSecretBaseTrainerPicIndex GetSubstruct SetWildMonHeldItem 
@@ -38,12 +49,21 @@
 - umod: src/pokemon_storage_system_data.c :: GetCursorBoxColumnAndRow GetCursorCoordsByPos HandleInput_InBox_GrabbingMultiple HandleInput_InBox_Normal 
 - umod: src/pokemon_storage_system_graphics.c :: CreateBoxMonIconAtPos SetPlacedMonSprite 
 - umod: src/pokemon_storage_system_misc.c :: SetItemIconPosition 
+- umod: src/region_map.c :: InitMapOpenAnim SnapToIconOrButton 
+- umod: src/renewable_hidden_items.c :: SampleRenewableItemFlags 
+- umod: src/roamer.c :: CreateInitialRoamerMon RoamerMove RoamerMoveToOtherLocationSet 
 - umod: src/save.c :: CopySectorSignatureByte HandleReplaceSector HandleWriteSector RestoreSaveBackupVarsAndIncrement WriteSaveSectorOrSlot WriteSectorSignatureByte 
+- umod: src/scrcmd.c :: ScrCmd_random 
+- umod: src/seagallop.c :: SpriteCB_Ferry 
 - umod: src/slot_machine.c :: StopReel1 
 - umod: src/special_field_anim.c :: Task_DrawEscalator 
 - umod: src/string_util.c :: ConvertIntToHexStringN 
 - umod: src/tileset_anims.c :: QueueAnimTiles_CeladonCity_Fountain QueueAnimTiles_General_Flower TilesetAnim_CeladonCity TilesetAnim_SilphCo 
 - umod: src/trade.c :: CheckValidityOfTradeMons DrawSelectedMonScreen PrintLevelAndGender 
+- umod: src/trade_scene.c :: CB2_LinkTrade CB2_SaveAndEndTrade CB2_UpdateLinkTrade CheckPartnersMonForRibbons LoadTradeMonPic TradeBufferOTnameAndNicknames 
+- umod: src/trainer_tower.c :: GetCurrentTime PrintTrainerTowerRecords ShowResultsBoard 
 - umod: src/trig.c :: Sin2 
+- umod: src/vs_seeker.c :: GetVsSeekerResponseInArea 
+- umod: src/wild_encounter.c :: ChooseWildMonLevel DoGlobalWildEncounterDiceRoll DoWildEncounterRateDiceRoll GenerateWildMon GetLocalWildMon GetUnownLetterByPersonalityLoByte HandleWildEncounterCooldown 
 - umod: src/wonder_news.c :: WonderNews_SetReward 
 - DOUBLE-HOME: src/intro.c src/pokemon_jump.c src/pokemon_special_anim_scene.c :: SpriteCB_Star

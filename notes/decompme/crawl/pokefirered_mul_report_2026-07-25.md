@@ -1,4 +1,4 @@
-<!-- pokefirered :: trait=mul :: crawled 2026-07-25 :: 225/283 files compiled -->
+<!-- pokefirered :: trait=mul :: crawled 2026-07-25 :: 279/283 files compiled -->
 - mul: src/battle_ai_script_commands.c :: BattleAI_DoAIProcessing Cmd_count_alive_pokemon Cmd_get_ability Cmd_get_gender Cmd_get_highest_type_effectiveness Cmd_get_hold_effect Cmd_get_how_powerful_move_is Cmd_get_type Cmd_if_can_faint Cmd_if_cant_faint Cmd_if_doesnt_have_move Cmd_if_doesnt_have_move_with_effect Cmd_if_has_move Cmd_if_has_move_with_effect Cmd_if_hp_equal Cmd_if_hp_less_than Cmd_if_hp_more_than Cmd_if_hp_not_equal Cmd_if_level_compare Cmd_if_not_status Cmd_if_not_status2 Cmd_if_stat_level_equal Cmd_if_stat_level_less_than Cmd_if_stat_level_more_than Cmd_if_stat_level_not_equal Cmd_if_status Cmd_if_status2 Cmd_if_status_in_party Cmd_if_status_not_in_party Cmd_if_user_has_attacking_move Cmd_if_user_has_no_attacking_moves 
 - mul: src/battle_ai_switch_items.c :: AI_TrySwitchOrUseItem AreStatsRaised FindMonThatAbsorbsOpponentsMove FindMonWithFlagsAndSuperEffective GetMostSuitableMonToSwitchInto HasSuperEffectiveMoveAgainstOpponents ModulateByTypeEffectiveness ShouldSwitch ShouldSwitchIfNaturalCure ShouldSwitchIfWonderGuard ShouldUseItem 
 - mul: src/battle_anim.c :: LaunchBattleAnimation 
@@ -27,6 +27,9 @@
 - mul: src/battle_interface.c :: CalcBarFilledPixels GetReceivedValueInPixels GetScaledHPFraction MoveBattleBarGraphically SwapHpBarsWithHpText TryAddPokeballIconToHealthbox UpdateHealthboxAttribute UpdateNickInHealthbox UpdateStatusIconInHealthbox 
 - mul: src/battle_main.c :: BattleIntroDrawPartySummaryScreens BattleIntroDrawTrainersOrMonsSprites BattleIntroRecordMonsToDex BattleStartClearSetData BufferPartyVsScreenHealth_AtEnd BufferPartyVsScreenHealth_AtStart CheckFocusPunch_ClearVarsBeforeTurnStarts CreateNPCTrainerParty FaintClearSetData GetWhoStrikesFirst HandleAction_Run HandleAction_UseMove HandleAction_WatchesCarefully HandleEndTurn_ContinueBattle HandleEndTurn_FinishBattle HandleTurnActionSelectionState IsRunningFromBattleImpossible PrepareOwnMultiPartnerBuffer SpriteCB_FaintOpponentMon SwitchInClearSetData TryEvolvePokemon TryRunFromBattle TurnValuesCleanUp 
 - mul: src/battle_message.c :: BattleStringExpandPlaceholders BufferStringBattle ExpandBattleTextBuffPlaceholders 
+- mul: src/battle_script_commands.c :: AI_CalcDmg ChangeStatBuffs CheckWonderGuardAndLevitate Cmd_accuracycheck Cmd_adjustnormaldamage Cmd_adjustnormaldamage2 Cmd_adjustsetdamage Cmd_assistattackselect Cmd_attackanimation Cmd_attackcanceler Cmd_checkteamslost Cmd_cleareffectsonfaint Cmd_clearstatusfromeffect Cmd_confuseifrepeatingattackends Cmd_copyfoestats Cmd_copymovepermanently Cmd_counterdamagecalculator Cmd_critcalc Cmd_cureifburnedparalysedorpoisoned Cmd_cursetarget Cmd_damagecalc Cmd_damagetohalftargethp Cmd_datahpupdate Cmd_disablelastusedattack Cmd_dmgtolevel Cmd_docastformchangeanimation Cmd_drawpartystatussummary Cmd_forcerandomswitch Cmd_friendshiptodamagecalculation Cmd_getexp Cmd_getmoneyreward Cmd_givecaughtmon Cmd_givepaydaymoney Cmd_handleballthrow Cmd_handlelearnnewmove Cmd_healpartystatus Cmd_healthbarupdate Cmd_hiddenpowercalc Cmd_hitanimation Cmd_hpthresholds Cmd_hpthresholds2 Cmd_jumpifability Cmd_jumpifcantmakeasleep Cmd_jumpifcantswitch Cmd_jumpifconfusedandstatmaxed Cmd_jumpifhasnohp Cmd_jumpifnopursuitswitchdmg Cmd_jumpifstat Cmd_jumpifstatus Cmd_jumpifstatus2 Cmd_jumpiftype Cmd_jumpiftype2 Cmd_manipulatedamage Cmd_maxattackhalvehp Cmd_mimicattackcopy Cmd_mirrorcoatdamagecalculator Cmd_moveend Cmd_normalisebuffs Cmd_painsplitdmgcalc Cmd_pickup Cmd_playstatchangeanimation Cmd_ppreduce Cmd_presentdamagecalculation Cmd_psywavedamageeffect Cmd_rapidspinfree Cmd_recoverbasedonsunlight Cmd_remaininghptopower Cmd_removeattackerstatus1 Cmd_removeitem Cmd_resultmessage Cmd_rolloutdamagecalculation Cmd_scaledamagebyhealthratio Cmd_setatkhptozero Cmd_setbide Cmd_setdamagetohealthdifference Cmd_setdefensecurlbit Cmd_setdestinybond Cmd_seteffectwithchance Cmd_setfocusenergy Cmd_setforesight Cmd_setseeded Cmd_setsubstitute Cmd_settorment Cmd_settypetorandomresistance Cmd_settypetoterrain Cmd_setyawn Cmd_status2animation Cmd_statusanimation Cmd_stockpiletobasedamage Cmd_stockpiletohpheal Cmd_subattackerhpbydmg Cmd_switchhandleorder Cmd_switchinanim Cmd_switchindataupdate Cmd_switchineffects Cmd_switchoutabilities Cmd_transformdataexecution Cmd_tryKO Cmd_trychoosesleeptalkmove Cmd_tryconversiontypechange Cmd_trycopyability Cmd_trydobeatup Cmd_tryexplosion Cmd_tryfaintmon Cmd_trygetintimidatetarget Cmd_trygivecaughtmonnick Cmd_tryhealhalfhealth Cmd_tryimprison Cmd_tryinfatuating Cmd_trymemento Cmd_tryrecycleitem Cmd_trysetencore Cmd_trysetfutureattack Cmd_trysetperishsong Cmd_trysetrest Cmd_tryspiteppreduce Cmd_tryswapabilities Cmd_tryswapitems Cmd_trywish Cmd_typecalc Cmd_typecalc2 Cmd_updatebattlermoves Cmd_updatestatusicon Cmd_useitemonopponent Cmd_various Cmd_weatherdamage Cmd_weightdamagecalculation Cmd_yesnoboxlearnmove DrawLevelUpBannerText DrawLevelUpWindow1 DrawLevelUpWindow2 ModulateDmgByType ModulateDmgByType2 PutMonIconOnLvlUpBanner SetMoveEffect TryDoForceSwitchOut TrySetDestinyBondToHappen TypeCalc Unused_ApplyRandomDmgMultiplier UproarWakeUpCheck 
+- mul: src/battle_setup.c :: GetSumOfPlayerPartyLevel 
+- mul: src/battle_tower.c :: AppendBattleTowerBannedSpeciesName AwardBattleTowerRibbons CB2_FinishEReaderBattle CheckPartyBattleTowerBanlist ChooseSpecialBattleTowerTrainer Debug_FillEReaderTrainerWithPlayerData FillBattleTowerTrainerParty GetBattleTowerTrainerClassNameId GetBattleTowerTrainerFrontSpriteId GetBattleTowerTrainerName PrintBattleTowerTrainerGreeting SetPlayerBattleTowerRecord ShouldBattleEReaderTrainer StartSpecialBattle UpdateOrInsertReceivedBattleTowerRecord ValidateBattleTowerRecordChecksums 
 - mul: src/battle_transition.c :: Spiral_UpdateFrame 
 - mul: src/battle_util.c :: AbilityBattleEffects AtkCanceller_UnableToUseMove CancelMultiTurnMoves CastformDataTypeChange CheckMoveLimitations ClearFuryCutterDestinyBondGrudge DoBattlerEndTurnEffects DoFieldEndTurnEffects GetImprisonedMovesCount GetMoveTarget HandleFaintedMonActions HandleWishPerishSongOnTurnEnd HasNoMonsToSwitch IsBattlerModernFatefulEncounter IsMonDisobedient ItemBattleEffects PressurePPLose PressurePPLoseOnUsingImprison PressurePPLoseOnUsingPerishSong TrySetCantSelectMoveBattleScript 
 - mul: src/battle_util2.c :: AdjustFriendshipOnBattleFaint 
@@ -35,6 +38,7 @@
 - mul: src/bg.c :: CopyRectToBgTilemapBufferRect CopyToBgTilemapBufferRect FillBgTilemapBufferRect_Palette0 WriteSequenceToBgTilemapBuffer 
 - mul: src/blend_palette.c :: BlendPalette BlendPalettesAt 
 - mul: src/blit.c :: BlitBitmapRect4Bit BlitBitmapRect4BitTo8Bit FillBitmapRect4Bit FillBitmapRect8Bit 
+- mul: src/daycare.c :: AddHatchedMonToParty BufferDayCareMonReceivedMail CB2_EggHatch_1 ClearAllDaycareData CountPokemonInDaycare DaycarePrintMonLvl DaycarePrintMonNickname Daycare_FindEmptySpot DetermineEggSpeciesAndParentSlots EggHatchCreateMonSprite EggHatchSetMonNickname GetDaycareCompatibilityScore GetDaycareCostForMon GetDaycareCostForSelectedMon GetDaycareLevelMenuLevelText GetDaycareLevelMenuText GetNumLevelsGainedFromDaycare GetSelectedMonNicknameAndSpecies InheritIVs InitDaycareMailRecordMixing PutMonInRoute5Daycare SpriteCB_Egg_2 StorePokemonInEmptyDaycareSlot StoreSelectedPokemonInDaycare TakeSelectedPokemonMonFromDaycareShiftSlots TryProduceOrHatchEgg _GiveEggFromDaycare 
 - mul: src/digit_obj_util.c :: DrawNumObjsLeadingZeros DrawNumObjsMinusInBack DrawNumObjsMinusInFront 
 - mul: src/dodrio_berry_picking.c :: GetPlayerIdAtColumn GetScore IsDodrioInParty ReadyToEndGame_Member StartDodrioBerryPicking TryIncrementDifficulty UpdateBerrySprites 
 - mul: src/easy_chat.c :: GetEasyChatWord 
@@ -43,17 +47,23 @@
 - mul: src/evolution_graphics.c :: SpriteCB_PostEvoSparkleSet2 SpriteCB_PreEvoSparkleSet1 SpriteCB_PreEvoSparkleSet2 
 - mul: src/evolution_scene.c :: CB2_EvolutionSceneLoadGraphics CB2_TradeEvolutionSceneLoadGraphics CreateShedinja EvolutionScene Task_BeginEvolutionScene Task_EvolutionScene Task_TradeEvolutionScene TradeEvolutionScene 
 - mul: src/field_effect.c :: FldEff_FieldMoveShowMonInit MultiplyInvertedPaletteRGBComponents MultiplyPaletteRGBComponents 
+- mul: src/field_player_avatar.c :: PartyHasMonWithSurf 
 - mul: src/field_poison.c :: FaintFromFieldPoison MonFaintedFromPoison 
+- mul: src/field_specials.c :: AreLeadMonEVsMaxedOut BufferMonNickname BufferTMHMMoveName CapeBrinkGetMoveToTeachLeadPokemon ChangePokemonNickname ChangePokemonNickname_CB DaisyMassageServices DoesPlayerPartyContainSpecies GetLeadMonFriendship GetLeadMonIndex GetPartyMonSpecies GiveLeadMonEffortRibbon HasMonBeenRenamed IsBadEggInParty IsMonOTIDNotPlayers IsMonOTNameNotPlayers IsStarterFirstStageInParty LeadMonHasEffortRibbon NameRaterWasNicknameChanged PlayerHasGrassPokemonInParty PlayerPartyContainsSpeciesWithPlayerID SampleResortGorgeousMonAndReward UpdateTrainerCardPhotoIcons 
 - mul: src/field_weather.c :: ApplyDroughtGammaShiftWithBlend ApplyFogBlend ApplyGammaShiftWithBlend 
 - mul: src/field_weather_effects.c :: StartRainSpriteFall UpdateSandstormSwirlSprite 
 - mul: src/fieldmap.c :: FillConnection GetMapBorderIdAt InitMapLayoutData LoadSavedMapView MapGridGetCollisionAt MapGridGetElevationAt MapGridGetMetatileIdAt MapGridSetMetatileEntryAt MapGridSetMetatileIdAt MapGridSetMetatileImpassabilityAt MoveMapViewToBackup SaveMapView 
 - mul: src/fldeff_softboiled.c :: SetUpFieldMove_SoftBoiled Task_DisplayHPRestoredMessage Task_SoftboiledRestoreHealth Task_TryUseSoftboiledOnPartyMon 
+- mul: src/fldeff_strength.c :: FldEff_UseStrength 
+- mul: src/hall_of_fame.c :: HallOfFame_PrintMonInfo SpriteCB_Confetti Task_Hof_InitMonData 
 - mul: src/help_message.c :: DrawHelpMessageWindowTilesById 
 - mul: src/help_system_util.c :: HS_RemoveSelectionCursorAt PlaceListMenuCursor 
 - mul: src/image_processing_effects.c :: ApplyImageEffect_BlackAndWhite ApplyImageEffect_BlackOutline ApplyImageEffect_Blur ApplyImageEffect_BlurDown ApplyImageEffect_BlurRight ApplyImageEffect_Grayscale ApplyImageEffect_Invert ApplyImageEffect_PersonalityColor ApplyImageEffect_RedChannelGrayscale ApplyImageEffect_RedChannelGrayscaleHighlight ConvertImageProcessingToGBA QuantizePalette_BlackAndWhite QuantizePalette_Grayscale QuantizePalette_GrayscaleSmall QuantizePalette_PrimaryColors QuantizePalette_Standard QuantizePixel_Blur QuantizePixel_BlurHard QuantizePixel_MotionBlur 
 - mul: src/intro.c :: CreateNidorinoRecoilDustSprites GFScene_CreateStarSparkle Scene3_Task_GengarAttack SpriteCB_NidorinoAttack SpriteCB_NidorinoRecoil SpriteCB_Star 
+- mul: src/item.c :: ItemId_GetBattleFunc ItemId_GetBattleUsage ItemId_GetDescription ItemId_GetFieldFunc ItemId_GetHoldEffect ItemId_GetHoldEffectParam ItemId_GetId ItemId_GetImportance ItemId_GetName ItemId_GetPocket ItemId_GetPrice ItemId_GetRegistrability ItemId_GetSecondaryId ItemId_GetType 
 - mul: src/item_menu.c :: Task_FinalizeSaleToShop Task_InitSaleQuantitySelectInterface Task_PrintSaleConfirmationText Task_SelectQuantityToSell Task_SellItem_Yes 
 - mul: src/item_pc.c :: ItemPc_MoveCursorFunc 
+- mul: src/item_use.c :: BattleUseFunc_StatBooster FieldUseFunc_PokeFlute 
 - mul: src/learn_move.c :: MoveRelearnerInitListMenuBuffersEtc MoveRelearnerMenuHandleInput MoveRelearnerStateMachine SpriteCB_ListMenuScrollIndicators 
 - mul: src/librfu_rfu.c :: rfu_STC_NI_initSlot_asRecvDataEntity rfu_STC_NI_receive_Sender 
 - mul: src/link.c :: DequeueRecvCmds DoRecv DoSend EnqueueSendCmd ResetRecvBuffer ResetSendBuffer 
@@ -66,9 +76,12 @@
 - mul: src/menu.c :: AddItemMenuActionTextPrinters Menu_RedrawCursor MultichoiceGrid_InitCursor MultichoiceGrid_MoveCursor MultichoiceGrid_MoveCursorIfValid MultichoiceGrid_PrintItems MultichoiceGrid_PrintItemsCustomOrder MultichoiceGrid_RedrawCursor MultichoiceList_PrintItems PrintTextArray 
 - mul: src/menu2.c :: UnusedBlitBitmapRect 
 - mul: src/menu_indicators.c :: SpriteCallback_ScrollIndicatorArrow 
+- mul: src/naming_screen.c :: DrawMonTextEntryBox 
 - mul: src/new_menu_helpers.c :: CopyToBufferFromBgTilemap 
 - mul: src/option_menu.c :: BufferOptionMenuString LoadOptionMenuItemNames UpdateSettingSelectionDisplay 
+- mul: src/overworld.c :: ComputeWhiteOutMoneyLoss 
 - mul: src/palette.c :: CopyPaletteInvertedTint PaletteStruct_Blend PaletteStruct_Copy TintPalette_CustomTone TintPalette_GrayScale TintPalette_GrayScale2 TintPalette_SepiaTone 
+- mul: src/party_menu.c :: AnimatePartySlot BlitBitmapToPartyWindow CB2_GiveHoldItem CB2_ReadHeldMail CB2_ReturnToPartyMenuFromWritingMail CB2_ReturnToPartyMenuWhileLearningMove CB2_ReturnToPartyOrBagMenuFromWritingMail CB2_ShowPartyMenuForItemUse CB2_UseEvolutionStone CB2_UseItem CB2_UseTMHMAfterForgettingMove CB2_WriteMailToGiveMon CB2_WriteMailToGiveMonFromBag CheckBattleEntriesAndGetMessage CreatePartyMonSprites CreateSelectionWindow CursorCB_Cancel2 CursorCB_FieldMove CursorCB_Register CursorCB_TakeItem CursorCB_Trade1 DisplayMonLearnedMove DisplayMonNeedsToReplaceMove DisplayPartyMenuForgotMoveMessage DisplayPartyPokemonData DisplayPartyPokemonDataForChooseMultiple DisplayPartyPokemonDataForMoveTutorOrEvolutionItem DisplayPartyPokemonDataToTeachMove DisplayPartyPokemonDescriptionData DisplayPartyPokemonGender DisplaySwitchedHeldItemMessage DrawHeldItemIconsForTrade ExecuteTableBasedItemEffect_ GetFieldMoveMonSpecies GetNewSlotDoubleLayout GetPartyBoxPaletteFlags GetPartySlotEntryStatus GiveItemToSelectedMon HandleChooseMonSelection InitPartyMenu IsSelectedMonNotEgg ItemUseCB_EvolutionStone ItemUseCB_Medicine ItemUseCB_MedicineStep ItemUseCB_RareCandy ItemUseCB_RareCandyStep ItemUseCB_RestorePP ItemUseCB_TMHM MonCanEvolve PartyMenuModifyHP PartyMenuTryEvolution RenderPartyMenuBox SetPartyMonFieldSelectionActions SetPartyMonsAllowedInMinigame SetSwitchedPartyOrderQuestLogEvent SetUsedFlyQuestLogEvent ShouldUseChooseMonText ShowMoveSelectWindow StopLearningMovePrompt SwitchAliveMonIntoLeadSlot SwitchPartyMon SwitchSelectedMons Task_DisplayGaveMailFromBagMessage Task_DisplayGaveMailFromPartyMessage Task_DisplayHPRestoredMessage Task_GiveHoldItem Task_HandleFieldMoveExitAreaYesNoInput Task_HandleLoseMailMessageYesNoInput Task_HandleSendMailToPCYesNoInput Task_HandleStopLearningMoveYesNoInput Task_HandleSwitchItemsFromBagYesNoInput Task_HandleSwitchItemsYesNoInput Task_LearnedMove Task_PartyMenuModifyHP Task_PartyMenuReplaceMove Task_ReplaceMoveWithTMHM Task_SacredAshDisplayHPRestored Task_SwitchHoldItemsPrompt Task_TryLearnNewMoves Task_TryLearningNextMove Task_UpdateHeldItemSprite Task_UpdateHeldItemSpriteAndClosePartyMenu TryGiveItemOrMailToSelectedMon TryGiveMailToSelectedMon TrySwitchInPokemon TryTutorSelectedMon TryUsePPItemInBattle TryUsePPItemOutsideBattle UpdatePartyToBattleOrder UpdatePartyToFieldOrder UseSacredAsh 
 - mul: src/party_menu_specials.c :: BufferMoveDeleterNicknameAndMove GetNumMovesSelectedMonHas IsSelectedMonEgg MoveDeleterForgetMove 
 - mul: src/pokeball.c :: GetBattlerPokeballItemId SpriteCB_ReleaseMonFromBall SpriteCB_ReleasedMonFlyOut Task_DoPokeballSendOutAnim 
 - mul: src/pokedex_screen.c :: DexScreen_CountMonsInOrderedList DexScreen_DrawMonAreaPage DexScreen_DrawMonDexPage DexScreen_DrawMonPicInCategoryPage DexScreen_PrintMonHeight DexScreen_PrintMonWeight 
@@ -83,25 +96,36 @@
 - mul: src/pokemon_storage_system_menu.c :: CountPartyAliveNonEggMonsExcept CountPartyMons CountPartyNonEggMons UnusedWriteRectCpu 
 - mul: src/pokemon_storage_system_misc.c :: Item_FromMonToMoving Item_GiveMovingToMon Item_SwitchMonsWithMoving Item_TakeMons TryLoadItemIconAtPos UnkUtil_CpuAdd 
 - mul: src/pokemon_storage_system_tasks.c :: GiveChosenBagItem SetPartySlotTilemaps SetPokeStorageQuestLogEvent 
+- mul: src/pokemon_summary_screen.c :: BufferMonInfo BufferMonMoveI BufferMonSkills BufferSelectedMonData PokeSum_PrintMoveName SeekToMonInMultiParty_SeekBack SeekToMonInMultiParty_SeekForward SeekToNextMonInSingleParty SwapMonMoveSlots UpdateCurrentMonBufferFromPartyOrBox UpdateExpBarObjs 
+- mul: src/post_battle_event_funcs.c :: EnterHallOfFame 
+- mul: src/quest_log.c :: ClearSavedScene GetQuestLogStartType QLPlayback_SetInitialPlayerPosition QL_CopySaveState QL_IsRoomToSaveAction QL_IsRoomToSaveEvent QL_LoadObjectsAndTemplates QL_ResetPartyAndPC QL_StartRecordingAction QuestLog_AdvancePlayhead QuestLog_GetPartyCount QuestLog_WaitFadeAndCancelPlayback ReadQuestLogScriptFromSav1 SetGameStateAtScene SetNPCInitialCoordsAtScene SetPlayerInitialCoordsAtScene SortQuestLogInSav1 TryStartQuestLogPlayback 
 - mul: src/quest_log_battle.c :: TrySetQuestLogBattleEvent 
+- mul: src/quest_log_events.c :: LoadEvent LoadEvent_UsedItem QL_SkipCommand QuestLog_GetSpeciesName RecordEventHeader 
 - mul: src/random.c :: Random 
+- mul: src/region_map.c :: GetSelectedMapSection RegionMap_DarkenPalette 
 - mul: src/reshow_battle_screen.c :: CB2_ReshowBattleScreenAfterMenu CreateBattlerSprite CreateHealthboxSprite LoadBattlerSpriteGfx 
 - mul: src/scanline_effect.c :: GenerateWave 
+- mul: src/scrcmd.c :: ScrCmd_bufferleadmonspeciesname ScrCmd_buffermovename ScrCmd_bufferpartymonnick ScrCmd_bufferspeciesname ScrCmd_checkmonmodernfatefulencounter ScrCmd_checkpartymove ScrCmd_setmonmetlocation ScrCmd_setmonmodernfatefulencounter 
 - mul: src/script_menu.c :: ScriptMenu_MultichoiceGrid 
 - mul: src/script_pokemon_util.c :: CheckPartyMonHasHeldItem HealPlayerParty ReducePlayerPartyToThree ScriptSetMonMoveSlot 
 - mul: src/shop.c :: BuyMenuBuildListMenuTemplate LoadTmHmNameInMart RecordItemTransaction Task_BuyHowManyDialogueHandleInput 
 - mul: src/slot_machine.c :: UpdateCoinsDisplay 
 - mul: src/sprite.c :: GetAnchorCoord 
 - mul: src/string_util.c :: ConvertIntToDecimalStringN 
+- mul: src/teachy_tv.c :: TeachyTvLoadBg3Map 
 - mul: src/text.c :: GetStringWidthFixedWidthFont 
 - mul: src/text_printer.c :: CopyGlyphToWindow CopyGlyphToWindow_Parameterized 
 - mul: src/tilemap_util.c :: TilemapUtil_Draw TilemapUtil_DrawPrev TilemapUtil_SetTilemap 
 - mul: src/title_screen.c :: TitleScreen_rand 
 - mul: src/tm_case.c :: GetTMNumberAndMoveString Task_AskConfirmSaleWithAmount Task_DoSaleOfTMs Task_InitQuantitySelectUI Task_PrintSaleConfirmedText Task_QuantitySelect_HandleInput 
 - mul: src/trade.c :: BufferMovesString CB2_CreateTradeMenu CB2_ReturnToTradeMenuFromSummary CanTradeSelectedMon CheckValidityOfTradeMons ComputePartyHPBarLevels ComputePartyTradeableFlags GetMonNicknameWidth PrintLevelAndGender PrintPartyNicknames 
+- mul: src/trade_scene.c :: BufferInGameTradeMonName CB2_LinkTrade CB2_TryLinkTradeEvolution CheckPartnersMonForRibbons CreateInGameTradePokemonInternal DoTradeAnim_Cable DoTradeAnim_Wireless GetInGameTradeSpeciesInfo GetTradeSpecies LoadTradeMonPic SpriteCB_BouncingPokeball TradeBufferOTnameAndNicknames TradeMons UpdatePokedexForReceivedMon 
 - mul: src/trainer_card.c :: InitTrainerCardData Task_AnimateCardFlipDown Task_AnimateCardFlipUp 
+- mul: src/trainer_tower.c :: BuildEnemyParty GetCurrentTime GetPartyMaxLevel PrintTrainerTowerRecords ShowResultsBoard 
 - mul: src/trig.c :: Cos Sin 
+- mul: src/union_room.c :: GetChatLeaderActionRequestMessage GetPartyPositionOfRegisteredMon HasAtLeastTwoMonsOfLevel30OrLower IsRequestedTradeInPlayerParty RegisterTradeMon RegisterTradeMonAndGetIsEgg Task_RunUnionRoom Task_StartUnionRoomTrade TradeBoardPrintItemInfo ViewURoomPartnerTrainerCard 
 - mul: src/union_room_battle.c :: SetUpPartiesAndStartBattle 
+- mul: src/wild_encounter.c :: IsWildLevelAllowedByRepel WildEncounterRandom 
 - mul: src/window.c :: AddWindow CopyWindowToVram FillWindowPixelBuffer InitWindows PutWindowRectTilemap PutWindowRectTilemapOverridePalette RemoveWindow ScrollWindow 
 - mul: src/window_8bpp.c :: AddWindow8Bit CopyWindowToVram8Bit FillWindowPixelBuffer8Bit 
 - DOUBLE-HOME: src/battle_controller_player.c src/battle_controller_pokedude.c :: CompleteOnBattlerSpritePosX_0
@@ -109,12 +133,14 @@
 - DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: DestroyExpTaskAndCompleteOnInactiveTextPrinter
 - DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Intro_TryShinyAnimShowHealthbox
 - DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Intro_WaitForShinyAnimAndHealthbox
+- DOUBLE-HOME: src/fame_checker.c src/help_system_util.c :: PlaceListMenuCursor
 - DOUBLE-HOME: src/intro.c src/pokemon_jump.c src/pokemon_special_anim_scene.c :: SpriteCB_Star
 - DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: StartSendOutAnim
 - DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: SwitchIn_HandleSoundAndEnd
 - DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_opponent.c :: SwitchIn_ShowHealthbox
 - DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_opponent.c :: SwitchIn_TryShinyAnim
 - DOUBLE-HOME: src/battle_controller_player.c src/battle_controller_pokedude.c :: SwitchIn_TryShinyAnimShowHealthbox
+- DOUBLE-HOME: src/fldeff_softboiled.c src/party_menu.c :: Task_DisplayHPRestoredMessage
 - DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_GiveExpToMon
 - DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_GiveExpWithExpBar
 - DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_PrepareToGiveExpWithExpBar

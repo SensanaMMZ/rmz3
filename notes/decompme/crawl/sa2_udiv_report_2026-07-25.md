@@ -1,0 +1,28 @@
+<!-- sa2 :: trait=udiv :: crawled 2026-07-25 :: 477/846 files compiled -->
+- udiv: src/game/math.c :: sub_8083858 sub_8083B10 sub_80856DC sub_80856F8 sub_8085A9C 
+- udiv: src/game/sa1/menus/mp_mode_select_2.c :: sub_80818B8 
+- udiv: src/game/sa1/special_stage/main.c :: Task_802A560 sub_8029CDC sub_802A248 sub_802A688 
+- udiv: src/game/sa1/stage/enemies/boss_2_egg_press.c :: Task_802DEFC Task_802E290 sub_802D908 
+- udiv: src/game/sa1/stage/enemies/boss_3_egg_ball.c :: Task_802F804 Task_8030120 
+- udiv: src/game/sa1/stage/enemies/buzzer.c :: Task_BuzzerInit 
+- udiv: src/game/sa1/ui/game_over.c :: Task_8056100 Task_8056970 Task_8056E64 
+- udiv: src/game/sa2/collect_rings/singlepak_connection.c :: sub_8081E90 
+- udiv: src/game/sa2/options_screen.c :: MultiplayerRecordsScreenCreatePlayerRowUI MultiplayerRecordsScreenCreateTableRowUI TimeRecordsScreenCreateTimesUI TimeRecordsScreenRefreshTimesUI 
+- udiv: src/game/sa2/sound_test.c :: SoundTestScreenRenderUI Task_SoundTestScreenMain 
+- udiv: src/game/sa2/special_stage/collectables.c :: HandleCollectableCollision 
+- udiv: src/game/sa2/special_stage/physics.c :: HandleRoboPlayerCollision 
+- udiv: src/game/sa2/special_stage/ui.c :: RenderScoresAnim 
+- udiv: src/game/sa2/special_stage/utils.c :: SpecialStageCalcEntityScreenPosition 
+- udiv: src/game/sa2/special_stage/world.c :: sub_806E7C0 
+- udiv: src/game/sa2/stage/bosses/boss_8.c :: Task_804A9D8 
+- udiv: src/game/sa2/stage/interactables/ice_paradise/big_snowball.c :: CreateEntity_BigSnowball sub_80791B4 
+- udiv: src/game/sa2/stage/interactables/ice_paradise/half_pipe.c :: UpdatePlayerPosOnHalfPipe 
+- udiv: src/game/sa2/stage/interactables/music_plant/note_sphere.c :: NoteSphere_BouncePlayer 
+- udiv: src/game/sa2/stage/interactables/ramp.c :: Task_Ramp 
+- udiv: src/game/sa2/stage/interactables/sky_canyon/fan.c :: UpdateFanSpeed sub_807D468 
+- udiv: src/game/sa2/stage/interactables/sky_canyon/whirlwind.c :: sub_807CC28 sub_807CCBC sub_807CFB4 
+- udiv: src/game/sa2/ui/time_attack_results.c :: CreateTimeAttackResults 
+- udiv: src/game/shared/stage/demo_manager.c :: CreateMusicFadeoutTask 
+- udiv: src/game/shared/stage/player.c :: Player_InitRampOrDashRing 
+- udiv: src/sprite.c :: sub_8004418 
+- DOUBLE-HOME: src/game/sa1/menus/mp_mode_select_2.c src/game/sa2/collect_rings/singlepak_connection.c :: sub_80818B8

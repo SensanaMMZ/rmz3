@@ -1,0 +1,26 @@
+<!-- sa2 :: trait=bic :: crawled 2026-07-25 :: 477/846 files compiled -->
+- bic: src/core.c :: GetInput VBlankIntr 
+- bic: src/game/sa1/multiplayer/chao_message.c :: sub_803BE0C 
+- bic: src/game/sa1/stage/interactables/107.c :: Task_Interactable107 
+- bic: src/game/sa1/stage/interactables/113.c :: Task_Interactable113 
+- bic: src/game/sa1/stage/interactables/ferris_wheel.c :: Task_FerrisWheel 
+- bic: src/game/sa1/stage/interactables/flipper_small_blue.c :: Task_Flipper_SmallBlue 
+- bic: src/game/sa1/stage/interactables/flippers.c :: Task_Flipper_Horizontal Task_Flipper_Vertical 
+- bic: src/game/sa1/stage/interactables/hang_bar.c :: Task_HangBar 
+- bic: src/game/sa1/stage/interactables/marble_track.c :: Task_MarbleTrack_Entrance 
+- bic: src/game/sa1/stage/interactables/platform_spiked.c :: Task_Platform_Spiked 
+- bic: src/game/sa1/stage/interactables/platform_square.c :: Task_Platform_Square 
+- bic: src/game/sa1/stage/interactables/platforms_085_089.c :: Task_Platform085 
+- bic: src/game/sa1/stage/interactables/ship_swing.c :: Task_ShipSwing 
+- bic: src/game/sa1/stage/interactables/shrubbery.c :: Task_ShrubberyMain 
+- bic: src/game/sa1/stage/interactables/skating_stone.c :: Task_SkatingStone2 
+- bic: src/game/sa1/stage/interactables/steam_exhaust.c :: Task_SteamExhaust2 
+- bic: src/game/sa1/stage/interactables/track.c :: Task_Track 
+- bic: src/game/sa1/stage/player_controls.c :: sub_804D13C 
+- bic: src/game/sa1/ui/extra_stage_results.c :: Task_8068214 
+- bic: src/game/sa2/multiplayer/team_play.c :: sub_805D1F8 
+- bic: src/game/sa2/stage/heart_particles_effect.c :: sub_8086B38 
+- bic: src/game/shared/stage/item_tasks.c :: Task_Item_Invincibility 
+- bic: src/game/shared/stage/mp_player.c :: Task_CreateMultiplayerPlayer sub_801707C sub_8017670 
+- bic: src/platform/win32/win32.c :: Win32_ProcessPendingMessages 
+- DOUBLE-HOME: src/game/sa1/stage/interactables/platform_square.c src/game/sa2/stage/interactables/platform_square.c :: Task_Platform_Square

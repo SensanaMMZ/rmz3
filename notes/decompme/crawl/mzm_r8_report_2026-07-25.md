@@ -1,4 +1,6 @@
-<!-- mzm :: trait=r8 :: crawled 2026-07-25 :: 199/654 files compiled -->
+<!-- mzm :: trait=r8 :: crawled 2026-07-25 :: 501/662 files compiled -->
+- r8: nes_metroid/emulator/src/part5.c :: sub_0600E048 
+- r8: nes_metroid/emulator/src/part6.c :: EmulatorFillPasswordWithSaved 
 - r8: src/animated_graphics.c :: AnimatedGraphicsLoad AnimatedPaletteUpdate 
 - r8: src/audio.c :: UpdateMusic UpdatePsgSounds UpdateTrack unk_1e2c 
 - r8: src/audio_wrappers.c :: InitializeAudio SetupSoundTransfer unk_2f00 unk_30b4 

@@ -1,4 +1,4 @@
-<!-- pokefirered :: trait=mov_ip :: crawled 2026-07-25 :: 225/283 files compiled -->
+<!-- pokefirered :: trait=mov_ip :: crawled 2026-07-25 :: 279/283 files compiled -->
 - mov_ip: src/AgbRfu_LinkManager.c :: rfu_LMAN_CHILD_checkEnableParentCandidate rfu_LMAN_linkWatcher 
 - mov_ip: src/battle_ai_script_commands.c :: Cmd_if_has_move_with_effect 
 - mov_ip: src/battle_anim.c :: ClearBattleAnimationVars LaunchBattleAnimation RelocateBattleBgPal 
@@ -19,6 +19,7 @@
 - mov_ip: src/battle_anim_status_effects.c :: AnimTask_FrozenIceCube_Step2 
 - mov_ip: src/battle_anim_utility_funcs.c :: AnimTask_UpdateSlidingBg 
 - mov_ip: src/battle_anim_water.c :: AnimTask_RotateAuroraRingColors_Step AnimTask_SurfWaveScanlineEffect 
+- mov_ip: src/battle_bg.c :: DrawLinkBattleParticipantPokeballs 
 - mov_ip: src/battle_controller_link_opponent.c :: LinkOpponentHandleMoveAnimation 
 - mov_ip: src/battle_controller_link_partner.c :: Intro_ShowHealthbox LinkPartnerHandleMoveAnimation 
 - mov_ip: src/battle_controller_oak_old_man.c :: OakOldManHandleMoveAnimation 
@@ -31,6 +32,9 @@
 - mov_ip: src/battle_intro.c :: BattleIntroSlide1 BattleIntroSlide2 BattleIntroSlide3 BattleIntroSlideLink CopyBattlerSpriteToBg DrawBattlerOnBgDMA 
 - mov_ip: src/battle_main.c :: BattleIntroDrawTrainersOrMonsSprites BattleStartClearSetData BattleTurnPassed CheckFocusPunch_ClearVarsBeforeTurnStarts FaintClearSetData HandleAction_UseItem HandleAction_UseMove HandleTurnActionSelectionState LinkBattleComputeBattleTypeFlags SetActionsAndBattlersTurnOrder SetAllPlayersBerryData SpriteCB_BlinkVisible SpriteCB_Flicker SpriteCB_HideAsMoveTarget SpriteCB_UnusedDebugSprite_Step SwitchInClearSetData TurnValuesCleanUp UpdatePartyOwnerOnSwitch_NonMulti 
 - mov_ip: src/battle_message.c :: BattlePutTextOnWindow BattleStringExpandPlaceholders BufferStringBattle 
+- mov_ip: src/battle_records.c :: PrintTotalRecord ResetGpu 
+- mov_ip: src/battle_script_commands.c :: ChangeStatBuffs CheckWonderGuardAndLevitate Cmd_attackcanceler Cmd_checkteamslost Cmd_copymovepermanently Cmd_critcalc Cmd_datahpupdate Cmd_disablelastusedattack Cmd_getexp Cmd_getmoneyreward Cmd_jumpifarrayequal Cmd_jumpifarraynotequal Cmd_jumpifnexttargetvalid Cmd_jumpifnopursuitswitchdmg Cmd_magnitudedamagecalculation Cmd_mimicattackcopy Cmd_moveend Cmd_normalisebuffs Cmd_openpartyscreen Cmd_painsplitdmgcalc Cmd_ppreduce Cmd_rolloutdamagecalculation Cmd_selectfirstvalidtarget Cmd_setseeded Cmd_settypetorandomresistance Cmd_settypetoterrain Cmd_switchhandleorder Cmd_switchindataupdate Cmd_transformdataexecution Cmd_tryconversiontypechange Cmd_tryimprison Cmd_trymirrormove Cmd_trysetencore Cmd_trysetperishsong Cmd_trysetrest Cmd_typecalc2 Cmd_updatebattlermoves Cmd_various SetMoveEffect UproarWakeUpCheck 
+- mov_ip: src/battle_tower.c :: CheckMonBattleTowerBanlist ChooseSpecialBattleTowerTrainer Debug_FillEReaderTrainerWithPlayerData UpdateOrInsertReceivedBattleTowerRecord 
 - mov_ip: src/battle_transition.c :: BigPokeball_SetGfx Mugshot_GradualWhiteFade Slice_Main UpdateBlackWipe 
 - mov_ip: src/battle_util.c :: CheckMoveLimitations DoBattlerEndTurnEffects DoFieldEndTurnEffects HandleFaintedMonActions HandleWishPerishSongOnTurnEnd OpponentSwitchInResetSentPokesToOpponentValue PressurePPLose PressurePPLoseOnUsingPerishSong UpdateSentPokesToOpponentValue 
 - mov_ip: src/berry_crush.c :: Cmd_TabulateResults FramesToMinSec HandlePartnerInput PrintResultsText printCrushingResults 
@@ -40,6 +44,7 @@
 - mov_ip: src/blit.c :: BlitBitmapRect4Bit BlitBitmapRect4BitTo8Bit FillBitmapRect4Bit FillBitmapRect8Bit 
 - mov_ip: src/cable_car_util.c :: CableCarUtil_CopyWrapped CableCarUtil_FillWrapped 
 - mov_ip: src/clear_save_data_screen.c :: SaveClearScreen_GpuInit 
+- mov_ip: src/daycare.c :: BuildEggMoveset GetEggSpecies 
 - mov_ip: src/decompress.c :: StitchObjectsOn8x8Canvas 
 - mov_ip: src/digit_obj_util.c :: CopyWorkToOam 
 - mov_ip: src/diploma.c :: DiplomaInitScreen 
@@ -48,14 +53,24 @@
 - mov_ip: src/dodrio_berry_picking_comm.c :: RecvPacket_GameState SendPacket_GameState 
 - mov_ip: src/easy_chat.c :: GetUnlockedWordsInAlphabeticalGroup InitEasyChatPhrases 
 - mov_ip: src/easy_chat_3.c :: DrawECFrameInTilemapBuffer EC_AddTextPrinterParameterized2 RedrawFrameByRect 
+- mov_ip: src/event_object_movement.c :: AddCameraObject CopySprite CreateCopySpriteAt GetAvailableObjectEventId GetBaseTemplateForObjectEvent InitObjectPriorityByElevation MoveCoordsInDirection SetSpritePosToMapCoords SetTrainerMovementType UpdateObjectEventSpriteInvisibility 
+- mov_ip: src/fame_checker.c :: FCSetup_ClearVideoRegisters FullyUnlockFameChecker ResetFameChecker 
 - mov_ip: src/field_effect.c :: MultiplyInvertedPaletteRGBComponents SlideIndoorBannerOnscreen WarpInObjectEventDownwards 
+- mov_ip: src/field_effect_helpers.c :: FindTallGrassFieldEffectSpriteId FldEff_Splash ShowDisguiseFieldEffect StartUnderwaterSurfBlobBobbing UpdateDisguiseFieldEffect 
+- mov_ip: src/field_fadetransition.c :: UpdateStairsMovement 
+- mov_ip: src/field_player_avatar.c :: AlignFishingAnimationFrames 
+- mov_ip: src/field_specials.c :: GetMartClerkObjectId 
 - mov_ip: src/field_weather.c :: ApplyDroughtGammaShiftWithBlend ApplyFogBlend ApplyGammaShift ApplyGammaShiftWithBlend BuildGammaShiftTables UpdateWeatherGammaShift 
 - mov_ip: src/field_weather_effects.c :: CreateRainSprite 
 - mov_ip: src/fieldmap.c :: LoadSavedMapView MoveMapViewToBackup SaveMapView 
+- mov_ip: src/fldeff_cut.c :: SetCutGrassMetatileAt 
 - mov_ip: src/gpu_regs.c :: InitGpuRegManager 
+- mov_ip: src/hall_of_fame.c :: ClearVramOamPltt_LoadHofPal Task_HofPC_PrintMonInfo Task_Hof_ApplauseAndConfetti Task_Hof_PaletteFadeAndPrintWelcomeText Task_Hof_TryDisplayAnotherMon 
+- mov_ip: src/help_system.c :: BuildMainTopicsListAndMoveToH00 
 - mov_ip: src/help_system_util.c :: HS_DrawBgTilemapRect 
 - mov_ip: src/image_processing_effects.c :: ApplyImageEffect_RedChannelGrayscale ApplyImageEffect_RedChannelGrayscaleHighlight ConvertImageProcessingToGBA QuantizePalette_Standard QuantizePixel_MotionBlur 
 - mov_ip: src/intro.c :: SpriteCB_GengarSwipe 
+- mov_ip: src/item.c :: ItemPcCompaction 
 - mov_ip: src/item_menu.c :: BackUpPlayerBag RestorePlayerBag UpdatePocketScrollPositions 
 - mov_ip: src/itemfinder.c :: RegisterHiddenItemRelativeCoordsIfCloser 
 - mov_ip: src/learn_move.c :: MoveRelearnerInitListMenuBuffersEtc MoveRelearnerMenuHandleInput 
@@ -77,11 +92,14 @@
 - mov_ip: src/multiboot.c :: MultiBootMain 
 - mov_ip: src/mystery_gift.c :: IsStampInMetadata 
 - mov_ip: src/mystery_gift_show_news.c :: WonderNews_GetInput 
+- mov_ip: src/naming_screen.c :: NamingScreen_InitBGs 
 - mov_ip: src/new_menu_helpers.c :: SetBgTilemapPalette 
 - mov_ip: src/oak_speech.c :: Task_OakSpeech_ReleaseNidoranFFromPokeBall Task_SlowFadeIn Task_SlowFadeOut 
 - mov_ip: src/option_menu.c :: InitOptionMenuBg 
+- mov_ip: src/overworld.c :: LinkPlayerDetectCollision ResetScreenForMapLoad 
 - mov_ip: src/palette.c :: BeginNormalPaletteFade CopyPaletteInvertedTint PaletteStruct_Copy ReadPlttIntoBuffers TintPalette_CustomTone TintPlttBuffer UnfadePlttBuffer UpdateFastPaletteFade 
 - mov_ip: src/palette_util.c :: RouletteFlash_FadePalette UnmarkUsedPulseBlendPalettes 
+- mov_ip: src/party_menu.c :: AnimateSelectedPartyIcon InitPartyMenuBoxes SwitchPartyOrderLinkMulti TryMovePartySlot 
 - mov_ip: src/player_pc.c :: PCMailCompaction 
 - mov_ip: src/pokeball.c :: SpriteCB_ReleasedMonFlyOut 
 - mov_ip: src/pokedex_screen.c :: DexScreen_AddTextPrinterParameterized DexScreen_DrawMonFootprint DexScreen_GetSetPokedexFlag DexScreen_TryScrollMonsVertical 
@@ -94,23 +112,34 @@
 - mov_ip: src/pokemon_storage_system_menu.c :: UnusedWriteRectDma 
 - mov_ip: src/pokemon_storage_system_misc.c :: UnkUtil_CpuAdd UnkUtil_DmaAdd UnkUtil_DmaRun 
 - mov_ip: src/pokemon_storage_system_tasks.c :: CreateDisplayMonSprite SetPartySlotTilemap 
+- mov_ip: src/pokemon_summary_screen.c :: PokeSum_AddWindows PokeSum_FlipPages_SlideHpExpBarsIn PokeSum_PrintMoveName PokeSum_SetHpExpBarCoordsFullRight PokeSum_Setup_InitGpu PokeSum_UpdateBgPriorityForPageFlip SpriteCB_MoveSelectionCursor Task_HandleInput_SelectMove 
+- mov_ip: src/quest_log.c :: QL_LoadObjectsAndTemplates QuestLogRecordNPCStep QuestLogRecordNPCStepWithDuration QuestLogRecordPlayerStep QuestLogSetFlagOrVar ResetActions SetNPCInitialCoordsAtScene 
 - mov_ip: src/quest_log_battle.c :: TrySetQuestLogLinkBattleEvent 
 - mov_ip: src/quest_log_objects.c :: QL_LoadObjects QL_RecordObjects 
+- mov_ip: src/region_map.c :: CreateDungeonIconSprite InitRegionMapBgs SetDungeonIconInvisibility SetFlyIconInvisibility 
 - mov_ip: src/save.c :: HandleReplaceSector HandleWriteSector 
 - mov_ip: src/save_failed_screen.c :: FillBgMapBufferRect 
 - mov_ip: src/scanline_effect.c :: GenerateWave TaskFunc_UpdateWavePerFrame 
+- mov_ip: src/seagallop.c :: ResetGPU 
 - mov_ip: src/slot_machine.c :: CalcPayout InitReelButtonTileMem OneReelBiasCheck ReleaseReelButtons SetLineState Task_SpinReels TwoReelBiasCheck 
 - mov_ip: src/sprite.c :: AddSubspritesToOamBuffer AllocSpriteTiles CreateSprite CreateSpriteAndAnimate CreateSpriteAtEnd DestroySprite FreeSpriteTilesByTag JumpToTopOfAffineAnimLoop JumpToTopOfAnimLoop SetSpriteOamFlipBits SortSprites 
 - mov_ip: src/start_menu.c :: DoSetUpSaveAfterLinkBattle 
 - mov_ip: src/task.c :: InsertTask 
+- mov_ip: src/teachy_tv.c :: TeachyTvComputeSingleMapTileBlockFromTilesetAndMetaTiles 
 - mov_ip: src/text.c :: DecompressGlyph_Female DecompressGlyph_Male DecompressGlyph_Normal 
 - mov_ip: src/text_printer.c :: AddTextPrinter CopyGlyphToWindow CopyGlyphToWindow_Parameterized GenerateFontHalfRowLookupTable 
 - mov_ip: src/title_screen.c :: UpdateScanlineEffectRegBuffer 
 - mov_ip: src/trade.c :: QueueAction SetActiveMenuOptions ShowTradePartyMonIcons 
+- mov_ip: src/trade_scene.c :: ClearLinkTimeoutTimer SetTradeBGAffine 
 - mov_ip: src/trainer_card.c :: Task_AnimateCardFlipDown Task_AnimateCardFlipUp 
 - mov_ip: src/trainer_pokemon_sprites.c :: CreatePicSprite LoadPicPaletteByTagOrSlot 
+- mov_ip: src/trainer_see.c :: SetIconSpriteData 
+- mov_ip: src/trainer_tower.c :: InitTrainerTowerBattleStruct 
+- mov_ip: src/union_room.c :: ClearIncomingPlayerList ClearRfuPlayerList LeaderPrunePlayerList TradeBoardListMenuItemPrintFunc TryAddIncomingPlayerToList 
 - mov_ip: src/union_room_chat_display.c :: UnionRoomChat_StartDisplaySubtask 
+- mov_ip: src/union_room_player_avatar.c :: IsUnionRoomPlayerAt 
 - mov_ip: src/util.c :: CopySpriteTiles 
+- mov_ip: src/vs_seeker.c :: LookupVsSeekerOpponentInArray 
 - mov_ip: src/window.c :: BlitBitmapRectToWindow BlitBitmapRectToWindowWithColorKey ScrollWindow 
 - mov_ip: src/window_8bpp.c :: AddWindow8Bit BlitBitmapRectToWindow4BitTo8Bit 
 - mov_ip: src/wireless_communication_status_screen.c :: CountPlayersInGroupAndGetActivity WCSS_AddTextPrinterParameterized 

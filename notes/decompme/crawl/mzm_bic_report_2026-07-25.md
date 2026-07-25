@@ -1,4 +1,4 @@
-<!-- mzm :: trait=bic :: crawled 2026-07-25 :: 199/654 files compiled -->
+<!-- mzm :: trait=bic :: crawled 2026-07-25 :: 501/662 files compiled -->
 - bic: src/audio.c :: UpdatePsgSounds 
 - bic: src/block.c :: BlockProcessBombChains 
 - bic: src/connection.c :: ConnectionLockHatches ConnectionSetHatchAsOpened 

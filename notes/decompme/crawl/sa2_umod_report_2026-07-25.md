@@ -1,0 +1,14 @@
+<!-- sa2 :: trait=umod :: crawled 2026-07-25 :: 477/846 files compiled -->
+- umod: src/game/sa1/stage/enemies/boss_4_egg_spider.c :: sub_8030EE4 
+- umod: src/game/sa1/stage/enemies/boss_x3_egg_x.c :: Task_Strc10_803891C sub_803711C 
+- umod: src/game/sa1/stage/mystery_itembox.c :: sub_801C130 
+- umod: src/game/sa2/options_screen.c :: MultiplayerRecordsScreenCreatePlayerRowUI MultiplayerRecordsScreenCreateTableRowUI TimeRecordsScreenCreateTimesUI TimeRecordsScreenRefreshTimesUI 
+- umod: src/game/sa2/sound_test.c :: Task_SoundTestScreenMain 
+- umod: src/game/sa2/special_stage/ui.c :: RenderScoresAnim 
+- umod: src/game/sa2/stage/interactables/ice_paradise/big_snowball.c :: sub_80791B4 
+- umod: src/game/sa2/stage/interactables/sky_canyon/fan.c :: UpdateFanSpeed 
+- umod: src/game/sa2/stage/interactables/techno_base/light_bridge.c :: sub_807A25C 
+- umod: src/game/sa2/stage/interactables/techno_base/spike_platform.c :: sub_807ACF4 
+- umod: src/game/sa2/stage/itembox.c :: ApplyItemboxEffect InitItemBoxGraphics 
+- umod: src/game/sa2/stage/mystery_itembox.c :: sub_8086504 
+- umod: src/game/sa2/ui/time_attack_results.c :: CreateTimeAttackResults 

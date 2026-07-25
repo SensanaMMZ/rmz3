@@ -1,0 +1,248 @@
+<!-- sa2 :: trait=mov_ip :: crawled 2026-07-25 :: 477/846 files compiled -->
+- mov_ip: multi_boot/programs/subgame_loader/src/multi_sio.c :: MultiSioInit MultiSioMain 
+- mov_ip: src/background.c :: DrawBackground animCmd_AddHitbox_BG 
+- mov_ip: src/bg_triangles.c :: sub_8006228 sub_80064A8 sub_8006DB4 sub_800724C sub_80075D0 sub_8007738 sub_8007958 
+- mov_ip: src/core.c :: ClearOamBufferDma EngineInit GetInput ProcessVramGraphicsCopyQueue 
+- mov_ip: src/game/math.c :: sub_8083504 sub_80835E0 sub_80836BC sub_8084A24 sub_8084B54 sub_8085968 sub_80859F4 
+- mov_ip: src/game/sa1/menus/mp_mode_select.c :: Task_800F058 Task_MultiPak 
+- mov_ip: src/game/sa1/menus/mp_mode_select_2.c :: sub_800FBF8 sub_80818B8 
+- mov_ip: src/game/sa1/multiplayer/chao_message.c :: sub_803BFE8 
+- mov_ip: src/game/sa1/save.c :: RegisterTimeRecord 
+- mov_ip: src/game/sa1/special_stage/main.c :: CreateCheckpointMessage sub_8029E0C sub_8029EA8 sub_8029F30 sub_802A248 sub_802B5DC sub_802B884 sub_802C0CC sub_802C488 sub_802C934 sub_802D6FC 
+- mov_ip: src/game/sa1/stage/backgrounds/zone_1.inc.c :: StageBgUpdate_Zone1Acts12 
+- mov_ip: src/game/sa1/stage/backgrounds/zone_3.inc.c :: StageBgUpdate_Zone3Acts12 
+- mov_ip: src/game/sa1/stage/backgrounds/zone_6.inc.c :: StageBgUpdate_Zone6Act1 
+- mov_ip: src/game/sa1/stage/egg_rocket_transitions.c :: Task_8028F20 Task_8029070 
+- mov_ip: src/game/sa1/stage/enemies/boss_1_egg_hammer_tank.c :: Task_8026ED0 
+- mov_ip: src/game/sa1/stage/enemies/boss_2_egg_press.c :: Task_802DDCC Task_802E130 Task_802E500 sub_802ECFC 
+- mov_ip: src/game/sa1/stage/enemies/boss_3_egg_ball.c :: Task_802F56C Task_802F9F8 Task_802FC14 Task_802FE88 Task_8030414 Task_PipeExtend 
+- mov_ip: src/game/sa1/stage/enemies/boss_4_egg_spider.c :: Task_8031480 sub_803170C 
+- mov_ip: src/game/sa1/stage/enemies/boss_5_mecha_knuckles.c :: Task_MechaKnucklesPartsInit sub_804E8D4 sub_804EB04 sub_804EE20 sub_804EEA8 sub_804EF18 sub_804FDD4 
+- mov_ip: src/game/sa1/stage/enemies/boss_6_egg_snake.c :: Task_8032AF8 Task_8033480 Task_8033730 sub_8031D88 sub_8032D44 sub_8032F58 
+- mov_ip: src/game/sa1/stage/enemies/boss_x1_egg_wrecker.c :: Task_8034718 sub_80342A0 sub_8034EE0 
+- mov_ip: src/game/sa1/stage/enemies/boss_x2_egg_drillster.c :: Task_8035DD4 sub_8036478 
+- mov_ip: src/game/sa1/stage/enemies/boss_x3_egg_x.c :: Task_803753C Task_803A2F8 sub_8038420 sub_803918C 
+- mov_ip: src/game/sa1/stage/enemies/boss_xtra_super_egg_robot.c :: sub_8050888 sub_80518E8 sub_8052424 
+- mov_ip: src/game/sa1/stage/enemies/bosses_misc.c :: Task_8016650 Task_8017334 sub_8017054 
+- mov_ip: src/game/sa1/stage/enemies/buzzer.c :: CreateEntity_Buzzer Task_Buzzer_801E190 
+- mov_ip: src/game/sa1/stage/enemies/drisame.c :: CreateIceBlock Task_IceBlockInit sub_8072E68 
+- mov_ip: src/game/sa1/stage/enemies/fireball.c :: Task_FireballExtinguish Task_FireballUpdateRise 
+- mov_ip: src/game/sa1/stage/enemies/hanabii.c :: Task_806D804 Task_HanabiiInit 
+- mov_ip: src/game/sa1/stage/enemies/kerokero.c :: Task_806D124 Task_KeroKeroInit 
+- mov_ip: src/game/sa1/stage/enemies/kiki.c :: Task_KikiMain 
+- mov_ip: src/game/sa1/stage/enemies/kuraa.c :: Task_KuraaInit 
+- mov_ip: src/game/sa1/stage/enemies/leon.c :: Task_806ED3C Task_806EEA4 
+- mov_ip: src/game/sa1/stage/enemies/mirror.c :: Task_Mirror Task_MirrorShoot 
+- mov_ip: src/game/sa1/stage/enemies/mole.c :: Task_Mole Task_Mole_8071640 
+- mov_ip: src/game/sa1/stage/enemies/oct.c :: Task_OctInit sub_807033C sub_80706F0 
+- mov_ip: src/game/sa1/stage/enemies/pen_mk1.c :: Task_PenMk1Main 
+- mov_ip: src/game/sa1/stage/enemies/rhinotank.c :: Task_806C9A0 Task_806CBD0 
+- mov_ip: src/game/sa1/stage/enemies/senbon.c :: Task_8070CB4 
+- mov_ip: src/game/sa1/stage/enemies/slot.c :: sub_806E374 
+- mov_ip: src/game/sa1/stage/enemies/tentou.c :: Task_807473C 
+- mov_ip: src/game/sa1/stage/enemies/yukimaru.c :: CreateSnowball2 Task_8071BFC Task_YukimaruWallInit Task_YukimaruWallInit2 sub_80723C0 
+- mov_ip: src/game/sa1/stage/interactables/039.c :: Task_Interactable039Main 
+- mov_ip: src/game/sa1/stage/interactables/113.c :: Task_Interactable113 
+- mov_ip: src/game/sa1/stage/interactables/air_bubbles.c :: Task_809141C Task_80915F0 sub_80914F8 
+- mov_ip: src/game/sa1/stage/interactables/bowl.c :: Task_Bowl3 
+- mov_ip: src/game/sa1/stage/interactables/bumpers.c :: CreateEntity_BumperRound_CircularMov CreateEntity_BumperRound_LinearMov Task_BumperHexagon2 Task_BumperRound_CircularMov2 Task_BumperRound_LinearMov2 
+- mov_ip: src/game/sa1/stage/interactables/checkpoint.c :: Task_CheckpointMain 
+- mov_ip: src/game/sa1/stage/interactables/crane_claw_and_lift.c :: Task_CraneClaw2 Task_CraneClaw4 Task_CraneClaw5 Task_CraneClaw6 Task_CraneClaw7 Task_CraneClaw8 Task_Lift3 Task_Lift4 
+- mov_ip: src/game/sa1/stage/interactables/fadein_to_be_continued.c :: Task_ToBeContinuedText 
+- mov_ip: src/game/sa1/stage/interactables/flipper_small_blue.c :: Task_Flipper_SmallBlue 
+- mov_ip: src/game/sa1/stage/interactables/flippers.c :: Task_Flipper_Horizontal Task_Flipper_Horizontal_2 Task_Flipper_Vertical_2 
+- mov_ip: src/game/sa1/stage/interactables/grind_rail.c :: Task_GrindRailEnd 
+- mov_ip: src/game/sa1/stage/interactables/half_pipe.c :: Task_HalfPipeEnd Task_HalfPipeStart 
+- mov_ip: src/game/sa1/stage/interactables/hook_rail.c :: Task_HookRail_Shared0 Task_HookRail_Type2_1 
+- mov_ip: src/game/sa1/stage/interactables/ice_block.c :: sub_8091E88 
+- mov_ip: src/game/sa1/stage/interactables/maze_air_corner.c :: CreateEntity_TrackAirCorner 
+- mov_ip: src/game/sa1/stage/interactables/mini_loop.c :: Task_MiniLoop_Entrance Task_MiniLoop_Exit Task_MiniLoop_StartBoost 
+- mov_ip: src/game/sa1/stage/interactables/mini_loop_boost.c :: Task_MiniLoop_Base 
+- mov_ip: src/game/sa1/stage/interactables/moving_spring.c :: sub_808BB44 
+- mov_ip: src/game/sa1/stage/interactables/panel_gate.c :: Task_PanelGate_Horizontal2 
+- mov_ip: src/game/sa1/stage/interactables/party_balloon.c :: Task_PartyBalloonPopped 
+- mov_ip: src/game/sa1/stage/interactables/pipe.c :: Task_8095D28 Task_8095E90 Task_809656C Task_8096724 Task_PipeEntrance 
+- mov_ip: src/game/sa1/stage/interactables/red_flag_and_pole.c :: Task_8077760 
+- mov_ip: src/game/sa1/stage/interactables/security_gate.c :: Task_SecurityGate1 Task_SecurityGateMain 
+- mov_ip: src/game/sa1/stage/interactables/shrubbery.c :: Task_ShrubberyMain 
+- mov_ip: src/game/sa1/stage/interactables/skating_stone.c :: Task_SkatingStone2 
+- mov_ip: src/game/sa1/stage/interactables/special_spring.c :: Task_TransitionSpStage 
+- mov_ip: src/game/sa1/stage/interactables/spikes.c :: CreateEntity_Spikes_Up Task_Spikes_Down Task_Spikes_Up sub_8020F2C sub_8021208 
+- mov_ip: src/game/sa1/stage/interactables/spring.c :: sub_8022AB4 sub_8022E14 
+- mov_ip: src/game/sa1/stage/interactables/spring_hiding.c :: Task_8095158 
+- mov_ip: src/game/sa1/stage/interactables/stage_goal.c :: Task_StageGoal4 
+- mov_ip: src/game/sa1/stage/interactables/toggle_player_layer.c :: Task_Toggle_PlayerLayer 
+- mov_ip: src/game/sa1/stage/interactables/toggle_player_visibility.c :: Task_Toggle_PlayerVisibility 
+- mov_ip: src/game/sa1/stage/interactables/track.c :: Task_Track 
+- mov_ip: src/game/sa1/stage/interactables/water_bridge_splash.c :: Task_WaterBridgeSplash 
+- mov_ip: src/game/sa1/stage/mp_chao.c :: Task_802816C Task_8028388 Task_8028518 Task_80286B0 
+- mov_ip: src/game/sa1/stage/mp_unk_0.c :: Task_801C810 
+- mov_ip: src/game/sa1/stage/mp_unk_1.c :: sub_801D0CC 
+- mov_ip: src/game/sa1/stage/mystery_itembox.c :: Task_801C2FC 
+- mov_ip: src/game/sa1/stage/player_controls.c :: GetAirDashDirection 
+- mov_ip: src/game/sa1/stage/player_knuckles.c :: sub_8048B38 
+- mov_ip: src/game/sa1/stage/player_super_sonic.c :: Task_804AAC4 Task_804AD0C Task_804B0D8 Task_804B370 sub_8049D7C sub_804A8A8 
+- mov_ip: src/game/sa1/stage/some_task_manager.c :: sub_804CD80 sub_804CDF8 
+- mov_ip: src/game/sa1/stage/to_be_continued_screen.c :: Task_ToBeContinuedScreenInit 
+- mov_ip: src/game/sa1/stage/ui_rendering.c :: sub_8053520 
+- mov_ip: src/game/sa1/ui/character_select.c :: Task_805B52C sub_805AFC4 sub_805B694 
+- mov_ip: src/game/sa1/ui/course_select.c :: Task_80628A4 
+- mov_ip: src/game/sa1/ui/edit_language_screen.c :: CreateEditLanguageScreen sub_806AD44 
+- mov_ip: src/game/sa1/ui/extra_stage_results.c :: CreateExtraStageResults Task_80661A8_48 Task_80662D0_48 Task_806636C_48 Task_80663EC_48 Task_8066478 Task_80669A0 
+- mov_ip: src/game/sa1/ui/game_2_3.c :: Task_80634EC 
+- mov_ip: src/game/sa1/ui/game_over.c :: Task_GameOverScreenInit 
+- mov_ip: src/game/sa1/ui/sound_test.c :: Task_SoundTestInit 
+- mov_ip: src/game/sa1/ui/vs_record.c :: SwapRecords 
+- mov_ip: src/game/sa2/bg_palette_effects.c :: sub_808D8A0 sub_808D988 
+- mov_ip: src/game/sa2/collect_rings/singlepak_connection.c :: StartSinglePakConnect sub_80818B8 
+- mov_ip: src/game/sa2/cutscenes/credits_slides.c :: CreateCreditsSlidesCutScene 
+- mov_ip: src/game/sa2/cutscenes/extra_ending_fall.c :: CreateExtraEndingFallCutScene sub_809066C sub_8090904 sub_8090CA0 sub_8090D60 sub_8090EB4 
+- mov_ip: src/game/sa2/cutscenes/final_ending_fall.c :: CreateFinalEndingFallCutScene sub_8092850 
+- mov_ip: src/game/sa2/cutscenes/final_ending_land.c :: CreateFinalEndingLandingCutScene sub_8093638 sub_8093740 sub_8093868 
+- mov_ip: src/game/sa2/cutscenes/level_endings.c :: sub_808DD9C sub_808DF88 
+- mov_ip: src/game/sa2/multiplayer/multipak_connection.c :: StartMultiPakConnect sub_805ADAC sub_805B4C0 
+- mov_ip: src/game/sa2/multiplayer/results.c :: sub_805C0F0 sub_805C504 
+- mov_ip: src/game/sa2/multiplayer/team_play.c :: sub_805CC34 sub_805D118 
+- mov_ip: src/game/sa2/options_screen.c :: CreateEditProfileNameScreen CreateMultiplayerRecordsScreen CreateTimeRecordsScreen CreateTimeRecordsScreenAtCoursesView DifficultyMenuCreateUI LanguageScreenHandleLanguageChanged OptionsInitBackground Task_ButtonConfigMenuOpenAnimWait Task_ButtonMenuConfigCloseAnim Task_DifficultyMenuCloseAnim Task_MultiplayerRecordsScreenScrollAnim Task_OptionsScreenMenuCursorMoveAnim Task_OptionsScreenSubMenuCloseAnim Task_OptionsScreenSubMenuOpenAnim Task_PlayerDataMenuCloseAnim Task_TimeLimitMenuCloseAnim TimeLimitMenuCreateUI TimeRecordsScreenRenderTimeRowAnimFrame sub_806A568 
+- mov_ip: src/game/sa2/save.c :: InsertMultiplayerProfile PackSaveSectorData UnpackSaveSectorData 
+- mov_ip: src/game/sa2/sound_test.c :: SoundTestScreenRenderUI 
+- mov_ip: src/game/sa2/special_stage/collectables.c :: SpecialStageHandleCollectRings sub_806E1AC sub_806E584 
+- mov_ip: src/game/sa2/special_stage/guard_robo.c :: sub_80710B0 sub_807120C sub_8071380 
+- mov_ip: src/game/sa2/special_stage/physics.c :: CalcGuardRoboPointerAngle HandleBoost1 HandleBoost2 HandleMovementControls PlayerStatePhysics_SlowToStop Task_PhysicsMain sub_806F468 
+- mov_ip: src/game/sa2/special_stage/player.c :: sub_806D424 sub_806D484 sub_806D4E4 sub_806D548 
+- mov_ip: src/game/sa2/special_stage/ui.c :: UpdateStageTime 
+- mov_ip: src/game/sa2/special_stage/utils.c :: SpecialStageCalcEntityScreenPosition SpecialStageDrawBackground sub_806CA88 
+- mov_ip: src/game/sa2/special_stage/world.c :: sub_806E7C0 sub_806EA04 
+- mov_ip: src/game/sa2/stage/backgrounds/zone_7_init.inc.c :: Zone7BgUpdate_Outside 
+- mov_ip: src/game/sa2/stage/boost_effect.c :: BoostEffect_StorePlayerState sub_801561C 
+- mov_ip: src/game/sa2/stage/boost_mode_particles.c :: CreateBoostModeParticles sub_808A0A4 
+- mov_ip: src/game/sa2/stage/bosses/boss_1.c :: CreateEggHammerTankII DestructionScene_UpdateComponents EggHammerTankIIMove HandleBossHitPalette InitDestructionScene StateHandler_HammerDrag StateHandler_HammerExtend StateHandler_HammerHold StateHandler_HammerPlunge StateHandler_HammerReset StateHandler_HammerRetract UpdateArmSegments 
+- mov_ip: src/game/sa2/stage/bosses/boss_2.c :: BreakWheels CreateDestructionExplosions CreateEggBomberTank UpdateBomberTankPalette 
+- mov_ip: src/game/sa2/stage/bosses/boss_3.c :: CreateEggTotem EggTotemMove Task_EggTotemBullet sub_803F4B8 sub_803FC14 sub_803FF44 sub_804063C sub_80407A4 sub_8040F14 sub_8041264 
+- mov_ip: src/game/sa2/stage/bosses/boss_4.c :: AeroEggMove AeroEgg_InitPartsDefeated sub_8041A08 sub_8042560 
+- mov_ip: src/game/sa2/stage/bosses/boss_5.c :: EggSaucerMove HandleCollision sub_80436E4 sub_80438C4 sub_8043E2C sub_8044A14 sub_8044CBC sub_8044EB0 sub_8044FE4 sub_80451C4 sub_8045898 
+- mov_ip: src/game/sa2/stage/bosses/boss_6.c :: EggGoRoundMove SetPalette sub_804655C sub_8046C28 sub_8047060 sub_804732C 
+- mov_ip: src/game/sa2/stage/bosses/boss_7.c :: CreateEggFrog sub_8047F0C sub_804931C sub_80493F8 
+- mov_ip: src/game/sa2/stage/bosses/boss_8.c :: Task_804AB24 sub_8049F1C sub_804A070 sub_804A398 sub_804A53C sub_804B0EC sub_804B43C sub_804BAC0 sub_804BC44 sub_804C240 sub_804C3AC sub_804C5B8 sub_804CA70 
+- mov_ip: src/game/sa2/stage/bosses/boss_9.c :: CreateTrueArea53Boss SetupEggmanKidnapsVanillaTask TrueArea53BossMove sub_804D8E0 sub_804DE5C sub_804DEEC sub_804E15C sub_804E4CC sub_804ED98 sub_804EF68 sub_804F010 sub_804F1EC sub_804F47C sub_804F6AC sub_804F768 sub_804F850 sub_804F9BC sub_804FAA4 sub_804FC10 sub_804FD58 sub_8050030 sub_8050104 sub_8050958 
+- mov_ip: src/game/sa2/stage/bosses/explosion_parts.c :: CreateBossParticleStatic CreateBossParticleWithExplosionUpdate 
+- mov_ip: src/game/sa2/stage/bosses/final_intro.c :: CreateActor CreateOrbitingEmeraldsSequence CreateSuperSonicSpark CreateTrueArea53Intro IntroRenderSprites sub_80378BC sub_8037E08 
+- mov_ip: src/game/sa2/stage/cheese.c :: sub_801464C sub_8014CC8 sub_8015118 
+- mov_ip: src/game/sa2/stage/enemies/balloon.c :: Task_BalloonMain 
+- mov_ip: src/game/sa2/stage/enemies/bullet_buzzer.c :: Task_BulletBuzzerMain 
+- mov_ip: src/game/sa2/stage/enemies/flickey.c :: CreateEntity_Flickey 
+- mov_ip: src/game/sa2/stage/enemies/geji_geji.c :: CreateEntity_GejiGeji 
+- mov_ip: src/game/sa2/stage/enemies/hammerhead.c :: Task_Hammerhead 
+- mov_ip: src/game/sa2/stage/enemies/kiki.c :: Task_KikiMain Task_ProjPieceMain 
+- mov_ip: src/game/sa2/stage/enemies/koura.c :: CreateEntity_Koura 
+- mov_ip: src/game/sa2/stage/enemies/kubinaga.c :: sub_80524D0 sub_80526C8 sub_80528AC sub_8052AEC sub_8052CC8 
+- mov_ip: src/game/sa2/stage/enemies/madillo.c :: Task_8056230 
+- mov_ip: src/game/sa2/stage/enemies/mon.c :: Task_MonMain 
+- mov_ip: src/game/sa2/stage/enemies/mouse.c :: sub_8057348 
+- mov_ip: src/game/sa2/stage/enemies/pen.c :: Task_PenMove 
+- mov_ip: src/game/sa2/stage/enemies/projectiles.c :: CreateSeveralProjectiles 
+- mov_ip: src/game/sa2/stage/enemies/spinner.c :: Task_EnemySpinner 
+- mov_ip: src/game/sa2/stage/enemies/straw.c :: Task_StrawMain 
+- mov_ip: src/game/sa2/stage/enemies/yado.c :: Task_8055084 
+- mov_ip: src/game/sa2/stage/input_buffer.c :: InputBuffer_HandleFrameInput 
+- mov_ip: src/game/sa2/stage/interactables/105.c :: sub_80809B8 
+- mov_ip: src/game/sa2/stage/interactables/ceiling_slope.c :: Task_Interactable_CeilingSlope 
+- mov_ip: src/game/sa2/stage/interactables/egg_utopia/cannon.c :: CreateEntity_Cannon Fire Render 
+- mov_ip: src/game/sa2/stage/interactables/egg_utopia/flying_handle.c :: CreateEntity_FlyingHandle 
+- mov_ip: src/game/sa2/stage/interactables/egg_utopia/iron_ball.c :: UpdatePosition 
+- mov_ip: src/game/sa2/stage/interactables/egg_utopia/launcher.c :: CreateEntity_Launcher 
+- mov_ip: src/game/sa2/stage/interactables/egg_utopia/speeding_platform.c :: sub_807FA98 sub_807FB1C sub_807FE34 
+- mov_ip: src/game/sa2/stage/interactables/grind_rail.c :: Task_GrindRail Task_GrindRail_Air 
+- mov_ip: src/game/sa2/stage/interactables/hot_crater/crane.c :: UpdatePartScreenPositions 
+- mov_ip: src/game/sa2/stage/interactables/hot_crater/dash_ring.c :: DashRing_PlayerIsColliding 
+- mov_ip: src/game/sa2/stage/interactables/hot_crater/floating_spring.c :: sub_8074E44 
+- mov_ip: src/game/sa2/stage/interactables/hot_crater/hook_rail.c :: IsPlayerTouching 
+- mov_ip: src/game/sa2/stage/interactables/hot_crater/windup_stick.c :: sub_80728D4 
+- mov_ip: src/game/sa2/stage/interactables/ice_paradise/big_snowball.c :: CreateEntity_BigSnowball sub_8078E48 sub_80791B4 
+- mov_ip: src/game/sa2/stage/interactables/ice_paradise/funnel_sphere.c :: sub_8077F7C 
+- mov_ip: src/game/sa2/stage/interactables/leaf_forest/bouncy_bar.c :: Task_BouncyBarLaunch 
+- mov_ip: src/game/sa2/stage/interactables/leaf_forest/checkpoint.c :: Task_CheckpointMain_Idle Task_Interactable_Toggle_Checkpoint 
+- mov_ip: src/game/sa2/stage/interactables/leaf_forest/corkscrew.c :: Task_8060D34 sub_8060ED0 sub_8061088 sub_8061228 
+- mov_ip: src/game/sa2/stage/interactables/leaf_forest/corkscrew_3d.c :: Task_8061914 Task_8061C70 Task_8061DA4 Task_8061F60 Task_8062100 Task_80622C8 Task_8062414 sub_8061AB0 
+- mov_ip: src/game/sa2/stage/interactables/leaf_forest/gapped_loop.c :: Task_GappedLoopForwardsMain Task_GappedLoopReverseMain Task_JumpSequenceForwards Task_JumpSequenceReverse 
+- mov_ip: src/game/sa2/stage/interactables/leaf_forest/spikes.c :: HandleSpikeMovementHidingDown HandleSpikeMovementHidingUp 
+- mov_ip: src/game/sa2/stage/interactables/leaf_forest/spring_bouncy.c :: Task_805E02C 
+- mov_ip: src/game/sa2/stage/interactables/leaf_forest/stage_goal.c :: StageGoalToggle_ForceMultiplayerFinish StageGoalToggle_PlayerReachedGoal Task_StageGoalMain 
+- mov_ip: src/game/sa2/stage/interactables/leaf_forest/toggle_player_layer.c :: Task_MapEntity_Toggle_PlayerLayer 
+- mov_ip: src/game/sa2/stage/interactables/music_plant/chord.c :: Task_Bounce 
+- mov_ip: src/game/sa2/stage/interactables/music_plant/keyboard.c :: CreateEntity_Keyboard 
+- mov_ip: src/game/sa2/stage/interactables/music_plant/note_block.c :: CreateEntity_NoteBlock LaunchPlayer UpdateBouncePosition 
+- mov_ip: src/game/sa2/stage/interactables/music_plant/note_sphere.c :: CreateEntity_NoteSphere NoteSphere_ApplyCollisionPlayer NoteSphere_UpdateSpritePos 
+- mov_ip: src/game/sa2/stage/interactables/music_plant/pipe_sequence.c :: Handler_MusicPlant_Pipe_1 Handler_MusicPlant_Pipe_10 Handler_MusicPlant_Pipe_2 Handler_MusicPlant_Pipe_3 Handler_MusicPlant_Pipe_4 Handler_MusicPlant_Pipe_5 Handler_MusicPlant_Pipe_6 Handler_MusicPlant_Pipe_7 Handler_MusicPlant_Pipe_8 Handler_MusicPlant_Pipe_9 PipeSegmentHandler_Translate 
+- mov_ip: src/game/sa2/stage/interactables/note_particle.c :: CreateAngledNoteParticle 
+- mov_ip: src/game/sa2/stage/interactables/pipe.c :: Task_Pipe_End 
+- mov_ip: src/game/sa2/stage/interactables/platform.c :: Task_FallingPlatformMain_Falling Task_PlatformMain 
+- mov_ip: src/game/sa2/stage/interactables/platform_square.c :: CreateEntity_Platform_Square Task_Platform_Square 
+- mov_ip: src/game/sa2/stage/interactables/sky_canyon/fan.c :: IsPlayerInFanRegion 
+- mov_ip: src/game/sa2/stage/interactables/sky_canyon/small_windmill.c :: GetPlayerTouchingAngle RotateWindmill StartSpinSequence 
+- mov_ip: src/game/sa2/stage/interactables/sky_canyon/whirlwind.c :: CreateEntity_Whirlwind sub_807C9C0 sub_807D130 
+- mov_ip: src/game/sa2/stage/interactables/slidy_ice.c :: Task_SlidyIce 
+- mov_ip: src/game/sa2/stage/interactables/techno_base/arrow_platform.c :: sub_807A33C sub_807A688 sub_807AB6C 
+- mov_ip: src/game/sa2/stage/interactables/techno_base/bounce_block.c :: CreateEntity_BounceBlock 
+- mov_ip: src/game/sa2/stage/interactables/techno_base/light_globe.c :: sub_807B2D0 
+- mov_ip: src/game/sa2/stage/interactables/techno_base/spike_platform.c :: sub_807ACF4 
+- mov_ip: src/game/sa2/stage/itembox.c :: ApplyItemboxEffect 
+- mov_ip: src/game/sa2/stage/mp_attack_1_effect.c :: sub_80871C4 
+- mov_ip: src/game/sa2/stage/player_callbacks.c :: Knuckles_Glide_UpdateSpeed Player_UpdateHomingPosition 
+- mov_ip: src/game/sa2/stage/player_super_sonic.c :: sub_802B8A8 sub_802C058 sub_802C358 sub_802C480 
+- mov_ip: src/game/sa2/stage/race_progress.c :: Task_UpdateAvatarPositions 
+- mov_ip: src/game/sa2/stage/screen_mask.c :: ScreenMask_CreateShape ScreenMask_Lower_OriginLeft ScreenMask_Lower_OriginRight ScreenMask_Upper_OriginRight sub_802E278 sub_802E384 sub_802E49C 
+- mov_ip: src/game/sa2/title_screen.c :: WavesBackgroundAnim 
+- mov_ip: src/game/sa2/ui/character_select.c :: Task_CharacterSelectMain Task_MultiplayerVerifySelections Task_MultiplayerWaitForSelections Task_SelectionCompleteFadeOutAndExit 
+- mov_ip: src/game/sa2/ui/course_select.c :: CreateCourseSelectionScreen Task_CourseSelectMain Task_ScrollToNextLevelAnim Task_ScrollToPreviousLevelAnim 
+- mov_ip: src/game/sa2/ui/multiplayer_lobby.c :: ScreenMain Task_NotifyExit 
+- mov_ip: src/game/sa2/ui/stage_intro.c :: SetupStageIntro Task_802F9F8 Task_IntroActLettersAnimations Task_IntroColorAnimation Task_IntroControllerMain Task_IntroZoneNameAndIconAnimations 
+- mov_ip: src/game/sa2/ui/time_attack_lobby.c :: sub_8088944 
+- mov_ip: src/game/sa2/ui/time_attack_results.c :: StoreRecord 
+- mov_ip: src/game/shared/collect_rings/results.c :: sub_80823FC sub_8082CEC 
+- mov_ip: src/game/shared/multiplayer/communication_outcome.c :: CreateMultipackOutcomeScreen 
+- mov_ip: src/game/shared/stage/amy_attack_heart_effect.c :: CreateAmyAttackHeartEffect HandleAnimFrame 
+- mov_ip: src/game/shared/stage/camera.c :: UpdateCamera Zone7BgUpdate_Outside 
+- mov_ip: src/game/shared/stage/collision_1.c :: sub_800CE94 sub_800DA4C 
+- mov_ip: src/game/shared/stage/collision_3.c :: Coll_Cheese_Enemy_Attack Coll_DamagePlayer Coll_Player_Boss_Attack Coll_Player_Enemy Coll_Player_Enemy_Attack Coll_Player_Entity_HitboxN Coll_Player_Entity_RectIntersection Coll_Player_ItemBox Coll_Player_PlatformCrumbling Coll_Player_Projectile 
+- mov_ip: src/game/shared/stage/entities_manager.c :: SpawnMapEntities 
+- mov_ip: src/game/shared/stage/item_tasks.c :: Task_Item_Confusion Task_Item_Invincibility 
+- mov_ip: src/game/shared/stage/magnetic_ring.c :: Task_MagneticRing 
+- mov_ip: src/game/shared/stage/mp_event_mgr.c :: ReceiveRoomEvent_ReachedStageGoal Task_MultiplayerEventMgr_Send 
+- mov_ip: src/game/shared/stage/mp_finish.c :: Task_TransitionToResultsScreen 
+- mov_ip: src/game/shared/stage/mp_indicators.c :: Task_8019898 
+- mov_ip: src/game/shared/stage/mp_player.c :: CreateMultiplayerPlayer Task_CreateMultiplayerPlayer sub_8017C28 sub_8018300 
+- mov_ip: src/game/shared/stage/pause_menu.c :: CreatePauseMenu Task_PauseMenuUpdate 
+- mov_ip: src/game/shared/stage/player.c :: CallPlayerTransition InitializePlayer Player_AirInputControls Player_HandleBoostState Player_HandleGroundMovement Player_HandleInputs SetStageSpawnPos sub_802195C sub_8021A34 sub_8021B08 sub_8021EE4 sub_802203C sub_8022D6C sub_802302C sub_80232D0 sub_80246DC sub_802486C sub_8024B10 sub_8024F74 sub_8029BB8 sub_802A6C0 
+- mov_ip: src/game/shared/stage/rings_scatter.c :: InitScatteringRings RingsScatterSingleplayer_NormalGravity 
+- mov_ip: src/game/shared/stage/spot_lights_manager.c :: Task_SpotlightsManagerMain 
+- mov_ip: src/game/shared/stage/stage.c :: Task_GameStage 
+- mov_ip: src/game/shared/stage/underwater_effects.c :: RandomlySpawnAirBubbles SpawnAirBubbles Task_SpawnAirBubbles 
+- mov_ip: src/game/shared/stage/water_effects.c :: InitWaterPalettes 
+- mov_ip: src/malloc_vram.c :: VramMalloc 
+- mov_ip: src/multi_boot.c :: MultiBootMain MultiBootStartMaster 
+- mov_ip: src/multi_sio.c :: MultiSioInit MultiSioMain 
+- mov_ip: src/platform/shared/audio/cgb_audio.c :: cgb_set_envelope 
+- mov_ip: src/sprite.c :: DisplaySprite ProcessOamBuffers animCmd_AddHitbox 
+- mov_ip: src/task.c :: TaskCreate sub_80028DC 
+- DOUBLE-HOME: src/game/sa1/ui/edit_language_screen.c src/game/sa2/options_screen.c :: CreateEditLanguageScreen
+- DOUBLE-HOME: src/game/sa1/stage/interactables/bounce_block.c src/game/sa2/stage/interactables/techno_base/bounce_block.c :: CreateEntity_BounceBlock
+- DOUBLE-HOME: src/game/sa1/stage/enemies/buzzer.c src/game/sa2/stage/enemies/buzzer.c :: CreateEntity_Buzzer
+- DOUBLE-HOME: src/game/sa1/stage/interactables/platform_square.c src/game/sa2/stage/interactables/platform_square.c :: CreateEntity_Platform_Square
+- DOUBLE-HOME: src/game/sa1/stage/interactables/spikes.c src/game/sa2/stage/interactables/leaf_forest/spikes.c :: CreateEntity_Spikes_Up
+- DOUBLE-HOME: src/game/sa2/stage/bosses/boss_1.c src/game/sa2/stage/bosses/boss_5.c :: HandleCollision
+- DOUBLE-HOME: src/game/sa2/stage/interactables/egg_utopia/flying_handle.c src/game/sa2/stage/interactables/hot_crater/hook_rail.c :: IsPlayerTouching
+- DOUBLE-HOME: src/game/sa2/stage/interactables/music_plant/chord.c src/game/sa2/stage/interactables/music_plant/note_block.c src/game/shared/stage/mp_player.c :: LaunchPlayer
+- DOUBLE-HOME: multi_boot/programs/subgame_loader/src/multi_sio.c src/multi_sio.c :: MultiSioInit
+- DOUBLE-HOME: multi_boot/programs/subgame_loader/src/multi_sio.c src/multi_sio.c :: MultiSioMain
+- DOUBLE-HOME: src/game/sa2/stage/bosses/boss_1.c src/game/sa2/stage/bosses/boss_6.c src/game/sa2/stage/bosses/boss_7.c src/game/sa2/stage/interactables/egg_utopia/cannon.c src/game/sa2/stage/interactables/egg_utopia/flying_handle.c src/game/sa2/stage/interactables/egg_utopia/iron_ball.c src/game/sa2/stage/interactables/hot_crater/crane.c src/game/sa2/stage/interactables/music_plant/chord.c src/game/sa2/stage/interactables/music_plant/note_block.c src/game/sa2/stage/interactables/music_plant/note_sphere.c src/game/sa2/stage/interactables/sky_canyon/propeller.c src/game/sa2/stage/interactables/special_ring.c :: Render
+- DOUBLE-HOME: src/game/sa1/stage/backgrounds/zone_1.inc.c src/game/sa2/stage/backgrounds/zone_1.inc.c src/game/shared/stage/camera.c :: StageBgUpdate_Zone1Acts12
+- DOUBLE-HOME: src/game/sa1/stage/enemies/boss_3_egg_ball.c src/game/sa2/ui/stage_intro.c :: Task_802F9F8
+- DOUBLE-HOME: src/game/sa2/stage/interactables/music_plant/chord.c src/game/sa2/stage/interactables/music_plant/note_block.c :: Task_Bounce
+- DOUBLE-HOME: src/game/sa1/stage/enemies/kiki.c src/game/sa2/stage/enemies/kiki.c :: Task_KikiMain
+- DOUBLE-HOME: src/game/sa1/stage/interactables/platform_square.c src/game/sa2/stage/interactables/platform_square.c :: Task_Platform_Square
+- DOUBLE-HOME: src/game/sa1/stage/enemies/kiki.c src/game/sa2/stage/enemies/kiki.c :: Task_ProjPieceMain
+- DOUBLE-HOME: src/game/sa2/stage/bosses/boss_2.c src/game/sa2/stage/interactables/egg_utopia/flying_handle.c src/game/sa2/stage/interactables/egg_utopia/iron_ball.c :: UpdatePosition
+- DOUBLE-HOME: src/game/sa2/stage/backgrounds/zone_7_init.inc.c src/game/shared/stage/camera.c :: Zone7BgUpdate_Outside
+- DOUBLE-HOME: src/game/sa1/stage/ui_rendering.c src/game/sa2/stage/enemies/kubinaga.c :: sub_80528AC
+- DOUBLE-HOME: src/game/sa1/menus/mp_mode_select_2.c src/game/sa2/collect_rings/singlepak_connection.c :: sub_80818B8
