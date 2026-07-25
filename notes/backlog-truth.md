@@ -1476,3 +1476,18 @@ before hypothesising anything structural.
   the ROM emits a **dead `movs r6,#0`** at the top, so the original had one more
   pseudo than my version — find what that zero is and the allocation likely falls
   into place. Same permuter-not-hand class as OmegaGoldProjectile_Init.
+- **Solid53_Die** (0x114) **PARKED** after 3 probes, 4 bytes over. Structure right.
+  We emit `sub sp,#4` / `add sp,#4`: one value spills. ROM hoists exactly four
+  loop invariants (&RNG_0202f388, 0x1FFF, -0x1000, 0x269EC3) and deliberately
+  **re-loads 0x343FD from the pool three times per iteration**; agbcc in our build
+  hoists that too and runs out of registers. Tried: separate x/y locals, fully
+  inlined call arguments, block-scoped x/y — all identical. Loop-invariant-motion
+  pressure heuristic, not a source shape. Permuter territory.
+  Also note `FUN_0800d5a8` is called here **with a `struct Coord*` argument**
+  though ocean/landscape.c defines it `(void)` — an unused parameter, so the
+  definition still matches; the real signature takes a Coord*.
+
+Three consecutive parks (OmegaGoldProjectile_Init, FUN_080c3574, Solid53_Die) all
+fail on the same axis: agbcc register allocation under pressure. That is the
+documented permuter class. Switching selection strategy to smallest-function-first
+rather than one-function-file-first.
