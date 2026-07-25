@@ -4,6 +4,22 @@
 #include "story.h"
 #include "motion.h"
 
+// 左右 0xA00 の位置に足場があるか (どちらか一方でもあれば TRUE)
+bool8 FUN_08095d80(struct Enemy* p) {
+  bool8 r = FALSE;
+  s32 t;
+
+  t = FUN_08009f6c((p->s).coord.x + 0xA00, (p->s).coord.y);
+  if (t - (p->s).coord.y <= 0x43F) {
+    r = TRUE;
+  }
+  t = FUN_08009f6c((p->s).coord.x - 0xA00, (p->s).coord.y);
+  if (t - (p->s).coord.y <= 0x43F) {
+    r = TRUE;
+  }
+  return r;
+}
+
 INCASM("asm/enemy/shellcrawler_pre_p1_p1_a.inc");
 
 static const EnemyFunc sDeads[4];
