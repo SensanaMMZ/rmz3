@@ -35,6 +35,51 @@ struct Projectile* createEchoWave(struct Entity* e, struct Coord* c, u8 a2) {
   return p;
 }
 
+struct Projectile* FUN_080a14dc(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 15);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 2;
+    p->work[1] = a2;
+    (p->s).coord = *c;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080a1538(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 15);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 3;
+    p->work[1] = a2;
+    (p->s).coord = *c;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+struct Projectile* FUN_080a1594(struct Entity* e, struct Coord* c, u8 a2) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 15);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 4;
+    p->work[1] = a2;
+    (p->s).coord = *c;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
 INCASM("asm/projectile/hellbat_p1_pre_p3.inc");
 
 void Projectile15_Update(struct Projectile* p) {

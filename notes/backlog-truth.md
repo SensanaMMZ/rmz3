@@ -1528,3 +1528,15 @@ those rather than trying to match them.
       (load the global pointer, load x, then deref) and took it 18 diffs -> 8.
   Residual is the usual register permutation (ROM dir=r3/x=r2/zx=r0; ours
   dir=r2/x=r3/zx=r1). Permuter class.
+- **FUN_080afb1c** (0x4C) MATCHED first probe — standard teardown gated on
+  `((p->s).unk_28)->mode[0] > 1`.
+- **FUN_080a14dc / FUN_080a1538 / FUN_080a1594** (0x5C each) MATCHED first probe,
+  all three in one pass. Exact copies of the file's existing `createBat` /
+  `createEchoWave` idiom differing only in `(p->s).work[0]` = 2/3/4.
+
+**Sibling-batching is the cheapest remaining move.** Scan: group asm functions by
+(inc file stem, true size); any group of >=2 is a candidate family. Verify they
+really are siblings by disassembling two — the phantom_p2_p2_p2 group of four at
+0x4C was a *coincidence* of size, not a family, so check before writing. When
+they are real siblings, write all of them in one probe and lift in one build;
+the unk_32 inits (4) and these hellbat spawners (3) each cost one probe total.
