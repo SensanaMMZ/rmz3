@@ -182,12 +182,47 @@ _080772F2:\n\
  .syntax divided\n");
 }
 
+
+extern const EnemyFunc sUpdates1[];
+extern const EnemyFunc sUpdates2[];
+
+// 0x080772f8
+bool8 FUN_080772f8(struct Enemy* p) {
+  if ((p->s).mode[1] != 7) {
+    s32 v = *(s32*)&p->props[0];
+    if (v == 0) {
+      switch ((p->s).mode[3]) {
+        case 0:
+          if (IsFrozen(&p->s)) {
+            (sUpdates1[(p->s).mode[1]])(p);
+            (sUpdates2[(p->s).mode[1]])(p);
+            (p->s).mode[3]++;
+            UpdateMotionGraphic(&p->s);
+            return TRUE;
+          }
+          break;
+        case 1:
+          if (IsFrozen(&p->s)) {
+            if (((p->body).status & 0x00020001) == 0x00020001) {
+              (p->s).mode[3] = 0;
+            } else {
+              return TRUE;
+            }
+          } else {
+            (p->s).mode[3] = 0;
+          }
+          break;
+      }
+    }
+  }
+  return FALSE;
+}
+
 INCASM("asm/enemy/volcaire_p1_a.inc");
 
 static const EnemyFunc sUpdates1[8];
 static const EnemyFunc sUpdates2[8];
 void FUN_08077388(struct Enemy* p);
-bool8 FUN_080772f8(struct Enemy* p);
 
 void Volcaire_Update(struct Enemy* p) {
   u8 sf = gCurStory.s.gameflags[4] & 2;

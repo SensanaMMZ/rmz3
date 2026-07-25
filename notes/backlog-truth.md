@@ -459,3 +459,16 @@ change snapped base into r8 and fixed every downstream register role
 (37 diffs -> 0). The second access stays as a fresh expression (the RNG
 global store aliases work[1], forcing the reload seen in the target).
 Tail: `if (work[2] == 0 || --work[2] == 0) DIE` || form.
+
+## Freeze-dispatcher trio FUN_080772f8/FUN_08093b50/FUN_08095124 (SOLVED)
+
+All three matched (one C body each, per-file sUpdates1/sUpdates2), ROM
+sha1 exact. bool8 return; gate order mode[1]!=7 then props-word==0;
+case 0 = IsFrozen -> call both update tables, mode[3]++, UMG, TRUE;
+case 1 = IsFrozen ? (status&0x20001)==0x20001 ? mode[3]=0 : TRUE
+: mode[3]=0. Lever: the status test MUST be the == spelling with the
+clear in the then-arm — crossjump then shares case 0's `movs r0,#1`
+tail (bne backwards), 2 bytes shorter; the != / early-return-TRUE
+spelling emits a second movs#1 and never merges. The two mode[3]=0
+stores pick up per-arm known-zero registers (r5 = props word, r0 =
+IsFrozen result) automatically.

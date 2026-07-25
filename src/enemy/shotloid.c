@@ -69,7 +69,41 @@ bool8 FUN_08093afc(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/shotloid_pre_p2_a_a.inc");
+
+extern const EnemyFunc sUpdates1[];
+extern const EnemyFunc sUpdates2[];
+
+// 0x08093b50
+bool8 FUN_08093b50(struct Enemy* p) {
+  if ((p->s).mode[1] != 7) {
+    s32 v = *(s32*)&p->props[0];
+    if (v == 0) {
+      switch ((p->s).mode[3]) {
+        case 0:
+          if (IsFrozen(&p->s)) {
+            (sUpdates1[(p->s).mode[1]])(p);
+            (sUpdates2[(p->s).mode[1]])(p);
+            (p->s).mode[3]++;
+            UpdateMotionGraphic(&p->s);
+            return TRUE;
+          }
+          break;
+        case 1:
+          if (IsFrozen(&p->s)) {
+            if (((p->body).status & 0x00020001) == 0x00020001) {
+              (p->s).mode[3] = 0;
+            } else {
+              return TRUE;
+            }
+          } else {
+            (p->s).mode[3] = 0;
+          }
+          break;
+      }
+    }
+  }
+  return FALSE;
+}
 
 struct ShotloidObject {
   OBJECT_HDR;
@@ -98,9 +132,6 @@ void FUN_08093be0(struct ShotloidObject* p) {
 
 INCASM("asm/enemy/shotloid_pre_p2_a_b.inc");
 
-extern const EnemyFunc sUpdates1[9];
-extern const EnemyFunc sUpdates2[9];
-bool8 FUN_08093b50(struct Enemy* p);
 
 void Shotloid_Update(struct Enemy* p) {
   if (!FUN_08093afc(p)) {
