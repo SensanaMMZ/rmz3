@@ -622,7 +622,42 @@ void copyxMode12(struct Boss* p) {
   (p->s).work[2] = 6;
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p1.inc");
+INCASM("asm/boss/copy_x_p2_p3_p1_p1_a.inc");
+
+void copyxNovaStrike2(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb3, 0x09));
+    (p->s).mode[2] = 0;
+    (p->s).d.x = 0;
+    (p->s).d.y = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x10;
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 15;
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a.inc");
+
+void copyx_080568bc(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb3, 0x18));
+    (p->s).mode[2] = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 11;
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_b.inc");
 
 void FUN_080569a4(struct Boss* p) {
   if ((p->s).mode[2] != 0) {

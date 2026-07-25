@@ -2109,3 +2109,36 @@ per-iteration `+= 0x3800`, which is why the ROM looks like a pointer walk.
   shape as throw_blade.c:98. Condition is `(z->unk_b4).mainCopy == WEAPON_BUSTER`
   (mainCopy is at 0xE4, confirmed with an offsetof probe, and the ROM's
   `cmp r0,#0` pins the constant to 0 = WEAPON_BUSTER, not SABER).
+
+## NEW VEIN: entity mode handlers (SetMotion + UpdateMotionGraphic only)
+
+The spawn-helper vein is exhausted. A `bl`-target rescan finds **63** remaining
+asm functions whose ONLY calls are SetMotion and UpdateMotionGraphic. They share
+one skeleton:
+
+    if ((p->s).mode[2] != 0) {          <- ldrb [r4,#0xe] / cmp #0 / beq
+      SetMotion(&p->s, MOTION(a, b));   <- ldr r1,=0x0000AABB
+      (p->s).mode[2] = 0;
+      ...per-mode setup...
+    }
+    UpdateMotionGraphic(&p->s);
+    ...per-mode update...
+    if ((p->s).motion.state == 3) {     <- adds r0,#0x73 / ldrb / cmp #3
+      (p->s).mode[1] = <next>;
+      (p->s).mode[2] = 1;
+    }
+
+Offsets: mode[] at 0xC so mode[1]=0xD, mode[2]=0xE; work[] at 0x10;
+motion.state at 0x73. `motion.state == 3` means the animation finished.
+Matched copyxNovaStrike2 and copyx_080568bc from this skeleton on the first probe.
+
+Caveat found while scanning: the scanner must SKIP functions whose body is a raw
+`.byte` blob (INCCODE'd rather than disassembled). 117 functions looked like
+call-free leaves purely because their `bl`s are invisible inside the blob.
+
+**blizzackMode18 / blizzackMode20 PARKED** (45/46 diffs, right length). Both
+write a u16 motion into the child at `unk_2c + 0xBC`; agbcc loads the constant
+into r3 and copies it (`ldr r3,pool / add r1,r3,#0`) where the ROM stores from r1
+directly, and it materialises the `mode[2] = 0` zero several instructions early.
+Tried `(u16)` cast, `motion_t*` via Enemy props[8], separate motionID/motionSubID
+stores, and SetMotion on the child: 45/45/53/27 diffs.
