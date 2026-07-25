@@ -124,11 +124,13 @@ because I compiled it wrong.** agbcc also reproduces `push {r7, lr}` with
 `-fno-omit-frame-pointer` (which `-O2` disables), and `old_agbcc.exe` is
 already in the tree, already used for `m4a.o`.
 
-Status: **unknown, worth investigating** — not ruled out. Still unexplained is
-that the target holds the global's address in r7 rather than a frame pointer,
-and ends with a redundant `movs r0, r0` / `tst r0, r0`. The Klonoa GBA project
-reports old_agbcc allocates pool loads to a different register and that `-ftst`
-emits `tst` instead of `ands`+`cmp`, which is worth probing next.
+Status: **RESOLVED (2026-07-25)** — the module is hand-written assembly.
+The `movs r0, r0` / `tst r0, r0` tails are flag-register returns: callers
+`beq` immediately after `bl` with no comparison (asm/mmbn4.inc:1681). No
+compiler emits flag-returning calls, so no flag sweep can ever match these
+18 functions; they stay NAKED permanently, like crt0. The original
+"different from the rest of the game" observation was correct — the
+error was assuming it had to be a *compiler* difference.
 
 ### "The objdiff ranking shows the closest holdouts" — WRONG
 

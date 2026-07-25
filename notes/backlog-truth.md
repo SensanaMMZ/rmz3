@@ -519,3 +519,22 @@ locals; taking &z->hazardCount as an explicit early local; permuter.
 Siblings IsInHazard (0x080283EC, 0xA0) and IsAgainstHazard (0x0802848C,
 0xD0) in src/player.c share the anchors — solve CheckZeroHazard first,
 the levers transfer.
+
+## mmbn4 sweep — RESOLVED: the module is hand-written assembly
+
+The planned old_agbcc/-ftst flag sweep is unnecessary. Proof that no
+compiler produced src/mmbn4.c's functions: they return results in the
+CPSR FLAGS. SioLink_GetTransmitFlags ends `tst r0, r0 / pop {pc}` and
+its caller (asm/mmbn4.inc:1681) does `bl SioLink_GetTransmitFlags /
+beq ...` with NO comparison after the call — the branch consumes the Z
+flag set inside the callee. SioLink_GetLocalPlayerId likewise ends
+`movs r0, r0 / tst r0, r0` (value in r0 AND flags valid, serving both
+caller styles — see asm/mmbn4.inc:836 vs :1030). C has no
+flag-returning calling convention; this is a hand-asm SIO/e-Reader
+link library (crt0-class). DISPOSITION: the 18 mmbn4 functions stay
+NAKED permanently and come OFF the reconstruction backlog. This also
+closes the old "mmbn4 is not our compiler's output" question from
+notes/matching-workflow.md: the original observation was right, but
+the reason is "not any compiler's output", not a flag difference.
+The r7-as-global-base and push {r7,lr} frames are asm-programmer
+idioms, consistent with this conclusion.
