@@ -13,6 +13,8 @@
 #include "vfx.h"
 #include "definition.h"
 #include "mission.h"
+#include "zero.h"
+#include "gba/syscall.h"
 
 // 左右 0xA00 の位置に足場があるか (どちらか一方でもあれば TRUE)
 bool8 FUN_08095d80(struct Enemy* p) {
@@ -450,6 +452,7 @@ void FUN_08096950(struct Enemy* p) {
 void FUN_080b145c(struct Coord* c, s32 dx);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 void FUN_080c6934(struct Entity* e, u8 n);
+void FUN_08096b84(struct Enemy* p);
 struct Entity* FUN_080b2b40(u8 kind, struct Coord* c, u16 r2, bool16 isDirRight);
 struct VFX* FUN_080c6880(struct Entity* e);
 void FUN_080c68cc(struct Entity* e, struct Coord* c);
@@ -674,7 +677,53 @@ void FUN_08096d84(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shellcrawler_post_post_c.inc");
+// 弾(子Entity): ゼロを狙って飛ぶ
+void FUN_08096eac(struct Enemy* p) {
+  struct Zero* z;
+  s32 dist;
+  s32 t;
+  s32 dy;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[10]);
+      if ((p->s).work[0] == 0) {
+        SetMotion(&p->s, MOTION(0xdb, 4));
+      } else {
+        SetMotion(&p->s, MOTION(0xdb, 0x0f));
+      }
+      UpdateMotionGraphic(&p->s);
+      z = pZero2;
+      (p->s).d.x = (p->s).coord.x - (z->s).coord.x;
+      dy = (p->s).coord.y - 0x1800;
+      (p->s).d.y = dy - (z->s).coord.y;
+      dist = ((p->s).d.x >> 8) * ((p->s).d.x >> 8);
+      dist += ((p->s).d.y >> 8) * ((p->s).d.y >> 8);
+      dist = Sqrt(dist) << 8;
+      if (dist != 0) {
+        (p->s).d.x = ((p->s).d.x << 8) / dist;
+        t = ((p->s).d.y << 8) / dist;
+        (p->s).d.x = (p->s).d.x * 6;
+        (p->s).d.y = t * 6;
+      } else {
+        (p->s).d.x = 0x600;
+        (p->s).d.y = dist;
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0 || (p->body).status & BODY_STATUS_B2) {
+        FUN_08096b84(p);
+      }
+      break;
+  }
+}
 
 void Shellcrawler_Init(struct Enemy* p);
 void Shellcrawler_Update(struct Enemy* p);

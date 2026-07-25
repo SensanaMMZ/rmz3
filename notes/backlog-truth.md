@@ -1360,3 +1360,16 @@ here). Both headers are needed when a function uses all four.
   suspect an argument type before suspecting the control flow.
   Also confirms the documented signed-power-of-two idiom: `d.x * 240 / 256`
   compiles to `lsls #4; subs; lsls #4` then `cmp; bge; adds #0xff; asrs #8`.
+- **FUN_08096d84** (0x128) MATCHED first probe. Same death-effect family; the
+  `||` lever applies to `if (--work[2] == 0 || FUN_080098a4(x, y) != 0)`.
+- **FUN_08096eac** (0x104) MATCHED in 4 probes; retires shellcrawler_post_post_c.inc.
+  Homing-shot maths. Levers: (a) the y delta needs a pinning temp
+  (`dy = coord.y - 0x1800; d.y = dy - z->coord.y;`) or GCC reassociates
+  `(a - K) - b` into `a - (b + K)` and materialises +0x1800 instead of loading
+  -0x1800 from the pool; (b) the sum-of-squares accumulator and `dist` are the
+  **same variable**, written with `+=`, which is what puts it in callee-saved r6
+  across the Sqrt call; (c) arms ordered `if (dist != 0) {...} else {...}`.
+  **Process note:** I sized this function 0x100 from eyeballing the listing; it
+  is 0x104. The probe reported "260B/256B, 4 bytes over" and I spent a cycle
+  hunting phantom extra bytes. Get the size from the *next* thumb_func_start,
+  not by counting.
