@@ -823,3 +823,28 @@ Second reminder from the same probe: standalone harnesses that only
 DECLARE the dispatch tables produce a wrong pool addend (0x10 vs the
 ROM's 0xC) because the arrays are never laid out — that difference is a
 probe artifact, not a mismatch. The ROM build is the arbiter.
+
+## Stage-layer bgofs draw family (FUN_08013bdc et al) — in progress
+
+FUN_08013bdc (sunken library, 48B) is the simplest of a family that also
+includes giantElevator_08014a34/_08014ad4 and snowyplains_080133b4.
+Body is understood completely:
+  n = l->bgIdx;
+  gVideoRegBuffer.bgofs[n >> 4][0] = (l->viewportCenterPixel.x * 3) >> 2;
+  gVideoRegBuffer.bgofs[n >> 4][1] = (l->viewportCenterPixel.y * 3) >> 2;
+(giantElevator uses `(x - 0x1428) >> 2` instead of the *3>>2 parallax.)
+
+STRUCT OFFSETS PINNED (useful for the whole family): bgIdx is the u32 at
+0x5C, which anchors the six Coords before it —
+drawPivotOffset 0x2C, viewportCenterPixel 0x34, prevViewportCenterPixel
+0x3C, scrollPower 0x44, scroll 0x4C, scrollCopy 0x54.
+
+REMAINING (8 bytes): the target pools `gVideoRegBuffer+12` (i.e. &bgofs)
+and then derives BOTH stores from it — index*4 in one register, and the
+second address by `adds r4,#2; adds r2,r2,r4`. Writing the plain member
+expression pools gVideoRegBuffer+0 and adds 0xC (52B, too big);
+anchoring `u16 (*ofs)[2] = gVideoRegBuffer.bgofs;` gets the +12 pool but
+then GCC collapses both stores onto one base register (40B, too small).
+Need the form that keeps the +12 anchor AND two separate address
+computations. This is the FlushOAM pool-anchor lever again — see
+notes/matching-workflow.md step 4.
