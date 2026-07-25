@@ -443,3 +443,12 @@ style, so anything ported upstream must be converted:
 * Prefer `typedef`'d struct names (`Boss`, `Projectile`, `VFX50`, `Coords32`).
 * "Motion" is being renamed "SpriteAnimation" -- don't entrench `Motion` in new
   upstream-facing names.
+
+## Upstream PRs: the fork is SensanaMMZ/rmz3-upstream
+`SensanaMMZ/rmz3` is a standalone repo, not a GitHub fork, so a cross-repo PR
+from it fails with `422 head invalid`. Push contrib branches to
+`SensanaMMZ/rmz3-upstream` (a real fork of mmzret/rmz3) and PR against `dev`.
+Flattened upstream types: Boss, Projectile, Weapon, FlopperObject, VFX50.
+Still nested: Enemy, VFX, Solid. Renames: taskCol -> renderPrio,
+struct Motion -> AnimState, props union -> u8 buffer[N].
+Verify ports with the per-function byte probe (upstream/dev does not build here).
