@@ -332,3 +332,21 @@ diverges early (suspect the compound && evaluation order, the
 unk_28->mode[0] access form, or a kept-pointer for unk_28). The
 whitepaint test idiom confirmed from entity.c:172:
 `gWhitePaintFlags[id >> 5] & (1 << (id & 0x1F))`.
+
+## SeaOtterElf_Init / BirdElf_Init — 216 B pair (in progress)
+
+Structure decoded and size-exact at 216: player from buffer[0],
+`struct Rect r = gZeroRanges[z->posture]` (packed x/y word read), init +
+reset motion, DISPLAY|FLIPABLE via TWO unfused ORs (single ldrb/strb —
+needs an intermediate, but the naive block-scoped `u8 fl` regressed the
+head: the target parks a zero in r8 BETWEEN the two orrs), GetElfMotion(1)
+SetMotion, xflip clears (elf0 forms), coord = z->coord + r, buffer[4/8] =
+coord copy, u16 buffer[14]=0x200 addressed via the OLD spr pointer + 0x78,
+buffer[12]=0 (zero parked in r1 before the strh), buffer[13]=0x20,
+unk_2c=NULL, ROUTINE(UPDATE), tail call. Harnesses:
+build/scratch/elf2/t.c (216/216, 135 diffs) and t2.c (220/216, 69).
+Next: transcribe the flag-OR + zero-parking region exactly
+(`0120 0022 9046 0843 0221 0843 b872`) — the r8 zero is probably
+`(p->s).unk_2c = NULL` hoisted between the ORs by scheduling; try
+declaring `struct Entity* none = NULL;` early or moving unk_2c=NULL
+before the flag ORs.
