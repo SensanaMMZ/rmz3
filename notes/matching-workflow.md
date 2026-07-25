@@ -399,3 +399,11 @@ agbcc dumps a literal pool after any unconditional branch, so a pool can sit in
 the MIDDLE of a function with code after it -- every SET_XFLIP spawner does this.
 The tool now checks for instructions after the last pool entry and falls back to
 the next symbol's address, or refuses to answer rather than guessing.
+
+## Never `rm` an .inc in the same command that inspects it
+I ran `grep thumb_func_start <inc> && rm <inc> && ...` -- the grep output only
+became visible after the delete had already happened. blizzard_arrow_pre.inc
+held THREE functions and I had lifted one, so the link failed on two missing
+symbols. Deleting an .inc outright is only correct when it contains exactly ONE
+thumb_func_start; otherwise carve it. Confirm the count in a SEPARATE tool call
+before the delete.

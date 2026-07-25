@@ -63,7 +63,36 @@ void MenuExit_BlizzardArrow(struct Weapon* w) {
   }
 }
 
-INCASM("asm/weapon/blizzard_arrow_pre.inc");
+#include "zero.h"
+#include "entity/macros.h"
+
+struct Weapon* CreateBlizzardArrow(struct Zero* z, struct Coord* c, u8 n, bool8 xflip) {
+  struct Weapon* w = (struct Weapon*)AllocEntityFirst(gWeaponHeaderPtr);
+
+  if (w != NULL) {
+    if ((z->unk_b4).mainCopy == WEAPON_BUSTER) {
+      INIT_WEAPON_ROUTINE(w, 10);
+      (w->s).flags2 &= ~ENTITY_FLAGS2_B6;
+      (w->s).taskCol = 16;
+      (w->s).tileNum = gWeaponTileNum[0];
+      (w->s).palID = gWeaponPalIDs[0];
+    } else {
+      INIT_WEAPON_ROUTINE(w, 10);
+      (w->s).flags2 &= ~ENTITY_FLAGS2_B6;
+      (w->s).taskCol = 16;
+      (w->s).tileNum = gWeaponTileNum[1];
+      (w->s).palID = gWeaponPalIDs[1];
+    }
+    (w->s).unk_28 = (struct Entity*)z;
+    SET_XFLIP(w, xflip);
+    (w->s).coord = *c;
+    (w->s).work[0] = n;
+    (w->s).work[1] = 0;
+  }
+  return w;
+}
+
+INCASM("asm/weapon/blizzard_arrow_pre_b.inc");
 
 void BlizzardArrow_Die(struct Weapon* p) {
   (p->s).flags &= ~DISPLAY;

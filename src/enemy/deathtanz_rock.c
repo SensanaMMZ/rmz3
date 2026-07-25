@@ -3,8 +3,47 @@
 #include "global.h"
 
 static const EnemyFunc sDeads[1];
+static const s16 s16_ARRAY_0836773c[3];
 
-INCASM("asm/enemy/deathtanz_rock_p1.inc");
+#include "entity/macros.h"
+
+void CreateDeathtanzRock(struct Entity* e, s32 x, s32 y, u8 n) {
+  struct Enemy* rock = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  s32 i;
+
+  if (rock != NULL) {
+    (rock->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(rock, 27);
+    (rock->s).tileNum = 0;
+    (rock->s).palID = 0;
+    (rock->s).flags2 |= WHITE_PAINTABLE;
+    (rock->s).invincibleID = (rock->s).uniqueID;
+    (rock->s).work[0] = 0;
+    (rock->s).coord.x = x;
+    (rock->s).coord.y = y;
+    (rock->s).unk_28 = e;
+    (rock->s).work[2] = n;
+  }
+
+  for (i = 0; i <= 2; i++) {
+    struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+
+    if (p != NULL) {
+      (p->s).taskCol = 24;
+      INIT_ENEMY_ROUTINE(p, 27);
+      (p->s).tileNum = 0;
+      (p->s).palID = 0;
+      (p->s).flags2 |= WHITE_PAINTABLE;
+      (p->s).invincibleID = (p->s).uniqueID;
+      (p->s).work[0] = 1;
+      (p->s).coord.x = x;
+      (p->s).coord.y = y + s16_ARRAY_0836773c[i];
+      (p->s).unk_28 = (struct Entity*)rock;
+      (p->s).work[2] = n;
+      (p->s).work[3] = i;
+    }
+  }
+}
 
 void nop_0807a5bc(struct Enemy* p) {}
 

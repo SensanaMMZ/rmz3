@@ -2100,3 +2100,12 @@ per-iteration `+= 0x3800`, which is why the ROM looks like a pointer walk.
   is n*23 built as `((n*3) << 3) - n`, then `<< 9`.
   Inner-loop `work[2] = i + 1` shows up as `adds r3,r5,#1` hoisted ABOVE the NULL
   check, because the same value is reused as the next loop counter.
+
+- **CreateDeathtanzRock** (enemy 27): same one-spawn-then-loop shape as the
+  stretched arms; `coord.y = y + s16_ARRAY_0836773c[i]`.
+- **CreateBlizzardArrow** (weapon 10): both arms of the if duplicate the ENTIRE
+  init -- INIT_WEAPON_ROUTINE, `flags2 &= ~ENTITY_FLAGS2_B6`, `taskCol = 16` --
+  and differ only in `gWeaponTileNum[0]/[1]` and `gWeaponPalIDs[0]/[1]`. Same
+  shape as throw_blade.c:98. Condition is `(z->unk_b4).mainCopy == WEAPON_BUSTER`
+  (mainCopy is at 0xE4, confirmed with an offsetof probe, and the ROM's
+  `cmp r0,#0` pins the constant to 0 = WEAPON_BUSTER, not SABER).
