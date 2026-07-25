@@ -1845,3 +1845,12 @@ probe each. Two caveats learned this round:
 
 The 4-argument spawners (parent, x, y, u8) are the reliable subset: five matched
 first-probe (phantom x3, babyelf, FUN_0809fa9c, deathtanz). Prefer those.
+- **FUN_0809fa44** (0x58) and **FUN_08093930** (0x64) MATCHED first probe.
+  FUN_0809fa44 writes BOTH unk_coord (0x64/0x68) and coord (0x54/0x58) from the
+  same x,y args. FUN_08093930 returns the Enemy and stores its u8 arg to
+  props[9] (0xBD) — note it is a **3-argument** spawner (x, y, n) with no parent.
+  Both use the same INIT_*_ROUTINE skeleton; only the tail fields differ.
+
+Spawn-helper vein tally: 42 found, 9 matched, 3 parked (FUN_08093994,
+FUN_08061c74, FUN_08061ccc), ~30 left. All three parks are register-allocation
+or scheduling, none are shape errors.

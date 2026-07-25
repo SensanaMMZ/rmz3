@@ -8,7 +8,27 @@
 
 static const struct Collision sCollisions[];
 
-INCASM("asm/enemy/shotloid_pre_p1_p1_a.inc");
+#include "entity/macros.h"
+
+struct Enemy* FUN_08093930(s32 x, s32 y, u8 n) {
+  struct Enemy* e = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+
+  if (e != NULL) {
+    (e->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(e, 62);
+    (e->s).tileNum = 0;
+    (e->s).palID = 0;
+    (e->s).flags2 |= WHITE_PAINTABLE;
+    (e->s).invincibleID = (e->s).uniqueID;
+    (e->s).work[0] = 2;
+    (e->s).coord.x = x;
+    (e->s).coord.y = y;
+    e->props[9] = n;
+  }
+  return e;
+}
+
+INCASM("asm/enemy/shotloid_pre_p1_p1_a_x.inc");
 
 bool8 FUN_080939e8(struct Enemy* p, s32 d) {
   s32 x = (p->s).coord.x;

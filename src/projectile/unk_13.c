@@ -62,7 +62,24 @@ void babyelf_0809f9f0(struct Entity* parent, s32 x, s32 y, u8 n) {
   }
 }
 
-INCASM("asm/projectile/unk_13_p1_post_b.inc");
+
+void FUN_0809fa44(struct Entity* parent, s32 x, s32 y, u8 n) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 13);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 3;
+    (p->s).work[2] = n;
+    (p->s).unk_coord.x = x;
+    (p->s).unk_coord.y = y;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).unk_28 = parent;
+  }
+}
 
 void FUN_0809fa9c(struct Entity* parent, s32 x, s32 y, u8 n) {
   struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
