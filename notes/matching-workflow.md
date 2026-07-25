@@ -245,3 +245,31 @@ The third form also leaves the `1` live in r1 for a following
 `flags |= DISPLAY`, which is how the target reuses it. Proven on
 FUN_080b7e3c (form 1), the elf/laser2 family (form 2) and
 FUN_080c6c60/FUN_080c7250 (form 3, matched exactly).
+
+## The duplicated-arm class (2026-07-25) — recognise it and park immediately
+
+A recurring, systematic blocker: the ROM contains two BYTE-IDENTICAL
+instruction blocks on the two arms of a branch, where agbcc compiling any
+equivalent C emits ONE shared block. Confirmed instances:
+  * `_zeroTryAttack` + its four siblings (116B x5) — duplicated
+    `attackMode[0]=3; attackMode[1]=0;`
+  * `getSunkenLibRoomCoord` — duplicated table lookup across an idx>7 guard
+    (noted by an earlier session, independently reconfirmed)
+  * partially `FUN_080b7e3c` — the pool constant is emitted twice
+
+agbcc cross-jumps the arms back together no matter how the C is spelled.
+Everything tried and FAILED to keep them apart: duplicating the statements
+in both arms; making one arm read a known-zero variable instead of a
+literal; block-local vs hoisted pointers; member-to-member vs temp stores;
+`|=` vs `=` on the shared field.
+
+There is also NO compiler escape hatch: `-fno-crossjumping` does not
+exist in gcc 2.9 (agbcc rejects it outright), and the two related flags
+that ARE accepted (`-fno-thread-jumps`, `-fno-cse-follow-jumps`) change
+the size in the wrong direction and never restore the duplication.
+
+DISPOSITION: when a byte diff shows the target is LARGER than our output
+by exactly one duplicated block, stop. Do not spend another cycle on
+spellings — record it, and treat the function as a permuter/decomp.me
+candidate or leave it as asm. Recognising this class early is worth more
+than any individual match.

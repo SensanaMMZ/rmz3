@@ -390,7 +390,7 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/player/zero/input/util.c:1902 | `NAKED static bool32 ultimate_command_08033da0(struct Zero* z)` |
 | src/player/zero/update.c:1710 | `NAKED static void zeroMode7Phase1(struct Zero* z)` |
 | src/player/zero/update.c:1881 | `NAKED static void zeroMode7Phase2(struct Zero* z)` |
-| src/projectile/blazin.c:100 | `NAKED static void Projectile9_Init(struct Projectile* p)` |
+| src/projectile/blazin.c:102 | `NAKED static void Projectile9_Init(struct Projectile* p)` |
 | src/projectile/lemon.c:45 | `NAKED static struct Projectile* unused_0809ca34(struct Coord* c, s32 r1, u8 r2) { INCCODE("asm/unused/unused_0809ca34.inc"); }` |
 | src/projectile/omega_white.c:63 | `NAKED static void OmegaWhiteProjectile_Init(struct Projectile* p)` |
 | src/projectile/omega_zero.c:263 | `NAKED static void Messenkou_Update(struct Projectile* p)` |
@@ -418,8 +418,8 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/solid/door_3d.c:357 | `NAKED static void FUN_080cd354(struct Solid* p)` |
 | src/solid/icebon.c:66 | `NAKED static void Icebon_Init(struct Solid* p)` |
 | src/solid/main_npc.c:111 | `NAKED static void UpdateCiel(struct Solid* p) { INCCODE("asm/wip/UpdateCiel.inc"); }` |
-| src/solid/mob_npc.c:38 | `NAKED static void MobNPC_Init(struct Solid* p)` |
-| src/solid/mob_npc.c:192 | `NAKED static void FUN_080d95f8(struct Solid* p)` |
+| src/solid/mob_npc.c:42 | `NAKED static void MobNPC_Init(struct Solid* p)` |
+| src/solid/mob_npc.c:196 | `NAKED static void FUN_080d95f8(struct Solid* p)` |
 | src/solid/plant.c:24 | `NAKED static void ModPlant_Init(struct Solid* p)` |
 | src/solid/sea_level_button.c:60 | `NAKED static void SeaLevelButton_Update(struct Solid* p)` |
 | src/solid/snowboard.c:22 | `NAKED bool8 FUN_080cf428(struct Solid* p)` |
