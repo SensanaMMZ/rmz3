@@ -610,3 +610,26 @@ struct MobObject refined: unk_00[8] split into unk_00[4]/unk_04/unk_05/
 unk_06[2], and unk_0c[4] into m_c0/m_c2 (two more motion_t).
 asm/solid/mob_npc_pre_p1.inc split into _1.._5 to interleave the four C
 bodies in ROM order.
+
+## _zeroTryAttack five-pack (116B x5) — in progress, 96/116
+
+Cluster: _zeroTryAttack(0802D020), FUN_0802e338, air1, zero_wall_080303d4,
+zero_ladder_08030ee0 — identical modulo the second bl (zeroAttack /
+FUN_0802e3b0 / zeroAirAtk / zeroWallAtk / zeroLadderAtk). Existing MODERN
+body in src/player/zero/attack/ground/idle.c is WRONG in two ways, both
+now proven from asm/wip/TryAttackGroundIdle.inc:
+ 1. the `forceWeapon == 0xFF` early-out is NOT a bare return — it does
+    `z->forceWeapon |= 0xFF;` first (target: `movs r0,#0xff; orrs r0,r1;
+    strb r0,[r2]`, reusing the already-loaded value);
+ 2. the `attackMode[0]=3; attackMode[1]=0;` pair is DUPLICATED into both
+    arms, not shared after the if/else — and cross-jumping does not merge
+    them because the ok-arm materialises a fresh 0 while the else-arm
+    reuses the (known-zero) IsAttackOK result register.
+Harness build/scratch/tryatk/t2.c reaches 96/116. REMAINING: (a) our
+duplicated arms get cross-jumped back together (need whatever keeps the
+two zero pseudos distinct), and (b) the target does NOT keep
+`&z->usingWeapon` across the IsAttackOK call — it recomputes
+z+0x128 for the later store, while ours CSEs it into r5 and pays a
+push {r5}. Next: try spellings that stop the address CSE (store through
+a separately-derived lvalue) and re-check whether that alone unblocks
+the arm duplication.
