@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "entity/macros.h"
 #include "projectile.h"
 
 static void PhantomProjectile_Init(struct Projectile* p);
@@ -302,6 +303,17 @@ void FUN_080af9c8(struct Projectile* p) {
 }
 
 INCASM("asm/projectile/phantom_p2_p2_p2.inc");
+
+void FUN_080afb1c(struct Projectile* p) {
+  if (((p->s).unk_28)->mode[0] > 1) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
+
+INCASM("asm/projectile/phantom_p2_p2_p2_b.inc");
 
 void FUN_080af518(struct Projectile* p);
 void FUN_080af5cc(struct Projectile* p);
