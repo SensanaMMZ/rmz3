@@ -1807,3 +1807,17 @@ probe each. Two caveats learned this round:
     file full of enemies;
   * spawners with a `flags2 |= ...` RMW plus a double invincibleID write hit
     the scheduler (see the spearook park); the plain ones do not.
+- **FUN_0807b0d0** (0x54, wormer_snow_ball) MATCHED first probe. Plain spawner:
+  AllocEntityLast, id 29, coord from the two s32 args, returns void.
+  Useful contrast with the spearook park: this one HAS the `flags2 |=
+  WHITE_PAINTABLE` RMW and it compiles contiguously. So the RMW is not what makes
+  spearook schedule oddly — it is the **second invincibleID write** (own uniqueID
+  then the parent's) that spreads the RMW apart.
+- **FUN_08093994** (0x54, shotloid) **PARKED** at 33 diffs / correct size.
+  Structure certain (AllocEntityFirst, id 62, work[0]=1, unk_28=parent, void).
+  Residual is a register-class choice: the ROM keeps the new entity in **r4**
+  and the parent in r5 (`push {r4,r5,lr}`), while we put the entity in r3 and the
+  parent in r4 (`push {r4,lr}`). Both are valid — nothing is live across a call
+  after the alloc — so agbcc simply chose a callee-saved register where we chose
+  a scratch one. Note its two-argument sibling FUN_0807b0d0 matches exactly,
+  so this only bites the single-argument spawners.

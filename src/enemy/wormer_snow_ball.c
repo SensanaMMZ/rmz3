@@ -7,7 +7,25 @@
 
 static const EnemyFunc sDeads[3];
 
-INCASM("asm/enemy/wormer_snow_ball_p1.inc");
+#include "entity/macros.h"
+
+void FUN_0807b0d0(s32 x, s32 y) {
+  struct Enemy* e = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+
+  if (e != NULL) {
+    (e->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(e, 29);
+    (e->s).tileNum = 0;
+    (e->s).palID = 0;
+    (e->s).flags2 |= WHITE_PAINTABLE;
+    (e->s).invincibleID = (e->s).uniqueID;
+    (e->s).work[0] = 0;
+    (e->s).coord.x = x;
+    (e->s).coord.y = y;
+  }
+}
+
+INCASM("asm/enemy/wormer_snow_ball_p1_b.inc");
 
 void nop_0807b1dc(struct Enemy* p) {}
 
