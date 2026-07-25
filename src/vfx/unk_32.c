@@ -200,7 +200,18 @@ void FUN_080bab54(struct VFX* p) {
   (p->s).mode[1] = 1, (p->s).mode[2] = 0, (p->s).mode[3] = 0;
 }
 
-INCASM("asm/vfx/unk_32_pre_pre_a.inc");
+void FUN_080babac(struct VFX* v) {
+  InitScalerotMotion1(&v->s);
+  (v->props).unk32.unk_8 = 0x100;
+  (v->s).spr.mag.x = 0x100;
+  (v->s).spr.mag.y = (v->props).unk32.unk_8;
+  RNG_0202f388 = LCG(RNG_0202f388);
+  (v->s).angle = RNG_0202f388 >> 16;
+  SET_VFX_ROUTINE(v, ENTITY_UPDATE);
+  (v->s).mode[1] = 2;
+  (v->s).mode[2] = 0;
+  (v->s).mode[3] = 0;
+}
 
 void FUN_080bac14(struct VFX* v) {
   InitScalerotMotion1(&v->s);

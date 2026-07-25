@@ -50,7 +50,24 @@ void FUN_0809130c(struct Entity* e, u8 idx) {
   }
 }
 
-INCASM("asm/enemy/unk_59_pre_pre_p1b.inc");
+#include "entity/macros.h"
+
+void FUN_080913c0(struct Enemy* p, u8 n) {
+  struct Enemy* e = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+
+  if (e != NULL) {
+    (e->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(e, 59);
+    (e->s).tileNum = 0;
+    (e->s).palID = 0;
+    (e->s).flags2 |= WHITE_PAINTABLE;
+    (e->s).invincibleID = (e->s).uniqueID;
+    (e->s).coord.x = (p->s).coord.x;
+    (e->s).coord.y = (p->s).coord.y;
+    (e->s).work[0] = n;
+    (e->s).work[3] = (*(s32*)&p->props[0] > 0);
+  }
+}
 
 void FUN_0809142c(struct Entity* e, u8 a2) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);

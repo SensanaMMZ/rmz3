@@ -1597,3 +1597,10 @@ guessing at a helper's identity from context.
 onward (declarations included) into the src file in place of an INCASM, and
 deletes the inc. Written because extracting just the function with a regex
 dropped forward declarations five times this session, costing a build each.
+- **FUN_080babac** (0x68) MATCHED first probe; retires unk_32_pre_pre_a.inc.
+  Fifth member of the unk_32 init family, with an LCG draw for the angle:
+  `RNG_0202f388 = LCG(RNG_0202f388); (v->s).angle = RNG_0202f388 >> 16;`
+  (`lsrs #0x11` on the pre-`>>1` value == `>> 16` of the stored seed, as before).
+- **FUN_080913c0** (0x6C) MATCHED first probe; retires unk_59_pre_pre_p1b.inc.
+  Spawn helper, id 59; last field is
+  `(e->s).work[3] = (*(s32*)&p->props[0] > 0);` written directly as a comparison.
