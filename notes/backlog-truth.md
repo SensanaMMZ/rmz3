@@ -393,3 +393,15 @@ with a mid-block r2→r3 copy), and 4 missing bytes near the
 invincibleTime address formation. Next: try `struct CollidableEntity*
 e` typed directly (drops the casts, may change the addressing form),
 or hoist `struct Body* b = &e->body;`.
+
+## b963c pair SOLVED (t7)
+
+FUN_080b963c + FUN_080c2294 both in-tree as C, ROM sha1 exact.
+Final lever (NEW, added to workflow table): an unexplained register-copy
+insn WEDGED INSIDE a condition evaluation (between the `ands` and its
+`cmp`) means the source evaluates the condition into a NAMED temp, then
+assigns ANOTHER variable, then tests the temp: `u8 t = work[3]++ & 1;
+ce = (struct CollidableEntity*)parent; if (t) ...`. The intervening
+assignment emits between the mask and the test, and the adds/copy
+clobbers flags which forces the `cmp` to exist at all. Also confirmed:
+Ghidra hid the invincibleTime leg of the triple-|| entirely.
