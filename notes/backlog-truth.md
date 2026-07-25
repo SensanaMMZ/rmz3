@@ -1938,3 +1938,29 @@ elf_080e4bf4 differs in one instruction: it writes `unk_coord.x = satelite_slot`
   A zero-extending prologue in the ROM proves a u8 parameter; its ABSENCE proves
   a wider one. Both functions shuttle the entity through `ip`, which agbcc
   reproduces on its own here -- `ip` is not automatically a hard residual.
+
+- **FUN_08099fb8** (minigame leviathan, enemy 68): `coord.x = n * 0x13000 + 0xD000`
+  -- agbcc builds n*19 with `lsl #2 / add / lsl #2 / sub` then `lsl #12`.
+- **FUN_08075bd0** (purple_nerple): the first LOOPING spawner matched --
+  `for (i = 0; i <= 1; i++)` around the whole alloc+init. Two consequences worth
+  remembering: gEnemyFnTable gets hoisted into a callee-saved register so
+  INIT_ENEMY_ROUTINE collapses to a bare `ldr r0,[r7,#0x58]`, and the coord copy
+  is two separate `x =` / `y =` statements, NOT `coord = e->coord` (which would
+  emit the paired thumb_load_double_from_address). agbcc also saves/restores r8
+  here without ever using it.
+- **deathtanz_080a0934 / deathtanz_080a09f4** (projectile 14, 5 args, so the 5th
+  arrives at `[sp,#0x18]`). 0934 writes a byte at 0xBC, which is inside
+  `prevCoord` in the generic struct Projectile, so it needs a local struct.
+
+- **FUN_08075c40** (purple_nerple, enemy 22) PARKED, 2 instructions short of a
+  match. Everything through the coord stores is byte-identical. The ROM's tail:
+
+      lsr r0,#0x11 / movs r1,#1 / ands r0,r1 / strb r0,[r3,#0x11]  <- work[1]
+      ... coord/d stores ...
+      adds r0,r3,#0 / adds r0,#0xb9 / strb r1,[r0]                 <- props[5] = r1
+
+  It REUSES the `& 1` mask constant still live in r1; agbcc from my source picks
+  r1 for the pointer temp and re-materialises `movs r0,#1`, costing 2 bytes.
+  Tried a shared `u32 one` local (+4B), props[5] moved earlier (21 diffs, and it
+  confirms store order = source order), and a `bool8 flip` temp (identical to the
+  plain form). Register assignment only.

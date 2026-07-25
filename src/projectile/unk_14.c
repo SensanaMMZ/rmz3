@@ -36,7 +36,29 @@ void FUN_080a08e0(struct Entity* e, s32 x, s32 y, u8 a3) {
   }
 }
 
-INCASM("asm/projectile/unk_14_p1_p1_p3.inc");
+struct DeathtanzProjectile {
+  OBJECT_HDR;
+  u8 work[4];    // 0xB4
+  u8 unk_b8[4];  // 0xB8
+  u8 unk_bc;     // 0xBC
+};
+
+void deathtanz_080a0934(struct Entity* e, s32 x, s32 y, u8 a3, u8 a4) {
+  struct DeathtanzProjectile* p = (struct DeathtanzProjectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 14);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[2] = a3;
+    (p->s).unk_28 = e;
+    p->unk_bc = a4;
+  }
+}
 
 #include "entity/macros.h"
 
@@ -56,7 +78,24 @@ void deathtanz_080a09a0(struct Entity* parent, s32 x, s32 y, u8 n) {
   }
 }
 
-INCASM("asm/projectile/unk_14_p1_p1_p3_b.inc");
+void deathtanz_080a09f4(struct Entity* e, s32 x, s32 y, u8 a3, u8 a4) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 14);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 3;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[2] = a3;
+    (p->s).work[3] = a4;
+    (p->s).unk_28 = e;
+  }
+}
+
+INCASM("asm/projectile/unk_14_p1_p1_p3_b_b.inc");
 
 void Projectile14_Update(struct Projectile* p) {
   (sUpdates1[(p->s).mode[1]])(p);

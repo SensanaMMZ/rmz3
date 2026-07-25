@@ -25,7 +25,29 @@ void FUN_08075b74(struct Entity* e, u8 n) {
   }
 }
 
-INCASM("asm/enemy/purple_nerple_p1_a_c_a.inc");
+void FUN_08075bd0(struct Entity* e) {
+  s32 i;
+
+  for (i = 0; i <= 1; i++) {
+    struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+
+    if (p != NULL) {
+      (p->s).taskCol = 24;
+      INIT_ENEMY_ROUTINE(p, 22);
+      (p->s).tileNum = 0;
+      (p->s).palID = 0;
+      (p->s).flags2 |= WHITE_PAINTABLE;
+      (p->s).invincibleID = (p->s).uniqueID;
+      (p->s).work[0] = 2;
+      (p->s).work[1] = i;
+      (p->s).coord.x = e->coord.x;
+      (p->s).coord.y = e->coord.y;
+      p->props[5] = 0;
+    }
+  }
+}
+
+INCASM("asm/enemy/purple_nerple_p1_a_c_a_b.inc");
 
 #include "stagerun.h"
 #include "camera.h"
