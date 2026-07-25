@@ -104,9 +104,80 @@ def clone(names):
     save_manifest(m)
 
 
+def shim_dir(name):
+    return os.path.join(CORPUS, '_shims', name)
+
+
+# Directories that never hold the game's own translation units.
+SKIP_DIRS = {'.git', '.github', 'tools', 'build', 'tests', 'test', 'scripts',
+             'plugins', 'graphics', 'sound', 'docs', 'reference', 'preview',
+             'banim', 'mgfembp', 'lib'}
+
+
+def c_files(root):
+    """Every game .c under a project, whatever its layout.
+
+    Most decomps use src/, but some (goldensun) split by overlay into
+    rom_*/ dirs and some (sma2) have no C at all. Walking the whole repo
+    minus the non-source dirs covers all three without per-project config.
+    """
+    out = []
+    for dirpath, dirs, files in os.walk(root):
+        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+        for f in sorted(files):
+            if f.endswith('.c'):
+                out.append(os.path.join(dirpath, f))
+    return sorted(out)
+
+
+def shim(names):
+    """Stub out build-time-generated headers so more of a project preprocesses.
+
+    Decomp repos generate headers (map_groups.h, sprite tables, ...) during
+    their own build; we never build them, so cpp dies on the include. An
+    EMPTY stub is enough for the corpus: we want representative codegen from
+    the files that do compile, not a correct binary.
+    """
+    for name, url in projects():
+        if names and name not in names:
+            continue
+        root = os.path.join(CORPUS, name)
+        srcs = c_files(root)
+        if not srcs:
+            continue
+        sd = shim_dir(name)
+        os.makedirs(sd, exist_ok=True)
+        made = set()
+        for rnd in range(6):
+            missing = set()
+            args = guess_cpp_args(root)
+            for cf in srcs:
+                if True:
+                    r = run([CPP] + args + [cf], cwd=root, timeout=60)
+                    for m in re.finditer(r'fatal error: ([^:\n]+): No such file',
+                                         r.stderr.decode('utf-8', 'replace')):
+                        missing.add(m.group(1).strip())
+            new = missing - made
+            if not new:
+                break
+            for h in sorted(new):
+                dst = os.path.join(sd, h)
+                os.makedirs(os.path.dirname(dst), exist_ok=True)
+                if not os.path.exists(dst):
+                    io.open(dst, 'w', encoding='utf-8', newline='\n').write(
+                        '/* corpus shim: generated header, stubbed %s */\n' % TODAY)
+                made.add(h)
+            print('%-16s round %d: stubbed %d header(s)' % (name, rnd + 1, len(new)))
+        print('%-16s shims: %d' % (name, len(made)))
+
+
 def guess_cpp_args(root):
     """Include dirs / defines that most agbcc-era GBA decomps want."""
     args = ['-I', AGBINC, '-nostdinc', '-undef', '-std=gnu89']
+    name = os.path.basename(root.rstrip(os.sep))
+    sd = shim_dir(name)
+    if os.path.isdir(sd):
+        args += ['-iquote', sd, '-I', sd]
     for d in ('include', 'src', 'tools/agbcc/include'):
         p = os.path.join(root, d)
         if os.path.isdir(p):
@@ -156,17 +227,14 @@ def index(names):
         root = os.path.join(CORPUS, name)
         if not os.path.isdir(root):
             continue
-        srcdir = os.path.join(root, 'src')
-        if not os.path.isdir(srcdir):
-            print('%-16s no src/ — skipped' % name)
+        srcs = c_files(root)
+        if not srcs:
+            print('%-16s no C sources — skipped (asm-only decomp?)' % name)
             continue
         cppargs = guess_cpp_args(root)
         recs, ok, fail = [], 0, 0
-        for dirpath, _, files in os.walk(srcdir):
-            for f in sorted(files):
-                if not f.endswith('.c'):
-                    continue
-                c = os.path.join(dirpath, f)
+        if True:
+            for c in srcs:
                 try:
                     pre = run([CPP] + cppargs + [c], cwd=root, timeout=60)
                     if pre.returncode != 0 or len(pre.stdout) < 200:
@@ -277,6 +345,8 @@ if __name__ == '__main__':
         clone(rest)
     elif cmd == 'index':
         index(rest)
+    elif cmd == 'shim':
+        shim(rest)
     elif cmd == 'check':
         check()
     elif cmd == 'grep':

@@ -196,8 +196,21 @@ instruction?" into a lookup instead of a guess.
 python3 tools/decomp_crawl.py clone [proj ...]   # shallow clone / fetch
 python3 tools/decomp_crawl.py index [proj ...]   # compile + index + dated reports
 python3 tools/decomp_crawl.py grep 'mov\s+r8'    # corpus-wide instruction search
+python3 tools/decomp_crawl.py shim  [proj ...]   # stub build-generated headers
 python3 tools/decomp_crawl.py check              # weekly: which upstreams moved
 ```
+
+`shim` exists because several projects generate headers during their own
+build (pokeemerald's `map_groups.h` and friends). We never build them, so cpp
+died on the include and the project indexed almost nothing. The shim pass
+walks the sources, collects every `fatal error: X: No such file`, writes an
+EMPTY stub for each, and repeats until the set stops growing — empty is fine
+because the corpus wants representative codegen, not a correct binary. It took
+pokeemerald from 37 functions to 15,488. Run `shim` before `index` on any
+project whose `files_failed` is high.
+
+Note that goldensun and sma2 index to zero legitimately: at their current
+commits they are asm-only decomps with no C sources at all.
 
 Reports land in `notes/decompme/crawl/<proj>_<trait>_report_<YYYY-MM-DD>.md`
 (same format as the original `pokeruby_r8_report.md`), one file per trait per

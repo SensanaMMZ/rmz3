@@ -1,0 +1,107 @@
+<!-- pokeemerald :: trait=udiv :: crawled 2026-07-25 :: 306/310 files compiled -->
+- udiv: src/apprentice.c :: BufferApprenticeChallengeText 
+- udiv: src/battle_ai_script_commands.c :: Cmd_get_how_powerful_move_is Cmd_if_can_faint Cmd_if_cant_faint Cmd_if_hp_equal Cmd_if_hp_less_than Cmd_if_hp_more_than Cmd_if_hp_not_equal 
+- udiv: src/battle_ai_switch_items.c :: ModulateByTypeEffectiveness 
+- udiv: src/battle_anim_dark.c :: DoMementoShadowEffect 
+- udiv: src/battle_anim_dragon.c :: AnimOverheatFlame AnimOverheatFlame_Step 
+- udiv: src/battle_anim_effects_1.c :: AnimBubbleBurst_Step AnimDoubleTeam AnimFlyingMusicNotes AnimFrenzyPlantRoot AnimHornHit AnimItemSteal_Step1 AnimItemSteal_Step3 AnimKnockOffOpponentsItem AnimMilkBottle_Step2 AnimNeedleArmSpike AnimSleepLetterZ_Step AnimTrickBag_Step1 AnimWavyMusicNotes_CalcVelocity moveAlongLinearPath 
+- udiv: src/battle_anim_effects_3.c :: AnimMeteorMashStar_Step AnimPainSplitProjectile AnimTask_AcidArmor_Step AnimTask_FlailMovement_Step GetGlareEyeDotCoords InitYawnCloudPosition 
+- udiv: src/battle_anim_electric.c :: AnimTask_ShockWaveProgressingBolt 
+- udiv: src/battle_anim_flying.c :: AnimDiveWaterSplash AnimSkyAttackBird 
+- udiv: src/battle_anim_ghost.c :: AnimDestinyBondWhiteShadow AnimShadowBall AnimShadowBall_Step AnimTask_DestinyBondWhiteShadow AnimTask_SpiteTargetShadow_Step2 
+- udiv: src/battle_anim_ground.c :: AnimTask_HorizontalShake 
+- udiv: src/battle_anim_ice.c :: GenerateHailParticle 
+- udiv: src/battle_anim_mon_movement.c :: AnimTask_ShakeTargetBasedOnMovePowerOrDmg AnimTask_WindUpLunge 
+- udiv: src/battle_anim_mons.c :: AnimWeatherBallUp_Step ConvertPosDataToTranslateLinearData InitAnimArcTranslation InitAnimFastLinearTranslation InitAnimFastLinearTranslationWithSpeed InitAnimLinearTranslation InitAnimLinearTranslationWithSpeed InitSpriteDataForLinearTranslation PrepareEruptAnimTaskData SetBattlerSpriteYOffsetFromOtherYScale SetBattlerSpriteYOffsetFromYScale SetGrayscaleOrOriginalPalette 
+- udiv: src/battle_anim_poison.c :: AnimSludgeBombHitParticle 
+- udiv: src/battle_anim_psychic.c :: AnimTask_ImprisonOrbs 
+- udiv: src/battle_anim_rock.c :: AnimRockScatter_Step AnimTask_MoveSeismicTossBg AnimTask_Rollout 
+- udiv: src/battle_anim_throw.c :: SpriteCB_Ball_MonShrink_Step 
+- udiv: src/battle_anim_water.c :: AnimToTargetInSinWave AnimWaterPulseBubble_Step AnimWaterPulseRing_Step 
+- udiv: src/battle_arena.c :: ShowJudgmentSprite 
+- udiv: src/battle_dome.c :: CalcDomeMonStats DecideRoundWinners DisplayTrainerInfoOnCard GetTypeEffectivenessPoints InitDomeTrainers InitRandomTourneyTreeResults 
+- udiv: src/battle_factory.c :: FillFactoryBrainParty GenerateInitialRentalMons GenerateOpponentMons GetAiScriptsInBattleFactory SetPlayerAndOpponentParties 
+- udiv: src/battle_factory_screen.c :: CreateFrontierFactorySelectableMons 
+- udiv: src/battle_interface.c :: CalcBarFilledPixels CalcNewBarValue Debug_DrawNumber GetScaledExpFraction GetScaledHPFraction MoveBattleBar 
+- udiv: src/battle_main.c :: BattleStartClearSetData CreateNPCTrainerParty GetWhoStrikesFirst 
+- udiv: src/battle_pike.c :: PrepareOneTrainer PrepareTwoTrainers 
+- udiv: src/battle_pyramid.c :: GenerateBattlePyramidWildMon GetBattlePyramidPickupItemId GetUniqueTrainerId SetPickupItem 
+- udiv: src/battle_script_commands.c :: AI_CalcDmg Cmd_accuracycheck Cmd_adjustnormaldamage Cmd_adjustnormaldamage2 Cmd_damagecalc Cmd_friendshiptodamagecalculation Cmd_getexp Cmd_handleballthrow Cmd_hiddenpowercalc Cmd_hpthresholds Cmd_hpthresholds2 Cmd_pickup Cmd_psywavedamageeffect Cmd_recoverbasedonsunlight Cmd_scaledamagebyhealthratio Cmd_stockpiletobasedamage Cmd_stockpiletohpheal Cmd_switchineffects Cmd_trydobeatup Cmd_trysetfutureattack Cmd_typecalc ModulateDmgByType ModulateDmgByType2 SetMoveEffect TypeCalc Unused_ApplyRandomDmgMultiplier 
+- udiv: src/battle_tower.c :: FillFactoryFrontierTrainerParty LoadLinkMultiOpponentsData LoadMultiPartnerCandidatesData SaveTowerChallenge SetNextFacilityOpponent ShowPartnerCandidateMessage 
+- udiv: src/battle_transition.c :: FrontierSquaresSpiral_Inward FrontierSquaresSpiral_Outward Groudon_PaletteBrighten Groudon_PaletteFlash Kyogre_PaletteBrighten Kyogre_PaletteFlash Rayquaza_TriRing 
+- udiv: src/battle_tv.c :: TrySetBattleSeminarShow 
+- udiv: src/battle_util.c :: ItemBattleEffects TryRunFromBattle 
+- udiv: src/berry_blender.c :: CalculatePokeblock PrintBlendingResults ShowBerryBlenderRecordWindow SpriteCB_ScoreSymbol Task_HandleOpponent1 Task_HandleOpponent2 Task_HandleOpponent3 TryAddContestLinkTvShow UpdateOpponentScores UpdateProgressBar UpdateRPM UpdateSpeedFromHit 
+- udiv: src/berry_crush.c :: Cmd_TabulateResults FramesToMinSec PrintCrushingResults PrintResultsText Task_ShowRankings UpdateInputEffects 
+- udiv: src/berry_tag_screen.c :: PrintBerrySize 
+- udiv: src/contest.c :: DrawConditionStars GetNumHeartsFromAppealPoints PrintContestMoveDescription UpdateConditionStars UpdateHeartSlider 
+- udiv: src/contest_ai.c :: ContestAICmd_get_condition ContestAICmd_get_num_move_hearts ContestAICmd_get_num_move_jam_hearts ContestAICmd_get_user_condition 
+- udiv: src/contest_effect.c :: ContestEffect_MakeFollowingMonsNervous 
+- udiv: src/contest_painting.c :: GetImageEffectForContestWinner LoadContestPaintingFrame 
+- udiv: src/contest_util.c :: CalculateContestantsResultData GetNumPreliminaryPoints GetNumRound2Points UpdateContestResultBars 
+- udiv: src/credits.c :: SpriteCB_CreditsMon 
+- udiv: src/daycare.c :: TryProduceOrHatchEgg 
+- udiv: src/dewford_trend.c :: UpdateDewfordTrendPerDay 
+- udiv: src/digit_obj_util.c :: DrawNumObjsLeadingZeros DrawNumObjsMinusInBack DrawNumObjsMinusInFront 
+- udiv: src/dodrio_berry_picking.c :: DoDodrioIntroAnim HandlePickBerries TryIncrementDifficulty UpdateFallingBerries 
+- udiv: src/evolution_graphics.c :: CycleEvolutionMonSprite SpriteCB_Sparkle_ArcDown SpriteCB_Sparkle_SpiralUpward SpriteCB_Sparkle_Spray Task_CycleEvolutionMonSprite_UpdateSize 
+- udiv: src/field_effect.c :: Task_MoveDeoxysRock 
+- udiv: src/field_effect_helpers.c :: UpdateRayquazaSpotlightEffect 
+- udiv: src/field_specials.c :: DetermineCyclingRoadResults GetBattlePyramidHint GetWeekCount 
+- udiv: src/field_weather_effect.c :: CreateAshSprites CreateFogDiagonalSprites CreateFogHorizontalSprites CreateSandstormSprites InitRainSpriteMovement StartRainSpriteFall 
+- udiv: src/fldeff_cut.c :: FldEff_CutGrass 
+- udiv: src/fldeff_softboiled.c :: SetUpFieldMove_SoftBoiled Task_SoftboiledRestoreHealth Task_TryUseSoftboiledOnPartyMon 
+- udiv: src/frontier_util.c :: GiveBattlePoints 
+- udiv: src/hall_of_fame.c :: HallOfFame_PrintMonInfo HallOfFame_PrintPlayerInfo 
+- udiv: src/image_processing_effects.c :: GetColorFromPersonality QuantizePixel_Blur QuantizePixel_BlurHard QuantizePixel_Grayscale QuantizePixel_GrayscaleSmall QuantizePixel_MotionBlur 
+- udiv: src/intro.c :: SpriteCB_WaterDrop_Ripple Task_Scene3_SpinPokeball 
+- udiv: src/link.c :: LinkTest_PrintInt 
+- udiv: src/link_rfu_2.c :: Rfu_InitBlockSend 
+- udiv: src/lottery_corner.c :: GetMatchingDigits 
+- udiv: src/m4a.c :: SampleFreqSet 
+- udiv: src/match_call.c :: PopulateBattleFrontierStreak ShouldTrainerRequestBattle 
+- udiv: src/math_util.c :: MathUtil_Div16 MathUtil_Div16Shift MathUtil_Inv16 MathUtil_Inv16Shift MathUtil_Mul16Shift 
+- udiv: src/mauville_old_man.c :: BardSing Task_BardSong 
+- udiv: src/menu.c :: ChangeGridMenuCursorPosition ChangeMenuGridCursorPosition MoveMenuGridCursor 
+- udiv: src/menu_specialized.c :: ConditionGraph_CalcLine ConditionGraph_SetNewPositions GetConditionMenuMonConditions 
+- udiv: src/mirage_tower.c :: UpdateDisintegrationEffect 
+- udiv: src/move_relearner.c :: MoveRelearnerShowHideHearts 
+- udiv: src/option_menu.c :: FrameType_DrawChoices 
+- udiv: src/overworld.c :: UpdateAmbientCry 
+- udiv: src/pokeball.c :: SpriteCB_PlayerMonSendOut_2 
+- udiv: src/pokeblock.c :: DrawPokeblockInfo 
+- udiv: src/pokeblock_feed.c :: CalculateMonAnimMovementEnd 
+- udiv: src/pokedex.c :: CreateInterfaceSprites CreateMonDexNum PrintDecimalNum PrintMonHeight PrintMonWeight SpriteCB_PokedexListMonSprite SpriteCB_Scrollbar UnusedPrintNum UpdateDexListScroll 
+- udiv: src/pokedex_cry_screen.c :: DrawWaveformSegment 
+- udiv: src/pokemon.c :: AdjustFriendship CalculateBaseDamage CalculateMonStats CalculatePPWithBonus CreateMonWithEVSpread CreateMonWithEVSpreadNatureOTID GetDeoxysStat ModifyStatByNature PokemonUseItemEffects 
+- udiv: src/pokemon_animation.c :: Anim_CircularStretchTwice Anim_GrowInStages Anim_GrowVibrate Anim_HorizontalPivot Anim_HorizontalSlideWobble Anim_HorizontalStretch Anim_HorizontalVibrate Anim_HorizontalVibrate_Fast Anim_HorizontalVibrate_Fastest Anim_RotateUpSlamDown Anim_TipMoveForward Anim_VerticalStretch Anim_VibrateToCorners BackAndLunge_2 BounceRotateToSides GrowStutter HorizontalSlide HorizontalStretchFar RisingWobble SetHorizontalDip ShakeGlow_Move ShrinkGrow ShrinkGrowVibrate Spin SwingConcave SwingConvex TriangleDown VerticalShakeLowTwice VerticalShakeTwice VerticalSlide VerticalSlideWobble VerticalSquishBounce VerticalStretchBothEnds 
+- udiv: src/pokemon_size_record.c :: FormatMonSizeRecord 
+- udiv: src/pokemon_storage_system.c :: CreateBoxMonIconAtPos GetCursorBoxColumnAndRow GetCursorCoordsByPos InBoxInput_Normal InBoxInput_SelectingMultiple InitCursorMove SetItemIconPosition 
+- udiv: src/pokemon_summary_screen.c :: DrawContestMoveHearts DrawExperienceProgressBar 
+- udiv: src/pokenav_conditions.c :: GetMonConditionGraphData 
+- udiv: src/pokenav_main_menu.c :: MoveLeftHeader PokenavCopyPalette 
+- udiv: src/pokenav_menu_handler_gfx.c :: StartOptionSlide 
+- udiv: src/pokenav_ribbons_summary.c :: DrawRibbonSmall GetMonRibbons StartMonSpriteSlide UpdateAndZoomInSelectedRibbon 
+- udiv: src/record_mixing.c :: Task_CopyReceiveBuffer Task_SendPacket 
+- udiv: src/region_map.c :: RegionMap_InitializeStateBasedOnSSTidalLocation 
+- udiv: src/roulette.c :: CanMoveSelectionInDir FlashSelectionOnWheel GetMultiplier GetMultiplierAnimId SetCreditDigits SpriteCB_RollBall_TryLand SpriteCB_RollBall_TryLandAdjacent SpriteCB_UnstickBall_ShroomishBallFall SpriteCB_UnstickBall_TaillowDrop UpdateGridSelectionRect 
+- udiv: src/scanline_effect.c :: ScanlineEffect_InitWave 
+- udiv: src/script_menu.c :: ScriptMenu_MultichoiceGrid 
+- udiv: src/secret_base.c :: GetAverageEVs SetSecretBaseWarpDestination Task_EnterNewlyCreatedSecretBase 
+- udiv: src/shop.c :: Task_BuyHowManyDialogueInit 
+- udiv: src/slot_machine.c :: AdvanceReeltimeReel AdvanceSlotReel SpriteCB_CoinNumber SpriteCB_ReelSymbol SpriteCB_ReelTimeNumbers 
+- udiv: src/sprite.c :: ConvertScaleParam GetAnchorCoord UpdateSpriteMatrixAnchorPos 
+- udiv: src/string_util.c :: ConvertIntToDecimalStringN ConvertIntToHexStringN ConvertUIntToDecimalStringN 
+- udiv: src/trade.c :: DoTradeAnim_Cable DoTradeAnim_Wireless PrintLevelAndGender SetSelectedMon SpriteCB_BouncingPokeball 
+- udiv: src/trainer_card.c :: Task_AnimateCardFlipDown Task_AnimateCardFlipUp UpdateCardFlipRegs 
+- udiv: src/trainer_hill.c :: BufferChallengeTime GetPrizeItemId PrintOnTrainerHillRecordsWindow 
+- udiv: src/trig.c :: Sin2 
+- udiv: src/tv.c :: CountDigits SecretBaseVisit_CalculatePartyData 
+- udiv: src/use_pokeblock.c :: CalculateNumAdditionalSparkles CalculatePokeblockEffectiveness 
+- udiv: src/wallclock.c :: InitClockWithRtc Task_SetClock_HandleInput 
+- udiv: src/wild_encounter.c :: ApplyCleanseTagEncounterRateMod WildEncounterCheck 
+- DOUBLE-HOME: src/pokedex.c src/roulette.c :: CreateInterfaceSprites
+- DOUBLE-HOME: src/battle_factory.c src/battle_tent.c :: GenerateInitialRentalMons
+- DOUBLE-HOME: src/battle_factory.c src/battle_tent.c :: GenerateOpponentMons
+- DOUBLE-HOME: src/dodrio_berry_picking.c src/pokemon_jump.c src/trainer_hill.c :: GetPrizeItemId
+- DOUBLE-HOME: src/contest.c src/pokemon_summary_screen.c :: PrintContestMoveDescription
