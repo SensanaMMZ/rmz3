@@ -787,3 +787,20 @@ fold. That is the same materialisation/allocation class as
 FUN_080d7e5c and FUN_080b7e3c — the pressure that forces the target to
 keep both forms comes from outside the expression. The loop BODY is
 correct in t3/t6; only the head differs. Park.
+
+## FUN_080111bc (ice base LAYER_EXIT, 32B) — SOLVED first try
+
+`gBlendRegBuffer.bldclt = 0; SEA = PIXEL(10240);` — that is the whole
+function. The pool constant 0x0002C00C is `gOverworld.sea` (the SEA
+macro); the value is built by agbcc as `movs r1,#0xa0; lsls r1,#0xe`
+from the plain constant, so write PIXEL(10240) as the rest of the
+codebase does (src/stage/sunken_library/landscape.c:89) and let the
+compiler pick the encoding.
+
+METHOD NOTE that found it: scanning asm/**/*.inc for thumb_func_start
+symbols still absent from src, cross-referenced with rom_symbols.txt
+sizes and filtered to 0x18..0x50 bytes EXCLUDING mmbn4, yields 82
+candidates. Sorting by size and preferring files where a sibling is
+already matched is a much better target picker than the dup-scan
+cluster list, which is now exhausted. Reusable snippet is in this
+session's transcript; consider promoting it to tools/.

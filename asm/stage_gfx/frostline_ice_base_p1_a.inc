@@ -63,19 +63,3 @@ _080111AE:
 _080111B4: .4byte gOverworld
 _080111B8: .4byte 0x0002C00C
 
-	thumb_func_start FUN_080111bc
-FUN_080111bc: @ 0x080111BC
-	ldr r1, _080111D0 @ =gBlendRegBuffer
-	movs r0, #0
-	strh r0, [r1]
-	ldr r0, _080111D4 @ =gOverworld
-	ldr r1, _080111D8 @ =0x0002C00C
-	adds r0, r0, r1
-	movs r1, #0xa0
-	lsls r1, r1, #0xe
-	str r1, [r0]
-	bx lr
-	.align 2, 0
-_080111D0: .4byte gBlendRegBuffer
-_080111D4: .4byte gOverworld
-_080111D8: .4byte 0x0002C00C

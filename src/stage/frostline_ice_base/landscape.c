@@ -163,6 +163,12 @@ static const StageLayerRoutine sLayerRoutine[7] = {
 
 INCASM("asm/stage_gfx/frostline_ice_base_p1_a.inc");
 
+// 0x080111bc
+void FUN_080111bc(struct StageLayer* l UNUSED, const struct Stage* _ UNUSED) {
+  gBlendRegBuffer.bldclt = 0;
+  SEA = PIXEL(10240);
+}
+
 void icebase_080111dc(struct StageLayer* l, const struct Stage* stage UNUSED) {
   if (l->phase == 0) {
     const u16 n = (l->bgIdx << 16) >> 20;
