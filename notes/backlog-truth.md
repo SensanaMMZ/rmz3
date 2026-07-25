@@ -889,3 +889,12 @@ BGCNT16 indexes 4 + 2n. The stage-layer draw family is now complete:
 FUN_08013bdc, giantElevator_08014a34/_08014ad4, snowyplains_080133b4.
 Four functions, one idiom, three of them first-probe once the idiom and
 the offsets were known.
+
+## FUN_0800f840 (SOLVED, 52B, first try) — 5th of the layer family
+
+Byte-for-byte the same body as snowyplains_080133b4, with ONE source
+difference visible in the asm: `const u16 n = l->bgIdx;` is declared
+BEFORE the `if (l->phase == 0)` guard, so the load and its `lsls #16`
+hoist above the compare (the `lsrs #0x14` stays inside). Declaring n
+inside the if would sink both. That hoist/sink split is a cheap, reliable
+tell for where a local is declared relative to a guard.

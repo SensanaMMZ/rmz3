@@ -334,6 +334,15 @@ void FUN_0800f54c(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED)
 
 INCASM("asm/stage_gfx/missile_factory_p2_p1.inc");
 
+// 0x0800f840
+void FUN_0800f840(struct StageLayer* l, const struct Stage* _ UNUSED) {
+  const u16 n = l->bgIdx;
+  if (l->phase == 0) {
+    BGCNT16(n >> 4) = (BGCNT16(n >> 4) & 0xFFFC) | 3;
+    l->phase++;
+  }
+}
+
 void FUN_0800f874(struct StageLayer* l, const struct Stage* stage) {
   if (l->phase == 0) {
     l->scrollPower.x = 0xc0;

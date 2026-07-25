@@ -360,31 +360,3 @@ _0800F834: .4byte 0x00000404
 _0800F838: .4byte 0x00000406
 _0800F83C: .4byte gVideoRegBuffer+12
 
-	thumb_func_start FUN_0800f840
-FUN_0800f840: @ 0x0800F840
-	push {lr}
-	adds r3, r0, #0
-	ldr r0, [r3, #0x5c]
-	lsls r2, r0, #0x10
-	ldrb r0, [r3, #0xe]
-	cmp r0, #0
-	bne _0800F868
-	lsrs r2, r2, #0x14
-	lsls r2, r2, #1
-	ldr r0, _0800F86C @ =gVideoRegBuffer+4
-	adds r2, r2, r0
-	ldrh r1, [r2]
-	ldr r0, _0800F870 @ =0x0000FFFC
-	ands r0, r1
-	movs r1, #3
-	orrs r0, r1
-	strh r0, [r2]
-	ldrb r0, [r3, #0xe]
-	adds r0, #1
-	strb r0, [r3, #0xe]
-_0800F868:
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0800F86C: .4byte gVideoRegBuffer+4
-_0800F870: .4byte 0x0000FFFC
