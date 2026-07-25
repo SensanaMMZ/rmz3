@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "entity/macros.h"
 #include "motion.h"
 #include "script.h"
 
@@ -100,7 +101,28 @@ bool8 FUN_0808bd00(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/omega_gold_sword_p3_p1_b.inc");
+void FUN_0808bd1c(struct Enemy* p) {
+  struct Entity* owner;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags2 |= WHITE_PAINTABLE;
+      (p->s).invincibleID = ((p->s).unk_28)->uniqueID;
+      SetMotion(&p->s, MOTION(0x65, 1));
+      SET_XFLIP(p, FALSE);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      owner = (p->s).unk_28;
+      (p->s).coord.y = owner->coord.y - 0x4000;
+      (p->s).coord.x = owner->coord.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 bool8 FUN_0808bd8c(struct Enemy* p) { return TRUE; }
 
