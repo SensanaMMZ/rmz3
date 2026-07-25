@@ -139,7 +139,21 @@ void FUN_080aada0(struct Entity* e, u8 n) {
   }
 }
 
-INCASM("asm/projectile/unk_32_p1_pre_pre_b_b_b_b.inc");
+struct Projectile* FUN_080aae34(struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 32);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 8;
+    (p->s).work[1] = 0;
+    (p->s).unk_28 = e;
+    return p;
+  }
+  return NULL;
+}
 
 void Projectile32_Init(struct Projectile* p) {
   (sInitializers[(p->s).work[0]])(p);

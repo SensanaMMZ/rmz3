@@ -10,7 +10,23 @@ static const u8 sInitModes[4];
 
 void Projectile18_Update(struct Projectile* p);
 
-INCASM("asm/projectile/unk_18_p1_p1.inc");
+#include "entity/macros.h"
+
+void FUN_080a2ea0(void) {
+  s32 i;
+
+  for (i = 0; i < 5; i++) {
+    struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+    if (p != NULL) {
+      (p->s).taskCol = 8;
+      INIT_PROJECTILE_ROUTINE(p, 18);
+      (p->s).tileNum = 0;
+      (p->s).palID = 0;
+      (p->s).work[0] = 2;
+    }
+  }
+}
 
 void FUN_080a2ee8(s32 x, s32 y) {
   struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
@@ -25,7 +41,24 @@ void FUN_080a2ee8(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/projectile/unk_18_p1_p2.inc");
+void FUN_080a2f34(s32 x, s32 y) {
+  s32 i;
+
+  for (i = 0; i <= 1; i++) {
+    struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+    if (p != NULL) {
+      (p->s).taskCol = 8;
+      INIT_PROJECTILE_ROUTINE(p, 18);
+      (p->s).tileNum = 0;
+      (p->s).palID = 0;
+      (p->s).work[0] = 0;
+      (p->s).coord.x = x - 0x1C00 + i * 0x3800;
+      (p->s).coord.y = y + 0x800;
+      (p->s).work[2] = i;
+    }
+  }
+}
 
 void FUN_080a2fa4(struct Enemy* p) {}
 

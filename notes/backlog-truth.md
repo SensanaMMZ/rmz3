@@ -2051,3 +2051,36 @@ duplication has any effect on codegen.
   Writing `coord.x = prev->coord.x + (prev->coord.x - ...)` lets agbcc fold the
   repeated load and comes out 10 bytes short; the `+=` keeps the already-stored
   value live in a register and re-loads prev->coord.x for the subtraction.
+
+## A countdown loop in the ROM does NOT mean a countdown in the source
+
+FUN_080a2ea0 was parked as "preheader ordering". The ROM is a countdown:
+
+    movs r5,#0 / ldr r6,=gProjectileFnTable / movs r4,#4    <- counter init LAST
+    loop: <body, does not use the counter>
+    subs r4,#1 / cmp r4,#0 / bge loop
+
+`for (i = 4; i >= 0; i--)` gives the identical 72 bytes but emits the counter
+init FIRST (6 diffs, offsets 0x2-0x7), because a for-init precedes the preheader
+that hoisted invariants land in. `for (i = 0; i < 5; i++)` MATCHES -- agbcc
+reverses the loop itself when the counter is unused in the body, and the
+replacement counter is created in the preheader, i.e. after the hoists.
+`for (i = 0; i <= 4; i++)` also matches; `do {} while (--i >= 0)` does not.
+So: counter init AFTER the hoisted invariants = a reversed ascending loop.
+FUN_080a2f34 does use `i` in its body, is not reversed, and stays ascending --
+its `x - 0x1C00 + i * 0x3800` is strength-reduced into the preheader add plus a
+per-iteration `+= 0x3800`, which is why the ROM looks like a pointer walk.
+
+- **FUN_080aae34** (projectile 32): `taskCol = 8` and `work[0] = 8` share one
+  `movs r2,#8` -- another known-value reuse, same trick as spearook's
+  `taskCol = 24` / boss id 24.
+
+**Still parked after retesting:**
+- **createPantheonZombie**: 8 diffs, same length. Everything matches except that
+  the ROM slots `movs r3,#0` between the parent counter's `adds r0,#1` and its
+  `strb`. Tried the `tileNum = 0, palID = 0` comma form -- no change.
+- **FUN_08093994**: the ROM keeps the entity in r4 and the argument in r5 (push
+  {r4,r5,lr}); mine puts the entity in r3, argument in r4 (push {r4,lr}). The
+  epilogue is `pop {r1} / bx r1`, i.e. r0 is LIVE at exit, so it returns
+  something -- but adding `return p` emits an extra `adds r0,r4,#0` and comes out
+  4 bytes LONG. So it returns a value that is already in r0 by other means.
