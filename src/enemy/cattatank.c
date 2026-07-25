@@ -26,7 +26,7 @@ INCASM("asm/enemy/cattatank_p1_p2_a.inc");
 
 extern const EnemyFunc sUpdates1[10];
 extern const EnemyFunc sUpdates2[10];
-void cattatank_08099e20(struct Enemy* p);
+bool8 cattatank_08099e20(struct Enemy* p);
 void Cattatank_Die(struct Enemy* p);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 
@@ -190,7 +190,45 @@ void FUN_08099d88(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/cattatank_p11.inc");
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoords[1];
+
+bool8 cattatank_08099e20(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)&p->props[8];
+  struct VFX* e;
+  u8 attr;
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    e = ApplyElementEffect(0, &p->s, sElementCoords);
+    *slot = e;
+    if ((p->s).mode[1] != 6) {
+      if (e != NULL) {
+        attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+        if (attr == 0x10) {
+          p->props[12] = 1;
+          (p->s).mode[1] = 7;
+          (p->s).mode[2] = 0;
+        } else if (attr == 0x30) {
+          p->props[12] = 2;
+          (p->s).mode[1] = 9;
+          (p->s).mode[2] = 0;
+        }
+      }
+    } else if (e != NULL) {
+      attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+      if (attr == 0x10) {
+        p->props[12] = 1;
+      } else if (attr == 0x30) {
+        p->props[12] = 2;
+      }
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/cattatank_p11_b.inc");
 
 void Cattatank_Init(struct Enemy* p);
 void Cattatank_Update(struct Enemy* p);

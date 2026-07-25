@@ -1107,6 +1107,46 @@ bool8 FUN_08068014(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/batring_p7.inc");
 
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoord;
+
+bool8 batring_08068130(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)&p->props[8];
+  struct VFX* e;
+  u8 attr;
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    e = ApplyElementEffect(0, &p->s, &sElementCoord);
+    *slot = e;
+    if ((p->s).mode[1] != 8) {
+      if (e != NULL) {
+        attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+        if (attr == 0x10) {
+          p->props[12] = 1;
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = 0;
+        } else if (attr == 0x30) {
+          p->props[12] = 2;
+          (p->s).mode[1] = 7;
+          (p->s).mode[2] = 0;
+        }
+      }
+    } else if (e != NULL) {
+      attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+      if (attr == 0x10) {
+        p->props[12] = 1;
+      } else if (attr == 0x30) {
+        p->props[12] = 2;
+      }
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/batring_p7_b.inc");
+
 static const struct Collision sCollisions[14] = {
     [0] = {
       kind : DDP,

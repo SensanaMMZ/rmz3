@@ -1704,3 +1704,15 @@ ApplyElementEffect vein: 19 found, 7 matched, 12 left.
   followed by sExplosionCoords, matching hellbat.c's own declaration order.
 
 ApplyElementEffect vein: 19 found, 8 matched, 2 parked, 9 left.
+- **batring_08068130** and **cattatank_08099e20** (0x94 each) MATCHED. Fifth
+  element-effect shape: after the spawn, `if (mode[1] != GUARD)` sets
+  props[12] and mode[1]/mode[2] from the attribute; the `== GUARD` arm sets only
+  props[12]. Constants: batring (8, 5, 7), cattatank (6, 7, 9).
+  Arm order matters again — the ROM's fallthrough is the `!= GUARD` path, so it
+  must be written `if (mode[1] != GUARD) {...} else if (e != NULL) {...}`.
+  Writing `== GUARD` first costs 4 bytes and 70 diffs.
+  `p->props[12] = 1` reuses r7, the `1` from the `status & 1` mask.
+  **Fifth wrong `void` declaration corrected** (cattatank).
+  **shotcounter_08066da0 differs** despite matching size — its constants appear in
+  a different order (movs #5 / movs #2 / movs #7) and it diffs from byte 6, so it
+  is NOT a third clone; treat separately.
