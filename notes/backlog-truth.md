@@ -1110,3 +1110,15 @@ uses struct Entity*); retyping the decl was needed to build.
 The two `strb` of the SAME masked value f (not a literal 0) is the
 known-zero-register reuse pattern: assign the masked result to a named
 variable and store THAT in both places, rather than writing 0.
+
+## FUN_080ce760 (SOLVED, 68B) — locomoif platform scroller
+
+  e = (p->s).unk_28;                       // kept in r5 across the switch
+  case 0: mode[2] = 1;  FALLTHROUGH;       // literal 1, NOT mode[2]++
+  case 1: *(u16*)&(p->props).raw[0] += (p->s).d.x;
+          FUN_080ce538(p); UpdateMotionGraphic(&p->s); break;
+  // OUTSIDE the switch:
+  if (e->mode[0] > 1) { mode[1] = 3; mode[2] = 0; }
+Note `struct Solid` has `props.raw[16]` (NOT `buffer[]` like Enemy/Elf) —
+the per-kind field name differs by entity type: Enemy/Elf use buffer[],
+Solid/Boss/VFX use props. Check the struct before writing the accessor.

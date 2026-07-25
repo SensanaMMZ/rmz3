@@ -82,7 +82,28 @@ void LocomoIFPlatform_Die(struct Solid* p) {
 
 void nop_080ce70c(struct Solid* p) {}
 
-INCASM("asm/solid/locomoif_platform_part3.inc");
+INCASM("asm/solid/locomoif_platform_part3_a.inc");
+
+// 0x080ce760
+void FUN_080ce760(struct Solid* p) {
+  struct Entity* e = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      FALLTHROUGH;
+    case 1:
+      *(u16*)&(p->props).raw[0] += (p->s).d.x;
+      FUN_080ce538(p);
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+  if (e->mode[0] > 1) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/solid/locomoif_platform_part3_b.inc");
 
 // --------------------------------------------
 
