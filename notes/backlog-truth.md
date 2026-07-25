@@ -499,3 +499,23 @@ literal & 3 materializes the mask first and accumulates into it. New
 lever for the table: power-of-two % vs & are NOT interchangeable
 spellings under agbcc. SetDDP fires at work[2]==0x32 (not a --timer),
 tail is the ||-die form after UpdateMotionGraphic.
+
+## CheckZeroHazard — hazard cluster opener (in progress, t3 = 192/188)
+
+Harness build/scratch/hz/t3.c. SOLVED pieces: loop body field access
+split is CONFIRMED — start.x/start.y each read through their OWN
+pooled anchor (gOverworld+0x1DC / +0x1E0, i.e. address-constant
+&HAZARD(0)->start.x + i*24 spelling), while w/h/objectLen go through
+the gOverworld base register (W_TERRAIN_V2.objects[i].w spelling) —
+mixing the two spellings stopped agbcc from hoisting a unified
+objects-base (that hoist made t2 32 bytes SHORT). len IS hoisted to a
+u8 local (r8). struct Hazard checks out: objects[] at gOverworld+0x1D4,
+{id,attr,w,h,start,unk_10} stride 24.
+REMAINING: whole-function register roles are shuffled vs target
+(target pins z straight into ip with `mov ip, r0` as the FIRST insn,
+x->sl, y->sb, count-ptr->r5, gOverworld->r6; ours puts z in r2, x in
+ip). Same class as the e58bc tie. Ideas: declaration order of x/y/z
+locals; taking &z->hazardCount as an explicit early local; permuter.
+Siblings IsInHazard (0x080283EC, 0xA0) and IsAgainstHazard (0x0802848C,
+0xD0) in src/player.c share the anchors — solve CheckZeroHazard first,
+the levers transfer.
