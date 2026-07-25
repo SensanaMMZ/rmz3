@@ -633,3 +633,24 @@ z+0x128 for the later store, while ours CSEs it into r5 and pays a
 push {r5}. Next: try spellings that stop the address CSE (store through
 a separately-derived lvalue) and re-check whether that alone unblocks
 the arm duplication.
+
+### five-pack addendum (negative results, do not re-run)
+
+Tried and ALL produce byte-identical 96B output (agbcc canonicalises them):
+ v1 block-local `weapon_t* uw = &z->usingWeapon; *uw = w;`
+ v2 hoisted `weapon_t* aw` used as the call argument
+ v3 `z->usingWeapon = z->forceWeapon;` (no temp at the store)
+ v4 `attackMode[1] = ok;` in the else arm (reading the target literally —
+    it stores the known-zero ok register there)
+So the 20-byte gap is NOT reachable by differentiating the two arms at
+source level: agbcc cross-jumps them back together every time, and it
+also insists on keeping &z->usingWeapon in a callee-saved register
+(push {r4,r5,lr}) where the target recomputes z+0x128 and pushes only
+{r4,lr}. Those two facts are linked — the kept pointer is what makes the
+two arms identical enough to merge.
+NEXT IDEA (untried): the target's two `=0x12B` pool entries are separate,
+which hints the two arms were compiled from two textually separate
+statement groups rather than one shared tail — consider that the original
+may not be an if/else at all but two sequential `if` blocks each ending in
+its own `zeroAttack` tail-merge candidate. Worth a corpus grep for
+functions with a duplicated store pair around a shared call tail.
