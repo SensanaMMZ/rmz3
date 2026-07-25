@@ -1854,3 +1854,24 @@ first-probe (phantom x3, babyelf, FUN_0809fa9c, deathtanz). Prefer those.
 Spawn-helper vein tally: 42 found, 9 matched, 3 parked (FUN_08093994,
 FUN_08061c74, FUN_08061ccc), ~30 left. All three parks are register-allocation
 or scheduling, none are shape errors.
+- **FUN_0808f2e4** (seimeran) and **FUN_08080c64** (pantheon_aqua_mod_obj)
+  MATCHED first probe. Both plain spawners (ids 57 and 38).
+
+**A new failure mode, and the worst one yet: orphan bytes at the end of an .inc.**
+asm/enemy/seimeran_p1.inc ended with
+
+    _0808F344:
+      .byte 0x70, 0x47, 0x00, 0x00
+
+after FUN_0808f2e4's literal pool — a stray `bx lr` plus padding with **no
+thumb_func_start**. Lifting the last function from that inc silently deleted
+those 4 bytes, shifting every later object and producing a 5.5-million-byte ROM
+diff starting at 0x5D6.
+Two things let it through:
+  * my byte-probe compares `min(len(ours), len(target))`, so "96B diffs=0"
+    against a 100-byte target reported a MATCH while being 4 bytes short. **A
+    size mismatch must be treated as a failure, not a footnote.**
+  * rom_symbols gives FUN_0808f2e4 size 0x64, which includes the orphan bytes.
+Fix: split the orphan tail into its own inc and INCASM it after the C.
+**Before lifting the LAST function of an inc, diff the inc against what the
+function actually needs — anything after the final pool must be preserved.**

@@ -29,6 +29,27 @@ extern const struct Coord sElementCoord;
 
 INCASM("asm/enemy/seimeran_p1.inc");
 
+#include "entity/macros.h"
+
+void FUN_0808f2e4(s32 x, s32 y, u8 n) {
+  struct Enemy* e = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+
+  if (e != NULL) {
+    (e->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(e, 57);
+    (e->s).tileNum = 0;
+    (e->s).palID = 0;
+    (e->s).flags2 |= WHITE_PAINTABLE;
+    (e->s).invincibleID = (e->s).uniqueID;
+    (e->s).work[0] = 2;
+    (e->s).coord.x = x;
+    (e->s).coord.y = y;
+    (e->s).work[2] = n;
+  }
+}
+
+INCASM("asm/enemy/seimeran_p1_x.inc");
+
 static bool8 FUN_0808f348(Seimeran* p) {
   if ((p->body).status & BODY_STATUS_DEAD) {
     SET_ENEMY_ROUTINE(p, ENTITY_DIE);

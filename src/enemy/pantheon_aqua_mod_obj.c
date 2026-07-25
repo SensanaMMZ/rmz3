@@ -115,6 +115,26 @@ void createSweepLaserSign(struct Entity* e) {
 
 INCASM("asm/enemy/pantheon_aqua_mod_obj_p1_p5.inc");
 
+#include "entity/macros.h"
+
+void FUN_08080c64(s32 x, s32 y) {
+  struct Enemy* e = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+
+  if (e != NULL) {
+    (e->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(e, 38);
+    (e->s).tileNum = 0;
+    (e->s).palID = 0;
+    (e->s).flags2 |= WHITE_PAINTABLE;
+    (e->s).invincibleID = (e->s).uniqueID;
+    (e->s).work[0] = 9;
+    (e->s).coord.x = x;
+    (e->s).coord.y = y;
+  }
+}
+
+INCASM("asm/enemy/pantheon_aqua_mod_obj_p1_p5_x.inc");
+
 void nop_08080eb8(struct Enemy* p) {}
 
 INCASM("asm/enemy/pantheon_aqua_mod_obj_p2_a.inc");
