@@ -1062,3 +1062,21 @@ ROM stores a WORD there — src/player/zero/zero.c:95 already works around
 this with `*((u32*)&z->horizontalSlide) = 0;`. Kept that convention
 rather than retyping a field used by an already-matched file; the field
 is probably really s32 and worth fixing upstream.
+
+## FUN_080823ec (glacierle arm distance, 64B) — 6 bytes, mul-copy shape
+
+Semantics certain (build/scratch/gla/t2.c, 58/64):
+  a = body->parent;  if (!a) return 0;
+  b = (a->s).unk_2c; if (!b) return 0;
+  dx = b->coord.x - a->s.coord.x;  dy = b->coord.y - a->s.coord.y;
+  return (u16)Sqrt((dx>>8)*(dx>>8) + (dy>>8)*(dy>>8)) << 8;
+(the tail `lsls #16; lsrs #8` is exactly `(u16)result << 8`.)
+REMAINING: the target squares each term as `adds r2,rX,#0; muls r2,rX,r2;
+adds rX,r2,#0` — a copy, a 2-operand multiply, and a copy back (3 insns
+per square) — while we emit a single `muls rX,rX`. Six bytes = the four
+extra copies. That pattern means the two multiply operands are DISTINCT
+pseudos in the original, so the source probably squares via two separate
+variables or a macro rather than `x * x` on one variable. Tried: shifting
+inside the expression, shifting as separate statements (both 58B).
+Next idea: `s32 ax = dx >> 8; s32 bx = ax; ... ax * bx` style, or look
+for a SQUARE/Pow2 helper macro in the headers (step 4c).
