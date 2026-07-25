@@ -736,3 +736,19 @@ transposition is not reachable by the permuter's source mutations either.
 Conclusion for the class stands: instruction-identical-modulo-registers
 targets need either a different reconstruction of the surrounding code
 (not this function alone) or acceptance as asm.
+
+### FUN_080b7e3c permuter verdict (VALID re-run, 2026-07-25)
+
+Corrected settings, 1354 iterations, -j4. Base score 180 -> best 160
+(output-160-1). The mutation that scored better splits the SECOND LCG
+into two statements:
+    RNG = RNG * 0x343FD + 0x269EC3;
+    RNG = (RNG << 1) >> 1;
+instead of the one-expression LCG() macro. Applied to the real harness
+(build/scratch/b7e3c/t5.c) this changes NOTHING measurable here: still
+306B, still 12 masked byte diffs, still 27 differing instruction lines.
+The permuter's score weights differences my masking differ ignores, so
+its "improvement" is not a step toward the match.
+NET: the 3-way register rotation survives a valid permuter run too. Same
+disposition as FUN_080d7e5c. Do not re-run either without a new idea
+about the SURROUNDING code — the tie is not inside these functions.
