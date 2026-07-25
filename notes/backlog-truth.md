@@ -1205,3 +1205,29 @@ from a stack Coord whose y is set before the X_FLIP branch and whose x
 is set inside each arm. See the workflow note on hoisting the call
 result — the `if (q != NULL) PlaySound(0x2C);` must be ONE test after
 the if/else, not duplicated in both arms.
+
+## phunter_08065218 (208B) — decoded, 4 bytes on a SET_XFLIP detail
+
+Semantics complete (build/scratch/ph/t9.c, 204/208):
+  u8 m = mode[2];
+  if (m == 0) { SetMotion(0x1300); d.y = m; d.x = m; mode[2]++; }
+  UpdateMotionGraphic;
+  SET_XFLIP(p, coord.x < pZero2->s.coord.x);
+  if (gProjectileHeaderPtr->remaining > 6) {          // s16 at hdr+0xA
+    u8 left = (pZero2->s.coord.x <= coord.x);
+    if (left != ((flags >> 4) & 1)) {
+      if ((u32)(pZero2->s.coord.x - coord.x + 0x6E00) <= 0xDC00 &&
+          (u32)(pZero2->s.coord.y - coord.y + 0x5000) <= 0xA000) {
+        mode[3] = mode[1]; mode[1] = 7; mode[2] = 0;
+      }
+    }
+  }
+REMAINING: inside SET_XFLIP the target keeps the macro's `__xflip__ & 1`
+(`movs r6,#1; adds r1,r6,#0; ands r1,r2`) and REUSES that r6 for the
+later `(flags >> 4) & 1`. We pass a comparison result, so agbcc proves
+it is 0/1 and elides the AND, which also stops the constant being
+shared — 4 bytes plus downstream branch shifts. Needs a value that is
+NOT provably boolean; the other SET_XFLIP matches this session
+(ActorOperator_Update, Actor13_Update) passed literals or a
+`work[1] == 0` test and did keep the AND, so compare those call sites
+before retrying.
