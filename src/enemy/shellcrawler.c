@@ -486,6 +486,44 @@ void FUN_080969d0(struct Enemy* p) {
   }
 }
 
+// 殻(子Entity)の追従処理
+void FUN_08096a90(struct Enemy* p) {
+  struct Enemy* q = (struct Enemy*)(p->s).unk_28;
+  u8 f = gCurStory.s.gameflags[4] & 0x40;
+
+  if (f) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+
+  if ((q->s).mode[0] > 1) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, sCollisions);
+      (p->s).flags &= ~DISPLAY;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (*(u32*)&q->props[4] == 0) {
+        SetDDP(&p->body, sCollisions);
+      } else {
+        SetDDP(&p->body, &sCollisions[14]);
+      }
+      (p->s).coord.x = (q->s).coord.x;
+      (p->s).coord.y = (q->s).coord.y;
+      break;
+  }
+}
+
 INCASM("asm/enemy/shellcrawler_post_post_c.inc");
 
 void Shellcrawler_Init(struct Enemy* p);

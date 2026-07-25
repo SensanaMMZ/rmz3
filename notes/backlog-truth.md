@@ -1336,3 +1336,14 @@ here). Both headers are needed when a function uses all four.
      first) or the result lands in the wrong register.
   4. `dir` must be **s32**. As u32, GCC rewrites `dir * 0x80 - 0x80` into
      `+ 0x80` because only the low byte survives the u8 truncation.
+- **FUN_080969d0** (0xC0) MATCHED first probe. Every lever came from FUN_08096814:
+  explicit `x = coord.x - PIXEL(16)` temp, multiply-first in the final add,
+  `dir` as s32. Confirms those are general to this file's projectile spawns.
+- **FUN_08096a90** (0xF4) MATCHED first probe (only the `&sCollisions[14]` pool
+  word differs in isolation — relocation, resolves in-tree). Lever: the story
+  flag must go through a **u8 local**:
+  `u8 f = gCurStory.s.gameflags[4] & 0x40; if (f) {...}`. The inline
+  `if (gCurStory.s.gameflags[4] & 0x40)` form omits the `lsls #24 / lsrs #24`,
+  and — more importantly — the local is what leaves a register provably holding
+  zero on the fall-through path, which the second EXIT_BODY then reuses instead
+  of emitting its own `movs r2,#0`. Two teardown blocks, only one materialises 0.
