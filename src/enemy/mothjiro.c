@@ -39,7 +39,7 @@ INCASM("asm/enemy/mothjiro_p1_a.inc");
 
 extern const EnemyFunc sUpdates1[7];
 extern const EnemyFunc sUpdates2[7];
-void mothjiro_08088a74(struct Enemy* p);
+bool8 mothjiro_08088a74(struct Enemy* p);
 void Mothjiro_Die(struct Enemy* p);
 
 void Mothjiro_Update(struct Enemy* p) {
@@ -113,7 +113,27 @@ void mothjiro_08088a50(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mothjiro_p8_post_p1.inc");
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoord;
+
+bool8 mothjiro_08088a74(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)((u8*)p + 0xc0);
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    *slot = ApplyElementEffect(0, &p->s, &sElementCoord);
+    if (*slot != NULL) {
+      u8 attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+      if (attr == 0x10) {
+        SetDDP(&p->body, &sCollisions[2]);
+      } else if (attr == 0x30) {
+        SetDDP(&p->body, &sCollisions[2]);
+      }
+    }
+  }
+  return TRUE;
+}
 
 struct Coord* FUN_08012a64(struct Coord* c);
 

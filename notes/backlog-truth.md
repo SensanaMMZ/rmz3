@@ -1604,3 +1604,12 @@ dropped forward declarations five times this session, costing a build each.
 - **FUN_080913c0** (0x6C) MATCHED first probe; retires unk_59_pre_pre_p1b.inc.
   Spawn helper, id 59; last field is
   `(e->s).work[3] = (*(s32*)&p->props[0] > 0);` written directly as a comparison.
+- **mothjiro_08088a74** (0x6C) MATCHED first probe; retires mothjiro_p8_post_p1.inc.
+  Third variant of the element-effect-slot idiom (claveker / beetank / mothjiro):
+  same guard, same `attr = *(u8*)((u8*)p + 0x97) & 0xf0` decode, but the arms call
+  `SetDDP(&p->body, &sCollisions[2])` instead of setting mode. **Both arms use the
+  same collision pointer** — that redundancy is in the original, not a misread;
+  agbcc keeps them separate because the two pool copies sit far apart.
+  **Second wrong `void` declaration corrected** (after beetank's FUN_0807be50):
+  mothjiro.c declared it void, the ROM ends `movs r0,#1 / pop`, so it is bool8.
+  Whenever a stub declaration says void, check the epilogue before trusting it.
