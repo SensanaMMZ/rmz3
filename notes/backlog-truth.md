@@ -667,3 +667,13 @@ two `flags &= ~X` statements would emit two load/store pairs.
 EXIT_BODY supplies the body zeroing AND the trailing
 `flags &= ~COLLIDABLE`, which is why that AND appears after the three
 body stores rather than with the other two.
+
+## FUN_080c6c60 / FUN_080c7250 (SOLVED, 112B x2)
+
+Drift + parity flicker + collision death, one C body each, ROM sha1 exact.
+coord += d; d.y += 0x40 (agbcc reuses the just-loaded d.y register, so
+write it as the third statement); UpdateMotionGraphic; then the counter
+flicker in the NO-TRUNCATION spelling (`work[2]++;` on its own line, then
+`if (work[2] & 1)`) — see the trichotomy table in matching-workflow.md;
+then `if (FUN_080098a4(coord.x, coord.y))` -> CreateSmoke(3) + DIE.
+asm/vfx/unk_72.inc split into _a/_b around the lifted body.

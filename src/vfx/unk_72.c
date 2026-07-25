@@ -1,4 +1,5 @@
 #include "global.h"
+#include "metatile.h"
 #include "story.h"
 #include "vfx.h"
 
@@ -107,7 +108,27 @@ void Ghost72_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_72.inc");
+INCASM("asm/vfx/unk_72_a.inc");
+
+// 0x080c6c60
+void FUN_080c6c60(struct VFX* p) {
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[2]++;
+  if ((p->s).work[2] & 1) {
+    (p->s).flags |= DISPLAY;
+  } else {
+    (p->s).flags &= ~DISPLAY;
+  }
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    CreateSmoke(3, &(p->s).coord);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/vfx/unk_72_b.inc");
 
 // --------------------------------------------
 

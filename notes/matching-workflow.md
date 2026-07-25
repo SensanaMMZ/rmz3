@@ -230,3 +230,18 @@ reports as moved. Note that projects using non-agbcc toolchains still index
 usefully (their C compiles under agbcc often enough to be a source-shape
 corpus), but `files_failed` in the manifest tells you how much of a project
 was unusable.
+
+Third addendum — the u8 post-increment-and-test trichotomy (2026-07-25).
+Three spellings of "bump a u8 counter and test bit 0" give three DIFFERENT
+encodings under agbcc -O2, so pick by what the target shows:
+
+| source | emitted |
+|---|---|
+| `if (++p->work[n] & 1)` | `movs r1,#0xff; ands` then `movs r1,#1; ands` |
+| `u8 t = ++p->work[n]; if (t & 1)` | `lsls #24; lsrs #24` then `movs r1,#1; ands` |
+| `p->work[n]++;` then `if (p->work[n] & 1)` | NO truncation — `movs r1,#1; ands` only |
+
+The third form also leaves the `1` live in r1 for a following
+`flags |= DISPLAY`, which is how the target reuses it. Proven on
+FUN_080b7e3c (form 1), the elf/laser2 family (form 2) and
+FUN_080c6c60/FUN_080c7250 (form 3, matched exactly).
