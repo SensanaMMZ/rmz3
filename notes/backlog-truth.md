@@ -1039,3 +1039,26 @@ guess arity from the asm when a prototype already exists somewhere.
 ALSO: FUN_080a449c (36B, tretista) is NOT a function — the preceding
 function branches into it (`bne _080A44AE`). It is a split tail like
 DeathtanzRock_Update's. Skip it in candidate lists.
+
+## FUN_080ac1a4 (SOLVED, 64B) — conveyor-push collision handler
+
+  self = (struct Projectile*)body->parent;
+  z    = (struct Zero*)(body->enemy)->parent;
+  s32 kind = (z->s).kind;                  // ldrsb via the s32-local rule
+  if (kind != ENTITY_PLAYER) return;
+  v = ((self->s).work[1] == 0) ? 0x180 : 0x280;
+  if ((self->s).flags & X_FLIP) *(s32*)&z->horizontalSlide =  v;
+  else                          *(s32*)&z->horizontalSlide = -v;
+
+TERNARY POLARITY is load-bearing: the target materialises the DEFAULT
+value first and branches over the other arm, so read which constant is
+loaded BEFORE the cmp and make that the ternary's false-branch value.
+`(work[1] != 0) ? 0x280 : 0x180` and `(work[1] == 0) ? 0x180 : 0x280`
+are semantically identical but compile to opposite branch polarities
+(5 diff bytes).
+FIELD NOTE: z->horizontalSlide is declared u8 at 0x190 in
+include/entity/player.h with a comment about 3 bytes of padding, but the
+ROM stores a WORD there — src/player/zero/zero.c:95 already works around
+this with `*((u32*)&z->horizontalSlide) = 0;`. Kept that convention
+rather than retyping a field used by an already-matched file; the field
+is probably really s32 and worth fixing upstream.

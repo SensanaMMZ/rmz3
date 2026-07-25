@@ -3,6 +3,7 @@
 #include "gpu_regs.h"
 #include "projectile.h"
 #include "sound.h"
+#include "zero.h"
 
 static const ProjectileFunc sUpdates[9];
 
@@ -85,6 +86,26 @@ void FUN_080abea8(struct Projectile* p) {
 }
 
 INCASM("asm/projectile/unk_32_p4_p4.inc");
+
+// 0x080ac1a4
+void FUN_080ac1a4(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+  struct Projectile* self = (struct Projectile*)body->parent;
+  struct Zero* z = (struct Zero*)(body->enemy)->parent;
+  s32 kind = (z->s).kind;
+  if (kind != ENTITY_PLAYER) {
+    return;
+  }
+  {
+    s32 v = ((self->s).work[1] == 0) ? 0x180 : 0x280;
+    if ((self->s).flags & X_FLIP) {
+      *(s32*)&z->horizontalSlide = v;
+    } else {
+      *(s32*)&z->horizontalSlide = -v;
+    }
+  }
+}
+
+INCASM("asm/projectile/unk_32_p4_p4_b.inc");
 
 void Projectile32_Init(struct Projectile* p);
 void Projectile32_Update(struct Projectile* p);
