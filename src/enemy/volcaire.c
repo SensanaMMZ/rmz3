@@ -218,7 +218,34 @@ bool8 FUN_080772f8(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/volcaire_p1_a.inc");
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoord;
+
+void FUN_08077388(struct Enemy* p) {
+  struct VFX** slot;
+  u32 frozen;
+
+  if ((p->s).work[0] != 0) {
+    slot = (struct VFX**)&p->props[0];
+    if (*slot == NULL && ((p->body).status & 1)) {
+      frozen = (p->body).status & 0x20000;
+      if (frozen != 0) {
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = 0;
+      } else {
+        *slot = ApplyElementEffect(0, &p->s, &sElementCoord);
+        if (*slot != NULL) {
+          (p->s).mode[1] = 0;
+          (p->s).mode[2] = 0;
+        }
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/volcaire_p1_a_b.inc");
 
 static const EnemyFunc sUpdates1[8];
 static const EnemyFunc sUpdates2[8];

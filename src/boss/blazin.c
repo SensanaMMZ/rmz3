@@ -206,7 +206,7 @@ bool8 FUN_0803f9a8(struct Boss* _);
 bool8 FUN_0803f9c0(struct Boss* _);
 bool8 FUN_0803fc70(struct Boss* _);
 bool8 FUN_0803fd58(struct Boss* _);
-void blazin_0803fed8(struct Boss* p);
+bool8 blazin_0803fed8(struct Boss* p);
 bool8 FUN_0803ffc0(struct Boss* p);
 
 // clang-format off
@@ -751,6 +751,30 @@ INCASM("asm/boss/blazin_p11.inc");
 bool8 FUN_0803fd58(struct Boss* _) { return TRUE; }
 
 INCASM("asm/boss/blazin_p12_p1.inc");
+
+#include "element.h"
+#include "vfx.h"
+
+extern const struct Coord gBlazinCoords[5];
+
+bool8 blazin_0803fed8(struct Boss* p) {
+  struct VFX** slot = (struct VFX**)&(p->props).raw[12];
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    *slot = ApplyElementEffect(9, &p->s, gBlazinCoords);
+    if (*slot != NULL) {
+      if ((*(u8*)((u8*)p + 0x97) & 0xf0) == 0x10) {
+        (p->s).mode[1] = 10;
+        (p->s).mode[2] = 0;
+      } else {
+        *slot = NULL;
+      }
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/boss/blazin_p12_p1_b.inc");
 
 struct Enemy* FUN_0809c430(struct Entity* e, struct Coord* c);
 

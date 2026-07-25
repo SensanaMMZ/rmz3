@@ -1642,3 +1642,17 @@ Caught by the sha1; fixed by reordering. Worth adding a flag for this case.
 
 Running tally of the ApplyElementEffect vein: 19 found, 4 matched
 (FUN_08061ef0, crossbyne_0807cdc4, FUN_0808c4e8, FUN_08075e8c), 15 left.
+- **FUN_08077388** (0x54) MATCHED first probe; retires volcaire_p1_a.inc.
+  Third instance of the frozen-check element shape (work[0] != 0, mode[1] = 7).
+- **blazin_0803fed8** (0x50) MATCHED. Two things it taught:
+  1. The third argument is **gBlazinCoords**, not an sElementCoord. I had masked
+     that pool word as a relocation and the probe said MATCH regardless — the same
+     trap as snakecord's gVFXFnTable. Resolved it with nm before lifting this
+     time. **Masked pool words must be resolved, not assumed**, and the callee's
+     first argument here is 9, not the usual 0.
+  2. **Third wrong `void` declaration corrected** (after beetank and mothjiro):
+     ROM ends `movs r0,#1 / pop`, so it is bool8.
+  Also note the else-arm writes `*slot = NULL` — a spawn that is immediately
+  discarded when the element attribute is not 0x10.
+
+ApplyElementEffect vein: 19 found, 6 matched, 13 left.

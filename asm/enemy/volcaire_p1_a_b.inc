@@ -4,51 +4,6 @@
 	
 	.text
 
-	thumb_func_start FUN_08077388
-FUN_08077388: @ 0x08077388
-	push {r4, r5, r6, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0x10]
-	cmp r0, #0
-	beq _080773D0
-	adds r6, r4, #0
-	adds r6, #0xb4
-	ldr r2, [r6]
-	cmp r2, #0
-	bne _080773D0
-	adds r0, r4, #0
-	adds r0, #0x8c
-	ldr r1, [r0]
-	movs r0, #1
-	ands r0, r1
-	cmp r0, #0
-	beq _080773D0
-	movs r5, #0x80
-	lsls r5, r5, #0xa
-	ands r5, r1
-	cmp r5, #0
-	beq _080773BC
-	movs r0, #7
-	strb r0, [r4, #0xd]
-	strb r2, [r4, #0xe]
-	b _080773D0
-_080773BC:
-	ldr r2, _080773D8 @ =0x083673F0
-	movs r0, #0
-	adds r1, r4, #0
-	bl ApplyElementEffect
-	str r0, [r6]
-	cmp r0, #0
-	beq _080773D0
-	strb r5, [r4, #0xd]
-	strb r5, [r4, #0xe]
-_080773D0:
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080773D8: .4byte 0x083673F0
-
 	thumb_func_start Volcaire_Init
 Volcaire_Init: @ 0x080773DC
 	push {r4, r5, r6, lr}
