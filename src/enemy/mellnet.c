@@ -2,6 +2,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "entity/macros.h"
 #include "story.h"
 #include "motion.h"
 
@@ -111,7 +112,18 @@ void Mellnet_Update(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mellnet_pre_p2_b.inc");
+static const EnemyFunc sDeads[3];
+
+void Mellnet_Die(struct Enemy* p) {
+  if ((p->s).work[0] == 0 && IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  } else {
+    (sDeads[(p->s).mode[1]])(p);
+  }
+}
 
 void FUN_0807d990(struct Enemy* p) {}
 

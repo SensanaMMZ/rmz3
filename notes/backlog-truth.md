@@ -1583,3 +1583,17 @@ guessing at a helper's identity from context.
   i.e. it returns a value. Matched as `bool8` returning TRUE (same as its
   claveker twin) and corrected the declaration. The ROM is the authority on
   signatures, not the existing stub declaration — cf. the porter-comments rule.
+- **Mellnet_Die** (0x6C) MATCHED first probe; retires mellnet_pre_p2_b.inc.
+  `if ((p->s).work[0] == 0 && IS_METTAUR) { ...teardown... } else
+  { (sDeads[(p->s).mode[1]])(p); }` — the dispatch goes through `_call_via_r1`
+  (0x080FE6E8), which is just how agbcc calls a table entry, not a real helper.
+- **createPantheonZombie** (0x64) **PARKED** at 8 bytes. Body exact and the same
+  size; the only difference is *where* an independent `movs r3,#0` is scheduled
+  (ROM emits it between `adds r0,#1` and `strb r0,[r1,#0]`, we emit it three
+  slots later). Pure instruction scheduling. Note it returns **void** despite the
+  name — epilogue is `pop {r4,r5,r6,r7} / pop {r0} / bx r0` with no move into r0.
+
+**tools/lift_fn.py added.** Lifts everything in the scratch from a marker line
+onward (declarations included) into the src file in place of an INCASM, and
+deletes the inc. Written because extracting just the function with a regex
+dropped forward declarations five times this session, costing a build each.
