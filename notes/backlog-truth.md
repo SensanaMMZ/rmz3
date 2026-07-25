@@ -922,3 +922,16 @@ change the codegen and is worth retrying once the minigame file lands.
 TOOLING NOTE: when hand-diffing objdump output, filter BOTH files
 identically — dropping lines containing `<` removes bl/branch lines from
 one side only and makes instruction counts meaningless.
+
+## ActorSaveSelectCiel_Update (SOLVED, 56B, first try)
+
+Textbook switch-with-FALLTHROUGH mode dispatcher:
+  case 0: coord.y = FUN_08009f6c(coord.x, coord.y);
+          SetMotion(&p->s, 0xC200); mode[1]++;  FALLTHROUGH;
+  case 1: UpdateMotionGraphic(&p->s); break;
+(0xC200 is the pooled `movs r1,#0xc2; lsls r1,#8` pair.) Nothing novel —
+logged only to record that the actor_p1_p1.inc file has many more
+functions of exactly this shape (Actor8/10/13/15_Update,
+ActorCrashedPantheon_Update, ActorLeviathan11_Update,
+ActorFefnir12_Update ...), all still asm. That single 3203-line inc is
+probably the densest remaining vein of easy dispatchers in the repo.

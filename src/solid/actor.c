@@ -1177,7 +1177,23 @@ _080D1744: .4byte gSolidFnTable\n\
  .syntax divided\n");
 }
 
-INCASM("asm/solid/actor_p1_p1.inc");
+INCASM("asm/solid/actor_p1_p1_a.inc");
+
+// 0x080d28b4
+void ActorSaveSelectCiel_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      SetMotion(&p->s, 0xC200);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/solid/actor_p1_p1_b.inc");
 
 extern const struct Rect Rect_08370c60;
 
