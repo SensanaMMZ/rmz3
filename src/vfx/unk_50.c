@@ -4,6 +4,7 @@
 // キュービットフォクスター の炎に関係
 
 static const VFXFunc sUpdates[2];
+static const motion_t sMotions[3];
 
 struct VFX* FUN_080c078c(struct Entity* e, struct Coord* c, u8 arg2) {
   struct VFX* p = (struct VFX*)AllocEntityFirst(gVFXHeaderPtr);
@@ -81,7 +82,29 @@ void VFX50_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_50_post.inc");
+#include "motion.h"
+
+void FUN_080c094c(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, sMotions[(p->props).raw[8]]);
+      (p->s).taskCol = 9;
+      (p->s).work[3] = 10;
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).d.y -= 0x20;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[3] == 0 || --(p->s).work[3] == 0) {
+        SET_VFX_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
+
+INCASM("asm/vfx/unk_50_post_b.inc");
 
 void VFX50_Init(struct VFX* vfx);
 void VFX50_Update(struct VFX* vfx);

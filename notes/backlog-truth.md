@@ -2190,3 +2190,15 @@ constants as well.
   `if ((work[0] & 2) && !FLAG(gCurStory.s.gameflags, FLAG_2))`; agbcc reuses the
   switch value (mode[2] == 2, still live in r4) as the mask constant on its own,
   so writing the literal `& 2` is correct -- no temp needed.
+
+- **FUN_080bfa10** (vfx 47) and **FUN_080c094c** (vfx 50), both first probe.
+  Two reusable details from these:
+  * The tail `ldr gVFXFnTable / ldrb [r4,#9] / lsls #2 / adds / str rN,[r4,#0xc]
+    / ldr / ldr [r0,#K] / str [r4,#0x14]` is just SET_VFX_ROUTINE(p, K/4). In
+    FUN_080bfa10 the modeID register is the SAME one holding motion.state (both
+    are 3), so agbcc reuses it -- write the macro normally, the reuse is free.
+  * `flags &= ~DISPLAY; flags &= ~FLIPABLE;` stays as TWO `ands` (0xfe then
+    0xfd). agbcc does not fold them to a single `& 0xfc`, so two separate `ands`
+    in the ROM means two separate statements in the source.
+  * FUN_080c094c's guard is `if (work[3] == 0 || --work[3] == 0)` -- note the
+    truncation is a bare `lsls #24` with no `lsrs`, i.e. a test-for-zero only.
