@@ -306,3 +306,17 @@ original file evidently declared its collision data as differently-split
 arrays. Harness: build/scratch/batch4/t2.c (byte-identical mod that one
 word, index [8] = +0xE0). To finish: reconstruct the file's true data
 split (what symbol starts at 0x0836A550) and re-land both lifts.
+
+## FUN_080b9cf8 / FUN_080b9db0 — slash-death VFX pair (in progress)
+
+184 B each; draft in build/ghidra-drafts/FUN_080b9cf8.c is UNRELIABLE
+(Ghidra deduped the CreateSmoke arms and hid a VRAM pool word
+0x06004008 that twin_diff shows). Real shape from disassembly: per
+CreateSlashedEnemy call the flip arg is computed as
+`-(u8)(flags & X_FLIP) >> 31 & 0x10` (branchless high nibble) plus a
+BRANCHY low bit (`f ? r3 = 1|r1 : r3 = (u8)r1`), likely from
+`u8 xf = (p->flags & X_FLIP) != 0;` then `(xf << 4) | xf` or a ternary
+mix; coord recomputed per call, saved in r5 for the smokes; the
+CreateSmoke if/else arms LOOK identical in the draft but 40 bytes are
+missing vs our probe. Probe harness: build/scratch/b9cf8/t.c (144/184).
+Next: transcribe the full 184-byte disasm and diff arm by arm.
