@@ -967,3 +967,28 @@ first-probe: the macro expands to the flags AND/OR pair, then a strb to
 constant -0x11 (spr.oam.xflip). Any time you see `movs r0,#0x11; rsbs
 r0,r0,#0; ands; orrs` around offsets 0x4A/0x4C, it is SET_XFLIP/SET_YFLIP
 — do not hand-roll the three writes.
+
+## Actor13_Update (176B) — decoded, 4 bytes over on one pool anchor
+
+Body fully recovered (build/scratch/act/t5.c, 180/176):
+  e = (p->s).unk_28;   // kept in r5 across the whole switch
+  case 0: InitScalerotMotion1; spr.mag.x = spr.mag.y = 0x180;
+          SetMotion(0x2100); SET_XFLIP(p, TRUE);
+          coord.x = e->coord.x + 0x1E00; coord.y = e->coord.y - 0x1E00;
+          mode[1]++; FALLTHROUGH;
+  case 1: UpdateMotionGraphic; coord.x += 0x400;
+          if (coord.x > <viewport.x> + 0xB7FF) SET_SOLID_ROUTINE(DIE);
+OFFSET PINNED: gStageRun.vm is at +232 (0xE8) and camera.viewport.x at
++0x38 inside it, i.e. StageRun+288 — verified by compiling
+`char a[(int)&((struct StageRun*)0)->vm.camera.viewport.x];` and reading
+the .comm size (a cheap, reliable offsetof trick worth reusing).
+REMAINING (4 bytes): the target pools `gStageRun+232` (= &gStageRun.vm)
+and reads with an immediate `[r0,#0x38]`; every spelling we tried folds
+to a single address and materialises 288 in a register instead:
+  gStageRun.vm.camera.viewport.x        (180B)
+  (&gStageRun.vm)->camera.viewport.x    (180B, identical)
+  struct VM* vm = &gStageRun.vm; ...    (180B, and it perturbs the head)
+Same class as the FlushOAM/BGnHOFS pool-anchor problem — the fix is
+probably an existing accessor macro that does not yet exist in
+include/stagerun.h. Worth revisiting when another function needs the
+same read; several actor updates do.
