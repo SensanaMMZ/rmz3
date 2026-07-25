@@ -5,6 +5,10 @@
 #include "motion.h"
 #include "physics.h"
 #include "metatile.h"
+#include "entity/macros.h"
+#include "sound.h"
+#include "constants/song.h"
+#include "constants/entity/enemy.h"
 
 // 左右 0xA00 の位置に足場があるか (どちらか一方でもあれば TRUE)
 bool8 FUN_08095d80(struct Enemy* p) {
@@ -228,9 +232,43 @@ void FUN_0809660c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shellcrawler_post_post_a.inc");
-
 static const struct Collision sCollisions[16];
+
+// 殻を構える / 弾(子Entity)を生成する
+void FUN_0809664c(struct Enemy* p) {
+  struct Entity* e;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      e = AllocEntityFirst(gEnemyHeaderPtr);
+      if (e != NULL) {
+        e->taskCol = 24;
+        INIT_ENEMY_ROUTINE(e, ENEMY_SHELLCRAWLER);
+        e->tileNum = 0, e->palID = 0;
+        e->flags2 |= WHITE_PAINTABLE;
+        e->invincibleID = e->uniqueID;
+        e->work[0] = 4;
+        e->unk_28 = &p->s;
+      }
+      (p->s).unk_2c = e;
+      SetDDP(&p->body, &sCollisions[8]);
+      SetMotion(&p->s, MOTION(0xdb, 0x0e));
+      (p->s).work[2] = 0x1e;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (--(p->s).work[2] == 0xf) {
+        PlaySound(SE_SHELL_CRAWLER);
+      }
+      if ((p->s).work[2] == 0) {
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 
 // 殻を脱ぎ捨てる (子Entityを消して当たり判定を殻なしのものに差し替える)
 void FUN_080966fc(struct Enemy* p) {
