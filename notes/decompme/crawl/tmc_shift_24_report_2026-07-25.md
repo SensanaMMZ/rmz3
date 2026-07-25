@@ -1,0 +1,334 @@
+<!-- tmc :: trait=shift_24 :: crawled 2026-07-25 :: 601/619 files compiled -->
+- shift_24: src/affine.c :: DrawEntities 
+- shift_24: src/beanstalkSubtask.c :: LoadMapData UpdatePlayerCollision sub_0801AA58 
+- shift_24: src/code_08049DF4.c :: sub_0804A044 
+- shift_24: src/collision.c :: CollisionDefault CollisionGroundItem sub_08017940 sub_080179EC sub_08017B58 
+- shift_24: src/color.c :: CleanUpObjPalettes SetEntityObjPalette sub_0801D244 
+- shift_24: src/cutscene.c :: sub_08053894 sub_08053904 
+- shift_24: src/demo.c :: sub_080A2FD0 
+- shift_24: src/eeprom.c :: DMA3Transfer EEPROMCompare EEPROMRead EEPROMWrite EEPROMWrite0_8k_Check EEPROMWrite1_check 
+- shift_24: src/enemy/acroBandits.c :: AcroBandit_OnCollision AcroBandit_OnKnockback AcroBandit_Type0Action5 AcroBandit_Type0Action6 AcroBandit_Type1Action3 sub_080322E8 sub_08032338 
+- shift_24: src/enemy/armos.c :: sub_08030338 sub_08030430 sub_08030474 sub_080304BC sub_080304F4 sub_08030524 sub_080306C4 
+- shift_24: src/enemy/ballChainSoldier.c :: sub_0803E6E0 sub_0803E71C sub_0803E75C sub_0803E7B4 sub_0803E7CC sub_0803E818 sub_0803E94C sub_0803E9D4 sub_0803EA64 
+- shift_24: src/enemy/beetle.c :: sub_08021A10 sub_08021A64 sub_08021B64 
+- shift_24: src/enemy/bobomb.c :: sub_0802C83C sub_0802C91C sub_0802CA10 sub_0802CA6C sub_0802CAF8 sub_0802CC18 
+- shift_24: src/enemy/bombPeahat.c :: sub_0802A9A8 sub_0802AA40 sub_0802AAC0 sub_0802AB40 sub_0802AF9C sub_0802B048 
+- shift_24: src/enemy/bombarossa.c :: Bombarossa_OnTick 
+- shift_24: src/enemy/bowMoblin.c :: sub_0803C234 sub_0803C2DC sub_0803C344 sub_0803C400 sub_0803C4B0 sub_0803C714 
+- shift_24: src/enemy/businessScrub.c :: BusinessScrub_Action2 BusinessScrub_Action4 sub_080290FC 
+- shift_24: src/enemy/businessScrubPrologue.c :: sub_08045CE0 sub_0804604C 
+- shift_24: src/enemy/chuchu.c :: sub_0801F12C sub_0801F228 sub_0801F270 sub_0801F4EC sub_0801F61C sub_0801F9C4 
+- shift_24: src/enemy/chuchuBoss.c :: ChuchuBoss_OnDeath sub_08026090 sub_08026358 sub_080263B4 sub_08026414 sub_08026580 sub_08026634 sub_08026774 sub_08026968 sub_080269CC sub_08026C40 sub_08027064 sub_080272D4 sub_08027AA4 sub_08027C9C 
+- shift_24: src/enemy/cloudPiranha.c :: CloudPiranha_Action1 CloudPiranha_Action3 sub_080385CC sub_08038754 
+- shift_24: src/enemy/crow.c :: Crow_OnCollision Crow_OnTick sub_08032AB0 sub_08032AF4 sub_08032B38 
+- shift_24: src/enemy/cuccoAggr.c :: sub_08038DA0 sub_08038E18 sub_08038EE0 
+- shift_24: src/enemy/cuccoChickAggr.c :: sub_08022970 sub_08022988 sub_080229F8 sub_08022A40 sub_08022B44 
+- shift_24: src/enemy/darkNut.c :: sub_08020DD4 sub_08020FE4 
+- shift_24: src/enemy/doorMimic.c :: sub_08022034 sub_080220D8 sub_08022174 
+- shift_24: src/enemy/dust.c :: Dust_OnGrabbed sub_08044550 
+- shift_24: src/enemy/enemy4D.c :: Enemy4D_Action10 Enemy4D_Action5 Enemy4D_Action6 Enemy4D_Action7 Enemy4D_Action8 Enemy4D_Action9 sub_0803EEA4 
+- shift_24: src/enemy/enemy50.c :: Enemy50_Action10 Enemy50_Action2 Enemy50_Action4 Enemy50_Action5 Enemy50_Action6 Enemy50_Action7 Enemy50_OnCollision Enemy50_OnConfused Enemy50_OnKnockback sub_08041300 
+- shift_24: src/enemy/enemy64.c :: Enemy64_Action2_SubAction4 Enemy64_Action3_SubAction1 Enemy64_Action3_SubAction2 Enemy64_Action3_SubAction3 Enemy64_Action4_SubAction2 Enemy64_Action4_SubAction3 Enemy64_Action4_SubAction4 Enemy64_Action4_SubAction7 sub_08049A8C 
+- shift_24: src/enemy/eyegore.c :: Eyegore_Action2 sub_08030E80 sub_08031024 sub_08031250 
+- shift_24: src/enemy/flyingPot.c :: FlyingPot_Action2 FlyingPot_Action4 
+- shift_24: src/enemy/flyingSkull.c :: sub_08039FAC sub_0803A080 
+- shift_24: src/enemy/ghini.c :: Ghini_Action2 Ghini_Action3 Ghini_Action4 Ghini_Action5 Ghini_Action6 Ghini_Action7 Ghini_OnCollision Ghini_OnConfused Ghini_OnKnockback sub_0803F694 
+- shift_24: src/enemy/gibdo.c :: Gibdo_OnCollision sub_080375A4 sub_080375F8 sub_08037624 sub_080376D0 sub_0803775C sub_080379EC 
+- shift_24: src/enemy/gleerok.c :: Gleerok_OnDeath sub_0802D86C sub_0802DB84 sub_0802DCE0 sub_0802DDD8 sub_0802E0B8 sub_0802E1D0 sub_0802E448 sub_0802E518 sub_0802E7CC sub_0802E7E4 sub_0802EBC4 
+- shift_24: src/enemy/gyorgChild.c :: GyorgChild_Action2 
+- shift_24: src/enemy/gyorgFemaleMouth.c :: GyorgFemaleMouth 
+- shift_24: src/enemy/gyorgMale.c :: sub_08046EF4 sub_0804723C sub_08047310 sub_0804763C sub_08047BF0 
+- shift_24: src/enemy/gyorgMaleEye.c :: GyorgMaleEye_Action2 sub_08048F50 
+- shift_24: src/enemy/helmasaur.c :: sub_0802BD28 sub_0802BE18 sub_0802BF3C sub_0802BFF4 sub_0802C06C sub_0802C0E8 
+- shift_24: src/enemy/keaton.c :: Keaton_Action1 Keaton_Action3 Keaton_Action5 Keaton_OnCollision 
+- shift_24: src/enemy/keese.c :: Keese_Rest 
+- shift_24: src/enemy/lakitu.c :: Lakitu_LightningDelay sub_0803CB04 
+- shift_24: src/enemy/lakituCloud.c :: sub_0803CDD8 
+- shift_24: src/enemy/leever.c :: Leever_Idle 
+- shift_24: src/enemy/likeLike.c :: sub_08027EFC sub_08027FB4 sub_0802805C 
+- shift_24: src/enemy/madderpillar.c :: sub_08029B2C sub_08029C2C sub_08029D14 sub_08029D78 sub_08029FB4 sub_08029FE4 sub_0802A098 
+- shift_24: src/enemy/mazaalBracelet.c :: sub_0803A364 sub_0803A548 sub_0803A58C sub_0803A5D0 sub_0803A60C sub_0803A660 sub_0803A720 sub_0803A780 sub_0803A7CC sub_0803A814 sub_0803A86C sub_0803A8B8 sub_0803A90C sub_0803A978 sub_0803AA00 sub_0803AA98 sub_0803AB10 sub_0803AB5C sub_0803ABB4 sub_0803AC1C sub_0803AC60 sub_0803ACC0 sub_0803ADAC sub_0803ADF4 sub_0803AE48 sub_0803AEC4 sub_0803AF18 sub_0803AFC8 sub_0803B01C sub_0803B074 sub_0803B1B8 sub_0803B35C sub_0803B398 sub_0803B3F4 sub_0803B4E4 sub_0803B610 sub_0803B63C sub_0803B978 sub_0803BA8C 
+- shift_24: src/enemy/mazaalHead.c :: sub_08033FFC sub_080341D0 sub_080342C8 sub_0803438C sub_0803499C sub_08034B38 
+- shift_24: src/enemy/mazaalMacro.c :: sub_08034F70 sub_08034FA0 
+- shift_24: src/enemy/miniSlime.c :: sub_080452FC sub_08045374 
+- shift_24: src/enemy/moldorm.c :: sub_08022E40 sub_08022F14 
+- shift_24: src/enemy/moldworm.c :: sub_08023288 sub_08023398 sub_080236F8 sub_08023894 sub_0802390C sub_08023B38 
+- shift_24: src/enemy/mulldozer.c :: Mulldozer_Action1 Mulldozer_Action2 Mulldozer_Action3 Mulldozer_Action4 Mulldozer_Action5 Mulldozer_Action6 Mulldozer_OnKnockback sub_08032F90 sub_08033000 
+- shift_24: src/enemy/octorok.c :: Octorok_Idle Octorok_Move sub_0801EB9C 
+- shift_24: src/enemy/octorokBoss.c :: OctorokBoss_Action1 OctorokBoss_Action1_AimTowardsPlayer OctorokBoss_Action1_Attack OctorokBoss_Action1_Attack_Type2_1 OctorokBoss_Action1_WaitForAttack OctorokBoss_Action1_WaitForTurn OctorokBoss_Burning_SubAction0 OctorokBoss_Burning_SubAction1 OctorokBoss_Burning_SubAction2 OctorokBoss_ExecuteAttackVacuum OctorokBoss_Hit_SubAction3 OctorokBoss_Hit_SubAction6 OctorokBoss_Intro_SubAction0 OctorokBoss_Intro_SubAction2 OctorokBoss_Intro_SubAction3 OctorokBoss_Intro_SubAction4 OctorokBoss_Intro_SubAction5 OctorokBoss_StartRegularAttack sub_08036998 sub_080369D0 sub_08036AF0 
+- shift_24: src/enemy/octorokGolden.c :: sub_08037D0C sub_08037D54 sub_08037E14 
+- shift_24: src/enemy/peahat.c :: PeahatPropeller_Fly Peahat_ChargeEnd Peahat_ChargeStart Peahat_ChargeTarget Peahat_Fly Peahat_Hop Peahat_OnGrabbed_Subaction5 Peahat_OnTick Peahat_Recover Peahat_RepairPropeller 
+- shift_24: src/enemy/pesto.c :: sub_080241C0 sub_080242A0 sub_0802433C sub_080243B8 sub_080244E8 sub_08024D00 
+- shift_24: src/enemy/puffstool.c :: Puffstool_OnCollide sub_08025230 sub_080252E0 sub_0802544C sub_0802547C sub_08025514 sub_080255AC sub_0802571C sub_0802594C sub_08025AB8 
+- shift_24: src/enemy/rollobite.c :: Rollobite_OnCollision Rollobite_RolledUp Rollobite_Turn Rollobite_Walk sub_080208B4 sub_08020A7C 
+- shift_24: src/enemy/rope.c :: sub_080314FC 
+- shift_24: src/enemy/ropeGolden.c :: sub_0803827C sub_080382EC sub_08038304 
+- shift_24: src/enemy/rupeeLike.c :: RupeeLike sub_08029474 sub_080294D4 sub_0802953C sub_08029610 
+- shift_24: src/enemy/scissorsBeetle.c :: sub_080389E8 sub_08038A70 sub_08038B64 
+- shift_24: src/enemy/slime.c :: sub_08045018 sub_08045088 
+- shift_24: src/enemy/sluggula.c :: sub_08023C8C sub_08023CE0 sub_08023E54 
+- shift_24: src/enemy/smallPesto.c :: sub_08031714 
+- shift_24: src/enemy/spark.c :: sub_0802B35C sub_0802B4A8 
+- shift_24: src/enemy/spearMoblin.c :: sub_08028378 sub_08028420 sub_08028488 sub_08028528 
+- shift_24: src/enemy/spikedBeetle.c :: sub_0802B744 sub_0802B7A4 sub_0802B7FC sub_0802B820 sub_0802B880 sub_0802B8E0 
+- shift_24: src/enemy/spinyBeetle.c :: SpinyBeetle_OnCollision sub_08033ACC sub_08033B44 sub_08033C94 
+- shift_24: src/enemy/spinyChuchu.c :: sub_08022654 
+- shift_24: src/enemy/stalfos.c :: Stalfos_Action2 Stalfos_Action7 Stalfos_Action8 Stalfos_OnCollision Stalfos_OnTick 
+- shift_24: src/enemy/takkuri.c :: Takkuri_OnCollision sub_0803BDD8 sub_0803BEE8 sub_0803BF2C sub_0803BF70 
+- shift_24: src/enemy/tektite.c :: sub_0802F300 
+- shift_24: src/enemy/tektiteGolden.c :: sub_08038048 
+- shift_24: src/enemy/treeItem.c :: TreeItem 
+- shift_24: src/enemy/vaatiArm.c :: sub_08042654 sub_08042818 sub_080428FC sub_080429D4 sub_08042AEC sub_08042B20 sub_08042C34 sub_08042D24 sub_08042E30 sub_08042EF4 sub_08042FD8 sub_08043048 sub_080430D0 sub_08043130 sub_080431E8 sub_0804334C sub_080435F4 sub_080436C0 sub_08043700 sub_08043738 sub_08043770 sub_0804393C sub_08043B08 sub_08043D08 
+- shift_24: src/enemy/vaatiBall.c :: sub_0804474C sub_08044868 sub_080449F8 sub_08044B04 
+- shift_24: src/enemy/vaatiEyesMacro.c :: sub_0802EF90 
+- shift_24: src/enemy/vaatiProjectile.c :: VaatiProjectileFunction0Action4 VaatiProjectileFunction0Action6 
+- shift_24: src/enemy/vaatiRebornEnemy.c :: VaatiRebornEnemyType0Action1 VaatiRebornEnemyType0Action2 VaatiRebornEnemyType0Action3 VaatiRebornEnemyType0Action4 VaatiRebornEnemyType0Action5 VaatiRebornEnemyType0Action6 VaatiRebornEnemyType0Action7 VaatiRebornEnemyType1Action1 VaatiRebornEnemyType1PreAction VaatiRebornEnemyType3Action1 
+- shift_24: src/enemy/vaatiTransfigured.c :: VaatiTransfiguredType0Action1 VaatiTransfiguredType0Action3 VaatiTransfiguredType0Action4 VaatiTransfiguredType0Action5 VaatiTransfiguredType0Action6 VaatiTransfiguredType0Action7 VaatiTransfiguredType2Action1 VaatiTransfiguredType4Action1 VaatiTransfiguredType5Action1 sub_080409B0 sub_08040AD4 
+- shift_24: src/enemy/vaatiTransfiguredEye.c :: VaatiTransfiguredEyeFunction0Action1 sub_08045A00 
+- shift_24: src/enemy/vaatiWrath.c :: VaatiWrath VaatiWrathType0Action1 VaatiWrathType0Action2 VaatiWrathType0Action3 VaatiWrathType0Action4 VaatiWrathType0Action7 VaatiWrathType0Action8 VaatiWrathType0Action9 VaatiWrathType0ActionB VaatiWrathType2 sub_08041E50 sub_08042004 
+- shift_24: src/enemy/vaatiWrathEye.c :: VaatiWrathEyeAction4 VaatiWrathEyeAction6 VaatiWrathEyeAction7 VaatiWrathEyeAction8 sub_080485D8 
+- shift_24: src/enemy/wallMaster.c :: sub_0802A5B8 sub_0802A610 sub_0802A69C sub_0802A734 sub_0802A7D0 
+- shift_24: src/enemy/wallMaster2.c :: sub_0802CD54 sub_0802CE68 sub_0802CEF4 sub_0802CFD8 
+- shift_24: src/enemy/wisp.c :: Wisp_OnCollision sub_080336A8 
+- shift_24: src/enemy/wizzrobeFire.c :: WizzrobeFire_Action1 WizzrobeFire_Action2 
+- shift_24: src/enemy/wizzrobeIce.c :: WizzrobeIce_Action1 WizzrobeIce_Action2 
+- shift_24: src/enemy/wizzrobeWind.c :: WizzrobeWind_Action1 WizzrobeWind_Action2 WizzrobeWind_Action3 
+- shift_24: src/enemyUtils.c :: EnemyCreateDeathFX EnemyCreateFX LoadEnemySprite 
+- shift_24: src/fileselect.c :: sub_0805066C sub_08050888 sub_08050910 sub_08050940 sub_08050A64 sub_08050B3C sub_08050E88 sub_08050FFC sub_080513C0 sub_08051480 sub_080516E0 sub_08051738 sub_08051874 sub_080610B8 
+- shift_24: src/gameOverTask.c :: GameOver_TextMove 
+- shift_24: src/gameUtils.c :: HasDungeonBigKey 
+- shift_24: src/gba/m4a.c :: CgbModVol CgbOscOff CgbSound FadeOutBody MPlayOpen MPlayStop MidiKeyToCgbFreq MidiKeyToFreq SoundClear m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aSoundVSync ply_xwave 
+- shift_24: src/interrupts.c :: HandlePlayerLife LoadResources sub_08016CA8 
+- shift_24: src/item/itemBow.c :: sub_08075E40 
+- shift_24: src/item/itemGustJar.c :: sub_08076EC8 
+- shift_24: src/item/itemLantern.c :: sub_08075A0C sub_08075B54 sub_08075C9C 
+- shift_24: src/item/itemMoleMitts.c :: sub_080774A0 
+- shift_24: src/item/itemPegasusBoots.c :: ItemPegasusBoots sub_08076964 
+- shift_24: src/item/itemRocsCape.c :: ItemRocsCape 
+- shift_24: src/item/itemSword.c :: sub_080755F0 sub_08075738 sub_08075900 
+- shift_24: src/item/itemTryPickupObject.c :: sub_080762D8 sub_0807660C 
+- shift_24: src/itemUtils.c :: GiveItem 
+- shift_24: src/kinstone.c :: GenerateAreaHint 
+- shift_24: src/main.c :: InitDMA 
+- shift_24: src/manager/angryStatueManager.c :: AngryStatueManager_Action1 AngryStatueManager_Action2 
+- shift_24: src/manager/armosInteriorManager.c :: ArmosInteriorManager_Action2 
+- shift_24: src/manager/bombableWallManager.c :: BombableWallManager_Action2 
+- shift_24: src/manager/bridgeManager.c :: BridgeManager_Action1 BridgeManager_Action2 
+- shift_24: src/manager/cameraTargetManager.c :: CameraTargetManager_Action1 CameraTargetManager_Action2 CameraTargetManager_Action3 
+- shift_24: src/manager/cloudOverlayManager.c :: CloudOverlayManager_Main 
+- shift_24: src/manager/enterRoomTextboxManager.c :: sub_0805E18C 
+- shift_24: src/manager/ezloHintManager.c :: EzloHintManager_Action3 
+- shift_24: src/manager/fightManager.c :: FightManagerHelper_Main 
+- shift_24: src/manager/goronMerchantShopManager.c :: GoronMerchantShopManager_Main 
+- shift_24: src/manager/hyruleTownBellManager.c :: HyruleTownBellManager_Main 
+- shift_24: src/manager/lightLevelSetManager.c :: LightLevelSetManager_Type0 LightLevelSetManager_Type1 
+- shift_24: src/manager/lightRayManager.c :: LightRayManager_Action2 LightRayManager_Action3 
+- shift_24: src/manager/minishPortalManager.c :: MinishPortalManager_Main 
+- shift_24: src/manager/miscManager.c :: MiscManager_Type1 MiscManager_Type5 MiscManager_Type6 MiscManager_TypeB 
+- shift_24: src/manager/pushableFurnitureManager.c :: PushableFurnitureManager_Init 
+- shift_24: src/manager/rainfallManager.c :: RainfallManager_Action1 
+- shift_24: src/manager/rollingBarrelManager.c :: sub_080588F8 
+- shift_24: src/manager/secretManager.c :: SecretManager_Type1_Action2 
+- shift_24: src/manager/steamOverlayManager.c :: SteamOverlayManager_Action2 SteamOverlayManager_Action3 SteamOverlayManager_Action4 
+- shift_24: src/manager/templeOfDropletsManager.c :: sub_0805AA58 
+- shift_24: src/manager/tileChangeObserveManager.c :: TileChangeObserveManager_Action2 
+- shift_24: src/manager/tilePuzzleManager.c :: TilePuzzleManager_Main 
+- shift_24: src/manager/vaati3StartManager.c :: Vaati3StartManager_Type0_Action2 
+- shift_24: src/manager/vaatiAppearingManager.c :: VaatiAppearingManager_Action1 VaatiAppearingManager_Action2 
+- shift_24: src/manager/weatherChangeManager.c :: MixPalettes sub_08059608 sub_080596E0 sub_08059894 
+- shift_24: src/menu/kinstoneMenu.c :: KinstoneMenu_Type3_Overlay0 KinstoneMenu_Type4 KinstoneMenu_Type5_Overlay0 sub_080A4418 
+- shift_24: src/menu/pauseMenu.c :: sub_080A5128 sub_080A5A54 sub_080A5F48 
+- shift_24: src/menu/pauseMenuScreen6.c :: PauseMenu_Screen_6 sub_080A66D0 sub_080A67C4 
+- shift_24: src/message.c :: ChangeWindowSize CreateWindow TextDispUpdate TextDispWait 
+- shift_24: src/npc/beedle.c :: Beedle_Action1 
+- shift_24: src/npc/bigGoron.c :: sub_0806CF30 sub_0806D1D0 sub_0806D274 sub_0806D520 sub_0806D5D4 
+- shift_24: src/npc/brocco.c :: sub_08063584 
+- shift_24: src/npc/castorWildsStatue.c :: sub_08067534 sub_080676E0 
+- shift_24: src/npc/cat.c :: sub_080679C4 
+- shift_24: src/npc/cow.c :: sub_08069018 sub_08069068 sub_08069168 sub_08069188 sub_080691BC 
+- shift_24: src/npc/cucco.c :: Cucco_Fly sub_0806E4EC 
+- shift_24: src/npc/cuccoChick.c :: CuccoChick_Fly sub_0806E764 
+- shift_24: src/npc/dog.c :: sub_08069C40 sub_08069D54 sub_08069DF8 
+- shift_24: src/npc/drLeft.c :: sub_0806C00C 
+- shift_24: src/npc/ezlo.c :: sub_0806D8A0 sub_0806D908 
+- shift_24: src/npc/ghostBrothers.c :: GhostBrothers sub_08065C0C sub_08065D74 sub_08065DB8 sub_08065EDC 
+- shift_24: src/npc/gorman.c :: sub_0806991C sub_080699AC sub_08069ACC 
+- shift_24: src/npc/goron.c :: Goron_MakeInteractable sub_08069328 sub_08069480 sub_0806948C 
+- shift_24: src/npc/goronMerchant.c :: sub_080695AC 
+- shift_24: src/npc/gregal.c :: sub_0806CCB4 
+- shift_24: src/npc/guard.c :: sub_08063E54 sub_08063F20 sub_08063F78 
+- shift_24: src/npc/guardWithSpear.c :: sub_08064198 sub_080642B8 
+- shift_24: src/npc/kid.c :: sub_08062130 sub_080622F4 sub_0806252C sub_080626C0 sub_080626E0 
+- shift_24: src/npc/mailbox.c :: sub_08063220 
+- shift_24: src/npc/mama.c :: sub_0806C4A8 
+- shift_24: src/npc/npc4E.c :: NPC4E_GetItemWithSwordUpgraded NPC4E_GetKinstoneId NPC4E_IsKinstoneFused NPC4E_MakeFuserInteractable NPC4E_RestoreEquippedItems 
+- shift_24: src/npc/npc5.c :: CalcJumpDirection ZeldaDoLostAnim ZeldaInitNavigate sub_08061B18 
+- shift_24: src/npc/pina.c :: sub_08063AC0 
+- shift_24: src/npc/postman.c :: sub_0806045C sub_08060700 sub_0806076C sub_080608E4 
+- shift_24: src/npc/rem.c :: sub_0806A410 sub_0806A458 sub_0806A4CC sub_0806A5E8 sub_0806A96C 
+- shift_24: src/npc/smith.c :: sub_08066118 
+- shift_24: src/npc/stockwell.c :: sub_080650CC sub_0806522C sub_0806528C 
+- shift_24: src/npc/sturgeon.c :: Sturgeon 
+- shift_24: src/npc/talon.c :: sub_0806559C sub_08065648 
+- shift_24: src/npc/tingleSiblings.c :: sub_08064DA0 
+- shift_24: src/npc/vaati.c :: VaatiAction1 sub_08066B74 
+- shift_24: src/npc/vaatiReborn.c :: VaatiRebornAction1 sub_0806B96C 
+- shift_24: src/npc/windTribespeople.c :: sub_0806CA5C 
+- shift_24: src/npc/zeldaFollower.c :: ZeldaFollower sub_08068318 sub_08068578 
+- shift_24: src/npcUtils.c :: sub_0806EE20 
+- shift_24: src/object/ambientClouds.c :: AmbientClouds_Init 
+- shift_24: src/object/angryStatue.c :: AngryStatue_Action3 AngryStatue_Action4 
+- shift_24: src/object/backgroundCloud.c :: BackgroundCloud_Action2 
+- shift_24: src/object/bakerOven.c :: BakerOven_Action2 
+- shift_24: src/object/barrelInside.c :: BarrelInside 
+- shift_24: src/object/barrelSpiderweb.c :: BarrelSpiderweb_Action1 BarrelSpiderweb_Action2 
+- shift_24: src/object/beanstalk.c :: Beanstalk_Action1Type0SubAction1 Beanstalk_Action1Type0SubAction2 Beanstalk_Action1Type2 Beanstalk_Init 
+- shift_24: src/object/bigBarrel.c :: BigBarrel_Type0 BigBarrel_Type1 BigBarrel_Type2 BigBarrel_Type4 
+- shift_24: src/object/bigIceBlock.c :: sub_08099880 
+- shift_24: src/object/bigVortex.c :: BigVortex_Action2 BigVortex_Action3 sub_08098E3C 
+- shift_24: src/object/bird.c :: Bird_Type0_Action1 
+- shift_24: src/object/blockPushed.c :: BlockPushed_Action1 
+- shift_24: src/object/book.c :: Book_Action1 Book_Action2 
+- shift_24: src/object/bossDoor.c :: BossDoor_Action1 BossDoor_Action3 BossDoor_Action5 
+- shift_24: src/object/bush.c :: Bush_Action2SubAction1 
+- shift_24: src/object/button.c :: sub_08081F7C 
+- shift_24: src/object/cameraTarget.c :: CameraTarget_Action1 CameraTarget_Action2 
+- shift_24: src/object/carlovObject.c :: CarlovObject_Type0Action1 CarlovObject_Type1Action2 CarlovObject_Type1Action4 CarlovObject_Type2Action1 
+- shift_24: src/object/chestSpawner.c :: ChestSpawner_Type2Action2 ChestSpawner_Type2Action3 ChestSpawner_Type2Action4 ChestSpawner_Type2Action6 sub_080840A8 
+- shift_24: src/object/chuchuBossCutscene.c :: ChuchuBossCutscene_Action1 ChuchuBossCutscene_Action3 ChuchuBossCutscene_Action5 ChuchuBossCutscene_Action7 
+- shift_24: src/object/chuchuBossParticle.c :: ChuchuBossParticle_Action1 
+- shift_24: src/object/chuchuBossStartParticle.c :: ChuchuBossStartParticle_Type3 ChuchuBossStartParticle_Type9 sub_0808F244 
+- shift_24: src/object/cloud.c :: Cloud_Type1 sub_0809F548 sub_0809F5B0 sub_0809F61C sub_0809F69C sub_0809F6CC sub_0809F7F4 
+- shift_24: src/object/crackingGround.c :: CrackingGround 
+- shift_24: src/object/crenelBeanSprout.c :: CrenelBeanSprout_Action1 CrenelBeanSprout_Action4 CrenelBeanSprout_Action6SubAction0 CrenelBeanSprout_Action6SubAction1 CrenelBeanSprout_Action6SubAction2 sub_080969A4 
+- shift_24: src/object/cutsceneMiscObject.c :: CutsceneMiscObject_Type23 CutsceneMiscObject_Type27 CutsceneMiscObject_Type31 CutsceneMiscObject_Type6 
+- shift_24: src/object/doubleBookshelf.c :: DoubleBookshelf_Action2 
+- shift_24: src/object/evilSpirit.c :: EvilSpirit_Action1 
+- shift_24: src/object/ezloCap.c :: EzloCap_Type1Action1 
+- shift_24: src/object/ezloCapFlying.c :: EzloCapFlying_Action1Type0 
+- shift_24: src/object/fairy.c :: Fairy_Action2 Fairy_Action4 
+- shift_24: src/object/fan.c :: sub_0809EFB0 
+- shift_24: src/object/fanWind.c :: FanWind 
+- shift_24: src/object/figurineDevice.c :: FigurineDevice_Action3 FigurineDevice_Draw sub_080880D8 sub_080882A8 
+- shift_24: src/object/fileScreenObjects.c :: FileScreenObjects_Type18 FileScreenObjects_Type23_LinkPreview 
+- shift_24: src/object/flame.c :: Flame_Action1 
+- shift_24: src/object/fourElements.c :: FourElements_Action3 sub_080A0424 sub_080A0444 
+- shift_24: src/object/frozenOctorok.c :: FrozenOctorok_Action1 FrozenOctorok_Action1SubAction0 FrozenOctorok_Action1SubAction1 FrozenOctorok_Action1SubAction2 FrozenOctorok_Action1SubAction3 FrozenOctorok_Action1SubAction4 sub_0809CBE4 
+- shift_24: src/object/furniture.c :: FurnitureUpdate sub_08090B6C 
+- shift_24: src/object/gleerokParticle.c :: GleerokParticle_Init 
+- shift_24: src/object/greatFairy.c :: GreatFairy_CreateForm GreatFairy_MiniAffineUpdate sub_080871A8 sub_080871D0 sub_0808727C 
+- shift_24: src/object/gyorgBossObject.c :: GyorgBossObject_FightEnd sub_080A1FF0 
+- shift_24: src/object/houseDoorExterior.c :: HouseDoorExterior_Type2 sub_080869A4 
+- shift_24: src/object/itemOnGround.c :: ItemOnGround_Action4 
+- shift_24: src/object/japaneseSubtitle.c :: JapaneseSubtitle_Type0 JapaneseSubtitle_Type2 
+- shift_24: src/object/keyStealingTakkuri.c :: KeyStealingTakkuri_Type0_Action1 KeyStealingTakkuri_Type2_Action1 KeyStealingTakkuri_Type2_Action4 KeyStealingTakkuri_Type3_Action3 sub_0809E0D4 
+- shift_24: src/object/ladderUp.c :: LadderUp 
+- shift_24: src/object/lavaPlatform.c :: LavaPlatform_Type1Action1 LavaPlatform_Type1Action3 LavaPlatform_Type1Action4 
+- shift_24: src/object/lightDoor.c :: LightDoor_Action2 LightDoor_Action3 LightDoor_Action4 
+- shift_24: src/object/lightRay.c :: LightRay_Type0 LightRay_Type1 LightRay_Type2 LightRay_Type3 LightRay_Type4 
+- shift_24: src/object/lightableSwitch.c :: LightableSwitch_Type1_Action2 
+- shift_24: src/object/lilypadLarge.c :: LilypadLarge_Action1 sub_08085B40 sub_08085D60 sub_08085F48 
+- shift_24: src/object/lilypadSmall.c :: sub_08097B24 
+- shift_24: src/object/linkFire.c :: sub_0808DDE8 
+- shift_24: src/object/linkHoldingItem.c :: LinkHoldingItem_Action3 
+- shift_24: src/object/litArea.c :: LitArea 
+- shift_24: src/object/lockedDoor.c :: LockedDoor_Action1 LockedDoor_Action2 LockedDoor_Action4 LockedDoor_Action8 
+- shift_24: src/object/macroDecorations.c :: MacroDecoration_Init 
+- shift_24: src/object/macroMushroomStalk.c :: MacroMushroomStalk_Action1 MacroMushroomStalk_Init 
+- shift_24: src/object/macroPlayer.c :: MacroPlayer_Type0_Action5 MacroPlayer_Type0_Action6 
+- shift_24: src/object/mazaalBossObject.c :: MazaalBossObject_Action2 MazaalBossObject_Action3 MazaalBossObject_Action4 MazaalBossObject_Action5 MazaalBossObject_Action6 MazaalBossObject_Action8 
+- shift_24: src/object/metalDoor.c :: MetalDoor_Action2 MetalDoor_Action4 
+- shift_24: src/object/minecart.c :: Minecart_Action3 sub_08091DDC 
+- shift_24: src/object/minecartDoor.c :: MinecartDoor_Action2 MinecartDoor_Action3 MinecartDoor_Action4 
+- shift_24: src/object/minishEmoticon.c :: MinishEmoticon_Action1 
+- shift_24: src/object/minishLight.c :: MinishLight_Action1 
+- shift_24: src/object/minishPortalCloseup.c :: MinishPortalCloseup_Action2 
+- shift_24: src/object/minishPortalStone.c :: MinishPortalStone_Action3 
+- shift_24: src/object/minishVillageObject.c :: MinishVillageObject_Type0 MinishVillageObject_Type1 MinishVillageObject_Type6 MinishVillageObject_Type8_Action2 MinishVillageObject_Type8_Init 
+- shift_24: src/object/object1F.c :: Object1F_Action2 Object1F_Init 
+- shift_24: src/object/object30.c :: Object30_Action2 
+- shift_24: src/object/object63.c :: Object63_Action1 
+- shift_24: src/object/object70.c :: Object70_Init 
+- shift_24: src/object/objectA.c :: ObjectA 
+- shift_24: src/object/objectA8.c :: ObjectA8_Action3 ObjectA8_Action6 
+- shift_24: src/object/objectBlockingStairs.c :: ObjectBlockingStairs_Action2 ObjectBlockingStairs_Action3 sub_08093280 
+- shift_24: src/object/objectOnSpinyBeetle.c :: sub_08098918 sub_080989C0 
+- shift_24: src/object/octorokBossObject.c :: OctorokBossObject_Action1 OctorokBossObject_Action2 OctorokBossObject_Init 
+- shift_24: src/object/picoBloom.c :: PicoBloom_Action1 
+- shift_24: src/object/playerClone.c :: PlayerClone_Action2 
+- shift_24: src/object/pot.c :: Pot_Action4 
+- shift_24: src/object/pressurePlate.c :: PressurePlate PressurePlate_Action1 PressurePlate_Action2 
+- shift_24: src/object/pullableLever.c :: PullableLever_HandleInit PullableLever_HandleSubAction0 sub_0809153C 
+- shift_24: src/object/pullableMushroom.c :: sub_0808ADF0 
+- shift_24: src/object/pushableFurniture.c :: PushableFurniture_Action1 sub_0808FC5C 
+- shift_24: src/object/pushableGrave.c :: PushableGrave_Action2 
+- shift_24: src/object/pushableStatue.c :: PushableStatue_Action4 
+- shift_24: src/object/railtrack.c :: Railtrack_Action2 Railtrack_Action3 sub_08085394 
+- shift_24: src/object/shrinkingHieroglyphs.c :: ShrinkingHieroglyphs_Action2 
+- shift_24: src/object/smallIceBlock.c :: SmallIceBlock_Action4 sub_0809953C 
+- shift_24: src/object/smoke.c :: Smoke_Type0 
+- shift_24: src/object/smokeParticle.c :: SmokeParticle_Action1 sub_080878CC 
+- shift_24: src/object/specialChest.c :: SpecialChest 
+- shift_24: src/object/steam.c :: Steam 
+- shift_24: src/object/swordParticle.c :: SwordParticle_Action1 
+- shift_24: src/object/thoughtBubble.c :: ThoughtBubble_Update 
+- shift_24: src/object/titleScreenObject.c :: TitleScreenObject_Type4 
+- shift_24: src/object/trapdoor.c :: Trapdoor_Action2 
+- shift_24: src/object/treeHidingPortal.c :: TreeHidingPortal_Action2 TreeHidingPortal_Action3 
+- shift_24: src/object/vaati2Particle.c :: sub_0809E7FC 
+- shift_24: src/object/warpPoint.c :: WarpPoint_Action2 WarpPoint_Action4 WarpPoint_Action5 
+- shift_24: src/object/waterfallOpening.c :: sub_080A00B0 
+- shift_24: src/object/whiteTriangleEffect.c :: sub_0808C74C 
+- shift_24: src/object/windTribeTeleporter.c :: WindTribeTeleporter_Action2 WindTribeTeleporter_Action3 sub_080A11E0 
+- shift_24: src/objectUtils.c :: CreateFx CreateLargeRippleFxRandom CreateObject CreateObjectWithParent LoadObjectSprite 
+- shift_24: src/physics.c :: LinearMoveAngle 
+- shift_24: src/player.c :: PlayerBounceUpdate PlayerMinishDieInit PlayerNormal PlayerPushUpdate PlayerRollUpdate PlayerTalkEzlo_MessageIdle PortalEnterUpdate PortalStandUpdate SurfaceAction_Swamp sub_08070E7C sub_08071208 sub_080712F0 sub_08071E74 sub_08072098 sub_08072168 sub_08072260 sub_080723D0 sub_0807240C sub_08072490 sub_08072ACC sub_08072CFC sub_08072F14 sub_08073584 sub_0807380C sub_08073884 sub_08073C30 sub_08073D20 sub_08073FD0 sub_08074244 sub_08074FEC sub_0807501C sub_0807508C sub_0807518C sub_080752AC 
+- shift_24: src/playerItem/playerItemBomb.c :: PlayerItemBomb PlayerItemBomb_Action3 
+- shift_24: src/playerItem/playerItemBoomerang.c :: PlayerItemBoomerang_Action1 PlayerItemBoomerang_Action2 sub_0801B804 
+- shift_24: src/playerItem/playerItemBottle.c :: PlayerItemBottle_UseEmptyBottle 
+- shift_24: src/playerItem/playerItemBow.c :: PlayerItemBow_Action2 
+- shift_24: src/playerItem/playerItemCellOverwriteSet.c :: PlayerItemCellOverwriteSet 
+- shift_24: src/playerItem/playerItemDashSword.c :: sub_0801B938 
+- shift_24: src/playerItem/playerItemFireRodProjectile.c :: PlayerItemFireRodProjectile_Action1 
+- shift_24: src/playerItem/playerItemGust.c :: sub_080ACC78 sub_080ACDB0 
+- shift_24: src/playerItem/playerItemGustBig.c :: PlayerItemGustBig_Action1 PlayerItemGustBig_Action2 sub_08018FA0 
+- shift_24: src/playerItem/playerItemGustJar.c :: PlayerItemGustJar_Action2 sub_080ADCDC 
+- shift_24: src/playerItem/playerItemHeldObject.c :: PlayerItemHeldObject_SubAction2 
+- shift_24: src/playerItem/playerItemLantern.c :: PlayerItemLantern_Action1 
+- shift_24: src/playerItem/playerItemPacciCaneProjectile.c :: PlayerItemPacciCaneProjectile_Init 
+- shift_24: src/playerItem/playerItemShield.c :: PlayerItemShield_Action1 
+- shift_24: src/playerItem/playerItemSpiralBeam.c :: PlayerItemSpiralBeam_Init 
+- shift_24: src/playerItem/playerItemSword.c :: PlayerItemSword_Action1 sub_080A78B8 sub_080A7A84 
+- shift_24: src/playerUtils.c :: AddInteractableAsMinishFuser AddInteractableFuser AddInteractableObject AddInteractableWhenBigFuser CreateItem CreateItem2 CreateItem3 CreateItemEquippedAtSlot CreateItemIfInputMatches DeleteClones DetermineRButtonInteraction GetPlayerTilePos PlayerSwimming ResetLantern ResolvePlayerAnimation SetItemAnim SetPlayerControl ToggleDiving UpdateCarriedObject sub_08078008 sub_08078140 sub_080782C0 sub_080784E4 sub_080789A8 sub_08078D60 sub_08078FB0 sub_080792D8 sub_08079550 sub_080797EC sub_08079E58 sub_0807B1EC sub_0807B264 sub_0807B2B8 sub_0807B434 sub_0807B464 sub_0807B778 
+- shift_24: src/projectile/arrowProjectile.c :: ArrowProjectile_Action2 ArrowProjectile_Action3 ArrowProjectile_Action4 
+- shift_24: src/projectile/ballAndChain.c :: sub_080AB26C 
+- shift_24: src/projectile/boneProjectile.c :: BoneProjectile_Action1 
+- shift_24: src/projectile/dekuSeedProjectile.c :: DekuSeedProjectile_Action1 DekuSeedProjectile_Action2 DekuSeedProjectile_OnCollision 
+- shift_24: src/projectile/dirtBallProjectile.c :: DirtBallProjectile_Action1 
+- shift_24: src/projectile/gleerokProjectile.c :: GleerokProjectile_Action1 GleerokProjectile_Action2 GleerokProjectile_Init 
+- shift_24: src/projectile/guardLineOfSight.c :: GuardLineOfSight 
+- shift_24: src/projectile/gyorgMaleEnergyProjectile.c :: GyorgMaleEnergyProjectile_Action1 GyorgMaleEnergyProjectile_Action2 
+- shift_24: src/projectile/gyorgTail.c :: GyorgTail_Action2 
+- shift_24: src/projectile/keatonDagger.c :: KeatonDagger 
+- shift_24: src/projectile/lakituLightning.c :: LakituLightning_Action1 
+- shift_24: src/projectile/mandiblesProjectile.c :: MandiblesProjectile_Action1 MandiblesProjectile_Action3 sub_080AA1D8 
+- shift_24: src/projectile/mazaalEnergyBeam.c :: MazaalEnergyBeam_Action1 
+- shift_24: src/projectile/octorokBossProjectile.c :: OctorokBossProjectile_Action1 
+- shift_24: src/projectile/removableDust.c :: RemovableDust_OnTick sub_080AA544 
+- shift_24: src/projectile/rockProjectile.c :: RockProjectile_Action1 
+- shift_24: src/projectile/spiderWeb.c :: SpiderWeb_Action3 SpiderWeb_SubAction0 
+- shift_24: src/projectile/spikedRollers.c :: SpikedRollers_Action1 
+- shift_24: src/projectile/v1DarkMagicProjectile.c :: V1DarkMagicProjectile_Action1 V1DarkMagicProjectile_OnDeath sub_080AAF74 
+- shift_24: src/projectile/v1FireProjectile.c :: V1FireProjectile_Action1 V1FireProjectile_Init 
+- shift_24: src/projectile/v2Projectile.c :: sub_080ABD44 
+- shift_24: src/projectile/v3ElectricProjectile.c :: V3ElectricProjectile_Action3 V3ElectricProjectile_Action4 
+- shift_24: src/projectileUtils.c :: LoadProjectileSprite 
+- shift_24: src/roomInit.c :: sub_0804C128 
+- shift_24: src/script.c :: LoadMenu LookAt ScriptCommand_0807E974 ScriptCommand_MoveTowardsTarget WaitForAnimDone WaitForPlayerAnim sub_0807F464 sub_0807F4F8 
+- shift_24: src/staffroll.c :: StaffrollTask_State1MenuType2 StaffrollTask_State2 
+- shift_24: src/subtask.c :: ShowAreaName 
+- shift_24: src/subtask/subtaskLocalMapHint.c :: Subtask_LocalMapHint 
+- shift_24: src/text.c :: GetFontStrWith ShowTextBox sub_0805EEB4 
+- shift_24: src/ui.c :: DrawHearts EzloNagUIElement_Action1 sub_0801C25C sub_0801CAD0 
+- shift_24: src/vram.c :: UnloadGFXSlots sub_080ADE74 
+- shift_24: src/worldEvent/worldEvent7.c :: WorldEvent_7_2 

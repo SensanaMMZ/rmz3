@@ -1,0 +1,12 @@
+<!-- pmd-red :: trait=bic :: crawled 2026-07-25 :: 673/696 files compiled -->
+- bic: src/agb_flash.c :: StopFlashTimer 
+- bic: src/bg_control.c :: SetBGOBJEnableFlags 
+- bic: src/dungeon_logic.c :: SetVisualFlags 
+- bic: src/dungeon_tilemap.c :: sub_803FA4C 
+- bic: src/event_flag.c :: _FlagCalc 
+- bic: src/ground_lives.c :: sub_80A8750 
+- bic: src/m4a.c :: CgbSound 
+- bic: src/math.c :: cos_4096 sin_4096 
+- bic: src/pokemon_3.c :: SetIQSkill ToggleIQSkill 
+- bic: src/text_2.c :: DrawCharOnWindowInternal sub_8007D00 
+- bic: src/textbox.c :: sub_809A6F8 

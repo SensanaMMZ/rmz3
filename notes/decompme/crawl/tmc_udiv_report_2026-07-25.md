@@ -1,0 +1,31 @@
+<!-- tmc :: trait=udiv :: crawled 2026-07-25 :: 601/619 files compiled -->
+- udiv: src/enemy/chuchuBoss.c :: sub_08026110 sub_080272D4 sub_0802757C sub_080276F4 sub_08027AA4 
+- udiv: src/enemy/gleerok.c :: sub_0802E518 
+- udiv: src/enemy/octorokBoss.c :: OctorokBoss_Action1 
+- udiv: src/enemy/vaatiArm.c :: sub_080429D4 sub_08043DB0 
+- udiv: src/gba/m4a.c :: SampleFreqSet m4aSoundVSyncOn 
+- udiv: src/manager/minishRaftersBackgroundManager.c :: sub_08058244 
+- udiv: src/manager/rollingBarrelManager.c :: sub_08058BC8 
+- udiv: src/manager/staticBackgroundManager.c :: sub_0805B474 
+- udiv: src/menu/figurineMenu.c :: FigurineMenu_080A4978 
+- udiv: src/menu/kinstoneMenu.c :: KinstoneMenu_080A414C KinstoneMenu_080A422C 
+- udiv: src/menu/pauseMenu.c :: sub_080A5128 sub_080A57F4 sub_080A6378 
+- udiv: src/menu/pauseMenuScreen6.c :: sub_080A69E0 
+- udiv: src/npc/minishEzlo.c :: sub_080630A4 
+- udiv: src/npc/npc58.c :: NPC58 
+- udiv: src/object/elementsBackground.c :: sub_080A04E8 
+- udiv: src/object/ezloCapFlying.c :: sub_080936C8 
+- udiv: src/object/figurineDevice.c :: sub_0808826C 
+- udiv: src/object/frozenOctorok.c :: FrozenOctorok_Action1 
+- udiv: src/object/gleerokParticle.c :: GleerokParticle_Action2 GleerokParticle_Action4 
+- udiv: src/object/greatFairy.c :: GreatFairy_CreateForm 
+- udiv: src/object/objectA2.c :: sub_0809F448 
+- udiv: src/object/octorokBossObject.c :: OctorokBossObject_Action2 
+- udiv: src/physics.c :: FixedDiv sub_0806FB38 sub_0806FCF4 
+- udiv: src/player.c :: PortalShrinkUpdate sub_08073584 
+- udiv: src/projectile/gleerokProjectile.c :: GleerokProjectile_Init 
+- udiv: src/projectile/v1FireProjectile.c :: V1FireProjectile_Init 
+- udiv: src/screenTileMap.c :: sub_0807D6D8 
+- udiv: src/script.c :: ScriptCommand_0807ED24 
+- udiv: src/scroll.c :: Scroll5Sub2 Scroll5Sub5 sub_080803D0 
+- udiv: src/subtask/subtaskFastTravel.c :: sub_080A6EE0 

@@ -1,0 +1,48 @@
+<!-- tmc :: trait=umod :: crawled 2026-07-25 :: 601/619 files compiled -->
+- umod: src/debug.c :: sub_0805FA98 
+- umod: src/demo.c :: sub_080A2FD0 
+- umod: src/enemy/acroBandits.c :: AcroBandit_Type0Action1 
+- umod: src/enemy/chuchuBoss.c :: sub_08027C9C 
+- umod: src/enemy/fireballGuy.c :: FireballGuy_Action2 
+- umod: src/enemy/gyorgChild.c :: GyorgChild_Action0 
+- umod: src/enemy/gyorgMale.c :: sub_08048158 
+- umod: src/enemy/madderpillar.c :: sub_08029E0C sub_08029FB4 sub_08029FE4 sub_0802A098 
+- umod: src/enemy/mazaalMacro.c :: sub_08034D4C sub_08035084 
+- umod: src/enemy/puffstool.c :: sub_080256B4 
+- umod: src/enemy/rollobite.c :: sub_08020A7C 
+- umod: src/enemy/ropeGolden.c :: sub_08038304 
+- umod: src/enemy/slime.c :: sub_080450A8 
+- umod: src/enemy/sluggula.c :: sub_08023E9C 
+- umod: src/enemy/vaatiRebornEnemy.c :: VaatiRebornEnemyType0Action2 sub_0803DD78 sub_0803DEE0 
+- umod: src/enemy/vaatiTransfigured.c :: sub_08040934 
+- umod: src/enemy/wizzrobeWind.c :: sub_0802F8E4 
+- umod: src/fileselect.c :: sub_0805066C sub_08050940 sub_080610B8 
+- umod: src/interrupts.c :: HandlePlayerLife 
+- umod: src/itemUtils.c :: CreateRandomItemDrop 
+- umod: src/kinstone.c :: ShuffleEzloHints 
+- umod: src/manager/goronMerchantShopManager.c :: GoronMerchantShopManager_Main 
+- umod: src/menu/figurineMenu.c :: FigurineMenu_080A4978 
+- umod: src/menu/kinstoneMenu.c :: KinstoneMenu_080A422C 
+- umod: src/menu/pauseMenu.c :: sub_080A57F4 
+- umod: src/menu/pauseMenuScreen6.c :: sub_080A67C4 
+- umod: src/message.c :: TextDispEnquiry 
+- umod: src/npc/guardWithSpear.c :: sub_08064198 sub_080642B8 
+- umod: src/npc/kid.c :: sub_080626E0 
+- umod: src/npc/melari.c :: sub_08068780 
+- umod: src/npc/mountainMinish.c :: sub_08067EF0 
+- umod: src/npc/npc58.c :: NPC58 
+- umod: src/npc/postman.c :: sub_0806076C 
+- umod: src/object/bigIceBlock.c :: sub_08099880 
+- umod: src/object/carlovObject.c :: CarlovObject_Type0Action1 
+- umod: src/object/chuchuBossStartParticle.c :: ChuchuBossStartParticle_Type9 
+- umod: src/object/cutsceneMiscObject.c :: CutsceneMiscObject_Type14 CutsceneMiscObject_Type5 
+- umod: src/object/ezloCap.c :: EzloCap_Type0Action1 
+- umod: src/object/furniture.c :: FurnitureUpdate 
+- umod: src/object/greatFairy.c :: GreatFairy GreatFairy_InitializeAnimation 
+- umod: src/object/objectA2.c :: sub_0809F448 
+- umod: src/object/smallIceBlock.c :: SmallIceBlock_Action4 
+- umod: src/objectUtils.c :: CreateLargeRippleFxRandom CreateRippleFxRandom 
+- umod: src/projectile/gyorgTail.c :: sub_080AC6F0 
+- umod: src/projectile/octorokBossProjectile.c :: OctorokBossProjectile_Init 
+- umod: src/roomInit.c :: sub_unk3_HouseInteriors1_InnEastRoom sub_unk3_HouseInteriors1_InnWestRoom 
+- umod: src/script.c :: GetRandomInt 

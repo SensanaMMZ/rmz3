@@ -1,0 +1,56 @@
+<!-- pokefirered :: trait=udiv :: crawled 2026-07-25 :: 225/283 files compiled -->
+- udiv: src/battle_ai_script_commands.c :: Cmd_get_how_powerful_move_is Cmd_if_can_faint Cmd_if_cant_faint Cmd_if_hp_equal Cmd_if_hp_less_than Cmd_if_hp_more_than Cmd_if_hp_not_equal 
+- udiv: src/battle_ai_switch_items.c :: ModulateByTypeEffectiveness 
+- udiv: src/battle_anim_dark.c :: DoMementoShadowEffect 
+- udiv: src/battle_anim_dragon.c :: AnimOverheatFlame AnimOverheatFlame_Step 
+- udiv: src/battle_anim_effects_1.c :: AnimBubbleBurst_Step AnimDoubleTeam AnimFlyingMusicNotes AnimFrenzyPlantRoot AnimHornHit AnimItemSteal_Step1 AnimItemSteal_Step3 AnimKnockOffOpponentsItem AnimMilkBottle_Step2 AnimNeedleArmSpike AnimSleepLetterZ_Step AnimTrickBag_Step1 AnimWavyMusicNotes_CalcVelocity MoveAlongLinearPath 
+- udiv: src/battle_anim_effects_3.c :: AnimMeteorMashStar_Step AnimPainSplitProjectile AnimTask_AcidArmor_Step AnimTask_FlailMovement_Step GetGlareEyeDotCoords InitYawnCloudPosition 
+- udiv: src/battle_anim_electric.c :: AnimTask_ShockWaveProgressingBolt 
+- udiv: src/battle_anim_flying.c :: AnimDiveWaterSplash AnimSkyAttackBird 
+- udiv: src/battle_anim_ghost.c :: AnimDestinyBondWhiteShadow AnimShadowBall AnimShadowBall_Step AnimTask_DestinyBondWhiteShadow AnimTask_GhostGetOut_Step2 AnimTask_SpiteTargetShadow_Step2 
+- udiv: src/battle_anim_ground.c :: AnimTask_HorizontalShake 
+- udiv: src/battle_anim_ice.c :: GenerateHailParticle 
+- udiv: src/battle_anim_mon_movement.c :: AnimTask_ShakeTargetBasedOnMovePowerOrDmg AnimTask_WindUpLunge 
+- udiv: src/battle_anim_mons.c :: AnimWeatherBallUp_Step BattleAnimHelper_SetSpriteSquashParams ConvertPosDataToTranslateLinearData InitAnimArcTranslation InitAnimFastLinearTranslation InitAnimFastLinearTranslationWithSpeed InitAnimLinearTranslation InitAnimLinearTranslationWithSpeed InitSpriteDataForLinearTranslation SetBattlerSpriteYOffsetFromOtherYScale SetBattlerSpriteYOffsetFromYScale SetGreyscaleOrOriginalPalette 
+- udiv: src/battle_anim_poison.c :: AnimSludgeBombHitParticle 
+- udiv: src/battle_anim_psychic.c :: AnimTask_ImprisonOrbs 
+- udiv: src/battle_anim_rock.c :: AnimRockScatter_Step AnimTask_MoveSeismicTossBg AnimTask_Rollout 
+- udiv: src/battle_anim_special.c :: SpriteCB_ThrowBall_ShrinkMon 
+- udiv: src/battle_anim_water.c :: AnimToTargetInSinWave AnimWaterPulseBubble_Step AnimWaterPulseRing_Step 
+- udiv: src/battle_interface.c :: CalcBarFilledPixels CalcNewBarValue Debug_DrawNumber GetReceivedValueInPixels GetScaledHPFraction MoveBattleBar 
+- udiv: src/battle_main.c :: BattleStartClearSetData CreateNPCTrainerParty GetWhoStrikesFirst HandleAction_WatchesCarefully TryRunFromBattle 
+- udiv: src/battle_util.c :: ItemBattleEffects 
+- udiv: src/berry_crush.c :: Cmd_TabulateResults FramesToMinSec PrintResultsText Task_ShowBerryCrushRankings UpdateInputEffects printCrushingResults 
+- udiv: src/digit_obj_util.c :: DrawNumObjsLeadingZeros DrawNumObjsMinusInBack DrawNumObjsMinusInFront 
+- udiv: src/dodrio_berry_picking.c :: DoDodrioIntroAnim HandlePickBerries TryIncrementDifficulty UpdateFallingBerries 
+- udiv: src/evolution_graphics.c :: CycleEvolutionMonSprite EvoTask_ShrinkOrExpandEvoSprites SpriteCB_PostEvoSparkleSet2 SpriteCB_PreEvoSparkleSet1 SpriteCB_PreEvoSparkleSet2 
+- udiv: src/field_effect.c :: Task_MoveDeoxysRock_Step 
+- udiv: src/field_weather_effects.c :: CreateAshSprites CreateFogDiagonalSprites CreateFogHorizontalSprites CreateSandstormSprites InitRainSpriteMovement StartRainSpriteFall 
+- udiv: src/fldeff_softboiled.c :: SetUpFieldMove_SoftBoiled Task_SoftboiledRestoreHealth Task_TryUseSoftboiledOnPartyMon 
+- udiv: src/image_processing_effects.c :: ConvertColorToGrayscale GetColorFromPersonality QuantizePixel_Blur QuantizePixel_BlurHard QuantizePixel_Grayscale QuantizePixel_GrayscaleSmall QuantizePixel_MotionBlur 
+- udiv: src/intro.c :: Scene3_StartNidorinoEntrance Scene3_StartNidorinoHop 
+- udiv: src/link_rfu_2.c :: Rfu_InitBlockSend 
+- udiv: src/m4a.c :: SampleFreqSet 
+- udiv: src/math_util.c :: Q_8_8_div Q_8_8_inv Q_N_S_div Q_N_S_inv Q_N_S_mul 
+- udiv: src/menu.c :: MultichoiceGrid_MoveCursor MultichoiceGrid_MoveCursorIfValid MultichoiceGrid_RedrawCursor 
+- udiv: src/menu2.c :: StartBlendTask 
+- udiv: src/pokeball.c :: SpriteCB_PlayerMonSendOut_2 
+- udiv: src/pokedex_screen.c :: DexScreen_PrintMonHeight DexScreen_PrintMonWeight DexScreen_PrintNum3LeadingZeroes DexScreen_PrintNum3RightAlign 
+- udiv: src/pokemon.c :: AdjustFriendship CalculateBaseDamage CalculateMonStats CalculatePPWithBonus CreateMonWithEVSpread ModifyStatByNature PokemonUseItemEffects 
+- udiv: src/pokemon_size_record.c :: FormatMonSizeRecord 
+- udiv: src/pokemon_storage_system_data.c :: GetCursorBoxColumnAndRow GetCursorCoordsByPos HandleInput_InBox_GrabbingMultiple HandleInput_InBox_Normal InitCursorMove 
+- udiv: src/pokemon_storage_system_graphics.c :: CreateBoxMonIconAtPos 
+- udiv: src/pokemon_storage_system_misc.c :: SetItemIconPosition 
+- udiv: src/quest_log_battle.c :: TrySetQuestLogBattleEvent 
+- udiv: src/scanline_effect.c :: ScanlineEffect_InitWave 
+- udiv: src/script_menu.c :: ScriptMenu_MultichoiceGrid 
+- udiv: src/shop.c :: Task_BuyHowManyDialogueInit 
+- udiv: src/slot_machine.c :: UpdateCoinsDisplay 
+- udiv: src/sprite.c :: ConvertScaleParam GetAnchorCoord UpdateSpriteMatrixAnchorPos 
+- udiv: src/ss_anne.c :: Task_SSAnneRun WakeSpriteCallback 
+- udiv: src/string_util.c :: ConvertIntToDecimalStringN ConvertIntToHexStringN 
+- udiv: src/tileset_anims.c :: TilesetAnim_CeladonCity TilesetAnim_SilphCo 
+- udiv: src/tm_case.c :: SetDiscSpritePosition 
+- udiv: src/trade.c :: PrintLevelAndGender SetSelectedMon 
+- udiv: src/trainer_card.c :: Task_AnimateCardFlipDown Task_AnimateCardFlipUp UpdateCardFlipRegs 
+- udiv: src/trig.c :: Sin2 

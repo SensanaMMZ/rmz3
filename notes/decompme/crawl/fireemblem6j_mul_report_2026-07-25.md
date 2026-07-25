@@ -1,0 +1,42 @@
+<!-- fireemblem6j :: trait=mul :: crawled 2026-07-25 :: 275/284 files compiled -->
+- mul: src/ai_080326C4.c :: AiAttemptHealStaff AiAttemptRangedHealStaff AiEquipGetFlags AiFunc_080334F4 AiFunc_CountEnemiesInRange AiIsUnitEnemyOnTheWayToCmdResult AiUpdateUnitSeeksHealing 
+- mul: src/ai_battle.c :: AiGetDamageDealtCombatScoreComponent AiGetDamageTakenScoreComponent AiGetDangerScoreComponent AiGetFriendZoneCombatScoreComponent AiGetLowHpScoreComponent AiGetOpponentLowHpScoreComponent AiGetTargetJobCombatScoreComponent AiGetTurnCombatScoreComponent 
+- mul: src/arena.c :: ArenaAdjustOpponentPowerRanking 
+- mul: src/augury.c :: AuguryPaletteModify1 AuguryPaletteModify2 
+- mul: src/banim_efxmagic.c :: EfxApocalypseBGCtrl_Loop EfxApocalypseOBJ3RND_Loop EfxApocalypseOBJ_Loop2 EfxApocalypseOBJ_Loop3 EfxApocalypseOBJ_Loop4 EfxFenrirOBJ2Chiri_Loop EfxRestRST_Loop 
+- mul: src/banim_efxmisc.c :: EfxSRankWeaponEffectSCR_Loop 
+- mul: src/banim_efxsound.c :: GetProperAnimSoundLocation M4aPlayWithPostionCtrl 
+- mul: src/banim_efxutils.c :: EfxDecodeSplitedPalette EfxPalBlackInOut EfxPalFlashingInOut EfxPalWhiteInOut 
+- mul: src/banim_ekrgauge.c :: EkrGaugeModDec 
+- mul: src/banim_ekrlvupfx.c :: EfxPartsofScroll2_Loop 
+- mul: src/battle.c :: GetAutoleveledStatIncrease GetUnitPowerLevel 
+- mul: src/bm.c :: CamMove_OnLoop UnkMapCursor_OnLoop 
+- mul: src/bmfx.c :: UnitPrepSwapAnim_Init UnitPrepSwapAnim_Loop 
+- mul: src/config.c :: CfObj_Loop Config_Loop DrawGameOptionHelpText DrawGameOptionIcon DrawGameOptionText DrawOptionValueTexts GenericOptionChangeHandler 
+- mul: src/item.c :: GetItemMaxValue GetItemValue GetTotalConvoyItemsValue GetTotalUnitItemsValue 
+- mul: src/m4a.c :: CgbModVol CgbSound MidiKeyToCgbFreq SampleFreqSet TrkVolPitSet m4aMPlayTempoControl 
+- mul: src/manim.c :: ManimDebugInitBattleScr ManimDebugInitBu ManimDebug_Display ManimDebug_Loop PutManimDebugParamText PutManimWindowBar func_fe6_0806875C 
+- mul: src/map.c :: MapFill 
+- mul: src/mapui.c :: GetTerrainMapUiScreenSide PutMapUiHpBar 
+- mul: src/menu.c :: ApplyMenuCursorScroll 
+- mul: src/minimap.c :: Minimap_AdjustDisplay Minimap_CloseAnim Minimap_OpenAnim 
+- mul: src/mu.c :: Mu_OnStateMovement 
+- mul: src/playrank.c :: PlayRankGetter_Asset PlayRankGetter_XmapCombat PlayRankTrail_Init PlayRank_ChapterTurns_DrawTurn PlayRank_GetTotalPlayTime PlayRank_GetWinningRate 
+- mul: src/prep_sallycir.c :: SallyCir1_Loop SallyCir2_Loop 
+- mul: src/prepmenu.c :: PrepScreen_ReloadLeftUnitInfo func_fe6_08079804 
+- mul: src/prepscreen_disp.c :: PrepDisp_PutTitleSprite PrepMenuFadeIn_Loop PrepMenuFadeOut_Loop 
+- mul: src/random.c :: RandNextB 
+- mul: src/save_game.c :: ReadSuspendSave 
+- mul: src/save_multiarena.c :: CopyMultiArenaSaveTeam ReadMultiArenaSaveTeam ReadMultiArenaSaveTeamName ReadMultiArenaSaveTeamRaw SwapMultiArenaSaveTeams WipeMultiArenaSaveTeam WriteMultiArenaSaveTeam WriteNewMultiArenaSave 
+- mul: src/savemenu.c :: SaveMenu_ExtraMenuScrollIn SaveMenu_ExtraMenuScrollOut SaveMenu_XMap1ScrollIn SaveMenu_XMap1ScrollOut func_fe6_08088B40 func_fe6_08088B9C 
+- mul: src/savemenu_2.c :: SaveDrawFadeIn_Loop SaveDrawFadeOut_Loop func_fe6_080893D0 func_fe6_08089490 func_fe6_080895B8 func_fe6_08089684 func_fe6_08089D30 
+- mul: src/scanline.c :: PrepareSineWaveScanlineBuf PrepareSineWaveScanlineBufExt func_fe6_0806A270 
+- mul: src/secretscreen_08082E74.c :: SecretScreen_ChecksumPasswordBuf 
+- mul: src/shop.c :: IsShopPageScrolling Shop_TryMoveHandPage 
+- mul: src/spriteanim.c :: ExecAnim SyncAnimImg 
+- mul: src/support.c :: ApplyAffinityBonuses 
+- mul: src/targetlist.c :: ListTerrainHealingTargets 
+- mul: src/text.c :: ClearTextPart GetSpriteTextDrawDest GetTextDrawDest PutText Text_GetChrOffset 
+- mul: src/util.c :: Interpolate MatMulMat StartFadeCore VecCrossVec VecDotVec VecMulMat func_fe6_08013F04 func_fe6_08014F70 func_fe6_0801501C func_fe6_080158B8 
+- mul: src/worldmap.c :: WmArrow_Init WmArrow_Loop WmZoomCore 
+- mul: src/xmap.c :: func_fe6_0808B194 func_fe6_0808B2BC 

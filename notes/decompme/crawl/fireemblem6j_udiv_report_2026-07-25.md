@@ -1,0 +1,36 @@
+<!-- fireemblem6j :: trait=udiv :: crawled 2026-07-25 :: 275/284 files compiled -->
+- udiv: src/arena.c :: ArenaAdjustOpponentDamage ArenaAdjustOpponentPowerRanking ArenaGenOpponentUnit 
+- udiv: src/battle.c :: GetBattleUnitStaffExp GetUnitRoundExp 
+- udiv: src/bm.c :: CamMove_OnLoop UnkMapCursor_OnLoop 
+- udiv: src/bmfx.c :: GameOverScreenHBlank UnitPrepSwapAnim_Loop 
+- udiv: src/bmio.c :: WeatherInit_Blue WeatherUpdate_Clouds 
+- udiv: src/debugtext.c :: GenNumberStr 
+- udiv: src/ending_monologue.c :: EndingMonologueText_Loop 
+- udiv: src/hardware.c :: FormatTime 
+- udiv: src/helpbox.c :: ApplyHelpBoxPosition 
+- udiv: src/helpbox_2.c :: func_fe6_08071584 func_fe6_080717B8 func_fe6_08071B20 
+- udiv: src/m4a.c :: SampleFreqSet 
+- udiv: src/manim.c :: PutManimWindowBar PutManimWindowNumber func_fe6_08065F9C func_fe6_08066094 
+- udiv: src/menu.c :: ApplyMenuCursorScroll 
+- udiv: src/minimap.c :: Minimap_AdjustDisplay 
+- udiv: src/opinfo_classdemo.c :: ClassDemoMain_Loop_Intro 
+- udiv: src/playrank.c :: PlayRankGetter_XmapCombat PlayRank_ChapterTurns_DrawBase PlayRank_GetWinningRate 
+- udiv: src/prep_sallycir.c :: SallyCir2_Loop 
+- udiv: src/prepscreen_disp.c :: PrepDisp_PutTitleSprite PrepMenu_DrawGmapSprites 
+- udiv: src/prepscreenfx2.c :: func_fe6_0807D834 
+- udiv: src/random.c :: RandNext RandNext_100 
+- udiv: src/save_stats.c :: PidStatsCountTotalLevelsGained RegisterChapterStats 
+- udiv: src/save_xmap.c :: GetXmapChapterStats 
+- udiv: src/savemenu.c :: SaveMenu_ExtraMenuScrollIn SaveMenu_ExtraMenuScrollOut SaveMenu_XMap1ScrollIn SaveMenu_XMap1ScrollOut func_fe6_08088B40 func_fe6_08088B9C 
+- udiv: src/savemenu_2.c :: func_fe6_08089684 func_fe6_08089894 func_fe6_08089C70 
+- udiv: src/secretscreen.c :: PrintSecretScreenTexts 
+- udiv: src/secretscreen_08082E74.c :: GetSecretScreenRN SecretScreen_CeilDivBitCount SecretScreen_InitBitstream SecretScreen_ReadBits SecretScreen_WriteBits 
+- udiv: src/soundroom.c :: func_fe6_0808BCBC func_fe6_0808BCF0 func_fe6_0808BD78 func_fe6_0808BDF8 
+- udiv: src/statscreen.c :: PutStatScreenStatWithBar PutStatScreenWeaponExpBar StatScreenPageName_CloseMain StatScreenPageName_OpenMain 
+- udiv: src/targetlist.c :: ListTerrainHealingTargets 
+- udiv: src/text.c :: PutNumber2Digit PutNumber2DigitExt PutNumber2DigitSmall PutNumberExt PutTime Text_DrawNumber 
+- udiv: src/titlescreen.c :: func_fe6_0809B99C 
+- udiv: src/trademenu.c :: TradeMenu_LoadForcedInitialHover 
+- udiv: src/unitlistscreen.c :: func_fe6_08074BA4 func_fe6_08074D54 
+- udiv: src/util.c :: func_fe6_08013F04 
+- udiv: src/worldmap.c :: WmArrow_Init WmArrow_Loop WmZoomCore 

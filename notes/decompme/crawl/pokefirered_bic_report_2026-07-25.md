@@ -1,0 +1,31 @@
+<!-- pokefirered :: trait=bic :: crawled 2026-07-25 :: 225/283 files compiled -->
+- bic: src/AgbRfu_LinkManager.c :: rfu_LMAN_CHILD_checkSendChildName rfu_LMAN_CHILD_checkSendChildName2 rfu_LMAN_PARENT_checkRecvChildName rfu_LMAN_PARENT_stopWaitLinkRecoveryAndDisconnect rfu_LMAN_REQ_callback rfu_LMAN_linkWatcher rfu_LMAN_reflectCommunicationStatus 
+- bic: src/agb_flash.c :: StopFlashTimer 
+- bic: src/battle_controller_link_opponent.c :: LinkOpponentBufferExecCompleted 
+- bic: src/battle_controller_link_partner.c :: LinkPartnerBufferExecCompleted 
+- bic: src/battle_controller_oak_old_man.c :: OakOldManBufferExecCompleted 
+- bic: src/battle_controller_opponent.c :: OpponentBufferExecCompleted 
+- bic: src/battle_controller_player.c :: HandleMoveSwitching PlayerBufferExecCompleted 
+- bic: src/battle_controller_pokedude.c :: PokedudeBufferExecCompleted 
+- bic: src/battle_controller_safari.c :: SafariBufferExecCompleted 
+- bic: src/battle_controllers.c :: PrepareBufferDataTransferLink Task_HandleCopyReceivedLinkBuffersData 
+- bic: src/battle_main.c :: FaintClearSetData SwitchInClearSetData TryEvolvePokemon 
+- bic: src/battle_util.c :: HandleFaintedMonActions MarkBattlerReceivedLinkData 
+- bic: src/bg.c :: BgTileAllocOp HideBgInternal IsDma3ManagerBusyWithBgCopy 
+- bic: src/easy_chat_3.c :: ModeIconsSpriteAnimIsEnded 
+- bic: src/ereader_helpers.c :: GetKeyInput 
+- bic: src/event_data.c :: FlagClear 
+- bic: src/field_weather_effects.c :: InitSnowflakeSpriteMovement 
+- bic: src/gpu_regs.c :: ClearGpuRegBits DisableInterrupts 
+- bic: src/image_processing_effects.c :: QuantizePixel_Invert 
+- bic: src/librfu_rfu.c :: rfu_CB_CHILD_pollConnectRecovery rfu_CB_pollConnectParent rfu_CB_recvData rfu_CB_sendData rfu_NI_stopReceivingData rfu_REQBN_watchLink rfu_STC_NI_initSlot_asRecvDataEntity rfu_changeSendTarget rfu_clearSlot 
+- bic: src/librfu_sio32id.c :: Sio32IDInit 
+- bic: src/link_rfu_2.c :: LinkManagerCB_Parent LinkManagerCB_UnionRoom RfuReqDisconnectSlot 
+- bic: src/m4a.c :: CgbSound 
+- bic: src/main.c :: ReadKeys 
+- bic: src/palette_util.c :: RouletteFlash_Stop UnmarkUsedPulseBlendPalettes 
+- bic: src/party_menu_specials.c :: ShiftMoveSlot 
+- bic: src/pokemon.c :: PokemonUseItemEffects 
+- bic: src/save.c :: SetDamagedSectorBits 
+- bic: src/save_failed_screen.c :: WipeDamagedSectors 
+- bic: src/sprite.c :: AllocSpriteTiles DestroySprite FreeOamMatrix FreeSpriteTilesByTag FreeSpriteTilesIfNotUsingSheet 

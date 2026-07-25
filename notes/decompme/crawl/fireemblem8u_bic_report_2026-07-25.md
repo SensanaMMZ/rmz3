@@ -1,0 +1,13 @@
+<!-- fireemblem8u :: trait=bic :: crawled 2026-07-25 :: 353/358 files compiled -->
+- bic: src/banim-ekrdragon-demonkingobj.c :: sub_8077F9C 
+- bic: src/bmsave-lib.c :: ReadSupplyItems UpdateBestGlobalSupportValue 
+- bic: src/bmudisp.c :: ApplyUnitSpriteImage16x16 ApplyUnitSpriteImage16x32 ApplyUnitSpriteImage32x32 ApplyUnitSpriteUiImage16x16 TornOutUnitSprite 
+- bic: src/eventscr.c :: Event02_EvBitAndIdMod Event0F_CounterOps 
+- bic: src/hardware.c :: UpdateKeyStatus _UpdateKeyStatus sub_8001FD0 
+- bic: src/m4a.c :: CgbSound 
+- bic: src/muctrl.c :: ClearEventMoveBuffer 
+- bic: src/opanim-main.c :: OpAnim1_UpdateScrollOneLine 
+- bic: src/scene.c :: ClearTalkFlag 
+- bic: src/uidebug.c :: sub_8085298 
+- bic: src/worldmap_entry.c :: GmapBaseEntry_80BF988 GmapBaseEntry_OnEnd 
+- bic: src/worldmap_scrollmanage.c :: CheckGmScrolling StartGmScrollManage 

@@ -1,0 +1,49 @@
+<!-- pokefirered :: trait=umod :: crawled 2026-07-25 :: 225/283 files compiled -->
+- umod: src/AgbRfu_LinkManager.c :: rfu_LMAN_settingPCSWITCH 
+- umod: src/battle_ai_script_commands.c :: BattleAI_ChooseMoveOrAction Cmd_if_random_safari_flee 
+- umod: src/battle_ai_switch_items.c :: FindMonThatAbsorbsOpponentsMove FindMonWithFlagsAndSuperEffective HasSuperEffectiveMoveAgainstOpponents ShouldSwitchIfWonderGuard 
+- umod: src/battle_anim_effects_1.c :: AnimLockOnTarget_Step6 
+- umod: src/battle_anim_effects_2.c :: AnimBulletSeed_Step1 AnimPencil_Step AnimPinkHeart AnimSoftBoiledEgg_Step3_Callback2 
+- umod: src/battle_anim_effects_3.c :: AnimFlatterConfetti AnimTask_FlailMovement_Step AnimWishStar_Step 
+- umod: src/battle_anim_electric.c :: AnimSparkElectricityFlashing_Step AnimZapCannonSpark_Step 
+- umod: src/battle_anim_fight.c :: AnimFistOrFootRandomPos 
+- umod: src/battle_anim_fire.c :: AnimTask_ShakeTargetInPattern 
+- umod: src/battle_anim_mons.c :: GetBattlerSpriteCoordAttr GetBattlerYDelta TranslateSpriteLinearAndFlicker 
+- umod: src/battle_anim_normal.c :: AnimHitSplatRandom 
+- umod: src/battle_anim_water.c :: AnimSmallWaterOrb AnimTask_CreateRaindrops CreateWaterPulseRingBubbles CreateWaterSpoutRainDroplet 
+- umod: src/battle_interface.c :: Debug_DrawNumber 
+- umod: src/battle_main.c :: HandleAction_ThrowBait HandleAction_ThrowRock SpriteCB_FaintOpponentMon 
+- umod: src/battle_util.c :: AbilityBattleEffects AtkCanceller_UnableToUseMove GetMoveTarget ItemBattleEffects 
+- umod: src/berry_crush.c :: Cmd_TabulateResults FramesToMinSec HandlePlayerInput UpdateInputEffects 
+- umod: src/decompress.c :: LoadSpecialPokePic LoadSpecialPokePic_DontHandleDeoxys 
+- umod: src/dodrio_berry_picking.c :: DoDodrioIntroAnim GetNewBerryIdByDifficulty InitDodrioGame SetRandomPrize TryIncrementDifficulty 
+- umod: src/easy_chat.c :: GetRandomECPokemon GetRandomUnlockedTrendySaying GetRandomWordFromGroup UnlockRandomTrendySaying 
+- umod: src/evolution_graphics.c :: CreatePostEvoSparkleSet2 
+- umod: src/field_weather_effects.c :: CreateAshSprites CreateFogDiagonalSprites CreateFogHorizontalSprites CreateSandstormSprites InitRainSpriteMovement InitSnowflakeSpriteMovement SetThunderCounter StartRainSpriteFall Thunderstorm_Main 
+- umod: src/fieldmap.c :: GetMapBorderIdAt MapGridGetCollisionAt MapGridGetElevationAt MapGridGetMetatileIdAt 
+- umod: src/image_processing_effects.c :: AddPointillismPoints GetColorFromPersonality 
+- umod: src/intro.c :: CreateNidorinoRecoilDustSprites SpriteCB_Star 
+- umod: src/itemfinder.c :: Task_ItemfinderResponseSoundsAndAnims Task_ItemfinderUnderfootSoundsAndAnims 
+- umod: src/link_rfu_2.c :: Rfu_InitBlockSend 
+- umod: src/link_rfu_3.c :: RfuRecvQueue_Dequeue RfuRecvQueue_Enqueue RfuSendQueue_Dequeue RfuSendQueue_Enqueue 
+- umod: src/menu.c :: MultichoiceGrid_MoveCursor MultichoiceGrid_MoveCursorIfValid MultichoiceGrid_RedrawCursor 
+- umod: src/oak_speech.c :: GetDefaultName Task_OakSpeech_ShrinkPlayerPic 
+- umod: src/pokeball.c :: SpriteCB_PlayerMonSendOut_2 
+- umod: src/pokedex_screen.c :: DexScreen_PrintMonHeight DexScreen_PrintMonWeight DexScreen_PrintNum3LeadingZeroes DexScreen_PrintNum3RightAlign 
+- umod: src/pokemon.c :: CreateMonWithGenderNatureLetter GetEvolutionTargetSpecies GetNature GetNatureFromPersonality GetSecretBaseTrainerNameIndex GetSecretBaseTrainerPicIndex GetSubstruct SetWildMonHeldItem 
+- umod: src/pokemon_icon.c :: GetUnownLetterByPersonality 
+- umod: src/pokemon_jump.c :: SpriteCB_StaticCountdown 
+- umod: src/pokemon_size_record.c :: FormatMonSizeRecord 
+- umod: src/pokemon_special_anim_scene.c :: Task_UseItem_OutwardSpiralDots 
+- umod: src/pokemon_storage_system_data.c :: GetCursorBoxColumnAndRow GetCursorCoordsByPos HandleInput_InBox_GrabbingMultiple HandleInput_InBox_Normal 
+- umod: src/pokemon_storage_system_graphics.c :: CreateBoxMonIconAtPos SetPlacedMonSprite 
+- umod: src/pokemon_storage_system_misc.c :: SetItemIconPosition 
+- umod: src/save.c :: CopySectorSignatureByte HandleReplaceSector HandleWriteSector RestoreSaveBackupVarsAndIncrement WriteSaveSectorOrSlot WriteSectorSignatureByte 
+- umod: src/slot_machine.c :: StopReel1 
+- umod: src/special_field_anim.c :: Task_DrawEscalator 
+- umod: src/string_util.c :: ConvertIntToHexStringN 
+- umod: src/tileset_anims.c :: QueueAnimTiles_CeladonCity_Fountain QueueAnimTiles_General_Flower TilesetAnim_CeladonCity TilesetAnim_SilphCo 
+- umod: src/trade.c :: CheckValidityOfTradeMons DrawSelectedMonScreen PrintLevelAndGender 
+- umod: src/trig.c :: Sin2 
+- umod: src/wonder_news.c :: WonderNews_SetReward 
+- DOUBLE-HOME: src/intro.c src/pokemon_jump.c src/pokemon_special_anim_scene.c :: SpriteCB_Star

@@ -1,0 +1,50 @@
+<!-- pokepinballrs :: trait=udiv :: crawled 2026-07-25 :: 77/77 files compiled -->
+- udiv: src/all_board_banners.c :: RenderBannerSlideAnimation 
+- udiv: src/all_board_mode_change_and_debug_menu.c :: BallSaverAnimation EndOfBallBonusSummary GameOverAnimation 
+- udiv: src/all_board_pause_game.c :: AnimatePauseMenuOverlay PauseGame 
+- udiv: src/all_board_portrait_display.c :: LoadPortraitGraphics 
+- udiv: src/all_board_process2.c :: AllBoardProcess_2A_4D6C4 BonusBoardProcess_2B_4DBFC MainBoardProcess_2B_4D960 
+- udiv: src/all_board_process4.c :: DetermineFlipperBallSide 
+- udiv: src/all_board_process5.c :: BonusBoardProcess_5B_11F88 MainBoardProcess_5B_11C98 
+- udiv: src/all_board_process6_collision.c :: ApplyBounceBackForce ApplyTiltEffectOnCollision ComputeFlipperLaunchVelocity ComputeWallReflection ProcessBonusTrapPhysics 
+- udiv: src/all_board_process7.c :: BonusBoardProcess_7B_12BF8 
+- udiv: src/all_board_process8.c :: AllBoardProcess_8B_4CEB4 ProcessEventTimer 
+- udiv: src/all_board_state_transitions_and_idle.c :: InitFieldIdle 
+- udiv: src/bonus_complete_scoring_transition.c :: ProcessBonusBannerAndScoring 
+- udiv: src/dusclops_process3.c :: DusclopsBoardProcess_3B_33130 DusclopsPhase_ProcessEntityLogicAndGraphics DuskullPhase_ProcessEntityLogic DuskullPhase_ProcessGraphics 
+- udiv: src/ereader.c :: BlinkEReaderTextCursor DrawEReaderTextCharacter 
+- udiv: src/groudon_process3.c :: AnimateGroudonBackground GroudonBoardProcess_3B_3B49C RenderGroudonSprites UpdateGroudonEntityLogic UpdateGroudonFieldEntities 
+- udiv: src/high_scores.c :: FormatScoreDigits 
+- udiv: src/intro.c :: IntroSceneX_64_HoldWhitescreen 
+- udiv: src/kecleon_process3.c :: KecleonBoardProcess_3A_35860 KecleonBoardProcess_3B_35AA4 RenderKecleonBoardElements RenderKecleonSprites UpdateKecleonEntityLogic UpdateKecleonScopeItem UpdateKecleonScopeVision 
+- udiv: src/kyogre_process3.c :: AnimateKyogreBackground KyogreBoardProcess_3B_3869C RenderKyogreSprites UpdateKyogreEntityLogic UpdateKyogreFieldEntities 
+- udiv: src/m4a.c :: SampleFreqSet 
+- udiv: src/main_board_bumpers.c :: CalculateRubyBumperBounce DrawSapphireBumperSprites HandleRubyBumperHit UpdateSapphireBumperLogic 
+- udiv: src/main_board_catch_holes.c :: AnimateCenterTrapSequence UpdateShopEntryAnimation 
+- udiv: src/main_board_catch_normal_and_jirachi_modes.c :: DrawCatchMonBoardSprite DrawJirachiSprites LoadCatchSpriteGraphics LoadMonFieldSpriteGraphics UpdateJirachiBonus 
+- udiv: src/main_board_catch_tile_logic.c :: RevealCatchTilesSequential 
+- udiv: src/main_board_catch_tile_particles.c :: InitBurstTileParticles UpdateBurstTileParticles UpdateSequentialTileParticles 
+- udiv: src/main_board_center_capture_hole.c :: RunMonCaptureSequence RunRouletteWheel 
+- udiv: src/main_board_charge_spinner.c :: UpdatePikachuChargeCounter 
+- udiv: src/main_board_evolution_mode.c :: UpdateEvolutionItemAnimation 
+- udiv: src/main_board_intro_mode.c :: UpdateBoardArrowAnimState UpdateBoardIntroMode 
+- udiv: src/main_board_launcher_and_cutscenes.c :: AnimateOneUpSprite DrawSpoinkSprite RunEvolutionCutscene RunTravelEventCutscene UpdateSpoinkAnimation 
+- udiv: src/main_board_pichu_entity.c :: PichuArrivalSequence UpdateKickbackLogic 
+- udiv: src/main_board_to_be_split.c :: AnimateAerodactylEggDelivery AnimateBonusTrapSprite AnimateCoinReward AnimateTotodileEggDelivery AnimateWasCaughtBanner InitAerodactylEggDelivery ProcessChargeIndicator RenderEvolutionUI UpdateEggMode UpdateHatchCave UpdateRubyEvolutionShopSprite 
+- udiv: src/main_board_travel_mode.c :: UpdateTravelMode 
+- udiv: src/options.c :: Options_HandleInput 
+- udiv: src/pokedex.c :: LoadMonAnimationSprite LoadMonPortrait PrintSeenOwnedTotals RenderLinkGraphics RenderPokedexSprites 
+- udiv: src/rayquaza_process3.c :: RenderRayquazaSprites RenderWindCloudSprites UpdateLightningGrabEntity UpdateRayquazaEntityLogic UpdateRayquazaIntroSequence UpdateRayquazaMinionsAndEffects 
+- udiv: src/ruby_board_indicators.c :: AnimateRubyBallPowerUpSequence AnimateRubyCatchLightBlink AnimateRubyHoleIndicators DrawRubyProgressDigits UpdateRubyBoardAnimations 
+- udiv: src/ruby_collision.c :: ProcessRubyCollisionEvent 
+- udiv: src/ruby_process3_entities_2.c :: AnimateSharpedoEntity RubyPondTriBumperHandleHitAndDraw RubyPond_EntityLogic UpdateNuzleafEntity 
+- udiv: src/ruby_ramp.c :: UpdateMakuhitaEntity 
+- udiv: src/ruby_trigger_targets.c :: AnimateChikoritaSprite UpdateChikoritaAttackAnimation 
+- udiv: src/sapphire_board_indicators.c :: AnimateSapphireCatchLightBlink AnimateSapphireHoleIndicators DrawSapphireProgressDigits UpdateSapphireBoardAnimations 
+- udiv: src/sapphire_collision.c :: ProcessSapphireCollisionEvent 
+- udiv: src/sapphire_pond_and_zigzagoon.c :: DrawZigzagoonAndRouletteStopPrompt UpdatePelipperPondEntity UpdateZigzagoonEntity 
+- udiv: src/sapphire_seedot_egg_shop.c :: UpdateSapphireEggHatchAnimation UpdateSapphireEggMachine UpdateSapphireSeedotCollection UpdateSapphireShopSignAnimation 
+- udiv: src/save_and_restore_game.c :: RestoreFieldSpecificGraphics RestoreGroudonBonusGraphics RestoreKyogreBonusGraphics RestoreMainFieldDynamicGraphics RestoreRayquazaBonusGraphics RestoreRubyBoardTileGraphics 
+- udiv: src/spheal_process3.c :: AnimateSphealBackground SphealBoardProcess_3B_43228 SphealBoard_PelipperDeliversBall UpdateSealeoKnockdownPhysics UpdateSphealEntityLogic UpdateSphealResultsScreen 
+- udiv: src/titlescreen.c :: TitleScreen1_WaitForStartButton 
+- udiv: src/util.c :: IntPow SetMatrixScale WriteDigitsRecursive 

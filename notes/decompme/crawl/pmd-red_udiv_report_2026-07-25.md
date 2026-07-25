@@ -1,0 +1,38 @@
+<!-- pmd-red :: trait=udiv :: crawled 2026-07-25 :: 673/696 files compiled -->
+- udiv: src/blow_away.c :: sub_807D068 
+- udiv: src/code_8023144.c :: sub_80234BC 
+- udiv: src/code_809D148.c :: sub_809D25C 
+- udiv: src/dungeon_action_handler.c :: sub_8067558 
+- udiv: src/dungeon_cutscene.c :: ShiftCameraToPosition 
+- udiv: src/dungeon_damage.c :: ApplyAtkDefStatBoosts CalcDamage 
+- udiv: src/dungeon_entity_movement.c :: DisplayActions_Async sub_8075050 
+- udiv: src/dungeon_generation.c :: GenerateFloor GetGridPositions ProcessFixedRoom SpawnEnemies SpawnNonEnemies 
+- udiv: src/dungeon_items.c :: sub_8046734 sub_804687C 
+- udiv: src/dungeon_menu_items.c :: ShowDungeonItemsMenu 
+- udiv: src/dungeon_misc.c :: sub_806A3D4 
+- udiv: src/dungeon_move_util.c :: sub_80566F8 
+- udiv: src/dungeon_name_banner.c :: ShowDungeonNameBanner_Async 
+- udiv: src/dungeon_projectile_throw.c :: HandleCurvedProjectileThrow 
+- udiv: src/dungeon_tilemap.c :: sub_803F878 sub_803FA4C 
+- udiv: src/effect_main.c :: sub_800DE8C sub_800E3AC 
+- udiv: src/event_flag.c :: _FlagCalc 
+- udiv: src/friend_areas_map.c :: MoveToNewLocation_Async 
+- udiv: src/ground_bg.c :: UpdateMapCameraPosition 
+- udiv: src/ground_script.c :: ExecuteScriptCommand 
+- udiv: src/hurl_orb.c :: HandleHurlOrb 
+- udiv: src/m4a.c :: SampleFreqSet 
+- udiv: src/math.c :: Atan2_4096 
+- udiv: src/menu_input.c :: MenuUpdatePagesData MoveMenuToEntryId sub_80137B0 
+- udiv: src/mini_printf.c :: mini_itoa 
+- udiv: src/move_orb_actions_3.c :: SplashMoveAction 
+- udiv: src/number_util.c :: FixedPoint_Div 
+- udiv: src/palette_fade_util.c :: DesaturateRow DesaturateSingle ModulatePaletteRow ModulatePaletteSingle 
+- udiv: src/palette_util.c :: sub_80998E0 
+- udiv: src/pixelpos_math.c :: InterpolatePixelPos 
+- udiv: src/pokemon.c :: CalculateEXPGain 
+- udiv: src/pokemon_summary_window.c :: ShowPokemonSummaryWindow 
+- udiv: src/trawl_orb.c :: HandleTrawlOrb 
+- udiv: src/util.c :: ConvertToBCD ConvertToDecimal 
+- udiv: src/wigglytuff_shop2.c :: PopulateWigglytuffShopFriendAreaInfoScreen 
+- udiv: src/window_buffer.c :: CopyWindowBgBuffer 
+- udiv: src/world_map.c :: AnimateMonPath_Async 

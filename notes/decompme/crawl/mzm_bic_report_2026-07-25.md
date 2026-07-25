@@ -1,0 +1,12 @@
+<!-- mzm :: trait=bic :: crawled 2026-07-25 :: 199/654 files compiled -->
+- bic: src/audio.c :: UpdatePsgSounds 
+- bic: src/block.c :: BlockProcessBombChains 
+- bic: src/connection.c :: ConnectionLockHatches ConnectionSetHatchAsOpened 
+- bic: src/cutscenes/story_text_cutscene.c :: StoryTextCutsceneFadeOut 
+- bic: src/display.c :: IoUpdateDispcnt 
+- bic: src/event.c :: EventFunction 
+- bic: src/menus/boot_debug.c :: BootDebugSamusHandler 
+- bic: src/menus/file_select.c :: FileSelectApplyMenuSelectInput 
+- bic: src/menus/status_screen.c :: PauseDebugToggleAbility StatusScreenGetSlotForNewItem StatusScreenSetPistolVisibility 
+- bic: src/menus/title_screen.c :: TitleScreenProcessComets unk_76a98 
+- bic: src/time_attack.c :: TimeAttackGarbleSeedValue 

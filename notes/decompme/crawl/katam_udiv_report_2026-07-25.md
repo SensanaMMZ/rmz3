@@ -1,0 +1,20 @@
+<!-- katam :: trait=udiv :: crawled 2026-07-25 :: 169/170 files compiled -->
+- udiv: src/batty.c :: sub_080BCF24 
+- udiv: src/code_08138D64.c :: sub_0813914C sub_08139368 sub_08139A3C sub_0813A464 sub_0813B720 sub_0813B8B0 sub_0813BA90 sub_0813BCA0 sub_0813C1C4 sub_0813C260 sub_0813C388 sub_0813C414 sub_0813C5D0 sub_0813C6A0 sub_0813C734 sub_0813C844 sub_0813C8D8 sub_0813CB78 sub_0813CCA8 sub_0813D0DC sub_0813D178 sub_0813D234 sub_0813D4CC sub_0813D674 sub_0813DE7C sub_0813DEF0 sub_0813DF4C sub_0813DFCC sub_0813E184 sub_0813E344 sub_0813E788 sub_0813EBDC sub_0813EED0 sub_0813F098 sub_08140284 sub_0814069C sub_0814086C sub_081409AC sub_08140B4C sub_08140BE8 sub_08140CD0 sub_081411A4 sub_08141A3C sub_08141B78 sub_08142544 sub_0814293C sub_08142B80 sub_08142E8C sub_08143314 
+- udiv: src/code_0814A828.c :: sub_0814A9E8 sub_0814CDE4 sub_0814DCBC 
+- udiv: src/code_0814EBE4.c :: sub_0814F0B8 sub_0814F1D8 
+- udiv: src/collection_room.c :: sub_0814389C sub_08143A38 sub_08143AF8 sub_08144238 sub_0814514C sub_08145784 sub_081458A0 sub_081459FC 
+- udiv: src/dark_meta_knight.c :: sub_080FDC68 
+- udiv: src/dark_mind.c :: CreateDarkMindForm2 sub_08106874 sub_081068F8 
+- udiv: src/intro.c :: sub_08145E84 sub_08146018 sub_0814654C sub_081471E8 sub_08149450 sub_08149A5C sub_08149AC4 
+- udiv: src/kirby.c :: sub_0803D46C 
+- udiv: src/logo.c :: LogoFadeIn 
+- udiv: src/m4a.c :: SampleFreqSet 
+- udiv: src/object.c :: sub_0809C6D0 
+- udiv: src/palette.c :: sub_081587E0 
+- udiv: src/parasol.c :: sub_080C2B28 
+- udiv: src/soarar.c :: sub_080ABA40 
+- udiv: src/subgames.c :: sub_0812B63C sub_0812D124 sub_0812E194 sub_08132888 sub_08133044 
+- udiv: src/title_screen.c :: TitleScreenFadeIn TitleScreenFadeOut sub_08149F08 sub_0814A39C sub_0814A70C 
+- udiv: src/ufo.c :: sub_080C4B70 
+- udiv: src/warp_star.c :: sub_0800CBF0 sub_0800D7A8 sub_0800DEE8 

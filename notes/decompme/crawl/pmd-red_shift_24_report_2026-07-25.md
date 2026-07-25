@@ -1,0 +1,273 @@
+<!-- pmd-red :: trait=shift_24 :: crawled 2026-07-25 :: 673/696 files compiled -->
+- shift_24: src/adventure_info.c :: GetAdventureAchievement GetAdventureLogLine SetAdventureAchievement UpdateAdventureAchievements 
+- shift_24: src/adventure_log.c :: DisplayAdventureLog HandleAdventureLogInput 
+- shift_24: src/agb_flash.c :: ProgramFlashSectorAndVerify ProgramFlashSectorAndVerifyNBytes ReadFlash ReadFlashId SetFlashTimerIntr StartFlashTimer SwitchFlashBank VerifyFlashSector VerifyFlashSectorNBytes 
+- shift_24: src/agb_flash_1m.c :: WaitForFlashWrite_Common 
+- shift_24: src/agb_flash_mx.c :: EraseFlashSector_MX ProgramFlashSector_MX 
+- shift_24: src/blow_away.c :: BlowAwayTarget sub_807D068 
+- shift_24: src/code_8004AA0.c :: ReadAnimatedColorData UpdateAnimatedColors sub_8004B78 sub_8004C00 sub_8004D14 sub_8004D40 
+- shift_24: src/code_800D090.c :: sub_800D33C sub_800D588 sub_800D820 
+- shift_24: src/code_8015080.c :: sub_801516C 
+- shift_24: src/code_801AFA4.c :: GetNumMonsAbleToLearnItemMove sub_801B080 sub_801B374 
+- shift_24: src/code_801B60C.c :: sub_801B60C sub_801B874 sub_801BB5C sub_801BD80 sub_801BE30 
+- shift_24: src/code_801C8C4.c :: sub_801C8C4 sub_801CA08 sub_801CB5C sub_801CE58 sub_801CF14 sub_801CF50 sub_801CFE0 sub_801CFF4 
+- shift_24: src/code_801D014.c :: LoadTeamRankBadge sub_801D4C0 sub_801D680 sub_801D798 sub_801D894 
+- shift_24: src/code_801EE10.c :: sub_801EE10 sub_801EF38 sub_801F1B0 sub_801F280 
+- shift_24: src/code_801F428.c :: sub_801F520 sub_801F5F0 
+- shift_24: src/code_801F808.c :: sub_801FA58 
+- shift_24: src/code_80227B8.c :: sub_80227B8 sub_8022A10 sub_8022D2C sub_8022EF4 sub_8023068 
+- shift_24: src/code_8023144.c :: sub_8023144 sub_8023278 sub_8023354 sub_80234BC sub_80236A4 sub_8023704 
+- shift_24: src/code_803B050.c :: sub_803B120 sub_803B18C 
+- shift_24: src/code_803B344.c :: sub_803B344 
+- shift_24: src/code_803C1B4.c :: GetDungeonTeamRankPts GetMissionRankText sub_803C1B4 sub_803C1D0 sub_803C21C sub_803C37C sub_803C3E0 sub_803C45C sub_803C4F0 sub_803C580 sub_803C610 
+- shift_24: src/code_803D0D8.c :: DecodeWonderMailPassword sub_803D0F0 sub_803D100 sub_803D110 sub_803D204 sub_803D2C0 sub_803D414 
+- shift_24: src/code_803DA7C_2.c :: sub_803E178 
+- shift_24: src/code_8040094_1.c :: GetEffectiveMoveId MoveHasSineWobble MoveHasSpecialEffect sub_8040BB0 sub_8040C4C sub_8040DA0 sub_8041038 sub_8041108 sub_8041168 sub_8041400 sub_80414C0 sub_8041500 
+- shift_24: src/code_8094F88.c :: CountMailType DeleteMailAtIndex GetFirstIndexofMailType GetMailIndex GetMailatIndex HasMail sub_8095494 
+- shift_24: src/code_80958E8.c :: CalculateMailChecksum CheckPKMNNewsSlot CountFilledMailboxSlots CountFilledPelipperBoardSlots CountJobsinDungeon GenerateMailJobDungeonInfo GenerateMailJobInfo GeneratePelipperJobs GetJobSlotInfo GetMailboxSlotInfo GetNumAcceptedJobs GetPelipperBoardSlotInfo InitializeMailJobsNews IsJobSlotEmpty IsMailSlotEmpty IsPelipperBoardSlotEmpty IsValidWonderMail ReceivePKMNNews ResetJobSlot ResetMailbox ResetMailboxSlot ResetPelipperBoardSlot ValidateWonderMail sub_8095E38 sub_8095E78 sub_8095F28 sub_80961B4 sub_80961D8 sub_80963B4 sub_80963FC sub_8096488 sub_80964B4 sub_80964E4 sub_809693C sub_8096A08 sub_8096AF8 sub_8096B98 sub_8096BD0 sub_8096E2C sub_8096E80 
+- shift_24: src/code_809D148.c :: sub_809D25C 
+- shift_24: src/code_80A26CC.c :: IsRescueDungeonAvailable sub_80A2688 sub_80A26D8 sub_80A2750 sub_80A2824 sub_80A28B4 sub_80A28F0 sub_80A293C sub_80A29B0 sub_80A2A5C 
+- shift_24: src/confirm_name_menu.c :: sub_80161F8 
+- shift_24: src/credits1.c :: sub_8035574 
+- shift_24: src/debug_field_map.c :: DebugMapViewer 
+- shift_24: src/debug_field_map_window.c :: DebugFieldMapWindow_GetInput ShowDebugFieldMapWindow 
+- shift_24: src/debug_menu1.c :: UpdateDebugMenu sub_803A3BC 
+- shift_24: src/debug_menu2.c :: sub_803A6F0 sub_803A7B0 
+- shift_24: src/debug_menu3.c :: sub_803AA34 sub_803AB34 sub_803ABC8 
+- shift_24: src/debug_menu4.c :: sub_803AF88 
+- shift_24: src/decompress_3.c :: StrsDifferent_IgnoreCase 
+- shift_24: src/decompress_at.c :: DecompressATGlobal DecompressAT_AppendByte DecompressAT_GetByte 
+- shift_24: src/direction_util.c :: SetVecFromDirectionSpeed SizedDeltaDirection4 SizedDeltaDirection8 TransformDirection1 TransformDirection2 sub_8002B04 sub_8002B5C 
+- shift_24: src/drought_orb.c :: HandleDroughtOrb 
+- shift_24: src/dungeon_8041AD0.c :: PlayStairsSound UpdateStatusIconFlags sub_804151C sub_8041550 sub_80416A4 sub_80416E0 sub_8041764 sub_804178C_Async sub_8041888 sub_8041BD0 sub_8041D5C sub_8041DD8 sub_80421C0 sub_80421EC sub_8042208 sub_804225C sub_8042390 sub_804245C sub_8042520 sub_80426C8 sub_8042768 sub_80427AC sub_8042818 sub_8042A84 sub_8042D7C sub_8042E1C sub_8042E5C sub_8042EC8 
+- shift_24: src/dungeon_action.c :: AddActionToDungeonSubMenu GetDungeonSubMenuItemString IsNotAttacking SetActionPassTurnOrWalk SetLeaderActionToNothing sub_8044BA8 sub_8044CC8 sub_8044D40 sub_8044DC8 sub_8044E24 
+- shift_24: src/dungeon_action_execution.c :: ExecuteEntityDungeonAction_Async HandleFlashFire HandleSleepTalk HandleSnore 
+- shift_24: src/dungeon_action_handler.c :: HandleGiveItemAction_Async HandlePlaceItemAction_Async HandleSetItemAction_Async HandleTakeItemAction_Async HandleUnsetItemAction_Async HandleUseMovePlayerAction sub_8066BD4_Async sub_8066E14 sub_8066FA4 sub_8067110 sub_80671A0 sub_8067558 sub_8067794 sub_8067904 
+- shift_24: src/dungeon_ai.c :: RunMonsterAI sub_8075BA4 
+- shift_24: src/dungeon_ai_attack.c :: AIConsiderMove ChooseAIMove GetMoveTargetAndRangeForPokemon HandleUseMoveAIAction HandleUseOrbAction_Async IsAITargetEligible IsTargetInRange TargetRegularAttack TryAddTargetToAITargetList WeightMove 
+- shift_24: src/dungeon_ai_item_weight.c :: GetAIUseItemProbability IsAdjacentToEnemy 
+- shift_24: src/dungeon_ai_items.c :: AIDecideUseItem GetPossibleAIArcItemTargets GetPossibleAIThrownItemDirections MonTryPickUpItem TargetThrownItem 
+- shift_24: src/dungeon_ai_leader.c :: GetLeaderIfVisible TargetLeader 
+- shift_24: src/dungeon_ai_movement.c :: AIMovement AvoidEnemies CanTakeItem ChooseTargetPosition DecideMovement Wander 
+- shift_24: src/dungeon_cleared_window.c :: ShowDungeonClearedWindow_Async 
+- shift_24: src/dungeon_cutscene.c :: CutsceneGetPartner CutsceneLookAroundEffect_Async CutsceneLookDir_Async GetEntityFromMonsterBehavior HandleBossFaint_Async ItemInInventoryOrHeld MonCutsceneCompleted SetDungeonBGColorRGB sub_8084854 sub_8085374 sub_80854D4 sub_80855E4 sub_808563C sub_8085764 sub_80857B8 sub_8085930 sub_80859F0 sub_8085EC8 sub_8085F44 sub_80861B8 sub_80861D4 sub_80861F8 sub_8086AC0 sub_8086AE4 
+- shift_24: src/dungeon_cutscene_articuno.c :: ArticunoPostStoryPreFightDialogue HandleArticunoBossFaint sub_8087FF8 
+- shift_24: src/dungeon_cutscene_celebi.c :: CelebiJoinDialogue HandleMazeBossFaint 
+- shift_24: src/dungeon_cutscene_deoxys.c :: DeoxysPreFightDialogue HandleDeoxysNormalBossFaint sub_808C3A0 
+- shift_24: src/dungeon_cutscene_entei.c :: EnteiPostStoryPreFightDialogue HandleEnteiBossFaint sub_8089C90 
+- shift_24: src/dungeon_cutscene_groudon.c :: GroudonPostStoryPreFightDialogue HandleGroudonBossFaint sub_808875C 
+- shift_24: src/dungeon_cutscene_hooh.c :: HandleHoOhBossFaint HoOhReFightDialogue sub_808A668 
+- shift_24: src/dungeon_cutscene_jirachi.c :: HandleJirachiBossFaint_Async JirachiFriendAreaSearch JirachiReFightDialogue JirachiWishGrantDialogue JirachiWish_Async sub_808B35C 
+- shift_24: src/dungeon_cutscene_kyogre.c :: HandleKyogreBossFaint KyogrePreFightDialogue sub_808C10C 
+- shift_24: src/dungeon_cutscene_latios.c :: HandleLatiosBossFaint 
+- shift_24: src/dungeon_cutscene_lugia.c :: HandleLugiaBossFaint LugiaPreFightDialogue sub_808BDEC 
+- shift_24: src/dungeon_cutscene_mankey.c :: HandleMankeyBossFaint 
+- shift_24: src/dungeon_cutscene_meanies.c :: HandleMeaniesBossFaint sub_8087144 
+- shift_24: src/dungeon_cutscene_mewtwo.c :: HandleMewtwoBossFaint MewtwoReFightDialogue sub_8089978 
+- shift_24: src/dungeon_cutscene_moltres.c :: HandleMoltresBossFaint MoltresPostStoryPreFightDialogue sub_8087848 
+- shift_24: src/dungeon_cutscene_raikou.c :: HandleRaikouBossFaint RaikouPostStoryPreFightDialogue sub_8089F8C 
+- shift_24: src/dungeon_cutscene_rayquaza.c :: HandleRayquazaBossFaint RayquazaPostStoryPreFightDialogue sub_8089328 
+- shift_24: src/dungeon_cutscene_regis.c :: HandleRegiceBossFaint_Async HandleRegirockBossFaint_Async HandleRegisteelBossFaint_Async RegicePreFightDialogue RegirockPreFightDialogue RegisteelPreFightDialogue sub_808ACC0 sub_808AD48 sub_808ADCC sub_808AFB0_Async sub_808B030_Async sub_808B0B0_Async sub_808B1CC 
+- shift_24: src/dungeon_cutscene_skarmory.c :: HandleSkarmoryBossFaint 
+- shift_24: src/dungeon_cutscene_suicune.c :: HandleSuicuneBossFaint SuicunePostStoryPreFightDialogue sub_808A308 
+- shift_24: src/dungeon_cutscene_zapdos.c :: HandleZapdosBossFaint ZapdosPostStoryPreFightDialogue ZapdosPreFightDialogue sub_808729C 
+- shift_24: src/dungeon_damage.c :: ApplyAtkDefStatBoosts CalcDamage HandleDealingDamageInternal_Async HandleDealingDamage_Async WeightWeakTypePicker sub_806E100 sub_806F2BC sub_806F370_Async sub_806F480 sub_806F4A4 
+- shift_24: src/dungeon_engine.c :: RunFractionalTurn_Async RunLeaderTurn_Async TrySpawnMonsterAndActivatePlusMinus_Async sub_8044454_Async sub_80444F4_Async sub_8044574_Async sub_8044820_Async sub_8044AB4 sub_8044B84 
+- shift_24: src/dungeon_entity_movement.c :: CheckEntityTileForInteraction DisplayActions_Async TryInteractWithTile TryTriggerMonsterHouseWithMsg_Async sub_8075680 
+- shift_24: src/dungeon_exit.c :: SetUpDungeonExitData sub_8083C88 
+- shift_24: src/dungeon_floor_spawns.c :: GetAvailableMonsToTransform GetRandomFloorItem GetRandomFloorTrap 
+- shift_24: src/dungeon_generation.c :: CreateGridCellConnections CreateHallway GenerateFloor GenerateKecleonShop GenerateMaze GenerateMazeLine GenerateMonsterHouse GenerateSecondaryStructure SetTerrainObstacleChecked SpawnEnemies SpawnNonEnemies StairsAlwaysReachable sub_80511F0 sub_805124C sub_8051288 sub_8051438 
+- shift_24: src/dungeon_generation_fixed.c :: PlaceFixedRoomTile SpawnEnemyTrapAtPos SpawnItemAtPos SpawnSpeciesAtPos sub_8051E7C sub_805210C 
+- shift_24: src/dungeon_info.c :: AppendWithNewLines BufferDungeonRequirementsText CanLeaderSwitch DoEnemiesEvolveWhenKOed GeneralizeMazeDungeonLoc GetDungeonFloorCount GetDungeonName1 GetDungeonName2 GetDungeonStartingFloor GetMaxItemsAllowed GetRandomItemForValidDungeonLoc GetRandomMovementChance GetRescuesAllowed GetTurnLimit HasCheckpoint IsEnterWithoutGameSave IsLevelResetDungeon IsMoneyAllowed IsNotValidDungeon IsRecruitingEnabled IsStairDirectionUp 
+- shift_24: src/dungeon_item_action.c :: BlastSeedItemAction HandleGummiItemAction HandleLinkBoxAction HealSeedItemAction HungerSeedItemAction KeyItemAction PechaBerryItemAction sub_80479B8 sub_80482FC sub_8048950 sub_8048A68 sub_8048D50 
+- shift_24: src/dungeon_items.c :: AllItemsToPlainSeed ClearAllItemsWithFlag CreateFloorItems CreateItemWithStickyChance HasHeldItem PlayerHasItemWithFlag RemoveGroundItem SpawnDroppedItem SpawnItem TryLeaderItemPickUp_Async sub_80462AC sub_8046734 sub_804687C sub_8046F00 
+- shift_24: src/dungeon_jobs.c :: sub_80842F0 sub_80843BC sub_8084424 sub_8084448 sub_80845E0 sub_8084778 
+- shift_24: src/dungeon_kecleon_shop.c :: sub_807EC28 sub_807EFFC sub_807F19C sub_807F33C 
+- shift_24: src/dungeon_leveling.c :: EnemyEvolution LevelDownTarget LevelUp LevelUpTarget sub_807218C sub_80725A4 sub_8072778 sub_8072938 sub_8072B78 
+- shift_24: src/dungeon_list_menu.c :: CountAvailableDungeons DungeonListMenu_GetInput DungeonListMenu_Init DungeonListMenu_UpdateShowWindow HasZeroAvailableDungeons 
+- shift_24: src/dungeon_logic.c :: AbilityIsActive CalcSpeedStage CanAIMonsterMoveInDirection CanAttackInDirection CanCrossWalls CanMoveInDirection CanSeeInvisibleMonsters CanSeeTeammate CannotAttack CheckRunAwayVisualFlag CheckVariousConditions CheckVariousStatuses2 GetCrossableTerrain GetMoveTypeForMonster GetTreatmentBetweenMonsters IQSkillPairIsEnabled IqSkillIsEnabled IsAtJunction IsProtectedFromStatDrops IsTacticSet LoadIQSkills MonsterCanThrowItems MonsterIsType SafeguardIsActive SetVisualFlags ShouldAvoidFirstHit ShouldMonsterRunAway ShouldMonsterRunAwayAndShowEffect sub_807034C sub_80703A0 sub_807049C sub_8070564 sub_80705F0 sub_80706A4 sub_8070828 sub_8070BC0 sub_8070F3C sub_8070F80 sub_8071058 sub_80717A4 sub_8071A8C 
+- shift_24: src/dungeon_main.c :: CheckLeaderTile DungeonHandlePlayerInput PrintOnMainMenu ShowMainMenu sub_805E738 sub_805E874 sub_805EC2C sub_805EC4C sub_805EF60 sub_805EFB4 sub_805F02C 
+- shift_24: src/dungeon_map.c :: CopyDungeonMapToVram DrawMinimapTile InitDungeonMap UpdateBgTilemapForDungeonMap 
+- shift_24: src/dungeon_map_access.c :: ChangeDungeonCameraPos IsTileGround sub_8049840 sub_80498A8 sub_804AD34 sub_804AE84 
+- shift_24: src/dungeon_menu_items.c :: PrintOnDungeonItemsMenu SetSubMenuActions ShowDungeonItemsMenu sub_8060D64 
+- shift_24: src/dungeon_menu_moves.c :: ActionDelinkMoves ActionSetOrUnsetMove AddMovesSubMenuOptions IsMoveLinkedAndNotCharging PrintMoveNamesOnWindow ShowDungeonMovesMenu ShowMovesFromTeamMenu ShowMovesMenuWindows sub_8063E70 sub_8064310 
+- shift_24: src/dungeon_menu_others.c :: PrintOthersMenuOptions ShowDungeonOptions ShowDungeonOthersMenu ShowGameOptionsMenu ShowOthersOptions TrySetNewGameOptions 
+- shift_24: src/dungeon_menu_recruitment.c :: CreateScrollingArrow SetRecruitableMons ShowRecruitmentSearchMenu 
+- shift_24: src/dungeon_menu_stairs.c :: ShowAndPrintOnStairsMenu ShowDungeonStairsMenu ShowStairsDescription 
+- shift_24: src/dungeon_menu_team.c :: AddTeamSubMenuOptions PrintMoveNamesOnBottomWindow PrintOnDungeonTeamMenu ShowDungeonSummaryOrIQMenu ShowDungeonTacticsMenu ShowDungeonTeamMenu ShowDungeonToWhichMonMenu ShowIqDescriptionWindow ShowTacticDescriptionWindow 
+- shift_24: src/dungeon_menu_tile.c :: ShowAndPrintOnTileMenu ShowDungeonTileMenu 
+- shift_24: src/dungeon_message.c :: BufferCutsceneProtagonists DisplayDungeonMenuMessage DisplayDungeonMessage_Async DisplayDungeonYesNoMessage_Async DisplayItemTip DisplayMessageAddToLog_Async LogMessageByIdWithPopupCheckUserUnknown_Async LogMessageByIdWithPopupCheckUser_Async TryDisplayDungeonLoggableMessage2_Async TryDisplayDungeonLoggableMessage3_Async TryDisplayDungeonLoggableMessage4_Async TryDisplayGeneralTutorialMessage sub_8052210 sub_8052DC0 xxx_draw_string_80524F0 
+- shift_24: src/dungeon_message_log.c :: CreateMessageLogArrow DisplayMessageLog 
+- shift_24: src/dungeon_misc.c :: DisplayMsgIfNewIqSkillLearned DisplayMsgIfTeamMonsLearnedNewIqSkill EndAbilityImmuneStatus GetMonsterApparentID HandleFaint_Async LoadDungeonActivePokemonSprites LoadPokemonSprite ReevaluateSnatchMonster SetDungeonMonsFromTeam SetMonSummaryInfoFromEntity TryActivateArtificialWeatherAbilities TryPointCameraToMonster sub_8068A84 sub_8068BDC sub_8068F28 sub_80694C0 sub_80695EC sub_8069660 sub_80696A8 sub_80696FC sub_806977C sub_8069E0C sub_8069F9C sub_806A120 sub_806A1B0 sub_806A1E8 sub_806A240 sub_806A3D4 sub_806A5B8 sub_806A898 sub_806A914 sub_806A974 sub_806A9B4 sub_806AA0C sub_806AA70 sub_806AB2C 
+- shift_24: src/dungeon_mon_recruit.c :: CanEntityBeRecruited HandleSpecialEntityJoinSequence IsMonsterRecruitable MonsterJoinSequence_Async TryRecruitMonster sub_806F910 
+- shift_24: src/dungeon_mon_spawn.c :: InitEntityFromSpawnInfo ResetMonEntityData SpawnTeamMember SpawnWildMon SpawnWildMonsOnFloor UpdateEntitySpecies sub_806B09C sub_806B168 sub_806B404 sub_806B678 sub_806C1D8 sub_806C330 
+- shift_24: src/dungeon_mon_sprite_render.c :: DetermineAllMonsterShadow DetermineMonsterShadow UpdateMonsterSprite sub_806CC10 sub_806CC70 sub_806CCB4 sub_806CD90 sub_806CDD4 sub_806CDFC sub_806CF18 
+- shift_24: src/dungeon_monster_house.c :: TriggerMonsterHouse_Async TryWakeSleepingWildPokemon 
+- shift_24: src/dungeon_move.c :: HandleDamagingMove TargetNotImmuneTo TryHitTarget_Async UseMoveAgainstTargets sub_80556BC sub_8055864_Async sub_8055988 
+- shift_24: src/dungeon_move_util.c :: AccuracyCalc CanAIUseMove CanMonsterUseMove GetDungeonExitReasonFromMoveOrItem IsChargingAnyTwoTurnMove MoveMatchesBideClassStatus MoveRequiresCharging RollSecondaryEffect SetNewTarget SetTargetsForMove ToItemID TriggerTargetAbilityEffect TryUseChosenMove sub_8055A00 sub_8056468 sub_8056564 sub_80566F8 sub_8057144 sub_805727C sub_805744C sub_8057588 
+- shift_24: src/dungeon_music.c :: IsFanfareSEPlaying_2 PlayDungeonCursorSE 
+- shift_24: src/dungeon_name_banner.c :: ShowDungeonNameBanner_Async sub_803DD30 
+- shift_24: src/dungeon_pokemon_sprites.c :: LoadStatusGraphics UpdateDungeonPokemonSprite 
+- shift_24: src/dungeon_portrait_placement.c :: GetPortraitPlacementInfo 
+- shift_24: src/dungeon_projectile_throw.c :: CanProjectileHitTarget HandleCurvedProjectileThrow HandleStraightProjectileThrow 
+- shift_24: src/dungeon_random.c :: CalculateStatusTurns 
+- shift_24: src/dungeon_range.c :: GetLeader IsPositionInSight sub_8083568 sub_8083904 
+- shift_24: src/dungeon_recruit_release_menu.c :: ShowPokemonSummary ShowRecruitReleaseMenu sub_8067F00 
+- shift_24: src/dungeon_run_end.c :: GetDungeonExitReasonFromMoveOrItemID PrintOnDungeonFinishedWindow 
+- shift_24: src/dungeon_serializer.c :: ReadDungeonTraps ReadMonster WriteBool8 WriteMonster WriteMonsterBehavior sub_80828E0 sub_8082A08 sub_8082B40 
+- shift_24: src/dungeon_submenu.c :: CreateDungeonMenuSubWindow 
+- shift_24: src/dungeon_tilemap.c :: UpdateCamera sub_803F27C sub_803F428 sub_803F9CC sub_803FA4C sub_803FB74 sub_803FE30 sub_803FF18 
+- shift_24: src/dungeon_turn_effects.c :: DoEndOfTurnEffects_Async TickStatusAndHealthRegen 
+- shift_24: src/dungeon_util.c :: CanSeeTarget CanTargetEntity CanTargetPosition ShouldDisplayEntity ShouldMinimapDisplayEntity SpawnItemEntity SpawnTrap sub_804522C sub_80453AC sub_804550C sub_8045A70 sub_8045AAC sub_8045ACC 
+- shift_24: src/dungeon_vram.c :: DungeonShowWindows sub_803E874 sub_803ED30 sub_803EDF0 sub_803EF90 
+- shift_24: src/dungeon_wild_mon_spawn.c :: TrySpawnWildMonster 
+- shift_24: src/dungeon_wind.c :: UpdateWindTurns 
+- shift_24: src/effect_data.c :: GetTrapEffect sub_800ECF8 sub_800ED0C 
+- shift_24: src/effect_main.c :: sub_800DE8C sub_800E448 sub_800E49C sub_800E9FC sub_800EC74 
+- shift_24: src/effect_sub_1.c :: sub_800EF28 sub_800EF40 
+- shift_24: src/event_flag.c :: CheckQuest FlagCalc FlagJudge FriendAreaIdToMapId GetScriptVarArrayValue GetScriptVarValue JudgeVarWithImmediate JudgeVarWithVar ScenarioCalc ScriptUnlockFriendArea UpdateScriptVarWithImmediate UpdateScriptVarWithVar _FlagCalc _FlagJudge sub_8001D88 sub_80026CC 
+- shift_24: src/exclusive_pokemon.c :: GetCutsceneFlag ReadExclusivePokemon SetCutsceneFlag SetTempCutsceneFlag UnsetCutsceneFlag WriteExclusivePokemon 
+- shift_24: src/explosion.c :: HandleExplosion sub_807E1A0 
+- shift_24: src/expose_trap.c :: sub_807D3CC 
+- shift_24: src/felicity_bank.c :: sub_8016B48 
+- shift_24: src/file_system.c :: OpenFile 
+- shift_24: src/flash.c :: WriteFlashData 
+- shift_24: src/friend_area.c :: GetFriendAreaCapacity GetFriendAreaCapacity2 GetFriendAreaDescription GetFriendAreaName GetFriendAreaPrice GetFriendAreaStatus GetFriendAreaUnlockCondition UnlockFriendArea WriteFriendAreaName sub_80923D4 sub_8092404 sub_809249C sub_8092558 
+- shift_24: src/friend_area_action_menu.c :: CreateFriendActionMenu sub_80278B4 sub_8027A78 sub_8027BD8 sub_8027D9C sub_8027DCC sub_8027E18 sub_8027E4C sub_8027EB8 
+- shift_24: src/friend_areas_map.c :: ChooseLocation_Async GetAreaMapPosition GetChosenDirection InitMapLocations IsFriendAreaShownOnMap PrintFriendAreaNameInMap ShowFriendAreasMap_Async 
+- shift_24: src/friend_areas_map_util.c :: FriendAreasMap_InitGfx FriendAreasMap_PrintAvailableSubAreas FriendAreasMap_RunFrameActions 
+- shift_24: src/friend_list.c :: FriendList_HandleInput FriendList_Init FriendList_ShowWindow MonHasFriendArea SortbyName sub_8023B7C sub_8024108 
+- shift_24: src/friend_list_menu.c :: CreateFriendListMenu FriendListMenu_isOnTeam sub_8025728 sub_8025A84 sub_8025CB4 
+- shift_24: src/friend_rescue.c :: sub_8032828 sub_8033CAC sub_8033D94 sub_8033DBC sub_8034074 sub_8034254 sub_8034404 sub_8034478 sub_8034590 sub_80346D8 sub_8034804 sub_8034A70 sub_8034C98 sub_8034D74 sub_8034EC8 sub_8034EF0 sub_8035038 sub_80350F4 sub_8035210 sub_80352A4 
+- shift_24: src/game_options.c :: GameOptions_SetTransparentMiniMap InitializeGameOptions 
+- shift_24: src/graphics_memory.c :: sub_8009A7C 
+- shift_24: src/ground_bg.c :: sub_80A3B80 sub_80A4660 sub_80A46C0 sub_80A4764 
+- shift_24: src/ground_effect.c :: CallbackEffectSetDirection CallbackEffectSpriteRelatedCheck_80AD690 CallbackEffectSpriteRelated_80AD6B4 GroundEffect_Action GroundEffect_Add GroundEffect_Cancel GroundEffect_CancelBlank GroundEffect_Select GroundEffectsCancelAll GroundEffectsNotifyAll sub_80AD18C sub_80AD7AC 
+- shift_24: src/ground_event.c :: GroundEvent_Add GroundEvent_Cancel GroundEvent_Select 
+- shift_24: src/ground_lives.c :: CallbackLivesSetDirection CallbackLivesSpriteRelatedCheck_80AB1C0 CallbackLivesSpriteRelated_80AB1E4 GroundLivesCancelAll GroundLivesNotifyAll GroundLives_Add GroundLives_Cancel GroundLives_CancelBlank_1 GroundLives_ExecutePlayerScriptActionLives GroundLives_Select _ExecutePlayerScript sub_80A7B94 sub_80A7DDC sub_80A87E0 sub_80A885C sub_80A88A0 sub_80A89AC sub_80A8A5C sub_80A8ACC sub_80A8D54 sub_80A9090 sub_80A90E8 sub_80A91A0 sub_80A93F0 sub_80A9488 sub_80A95AC sub_80AA074 sub_80AA180 sub_80AA2BC sub_80AA3F8 sub_80AA660 sub_80AA690 sub_80AA7B0 sub_80AA8BC sub_80AAAE8 sub_80AAF68 sub_80AB5D4 sub_80ABA7C 
+- shift_24: src/ground_lives_helper.c :: sub_809CDC8 
+- shift_24: src/ground_main.c :: GetReturnMap sub_8098CC8 sub_8098D80 sub_8098DCC sub_80991E0 sub_809927C sub_80993C0 xxx_script_related_8098468_Async 
+- shift_24: src/ground_map.c :: GetAdjustedGroundMap GroundMapNotifyAll GroundMap_ExecuteEvent GroundMap_ExecuteStation GroundMap_GetStationScript sub_80A4D14 sub_80A56A0 sub_80A5934 sub_80A595C sub_80A59DC 
+- shift_24: src/ground_object.c :: CallbackObjectSetDirection CallbackObjectSpriteRelatedCheck_80AC9B8 CallbackObjectSpriteRelated_80AC9DC GetObjectCollision_80AC5F4 GroundObject_Action GroundObject_Add GroundObject_Cancel GroundObject_CancelBlank GroundObject_GetScript GroundObject_Select GroundObjectsCancelAll GroundObjectsNotifyAll sub_80ACAD4 
+- shift_24: src/ground_script.c :: ExecutePredefinedScript ExecuteScriptCommand GroundCancelAllEntities GroundScriptCheckLockCondition GroundScriptLockCond GroundScriptModifyBGM GroundScript_Cancel GroundScript_Unlock HandleAction InitActionWithParams ResolveJump sub_80A1440 sub_80A14E8 
+- shift_24: src/ground_sprite.c :: GroundSprite_Reset IsOnscreen_80A675C sub_80A671C sub_80A67CC sub_80A6E80 sub_80A6EFC sub_80A7040 sub_80A7094 sub_80A72B8 
+- shift_24: src/ground_sprite_monster.c :: sub_80A7428 sub_80A74F0 sub_80A7524 
+- shift_24: src/ground_weather.c :: sub_80A5E8C sub_80A5EDC 
+- shift_24: src/gulpin_shop.c :: sub_801EBC4 sub_801ED28 
+- shift_24: src/gulpin_shop_801FB50.c :: CreateGulpinLinkMenu sub_8020B38 sub_8020CC0 sub_8020DCC sub_8020EB4 
+- shift_24: src/hints_menu1.c :: CreateHintSelectionScreen sub_801E474 
+- shift_24: src/hints_menu2.c :: HandleHintDisplayScreenInput 
+- shift_24: src/hurl_orb.c :: HandleHurlOrb sub_807F9BC 
+- shift_24: src/iq_skill_info_menu.c :: CreateIQSkillInfoMenu 
+- shift_24: src/iq_skill_list_menu.c :: BuildIQSkillList CreateIQSkillListMenu HandleIQSkillListMenuInput RedrawIQSkillListMenu 
+- shift_24: src/iq_skill_menu.c :: CreateIQSkillMenu HandleIQSkillMenuAction 
+- shift_24: src/items.c :: AddHeldItemToInventory AddItemIdToInventory AddKecleonShopItem AddKecleonWareItem BufferItemName BulkItemToItem ChooseKecleonShopInventory ChooseKecleonWareInventory FillKecleonShopGaps FillKecleonWareGaps FindItemInInventory GetActualBuyPrice GetActualSellPrice GetGummiItemStatBoost GetItemActionType GetItemBuyPrice GetItemCategory GetItemCountInInventory GetItemDescription GetItemMoveID GetItemOrder GetItemPalette GetItemPossessionCount GetItemSellPrice GetKecleonShopItem GetKecleonWareItem GetRandomItemForSet GetStackBuyValue GetStackSellValue GetThrownItemQuantityLimit HasGummiItem InitBulkItem InitKecleonShopItem InitKecleonWareItem InitializeMoneyItems IsEdibleItem IsGummiItem IsHMItem IsInvalidItemReward IsNotMoneyOrUsedTMItem IsNotSpecialItem IsShoppableItem IsThrownItem ItemIdToItem MoveToStorage TestItemAIFlag WriteHighDecimal sub_8090E14 sub_80913E0 sub_8091E50 xxx_bit_lut_lookup_8091E50 
+- shift_24: src/kangaskhan_storage1.c :: HandleKangaskhanMainMenu sub_8016FF8 sub_8017A1C sub_8017C7C sub_8017D24 
+- shift_24: src/kangaskhan_storage2.c :: BuildKangaskhanStorage2MainMenu BuildKangaskhanStorage2StoreMenu HandleKangaskhanStorage2MainMenu HandleKangaskhanStorage2StoreMenu HandleKangaskhanStorage2TakeMenu sub_80186F8 sub_8018854 
+- shift_24: src/kecleon_bros1.c :: HandleKecleonBrosBuyItemMenu HandleKecleonBrosSellAllItemsMenu HandleKecleonBrosSellItemMenu KecleonCalcSellPriceForAllItems 
+- shift_24: src/kecleon_bros2.c :: sub_8019EDC sub_8019FB0 sub_8019FCC sub_801A0D8 
+- shift_24: src/kecleon_bros3.c :: sub_801A2A8 sub_801A37C sub_801A398 sub_801A4A4 
+- shift_24: src/kecleon_bros4.c :: sub_801A6E8 sub_801A8D0 sub_801A9E0 sub_801ADA0 sub_801AE24 
+- shift_24: src/load_screen.c :: CreateLoadScreen DrawLoadScreenText DrawQuestIcons UpdateLoadScreenMenu 
+- shift_24: src/luminous_cave.c :: UpdateLuminousCaveDialogue sub_8024E9C sub_80250EC sub_802515C 
+- shift_24: src/m4a.c :: CgbModVol CgbOscOff CgbSound FadeOutBody MPlayOpen MidiKeyToCgbFreq MidiKeyToFreq SoundClear m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayStop ply_xwave 
+- shift_24: src/mailbox.c :: CreateMailActionMenu CreateMailboxMenu HandleMailActionMenu HandleMailboxMenu 
+- shift_24: src/main_loops.c :: GameLoop_Async LoadAndRunQuickSaveDungeon_Async RunGameMode_Async sub_8001170 sub_80011E8 
+- shift_24: src/main_menu1.c :: SetMenuItems 
+- shift_24: src/main_menu2.c :: DrawMainMenu SetMainMenuItems UpdateMainMenu sub_803623C 
+- shift_24: src/makuhita_dojo1.c :: MakuhitaDojo_DrawMainMenu MakuhitaDojo_UpdateDialogue 
+- shift_24: src/makuhita_dojo2.c :: MakuhitaDojo_DrawCourseList sub_80302E8 sub_80303AC sub_8030444 sub_8030668 
+- shift_24: src/math.c :: F48_16_SDiv F48_16_SMul F48_16_Square F48_16_UDiv F48_16_UMul FP48_16_Hypot FP48_16_SLessThan FP48_16_ToF248 u24_8_div u24_8_mul 
+- shift_24: src/memory.c :: MemoryFill8 
+- shift_24: src/menu_input.c :: DrawCharOnWindowWidth12 MenuCursorUpdate MoveMenuCursorDownWrapAround MoveMenuCursorUpWrapAround PrintNumOnWindow sub_8013BBC sub_8013C68 sub_8013D10 
+- shift_24: src/mini_printf.c :: mini_pad mini_vpprintf 
+- shift_24: src/mission_reward.c :: MR_Create MR_InitStateDialogue 
+- shift_24: src/move_checks.c :: CanUseOnSelfWithStatusChecker CanUseOnTargetWithStatusChecker 
+- shift_24: src/move_orb_actions_1.c :: AncientPowerMoveAction AuroraBeamMoveAction BasicFireMoveAction Bide2MoveAction BiteMoveAction BrickBreakMoveAction BubbleMoveAction DigMoveAction EndeavorMoveAction FlameWheelMoveAction FocusPunchMoveAction GigaDrainMoveAction GustMoveAction HailMoveAction IronTailMoveAction MorningSunMoveAction OctazookaMoveAction OutrageMoveAction OverheatMoveAction RainDanceMoveAction RapidSpinMoveAction RazorWindMoveAction ReturnMoveAction RockSlideMoveAction RockTombMoveAction ShadowBallMoveAction SnoreMoveAction SuperFangMoveAction SynthesisMoveAction ThunderMoveAction WeatherBallMoveAction WhirlpoolMoveAction WillOWispMoveAction sub_8058580 
+- shift_24: src/move_orb_actions_2.c :: AbsorbMoveAction BasicIceMoveAction ConversionMoveAction DamageLowerDefMoveAction DiveMoveAction DoubleEdgeMoveAction ExplosionMoveAction ExtrasensoryMoveAction FissureMoveAction FlyMoveAction HeadbuttMoveAction HornDrillMoveAction LickMoveAction MeteorMashMoveAction MoonlightMoveAction MuddyWaterMoveAction NaturePowerMoveAction PoisonFangMoveAction PsychoBoostMoveAction SacredFireMoveAction SandstormMoveAction SelfDestructMoveAction SkillSwapMoveAction SkyAttackMoveAction SmogMoveAction SolarBeamMoveAction SonicboomMoveAction ThunderboltMoveAction ThundershockMoveAction TwineedleMoveAction TwisterMoveAction ZapCannonMoveAction sub_8058C00 sub_8058E5C sub_80595EC sub_8059A2C 
+- shift_24: src/move_orb_actions_3.c :: BeatUpMoveAction BlazeKickMoveAction BounceMoveAction CrushClawMoveAction DynamicPunchMoveAction FakeOutMoveAction HandleColorChange HiJumpKickMoveAction JumpKickMoveAction KnockOffMoveAction MudSlapMoveAction PayDayMoveAction PoisonStingMoveAction PoisonTailMoveAction RolePlayMoveAction SecretPowerMoveAction SpikesMoveAction SplashMoveAction SteelWingMoveAction SunnyDayMoveAction SuperpowerMoveAction ThiefMoveAction TransformMoveAction TriAttackMoveAction TrickMoveAction sub_805AC90 sub_805B17C 
+- shift_24: src/move_orb_actions_4.c :: CleanseOrbAction DragonRageMoveAction DreamEaterMoveAction FrustrationMoveAction LusterPurgeMoveAction MetalClawMoveAction MetronomeMoveAction MimicMoveAction MistBallMoveAction OneShotOrbAction RecycleMoveAction RockSmashMoveAction RollcallOrbAction SkullBashMoveAction StruggleMoveAction ThiefAction TransferOrbAction TrapbustOrbAction sub_805C208 
+- shift_24: src/move_orb_actions_5.c :: FillInOrbAction ItemizeOrbAction 
+- shift_24: src/move_orb_effects_1.c :: ActivateFlashFire ApplyDefensiveStatMultiplier ApplyOffensiveStatMultiplier BadlyPoisonedStatusTarget BoostDefensiveStat BoostHitChanceStat BoostOffensiveStat BoostSpeed BurnedStatusTarget CannotSleep FrozenStatusTarget GetFlashFireStatus ImmobilizedStatusTarget InfatuateStatusTarget IngrainedStatusTarget LowerDefensiveStat LowerHitChanceStat LowerOffensiveStat LowerSpeed NappingStatusTarget NightmareStatusTarget PausedStatusTarget PetrifiedStatusTarget PoisonedStatusTarget SleepStatusTarget SleeplessStatusTarget SqueezedStatusTarget TryInflictCringeStatus TryInflictParalysisStatus WrapTarget YawnedStatusTarget sub_8075BF4 sub_8076CB4 
+- shift_24: src/move_orb_effects_2.c :: BlindTarget ConfuseStatusTarget CowerStatusTarget CrossEyeVisionTarget CurseStatusTarget DestinyBondStatusTarget EncoreStatusTarget ExposeStatusTarget FixedDamageStatusTarget FocusEnergyStatusTarget HandleLeechSeed HandleRadarOrb HandleScannerOrb HandleStairsOrb HandleStockpile HealTargetHP IdentityItemHolders InvisibleStatusTarget MobileStatusTarget MuzzleTarget PerishSongTarget RaiseAtkStatTarget RaiseDefStatTarget RaiseSpAtkStatTarget RaiseSpDefStatTarget RestorePPTarget RestoreVisionTarget SnatchStatusTarget SureShotStatusTarget TauntStatusTarget TransformStatusTarget WhifferStatusTarget sub_8078084 sub_80783C4 sub_8078A58 sub_8078B5C 
+- shift_24: src/move_orb_effects_3.c :: SetChargeStatusTarget sub_8079764 
+- shift_24: src/move_orb_effects_4.c :: Conversion2StatusTarget CounterStatusTarget EndureStatusTarget LightScreenStatusTarget MagicCoatStatusTarget MirrorCoatStatusTarget MirrorMoveStatusTarget MistStatusTarget ProtectStatusTarget ReflectStatusTarget SafeguardStatusTarget VitalThrowStatusTarget WishStatusTarget sub_8079E34 
+- shift_24: src/move_orb_effects_5.c :: EndBurnClassStatus EndCringeClassStatus EndCurseClassStatus EndFrozenClassStatus EndLeechSeedClassStatus EndReflectClassStatus EndSleepClassStatus SendEyesightEndMessage SendMoveEndMessage SendMuzzledEndMessage SendThawedMessage SendTransformEndMessage sub_8079F20 sub_807A0CC 
+- shift_24: src/moves.c :: BufferMoveName TryLinkMovesAfter sub_8093318 sub_809333C sub_8093360 sub_80933D8 unk_MovePrintData 
+- shift_24: src/music.c :: FadeInNewBGM FadeOutBGM FadeOutFanfareSE IsFanfareSEPlaying IsValidSong PlayFanfareSE SetSoundEffectVolume SoundVSync StartBGMusicVSync StartNewBGM StopBGM StopBGMusicVSync StopFanfareSE UpdateSound 
+- shift_24: src/music_util.c :: IsSoundPlaying 
+- shift_24: src/naming_screen.c :: HandleAPress NamingScreen_HandleInput UpdateInputWindow 
+- shift_24: src/one_room_orb.c :: HandleOneRoomOrb 
+- shift_24: src/options_menu1.c :: HandleOthersMenu sub_801E0FC 
+- shift_24: src/options_menu2.c :: sub_801E218 
+- shift_24: src/other_menus1.c :: sub_80370F0 sub_8037400 
+- shift_24: src/other_menus2.c :: sub_8037A48 sub_8037B28 sub_8037C10 sub_8037D64 sub_8037DF0 sub_8037E38 sub_8037E90 sub_8037EBC sub_8037F4C sub_8038014 sub_8038078 sub_80380C4 sub_803812C sub_80381F4 
+- shift_24: src/palette_util.c :: sub_8099BE4 
+- shift_24: src/party_list_menu.c :: CanTakePokemonHeldItem PartyListMenu_CreateMenu1 PartyListMenu_HandleMenu1 PartyListMenu_HandleMenu2 sub_8026AB0 sub_8026E88 sub_8026EB8 sub_8026F04 sub_8026FA4 
+- shift_24: src/pelipper_board.c :: CreatePelipperBoardMenu sub_802EC10 sub_802ECB4 sub_802EDBC 
+- shift_24: src/personality_test2.c :: GetValidPartners HandlePartnerSelectionInput sub_803CE34 
+- shift_24: src/play_time.c :: IncrementPlayTime 
+- shift_24: src/pokemon.c :: AddShadowSprite CreateLeaderPartnerData CreateLevel1Pokemon TryAddLevel1PokemonToRecruited TryAddPokemonToRecruited sub_808D278 sub_808D6E8 sub_808D750 sub_808DA44 sub_808E400 
+- shift_24: src/pokemon_3.c :: CopyTacticsNameToBuffer GenerateHiddenPower GetIQSkillDescription GetIQSkillName GetNumAvailableIQSkills GetTacticsDescription HasIQForSkill SetDefaultIQSkills TacticsTargetLeader ToggleIQSkill 
+- shift_24: src/pokemon_abilities.c :: CopyAbilityNametoBuffer GetAbilityDescription 
+- shift_24: src/pokemon_evolution.c :: SetMonEvolveStatus 
+- shift_24: src/pokemon_mail.c :: CreateRescueDescription CreateRescueTitle GetPokemonMailHeadline GetPokemonMailText sub_803B6B0 sub_803C110 
+- shift_24: src/pokemon_news1.c :: GetNumPKMNNews HasNoPKMNNews sub_802B640 sub_802B720 sub_802B7D0 
+- shift_24: src/pokemon_news2.c :: sub_802B9FC 
+- shift_24: src/pokemon_news3.c :: CountEmptyMailSlots CreateMailMenu HasNoMailinMailbox sub_802BD14 sub_802BDEC sub_802BE94 
+- shift_24: src/pokemon_summary_window.c :: SetMonSummaryInfo ShowPokemonSummaryWindow 
+- shift_24: src/pokemon_types.c :: GetBestResistingType GetFormattedTypeString GetUnformattedTypeString IsTypePhysical 
+- shift_24: src/post_office_guide2.c :: DisplayMissionObjectives sub_80319A4 
+- shift_24: src/pounce_orb.c :: HandlePounceOrb 
+- shift_24: src/quick_save_write.c :: PrepareQuickSaveWrite 
+- shift_24: src/random_mersenne_twister.c :: MersenneTwister_MixSeeds Random32MersenneTwister 
+- shift_24: src/recruited_mon_summary_menu.c :: RecruitedMonSummaryMenu_InitSummaryMenu RecruitedMonSummaryMenu_Input 
+- shift_24: src/reg_control.c :: SetInterruptCallback sub_800B720 sub_800B850 sub_800BB44 
+- shift_24: src/rescue_password_menu.c :: UpdateRescuePasswordMenu sub_8039068 
+- shift_24: src/rescue_scenario.c :: GetRescueDungeonName SetRescueScenarioConquered UnusedGetRescueDungeonName sub_809733C sub_80973A8 
+- shift_24: src/rescue_team_info.c :: GetPtsToNextRank GetRescueTeamRank GetTeamRankString 
+- shift_24: src/run_dungeon.c :: EnforceMaxItemsAndMoney GetFloorType IsMakuhitaTrainingMaze RunDungeon_Async TryForcedLoss_Async sub_8043D60 
+- shift_24: src/save.c :: ReadSaveFromPak ReadSaveSector WriteSaveSector 
+- shift_24: src/save_menu.c :: UpdateSaveMenu 
+- shift_24: src/save_read.c :: ReadSavePak 
+- shift_24: src/script_item.c :: HasItemInInventory ScriptItemTextboxFunc TryGiveScriptItem 
+- shift_24: src/sprite.c :: AddAxSprite AxResInit AxResInitFile AxResInitUnoriented AxResInitUnorientedFile ResetSprites sub_800533C sub_800569C 
+- shift_24: src/status_checks.c :: HasStatusThatPreventsActing sub_80701A4 
+- shift_24: src/status_strings.c :: PrepareStatusStringArrays 
+- shift_24: src/string_format.c :: DrawDialogueBoxString_Async FormatString sub_8014B94 
+- shift_24: src/switcher_orb.c :: HandleSwitcherOrb 
+- shift_24: src/text_1.c :: AddWindow PutWindowBottomBorderTilemap PutWindowTopBorderTilemap SetCharacterMask ShowWindows ShowWindowsInternal 
+- shift_24: src/text_2.c :: HexDigitValue sub_8007BA8 sub_8007D00 xxx_call_update_bg_vram 
+- shift_24: src/text_3.c :: HandleCharFormatInternal InterpretColorChar sub_8008DF4 sub_8008E58 sub_800915C 
+- shift_24: src/text_util.c :: GetCharId ReturnIntFromChar 
+- shift_24: src/textbox.c :: IsTextboxOpen_809A750 ScriptClearTextbox ScriptClearTextbox2 ScriptPrintText ScriptPrintTextOnBg ScriptPrintTextOnBg2 ScriptPrintTextOnBgAuto ScriptSetPortraitInfo ScriptSpecialTextHandler ScriptSpecialTextHandler2 sub_809A8B8 sub_809AB4C sub_809ABB4 sub_809AC18 sub_809AFC8 sub_809AFFC sub_809B028 sub_809B428 sub_809B474_Async sub_809B648 sub_809C39C sub_809C3D8 sub_809C414 sub_809C550 
+- shift_24: src/thank_you_messages.c :: TYM_Create 
+- shift_24: src/thank_you_wonder_mail.c :: CreateThankYouMailPelipper HandleMailCommunicationMenu HandleThankYouMailPasswordMenu UpdateThankYouMailText sub_802A174 sub_802A39C sub_802A68C sub_802A6B4 sub_802A850 sub_802A910 sub_802AB98 
+- shift_24: src/trade_items_menu.c :: WriteandExitTradeItemsMenu sub_8036674 sub_8036A54 sub_8036A7C sub_8036AA4 sub_8036B28 
+- shift_24: src/training_maze.c :: HasCompletedAllMazes sub_8097504 sub_80975A8 sub_80975C4 sub_80975DC sub_8097640 
+- shift_24: src/trap.c :: GetTrapName HandleGrimyTrap HandlePitfallTrap HandlePokemonTrap HandleSealTrap HandleStickyTrap HandleSummonTrap LayTrap SetTrap TryTriggerTrap sub_807FA18 sub_807FD84 sub_807FE04 sub_807FE44 
+- shift_24: src/trawl_orb.c :: HandleTrawlOrb 
+- shift_24: src/unk_ds_only_feature.c :: sub_809C6EC sub_809C730 sub_809C770 
+- shift_24: src/unk_dungeon_load_maybe.c :: sub_80ADD9C 
+- shift_24: src/unk_menu_203B360.c :: sub_80383D4 
+- shift_24: src/warp_target.c :: WarpTarget 
+- shift_24: src/weather.c :: GetApparentWeather GetWeatherName MudWaterSportEffect sub_807E5AC sub_807E698 sub_807E7FC sub_807E88C sub_807E8F0 sub_807EAA0 
+- shift_24: src/wigglytuff_shop1.c :: sub_80211AC sub_8021274 sub_8021354 sub_8021664 sub_8021700 
+- shift_24: src/wigglytuff_shop2.c :: CreateWigglytuffShopFriendAreaMenu sub_8021A60 
+- shift_24: src/wigglytuff_shop3.c :: HandleWigglytuffMainMenu UpdateWigglytuffDialogue sub_80225C8 sub_80226F0 
+- shift_24: src/window_buffer.c :: CopyWindowBgBuffer 
+- shift_24: src/wonder_mail.c :: sub_8028D4C sub_8028EAC sub_8028F04 sub_8028F58 sub_8028FDC sub_80290F0 sub_802939C sub_8029684 sub_8029884 sub_8029A18 sub_8029A88 
+- shift_24: src/wonder_mail_2.c :: WM2_Create WM2_InitStateDialogue WM2_Update_Saving 
+- shift_24: src/wonder_mail_3_mid.c :: sub_802F184 
+- shift_24: src/wonder_mail_4.c :: sub_80306A8 sub_8030768 sub_8030810 
+- shift_24: src/wonder_mail_5.c :: sub_8030D40 
+- shift_24: src/wonder_mail_6.c :: HandleWonderMail6DeleteMailMenu HandleWonderMail6MainMenu sub_8030F58 
+- shift_24: src/wonder_mail_802C10C.c :: CountPelipperBoardSlots DrawPelipperBoardJobMenu HasNoPelipperBoardJobs sub_802C10C sub_802C1E4 sub_802C28C 
+- shift_24: src/wonder_mail_802C4C8.c :: CountAcceptedJobs HasNoAcceptedJobs sub_802C4C8 sub_802C598 sub_802C640 
+- shift_24: src/wonder_mail_802C860.c :: InitializeJobListMenu sub_802CAA4 sub_802CC70 sub_802CD38 
+- shift_24: src/wonder_mail_802CDD4.c :: sub_802CE5C sub_802CEBC sub_802CED8 sub_802CFD0 
+- shift_24: src/wonder_mail_802D098.c :: sub_802D2A8 sub_802D940 sub_802D9F0 
+- shift_24: src/wonder_mail_main_menu.c :: HandlePasswordEntryScreen HandleSaveAdventureScreen WonderMailMainMenuCallback 
+- shift_24: src/world_map.c :: AnimateMonPath_Async AnimateSprites GetDungeonCoords ShowWorldMap_Async sub_801059C 
+- shift_24: src/world_map_sound.c :: FadeOutFriendAreasMapBGM PlayFriendAreasMapBGM PlayWorldMapBGM 
+- DOUBLE-HOME: src/friend_areas_map_util.c src/world_map.c :: AnimateSprites

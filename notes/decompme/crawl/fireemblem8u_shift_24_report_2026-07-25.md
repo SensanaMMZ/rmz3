@@ -1,0 +1,219 @@
+<!-- fireemblem8u :: trait=shift_24 :: crawled 2026-07-25 :: 353/358 files compiled -->
+- shift_24: src/agb_sram.c :: WriteAndVerifySramFast 
+- shift_24: src/animedrv.c :: AnimInterpret 
+- shift_24: src/ap.c :: APProc_OnUpdate AP_ExecFrame AP_Update 
+- shift_24: src/banim-battleparse.c :: GetBanimBackgroundIndex GetBanimTerrainGround ParseBattleHitToBanimCmd 
+- shift_24: src/banim-efxdeath.c :: EfxDeadAlphaMain EfxDeadDragonAlphaMain sub_8052EAC sub_8052F84 sub_8053080 
+- shift_24: src/banim-efxhpbar.c :: EfxHpBarResire_DeclineToDeath EfxHpBar_DeclineToDeath 
+- shift_24: src/banim-efxlvup.c :: EfxleveluphbMain 
+- shift_24: src/banim-efxmagic-bolting.c :: efxThunderstormColor_Loop_C 
+- shift_24: src/banim-efxmagic-crimsoneye.c :: StartSubSpell_efxCrimsonEyeOBJFinishPiece sub_806A634 sub_806A64C 
+- shift_24: src/banim-efxmagic-demonlight.c :: StartSubSpell_efxMaohFlashEyeFire1OBJ1 StartSubSpell_efxMaohFlashEyeFire2OBJ1 StartSubSpell_efxMaohFlashEyeLOBJ2 StartSubSpell_efxMaohFlashEyeOBJ1 StartSubSpell_efxMaohFlashEyeROBJ2 efxMaohFlashThunderOBJ_Loop 
+- shift_24: src/banim-efxmagic-evileye.c :: StartSubSpell_efxEvilEyeOBJ 
+- shift_24: src/banim-efxmagic-healstaves.c :: efxLiveALPHA_Loop_B 
+- shift_24: src/banim-efxmagic-ivaldi.c :: StartSubSpell_efxIvaldiOBJ1 StartSubSpell_efxIvaldiOBJ2 
+- shift_24: src/banim-efxmagic-naglfar.c :: StartSubSpell_efxNaglfarOBJ StartSubSpell_efxNaglfarOBJ2 
+- shift_24: src/banim-efxmagic-wretchedair.c :: sub_8068AFC 
+- shift_24: src/banim-efxmagic.c :: EfxALPHAMain efxRestRSTMain sub_805B958 
+- shift_24: src/banim-efxmisc.c :: EfxChillEffectBGCOL_Loop 
+- shift_24: src/banim-efxop.c :: efxopLiveALPHA_Loop_B 
+- shift_24: src/banim-efxskill.c :: EfxSkillType01BGMain NewEfxSkillCommonBG sub_806E638 
+- shift_24: src/banim-efxsound.c :: EfxPlaySE EkrPlayMainBGM M4aPlayWithPostionCtrl 
+- shift_24: src/banim-efxutils.c :: sub_8071574 
+- shift_24: src/banim-ekrbattle.c :: MainUpdateEkrBattle ekrBattleInRoundIdle ekrBattleWaitDragonIntro ekrBattleWaitTriangleIdle ekrBattle_8050134 ekrBattle_8050600 ekrBattle_HandlePreEventMaybe ekrBattle_Init ekrBattle_WaitEkrDragonEndIdle ekrBattle_WaitEkrLvupIdle ekrBattle_WaitForPopup ekrBattle_WaitPromotionIdle 
+- shift_24: src/banim-ekrbattleending.c :: ekrBattleEnding_8056170 
+- shift_24: src/banim-ekrbattleintro.c :: PrepareBattleGraphicsMaybe 
+- shift_24: src/banim-ekrbattlestarting.c :: MainUpdate_8055C68 sub_8055BB4 sub_8055BC4 
+- shift_24: src/banim-ekrclasschg.c :: NewEfxClasschgOBJDiffusion 
+- shift_24: src/banim-ekrcmd.c :: GetBanimFactionPalette 
+- shift_24: src/banim-ekrdispup.c :: GetBanimInitPosReal 
+- shift_24: src/banim-ekrdragon-8070710.c :: sub_8070710 
+- shift_24: src/banim-ekrdragon-demonking.c :: EkrDK_IdleInBattle EkrDK_ReloadCustomBgAndFadeOut 
+- shift_24: src/banim-ekrdragon-dracozombie.c :: EfxDracoZombiePrepareTSA EkrDZ_IdleInBattle EkrDZ_ReloadCustomBg EkrDZ_ReloadCustomBgAndFadeOut 
+- shift_24: src/banim-ekrdragon-myrrh.c :: RegisterEkrDragonStatusType 
+- shift_24: src/banim-ekrdragonstatus.c :: SetEkrDragonStatusType 
+- shift_24: src/banim-ekrlvup.c :: EkrLvup_InitStatusText 
+- shift_24: src/banim-ekrmain.c :: GetBanimPalette 
+- shift_24: src/banim-ekrpopup.c :: NewEkrPopup 
+- shift_24: src/banim-ekrutils.c :: SpellFx_WriteBgMapUnused 
+- shift_24: src/bb.c :: SubtitleHelpDarkener_FadeOut 
+- shift_24: src/bksel.c :: BattleForecast_LoopDisplay BattleForecast_LoopSlideIn BattleForecast_LoopSlideOut CloseBattleForecast DrawBattleForecastContentsExtended DrawBattleForecastContentsStandard GetBattleForecastPanelSide GetBkselHelpBoxMsg InitBattleForecastBattleStats InitBattleForecastFramePalettes MapEventEngineExists_ NewBattleForecast PutBattleForecastMultipliers PutBattleForecastTilemaps PutBattleForecastWeaponTriangleArrows StartBattleForecastHelpBox TriggerBattleForcastToturialEvent UpdateBattleForecastContents UpdateBattleForecastEffectivenessPalettes 
+- shift_24: src/bm.c :: BmMain_ChangePhase BmMain_StartIntroFx CallBeginningEvents CamMove_OnInit GetCurrentMapMusicIndex HandleMapCursorInput OnMain UpdateStatArrowSprites sub_8015434 sub_80155C4 
+- shift_24: src/bmarch.c :: sub_8037AC0 
+- shift_24: src/bmarena.c :: ArenaBeginInternal ArenaGetPowerRanking ArenaSetFallbackWeaponForUnit 
+- shift_24: src/bmbattle.c :: ApplyUnitDefaultPromotion ApplyUnitPromotion BattleApplyExpGains BattleApplyItemEffect BattleApplyMiscActionExpGains BattleApplyUnitUpdates BattleCheckGreatShield BattleCheckPierce BattleCheckSilencer BattleCheckSureShot BattleCheckTriangleAttack BattleGenerateHit BattleGenerateHitAttributes BattleGenerateHitEffects BattleGenerateHitTriangleAttack BattleGenerateRoundHits BattleGenerateUiStats BattleRoll1RN BattleRoll2RN BattleUnitTargetCheckCanCounter BattleUnitTargetSetEquippedWeapon BattleUnwind BattleUnwindScripted BeginBattleAnimations CheckBattleUnitLevelUp CheckBattleUnitStatCaps ComputeBattleUnitAttack ComputeBattleUnitAvoidRate ComputeBattleUnitBaseDefense ComputeBattleUnitDefense ComputeBattleUnitHitRate DidBattleUnitBreakWeapon GetBattleAnimPreconfType GetBattleUnitExpGain GetBattleUnitStaffExp GetBattleUnitUpdatedWeaponExp GetStatIncrease InitObstacleBattleUnit ModifyUnitSpecialExp SetBattleUnitWeapon UnitLevelUp UpdateObstacleFromBattle 
+- shift_24: src/bmcommanddbg.c :: CanUnitUseSeize CanUnitUseVisit GetUnitCommandUseFlags sub_80344E8 
+- shift_24: src/bmcontainer.c :: HasConvoyAccess sub_8031660 
+- shift_24: src/bmdebug.c :: DebugChargeMenu_Draw DebugContinueMenuInit DebugContinueMenu_IsContinueChapterAvailable DebugContinueMenu_IsManualContinueAvailable DebugMenuMapIdleCore DebugMenu_FogIdle StartupDebugMenu_ChapterSelectEffect StartupDebugMenu_ChapterSelectIdle sub_801BB98 
+- shift_24: src/bmdifficulty.c :: CanUnitSeize DrawDungeonRecordUiText DrawNumberText DrawNumberText_WithReset DrawTimeText DrawTimeText_WithReset DungeonRecordUi_UpdateEnemiesDefeatedCount DungeonRecordUi_UpdateRunningTime PrepScreenProc_AddPostgameUnits sub_8038668 sub_80390D4 sub_8039668 
+- shift_24: src/bmguide.c :: BmGuideTextShowGreenOrNormal GuideDetailsRedraw_Init GuideEntry_RedrawDown GuideEntry_RedrawUp GuideSpriteDraw_Loop Guide_Init Guide_MainLoop IsGuideLocked MoveGuideDetailText PutGuideBottomBarText sub_80CE414 sub_80CEAE8 sub_80CEBA4 
+- shift_24: src/bmidoten.c :: GenerateBestMovementScript GenerateDangerZoneRange GenerateUnitMovementMap GenerateUnitMovementMapExt sub_801A570 
+- shift_24: src/bmio.c :: BMapDispResume BMapDispSuspend InitPlayConfig IsFirstPlaythrough ResetMapPaletteAnimations 
+- shift_24: src/bmitem.c :: CanUnitUseStaffNow CanUnitUseWeapon CanUnitUseWeaponNow CanUnitUse_unused DrawItemMenuLine DrawItemMenuLineLong GetItemDefBonus GetItemHpBonus GetItemLckBonus GetItemNameWithArticle GetItemPowBonus GetItemResBonus GetItemSklBonus GetItemSpdBonus GetUnitEquippedWeapon GetUnitEquippedWeaponSlot GetUnitItemUseReachBits GetUnitStaffReachBits GetUnitWeaponReachBits IsItemDisplayUsable SetItemUnsealedForCharacter 
+- shift_24: src/bmitemuse.c :: CanUnitOpenBridge CanUnitUseChestKeyItem CanUnitUseDoorKeyItem CanUnitUseFruitItem CanUnitUseItem CanUnitUseItemPrepScreen CanUnitUseLockpickItem GetItemCantUseMsgid RepairMenuItemDraw RepairMenuItemIsAvailable RepairMenuItemSelect TorchSelect_OnInit WarpSelect_OnCancel WarpSelect_OnConfirm WarpSelect_OnIdle 
+- shift_24: src/bmlib-hblank.c :: HBlank_BgVerticalScroll 
+- shift_24: src/bmlib.c :: Decompress FadeCore_Loop PartialGameLock_OnLoop PlaySeSpacial StartFadeCore StartPartialGameLock WaitForFade sub_80145C8 
+- shift_24: src/bmmap.c :: BmMapFillEdges DisplayMovementViewTile GetTerrainHealAmount GetTerrainHealsStatus InitChapterMap RevertMapChange UnpackChapterMapPalette sub_8019778 
+- shift_24: src/bmmenu.c :: ArenaCommandEffect ArenaCommandUsability ArmoryCommandEffect AttackCommandUsability AttackMapSelect_Cancel AttackMapSelect_Select BackToUnitMenu_CamWatch BallistaRangeMenuHelpBox BallistaRangeMenu_Draw ChestCommandUsability DanceCommandUsability FillBallistaRange GenericSelection_BackToUM IsAdjacentForSupply ItemMenu_AreOtherCommandsAvailable ItemMenu_DrawOtherCommands ItemSelectMenu_Effect ItemSelectMenu_TextDraw ItemSelectMenu_Usability ItemSubMenu_DiscardItem ItemSubMenu_EquipItem ItemSubMenu_IsEquipAvailable ItemSubMenu_IsUseAvailable MapMenu_GuideCommandDraw MapMenu_IsGuideCommandAvailable MapMenu_IsRecordsCommandAvailable PlayCommandEffect PlayCommandUsability SecretShopCommandEffect StaffCommandUsability StaffItemSelect_Effect StaffItemSelect_Usability StealItemMenuCommand_Draw StealItemMenuCommand_Usability SupplyUsability UnitActionMenu_Attack UnitActionMenu_CanSeize VendorCommandEffect VisitCommandUsability WeaponSelectMenu_Draw WeaponSelectMenu_IsAvailable WeaponSelectMenu_Selected sub_80230F0 
+- shift_24: src/bmmind.c :: ActionCombat AfterDrop_CheckTrapAfterDropMaybe ApplyUnitAction BATTLE_GOTO1_IfNobodyIsDead BATTLE_PostCombatDeathFades sub_8032974 
+- shift_24: src/bmpatharrowdisp.c :: AddPointToPathArrowProc CutOffPathLength DrawPathArrow GenerateMovementMapForActiveUnit GetDirectionOfPathAfterIndex GetDirectionOfPathBeforeIndex GetMovementScriptFromPath GetPathFromMovementScript GetPointAlongPath PathArrowDisp_Init PathContainsNoCycle PointInCameraBounds UpdatePathArrowWithCursor 
+- shift_24: src/bmphase.c :: GetCurrentPhase GetNonActiveFaction 
+- shift_24: src/bmreliance.c :: CanUnitSupportNow GetUnitSupporterNum GetUnitSupporterUnit HasUnitGainedSupportLevel HaveCharactersMaxSupport SetSupportLevelGained UnitGainSupportLevel 
+- shift_24: src/bmsave-bwl.c :: CheckGameEndFlag GetCurCompleteChapters GetGameTotalTime GetGameTotalTurnCount2 GetGlobalCompletionCount GetNewPlaythroughId GetPidStats IsPlaythroughIdUnique PidStatsAddActAmt PidStatsAddDeployAmt PidStatsAddExpGained PidStatsAddFavval PidStatsAddSquaresMoved PidStatsAddStatViewAmt PidStatsAddWinAmt PidStatsGetExpGain PidStatsGetFavval PidStatsRecordDefeatInfo PidStatsRecordLoseData PidStatsSubFavval08 PidStatsSubFavval100 SavePlayThroughData SetGameEndFlag 
+- shift_24: src/bmsave-gmap.c :: ReadWorldMapNodes WriteWorldMapNodes WriteWorldMapPaths 
+- shift_24: src/bmsave-lib.c :: EraseSramDataIfInvalid GetRankDataValidBitMap IsExtraBonusClaimEnabled IsExtraFreeMapEnabled IsExtraLinkArenaEnabled IsExtraSupportViewerEnabled IsGamePlayedThrough IsSramWorking IsValidExtraMapAvilable LoadAndVerfyLinkArenaStruct2 LoadAndVerfyRankData LoadAndVerifySoundRoomData LoadBonusContentData ModifySaveLinkArenaStruct2B ReadGlobalSaveInfo ReadSaveBlockInfo ReadSupplyItems SaveEndgameRankings SaveNewRankData UnlockSoundRoomSong UpdateBestGlobalSupportValue sub_80A39E4 
+- shift_24: src/bmsave-multiarena.c :: IsMultiArenaSaveReady 
+- shift_24: src/bmsave-xmap.c :: IsExtraMapAvailable LoadAndVerfySuspendSave ReadExtraMapSaveHead 
+- shift_24: src/bmsave.c :: EncodeSuspendSavePackedUnit InvalidateGameSave IsGameSaveComplete IsGameSaveNotFirstChapter IsMultiArenaSaveValid IsSaveValid IsValidSuspendSave LoadSavedEid8A ReadLastGameSaveId ReadSuspendSavePackedUnit WriteNewGameSave WriteSuspendSave 
+- shift_24: src/bmshop.c :: DisplayShopUiArrows DrawShopItemLine DrawShopItemPriceLine GetItemPurchasePrice ShopTryMoveHand Shop_Loop_BuyKeyHandler Shop_Loop_SellKeyHandler Shop_Loop_UnkKeyHandler Shop_NoSendToConvoyDialogue Shop_TryAddItemToInventory StartShopScreen 
+- shift_24: src/bmtarget.c :: AddAsTarget_IfCanStealFrom AddAsTarget_IfPositionCleanForSummon AddToTargetListIfNotAllied AddUnitToTargetListIfAllied AddUnitToTargetListIfNotAllied ForEachPosInRange ForEachUnitInMovement ForEachUnitInRange MakeGorgonEggHatchTargetList MakeTargetListForLatona MakeTargetListForSupport MakeTerrainHealTargetList TryAddBridgeToTargetList TryAddClosedDoorToTargetList TryAddRescuedUnitToTakeTargetList TryAddToDropTargetList TryAddToLightRuneTargetList TryAddToMineTargetList TryAddTrapsToTargetList TryAddUnitToBarrierTargetList TryAddUnitToBerserkTargetList TryAddUnitToGiveTargetList TryAddUnitToHammerneTargetList TryAddUnitToHealTargetList TryAddUnitToRefreshTargetList TryAddUnitToRescueStaffTargetList TryAddUnitToRescueTargetList TryAddUnitToRestoreTargetList TryAddUnitToSilenceTargetList TryAddUnitToSleepTargetList TryAddUnitToTalkTargetList TryAddUnitToTradeTargetList TryAddUnitToWarpTargetList sub_8024FD8 sub_8025CD8 
+- shift_24: src/bmtrade.c :: StartTradeMenu TradeMenu_HelpBox_OnInit TradeMenu_HelpBox_OnLoop TradeMenu_OnEndSelected TradeMenu_OnLoopSelected TradeMenu_OnLoopUnselected TradeMenu_RefreshItemText 
+- shift_24: src/bmtrap.c :: AddGorgonEggTrap ApplyTrapDamageReal ExecFireTileTrapAnim1 ExecFireTileTrapAnim2 ExecTrapAfterDeathDrop ExecTrapAfterDropAction ExecTrapAfterWarp HandlePostActionTraps 
+- shift_24: src/bmtrick.c :: DecayTraps GenerateDisplayedTrapDamageTargets GetMapChange GetMapChangeIdAt InitMapObstacles PostTrapExecFlag 
+- shift_24: src/bmudisp.c :: GetUnitSpriteHideFlag PutUnitSpriteIconsOam SMS_DisplayOne 
+- shift_24: src/bmunit.c :: CanClassWieldWeaponType CanUnitCrossTerrain CanUnitMove CanUnitRescue GetUnitMiniPortraitId GetUnitPortraitId GetUnitWeaponUsabilityBits IsPositionMagicSealed IsUnitMagicSealed LoadUnit UnitAutolevelCore UnitAutolevelRealistic UnitAutolevelWExp UnitGetDeathDropLocation 
+- shift_24: src/bmusailment.c :: FinishDamageDisplay GorgonEggHatchDisplay_Next KillAllRedUnits_Init KillAllRedUnits_Loop PoisonDamageDisplay_Next StatusHealEffect_BlendSpriteAnim_Loop StatusHealEffect_OverlayBg_Loop TrapDamageDisplay_Watch 
+- shift_24: src/bmusemind.c :: ActionPick ActionStaffDoorChestUseItem ApplyJunaFruitItem ApplyNightmareEffect ApplyStatBoostItem ExecFortify ExecKeyItem ExecLatona ExecStatusStaff ExecUnitPromotion GetRescueStaffeePosition PostWarpStaff_ExecTrap sub_802F598 
+- shift_24: src/bmxfade.c :: MakeNew6CBMXFADE2 NewBMXFADE bmxfade_loop 
+- shift_24: src/bonusclaim.c :: BonusClaim_DrawTargetUnitSprites BonusClaim_Loop_MainKeyHandler BonusClaim_Loop_SelectTargetKeyHandler DrawBonusClaimItemText sub_80B0674 
+- shift_24: src/cgtext.c :: CgTextInterpreter_808FF18 CgTextInterpreter_Loop_Main CgText_ClearSpriteText CgText_Init StartCgText sub_808F30C sub_808F5C8 
+- shift_24: src/chapterintrofx.c :: ChapterIntro_8021188 ChapterIntro_BeginFadeToMap ChapterIntro_End ChapterIntro_LightBurst_Loop ChapterIntro_LoopFadeToMap 
+- shift_24: src/classchg-handler.c :: PromoHandler_SetupAndStartUI 
+- shift_24: src/classchg-main.c :: MakePromotionScreen PromoMain_InitScreen 
+- shift_24: src/classchg-menuselect.c :: ClassChgMenuItem_3rdUsability ClassChgMenuItem_OnTextDraw 
+- shift_24: src/classchg-postconfirm.c :: ClassChgExecPromotionReal ClassChgPostConfirmWaitBanimEnd 
+- shift_24: src/classchg-sel.c :: Check3rdTraineeEnabled LoadBattleSpritesForBranchScreen LoadClassBattleSprite LoadClassNameInClassReelFont LoadClassReelFontPalette Make6C_PromotionMenuSelect 
+- shift_24: src/classdisplayfont.c :: GetClassDisplayFontInfo 
+- shift_24: src/code_8086934.c :: sub_808683C 
+- shift_24: src/convoymenu.c :: ConvoyMenuProc_ExecBootlegPopup ConvoyMenuProc_StarMenu HandleNewItemGetFromDrop 
+- shift_24: src/cp_0803E2F4.c :: AiBallistaRideExit AiCheckDangerAt AiCountEnemyInRangeOrTryMoveToSpecificPosition AiEquipGetDanger AiEquipGetFlags AiFillDangerMap AiFunc_CountEnemiesInRange AiIsWithinFlyingDistance AiTryActionAfterMove AiTryDanceOrStealAfterMove AiTryDoDanceAdjacent AiTryDoStealAdjacent AiTryGetNearestHealPoint AiTryHealSelf AiTryMoveTowardsEscape sub_803EEB0 sub_803F15C sub_803F51C sub_803F5E0 sub_803F61C sub_803F680 sub_803F6B8 sub_803F790 sub_803F7DC 
+- shift_24: src/cp_battle.c :: AiAttemptBallistaCombat AiAttemptCombatWithinMovement AiAttemptOffensiveAction AiAttemptStealActionWithinMovement AiAttemptStealAction_GetMovementAt AiFillReversedAttackRangeMap AiGetCombatPositionScore AiGetFriendZoneCombatPositionScoreComponent AiGetFriendZoneCombatScoreComponent AiGetTargetClassCombatScoreComponent AiGetTerrainCombatPositionScoreComponent AiSimulateBattleAgainstTargetAtPosition AiSimulateBestBallistaBattleAgainstTarget AiSimulateBestBattleAgainstTarget 
+- shift_24: src/cp_decide.c :: AiDecideMain AiUpdateDecision CpDecide_Suspend DecideHealOrEscape DecideScriptA DecideScriptB 
+- shift_24: src/cp_order.c :: CpOrderMain GetUnitAiPriority GetUnitBattleAiPriority 
+- shift_24: src/cp_perform.c :: AiEscapeAction AiPillageAction CpPerform_EquipBest CpPerform_WaitAction 
+- shift_24: src/cp_script.c :: AiDoBerserkAction AiDoBerserkMove AiIsUnitEnemy AiIsUnitEnemyAndNotInScrList AiIsUnitEnemyAndScrCharId AiIsUnitEnemyAndScrClassId AiIsUnitEnemyOrInScrList AiScriptCmd_00_ConditionalGoto AiScriptCmd_03_Goto AiScriptCmd_04_ActionOnSelectedCharacter AiScriptCmd_05_DoStandardAction AiScriptCmd_07_DoStandardActionNoMove AiScriptCmd_08_DoStandardActionAgainstClass AiScriptCmd_0D_MoveTowardsCharacterUntilInRange AiScriptCmd_0F_MoveTowardsUnitWithClass AiScriptCmd_10_DoLooting AiScriptCmd_11_MoveTowardsSafety AiScriptCmd_12_MoveTowardsEnemy AiScriptCmd_13 AiScriptCmd_18_TryAttackSnagWall AiScriptCmd_19_MoveTowardsTerrain AiScriptCmd_1A_MoveTowardsTerrain sub_803CF60 sub_803CFB4 sub_803D124 
+- shift_24: src/cp_staff.c :: AiStaffFortify AiStaffHealMendRecover AiStaffPhysicRescue AiStaffRestore AiStaffSilence AiStaffSleepBerserk AiStaffWarp AiTryDoStaff GetAiSilenceEffectivenessScore GetAiStaffFuncIndex sub_80402A8 sub_8040668 
+- shift_24: src/cp_utility.c :: AiCompare AiCouldReachByBirdsEyeDistance AiCountAlliedUnitsInRange AiCountEnemyUnitsInRange AiCountNearbyAlliedUnits AiCountNearbyEnemyUnits AiCountUnitsInRange AiFindBestAdjacentPositionByFunc AiFindClosestTerrainAdjacentPosition AiFindClosestTerrainPosition AiFindClosestUnlockPosition AiFindPillageLocation AiFindTargetInReachByFunc AiFindTargetInReachNeglectWallByFunc AiGetClassRank AiGetPositionRange AiGetUnitStealItemSlot AiIsInByteList AiIsWithinRectDistance AiLocationIsPillageTarget AiRandomMove AiReachesByBirdsEyeDistance AiTryMoveTowards AiTryMoveTowardsNeglectWall SaveNumberOfAlliedUnitsIn0To8Range SetupUnitInventoryAIFlags sub_803C284 sub_803C3B0 sub_803C44C 
+- shift_24: src/cpextra_80407F0.c :: AiDetermineNightmareEffectiveness AiSetMovCostTableWithPassableWalls AiSpecialItemAntitoxin AiSpecialItemDoorKey AiSpecialItemLockpick AiTryDKSummon AiTryDoSpecialItems AiTryUseNightmareStaff sub_8040AE0 sub_8040B38 sub_8040B8C sub_8040BB4 sub_8040C5C sub_8041054 
+- shift_24: src/cursor_hand.c :: SetUiCursorHandConfig UiCursorHand_Loop 
+- shift_24: src/difficultymenu.c :: DifficultySelect_Loop_KeyHandler InitDifficultySelectScreen SaveMenuGetValidMenuAmt SaveMenuInitSaveSlotData SaveMenuInitSlotPalette sub_80ABF74 sub_80AC4F8 
+- shift_24: src/emitstarfx.c :: StarsBlinking 
+- shift_24: src/ending_credits.c :: CreditsBlendCG_80C40B8 CreditsBlendCG_80C4184 sub_80C4238 sub_80C43B4 sub_80C45E0 
+- shift_24: src/ending_details.c :: EndingBattleText_Loop GetPidDefeatedEndingString GetUnitASupporterPid LoadNextCharacterEnding PairedEndingBattleDisp_Loop_Blend PrepareUnitDefeatLocationString sub_80B7540 sub_80B8190 
+- shift_24: src/event.c :: CallEvent CallNextQueuedEvent CallRetreatPromptEvent EnqueueEventCall EventEngine_Create EventEngine_OnUpdate EventEngine_StartSkip GetEventTriggerState SetEventTriggerState 
+- shift_24: src/eventcall.c :: EventQuakefxVeritical_Loop WorldFlushIn WorldFlushOut 
+- shift_24: src/eventcmd_warp.c :: EventWarpAnimExists_ret StartEventWarpAnim_ret 
+- shift_24: src/eventfx-earthquake.c :: StartEventEarthQuake 
+- shift_24: src/eventfx-fade.c :: EventEndFade EventFadefx_Loop EventStartFade NewEventFadefx 
+- shift_24: src/eventinfo.c :: CallBattleQuoteEventsIfAny CallEndEvent CheckAnyBlueUnitArea1 CheckAnyBlueUnitArea2 CheckAnyBlueUnitArea3 CheckAnyBlueUnitArea4 CheckAnyBlueUnitArea5 CheckAnyBlueUnitArea6 CheckAnyBlueUnitArea7 CheckBattleDefeatTalk CheckBattleForecastTutorialEvent CheckFlag CheckFlag82 CheckForCharacterEvents CheckForWaitEvents CheckPermanentFlag CheckTradeTutorial CheckTutorialEvent CheckWin ClearChapterFlag ClearPermanentFlag DisplayDefeatTalkForPid EnqueueTutEvent EvCheck01_AFEV EvCheck03_CHAR EvCheck04_CHARASM EvCheck0B_AREA EvCheck0E_ EvCheck0F_ EvCheck10_ EventInfoCheckTalk GetAvailableBattleTalk GetAvailableTileEventCommand GetBattleQuoteEntry GetChapterEnemyUnitDefinitions GetChapterSkirmishLeaderClasses GetDefeatTalkEntry GetSupportTalkSong GetSupportTalkSong_ GetTrapPointer IsThereClosedChestAt IsThereClosedDoorAt IsThereTileCommand15 MaybeCallEndEvent RunPhaseSwitchEvents RunTutorialEvent RunWaitEvents SearchAvailableEvent SetPidDefeatedFlag ShouldCallBattleQuote ShouldCallEndEvent StartAfterUnitMovedEvent StartAvailableChestTileEvent StartAvailableDoorTileEvent StartAvailableTileEvent StartCharacterEvent StartDestSelectedEvent StartEventFromInfo StartSupportTalk StartSupportViewerTalk TryCallSelectEvents sub_8083424 sub_8083654 sub_8083FFC 
+- shift_24: src/events_script.c :: AutoGenerateUnitdef AutolevelSecondaryLord 
+- shift_24: src/eventscr.c :: Event01_End Event03_CheckEvBitOrId Event0A_Call Event0B_EnqueueCall Event0C_Branch Event0F_CounterOps Event18_ColorFade Event19_Checks Event1A_TEXTSTART Event1D_WaitForLockTalk Event21_TextBg Event22_ClearScreen Event26_CameraControl Event27_MapChange Event2F_MoveUnit Event30_ENUN Event32_SpawnSingleUnit Event36_CheckInArea Event39_ChangeAiScript Event3A_DisplayPopup Event3B_DisplayCursor Event3C_MoveCursor Event3D_MenuOverride Event3F_ScriptBattle Event40_PromoteUnit Event41_Warp Event42_EarthQuake EventLoadUnitSliently EventLoadUnitWithMovement EventShowTextBgDirect GenerateScriptBattleHitFormEventQueue LoadUnit_800F704 ModifyMoveUnitFlag ScriptBattleDeamon ShouldUNITBeLoaded TryPrepareEventUnitMovement WaitEventPromoteDone _WhileFace6CExists sub_800E210 sub_800E31C sub_800E640 sub_800EEE8 sub_800F8A8 
+- shift_24: src/eventscr3.c :: ChangeAiForCharacter ChangeAiForPositions ChangeUnitAi EventPromoteUnitExt StartEventBattle StartScriptBattleAnim 
+- shift_24: src/eventscr_gmap.c :: Event89_WmScrollWait Event99_GmNodeDisplayWait EventA5_WmUnitFadeWait EventAC_WmUnitMoveWait EventAE_WmFadeToDarkerWait EventB1_WmTextBoxWait EventB3_WmFancyFadeWait 
+- shift_24: src/eventscr_utils.c :: BgChangeChr CopyBgImage CopyBgPalette CopyBgTiles EventSetFogVisionExt SetSomeRealCamPos TriggerMapChanges UntriggerMapChange sub_800BA04 
+- shift_24: src/eventwarpfx.c :: StartEventWarpAnim StartEventWarpAnim_unused 
+- shift_24: src/face.c :: PutFace80x72_Core PutFaceChibi PutFaceOnBackGround PutFaceTm StartFaceChibiSpr 
+- shift_24: src/fogmap.c :: FastUpdateMapViewWithFog FillWarpRangeMap UpdateMapViewWithFog 
+- shift_24: src/gamecontrol.c :: GamceControl_StartClassReel GameControl_CallPostChapterSaveMenu GameControl_ChapterSwitch GetTitleClassReelSet 
+- shift_24: src/gamerankings.c :: GetChapterDeathCount GetChapterExpRank GetChapterFundsRank GetChapterSurvivalRank GetChapterTacticsRank GetGameExpRank GetGameFundsRank GetGameSurvivalRank GetGameTacticsRank 
+- shift_24: src/hardware.c :: ColorFadeSetupFromBlack ColorFadeSetupFromColorToBlack ColorFadeSetupFromColorToWhite ColorFadeSetupFromWhite FlushBackgrounds IsSoftwareReset SoftResetIfKeyComboPressed _UpdateKeyStatus sub_800154C 
+- shift_24: src/helpbox.c :: DisplayHelpBoxObj sub_808B7B8 sub_808B928 
+- shift_24: src/koido.c :: Loop6C_KOIDO 
+- shift_24: src/m4a.c :: CgbModVol CgbOscOff CgbSound FadeOutBody MPlayOpen MidiKeyToCgbFreq MidiKeyToFreq SoundClear m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayStop ply_xwave 
+- shift_24: src/mapanim.c :: BattleUnit_ShouldDisplayWRankUp BattleUnit_ShouldDisplayWpnBroke DisplayWRankUpPopup DisplayWpnBrokePopup MapAnim_Cleanup MapAnim_DisplayDeathQuote MapAnim_DisplayExpBar MapAnim_InitInfoBox MapAnim_MoveCameraOntoSubject SetBattleMuPaletteByIndex 
+- shift_24: src/mapanim_api.c :: BeginBattleMapAnims SetBattleAnimFacing SetupBattleMOVEUNITs sub_807B4D0 
+- shift_24: src/mapanim_debug.c :: MADebug_MainLoop 
+- shift_24: src/mapanim_eventcall.c :: sub_808038C sub_8080408 sub_8080BD8 sub_8081208 
+- shift_24: src/mapanim_lvupfx.c :: GetManimLevelUpBaseStat GetManimLevelUpStatGain PutManimLevelUpFrame PutManimLevelUpStat 
+- shift_24: src/mapanim_specialeffect.c :: LoadGorgonFromEgg 
+- shift_24: src/mapanim_spellassoc.c :: MapAnim_BeginRoundSpecificAnims MapAnim_MoveCameraOnSubject MapAnim_MoveCameraOnTarget sub_8081348 sub_8081384 
+- shift_24: src/mapanim_staffeffect.c :: MapAnimEffectAnimator_Init MapAnimRepair_Loop3 MapAnimSilence_Loop MapAnimTorch_Loop1 MapAnimTorch_Loop2 MapLatonaBlinkingfx_Main MapLatonaShiningfx_Loop1 MapLatonaShiningfx_Loop3 NightMarefx_Loop 
+- shift_24: src/mapanim_summon.c :: CheckCanSummon GenerateSummonUnitDef LoadSumMonsterFromDK ProcSummonDK_SelectDownPos ProcSummonDK_SelectLeftPos ProcSummonDK_SelectRightPos ProcSummonDK_SelectUpPos SelSumPosAndMoveCamera SelectSummonPos 
+- shift_24: src/menuitempanel.c :: MenuItemPanelProcIdle UpdateMenuItemPanel 
+- shift_24: src/minimap.c :: Minimap_CloseAnim Minimap_OpenAnim 
+- shift_24: src/monstergen.c :: GenerateMonsterClass GenerateMonsterItems GenerateMonsterLevel SelectFromWeightedArray 
+- shift_24: src/msg.c :: GetStrPrefix InsertPrefix SetMsgTerminator 
+- shift_24: src/mu.c :: MuDeathFade_OnLoop MuDelayedFaceDefenderFunc Mu_OnLoop Mu_OnStateBump PutMu PutMuSMS RunMuMoveScript SortMus UpdateMuStepSounds 
+- shift_24: src/muctrl.c :: AdjustNewUnitPosition ClearEventMoveBuffer CopyEventMoveREDAs GenUnitDefinitionFinalPosition MoveUnit_ MuCtr_ExecREDA_807A358 MuCtr_InitDefinedMove MuCtr_StartDefinedMove MuCtr_StartMoveTowards sub_807A0E4 sub_807A194 sub_807A294 sub_807A644 
+- shift_24: src/mural_background.c :: StartMuralBackgroundAlt 
+- shift_24: src/opanim-healthsafetyscreen.c :: GameIntroHealthSafetyWaitButton 
+- shift_24: src/opanim-main.c :: OpAnimEphraimExit sub_80C72A4 sub_80C835C sub_80C85B0 sub_80C8638 sub_80C8D30 sub_80C8ED4 sub_80C9024 sub_80C9100 sub_80C9218 sub_80C9330 sub_80C940C sub_80C955C sub_80C9638 sub_80C9750 sub_80C98A0 sub_80C99B8 sub_80C9A94 sub_80CA10C sub_80CA26C 
+- shift_24: src/opanimfx.c :: OpAnimPutObjCommon SetFirstPalDirectly TsaModifyFirstPalMaybe sub_80C689C 
+- shift_24: src/opinfo.c :: ClassInfoDisplay_LoopScript ClassInfoDisplay_LoopWindowIn ClassIntroFlare_Loop ClassIntroIcon_LoopFadeIn ClassIntroIcon_LoopFadeOut ClassIntroLetter_LoopFadeIn ClassIntroLetter_LoopFadeOut ClassIntro_LoopIn ClassStatsDisplay_Init ClassStatsDisplay_Loop StartClassNameIntroIcon StartClassNameIntroLetter StartClassReel sub_80B2A14 sub_80B2DF0 sub_80B30FC sub_80B369C sub_80B3C14 
+- shift_24: src/opsubtitle.c :: Subtitle_LightFlareFx_Loop sub_80C4E18 sub_80C4F60 sub_80C501C 
+- shift_24: src/player_interface.c :: BurstDisplay_Loop_Display DrawTerrainDisplayWindow DrawUnitBurstMapUi DrawUnitMapUi GoalDisplay_Init GoalDisplay_Loop_OnSideChange GoalDisplay_Loop_SlideIn GoalDisplay_Loop_SlideOut InitPlayerPhaseInterface IsAnyPlayerSideWindowRetracting MMB_Loop_OnSideChange MMB_Loop_SlideIn MMB_Loop_SlideOut MenuButtonDisp_UpdateCursorPos TerrainDisplay_Loop_OnSideChange TerrainDisplay_Loop_SlideIn TerrainDisplay_Loop_SlideOut UnitMapUiUpdate sub_808C234 sub_808C288 sub_808D1B4 sub_808D514 
+- shift_24: src/playerphase.c :: DisplayUnitEffectRange EnsureCameraOntoActiveUnitPosition GetPlayerSelectKind MakeMoveunitForActiveUnit PlayPhaseForceActiveUnitCanto PlayerPhase_ApplyUnitMovement PlayerPhase_FinishAction PlayerPhase_MainIdle PlayerPhase_PrepareAction PlayerPhase_RangeDisplayIdle PlayerPhase_WaitForUnitMovement RunPotentialWaitEvents TryMakeCantoUnit TrySwitchViewedUnit 
+- shift_24: src/popup.c :: NewGoldNumPopup_unused NewPopup_ItemStealing NewPopup_NewAlly sub_8011A1C sub_8011AA0 sub_8011B4C 
+- shift_24: src/prep_80A0760.c :: FortuneSubMenu_Unused_SetupText GetChapterDivinationFee GetChapterDivinationPortrait GetChapterDivinationTextIdBeginning GetChapterDivinationTextIdEnding GetChapterDivinationTextIdHectorStory sub_80A095C sub_80A0A74 
+- shift_24: src/prep_atmenu.c :: AtMenu_LockGame AtMenu_Reinitialize AtMenu_ResetBmUiEffect AtMenu_UnlockGame DrawPrepMenuDescTexts EndPrepAtMenuIfNoUnitAvailable PrepAtMenu_OnInit 
+- shift_24: src/prep_itemlist.c :: PrepItemList_Loop_MainKeyHandler PrepItemList_Loop_UnitInvKeyHandler 
+- shift_24: src/prep_itemscreen.c :: PrepItemScreen_DpadKeyHandler PrepItemScreen_DrawUnitItems PrepItemScreen_GiveAll PrepItemScreen_Loop_MainKeyHandler PrepItemScreen_SetupGfx PutClassSpriteForSecretShop sub_8098CC0 sub_8098FAC sub_8099120 sub_8099328 sub_80995D4 sub_80996E8 sub_8099AF8 sub_809A08C sub_809A114 sub_809A274 sub_809A504 
+- shift_24: src/prep_itemsupply.c :: PrepItemSupply_GiveItemToSupply PrepItemSupply_Loop_GiveTakeKeyHandler PrepItemSupply_Loop_UnitInvKeyHandler sub_809D300 sub_809D47C sub_809D644 sub_809D6CC sub_809E420 
+- shift_24: src/prep_itemtrade.c :: DrawPrepScreenItems PrepItemTrade_Loop_MainKeyHandler 
+- shift_24: src/prep_itemuse.c :: DrawPrepScreenItemUseStatBars DrawPrepScreenItemUseStatLabels DrawPrepScreenItemUseStatValues PrepItemUse_CtrlLoop PrepItemUse_ExecPromoDoneUnusedIDLE PrepItemUse_ExecPromotionItemUnused PrepItemUse_ResetBgmAfterPromo 
+- shift_24: src/prep_menuproc.c :: DoPromoteAnimForChar100 DrawPrepScreenSprites HasConvoyAccess_ IsGameLockLevelReserved PrepMenu_CtrlLoop PrepSpriteDraw_Init 
+- shift_24: src/prep_menuscroll.c :: UpdateMenuScrollBarConfig 
+- shift_24: src/prep_sallycir.c :: SallyCir_Init SallyCir_Loop StartSallyCirProc sub_8097ACC sub_8097B98 
+- shift_24: src/prep_sallycursor.c :: CanCharacterBePrepMoved InitPrepScreenCursorPosition PrepScreenProc_MapIdle PrepScreenProc_SetupMapIdle PrepScreenProc_StartMapMenu PrepScreenProc_StartShopScreen PrepScreen_UnitSwapIdle sub_8033DD8 
+- shift_24: src/prep_unitselect.c :: PrepCheckCanUnselectUnit PrepUnit_DrawPickLeftBar PrepUnit_DrawSMSAndObjs PrepUnit_DrawUnitItems PrepUnit_DrawUnitListNames PrepUnit_HandlePressA ProcPrepUnit_Idle sub_809ADC8 
+- shift_24: src/prep_utils.c :: CheckValidLinkArenaItemSupply CheckValidLinkArenaItemSwap CountUnitUsableWeapons GetConvoyItemCount_ IsWeaponUsable sub_8097E38 sub_8097F98 sub_8098048 
+- shift_24: src/prep_wm_sell.c :: WmSell_OnLoop_MainKeyHandler 
+- shift_24: src/prepscreen.c :: AtMenu_AddPrepScreenSupportMenuItem CalcForceDeployedUnitCounts CanPrepScreenCheckMap GetLatestUnitIndexInPrepListByUId InitPrepScreenMainMenu IsCharacterForceDeployed MakePrepUnitList PrepGetDeployedUnitAmt PrepScreenMenu_OnBPress Prep_DrawChapterGoal RegisterSioPid RemoveSioPid SortPlayerUnitsForPrepScreen sub_8095024 
+- shift_24: src/proc.c :: ProcCmd_CALL_ROUTINE_2 ProcCmd_CALL_ROUTINE_ARG ProcCmd_WHILE_ROUTINE RunProcessScript 
+- shift_24: src/savedraw.c :: InitSaveMenuChoice SaveDrawCursor_Loop SaveDraw_Loop_Main SaveMenuDrawSubSelBox SaveMenuDrawSubSelBoxExt SaveMenuModifySaveSlot SaveMenuTryMoveSaveSlotCursor SqMask_Loop StartSqMask sub_80AA7EC sub_80AAB78 sub_80AABC4 sub_80AAC40 sub_80AADE0 sub_80AAE90 sub_80AAF6C sub_80AB05C 
+- shift_24: src/savemenu.c :: BitfileToIndex LoadSaveMenuInfo SameMenu_CtrlLoop SaveMenuGetBitfile SaveMenuGetBitfileByMask SaveMenuWaitSlotBoxScrolling SaveMenuWriteNewGame SaveMenu_InitScreen SaveMenu_LoadExtraMenuGraphics SaveMenu_SaveSlotSelectLoop SaveMenu_SetLcdChapterIdx sub_80A9B90 sub_80AA248 sub_80AA2A8 
+- shift_24: src/scene.c :: GetStrTalkLen GetTalkFaceHPos InitTalk PutTalkBubble StartTalkFaceMove TalkInterpret TalkLoadFace TalkOpen_OnIdle TalkPrepNextChar Talk_OnIdle 
+- shift_24: src/sio_bat.c :: sub_8045930 sub_8045A64 sub_8045F48 sub_8046234 sub_80463A8 sub_80464B0 sub_8046580 
+- shift_24: src/sio_battlemap.c :: LinkArenaFogSprite_Loop sub_8049350 sub_80493A8 sub_80493D0 sub_80494F0 sub_8049594 sub_80495F4 sub_8049964 sub_8049A60 sub_8049B24 sub_8049C18 sub_8049C94 sub_8049D24 sub_804A108 sub_804A158 sub_804A1D0 sub_804A298 sub_804A614 sub_804A6A4 sub_804A914 sub_804A9A4 sub_804ADA0 sub_804AEC4 sub_804AF5C sub_804B190 sub_804B250 sub_804B71C sub_804B800 sub_804B8D0 
+- shift_24: src/sio_core.c :: SioEmitData SioHandleIrq_Serial SioMain_Loop SioReceiveData SioVsync_Loop StartSioBigSend sub_804213C sub_8042168 sub_8042194 sub_80421BC sub_80423B0 
+- shift_24: src/sio_event.c :: StartXMapTransfer XMapTransfer_80482E0 XMapTransfer_8048460 XMapTransfer_AwaitCompletion 
+- shift_24: src/sio_main.c :: sub_8042EF0 
+- shift_24: src/sio_main2.c :: sub_80432F4 
+- shift_24: src/sio_menu.c :: CheckSomethingSaveRelated SioMenu_GetItemHelpText SioMenu_HandleDPadInput SioMenu_LoadGraphics SioMenu_RestartGraphicsMaybe StartLinkArenaMainMenu 
+- shift_24: src/sio_menudef.c :: sub_804D858 sub_804D8DC 
+- shift_24: src/sio_mu.c :: SioWarp_Init StartSioWarpFx sub_804C260 
+- shift_24: src/sio_multiboot.c :: MultiBootHandShake MultiBootMain MultiBootStartMaster 
+- shift_24: src/sio_points.c :: LAPointsBox_LoadBoxes PointsNumberMover_Init PointsNumberMover_InitScoreChange PointsNumberMover_LoopNumberEmerge PointsNumberMover_TickScore sub_80490EC sub_8049238 
+- shift_24: src/sio_postbattle.c :: SioPostBattle_Loop_Main StartDrawLinkArenaRankSprites 
+- shift_24: src/sio_result.c :: DrawLinkArenaRankingRow SioResult_Init sub_8047308 
+- shift_24: src/sio_rulesettings.c :: SioRuleSettings_Loop_Main 
+- shift_24: src/sio_tactician.c :: SaveTactician Tactician_InitScreen Tactician_LoopCore sub_8044FFC sub_8045068 sub_80451F0 
+- shift_24: src/sio_teamlist.c :: SioTeamList_8043D8C SioTeamList_EraseTeam SioTeamList_Loop_MainKeyHandler SioTeamList_Main_HandleDPadInput SioTeamList_SwapTeams sub_80433C0 sub_8043548 sub_80437C0 sub_8044280 
+- shift_24: src/sio_term.c :: sub_80469C4 sub_8046C64 sub_8046CF0 sub_8046E0C 
+- shift_24: src/sio_uiutils.c :: LinkArenaMenuScroll_Loop StartLinkArenaMenuScrollBar StartSioMenuItem UpdateLinkArenaMenuScrollBar UpdateNameEntrySpriteGlow UpdateSioMenuBurstGlow UpdateSioMenuSelectedGlow sub_804C7E4 sub_804C83C sub_804C894 sub_804CAEC sub_804D428 sub_804D6D4 sub_804D724 
+- shift_24: src/soundroom.c :: InitSoundRoomShuffleBuffer InitSoundRoomSongData SoundRoomSongChange_StartNext SoundRoomUi_Loop_MainKeyHandler SoundRoomUi_Loop_ShufflePlayKeyHandler SoundRoomUi_RestartTitleMusic SoundRoom_DrawSprites_Loop SoundRoom_StartNextSong_Negative SoundRoom_StartNextSong_Positive StartSoundRoomSong StopSoundRoomSong TryDrawSoundRoomSongTitle VolumeGraphBuffer_Loop sub_80AF3C8 sub_80B0204 
+- shift_24: src/soundwrapper.c :: ChangeBgm IsBgmPlaying sub_80028FC sub_800296C sub_8002A88 
+- shift_24: src/statscreen.c :: DisplayBwl DisplayLeftPanel DisplayPage0 DisplayPage1 DisplayPage2 DisplaySupportList FindNextUnit GlowBlendCtrl_OnLoop HbMoveCtrl_OnIdle HbPopulate_SSPower HbPopulate_SSWExp UnitSlide_FadeInLoop UnitSlide_FadeOutLoop 
+- shift_24: src/sysutil.c :: BgAffinAnchoring BgAffinAnchoringHighPrecision BgAffinRotScaling BgAffinRotScalingHighPrecision BgAffinScaling BgAffinScalingHighPrecision BmBgfxSetLoopEN BmBgfx_Loop ConfigSysHandCursorShadowEnabled FadeIn_Loop FadeOut_Loop SetSysBrownBoxWidth SysBlackBox_Main SysHandCursor_Loop 
+- shift_24: src/time.c :: CheckCanKeyComboReset 
+- shift_24: src/titlescreen.c :: TitleScreenTryJumpIntroAnim 
+- shift_24: src/uichapterstatus.c :: ChapterStatus_DrawText GetEnemyBossUnit StatusScreenSpriteDraw_Loop UpdateUnitSpritePal 
+- shift_24: src/uiconfig.c :: Config_Loop_KeyHandler DrawConfigUiSprites DrawGameOptionHelpText DrawOptionValueTexts GenericOptionChangeHandler GetGameOption GetSelectedGameOption GetSelectedOptionValue MusicOptionChangeHandler SetGameOption WindowColorOptionChangeHandler 
+- shift_24: src/uidebug.c :: IsCharDeadAsNonPlayerUnit sub_8084880 sub_80848E0 sub_8084940 sub_80849A0 sub_80849D8 sub_8084A10 sub_8084C38 sub_8084C4C sub_8084C8C sub_8084C9C sub_8084CAC sub_8084CE8 sub_8084CF8 sub_8084D08 sub_8084D18 sub_8084D28 sub_8084D38 sub_8084D48 sub_8084D58 sub_8084D68 sub_8084D78 sub_8084D88 sub_8084D98 sub_8084DA8 sub_8084DB8 sub_8084DC8 sub_8084DD8 sub_8084DE8 sub_8084DF8 sub_8084E08 sub_8084E18 sub_8084E28 sub_8084E38 sub_8084E48 sub_8084E58 sub_8084E68 sub_8084E78 sub_8084E88 sub_8084EB8 sub_8084EC8 sub_8084ED8 sub_8084F54 sub_8085018 sub_8085028 sub_8085038 sub_8085048 sub_8085058 sub_8085068 sub_8085078 sub_8085088 sub_8085098 sub_80850A8 sub_80850B8 sub_80850C8 sub_80850D8 sub_80850E8 sub_80850F8 sub_8085108 sub_8085118 sub_8085128 sub_808513C sub_8085150 sub_8085164 sub_8085178 sub_808518C sub_80851A0 
+- shift_24: src/uimenu.c :: DrawMenuItemHover OverriddenMenuAvailability OverriddenMenuSelected ProcessMenuSelectInput RedrawMenu StartMenuCore StartOrphanMenuAdjusted StartOrphanMenuAdjustedExt 
+- shift_24: src/uiselecttarget.c :: TargetSelection_HandleSelectInput TargetSelection_Loop 
+- shift_24: src/uisupport.c :: InitSupportSubScreenPartners StartSupportUnitSubScreen SupportScreen_RestartSourceScreenMusic SupportScreen_SetupUnits SupportScreen_StartUnitSubMenu SupportSubScreen_EndSwapPage SupportSubScreen_Loop_KeyHandler SupportSubScreen_PrepareSupportConvo SupportSubScreen_SetupGraphics SupportSubScreen_SwapPageIn_FromLeft SupportSubScreen_SwapPageIn_FromRight SupportSubScreen_SwapPageOut_ToLeft SupportSubScreen_SwapPageOut_ToRight UiSupport_GetSupportTalkSong sub_80A0EC0 sub_80A0F6C sub_80A199C sub_80A25F8 
+- shift_24: src/unitinfowindow.c :: DrawUnitConText GetUnitInfoWindowX RefreshHammerneUnitInfoWindow RefreshUnitStealInventoryInfoWindow 
+- shift_24: src/unitlistscreen.c :: SortUnitList StartUnitListScreenPrepMenu UnitList_DeployUnit UnitList_DrawColumnNames UnitList_PutRow UnitList_StartPageChange UnitList_TogglePrepDeployState UnitList_UndeployUnit sub_809014C sub_80901BC sub_8090238 sub_8090418 sub_8090514 sub_8090B48 sub_8090C58 sub_8090D00 sub_8090D80 sub_809144C sub_80917D8 sub_8091D54 sub_8092298 
+- shift_24: src/worldmap_automu.c :: GmapAutoMu_80C3350 GmapAutoMu_OnEnd GmapAutoMu_WaitForFadeEnd 
+- shift_24: src/worldmap_basemenu.c :: GMapBaseMenu_RestoreBgm GMapBaseMenu_StartItemScreen 
+- shift_24: src/worldmap_cursor.c :: GmapCursor_Loop 
+- shift_24: src/worldmap_draw.c :: AddAndDrawGmPath 
+- shift_24: src/worldmap_effect.c :: GmapEffectPal_Loop 
+- shift_24: src/worldmap_entry.c :: GmMuEntry_80C0080 GmapBaseEntry_80BF988 sub_80BFC44 
+- shift_24: src/worldmap_face.c :: HandleWMFaceFade WMFaceCtrl_Loop WmClearFace WmDrawFace sub_80B82C8 
+- shift_24: src/worldmap_gmapunit.c :: GmapUnitFade_Destruct GmapUnit_Loop MapUnitC_GetAnimId MapUnitC_IsBlendEnabled MapUnitC_SetAnimId MapUnitC_SetBlendEnabled MapUnitC_SetDisplayEnabled 
+- shift_24: src/worldmap_hb.c :: WorldMapHblank 
+- shift_24: src/worldmap_main.c :: WmMain_MoveCursor WmMergeFace WorldMap_LoopExt WorldMap_PostBeginningEvent WorldMap_WaitForChapterIntroEvents WorldMap_WaitMonsterMerging Worldmap_WaitForSkirmishAnim Worlmap_WaitGmapSogu sub_80B8B3C sub_80B8BA4 sub_80B92D0 sub_80B96DC 
+- shift_24: src/worldmap_mapmu.c :: GmHideMuUnit GmMuPrim_80BD444 GmMuPrim_80BD830 GmMuPrim_80BD9D8 GmMuPrim_80BDA78 GmMu_80BE108 GmMu_GetPosition GmMu_RemoveUnit GmMu_SetPosition GmMu_SetSpriteLayer GmMu_SetUnit GmMu_StartFadeIn GmMu_StartFadeOut GmShowMuUnit sub_80BD5B8 sub_80BD740 sub_80BE080 sub_80BE0A4 sub_80BE0C8 sub_80BE12C sub_80BE194 sub_80BE3E8 sub_80BE45C 
+- shift_24: src/worldmap_path.c :: MapRoute_TransitionLoop WMMenu_OnGuideDraw sub_80BBC54 sub_80BBF60 sub_80BC0F4 sub_80BCAB8 sub_80BCBAC sub_80BCCFC sub_80BCE34 sub_80BD28C 
+- shift_24: src/worldmap_player_interface.c :: GMapPI_HideLoop GMapPI_ShowLoop InitGMapPIInterfaceKind sub_80BE65C sub_80BEBD4 
+- shift_24: src/worldmap_radar.c :: GMapRadar_80C3B40 WmMinimap_PutCursorIcon 
+- shift_24: src/worldmap_rm.c :: CheckGmapRmBaPalAnim1State GmapRmBaPalAnim1_End GmapRmBaPalAnim1_Loop1 GmapRmBaPalAnim1_Loop2 GmapRmBorder1_80C29F8 GmapRmBorder1_80C2A1C GmapRmBorder1_NationMergeIn GmapRmBorder1_NationMergeOut GmapRmBorder1_PutSprite2 GmapRm_BlendIn GmapRm_BlendOut StartGmapRmBorder1 WmPlaceDot_Loop1 WmPlaceDot_Loop2 sub_80C2E50 
+- shift_24: src/worldmap_screen.c :: GMScreenVSync_Loop sub_80BA8A0 
+- shift_24: src/worldmap_screen2.c :: GmapScreen2_Loop WMLoc_GetNextLocId 
+- shift_24: src/worldmap_sogu.c :: GmapSogu_Loop1 GmapSogu_Loop2 
+- shift_24: src/worldmap_status_ui.c :: PutWorldmapStatusDetails 
+- shift_24: src/worldmap_text.c :: ShowWmText 
+- shift_24: src/worldmap_timemons.c :: GenerateRandomonsterMergeConf GmapTimeMons_ExecMonsterMergeMu GmapTimeMons_Init GmapTimeMons_WaitSpriteDone 
+- shift_24: src/worldmap_tm_confront.c :: GmTmConfront_WaitForAnim 

@@ -1,0 +1,81 @@
+<!-- fireemblem6j :: trait=mov_ip :: crawled 2026-07-25 :: 275/284 files compiled -->
+- mov_ip: src/ai_080326C4.c :: AiEquipGetDanger AiFunc_080334F4 
+- mov_ip: src/ai_order.c :: SortAiUnitList 
+- mov_ip: src/ai_perform.c :: AiPerform_WatchUnit 
+- mov_ip: src/ai_utility.c :: AiCountNearbyUnits AiCountUnitsInRange AiFindSafestReachableLocation AiGetUnitClosestValidPosition 
+- mov_ip: src/arena_ui.c :: ArenaUi_Init 
+- mov_ip: src/augury.c :: AuguryPaletteModify1 AuguryPaletteModify2 func_fe6_0808D59C func_fe6_0808D630 
+- mov_ip: src/banim_efxdeath.c :: EfxDeadAlpha_Loop EfxDeadDragonAlpha_Loop 
+- mov_ip: src/banim_efxmagic.c :: EfxApocalypseOBJ3_Loop EfxCircleWIN_Loop EfxRestRST_Loop EfxRestWIN_Loop EfxThunderstormCOLOR_LoopC NewEfxBerserkBG NewEfxRestWINH 
+- mov_ip: src/banim_efxmisc.c :: EfxSRankWeaponEffectSCR_Loop 
+- mov_ip: src/banim_efxquake.c :: EfxHitQuake_Loop 
+- mov_ip: src/banim_efxutils.c :: EfxDecodeSplitedPalette EfxPalBlackInOut EfxPalFlashingInOut EfxPalWhiteInOut EfxSplitColor EfxTmCpyExt EfxTmCpyExtHFlip FillBGSafelyRect func_fe6_0805B0D4 func_fe6_0805B380 
+- mov_ip: src/banim_ekrbattle.c :: EkrBattleExecExpGain EkrBattleTriggerNewRoundStart 
+- mov_ip: src/banim_ekrbattleintro.c :: EkrBaEnd_WaitOutroAndEndGauge 
+- mov_ip: src/banim_ekrclasschg.c :: NewEfxClasschgFIN 
+- mov_ip: src/banim_ekrlvupfx.c :: NewEfxleveluphb 
+- mov_ip: src/banim_ekrmisc.c :: EkrDispUp_PutTerrainfx 
+- mov_ip: src/banim_ekrsetup.c :: InitLeftAnim InitRightAnim 
+- mov_ip: src/banim_ekrtriangle.c :: EfxTriangleQUAKE_Loop 
+- mov_ip: src/banim_ekrutils.c :: EfxAdvanceFrameLut SpellFx_SetSomeColorEffect 
+- mov_ip: src/banim_sprite.c :: PutBas 
+- mov_ip: src/battle.c :: BattleGenerateRealInternal BattleInitTargetCanCounter CheckBattleUnitStatCaps ComputeBattleObstacleStats 
+- mov_ip: src/battlepreview.c :: InitBattlePreviewIconPalBuf 
+- mov_ip: src/bm.c :: CamMove_OnInit HandleMapCursorInput 
+- mov_ip: src/bmfx.c :: ChapterIntro_Begin_0801E1A0 ChapterIntro_Init ChapterIntro_LoopCloseText ChapterIntro_LoopFadeToMap ChapterIntro_LoopFastCloseText GameOverScreen_RandomScroll_Loop MapFade_Loop PhaseIntroSquares_InLoop PhaseIntroSquares_OutLoop PhaseIntro_InitDisp PhaseIntro_WaitForEnd PutChapterIntroMotif PutScreenFogEffect PutScreenFogEffectOverlayed 
+- mov_ip: src/bmio.c :: ApplyFlamesWeatherGradient FlamesWeatherInitGradient FlamesWeatherUpdateGradient 
+- mov_ip: src/debugtext.c :: DebugPrintStr DebugPutScreen 
+- mov_ip: src/ending_monologue.c :: EndingMonologue_MoveText 
+- mov_ip: src/event.c :: DarkenThenFunc_StartDarken EvtCmd_WmPutMapText SetUnitAi WmPutFace_OnLoop WmRemoveFace_OnLoop 
+- mov_ip: src/eventfunctions.c :: GameEnding_PutUnitsOnPosition1 GameEnding_PutUnitsOnPosition2 
+- mov_ip: src/eventinfo.c :: EvtListCmd_Area 
+- mov_ip: src/face.c :: PutFaceTm 
+- mov_ip: src/gbasram.c :: SetSramFastFunc 
+- mov_ip: src/hardware.c :: ColFadeDirect ColFadeFromBlack ColFadeFromWhite ColFadeStep ColFadeTick ColFadeToBlack ColFadeToWhite func_fe6_08001B8C func_fe6_08001C68 
+- mov_ip: src/helpbox.c :: UpdateHelpBoxDisplay 
+- mov_ip: src/helpbox_2.c :: func_fe6_08071A34 
+- mov_ip: src/item.c :: DrawItemMenuLineLong GetTotalConvoyItemsValue GetTotalUnitItemsValue 
+- mov_ip: src/m4a.c :: MidiKeyToCgbFreq MidiKeyToFreq m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- mov_ip: src/manim.c :: InitManimLevelUpWindow ManimDebug_Init ManimDebug_Loop ManimExpBar_OpenLoop ManimInfoWindow_OpenLoop ManimLevelUp_InitMainScreen PrepareManimHit SortManimMuLayers StartRefreshManim StartStealManim func_fe6_08064FD0 func_fe6_080651E0 func_fe6_080652E0 func_fe6_080663E0 func_fe6_08066678 func_fe6_08066F34 
+- mov_ip: src/map.c :: InitMetatilesMap MapInit RefreshTerrainMap func_fe6_080187EC 
+- mov_ip: src/mapselect.c :: GetFurthestTargetDistance GetLinkedTargetsNear 
+- mov_ip: src/mapui.c :: TerrainMapUi_Loop UnitBurstMapUi_Loop UnitMapUi_Loop 
+- mov_ip: src/mapwork.c :: BuildBestMoveScript MapAddInRange MapMarkFloodEdges MapMovementMarkFloodEdges func_fe6_08019528 
+- mov_ip: src/masseffect.c :: StatusHealEffect_BlendSpriteAnim_Loop StatusHealEffect_BlendedSprite_Init 
+- mov_ip: src/menu.c :: GetMenuCursorPosition 
+- mov_ip: src/minimap.c :: GetMinimapBridgeKindAt InitMinimapFlashPalette Minimap_CloseAnim Minimap_InitOpenAnim Minimap_OpenAnim 
+- mov_ip: src/movepath.c :: FindMovePathSquare GenMoveScriptFromMovePath MovePathIsValid 
+- mov_ip: src/mu.c :: MuDeathFade_OnLoop Mu_OnStateMovement StartMuDeathFade 
+- mov_ip: src/oam.c :: PutUnkSprite 
+- mov_ip: src/opanim.c :: GetNextOpAnimTextIndex OpAnim_ResetDispIO OpAnim_SetWin0Layers func_fe6_0809947C 
+- mov_ip: src/opinfo.c :: OpInfo_Branch 
+- mov_ip: src/opinfo_classdemo.c :: ClassDemoMain_Loop_Intro OpInfo_EfxmagicMiniCallBack 
+- mov_ip: src/playrank.c :: PlayRank_InitDisplay SetupPlayRankDispUnit func_fe6_0808E284 
+- mov_ip: src/prep_080823A0.c :: SetPrepMenuScrollBarBaseInfo 
+- mov_ip: src/prep_sallycir.c :: SallyCir1_Init SallyCir2_Init 
+- mov_ip: src/prep_subitemscreen3.c :: PrepSubItem_StartSupplyScreen func_fe6_0807FBE8 
+- mov_ip: src/prep_subitemscreen_viewall.c :: PrepSubItem_StartViewAllScreen 
+- mov_ip: src/prepmenu.c :: PrepMenu_InitScreenExt PrepMenu_Loop PrepScreen_DrawScreenInfo PrepScreen_ReloadLeftUnitInfo PrepUnitSel_Loop func_fe6_08079250 func_fe6_080792C8 func_fe6_08079804 func_fe6_08079928 
+- mov_ip: src/prepmenuitem.c :: PrepMenuHelpbox PrepScreenMenu_OnItems SetPrepScreenMenuItem func_fe6_0807C840 
+- mov_ip: src/prepscreen_disp.c :: PrepMenuFadeIn_Loop PrepMenuFadeOut_Loop PrepUnit_DrawSMSAndObjs 
+- mov_ip: src/proc.c :: InitProcs 
+- mov_ip: src/save_game.c :: EncodeSuspendSavePackedUnit ReadSuspendSavePackedUnit WriteGameSavePackedUnit 
+- mov_ip: src/save_multiarena.c :: WriteNewMultiArenaSave 
+- mov_ip: src/savemenu_2.c :: SaveDrawFadeIn_Loop SaveDrawFadeOut_Loop func_fe6_080893D0 func_fe6_08089490 func_fe6_080895B8 func_fe6_0808A3E8 func_fe6_0808A7B8 
+- mov_ip: src/scanline.c :: PrepareSineWaveScanlineBuf PrepareSineWaveScanlineBufExt 
+- mov_ip: src/shop.c :: ShopTryMoveCursor Shop_InitBuyState Shop_Start 
+- mov_ip: src/statscreen.c :: StatScreen_DisableScreen 
+- mov_ip: src/support.c :: DoTurnSupportExp 
+- mov_ip: src/talk.c :: InitTalkTextWin PutTalkBubbleTm TalkPutSpriteText_OnIdle 
+- mov_ip: src/titlescreen.c :: func_fe6_0809B590 func_fe6_0809B608 func_fe6_0809B75C func_fe6_0809B7D4 func_fe6_0809B864 
+- mov_ip: src/trademenu.c :: TradeMenu_RefreshSelectableCells 
+- mov_ip: src/trap.c :: ApplyMapChange 
+- mov_ip: src/ui.c :: PutUiEntryHover PutUiWindowFrame RemoveUiEntryHover 
+- mov_ip: src/unit.c :: CanActiveUnitStillMove TickActiveFactionTurnAndListStatusHeals UnitDropRescue UnitGetDropPositionOnDeath 
+- mov_ip: src/unitlistscreen.c :: SortUnitList func_fe6_08074558 func_fe6_08074668 func_fe6_08074EF0 
+- mov_ip: src/unitpanel.c :: InitUnitPanel 
+- mov_ip: src/unitsprite.c :: PutUnitSpriteIconsOam 
+- mov_ip: src/util.c :: BrightenPalette FadeFromBlack_OnInit FadeToBlack_OnInit func_fe6_08013F7C func_fe6_08014E30 func_fe6_08014E98 func_fe6_08014F70 func_fe6_0801501C func_fe6_080150DC 
+- mov_ip: src/worldmap.c :: WmArrow_Loop WmZoomCore func_fe6_080922D8 
+- mov_ip: src/worldmapfx.c :: WmHighlight_Init WmMapTextDisp_Loop1 WmMapTextDisp_Loop3 WmRotIntro_Init 
+- mov_ip: src/xmap.c :: Xmap_Init func_fe6_0808B194 func_fe6_0808B2BC func_fe6_0808B7B4 func_fe6_0808B854 

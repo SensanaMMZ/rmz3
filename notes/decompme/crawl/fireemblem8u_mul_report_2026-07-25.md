@@ -1,0 +1,96 @@
+<!-- fireemblem8u :: trait=mul :: crawled 2026-07-25 :: 353/358 files compiled -->
+- mul: src/ap.c :: AP_ExecFrame AP_QueueObjGraphics 
+- mul: src/banim-efxlvup.c :: EfxPartsofScroll2Main 
+- mul: src/banim-efxmagic-crimsoneye.c :: sub_806A590 sub_806A634 sub_806A64C 
+- mul: src/banim-efxmagic-demonsurge.c :: sub_806B940 sub_806C2D4 sub_806C478 
+- mul: src/banim-efxmagic-excalibur.c :: efxExcaliburSCR_Loop 
+- mul: src/banim-efxmagic-fenrir.c :: efxFenrirOBJ2Chiri_Loop 
+- mul: src/banim-efxmagic-gleipnir.c :: sub_8069530 sub_8069704 sub_806977C 
+- mul: src/banim-efxmagic-luna.c :: efxLunaOBJ_Loop_A efxLunaOBJ_Loop_B efxLunaOBJ_Loop_C efxLunaOBJ_Loop_D efxLunaSCR_Loop 
+- mul: src/banim-efxmagic-shadowshot.c :: sub_806B344 
+- mul: src/banim-efxmagic.c :: efxRestRSTMain 
+- mul: src/banim-efxmisc.c :: EfxSRankWeaponEffectSCRMain 
+- mul: src/banim-efxsound.c :: GetProperAnimSoundLocation M4aPlayWithPostionCtrl 
+- mul: src/banim-efxutils.c :: EfxDecodeSplitedPalette EfxPalBlackInOut EfxPalFlashingInOut EfxPalWhiteInOut 
+- mul: src/banim-ekrdragon-8070710.c :: sub_8070710 
+- mul: src/banim-ekrgauge.c :: ModDec 
+- mul: src/bm.c :: CamMove_OnLoop UnkMapCursor_OnLoop 
+- mul: src/bmarena.c :: ArenaAdjustOpponentPowerRanking 
+- mul: src/bmbattle.c :: GetAutoleveledStatIncrease GetBattleUnitUpdatedWeaponExp GetUnitKillExpBonus GetUnitPowerLevel 
+- mul: src/bmitem.c :: GetConvoyItemCostSum GetItemCost GetItemMaxCost GetUnitItemCostSum 
+- mul: src/bmlib-math.c :: MatMulMat VecCrossVec VecDotVec VecMulMat sub_801529C 
+- mul: src/bmlib.c :: Interpolate StartFadeCore WriteFadedPaletteFromArchive sub_80131F0 sub_8013794 sub_80146A0 sub_801474C 
+- mul: src/bmmap.c :: BmMapFill RevertMapChange 
+- mul: src/bmreliance.c :: ApplyAffinitySupportBonuses 
+- mul: src/bmsave-bwl.c :: GetGameTotalTime GetGameTotalTime_unused 
+- mul: src/bmsave-lib.c :: GetGlobalSupportListFromSave GetTotalSupportCollection 
+- mul: src/bmsave-misc.c :: EraseInvalidSaveData 
+- mul: src/bmsave-multiarena.c :: CopyMultiArenaSaveTeam ReadMultiArenaSaveTeam ReadMultiArenaSaveTeamName ReadMultiArenaSaveTeamRaw SwapMultiArenaSaveTeams WipeMultiArenaSaveTeam WriteMultiArenaSaveTeam WriteMultiArenaSaveTeamName WriteNewMultiArenaSave 
+- mul: src/bmsave.c :: ReadSuspendSave 
+- mul: src/bmshop.c :: IsShopPageScrolling Shop_TryMoveHandPage 
+- mul: src/bmtarget.c :: MakeTerrainHealTargetList 
+- mul: src/bmunit.c :: CanClassWieldWeaponType FixROMUnitStructPtr GetCharacterData GetClassData GetClassSMSId UnitInitFromDefinition 
+- mul: src/bonusclaim_helpbox.c :: sub_80AEC04 
+- mul: src/code_8086934.c :: sub_808683C 
+- mul: src/code_80AC6AC.c :: sub_80AC6AC sub_80AC784 
+- mul: src/colorfade.c :: ColFadeIn_Loop ColFadeOut_Loop 
+- mul: src/cp_0803E2F4.c :: AiEquipGetFlags AiFunc_CountEnemiesInRange AiUpdateGetUnitIsHealing sub_803F15C sub_803F6B8 
+- mul: src/cp_battle.c :: AiGetDamageDealtCombatScoreComponent AiGetDamageTakenScoreComponent AiGetDangerScoreComponent AiGetFriendZoneCombatScoreComponent AiGetLowHpScoreComponent AiGetOpponentLowHpScoreComponent AiGetTargetClassCombatScoreComponent AiGetTurnCombatScoreComponent 
+- mul: src/cp_staff.c :: AiStaffHealMendRecover AiStaffPhysicRescue 
+- mul: src/difficultymenu.c :: DrawDifficultyMenuCursorMaybe SaveDrawSetDifficultSlotPalette sub_80AC1BC sub_80AC22C 
+- mul: src/ending_details.c :: PairedEndingBattleDisp_Init SoloEndingBattleDisp_Init sub_80B8190 
+- mul: src/eventcall.c :: WorldFlushIn WorldFlushOut 
+- mul: src/eventfx-fade.c :: EventFadefx_Loop 
+- mul: src/eventscr.c :: Event06_SlotOperation Event32_SpawnSingleUnit Event35_UnitClassChanging 
+- mul: src/gamerankings.c :: GetChapterExpRank GetChapterFundsRank GetChapterTacticsRank GetChapterWinPerc GetGameExpRank GetGameFundsRank GetGameTacticsRank GetGameWinPerc 
+- mul: src/hardware.c :: AddAttr2dBitMap sub_8000E14 
+- mul: src/helpbox.c :: sub_808B870 
+- mul: src/m4a.c :: CgbModVol CgbSound MidiKeyToCgbFreq SampleFreqSet TrkVolPitSet m4aMPlayTempoControl 
+- mul: src/mapanim_debug.c :: MADebug_FormatPrint MADebug_InitScreen MADebug_MainLoop SetupMADebugBattle SetupMADebugBattleUnit 
+- mul: src/mapanim_eventcall.c :: sub_80805AC sub_8080BD8 
+- mul: src/mapanim_infobox.c :: sub_807BB40 
+- mul: src/mapanim_scanline.c :: PrepareSineWaveScanlineBuf PrepareSineWaveScanlineBufExt sub_808218C sub_8082268 sub_80822AC sub_80822F0 sub_80829A4 sub_8082C50 
+- mul: src/mapanim_spellassocfx.c :: PutSparkGfxRotation 
+- mul: src/minimap.c :: Minimap_AdjustDisplay Minimap_CloseAnim Minimap_OpenAnim 
+- mul: src/mu.c :: GetMu Mu_OnStateMovement 
+- mul: src/opanim-healthsafetyscreen.c :: OpAnimHS_BrightenPalette sub_80CBFC0 
+- mul: src/opanimfx.c :: sub_80C69B0 
+- mul: src/opsubtitle.c :: sub_80C4BB4 
+- mul: src/player_interface.c :: DrawHpBar 
+- mul: src/prep_itemlist.c :: PrepItemList_SwitchPageLeft PrepItemList_SwitchPageRight 
+- mul: src/prep_itemscreen.c :: sub_80996E8 
+- mul: src/prep_itemsupply.c :: PrepItemSupply_SwitchPageLeft PrepItemSupply_SwitchPageRight 
+- mul: src/prep_menuscroll.c :: MenuScroll_Loop 
+- mul: src/prep_sallycir.c :: SallyCir_Loop sub_8097B98 
+- mul: src/prep_unitswap.c :: PrepUnitSwapProc_Init PrepUnitSwapProc_MainLoop 
+- mul: src/rng.c :: AdvanceGetLCGRNValue NextRN_100 NextRN_N 
+- mul: src/savedraw.c :: sub_80AA7EC sub_80AAF6C sub_80AB05C 
+- mul: src/savemenu.c :: GetLeaderNameForSaveMenu SaveMenuScrollBackToMain SaveMenuScrollSlot sub_80A9A68 sub_80A9AB0 sub_80A9AF4 sub_80A9B44 sub_80AA248 sub_80AA2A8 
+- mul: src/scene.c :: ScreenFlash_FadeIn ScreenFlash_FadeOut 
+- mul: src/sio_804B920.c :: sub_804B9E4 
+- mul: src/sio_bat.c :: sub_804619C sub_8046234 sub_80462D4 sub_8046704 
+- mul: src/sio_core.c :: SioEmitData SioMain_Loop SioQueuePendingRecvData SioReceiveData SioSend sub_8041718 sub_80423B0 sub_8042694 sub_8042B68 sub_8042C44 
+- mul: src/sio_uiutils.c :: LinkArenaMenuScroll_Init LinkArenaMenuScroll_Loop UpdateLinkArenaMenuScrollBar 
+- mul: src/soundroom.c :: InitSoundRoomShuffleBuffer InitSoundRoomSongData SoundRoomUi_Loop_MainKeyHandler SoundRoomUi_Loop_MainUiSlideIn SoundRoomUi_Loop_MainUiSlideOut SoundRoomUi_Loop_ShufflePlayUiSlideIn SoundRoomUi_Loop_ShufflePlayUiSlideOut 
+- mul: src/spline.c :: _DivArm1 _DivArm2 sub_800A42C sub_800A518 sub_800A680 sub_800A950 sub_800AB58 sub_800ACEC sub_800AF64 
+- mul: src/sysutil.c :: BgAffinAnchoring BgAffinAnchoringHighPrecision BgAffinScaling BgAffinScalingHighPrecision BmBgfx_Loop MixPaletteCore sub_80AE044 sub_80AE0F0 
+- mul: src/titlescreen.c :: DrawTitleLightBubbleSprites 
+- mul: src/uichapterstatus.c :: UpdateStatusFactionSelectorGlow 
+- mul: src/uiconfig.c :: Config_Loop_KeyHandler DrawConfigUiSprites DrawGameOptionHelpText DrawGameOptionIcon DrawGameOptionText DrawOptionValueTexts GenericOptionChangeHandler 
+- mul: src/uimenu.c :: ApplyMenuCursorVScroll 
+- mul: src/uisupport.c :: DrawSupportSubScreenRemainingText DrawSupportSubScreenUnitPartnerText GetSupportClassForCharId GetSupportScreenPartnerCharId GetSupportScreenPartnerCount GetTotalSupportLevel SupportScreen_Loop_KeyHandler SupportScreen_SetupUnits SupportSubScreen_ReinitAfterSwapPage SupportSubScreen_SetupGraphics SupportSubScreen_SwapPageIn_FromLeft SupportSubScreen_SwapPageIn_FromRight SupportSubScreen_SwapPageOut_ToLeft SupportSubScreen_SwapPageOut_ToRight sub_80A199C 
+- mul: src/whitecircularfadefx.c :: ProcWhiteCircleFx_Loop 
+- mul: src/worldmap_80C0834.c :: sub_80C0834 
+- mul: src/worldmap_entry.c :: GmMuEntry_80C0080 GmMuEntry_80C0144 
+- mul: src/worldmap_face.c :: WMFaceCtrl_LoopExt 
+- mul: src/worldmap_gmapunit.c :: sub_80BB26C 
+- mul: src/worldmap_main.c :: sub_80BA100 sub_80BA1F4 
+- mul: src/worldmap_mapmu.c :: GetCharacterClassId GmMuPrim_80BDA78 sub_80BD41C sub_80BDEB4 
+- mul: src/worldmap_palette_fade.c :: GmPalFade_Loop 
+- mul: src/worldmap_path.c :: sub_80BBBF4 sub_80BCE34 
+- mul: src/worldmap_player_interface.c :: PutGMapPICharName 
+- mul: src/worldmap_radar.c :: WmMinimap_PutCursorIcon WmMinimap_PutLordIcon WmMinimap_PutSkirmishIcons WmMinimap_PutStoryNodeIcon 
+- mul: src/worldmap_rm.c :: GmapRmUpdateExt_ScrollPosition sub_80C2C80 
+- mul: src/worldmap_scrollmanage.c :: GmMoveCursor_OnLoop GmScrollManage_OnLoop 
+- mul: src/worldmap_text.c :: sub_80C34D0 
+- mul: src/worldmap_tm_confront.c :: GmTmConfront_Loop_MoveUnitPositions 

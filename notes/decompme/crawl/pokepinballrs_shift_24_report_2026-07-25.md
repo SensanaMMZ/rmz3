@@ -1,0 +1,70 @@
+<!-- pokepinballrs :: trait=shift_24 :: crawled 2026-07-25 :: 77/77 files compiled -->
+- shift_24: src/agb_sram.c :: WriteAndVerifySramFast 
+- shift_24: src/all_board_banners.c :: ProcessBannerCameraTransition RenderBannerSlideAnimation 
+- shift_24: src/all_board_mode_change_and_debug_menu.c :: EndOfBallBonusSummary EndOfBallSequence 
+- shift_24: src/all_board_pinball_game_main.c :: PinballGame_State0_49ED4 
+- shift_24: src/all_board_portrait_display.c :: ClampPortraitSpritesToOffscreen LoadPortraitGraphics UpdatePortraitSpritePositions 
+- shift_24: src/all_board_process0_sprite_init.c :: RubyBoardProcess_0B_50918 
+- shift_24: src/all_board_process1.c :: AllBoardProcess_1B_47160 
+- shift_24: src/all_board_process2.c :: AllBoardProcess_2A_4D6C4 BonusBoardProcess_2B_4DBFC MainBoardProcess_2B_4D960 ProcessBonusBoardBallDrain ProcessTiltInput ResetBoardStateOnDeath 
+- shift_24: src/all_board_process4.c :: DetermineFlipperBallSide UpdateBonusBoardFlipperPhysics UpdateMainBoardFlipperPhysics 
+- shift_24: src/all_board_process5.c :: BonusBoardProcess_5B_11F88 
+- shift_24: src/all_board_process6_collision.c :: AllBoardProcess_6B_1333C ApplyTiltEffectOnCollision ComputeFlipperBounce ComputeFlipperLaunchVelocity ComputeWallReflection DetectBallCollision PixelWalkCollisionDetection 
+- shift_24: src/all_board_process7.c :: BonusBoardProcess_7B_12BF8 MainBoardProcess_7B_12524 
+- shift_24: src/all_board_process8.c :: AllBoardProcess_8B_4CEB4 ProcessEventTimer 
+- shift_24: src/all_board_state_transitions_and_idle.c :: InitFieldIdle RequestBoardStateTransition UpdateFieldIdle 
+- shift_24: src/bonus_complete_scoring_transition.c :: HideDusclopsSprites ProcessBonusBannerAndScoring TransitionFromBonusToMainBoard 
+- shift_24: src/bonus_field_select.c :: BonusFieldSelect_State1_2768 BonusFieldSelect_State2_2990 
+- shift_24: src/display.c :: BrightenPalette CopyBgTilesRect CopyPixelCanvasRect DarkenPalette 
+- shift_24: src/dusclops_collision.c :: CheckDusclopsAbsorbZoneHit CheckDusclopsEntitiesCollision 
+- shift_24: src/dusclops_process3.c :: DusclopsBoardProcess_3B_33130 DusclopsPhase_ProcessEntityLogicAndGraphics DuskullPhase_ProcessEntityLogic DuskullPhase_ProcessGraphics 
+- shift_24: src/ereader.c :: BlinkEReaderTextCursor DrawEReaderTextCharacter DrawEReaderTextPage Ereader_State1_2E40 Ereader_State2_2FC0 Ereader_State4_3208 Ereader_State5_33A0 Ereader_State7_33C8 Ereader_State8_374C PrepareEReaderLinkSendCmd UpdateEReaderSprites UpdateEReaderSpritesViaOam 
+- shift_24: src/gbplayer.c :: InitGameBoyPlayer IsGbPlayerReady Sio32BuildCommand Sio32EncodePacket Sio32ValidateResponse Sio32VerifyChecksum 
+- shift_24: src/groudon_collision.c :: CheckGroudonEntityCollision ProcessGroudonCollisionEvent 
+- shift_24: src/groudon_process3.c :: GroudonBoardProcess_3A_3B120 GroudonBoardProcess_3B_3B49C RenderGroudonSprites UpdateGroudonEntityLogic UpdateGroudonFieldEntities 
+- shift_24: src/high_scores.c :: GenerateRandomHighScores HighScore_BrowseScores HighScore_ShowCompletionBanner IdleHighScore_Exit InitHighScoreData MasterReceiveHighScores MasterSendHighScores RenderCompletionBanner RenderHighScoreSprites SlaveReceiveHighScores SlaveSendHighScores 
+- shift_24: src/intro.c :: IntroScene1Torchic_RenderAllSprites IntroScene6Chinchou_39_MoveChinchouBallAndStars IntroScene6Chinchou_RenderStarSprites IntroScene8WailmerLaunch_RenderAllSprites IntroScene9BallFlight_62_MoveBallSkyFadeWhite Intro_State3_938C 
+- shift_24: src/kecleon_collision.c :: CheckKecleonEntityCollision ProcessKecleonBallDisturbanceCollisionEvent 
+- shift_24: src/kecleon_process3.c :: KecleonBoardProcess_3B_35AA4 RenderKecleonBoardElements RenderKecleonSprites UpdateKecleonEntityLogic UpdateKecleonScopeItem UpdateKecleonScopeVision 
+- shift_24: src/kyogre_collision.c :: CheckKyogreEntityCollision ProcessKyogreCollisionEvent 
+- shift_24: src/kyogre_process3.c :: KyogreBoardProcess_3A_383E4 KyogreBoardProcess_3B_3869C RenderKyogreSprites UpdateKyogreEntityLogic UpdateKyogreFieldEntities 
+- shift_24: src/link.c :: DequeueRecvCmds DoHandshake DoRecv DoSend EnqueueSendCmd LinkVSync ResetRecvBuffer ResetSendBuffer SerialCB 
+- shift_24: src/m4a.c :: CgbModVol CgbOscOff CgbSound FadeOutBody MPlayOpen MidiKeyToCgbFreq MidiKeyToFreq SetPokemonCryChorus SetPokemonCryPanpot SetPokemonCryPitch SetPokemonCryVolume SoundClear m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayStop ply_xcmd_0D ply_xwave 
+- shift_24: src/main_board_bumpers.c :: DrawSapphireBumperSprites HandleRubyBumperHit UpdateSapphireBumperLogic 
+- shift_24: src/main_board_catch_hatch_picker.c :: BuildSpeciesWeightsForCatchEmMode PickSpeciesForCatchEmMode PickSpeciesForEggMode RegisterCaptureOrEvolution 
+- shift_24: src/main_board_catch_holes.c :: TransitionToBonusField UpdateShopEntryAnimation 
+- shift_24: src/main_board_catch_normal_and_jirachi_modes.c :: CheckCatchTileRevealState CleanupCatchEmState DrawCatchMonBoardSprite DrawJirachiSprites InitCatchEmMode PlayCatchMonAppearsAnimation UpdateCatchEmMode UpdateJirachiBonus 
+- shift_24: src/main_board_catch_tile_logic.c :: RevealCatchTilesBurst RevealCatchTilesSequential 
+- shift_24: src/main_board_catch_tile_particles.c :: UpdateBurstTileParticles UpdateSequentialTileParticles 
+- shift_24: src/main_board_center_capture_hole.c :: GivePrize InitRouletteWheel RunMonCaptureSequence RunRouletteWheel 
+- shift_24: src/main_board_charge_spinner.c :: DrawPikachuSpinner UpdatePikachuChargeCounter 
+- shift_24: src/main_board_edge.c :: RestoreBoardObjPalettes 
+- shift_24: src/main_board_evolution_mode.c :: CleanupEvolutionModeState UpdateEvolutionItemAnimation UpdateEvolutionMode 
+- shift_24: src/main_board_intro_mode.c :: InitBoardIntroMode UpdateBoardIntroMode 
+- shift_24: src/main_board_launcher_and_cutscenes.c :: RunEvolutionCutscene RunTravelEventCutscene UpdateSpoinkAnimation 
+- shift_24: src/main_board_pichu_entity.c :: PichuArrivalSequence UpdateKickbackLogic 
+- shift_24: src/main_board_to_be_split.c :: AnimateBonusTrapSprite AnimateCoinReward AnimateTotodileEggDelivery CleanupEggModeState InitBonusStageSelect RenderEvolutionUI UpdateBonusStageSelect UpdateCatchTrigger UpdateEggMode UpdateHatchCave UpdateRubyEggHatchAnimation UpdateRubyEvolutionShopSprite 
+- shift_24: src/main_board_travel_mode.c :: UpdateTravelMode 
+- shift_24: src/options.c :: Options_HandleInput SetButtonConfigInputs 
+- shift_24: src/pokedex.c :: ClientReceivePokedexFlags ClientSendPokedexFlags InitPokedexState MasterReceivePokedexFlags MasterSendPokedexFlags PokedexListScrollUp Pokedex_CheckDeleteKeyComboPressed Pokedex_InfoWindowSlideIn RefreshMonPreviewSprite RenderLinkGraphics RenderPokedexSprites 
+- shift_24: src/pokemon_cry.c :: PlayCryInternal PlayCry_Normal PlayCry_NormalNoDucking 
+- shift_24: src/rayquaza_collision.c :: CheckRayquazaEntityCollision ProcessRayquazaCollisionEvent 
+- shift_24: src/rayquaza_process3.c :: RayquazaBoardProcess_3A_3E79C RayquazaBoardProcess_3B_3EB2C RenderRayquazaSprites RenderWindCloudSprites UpdateLightningGrabEntity UpdateRayquazaEntityLogic UpdateRayquazaIntroSequence UpdateRayquazaMinionsAndEffects 
+- shift_24: src/ruby_board_indicators.c :: AnimateRubyBallPowerUpSequence AnimateRubyCatchArrowPalette AnimateRubyCatchLightBlink AnimateRubyCatchProgressArrow AnimateRubyEvoArrowPalette AnimateRubyHoleIndicators AnimateRubyShopRampArrow DrawRubyBallPowerUpLights DrawRubyCatchArrowProgress DrawRubyEvoArrowProgress DrawRubyModeTimerDisplay DrawRubyProgressDigits UpdateRubyBoardAnimations 
+- shift_24: src/ruby_catch_holes.c :: AnimateRubyEggHatchSequence AnimateRubyEvolutionShopSequence DispatchRubyCatchModeInit InitRubyEggHatchMode InitSharpedoCatchMode UpdateRubyCatchModeAnimation 
+- shift_24: src/ruby_collision.c :: CheckRubyBoardCollision ProcessRubyCollisionEvent 
+- shift_24: src/ruby_process3_entities.c :: HandleRubyFlipperButtonInput UpdateRubyBoardEntityRendering 
+- shift_24: src/ruby_process3_entities_2.c :: DrawWhiscash RubyPondTriBumperHandleHitAndDraw RubyPond_EntityLogic SelectRubyShopDoorState UpdateNuzleafEntity 
+- shift_24: src/ruby_ramp.c :: DrawRubyRampPrize UpdateMakuhitaEntity 
+- shift_24: src/ruby_trigger_targets.c :: AnimateChikoritaSprite DrawRubySideBumperSprites UpdateGulpinBossState UpdateRubySideBumperAnimation 
+- shift_24: src/sapphire_board_indicators.c :: AnimateHatchMachineSpinner AnimateSapphireBumperArrowPalette AnimateSapphireCatchLightBlink AnimateSapphireHatchArrow AnimateSapphireHatchArrowFlash AnimateSapphireHoleIndicators AnimateSapphireShopArrow DrawSapphireBallPowerUpLights DrawSapphireCatchArrowProgress DrawSapphireEvoArrowProgress DrawSapphireModeTimerDisplay DrawSapphireProgressDigits UpdateSapphireBoardAnimations 
+- shift_24: src/sapphire_collision.c :: CheckSapphireBumperCollision ProcessSapphireCollisionEvent 
+- shift_24: src/sapphire_pond_and_zigzagoon.c :: DrawZigzagoonAndRouletteStopPrompt UpdatePelipperPondEntity UpdateZigzagoonEntity 
+- shift_24: src/sapphire_process3.c :: DispatchSapphireCatchModeInit HandleSapphireFlipperButtonInput InitSapphireWailmerCatch UpdateSapphireBoardEntityRendering UpdateSapphireCatchModeAnimation UpdateSapphireEvolutionShopSequence 
+- shift_24: src/sapphire_seedot_egg_shop.c :: DrawSapphireSeedotAndBasketSprites UpdateSapphireEggHatchAnimation UpdateSapphireEggMachine UpdateSapphireSeedotCollection UpdateSapphireShopSignAnimation 
+- shift_24: src/save.c :: SaveFile_LoadGameData SaveFile_SetPokedexFlags 
+- shift_24: src/save_and_restore_game.c :: RestoreFieldSpecificGraphics RestoreGameState RestoreGroudonBonusGraphics RestoreKyogreBonusGraphics RestoreMainFieldDynamicGraphics RestoreRayquazaBonusGraphics RestoreRubyBoardTileGraphics RestoreSapphireBoardTileGraphics 
+- shift_24: src/spheal_collision.c :: CheckSphealEntityCollision ProcessSphealCollisionEvent 
+- shift_24: src/spheal_process3.c :: SphealBoardProcess_3A_42E48 SphealBoardProcess_3B_43228 SphealBoard_WhiscashDeliversBall UpdateSealeoEntityLogic UpdateSealeoKnockdownPhysics UpdateSphealEntityLogic UpdateSphealResultsScreen 
+- shift_24: src/titlescreen.c :: CheckEReaderAccessCombo TitleScreen10_ExecMenuSelection TitleScreen11_80114B4 TitleScreen1_WaitForStartButton TitleScreen2_AnimOpenMenu TitleScreen3_8010E00 TitleScreen4_MenuInputNoSavedGame TitleScreen5_MenuInputSavedGame TitleScreen6_AnimCloseMenu TitleScreen_CheckDeleteKeyComboPressed 
+- shift_24: src/util.c :: LoadSpriteSets WriteDigitsRecursive 

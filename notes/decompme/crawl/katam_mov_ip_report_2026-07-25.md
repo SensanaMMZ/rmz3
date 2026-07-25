@@ -1,0 +1,98 @@
+<!-- katam :: trait=mov_ip :: crawled 2026-07-25 :: 169/170 files compiled -->
+- mov_ip: src/ability_objects.c :: sub_080A9258 sub_080A98F4 sub_080A9BB4 sub_080A9CEC sub_080AA108 sub_080AA588 sub_080AA6F8 
+- mov_ip: src/batafire.c :: sub_080C939C sub_080C9A08 sub_080C9BB4 sub_080C9E70 sub_080CA0A4 sub_080CA2D8 sub_080CA50C sub_080CA8FC sub_080CAA68 sub_080CAB14 sub_080CAEB8 sub_080CB02C sub_080CB4A0 
+- mov_ip: src/batty.c :: sub_080BCCB0 
+- mov_ip: src/bg.c :: sub_08153060 sub_08153184 sub_08153CB8 
+- mov_ip: src/blipper.c :: sub_080A561C sub_080A58C0 sub_080A5B1C sub_080A5C44 sub_080A5E30 sub_080A6210 sub_080A63A0 sub_080A64F0 sub_080A6704 sub_080A6914 sub_080A6AE8 sub_080A6E44 
+- mov_ip: src/bombar.c :: sub_080D7A6C sub_080D7DCC sub_080D7FF0 sub_080D8338 sub_080D85BC sub_080D8950 sub_080D8C98 sub_080D8E6C sub_080D95A4 sub_080D9764 
+- mov_ip: src/bonkers.c :: sub_080CF960 sub_080CFAF4 sub_080CFC50 sub_080CFF00 sub_080D109C 
+- mov_ip: src/bonus.c :: BonusAddHpOrBattery BonusCreateRandom BonusCreateTomatoAt 
+- mov_ip: src/box_boxer.c :: sub_080C72CC sub_080C776C sub_080C8C30 
+- mov_ip: src/boxin.c :: sub_080B4338 sub_080B4570 sub_080B479C sub_080B49E8 sub_080B4C38 
+- mov_ip: src/boxy.c :: sub_080D571C sub_080D6C0C sub_080D6E1C sub_080D7020 sub_080D73C8 
+- mov_ip: src/bronto_burt.c :: sub_080ADDE0 sub_080AE1AC sub_080AE910 
+- mov_ip: src/cannon_fuse.c :: sub_0811DD94 sub_0811E4B4 
+- mov_ip: src/chest.c :: sub_0800AEB0 sub_0800B7A4 
+- mov_ip: src/chip.c :: sub_080AB5F8 
+- mov_ip: src/code_080023A4.c :: CreateLevelObjects sub_08001408 sub_080015A8 sub_08001940 sub_08001FF8 sub_08002B30 sub_08002C18 sub_0800385C sub_080042BC sub_080047E0 sub_08004998 sub_08004DBC sub_0800520C sub_080053F8 sub_0800549C sub_08005A04 sub_08005BF8 sub_08005DE0 sub_08005FD8 sub_080061C4 sub_080063B0 sub_08006DF8 sub_0800705C sub_080072BC sub_08007528 sub_08007720 sub_0800798C sub_08007B84 sub_08007DE0 sub_08008038 sub_08008298 sub_08008484 sub_080086E0 sub_08008C04 sub_0800913C sub_08009674 sub_08009D70 sub_0800A2B4 sub_0800A460 
+- mov_ip: src/code_0800E0E4.c :: sub_0800E27C 
+- mov_ip: src/code_0800ECAC.c :: sub_0800EE04 sub_0800EF60 
+- mov_ip: src/code_0800ECAC_2.c :: sub_0800FE50 sub_08010034 sub_08010294 sub_08010590 sub_08010818 sub_08010AC8 sub_08010B80 sub_08010C34 sub_08010CE8 sub_08010E3C sub_08010F90 sub_08011044 sub_0801119C sub_08011250 sub_0801149C sub_080115FC sub_08011A28 sub_08011AD8 sub_08011C2C sub_08011CE0 sub_08011D94 sub_08011F00 sub_08012048 sub_0801232C sub_08013804 sub_0801399C sub_08013A60 sub_08013C4C sub_08013D0C sub_08013DB4 sub_08013FC4 sub_080140B0 sub_080141EC sub_08014454 sub_08014B9C sub_08014DA4 sub_08014FA0 sub_0801519C sub_080152B0 sub_080156FC sub_0801617C sub_080168BC sub_0801694C sub_08017C24 sub_08017DC4 sub_08018024 sub_08018110 sub_0801818C sub_08018884 sub_080188BC sub_080196E4 
+- mov_ip: src/code_0801C6F8.c :: sub_0801D16C 
+- mov_ip: src/code_0801DA58.c :: sub_0801DC70 sub_0801DD20 
+- mov_ip: src/code_08026044.c :: sub_08026168 sub_08026698 sub_080272F8 sub_08027350 sub_08027DD0 sub_08028194 sub_08028224 sub_080282CC sub_08028528 sub_080286C4 sub_08028758 sub_080288D0 sub_08028A1C sub_08028AA8 sub_08028B5C sub_08028C94 sub_08028E78 sub_08028F10 sub_08028FFC sub_080298C8 
+- mov_ip: src/code_080332BC.c :: sub_08033540 sub_080335B4 sub_08033674 sub_08033790 
+- mov_ip: src/code_0806F780.c :: sub_0806F8BC sub_0806FAC8 sub_0806FE64 sub_08070164 sub_080706A0 sub_080711A8 sub_08071994 sub_08071C9C sub_080730E0 sub_080731EC sub_080732E4 sub_080733D8 sub_080737D8 sub_08073A74 sub_08073ECC sub_08074AB0 sub_08074C1C sub_080753CC sub_08075EDC sub_08076B84 sub_08077574 sub_08077D84 sub_08078314 sub_080788AC sub_08078EFC sub_0807958C sub_0807988C sub_08079D64 sub_0807A280 sub_0807A7E8 sub_0807BCE0 sub_0807BF2C sub_0807C48C sub_0807C6C0 sub_0807CC14 sub_0807CDFC sub_0807CFE4 sub_0807D2D0 sub_0807D4B0 sub_0807D978 sub_0807DBCC sub_0807E820 sub_0807ECE0 sub_0807EF0C sub_0807F128 sub_0807F9EC sub_08080004 sub_08080870 sub_08080FBC sub_08081724 sub_08081864 sub_08081EB0 sub_08082380 sub_08083150 sub_08083B04 sub_08084280 sub_08084524 sub_08085834 sub_08085A54 sub_08085E60 sub_08086F98 sub_080870B8 sub_080871A4 sub_08087290 sub_08087390 sub_0808747C sub_0808758C sub_08087678 sub_08087770 sub_0808781C sub_08087A78 sub_08087B58 sub_08087CEC sub_08087ECC sub_08088C0C sub_08089350 sub_08089E50 sub_0808A208 sub_0808A490 sub_0808A9C4 sub_0808AF48 sub_0808B360 sub_0808B754 sub_0808BA6C sub_0808BB98 sub_0808BF88 sub_0808C538 sub_0808C828 sub_0808CC78 sub_0808CFC0 sub_0808D5E0 sub_0808D728 sub_0808DC80 sub_0808DDD0 sub_0808E024 sub_0808E11C sub_0808E2EC sub_0808E404 sub_0808E66C sub_0808E7A4 sub_0808E9C8 sub_0808EB08 sub_0808F1C8 sub_0808F774 sub_0808F8C0 sub_0808FC1C sub_0808FF8C sub_0809030C sub_08090698 sub_08090968 sub_08090CB8 sub_0809104C sub_08091258 sub_08091438 sub_08091C7C sub_080920A0 sub_08092568 sub_08092748 sub_08092944 sub_08092A54 sub_08092D50 sub_08093044 sub_08093264 sub_08093468 sub_080936F4 sub_08093A4C sub_08093F90 sub_080941F0 sub_08094540 sub_080949C8 sub_08094D30 sub_08094F7C sub_0809513C sub_080951E4 sub_08095468 sub_080957F4 sub_08095AD4 sub_0809603C sub_0809656C sub_08096898 sub_08096C28 sub_080979E0 sub_08097C74 sub_08097F90 sub_08098400 sub_08098700 sub_08098B34 
+- mov_ip: src/code_08138D64.c :: sub_08138B44 sub_08138D64 sub_08138F68 sub_08139368 sub_081397FC sub_0813C064 sub_0813E2CC sub_0813E680 sub_0813E788 sub_081404AC 
+- mov_ip: src/code_0814A828.c :: sub_0814AA50 sub_0814DB40 sub_0814DBD0 
+- mov_ip: src/code_0814EBE4.c :: sub_0814EBE4 
+- mov_ip: src/code_0814F274.c :: sub_0814F274 
+- mov_ip: src/collection_room.c :: sub_081434F8 sub_08143730 sub_08143DA8 sub_08143F88 sub_08144C1C sub_08144EB4 sub_08145490 sub_08145574 
+- mov_ip: src/crazy_hand.c :: sub_080DF4C0 sub_080DF720 sub_080DFDE0 sub_080E2024 sub_080E261C sub_080E28CC sub_080E2C78 sub_080E31D4 sub_080E3610 sub_080E3A4C 
+- mov_ip: src/cupie.c :: sub_080A2B6C sub_080A35C8 
+- mov_ip: src/dark_meta_knight.c :: sub_080F5974 sub_080F5DA0 sub_080F6104 sub_080F6300 sub_080F6454 sub_080F6824 sub_080F6AEC sub_080F6ED8 sub_080F75B4 sub_080F77D0 sub_080F79AC sub_080F7A60 sub_080F7B34 sub_080F7CD8 sub_080F7D4C sub_080F7DB8 sub_080F90CC sub_080F9A2C sub_080FAC64 sub_080FC150 sub_080FC6D4 sub_080FCA94 sub_080FCE70 sub_080FD26C sub_080FEA70 sub_080FEFB0 sub_080FF3F4 sub_080FF5B0 
+- mov_ip: src/dark_mind.c :: DarkMindForm2CreateLaserShower DarkMindForm2CreateRandomEnemies DarkMindForm2FlipSprites sub_08100538 sub_081007A8 sub_08100BD0 sub_08101784 sub_08103404 sub_08103688 sub_08104080 sub_0810487C sub_081059A8 sub_08105D78 sub_08105EC4 sub_081060C0 sub_081062B4 sub_08106508 sub_081065B0 sub_08106BE0 sub_08107254 sub_081075DC sub_08108368 sub_08108A50 sub_08109304 sub_08109CEC sub_0810A098 sub_0810A168 sub_0810A3D0 sub_0810A71C sub_0810AC70 sub_0810B1F4 sub_0810B830 sub_0810BD28 sub_0810BE7C sub_0810CA50 sub_0810CBE8 sub_0810CF60 sub_0810D2EC sub_0810D4E0 sub_0810D730 sub_0810D914 sub_0810DF60 sub_0810F428 sub_0810FC44 sub_081111C4 sub_08111314 sub_081126C0 sub_08112880 sub_08112D58 sub_0811323C sub_08113310 sub_081135A8 sub_0811370C sub_08113940 sub_08114C44 sub_08116654 sub_081169E4 sub_08116E74 sub_08117530 sub_08117964 sub_08117A9C sub_08117DA0 sub_08118064 sub_08118310 
+- mov_ip: src/demo.c :: sub_08025E00 sub_08025F84 
+- mov_ip: src/droppy.c :: sub_080A03A4 sub_080A05C8 sub_080A0864 
+- mov_ip: src/flame_column.c :: sub_0811FDF0 sub_0811FE74 
+- mov_ip: src/flamer.c :: sub_080B75D0 sub_080B7E74 sub_080B819C 
+- mov_ip: src/foley.c :: sub_080C066C sub_080C0BD0 
+- mov_ip: src/glunk.c :: sub_080AF330 
+- mov_ip: src/goal_game_bonus.c :: CreateGoalGameBonus sub_0801B678 
+- mov_ip: src/gobbler.c :: sub_080E3FFC sub_080E4488 sub_080E4784 sub_080E4CAC sub_080E50E0 sub_080E59B4 sub_080E6784 sub_080E6E1C sub_080E7148 sub_080E72C0 sub_080E7848 
+- mov_ip: src/golem.c :: sub_080C5500 sub_080C6244 sub_080C65F8 
+- mov_ip: src/haley.c :: sub_080A0F2C sub_080A100C 
+- mov_ip: src/heavy_knight.c :: sub_080BEAE8 sub_080BED38 sub_080BEF58 sub_080BF198 sub_080BF414 
+- mov_ip: src/inhalable_star.c :: sub_080A8C28 sub_080A8D18 sub_080A8F64 sub_080A9038 
+- mov_ip: src/intro.c :: sub_08145B64 sub_08146398 sub_0814682C sub_08148804 sub_0814889C sub_08149680 sub_081496C8 
+- mov_ip: src/king_golem.c :: sub_080DA2BC sub_080DA540 sub_080DA768 sub_080DAB00 sub_080DB0FC sub_080DB1B8 sub_080DB43C 
+- mov_ip: src/kirby.c :: kirbyFlyUp sub_0803D368 sub_0803D46C sub_0803D5CC sub_0803D6B4 sub_0803D80C sub_0803D8AC sub_0803D9A8 sub_0803DAB8 sub_0803DBC8 sub_0803DE54 sub_0803E210 sub_0803E2B0 sub_0803E308 sub_0803E324 sub_0803EE18 sub_0803F324 sub_0803F46C sub_0803F790 sub_0803FF64 sub_08040930 sub_080412AC sub_08041C50 sub_080425F0 sub_080435F8 sub_08043E68 sub_0804464C sub_08044FD4 sub_08045A34 sub_080464AC sub_08046E10 sub_08047814 sub_0804805C sub_080488E0 sub_080491E4 sub_08049A60 sub_0804BD98 sub_0804E3E4 sub_0804E60C sub_0804F32C sub_0804FBFC sub_080502E0 sub_080506A8 sub_08050908 sub_08050B44 sub_0805142C sub_080531B4 sub_0805405C sub_08054F90 sub_080551FC sub_080578E4 sub_08057E08 sub_08058714 sub_08059008 sub_080598E8 sub_0805A64C sub_0805A938 sub_0805BDF4 sub_0805C024 sub_0805C11C sub_0805C3B8 sub_0805C700 sub_0805C954 sub_0805CB88 sub_0805CD3C sub_0805CEEC sub_0805D044 sub_08067458 sub_08067830 sub_08068CA4 sub_08069270 sub_0806A85C sub_0806B234 sub_0806BBD8 sub_0806C5AC sub_0806E40C sub_0806E47C sub_0806E93C sub_0806E980 sub_0806E9D0 sub_0806EA6C sub_0806EABC sub_0806EB74 sub_0806ED58 sub_0806F518 sub_0806F54C sub_0806F580 sub_0806F5B8 sub_0806F620 
+- mov_ip: src/kracko.c :: sub_080DBA1C sub_080DC050 sub_080DC3D4 sub_080DC550 sub_080DC800 sub_080DD044 sub_080DE064 
+- mov_ip: src/laser_ball.c :: sub_080B2780 
+- mov_ip: src/logo.c :: LogoCopyPalette 
+- mov_ip: src/m4a.c :: MidiKeyToCgbFreq MidiKeyToFreq m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- mov_ip: src/main.c :: ClearOamBufferDma GameInit GetInput 
+- mov_ip: src/malloc_vram.c :: VramMalloc 
+- mov_ip: src/master_hand.c :: sub_080D2028 sub_080D379C sub_080D450C sub_080D4B5C sub_080D4DA4 sub_080D53C4 
+- mov_ip: src/mega_titan.c :: sub_080EDAD0 sub_080EDD0C sub_080EE358 sub_080EE588 sub_080EEA2C sub_080EF010 sub_080EF2A0 sub_080EF7D8 sub_080EFD4C sub_080F05CC sub_080F1400 sub_080F1BB0 sub_080F1FD8 sub_080F2268 sub_080F27A0 sub_080F2BDC sub_080F3388 sub_080F4484 sub_080F53A0 
+- mov_ip: src/metal_guardian.c :: sub_080BD634 sub_080BDA70 sub_080BDE7C 
+- mov_ip: src/mirra.c :: sub_080B10A8 
+- mov_ip: src/mirror_door.c :: sub_0811A15C sub_0811A234 sub_0811A45C sub_0811A548 
+- mov_ip: src/moley.c :: sub_080EB2C0 sub_080EB700 sub_080EC44C sub_080EC650 sub_080EC8E8 
+- mov_ip: src/mr_frosty.c :: sub_080CC818 sub_080CCDF8 sub_080CCEE0 
+- mov_ip: src/multi_08019F28.c :: sub_0801A0AC sub_0801A374 
+- mov_ip: src/multi_08030C94.c :: sub_08030D4C sub_08030E44 sub_08030FE0 sub_080315B8 sub_08031860 sub_080321DC sub_080324BC sub_080326C0 
+- mov_ip: src/multi_boot.c :: MultiBootMain MultiBootStartMaster 
+- mov_ip: src/multi_boot_util.c :: sub_080302EC sub_0803040C sub_08030898 
+- mov_ip: src/multi_sio.c :: MultiSioInit MultiSioMain 
+- mov_ip: src/noddy.c :: sub_080C2438 sub_080C25CC 
+- mov_ip: src/object.c :: ObjectInitSprite ObjectMain sub_0809A7A4 sub_0809B6A8 sub_0809B93C sub_0809BBB0 sub_0809BEF8 sub_0809C180 sub_0809C380 sub_0809C994 sub_0809CDBC sub_0809CE80 sub_0809CFC4 sub_0809D5D0 sub_0809D7C8 sub_0809D8C8 sub_0809D998 sub_0809E424 sub_0809E55C sub_0809E79C sub_0809E8D4 sub_0809EB90 sub_0809ECD0 sub_0809F6BC sub_0809F8BC 
+- mov_ip: src/palette.c :: ConvertToBlackAndWhite ConvertToGrayscale InvertRgbMap LoadBgPaletteWithTransformation LoadObjPaletteWithTransformation sub_08158434 
+- mov_ip: src/parasol.c :: sub_080C29C0 sub_080C2D44 
+- mov_ip: src/pause_area_map.c :: AreaMapFindRoomsWithKirbys AreaMapRoomsOverwriteTilemap CreateAreaMap MapDisableUIElementsThunk 
+- mov_ip: src/pause_help.c :: CreateHelpMenu 
+- mov_ip: src/pause_world_map.c :: CreateWorldMapLine WorldMapSetKirbySprites 
+- mov_ip: src/pengy.c :: sub_080BAE04 
+- mov_ip: src/phan_phan.c :: sub_080CDAA4 sub_080CDC84 sub_080CDE64 sub_080CE07C sub_080CEEC8 
+- mov_ip: src/save.c :: VerifySaveByOffset WriteSaveSectionByOffset 
+- mov_ip: src/scarfy.c :: sub_080A75C4 sub_080A78E4 sub_080A7D90 
+- mov_ip: src/scroll_lock.c :: ScrollLockDestroy sub_0811C7D0 sub_0811C8BC sub_0811CB44 sub_0811CBB8 sub_0811CD1C sub_0811CD90 sub_0811D158 sub_0811D508 sub_0811D68C 
+- mov_ip: src/shadow_kirby.c :: sub_08023990 sub_08023B14 sub_08023F34 sub_08024644 sub_08024E20 
+- mov_ip: src/shard.c :: sub_0801BC28 sub_0801BE4C sub_0801C004 sub_0801C3F4 sub_0801C558 
+- mov_ip: src/shooty.c :: sub_080C0E70 
+- mov_ip: src/soarar.c :: sub_080ABEAC sub_080AC45C 
+- mov_ip: src/special_doors.c :: sub_0802AE9C 
+- mov_ip: src/sprite_1.c :: AnimCmd_6_2 sub_08154148 
+- mov_ip: src/sprite_2.c :: DrawToOamBuffer sub_0815604C sub_081564D8 
+- mov_ip: src/squishy.c :: sub_080AF9C4 sub_080AFBFC 
+- mov_ip: src/star_platform.c :: CreateStarPlatform 
+- mov_ip: src/subgame_menu.c :: sub_0801E754 sub_0801ED94 sub_0801F1F4 sub_0801F2E8 sub_0801F7F8 sub_0801F8EC 
+- mov_ip: src/subgames.c :: sub_08129C34 sub_08129F28 sub_0812A5FC sub_0812B63C sub_0812BE74 sub_0812CED8 sub_0812D3AC sub_0812D988 sub_0812E468 sub_0813119C sub_081315AC sub_081317FC sub_08131948 sub_08131C88 sub_08132034 sub_08132160 sub_08132350 sub_08132540 sub_08132650 sub_081326F8 sub_08133280 sub_08135B38 sub_08135E9C sub_081361B4 sub_081366B8 sub_08136C68 sub_08136F3C sub_08137204 sub_08137FC8 
+- mov_ip: src/task.c :: TaskCreate sub_08152EBC 
+- mov_ip: src/title_screen.c :: CreateTitleScreen 
+- mov_ip: src/ufo.c :: sub_080C4D10 sub_080C4EDC 
+- mov_ip: src/unknown_75.c :: sub_0811C328 
+- mov_ip: src/waddle_dee.c :: WaddleDee37CheckTurnAround 
+- mov_ip: src/waddle_doo.c :: sub_080B6B68 
+- mov_ip: src/warp_star.c :: sub_0800C270 sub_0800C42C sub_0800C4D0 sub_0800C558 sub_0800C660 sub_0800C89C sub_0800C918 sub_0800CA84 sub_0800CB54 sub_0800CDE8 sub_0800D0EC sub_0800D194 sub_0800D264 sub_0800D3B0 sub_0800D5D8 sub_0800D6C0 sub_0800D7A8 sub_0800DAD8 sub_0800DD40 sub_0800DE20 sub_0800E02C 
+- mov_ip: src/wiz.c :: sub_080E7EBC sub_080E9384 sub_080E9524 sub_080E96F8 sub_080E9A54 sub_080E9C58 sub_080E9FC0 sub_080EA1C0 sub_080EA27C sub_080EA3B8 

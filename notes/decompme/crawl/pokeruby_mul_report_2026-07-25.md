@@ -1,0 +1,105 @@
+<!-- pokeruby :: trait=mul :: crawled 2026-07-25 :: 303/352 files compiled -->
+- mul: src/battle/anim/dark.c :: sub_80E0A4C 
+- mul: src/battle/anim/dragon.c :: sub_80DFAB0 sub_80DFB28 
+- mul: src/battle/anim/fire_2.c :: sub_80D57C4 sub_80D59B0 
+- mul: src/battle/anim/flying.c :: AnimFallingFeather DestroyAnimSpriteAfterTimer sub_80DAF0C sub_80DB000 
+- mul: src/battle/anim/flying_path.c :: sub_80CBDF4 sub_80CBF5C 
+- mul: src/battle/anim/flying_petals.c :: sub_80CC580 
+- mul: src/battle/anim/ghost.c :: sub_80DF24C 
+- mul: src/battle/anim/heal.c :: sub_80CBAA4 
+- mul: src/battle/anim/hop.c :: sub_80CB814 
+- mul: src/battle/anim/normal.c :: sub_80E2F2C sub_80E3338 sub_80E3C4C 
+- mul: src/battle/anim/osmose.c :: sub_80CB768 
+- mul: src/battle/anim/roots.c :: sub_80CB620 
+- mul: src/battle/anim/sfx.c :: sub_812B18C 
+- mul: src/battle/anim/shock.c :: sub_80D6328 
+- mul: src/battle/anim/switch.c :: sub_80CBCF8 
+- mul: src/battle/anim/water.c :: sub_80D4394 sub_80D472C sub_80D4CEC 
+- mul: src/battle/anim/wisp_fire.c :: sub_80D60B4 
+- mul: src/battle_ai_script_commands.c :: BattleAICmd_count_alive_pokemon BattleAICmd_get_ability BattleAICmd_get_gender BattleAICmd_get_highest_possible_damage BattleAICmd_get_hold_effect BattleAICmd_get_type BattleAICmd_if_can_faint BattleAICmd_if_cant_faint BattleAICmd_if_dont_have_move BattleAICmd_if_has_move BattleAICmd_if_hp_equal BattleAICmd_if_hp_less_than BattleAICmd_if_hp_more_than BattleAICmd_if_hp_not_equal BattleAICmd_if_level_compare BattleAICmd_if_move_effect BattleAICmd_if_not_move_effect BattleAICmd_if_not_status BattleAICmd_if_not_status2 BattleAICmd_if_stat_level_equal BattleAICmd_if_stat_level_less_than BattleAICmd_if_stat_level_more_than BattleAICmd_if_stat_level_not_equal BattleAICmd_if_status BattleAICmd_if_status2 BattleAICmd_if_status_in_party BattleAICmd_if_status_not_in_party BattleAICmd_if_user_can_damage BattleAICmd_if_user_cant_damage BattleAICmd_is_most_powerful_move BattleAI_DoAIProcessing 
+- mul: src/battle_ai_switch_items.c :: AI_TrySwitchOrUseItem AreStatsRaised FindMonThatAbsorbsOpponentsMove FindMonWithFlagsAndSuperEffective GetMostSuitableMonToSwitchInto HasSuperEffectiveMoveAgainstOpponents ModulateByTypeEffectiveness ShouldSwitch ShouldSwitchIfNaturalCure ShouldSwitchIfWonderGuard ShouldUseItem 
+- mul: src/battle_anim.c :: LaunchBattleAnimation 
+- mul: src/battle_anim_effects_3.c :: AnimTask_RolePlaySilhouette AnimTask_SnatchOpposingMonMove AnimTask_TeeterDanceMovementStep sub_8130424 sub_8130B38 sub_81311E4 
+- mul: src/battle_anim_mon_movement.c :: sub_80A8E04 sub_80A8EFC 
+- mul: src/battle_anim_special.c :: sub_813F844 
+- mul: src/battle_controller_link_opponent.c :: LinkOpponentHandleFaintingCry LinkOpponentHandleHealthBarUpdate LinkOpponentHandleLoadPokeSprite LinkOpponentHandleStatusIconUpdate LinkOpponentHandlecmd3 dp01_getattr_by_ch1_for_player_pokemon__ sub_8037840 sub_8037A74 sub_8037D64 sub_8037E30 sub_8038900 sub_8039430 
+- mul: src/battle_controller_link_partner.c :: LinkPartnerHandleFaintingCry LinkPartnerHandleHealthBarUpdate LinkPartnerHandleLoadPokeSprite LinkPartnerHandleSendOutPoke LinkPartnerHandleStatusIconUpdate LinkPartnerHandlecmd10 LinkPartnerHandlecmd3 bx_t3_healthbar_update dp01_getattr_by_ch1_for_player_pokemon sub_811DCA0 sub_811DE98 sub_811E0CC sub_811E1BC sub_811EC68 sub_811F864 sub_812071C 
+- mul: src/battle_controller_opponent.c :: OpponentHandleFaintingCry OpponentHandleHealthBarUpdate OpponentHandleLoadPokeSprite OpponentHandleStatusIconUpdate OpponentHandlecmd1 OpponentHandlecmd22 OpponentHandlecmd3 sub_8032E2C sub_8033018 sub_8033308 sub_80333D4 sub_8033598 sub_8033E24 sub_803495C 
+- mul: src/battle_controller_player.c :: PlayerHandleExpBarUpdate PlayerHandleFaintingCry PlayerHandleGetRawMonData PlayerHandleHealthBarUpdate PlayerHandleLoadPokeSprite PlayerHandleSendOutPoke PlayerHandleStatusIconUpdate PlayerHandleStatusXor PlayerHandlecmd10 PlayerHandlecmd3 SpriteCB_FreePlayerSpriteLoadMonSprite bx_t1_healthbar_update dp01_getattr_by_ch1_for_player_pokemon_ dp01_setattr_by_ch1_for_player_pokemon sub_802C2EC sub_802CA60 sub_802D31C sub_802D500 sub_802D730 sub_802D798 sub_802D924 sub_802DA9C sub_802DB6C sub_802DD10 sub_802DDC4 sub_802DE10 sub_802E12C sub_802F934 task05_08033660 
+- mul: src/battle_controller_safari.c :: SafariHandleFaintingCry SafariHandleStatusIconUpdate SafariHandleTrainerBallThrow 
+- mul: src/battle_controller_wally.c :: CompleteOnHealthbarDone CopyWallyMonData Intro_TryShinyAnimShowHealthbox Intro_WaitForShinyAnimAndHealthbox SetWallyMonData StartSendOutAnim WallyHandleFaintingCry WallyHandleHealthBarUpdate 
+- mul: src/battle_gfx_sfx_util.c :: BattleLoadSubstituteSprite battle_load_something sub_8031FC4 sub_8032638 
+- mul: src/battle_interface.c :: CalcBarFilledPixels GetScaledExpFraction GetScaledHPFraction UpdateHealthboxAttribute draw_status_ailment_maybe sub_804454C sub_8045458 sub_8045D58 
+- mul: src/battle_main.c :: BattleStartClearSetData BufferPartyVsScreenHealth_AtStart CanRunFromBattle CheckFocusPunch_ClearVarsBeforeTurnStarts CreateNPCTrainerParty GetWhoStrikesFirst HandleAction_Run HandleAction_UseMove HandleEndTurn_FinishBattle PrepareOwnMultiPartnerBuffer SwitchInClearSetData TryEvolvePokemon TryRunFromBattle TurnValuesCleanUp UndoEffectsAfterFainting bc_801333C bc_801362C bc_8013B1C sub_800FE40 sub_8010384 sub_8011384 sub_8012324 
+- mul: src/battle_message.c :: BattleStringExpandPlaceholders BufferStringBattle ExpandBattleTextBuffPlaceholders 
+- mul: src/battle_party_menu.c :: HandleBattlePartyMenu SetUpBattlePartyMenu Task_809538C Task_BattlePartyMenuShift pokemon_change_order sub_8094D60 sub_8095050 unref_sub_8094DB0 
+- mul: src/battle_script_commands.c :: AI_CalcDmg AI_TypeCalc ChangeStatBuffs CheckWonderGuardAndLevitate ModulateDmgByType ModulateDmgByType2 SetMoveEffect TrySetDestinyBondToHappen TypeCalc Unused_ApplyRandomDmgMultiplier UproarWakeUpCheck atk00_attackcanceler atk01_accuracycheck atk03_ppreduce atk04_critcalc atk05_damagecalc atk06_typecalc atk07_adjustnormaldamage atk08_adjustnormaldamage2 atk09_attackanimation atk0B_healthbarupdate atk0C_datahpupdate atk0F_resultmessage atk15_seteffectwithchance atk18_clearstatusfromeffect atk19_tryfaintmon atk1B_cleareffectsonfaint atk1C_jumpifstatus atk1D_jumpifstatus2 atk1E_jumpifability atk20_jumpifstat atk22_jumpiftype atk23_getexp atk24 atk42_jumpiftype2 atk48_playstatchangeanimation atk49_moveend atk4A_typecalc2 atk4D_switchindataupdate atk4E_switchinanim atk4F_jumpifcantswitch atk51_switchhandleorder atk52_switchineffects atk59_handlelearnnewmove atk5A_yesnoboxlearnmove atk5C_hitanimation atk5D_getmoneyreward atk5E atk61_drawpartystatussummary atk64_statusanimation atk65_status2animation atk69_adjustsetdamage atk6A_removeitem atk6C_drawlvlupbox atk73_hpthresholds atk74_hpthresholds2 atk75_useitemonopponent atk76_various atk78_faintifabilitynotdamp atk79_setatkhptozero atk7B_tryhealhalfhealth atk7F_setseeded atk80_manipulatedamage atk81_trysetrest atk84_jumpifcantmakeasleep atk86_stockpiletobasedamage atk87_stockpiletohpheal atk8A_normalisebuffs atk8B_setbide atk8C_confuseifrepeatingattackends atk8F_forcerandomswitch atk90_tryconversiontypechange atk91_givepaydaymoney atk94_damagetohalftargethp atk96_weatherdamage atk97_tryinfatuating atk98_updatestatusicon atk9A_setfocusenergy atk9B_transformdataexecution atk9C_setsubstitute atk9D_mimicattackcopy atk9F_dmgtolevel atkA0_psywavedamageeffect atkA1_counterdamagecalculator atkA2_mirrorcoatdamagecalculator atkA3_disablelastusedattack atkA4_trysetencore atkA5_painsplitdmgcalc atkA6_settypetorandomresistance atkA8_copymovepermanently atkA9_trychoosesleeptalkmove atkAA_setdestinybond atkAC_remaininghptopower atkAD_tryspiteppreduce atkAE_healpartystatus atkAF_cursetarget atkB1_setforesight atkB2_trysetperishsong atkB3_rolloutdamagecalculation atkB4_jumpifconfusedandstatmaxed atkB6_happinesstodamagecalculation atkB7_presentdamagecalculation atkBA_jumpifnopursuitswitchdmg atkBC_maxattackhalvehp atkBD_copyfoestats atkBE_rapidspinfree atkBF_setdefensecurlbit atkC0_recoverbasedonsunlight atkC1_hiddenpowercalc atkC3_trysetfutureattack atkC4_trydobeatup atkC9_jumpifattackandspecialattackcannotfall atkCD_cureifburnedparalysedorpoisoned atkCE_settorment atkD2_tryswapitems atkD3_trycopyability atkD4_trywish atkD7_setyawn atkD8_setdamagetohealthdifference atkD9_scaledamagebyhealthratio atkDA_tryswapabilities atkDB_tryimprison atkDD_weightdamagecalculation atkDE_assistattackselect atkE1_trygetintimidatetarget atkE2_switchoutabilities atkE3_jumpifhasnohp atkE5_pickup atkE6_docastformchangeanimation atkEA_tryrecycleitem atkEB_settypetoenvironment atkEF_handleballthrow atkF0_givecaughtmon atkF1_trysetcaughtmondexflags atkF2_displaydexinfo atkF3_trygivecaughtmonnick atkF4_subattackerhpbydmg atkF5_removeattackerstatus1 sub_80264C0 
+- mul: src/battle_util.c :: AbilityBattleEffects AtkCanceller_UnableToUseMove CancelMultiTurnMoves CastformDataTypeChange CheckMoveLimitations DoFieldEndTurnEffects GetMoveTarget HandleFaintedMonActions HandleWishPerishSongOnTurnEnd IsImprisoned IsMonDisobedient ItemBattleEffects PressurePPLose PressurePPLoseOnUsingImprision PressurePPLoseOnUsingPerishSong TrySetCantSelectMoveBattleScript TurnBasedEffects sub_8018018 
+- mul: src/berry.c :: CalcBerryYieldInternal 
+- mul: src/berry_blender.c :: Blender_CalculatePokeblock Blender_PrintBlendingRanking Blender_PrintBlendingResults sub_8051A1C 
+- mul: src/blend_palette.c :: BlendPalette 
+- mul: src/calculate_base_damage.c :: CalculateBaseDamage 
+- mul: src/choose_party.c :: HandleBattleTowerPartyMenu HandleDaycarePartyMenu SetupBattleTowerPartyMenu sub_81220C8 sub_81221F8 sub_8122530 sub_81228E8 sub_8122950 sub_81229B8 sub_8122D94 sub_8122F90 unref_sub_8122C60 
+- mul: src/contest_link_util.c :: ScrSpecial_CanMonParticipateInSelectedLinkContest ScrSpecial_CheckSelectedMonAndInitContest ScrSpecial_GiveContestRibbon sub_80C40D4 
+- mul: src/daycare.c :: GetDaycareCostForSelectedMon GetSelectedDaycareMonNickname StoreSelectedPokemonInDaycare _ShouldEggHatch 
+- mul: src/debug/matsuda_debug_menu.c :: sub_80AA4F0 
+- mul: src/debug/mori_debug_menu.c :: MoriDebugMenu_BreedEgg MoriDebugMenu_SearchChild 
+- mul: src/dewford_trend.c :: ReceiveDewfordTrendData 
+- mul: src/easy_chat_1.c :: sub_80E6AE4 sub_80E75D8 
+- mul: src/egg_hatch.c :: AddHatchedMonToParty CB2_EggHatch_1 EggHatchCreateMonSprite EggHatchSetMonNickname SpriteCB_Egg_2 
+- mul: src/evolution_graphics.c :: SpriteCB_PostEvoSparkleSet2 SpriteCB_PreEvoSparkleSet1 SpriteCB_PreEvoSparkleSet2 
+- mul: src/evolution_scene.c :: CB2_EvolutionSceneLoadGraphics CB2_TradeEvolutionSceneLoadGraphics CreateShedinja EvolutionScene TradeEvolutionScene 
+- mul: src/field_effect.c :: FldEff_FieldMoveShowMonInit MultiplyInvertedPaletteRGBComponents MultiplyPaletteRGBComponents 
+- mul: src/field_poison.c :: FaintFromFieldPoison MonFaintedFromPoison 
+- mul: src/field_weather.c :: ApplyDroughtGammaShiftWithBlend ApplyFogBlend ApplyGammaShiftWithBlend 
+- mul: src/field_weather_effects.c :: SandstormSpriteCallback3 sub_807E4EC 
+- mul: src/fieldmap.c :: FillConnection GetMapBorderIdAt InitMapLayoutData LoadSavedMapView MapGridGetCollisionAt MapGridGetElevationAt MapGridGetMetatileIdAt MapGridSetMetatileEntryAt MapGridSetMetatileIdAt MoveMapViewToBackup SaveMapView 
+- mul: src/fldeff_softboiled.c :: SetUpFieldMove_SoftBoiled sub_8133D50 
+- mul: src/hall_of_fame.c :: HallOfFame_PrintMonInfo sub_8141FF8 sub_814386C 
+- mul: src/image_processing_effects.c :: ApplyImageEffect_BlackAndWhite ApplyImageEffect_BlackOutline ApplyImageEffect_Blur ApplyImageEffect_BlurDown ApplyImageEffect_BlurRight ApplyImageEffect_Grayscale ApplyImageEffect_Invert ApplyImageEffect_PersonalityColor ApplyImageEffect_RedChannelGrayscale ApplyImageEffect_RedChannelGrayscaleHighlight ConvertImageProcessingToGBA QuantizePalette_BlackAndWhite QuantizePalette_Grayscale QuantizePalette_GrayscaleSmall QuantizePalette_PrimaryColors QuantizePalette_Standard QuantizePixel_Blur QuantizePixel_BlurHard QuantizePixel_MotionBlur 
+- mul: src/intro.c :: sub_813D220 sub_813DA64 sub_813DB9C sub_813DD58 sub_813E5E0 sub_813E804 sub_813E980 sub_813EBBC 
+- mul: src/item.c :: ItemId_CopyDescription ItemId_GetBattleFunc ItemId_GetBattleUsage ItemId_GetDescription ItemId_GetExitsBagOnUse ItemId_GetFieldFunc ItemId_GetHoldEffect ItemId_GetHoldEffectParam ItemId_GetId ItemId_GetImportance ItemId_GetName ItemId_GetPocket ItemId_GetPrice ItemId_GetSecondaryId ItemId_GetType 
+- mul: src/item_menu.c :: BuyMenuDisplayMessage Task_BuyHowManyDialogueHandleInput sub_80A4548 sub_80A6870 
+- mul: src/libs/m4a.c :: CgbModVol CgbSound MidiKeyToCgbFreq SampleFreqSet SetPokemonCryTone TrkVolPitSet m4aMPlayTempoControl 
+- mul: src/link.c :: DequeueRecvCmds DoRecv DoSend EnqueueSendCmd ResetRecvBuffer ResetSendBuffer 
+- mul: src/lottery_corner.c :: PickLotteryCornerTicket SetRandomLotteryNumber 
+- mul: src/move_tutor_menu.c :: InitMoveTutorMenuStrings MoveTutorMain UpdateMoveTutorMenuCursorPosition 
+- mul: src/naming_screen.c :: sub_80B78F8 
+- mul: src/palette.c :: unused_sub_8073DFC unused_sub_8073F60 
+- mul: src/party_menu.c :: ChangeLinkDoubleBattlePartyMenuSelection CreateHeldItemIcons CreateHeldItemIcons_806DC34 CreateItemUseMoveMenu DisplayGiveHeldItemMessage DisplayTakeHeldItemMessage DoRecoverPP ExecuteTableBasedItemEffect__ PartyMenuDrawHPBars PartyMenuPrintMonsLevelOrStatus PartyMenuTryPrintMonsHP PrintPartyMenuMonNicknames SetHeldItemIconVisibility SetupDefaultPartyMenu StopTryingToTeachMove_806F588 StopTryingToTeachMove_806F614 StopTryingToTeachMove_806F6B4 Task_RareCandy3 Task_TeamMonTMMove Task_TeamMonTMMove2 TaughtMove TeachMonMoveInPartyMenu sub_806B9A4 sub_806BCE8 sub_806BF24 sub_806D198 sub_806E8D0 sub_806F7E8 sub_806FA18 sub_8070088 sub_80701DC unref_sub_806D964 
+- mul: src/pokeball.c :: GetBattlerBall SendOutMonAnimation sub_8046C78 sub_804748C 
+- mul: src/pokeblock.c :: PokeblockGetGain 
+- mul: src/pokeblock_feed.c :: Task_PrintAtePokeblockText TransitionToPokeblockFeedScene sub_814862C 
+- mul: src/pokedex.c :: CreateMonName DoPokedexSearch PrintCryScreenSpeciesName PrintEntryScreenSpeciesName SpriteCB_PokedexListMonSprite sub_8091458 sub_8091564 
+- mul: src/pokedex_cry_screen.c :: BufferCryWaveformSegment SpriteCB_CryMeterNeedle 
+- mul: src/pokemon_1.c :: CalculateMonStats CreateBoxMon GetLevelFromBoxMonExp GetLevelFromMonExp 
+- mul: src/pokemon_2.c :: CalculateEnemyPartyCount CalculatePPWithBonus CalculatePlayerPartyCount CopyPlayerPartyMonToBattleData CreateSecretBaseEnemyParty GetMonsStateToDoubles GetSpeciesName GiveMonToPlayer PlayerPartyAndPokemonStorageFull 
+- mul: src/pokemon_3.c :: AdjustFriendship CheckPartyHasHadPokerus CheckPartyPokerus EvolutionRenameMon HealStatusConditions MonGainEVs PartySpreadPokerus RandomlyGivePartyPokerus ShouldHideGenderIconForLanguage TryIncrementMonLevel UpdatePartyPokerusTime nature_stat_mod 
+- mul: src/pokemon_icon.c :: UpdateMonIconFrame 
+- mul: src/pokemon_item_effect.c :: PokemonUseItemEffects 
+- mul: src/pokemon_menu.c :: FieldCallback_AfterFadeInFromMenu HandleDefaultPartyMenu sub_8089A8C sub_8089E84 sub_808A180 sub_808A2DC sub_808A3F8 sub_808A520 sub_808A848 sub_808AE8C sub_808AF20 sub_808AF80 sub_808B0C0 sub_808B338 sub_808B3EC unref_sub_808AD88 
+- mul: src/pokemon_size_record.c :: CompareMonSize GetMonSizeHash GetMonSizeRecordInfo GiveGiftRibbonToParty 
+- mul: src/pokemon_storage_system.c :: CountAlivePartyMonsExceptOne GetNumValidDaycarePartyMons StorageSystemGetPartySize sub_8095C8C 
+- mul: src/pokemon_storage_system_2.c :: sub_8098780 
+- mul: src/pokemon_storage_system_3.c :: sub_8098EE0 sub_8099200 
+- mul: src/pokemon_storage_system_4.c :: CompactPartySlots SetPlacedMonData SetShiftedMonData sub_809AACC sub_809AB8C sub_809B44C sub_809B548 sub_809B7D4 sub_809B960 sub_809BDD8 sub_809BF74 sub_809C04C sub_809CB94 
+- mul: src/pokenav.c :: SetMonMarkings sub_80EFC64 sub_80F1934 sub_80F1BC8 sub_80F29B8 sub_80F44B0 sub_80F4BD0 sub_80F4D88 sub_80F55AC sub_80F6250 sub_80F63D0 sub_80F6514 
+- mul: src/random.c :: Random 
+- mul: src/record_mixing.c :: ReceiveBattleTowerData ReceiveDaycareMailData ReceiveOldManData Task_RecordMixing_CopyReceiveBuffer Task_RecordMixing_SendPacket sub_80B9BC4 
+- mul: src/reshow_battle_screen.c :: CB2_ReshowBattleScreenAfterMenu LoadAppropiateBankSprite sub_807B184 sub_807B508 
+- mul: src/rom_8077ABC.c :: GetBattlerSpriteCoord GetBattlerSpriteCoordAttr IsBankSpritePresent sub_8077BFC sub_8077FC0 sub_8079B10 
+- mul: src/roulette.c :: sub_8115238 sub_811677C sub_8117434 sub_81174C4 
+- mul: src/roulette_gfx.c :: sub_8117E98 sub_8118724 sub_8118834 sub_8119224 sub_81193D4 sub_8119BCC 
+- mul: src/scanline_effect.c :: GenerateWave 
+- mul: src/script_pokemon_util_80F99CC.c :: DeleteMonMove HandleMoveTutorPartyMenu IsSelectedMonEgg ScrSpecial_CountPokemonMoves ScrSpecial_GetPokemonNicknameAndMoveName SetupContestPartyMenu SetupMoveTutorPartyMenu sub_80F9C00 sub_80F9E1C 
+- mul: src/shop.c :: Shop_DisplayPriceInCheckoutWindow Shop_PrintPrice 
+- mul: src/starter_choose.c :: CreateStarterPokemonLabel 
+- mul: src/string_util.c :: ConvertIntToDecimalStringN ConvertIntToDecimalStringN_DigitWidth6 
+- mul: src/text.c :: DoScroll_TextMode2 GetCursorTileNum GetGlyphTilePointers InitVariableWidthFontTileData 
+- mul: src/time_events.c :: IsMirageIslandPresent UpdateMirageRnd 
+- mul: src/trade.c :: GetInGameTradeSpeciesInfo GetTradeSpecies SetTradeSceneStrings _CreateInGameTradePokemon sub_8047EC0 sub_80484F4 sub_804A2B4 sub_804A33C sub_804A41C sub_804A51C sub_804A96C sub_804ACF4 sub_804AE3C sub_804B2D0 sub_804BA18 sub_804BA94 sub_804C29C sub_804D588 sub_804D6BC sub_804D8E4 sub_804E1DC 
+- mul: src/trader.c :: ScrSpecial_TraderDoDecorationTrade Task_HandleGetDecorationMenuInput TraderSetup sub_810993C 
+- mul: src/trainer_card.c :: TrainerCard_ScaleDownFlipAnimation TrainerCard_ScaleUpFlipAnimation 
+- mul: src/trig.c :: Cos Sin 
+- mul: src/unused_8124F94.c :: unref_sub_8124FD8 
+- mul: src/use_pokeblock.c :: sub_81369CC sub_8136BB8 sub_8136EF0 sub_8136F74 sub_8137058 sub_81370A4 sub_81370E4 

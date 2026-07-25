@@ -1,0 +1,122 @@
+<!-- fireemblem6j :: trait=r8 :: crawled 2026-07-25 :: 275/284 files compiled -->
+- r8: src/action.c :: DeathDropSpriteAnim_Loop DoStealAction DoSupportAction func_fe6_0802A234 
+- r8: src/ai_080326C4.c :: AiAttemptBarrierStaff AiAttemptFortifyStaff AiAttemptHealStaff AiAttemptOffensiveStaff AiAttemptRangedHealStaff AiAttemptRestoreStaff AiAttemptSilenceStaff AiAttemptStaffAction AiAttemptWarpStaff AiEquipGetDanger AiEquipGetFlags AiFillDangerMap AiFunc_080334F4 AiFunc_CountEnemiesInRange AiGetGoodWarpPosition AiGetReachableAdjacentPosition AiIsUnitEnemyOnTheWayToCmdResult AiTryCombatAt AiTryGetNearestHealPoint AiTryRefreshAt func_fe6_08033898 
+- r8: src/ai_battle.c :: AiAttemptBallistaCombat AiAttemptCombatWithinMovement AiAttemptOffensiveAction AiAttemptStealActionWithinMovement AiFillReversedAttackRangeMap AiFloodMovementAndRange AiGetFriendZoneCombatPositionScoreComponent AiGetFriendZoneCombatScoreComponent AiSimulateBestBallistaBattleAgainstTarget AiSimulateBestBattleAgainstTarget 
+- r8: src/ai_decide.c :: AiSetDecision 
+- r8: src/ai_order.c :: AiOrder_Berserk_Init BuildAiUnitList GetUnitBattleAiScore SortAiUnitList 
+- r8: src/ai_perform.c :: AiStartStealAction 
+- r8: src/ai_utility.c :: AiCountNearbyAlliedUnits AiCountNearbyEnemyUnits AiCountNearbyUnits AiCountUnitsInRange AiFindBestAdjacentPositionByFunc AiFindClosestTerrainAdjacentPosition AiFindClosestTerrainPosition AiFindClosestUnlockPosition AiFindGoodMovePositionWithinRange AiFindSafestReachableLocation AiFindTargetInReachByFunc AiFindTargetInReachByPid AiGetUnitClosestValidPosition AiMakeMoveRangeMapsForUnitAndWeapon AiMakeMoveRangeMapsForUnitAndWeapon2 AiRandomMove AiTryMoveTowards func_fe6_080309E0 func_fe6_08030BDC 
+- r8: src/arena.c :: ArenaGenOpposingJid 
+- r8: src/arena_ui.c :: ArenaUi_Init 
+- r8: src/augury.c :: AuguryPaletteModify1 AuguryPaletteModify2 Augury_InitIO func_fe6_0808DB14 
+- r8: src/banim_dragon.c :: PutManaketeBodyIntro1 PutManaketeBodyIntro2 
+- r8: src/banim_dragonfx_idunn.c :: EfxAvoidForIdunn_Loop1 EfxAvoidForIdunn_Loop2 EkrIdunnExitAnim1_Loop2 EkrIdunn_BodyFallInAndTriggerBattleStart EkrIdunn_InitIntroBodyPosition NewEkrIdunnDeadFlashing NewEkrIdunnExitAnim2 
+- r8: src/banim_efxflashing.c :: EfxHpBarColorChange_Loop EfxStatusUnitFlashing NewEfxFlashUnit NewEfxHpBarColorChange 
+- r8: src/banim_efxhpbar.c :: EfxHpBarResire_DeclineToDeath EfxHpBar_DeclineToDeath EfxNoDamageYure_Loop NewEfxNoDamage 
+- r8: src/banim_efxmagic.c :: EfxApocalypseBG2_Loop EfxAureolaOBJ2_Loop EfxAureola_Loop EfxCircleWIN_Loop EfxEckesachsBGCtrl_Loop EfxFenrir_Loop EfxFimbulvetr_Loop EfxFire_Loop EfxHammarne_Loop EfxHazymoon_Loop EfxLightningBG_Loop EfxMagicQUAKE_Loop EfxPurgeBG_Loop EfxReblowOBJ_Loop1 EfxResire_Loop EfxRestRST_Loop EfxRest_Loop EfxSilence_Loop EfxSleep_Loop NewEfxALPHA NewEfxApocalypseOBJ2 NewEfxApocalypseOBJ3RND NewEfxCircleWIN NewEfxFimbulvetrOBJ2Fall NewEfxForblazeOBJ NewEfxHazymoonOBJ3RND NewEfxLiveALPHA NewEfxPurgeOBJ NewEfxRestRST NewEfxRestWIN NewEfxRestWINH 
+- r8: src/banim_efxmisc.c :: EfxSRankWeaponEffectSCR_Loop NewEfxMantBatabata 
+- r8: src/banim_efxopmagic.c :: CRSpellCreateFrontAnim NewEfxopLiveALPHA 
+- r8: src/banim_efxquake.c :: EfxHitQuake_Loop EfxQuake_Loop NewEfxHitQuake 
+- r8: src/banim_efxsound.c :: EfxPlaySEwithCmdCtrl GetProperAnimSoundLocation 
+- r8: src/banim_efxutils.c :: BanimUpdateSpriteRotScale EfxDecodeSplitedPalette EfxPalBlackInOut EfxPalFlashingInOut EfxPalModifyPetrifyEffect EfxPalWhiteInOut EfxSplitColorPetrify EfxTmCpyExt EfxTmCpyExtHFlip FillBGSafelyRect NewEkrsubAnimeEmulator func_fe6_0805B0D4 func_fe6_0805B4D8 func_fe6_0805B88C 
+- r8: src/banim_ekrarena.c :: EkrTogiInit_Init 
+- r8: src/banim_ekrbattle.c :: EkrBattleExecExpGain EkrBattleWaitExpBar 
+- r8: src/banim_ekrbattleintro.c :: EkrBaEnd_ScreenFailOut EkrBaStart_InitScreen EkrBaStart_SreenFailIn 
+- r8: src/banim_ekrclasschg.c :: EfxClasschgBG_Loop EkrClasschg_Loop NewEfxClasschgRST 
+- r8: src/banim_ekrcmd.c :: ParseBattleHitToBanimCmd 
+- r8: src/banim_ekrdispup.c :: EkrDispUP_Loop 
+- r8: src/banim_ekrgauge.c :: EkrGauge_Loop NewEkrGauge 
+- r8: src/banim_ekrlvup.c :: EkrLvup_Init EkrLvup_InitLevelUpBox EkrLvup_InitStatusText EkrLvup_MainAnime EkrLvup_PutWindowOnScreen 
+- r8: src/banim_ekrlvupfx.c :: NewEfxleveluphb NewEkrlvupSubAnimeEmulator 
+- r8: src/banim_ekrmainmini.c :: EkrMainMini_InitAnim EkrMainMini_UpdateAnim 
+- r8: src/banim_ekrmisc.c :: EkrDispUp_PutTerrainfx 
+- r8: src/banim_ekrpopup.c :: DrawBattlePopup 
+- r8: src/banim_ekrsetup.c :: InitLeftAnim InitRightAnim 
+- r8: src/banim_ekrterrainfx.c :: EkrTerrainfx_PutTiles NewEkrTerrainfx 
+- r8: src/banim_ekrtriangle.c :: EfxTriangleQUAKE_Loop EkrTriangle_Loop NewEkrTriArmorKnight NewEkrTriArmorKnightOBJ NewEkrTriArmorKnightOBJ2 NewEkrTriPegasusKnight NewEkrTriPegasusKnightOBJ 
+- r8: src/banim_ekrutils.c :: SpellFx_SetSomeColorEffect StartBattleAnimHitEffects StartBattleAnimResireHitEffects 
+- r8: src/banim_main.c :: BattleAIS_ExecCommands 
+- r8: src/banim_setup.c :: _SetupBanim 
+- r8: src/banim_sprite.c :: PutBas 
+- r8: src/battle.c :: BattleCheckTriangleAttack BattleGenerateArena BattleGenerateRoundHits BattleGenerateSimulationInternal CheckBattleUnitLevelUp SetBattleUnitWeapon 
+- r8: src/battlepreview.c :: BattlePreview_LoopSlideIn BattlePreview_LoopSlideOut DrawBattlePreviewContentsLong DrawBattlePreviewContentsShort InitBattlePreviewBattleStats InitBattlePreviewIconPalBuf PutBattlePreviewItemName PutBattlePreviewUnitName 
+- r8: src/bm.c :: CameraMoveWatchPosition PutMapCursor 
+- r8: src/bmfx.c :: BuildWarpDestinationMap ChapterIntro_Init EquipInfoWindow_Loop MapFade_Loop PhaseIntroSquares_InLoop PhaseIntroSquares_OutLoop PhaseIntro_InitDisp PutChapterIntroMotif PutScreenFogEffect PutScreenFogEffectOverlayed StartEquipInfoWindow StartGasTrapAnim StartRescueTransferAnim StartUnitPrepSwapAnim UnitPrepSwapAnim_Init UnitPrepSwapAnim_Loop UpdateEquipInfoWindow 
+- r8: src/bmio.c :: ApplyFlamesWeatherGradient FlamesWeatherInitGradient FlamesWeatherUpdateParticles WeatherInit_Blue WeatherVBlank_Rain 
+- r8: src/chapter.c :: InitPlayConfig StartChapter 
+- r8: src/config.c :: Config_Init DrawGameOptionText DrawOptionValueTexts GenericOptionChangeHandler 
+- r8: src/debugmenu.c :: DebugTextFrame_DoPut PutDebugTextFrame 
+- r8: src/ending_credit2.c :: EndingCredit_PutJobName 
+- r8: src/ending_pinfo.c :: EndingFacePalCtrl EndingP0InfoText_Init EndingP1InfoText_Init EndingP2InfoText_Init EndingPInfo1_StartMerge Ending_DrawDyadPInfo Ending_DrawPInfoTitle 
+- r8: src/event.c :: DisplayMovement EvtCmd_FightScript EvtCmd_MovePosition EvtCmd_SetAiPid EvtCmd_SetAiPosition Popup_Display TryMoveUnitDisplayed 
+- r8: src/eventfunctions.c :: DemoScene_JumpToChapterDirectly GameEnding_PutUnitsOnPosition1 GameEnding_PutUnitsOnPosition2 PutDemoMonologueMsg func_fe6_0806C7E0 func_fe6_0806D1FC 
+- r8: src/eventinfo.c :: CheckAnyBlueUnitArea StartBattleTalk func_fe6_0806AE7C 
+- r8: src/face.c :: PutFace80x72 PutFaceChibi PutFaceTm StartFace StartFaceChibiStr StartFaceFadeIn UnpackFaceChibiSprGraphics 
+- r8: src/gbasram.c :: SetSramFastFunc 
+- r8: src/hardware.c :: ColFadeDirect ColFadeFromBlack ColFadeFromWhite ColFadeStep ColFadeTick ColFadeToBlack ColFadeToWhite FormatTime func_fe6_08001C68 
+- r8: src/helpbox.c :: ApplyHelpBoxPosition StartHelpBox_08070804 
+- r8: src/helpbox_2.c :: PutSpriteTalkBox func_fe6_08071410 func_fe6_080717B8 func_fe6_08071A34 func_fe6_08071C8C func_fe6_08071D04 func_fe6_08071D94 func_fe6_08072100 
+- r8: src/item.c :: DrawItemMenuLine DrawItemMenuLineLong DrawItemMenuLineNoColor DrawItemStatScreenLine GetTotalUnitItemsValue 
+- r8: src/itemaction.c :: DoItemPromoteAction DoItemStatBoostAction GetRescueStaffTargetPosition func_fe6_08027DB4 
+- r8: src/itemuse.c :: WarpSelect_Init 
+- r8: src/m4a.c :: CgbSound m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayStart m4aMPlayVolumeControl 
+- r8: src/manim.c :: InitManimActorInfoWindow InitManimActors ManimDebug_Display ManimDebug_Loop ManimInfoWindow_Loop ManimLevelUp_PutStatGainLabels Manim_HitImpact NewManimWarpStarDisp PutManimDebugParamText PutManimExpBar PutManimLevelUpFrame PutManimLevelUpStat PutManimWindowNumber SortManimMuLayers StartManimLevelUpStatGainLabelAnim StartManimLevelUpStatGainLabels func_fe6_08064FD0 func_fe6_080650A4 func_fe6_08065694 func_fe6_080671F4 func_fe6_08067324 
+- r8: src/map.c :: InitMetatilesMap RefreshEntityMaps RefreshTerrainMap RenderMapColumn RenderMapLine func_fe6_080187EC 
+- r8: src/mapmenu.c :: UnitAttackBallista_Entry_SwitchIn 
+- r8: src/mapselect.c :: EnlistTarget GetLinkedTargetsNear 
+- r8: src/mapui.c :: DrawTerrainMapUi DrawUnitBurstMapUi DrawUnitMapUi PutMapUiHpBar TerrainMapUi_HideLoop TerrainMapUi_ShowLoop UnitMapUiUpdate UnitMapUi_HideLoop UnitMapUi_ShowLoop 
+- r8: src/mapwork.c :: BeginMapFlood BuildBestMoveScript BuildUnitCompleteAttackRange BuildUnitCompleteStaffRange MapAddInRange MapFloodWorkingMap_From_UpTo MapMarkFloodEdges MapMovementMarkFloodEdges func_fe6_08019528 
+- r8: src/masseffect.c :: StatusHealEffect_BlendedSprite_Init 
+- r8: src/menu.c :: Menu_Draw StartLockingMenuExt 
+- r8: src/minimap.c :: DrawMinimapInternal InitMinimapFlashPalette Minimap_CloseAnim Minimap_InitOpenAnim Minimap_OpenAnim 
+- r8: src/movepath.c :: DrawMovePath 
+- r8: src/mu.c :: MuFogBump_Init MuFogBump_ScaleLoop Mu_OnStateMovement StartMu StartMuInternal 
+- r8: src/oam.c :: PutUnkSprite 
+- r8: src/opanim.c :: NewOpAnimSubtitleDisp OpAnim_PutSubtitle OpAnim_SetWin0Layers func_fe6_08098FA8 func_fe6_080990FC func_fe6_08099194 func_fe6_0809947C 
+- r8: src/opinfo.c :: PutOpInfoViewLetter 
+- r8: src/opinfo_classdemo.c :: ClassDemoMain_ExecEkrMainMini ClassDemoMain_Loop_Intro OpInfo_EfxmagicMiniCallBack 
+- r8: src/playrank.c :: PlayRankTrail_Init PlayRankTrialOBJ_Init PlayRank_ChapterTurns_DrawBase PlayRank_ChapterTurns_DrawTurn PlayRank_InitDisplay PutPlayRankTexts func_fe6_0808DE04 func_fe6_0808DFCC func_fe6_0808E0DC func_fe6_0808E1E4 func_fe6_0808E2F4 func_fe6_0808E434 func_fe6_0808E4E8 func_fe6_0808E5F0 func_fe6_0808EB94 
+- r8: src/prep_080823A0.c :: PrepPutText 
+- r8: src/prep_sallycir.c :: SallyCir1_Init SallyCir1_Loop SallyCir2_Init SallyCir2_Loop 
+- r8: src/prep_subitemscreen1.c :: PrepSubItemScreen_Init PrepSubItem_Trade_Loop 
+- r8: src/prep_subitemscreen3.c :: PrepSubItem_StartSupplyScreen func_fe6_0807FBE8 
+- r8: src/prep_subitemscreen_viewall.c :: PrepSubItem_StartViewAllScreen 
+- r8: src/prep_subscreen_discard1.c :: PrepDiscard_Init 
+- r8: src/prep_utils.c :: func_fe6_08082DA4 
+- r8: src/prepmenu.c :: PrepMenu_InitExt PrepMenu_InitScreenExt PrepMenu_Loop PrepScreen_DrawScreenInfo PrepScreen_ReloadLeftUnitInfo PrepUnitSel_Loop PrepUnit_DrawUnitListNames RearrangeMandatoryDeployUnits func_fe6_08079804 func_fe6_08079928 func_fe6_08079C38 func_fe6_08079D84 
+- r8: src/prepmenuitem.c :: PrepMenuHelpbox PrepScreenMenu_OnPickUnits PrepScreenSubMenu_OnTrade PutPrepScreenMenuItems func_fe6_0807C520 
+- r8: src/prepscreen_disp.c :: PrepDisp_PutTitleSprite PrepMenuFadeIn_Loop PrepMenuFadeOut_Loop PrepMenu_DrawGmapSprites PrepUnit_DrawSMSAndObjs func_fe6_0807BF70 
+- r8: src/prepscreenfx.c :: PrepItem_PutItemDesc func_fe6_0807D358 func_fe6_0807D6C0 
+- r8: src/prepscreenfx2.c :: PrepAllItems_PutPName PrepAllItems_PutTotalNum func_fe6_0807D834 func_fe6_0807D9E4 func_fe6_0807DB80 
+- r8: src/save_game.c :: CopyGameSave EncodeSuspendSavePackedUnit ReadGameSave ReadSuspendSavePackedUnit WriteGameSave WriteGameSavePackedUnit WriteNewGameSave WriteSuspendSave 
+- r8: src/save_multiarena.c :: CopyMultiArenaSaveTeam ReadMultiArenaSaveTeam SwapMultiArenaSaveTeams WriteMultiArenaSaveTeam WriteNewMultiArenaSave 
+- r8: src/save_stats.c :: PidStatsSetDefeatInfo 
+- r8: src/savemenu.c :: SaveMenu_PutScreen func_fe6_08088870 
+- r8: src/savemenu_2.c :: SaveDrawFadeIn_Loop SaveDrawFadeOut_Loop func_fe6_080893D0 func_fe6_08089490 func_fe6_080895B8 func_fe6_08089684 func_fe6_08089A3C func_fe6_08089ABC func_fe6_08089B3C func_fe6_08089D30 func_fe6_0808A25C func_fe6_0808A9F4 
+- r8: src/scanline.c :: PrepareGradientScanlineBuf StartManimFrameGradientScanlineEffect func_fe6_08069DA4 func_fe6_0806A270 func_fe6_0806A51C 
+- r8: src/secretscreen.c :: PrintSecretScreenTexts SecretScreen_DecodeUnitData SecretScreen_PackUnitData 
+- r8: src/secretscreen_08082E74.c :: SecretScreen_ReadBits SecretScreen_WriteBits 
+- r8: src/shop.c :: DrawShopItemPriceLine Shop_Start StartShopScreen 
+- r8: src/sioerror.c :: PutSioErrorMessage 
+- r8: src/sound.c :: MusicFi_OnLoop MusicVc_OnLoop StartBgmFadeIn 
+- r8: src/soundroom.c :: Soundroom_Init func_fe6_0808BF00 
+- r8: src/spriteanim.c :: PutAnimAffine StartSpriteAnimProc SyncAnimImg 
+- r8: src/statscreen.c :: DrawUiGauge PutDrawUiGauge PutStatScreenItemsPage PutStatScreenLeftPanelInfo PutStatScreenPersonalInfoPage PutStatScreenStatWithBar PutStatScreenSupportList PutStatScreenWeaponExpBar StartStatScreenPageSlide StatScreenPageName_CloseMain StatScreenPageName_Init StatScreenPageName_OpenMain StatScreenSprites_PutArrows 
+- r8: src/statusscreen.c :: StartStatusScreenPageSlide func_fe6_0807372C func_fe6_08073808 
+- r8: src/subtitlehelp.c :: InitSubtitleHelpText 
+- r8: src/support.c :: ClearUnitSupports DoTurnSupportExp GetUnitSupportBonuses 
+- r8: src/talk.c :: GetStrTalkLen MoveTalkFace PrintStringToTexts PutTalkBubble PutTalkBubbleTm StartPutTalkSpriteText StartTalkChoice TalkInterpret TalkPutSpriteText_OnIdle 
+- r8: src/targetlist.c :: ListAttackTargetsForWeapon ListPoisonDamageTargets ListSaintsStaffTargets ListTargetUnitsWithinSubjectMagRange ListTerrainHealingTargets func_fe6_08021B30 
+- r8: src/text.c :: DrawSpriteTextGlyph DrawTextGlyph DrawTextGlyphNoClear PutNumber2DigitExt PutTime SpecialCharTest 
+- r8: src/titlescreen.c :: func_fe6_0809B99C 
+- r8: src/trademenu.c :: TradeMenu_HelpBox_OnLoop TradeMenu_InitUnitNameDisplay TradeMenu_RefreshItemText TradeMenu_RefreshSelectableCells 
+- r8: src/trap.c :: ApplyMapChange EnlistGasTrapTargets 
+- r8: src/ui.c :: PutUiEntryHover PutUiWindowFrame RemoveUiEntryHover 
+- r8: src/unit.c :: CanActiveUnitStillMove GetUnitUseBits TickActiveFactionTurnAndListStatusHeals UnitGetDropPositionOnDeath 
+- r8: src/unitlistscreen.c :: SortUnitList UnitListScreenSprites_Main func_fe6_08074254 func_fe6_080742D0 func_fe6_080743C8 func_fe6_08074558 func_fe6_08074BA4 func_fe6_08074D54 func_fe6_08074EF0 func_fe6_08075570 func_fe6_08076314 func_fe6_08076448 
+- r8: src/unitpanel.c :: InitUnitPanel RefreshUnitGivePanels RefreshUnitHpStatusPanel RefreshUnitInventoryPanel RefreshUnitRepairInventoryPanel RefreshUnitRescuePanels RefreshUnitStaffOffensePanel RefreshUnitStealInventoryPanel RefreshUnitTakePanels 
+- r8: src/unitsprite.c :: ApplyUnitSpriteImage16x16 ApplyUnitSpriteImage16x32 ApplyUnitSpriteImage32x32 PutBlendWindowUnitSprite PutUnitSprite PutUnitSpriteExt PutUnitSpriteIconsOam RefreshUnitSprites 
+- r8: src/util.c :: ApplyBitmap NumberToString PalFade_OnLoop PutDrawTextCentered PutStringCentered StartPalFade func_fe6_08013F04 func_fe6_08013F7C func_fe6_08014D60 func_fe6_08014E30 func_fe6_08014E98 func_fe6_08014F70 func_fe6_0801501C func_fe6_080150DC 
+- r8: src/worldmap.c :: StartWmArrow WmArrow_Init WmArrow_Loop WmZoomBack_Loop WmZoomCore WmZoomTo_Loop 
+- r8: src/worldmapfx.c :: StartWmDot StartWmFlag StartWmMapText WmHighlight_Loop WmRotIntro_Init 
+- r8: src/xmap.c :: Xmap_Init func_fe6_0808B194 func_fe6_0808B640 func_fe6_0808B7B4 func_fe6_0808B854 

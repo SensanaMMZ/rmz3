@@ -1,0 +1,63 @@
+<!-- pokepinballrs :: trait=mov_ip :: crawled 2026-07-25 :: 77/77 files compiled -->
+- mov_ip: src/agb_sram.c :: SetSramFastFunc 
+- mov_ip: src/all_board_banners.c :: ProcessBannerCameraTransition RenderBannerSlideAnimation 
+- mov_ip: src/all_board_mode_change_and_debug_menu.c :: BallSaverAnimation EndOfBallBonusSummary GameOverAnimation 
+- mov_ip: src/all_board_pause_game.c :: AnimatePauseMenuOverlay PositionPauseMenuSprites 
+- mov_ip: src/all_board_pinball_game_main.c :: ReplayButtonActionsFromRecording UpdateButtonActionsFromJoy 
+- mov_ip: src/all_board_portrait_display.c :: UpdatePortraitSpritePositions 
+- mov_ip: src/all_board_process0_sprite_init.c :: DusclopsBoardProcess_0A_50D48 GroudonBoardProcess_0A_50FD4 KecleonBoardProcess_0A_50DE0 KyogreBoardProcess_0A_50F04 RayquazaBoardProcess_0A_51090 SphealBoardProcess_0A_51150 
+- mov_ip: src/all_board_process2.c :: AllBoardProcess_2A_4D6C4 BonusBoardProcess_2B_4DBFC MainBoardProcess_2B_4D960 ProcessBonusBoardBallDrain ProcessTiltInput 
+- mov_ip: src/all_board_process4.c :: BonusBoardProcess_4B_19734 MainBoardProcess_4B_19490 
+- mov_ip: src/all_board_process6_collision.c :: ApplyBounceBackForce CheckFlipperCollision LookupFlipperCollisionMap 
+- mov_ip: src/all_board_process7.c :: BonusBoardProcess_7B_12BF8 MainBoardProcess_7B_12524 
+- mov_ip: src/bonus_complete_scoring_transition.c :: HideDusclopsSprites ProcessBonusBannerAndScoring 
+- mov_ip: src/bonus_field_select.c :: RenderBonusFieldSelectSprites 
+- mov_ip: src/display.c :: BrightenPalette CopyString DarkenPalette InterpolatePaletteStep PrintString SetStringPalette 
+- mov_ip: src/dusclops_collision.c :: CheckDusclopsEntitiesCollision CollisionCheck_Dusclops 
+- mov_ip: src/dusclops_process3.c :: DuskullPhase_ProcessGraphics SwapDuskullEntityIndex 
+- mov_ip: src/ereader.c :: UpdateEReaderSprites UpdateEReaderSpritesViaOam 
+- mov_ip: src/field_select.c :: RenderFieldSelectSprites 
+- mov_ip: src/game_idle.c :: PinballGameIdle0_19048 
+- mov_ip: src/gbplayer.c :: ProcessRumbleFrame 
+- mov_ip: src/groudon_collision.c :: CheckGroudonEntityCollision CollisionCheck_Groudon 
+- mov_ip: src/groudon_process3.c :: AnimateGroudonBackground GroudonBoardProcess_3A_3B120 HideGroudonShockwaveSprite RenderGroudonSprites UpdateGroudonFieldEntities 
+- mov_ip: src/high_scores.c :: AnimateScoreTilemapPalette HighScore_LinkSuccess HighScore_NameEntry InitHighScoreData InitIdleHighScoreData InsertNewHighScore MasterReceiveHighScores MasterSendHighScores MergeReceivedTopScore RenderCompletionBanner RenderHighScoreSprites ResetScoreTilemapPalette SetDefaultHighScores SlaveReceiveHighScores SlaveSendHighScores UpdateNameEntryCursor 
+- mov_ip: src/intro.c :: IntroScene1Torchic_InitVars IntroScene1Torchic_RenderAllSprites IntroScene1Torchic_RenderScaledTitle IntroScene1Torchic_RenderTitleSprite IntroScene3Treecko_RenderPokeball IntroScene5Mudkip_RenderAllSprites IntroScene6Chinchou_InitVars IntroScene6Chinchou_RenderStarSprites IntroScene7Parade_RenderWailmer IntroScene8WailmerLaunch_58_ResetTilemap IntroScene8WailmerLaunch_InitVars IntroScene8WailmerLaunch_RenderAllSprites IntroScene9BallFlight_RenderBallAndCloud 
+- mov_ip: src/kecleon_collision.c :: CollisionCheck_Kecleon ProcessKecleonSkulkingDisturbanceCollisionEvent 
+- mov_ip: src/kecleon_process3.c :: RenderKecleonBoardElements RenderKecleonSprites SortKecleonSpritesByY UpdateKecleonScopeVision 
+- mov_ip: src/kyogre_collision.c :: CollisionCheck_Kyogre 
+- mov_ip: src/kyogre_process3.c :: AnimateKyogreBackground HideKyogreSplashSprite RenderKyogreSprites UpdateKyogreEntityLogic UpdateKyogreFieldEntities 
+- mov_ip: src/link.c :: DequeueRecvCmds DoHandshake DoRecv EnqueueSendCmd LinkMain1 LoadSpriteSetsWithCpuCopy 
+- mov_ip: src/m4a.c :: MidiKeyToCgbFreq MidiKeyToFreq SetPokemonCryTone m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- mov_ip: src/main_board_bumpers.c :: DrawSapphireBumperSprites 
+- mov_ip: src/main_board_catch_hatch_picker.c :: BuildSpeciesWeightsForCatchEmMode BuildSpeciesWeightsForEggMode 
+- mov_ip: src/main_board_catch_normal_and_jirachi_modes.c :: CleanupCatchMonBoardSprite CleanupJirachiSprites DrawCatchMonBoardSprite DrawJirachiSprites LoadCatchSpriteGraphics PlayCatchMonAppearsAnimation 
+- mov_ip: src/main_board_catch_tile_logic.c :: DisableCatchTileDisplay RevealCatchTilesBurst RevealCatchTilesSequential 
+- mov_ip: src/main_board_catch_tile_particles.c :: UpdateBurstTileParticles 
+- mov_ip: src/main_board_center_capture_hole.c :: RunMonCaptureSequence 
+- mov_ip: src/main_board_charge_spinner.c :: DrawPikachuSpinner UpdatePikachuChargeCounter 
+- mov_ip: src/main_board_edge.c :: DrawBoardEdgeBanner 
+- mov_ip: src/main_board_evolution_mode.c :: UpdateEvolutionItemAnimation 
+- mov_ip: src/main_board_intro_mode.c :: UpdateBoardIntroMode 
+- mov_ip: src/main_board_launcher_and_cutscenes.c :: AnimateBannerSlide AnimateOneUpSprite DrawSpoinkSprite RunEvolutionCutscene RunTravelEventCutscene 
+- mov_ip: src/main_board_pichu_entity.c :: PichuArrivalSequence UpdateKickbackLogic 
+- mov_ip: src/main_board_to_be_split.c :: AnimateAerodactylEggDelivery AnimateBonusTrapSprite AnimateCoinReward AnimateTotodileEggDelivery InitEvolutionSuccessDisplay LoadPokemonNameGraphics ProcessChargeIndicator RenderEvolutionUI UpdateEggMode UpdateHatchCave UpdatePokemonNamePosition UpdateRubyEggHatchAnimation UpdateRubyEvolutionShopSprite 
+- mov_ip: src/options.c :: InitCustomButtonConfigDisplay Options_HandleInput Options_InitStates SetButtonConfigInputs 
+- mov_ip: src/pokedex.c :: BlitGlyphToTileBuffer ClientSendPokedexFlags MasterSendPokedexFlags Pokedex_DeleteConfirmation Pokedex_InfoWindowSlideIn Pokedex_InfoWindowSlideOut RenderLinkGraphics RenderPokedexSprites 
+- mov_ip: src/rayquaza_collision.c :: CollisionCheck_Rayquaza 
+- mov_ip: src/rayquaza_process3.c :: RayquazaBoardProcess_3A_3E79C RenderRayquazaSprites UpdateLightningGrabEntity UpdateRayquazaEntityLogic UpdateRayquazaIntroSequence UpdateRayquazaMinionsAndEffects 
+- mov_ip: src/ruby_board_indicators.c :: AnimateRubyCatchLightBlink DrawRubyCatchArrowProgress DrawRubyEvoArrowProgress 
+- mov_ip: src/ruby_catch_holes.c :: AnimateRubyEggHatchSequence AnimateSharpedoCatchSequence 
+- mov_ip: src/ruby_collision.c :: CheckRubyBoardCollision CollisionCheck_Ruby ProcessRubyCollisionEvent 
+- mov_ip: src/ruby_process3_entities_2.c :: AnimateRubyShopDoor AnimateSharpedoEntity DrawWhiscash RubyPondTriBumperHandleHitAndDraw UpdateNuzleafEntity 
+- mov_ip: src/ruby_trigger_targets.c :: AnimateChikoritaSprite DrawRubySideBumperSprites UpdateChikoritaAttackAnimation UpdateGulpinBossState UpdateRubySideBumperAnimation 
+- mov_ip: src/sapphire_board_indicators.c :: AnimateSapphireCatchLightBlink DrawSapphireCatchArrowProgress DrawSapphireEvoArrowProgress 
+- mov_ip: src/sapphire_collision.c :: CheckSapphireBumperCollision CollisionCheck_Sapphire 
+- mov_ip: src/sapphire_pond_and_zigzagoon.c :: AnimateWailmerEntity DrawZigzagoonAndRouletteStopPrompt UpdatePelipperPondEntity 
+- mov_ip: src/sapphire_process3.c :: UpdateSapphireEvolutionShopSequence UpdateSapphireWailmerCatchSequence 
+- mov_ip: src/sapphire_seedot_egg_shop.c :: DrawSapphireSeedotAndBasketSprites DrawSapphireShopSignSprite UpdateSapphireEggHatchAnimation UpdateSapphireEggMachine 
+- mov_ip: src/save_and_restore_game.c :: RestoreFieldSpecificGraphics RestoreGameState RestoreRubyBoardTileGraphics RestoreSphealBonusGraphics SaveGameStateSnapshot 
+- mov_ip: src/spheal_collision.c :: CheckSphealEntityCollision CollisionCheck_Spheal 
+- mov_ip: src/spheal_process3.c :: AnimateSphealBackground SphealBoardProcess_3A_42E48 SphealBoard_WhiscashDeliversBall UpdateSealeoEntityLogic UpdateSealeoKnockdownPhysics UpdateSphealEntityLogic UpdateSphealResultsScreen UpdateSphealScoreAndDelivery 
+- mov_ip: src/titlescreen.c :: InitTitlescreenStates RenderTitleMenuNoSavedGame RenderTitleMenuSavedGame RenderTitlePressStartSprites 
+- mov_ip: src/util.c :: ClearSprites LoadSpriteSets 

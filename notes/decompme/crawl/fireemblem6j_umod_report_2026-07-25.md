@@ -1,0 +1,25 @@
+<!-- fireemblem6j :: trait=umod :: crawled 2026-07-25 :: 275/284 files compiled -->
+- umod: src/bm.c :: PutSysArrow 
+- umod: src/bmio.c :: WeatherInit_Sandstorm 
+- umod: src/config.c :: GenericOptionChangeHandler RefrashUiConfigScreen 
+- umod: src/debugmenu.c :: func_fe6_0801A820 func_fe6_0801A89C 
+- umod: src/debugtext.c :: GenNumberStr 
+- umod: src/ending_monologue.c :: EndingMonologueText_Loop 
+- umod: src/eventfunctions.c :: func_fe6_0806D77C 
+- umod: src/hardware.c :: FormatTime 
+- umod: src/manim.c :: ManimExpBar_Fill PutManimWindowNumber 
+- umod: src/playrank.c :: PlayRank_ChapterTurns_DrawBase 
+- umod: src/prepscreen_disp.c :: PrepDisp_PutPickLeftBar PrepMenu_DrawGmapSprites func_fe6_0807BF70 
+- umod: src/random.c :: RandInit 
+- umod: src/savemenu_2.c :: func_fe6_08089684 
+- umod: src/secretscreen.c :: PrintSecretScreenTexts 
+- umod: src/secretscreen_08082E74.c :: SecretScreen_CeilDivBitCount SecretScreen_InitBitstream SecretScreen_ReadBits SecretScreen_WriteBits 
+- umod: src/statscreen.c :: PutStatScreenWeaponExpBar StatScreenSprites_PutArrows StatScreen_Main 
+- umod: src/statusscreen.c :: StatusScreenSprites_Loop 
+- umod: src/subtitlehelp.c :: PutSubtitleHelpText 
+- umod: src/talk.c :: TalkInterpret TalkPrepNextChar TalkShiftClear_OnIdle Talk_OnIdle 
+- umod: src/text.c :: PutNumber2Digit PutNumber2DigitExt PutNumber2DigitSmall PutNumberExt PutTime Text_DrawNumber 
+- umod: src/trademenu.c :: TradeMenu_LoadForcedInitialHover 
+- umod: src/unitlistscreen.c :: func_fe6_080744A0 func_fe6_080754F4 func_fe6_08076448 
+- umod: src/unitsprite.c :: ForceSyncUnitSpriteSheet PutUnitSpriteIconsOam SyncUnitSpriteSheet 
+- umod: src/xmap.c :: func_fe6_0808B854 

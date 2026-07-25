@@ -1,0 +1,18 @@
+<!-- pmd-red :: trait=umod :: crawled 2026-07-25 :: 673/696 files compiled -->
+- umod: src/code_8023144.c :: sub_80234BC 
+- umod: src/code_8031D70.c :: DrawSOSPasswordScreen 
+- umod: src/dungeon_info.c :: AppendWithNewLines 
+- umod: src/dungeon_menu_items.c :: ShowDungeonItemsMenu 
+- umod: src/dungeon_misc.c :: sub_806A3D4 
+- umod: src/dungeon_name_banner.c :: ShowDungeonNameBanner_Async 
+- umod: src/dungeon_pokemon_sprites.c :: LoadStatusGraphics 
+- umod: src/event_flag.c :: _FlagCalc 
+- umod: src/ground_bg.c :: RenderChunksToBgTilemapWrapAround_3x3 RenderChunksToBgTilemap_3x3 RenderChunksToBgTilemaps_3x3 UpdateMapCameraPosition 
+- umod: src/math.c :: fast_mod_3 
+- umod: src/menu_input.c :: MenuUpdatePagesData MoveMenuToEntryId 
+- umod: src/mini_printf.c :: mini_itoa 
+- umod: src/number_util.c :: FixedPoint_Div 
+- umod: src/pokemon_mail.c :: CreateRescueDescription CreateRescueTitle 
+- umod: src/util.c :: ConvertToBCD ConvertToDecimal 
+- umod: src/wigglytuff_shop2.c :: PopulateWigglytuffShopFriendAreaInfoScreen 
+- umod: src/wonder_mail_5.c :: sub_8030E48 

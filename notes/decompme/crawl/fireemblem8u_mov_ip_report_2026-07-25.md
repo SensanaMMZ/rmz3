@@ -1,0 +1,133 @@
+<!-- fireemblem8u :: trait=mov_ip :: crawled 2026-07-25 :: 353/358 files compiled -->
+- mov_ip: src/agb_sram.c :: SetSramFastFunc 
+- mov_ip: src/animedrv.c :: AnimDisplayPrivate 
+- mov_ip: src/banim-efxbattle.c :: efxHitQuake_Loop 
+- mov_ip: src/banim-efxlvup.c :: NewEfxleveluphb 
+- mov_ip: src/banim-efxmagic-demonsurge.c :: sub_806B940 sub_806C2D4 sub_806C478 
+- mov_ip: src/banim-efxmagic-excalibur.c :: efxExcaliburSCR_Loop 
+- mov_ip: src/banim-efxmagic-gleipnir.c :: sub_8069530 
+- mov_ip: src/banim-efxmagic-luna.c :: efxLunaSCR_Loop 
+- mov_ip: src/banim-efxmagic-shadowshot.c :: sub_806B344 
+- mov_ip: src/banim-efxmagic.c :: EfxCircleWINMain EfxRestWINMain NewEfxRestWINH efxRestRSTMain 
+- mov_ip: src/banim-efxmisc.c :: EfxChillEffectBGCOL_Loop EfxSRankWeaponEffectSCRMain 
+- mov_ip: src/banim-efxutils.c :: EfxDecodeSplitedPalette EfxPalBlackInOut EfxPalFlashingInOut EfxPalWhiteInOut EfxSplitColor EfxTmCpyExt EfxTmCpyExtHFlip EfxTmModifyPal sub_8070D04 sub_8070DBC sub_8071068 
+- mov_ip: src/banim-ekrbattle.c :: ekrBattleExecExpGain ekrBattleTriggerNewRoundStart 
+- mov_ip: src/banim-ekrbattleending.c :: ekrBattleEnding_8056288 
+- mov_ip: src/banim-ekrdispup.c :: sub_8051E00 
+- mov_ip: src/banim-ekrdragon-8070710.c :: sub_8070710 
+- mov_ip: src/banim-ekrdragon-demonkingobj.c :: CopyPalWithFade 
+- mov_ip: src/banim-ekrpopup.c :: MakeBattlePopupTileMapFromTSA 
+- mov_ip: src/banim-ekrutils.c :: EfxAdvanceFrameLut SpellFx_SetSomeColorEffect sub_8055A64 
+- mov_ip: src/bksel.c :: InitBattleForecastIconPaletteBuffer 
+- mov_ip: src/bm.c :: CamMove_OnInit HandleMapCursorInput 
+- mov_ip: src/bmbattle.c :: ApplyUnitDefaultPromotion ApplyUnitPromotion BattleGenerateRealInternal BattleGenerateUiStats BattleInitTargetCanCounter CheckBattleUnitStatCaps ClearBattleHits 
+- mov_ip: src/bmdifficulty.c :: DungeonRecordUi_InitText UpdateDungeonEnemiesDefeated UpdateDungeonRecordStats 
+- mov_ip: src/bmguide.c :: GuideDetailsRedraw_Loop sub_80CE750 sub_80CE858 sub_80CEC68 
+- mov_ip: src/bmidoten.c :: GenerateBestMovementScript MapAddInRange MapSetInRange MarkMovementMapEdges MarkWorkingMapEdges UnitApplyWorkingMovementScript sub_801A570 
+- mov_ip: src/bmio.c :: InitPlayConfig WfxFlamesInitGradient WfxFlamesInitGradientPublic WfxFlamesUpdateGradient 
+- mov_ip: src/bmitem.c :: DrawItemMenuLineLong GetUnitItemCostSum 
+- mov_ip: src/bmlib-hblank.c :: StartBgVerticalScroll 
+- mov_ip: src/bmlib.c :: WriteFadedPaletteFromArchive sub_80131F0 sub_8013278 sub_8014560 sub_80145C8 sub_80146A0 sub_801474C sub_8014804 sub_8014BE0 
+- mov_ip: src/bmmap.c :: BmMapInit InitBaseTilesBmMap RefreshTerrainBmMap RevertMapChange sub_8019624 
+- mov_ip: src/bmpatharrowdisp.c :: GetMovementScriptFromPath GetPointAlongPath PathContainsNoCycle 
+- mov_ip: src/bmreliance.c :: ProcessTurnSupportExp 
+- mov_ip: src/bmsave-gmap.c :: ReadWorldMapNodes WriteWorldMapNodes WriteWorldMapPaths WriteWorldMapUnits 
+- mov_ip: src/bmsave-lib.c :: GetGlobalSupportListFromSave UpdateBestGlobalSupportValue WriteSupplyItems 
+- mov_ip: src/bmsave-multiarena.c :: WriteNewMultiArenaSave 
+- mov_ip: src/bmsave.c :: EncodeSuspendSavePackedUnit ReadSuspendSavePackedUnit WriteGameSavePackedUnit 
+- mov_ip: src/bmshop.c :: ShopTryMoveHand Shop_Init Shop_InitBuyState 
+- mov_ip: src/bmtrade.c :: TradeMenu_RefreshSelectableCells 
+- mov_ip: src/bmtrick.c :: ApplyMapChangesById 
+- mov_ip: src/bmudisp.c :: SMS_DisplayOne TornOutUnitSprite sub_8028160 
+- mov_ip: src/bmunit.c :: TickActiveFactionTurn 
+- mov_ip: src/bmusailment.c :: StatusHealEffect_BlendedSprite_Init 
+- mov_ip: src/bonusclaim.c :: BonusClaim_DrawItemSentPopup BonusClaim_Init 
+- mov_ip: src/cgtext.c :: CgText_Init StartCgText sub_808FEA4 
+- mov_ip: src/chapterintrofx.c :: ChapterIntro_Init ChapterIntro_RevealDecalSprite_Loop PutScreenFogEffect PutScreenFogEffectOverlayed 
+- mov_ip: src/chapterintrofx_title.c :: ChapterIntroTitle_InitBgImg 
+- mov_ip: src/classchg-sel.c :: sub_80CD34C 
+- mov_ip: src/colorfade.c :: ColFadeIn_Loop ColFadeOut_Loop NewColFadeIn 
+- mov_ip: src/cp_0803E2F4.c :: AiEquipGetDanger sub_803F15C 
+- mov_ip: src/cp_order.c :: SortAiUnitList 
+- mov_ip: src/cp_perform.c :: CpPerform_MoveCameraOntoUnit 
+- mov_ip: src/cp_utility.c :: AiCountNearbyUnits AiCountUnitsInRange AiFindSafestReachableLocation AiGetUnitClosestValidPosition 
+- mov_ip: src/cursor_hand.c :: sub_80AC844 
+- mov_ip: src/difficultymenu.c :: SaveDrawSetDifficultSlotPalette sub_80AC4F8 
+- mov_ip: src/ending_credits.c :: sub_80C4238 
+- mov_ip: src/ending_details.c :: TurnRecord_SetupText sub_80B8190 
+- mov_ip: src/event.c :: EventEngine_CreateBattle 
+- mov_ip: src/eventcall.c :: WorldFlushInit 
+- mov_ip: src/eventfx-fade.c :: EventEndFade EventFadefx_Loop EventStartFade 
+- mov_ip: src/eventinfo.c :: EvCheck0B_AREA 
+- mov_ip: src/events_script.c :: AutoGenerateUnitdef 
+- mov_ip: src/events_script_utils.c :: sub_8085E94 sub_8085F88 
+- mov_ip: src/eventscr.c :: Event0A_Call Event0F_CounterOps Event18_ColorFade Event21_TextBg Event32_SpawnSingleUnit 
+- mov_ip: src/eventscr_gmap.c :: Event86_WmScrollCamera Event96_WmEnablePathTargetDisplayed Event98_WmSetNextStoryNodePath EventA8_WmUnitMoveFree EventB6_WmMoveBigMap EventBC_MarkPoint EventC4_WmShowPortrait 
+- mov_ip: src/face.c :: PutFaceOnBackGround PutFaceTm sub_8005D98 
+- mov_ip: src/gameoverbgfx.c :: GameOverScreen_RandomScroll_Loop 
+- mov_ip: src/hardware.c :: AddAttr2dBitMap ColorFadeSetupFromBlack ColorFadeSetupFromColorToBlack ColorFadeSetupFromColorToWhite ColorFadeSetupFromWhite MaybeSmoothChangeSomePal SetBlendConfig sub_8000E14 sub_800154C sub_80016C4 sub_80017B4 sub_8001A6C sub_80021E4 
+- mov_ip: src/helpbox.c :: sub_808A8E4 
+- mov_ip: src/m4a.c :: MidiKeyToCgbFreq MidiKeyToFreq m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- mov_ip: src/mapanim.c :: MapAnim_AdvanceBattleRound 
+- mov_ip: src/mapanim_api.c :: BeginMapAnimForDance BeginMapAnimForSteal BeginMapAnimForSummon BeginMapAnimForSummonDK sub_807B4D0 
+- mov_ip: src/mapanim_debug.c :: InitDebugMapAnim MADebug_MainLoop 
+- mov_ip: src/mapanim_eventcall.c :: sub_8080288 sub_80805AC sub_8080900 sub_8080BD8 
+- mov_ip: src/mapanim_expbar.c :: ProcMAExpBar_FrameAdvance 
+- mov_ip: src/mapanim_infobox.c :: MapInfoBoxShake 
+- mov_ip: src/mapanim_lvup.c :: InitManimLevelUpWindow 
+- mov_ip: src/mapanim_scanline.c :: PrepareSineWaveScanlineBuf PrepareSineWaveScanlineBufExt sub_8082268 sub_80822AC sub_80822F0 sub_8082764 sub_80829A4 
+- mov_ip: src/mapanim_specialeffect.c :: LoadGorgonFromEgg 
+- mov_ip: src/mapanim_staffeffect.c :: MapAnimBarrierfx_Loop MapAnimRepair_Loop1 MapAnimRestore_Loop 
+- mov_ip: src/mapanim_summon.c :: GenerateSummonUnitDef 
+- mov_ip: src/minimap.c :: GetMinimapBridgeKindAt InitMinimapFlashPalette Minimap_CloseAnim Minimap_OpenAnim 
+- mov_ip: src/mu.c :: Mu_OnStateMovement SortMus 
+- mov_ip: src/muctrl.c :: AdjustNewUnitPosition CopyEventMoveREDAs MuCtr_ExecREDA_807A358 
+- mov_ip: src/opanim-healthsafetyscreen.c :: sub_80CBFC0 
+- mov_ip: src/opanim-main.c :: sub_80C7900 sub_80CA940 sub_80CB320 
+- mov_ip: src/opanimfx.c :: sub_80C69B0 
+- mov_ip: src/opinfo.c :: ClassInfoDisplay_LoopWindowIn sub_80B30FC sub_80B3740 
+- mov_ip: src/phasechangefx.c :: PhaseIntroSquares_InLoop PhaseIntroSquares_OutLoop 
+- mov_ip: src/player_interface.c :: GoalDisplay_Loop_Display MenuButtonDisp_Loop_Display TerrainDisplay_Loop_Display 
+- mov_ip: src/prep_itemlist.c :: sub_809F370 sub_809F5F4 sub_809FA88 
+- mov_ip: src/prep_itemscreen.c :: PrepItemScreen_SetupGfx 
+- mov_ip: src/prep_itemsupply.c :: PrepItemSupply_Loop_GiveTakeKeyHandler sub_809E100 sub_809E184 
+- mov_ip: src/prep_itemuse.c :: PrepItemUse_InitDisplay 
+- mov_ip: src/prep_menuproc.c :: GetActivePrepMenuItemIndex 
+- mov_ip: src/prep_sallycir.c :: SallyCir_Init sub_8097ACC 
+- mov_ip: src/prep_unitselect.c :: PrepUnit_DrawSMSAndObjs 
+- mov_ip: src/proc.c :: Proc_Init 
+- mov_ip: src/savedraw.c :: SaveMenuTryMoveSaveSlotCursor SqMask_Loop sub_80AB514 
+- mov_ip: src/scene.c :: InitTalkTextWin PutTalkBubbleTm TalkPutSpriteText_OnIdle 
+- mov_ip: src/sio_804B920.c :: sub_804B9E4 sub_804BC84 
+- mov_ip: src/sio_battlemap.c :: sub_80497CC sub_8049B24 
+- mov_ip: src/sio_core.c :: SioEmitData SioHandleIrq_Serial SioSend sub_8041718 sub_80423B0 
+- mov_ip: src/sio_multiboot.c :: MultiBootMain 
+- mov_ip: src/sio_points.c :: sub_8048884 
+- mov_ip: src/sio_result.c :: SioResult_Init SioResult_NewHS_Init 
+- mov_ip: src/sio_tactician.c :: sub_8044560 
+- mov_ip: src/sio_teamlist.c :: SioTeamList_Init SioTeamList_SetupGfx 
+- mov_ip: src/sio_term.c :: sub_8046C64 
+- mov_ip: src/sio_uiutils.c :: LinkArenaMenuScroll_Loop sub_804CAEC 
+- mov_ip: src/soundroom.c :: InitSoundRoomSongData VolumeGraphBuffer_Loop 
+- mov_ip: src/spline.c :: sub_800A950 sub_800AF64 sub_800B764 
+- mov_ip: src/statscreen.c :: StatScreen_InitDisplay UpdateHelpBoxDisplay 
+- mov_ip: src/sysutil.c :: MixPaletteCore SysBrownBox_Loop sub_80AE044 
+- mov_ip: src/uiarena.c :: ArenaUi_Init 
+- mov_ip: src/uichapterstatus.c :: ChapterStatus_Init ChapterStatus_LoopKeyHandler 
+- mov_ip: src/uimenu.c :: DrawMenuItemHover GetMenuCursorPosition 
+- mov_ip: src/uiselecttarget.c :: GetFurthestTargetDistance GetLinkedTargetsNear 
+- mov_ip: src/uisupport.c :: SupportScreen_SetupGraphics sub_80A1AE4 sub_80A221C sub_80A2730 
+- mov_ip: src/uiutils.c :: ClearUiItemHover ClearUiItemHoverExt DrawUiFrame DrawUiFrame2 
+- mov_ip: src/unitinfowindow.c :: UnitInfoWindow_DrawBase 
+- mov_ip: src/unitlistscreen.c :: SortUnitList sub_8090418 sub_8090514 sub_809144C sub_8091D54 
+- mov_ip: src/worldmap_80C0834.c :: sub_80C089C 
+- mov_ip: src/worldmap_cursor.c :: GmapCursor_Loop 
+- mov_ip: src/worldmap_entry.c :: GmMuEntryStartHide GmMuEntryStartShow 
+- mov_ip: src/worldmap_hb.c :: SetWorldMapHblank 
+- mov_ip: src/worldmap_main.c :: sub_80B8E60 sub_80B982C sub_80B98A8 sub_80B9924 sub_80B99A0 sub_80BA100 sub_80BA1F4 
+- mov_ip: src/worldmap_mapmu.c :: sub_80BD5B8 sub_80BDEB4 sub_80BDFA4 
+- mov_ip: src/worldmap_palette_fade.c :: GmPalFade_Loop 
+- mov_ip: src/worldmap_path.c :: RefreshGmNodeLinksExt sub_80BBBF4 sub_80BBDA4 sub_80BBF1C sub_80BBF60 
+- mov_ip: src/worldmap_player_interface.c :: sub_80BECB8 
+- mov_ip: src/worldmap_screen.c :: sub_80BA4D0 
+- mov_ip: src/worldmap_screen2.c :: GetNodeAtPosition 

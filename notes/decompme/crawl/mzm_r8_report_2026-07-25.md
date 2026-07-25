@@ -1,0 +1,117 @@
+<!-- mzm :: trait=r8 :: crawled 2026-07-25 :: 199/654 files compiled -->
+- r8: src/animated_graphics.c :: AnimatedGraphicsLoad AnimatedPaletteUpdate 
+- r8: src/audio.c :: UpdateMusic UpdatePsgSounds UpdateTrack unk_1e2c 
+- r8: src/audio_wrappers.c :: InitializeAudio SetupSoundTransfer unk_2f00 unk_30b4 
+- r8: src/bg_clip.c :: BgClipCallMotherBrainUpdateGlass BgClipCheckGrabbingCrumbleBlock BgClipCheckOpeningHatch BgClipCheckTouchingTransitionOrTank BgClipCheckWalkingOnCrumbleBlock BgClipRemoveCollectedTanks 
+- r8: src/block.c :: BlockCheckStartNewSubBombChain BlockDestroySquareBlock BlockShiftNeverReformBlocks BlockStartBombChain BlockStoreBrokenNonReformBlock BlockStoreBrokenReformBlock BlockUpdateBrokenBlocks BlockUpdateMakeSolidBlocks 
+- r8: src/cable_link.c :: FusionGalleryConnectProcess 
+- r8: src/chozodia_escape.c :: ChozodiaEscapeGetItemCountAndEndingNumber ChozodiaEscapeProcessOam_1 ChozodiaEscapeProcessOam_2 ChozodiaEscapeShipBlowingUp ChozodiaEscapeUpdateExplosionHaze 
+- r8: src/clipdata.c :: ClipdataCheckCantUseElevator ClipdataProcess 
+- r8: src/color_effects.c :: ApplyMonochromeToPalette ApplySmoothMonochromeToPalette ApplySmoothPaletteTransition ApplySpecialBackgroundEffectColorOnBg ApplySpecialBackgroundEffectColorOnObj ApplySpecialBackgroundFadingColor CallApplySpecialBackgroundFadingColor 
+- r8: src/color_fading.c :: ColorFadingTransferPaletteOnTransition 
+- r8: src/complex_oam.c :: CalculateOamPart4 ProcessComplexOam 
+- r8: src/connection.c :: ConnectionCheckAreaConnection ConnectionCheckEnterDoor ConnectionFindEventBasedDoor ConnectionLoadDoors ConnectionLockHatches ConnectionOverrideOpenedHatch ConnectionSetHatchAsOpened ConnectionUpdateHatchAnimation 
+- r8: src/cutscenes/before_ruins_test.c :: BeforeRuinsTestInit BeforeRuinsTestSamusCloseUp BeforeRuinsTestWallAndGreyVoice 
+- r8: src/cutscenes/cutscene_utils.c :: CutsceneEnd CutsceneReset CutsceneStartBackgroundEffect CutsceneStartBackgroundScrolling CutsceneStartSpriteEffect CutsceneUpdateFading 
+- r8: src/cutscenes/enter_tourian.c :: EnterTourianInit EnterTourianUpdateMetroid 
+- r8: src/cutscenes/getting_fully_powered_suit.c :: GettingFullyPoweredSuitInit 
+- r8: src/cutscenes/kraid_rising.c :: KraidRisingInit KraidRisingRising 
+- r8: src/cutscenes/mecha_sees_samus.c :: MechaRidleySeesSamusInit 
+- r8: src/cutscenes/mother_brain_close_up.c :: MotherBrainCloseUpInit MotherBrainCloseUpUpdateEye 
+- r8: src/cutscenes/ridley_in_space.c :: RidleyInSpaceInit RidleyInSpaceRedAlert RidleyInSpaceRidleySuspicious RidleyInSpaceShipLeaving RidleyInSpaceShipLeavingParticles RidleyInSpaceViewOfShipParticles 
+- r8: src/cutscenes/ridley_landing.c :: RidleyLandingInit RidleyLandingShipLanding 
+- r8: src/cutscenes/ridley_spawn.c :: RidleySpawnInit RidleySpawnRidleyFlyingIn 
+- r8: src/cutscenes/samus_in_blue_ship.c :: SamusInBlueShipInit 
+- r8: src/cutscenes/statue_opening.c :: StatueOpeningInit 
+- r8: src/demo.c :: DemoInit 
+- r8: src/dma.c :: BitFill DmaTransfer 
+- r8: src/ending_and_gallery.c :: CreditsDisplayLine CreditsInit EndScreenInit EndingImageDisplayText EndingImageInit EndingImageLoadIGTAndPercentageGraphics GalleryDisplay GalleryInit UnlockedOptionsInit 
+- r8: src/fusion_gallery.c :: FusionGalleryInit 
+- r8: src/gadora_hatch.c :: GadoraHatchUpdate 
+- r8: src/haze.c :: HazeCalculateGradient Haze_Bg3StrongWeak Haze_PowerBombExpanding Haze_PowerBombRetracting 
+- r8: src/hud.c :: HudDrawEnergy HudDrawMissileDigits HudDrawMissiles HudDrawPowerBomb HudDrawSuperMissiles HudUpdateOam 
+- r8: src/hud_generic.c :: HudGenericResetHudData 
+- r8: src/in_game.c :: InGameHandler 
+- r8: src/in_game_cutscene.c :: InGameCutsceneCheckPlayOnTransition InGameCutsceneSamusCloseUp InGameCutsceneUpgradingSuit unk_5fd58 
+- r8: src/init_game.c :: InitializeGame 
+- r8: src/intro.c :: IntroFuzzProcessOam IntroInit IntroProcessText IntroShipFlyingTowardsCameraProcessOam IntroTextProcessOam IntroViewOfZebesProcessOam 
+- r8: src/link.c :: LinkDequeueRecvCmds LinkDoHandshake LinkEnqueueSendCmd 
+- r8: src/menus/boot_debug.c :: BootDebugDrawNumber BootDebugDrawSubMenuOptionText BootDebugDrawTextAtPosition BootDebugHandleInput BootDebugSaveUpdateText BootDebugSectionMapDrawRoomAndDoorIds BootDebugSectionMapRoomOrDoorUpdated BootDebugSectionSetFilesColor BootDebugSetupMenu BootDebugSetupMenuOam BootDebugUpdateMapScreenPosition 
+- r8: src/menus/erase_sram.c :: EraseSramResetOam 
+- r8: src/menus/file_select.c :: FileScreenProcessText FileSelectDisplaySaveFileInfo FileSelectDisplaySaveFileTimer FileSelectInit FileSelectInitFading FileSelectOptionTransition FileSelectProcessFileSelection FileSelectResetOam FileSelectUpdateFading FileSelectUpdateTilemap OptionsMetroidFusionLinkHandler OptionsSoundTestUpdateIdGfx OptionsTimeAttackLoadPassword OptionsTimeAttackLoadRecord OptionsTimeAttackRecordsHandler OptionsUpdateStereoOam unk_79ecc unk_7b854 unk_7eedc 
+- r8: src/menus/game_over.c :: GameOverInit GameOverInit_Debug 
+- r8: src/menus/pause_screen.c :: PauseScreenApplyFading PauseScreenCopyPalramToEwram_Unused PauseScreenDetermineMapsViewable PauseScreenDrawCompletionInfo PauseScreenGetMinimapData PauseScreenInit PauseScreenLoadAreaNamesAndIcons PauseScreenUpdateMapArrows PauseScreenUpdateOrStartFading PauseScreenUpdateStatusScreenOam PauseScreenUpdateWorldMap ProcessComplexMenuOam ProcessCutsceneOam ProcessMenuOam 
+- r8: src/menus/pause_screen_map.c :: PauseScreenDrawIgtAndTanks PauseScreenGetAllMinimapData PauseScreenMapDownload 
+- r8: src/menus/pause_screen_sub_menus.c :: ChozoStatueHintDeterminePath ChozoStatueHintHandler PauseScreenEasySleepHandler 
+- r8: src/menus/status_screen.c :: PauseDebugDrawAbilityGroup PauseDebugDrawAffectedGroups PauseDebugDrawEnergyAmmoNumber PauseDebugDrawEventName PauseDebugDrawStaticInfo PauseDebugEnergyAmmoInput PauseDebugEventList PauseDebugStatusScreen StatusScreenDrawItems StatusScreenDrawSingleTankAmount StatusScreenFullyPoweredItems StatusScreenGetDestinationSlot StatusScreenGetSlotForNewItem StatusScreenSetBeamsVisibility StatusScreenSetBombsVisibility StatusScreenSetMiscsVisibility StatusScreenSetMissilesVisibility StatusScreenSetPistolVisibility StatusScreenSetSuitsVisibility StatusScreenToggleItem 
+- r8: src/menus/title_screen.c :: TitleScreenFadingIn TitleScreenFadingOut TitleScreenInit unk_76710 unk_76978 
+- r8: src/minimap.c :: MinimapCheckSetAreaNameAsExplored MinimapCopyTileGfx MinimapCopyTileXFlippedGfx MinimapCopyTileXYFlippedGfx MinimapCopyTileYFlippedGfx MinimapDraw MinimapLoadTilesWithObtainedItems MinimapSetDownloadedTiles MinimapSetTilesWithObtainedItems 
+- r8: src/multiboot.c :: MultiBootMain 
+- r8: src/music_wrappers.c :: BackupTrackData2SoundChannels CheckSetNewMusicTrack ReplayQueuedMusic RetrieveTrackData2SoundChannels unk_34ac unk_35d0 
+- r8: src/particle.c :: ParticleCheckOnScreen ParticleDraw ParticleSet 
+- r8: src/power_bomb_explosion.c :: PowerBombExplosion 
+- r8: src/projectile.c :: ProjectileCheckSamusBombBounce ProjectileCheckWaveBeamHittingBlocks ProjectileMorphballLauncherCheckLaunchSamus 
+- r8: src/projectile_util.c :: ProjectileChargedIceBeamHittingSprite ProjectileCheckDespawn ProjectileCheckHittingSprite ProjectileCheckVerticalCollisionAtPosition ProjectileDraw ProjectileHitSprite ProjectileIceBeamHittingSprite ProjectileInit ProjectileMissileHitSprite ProjectileNonIceChargedHitSprite ProjectileSuperMissileHitSprite 
+- r8: src/room.c :: RoomReset RoomSetInitialTilemap RoomUpdateHorizontalTilemap RoomUpdateVerticalTilemap 
+- r8: src/samus.c :: SamusAimingWhileHanging SamusCheckCollisionAbove SamusCheckCollisionAtPosition SamusCheckCollisions SamusCheckLandingCollision SamusCheckScrewSpeedboosterAffectingEnvironment SamusCheckSetEnvironmentalEffect SamusCheckTopCollision SamusCheckTopSideCollisionMidAir SamusCheckWalkingSidesCollision SamusDraw SamusInit SamusTakeHazardDamage SamusUpdateEnvironmentalEffect SamusUpdateGraphicsOam SamusUpdatePalette unk_5AD8 
+- r8: src/save_file.c :: SramCheckSetNewBestCompletionTime SramRead_Arrays SramRead_FileScreenOptionsUnlocked SramRead_FromEwram SramRead_Language SramRead_TimeAttack SramWrite_Arrays SramWrite_FileInfo SramWrite_ToEwram unk_743a4 unk_74624 
+- r8: src/save_file_load.c :: Sram_InitSaveFile 
+- r8: src/scroll.c :: ScrollUpdateCurrent 
+- r8: src/soft_reset.c :: SoftResetInit 
+- r8: src/soft_reset_input.c :: SoftReset 
+- r8: src/sprite.c :: SpriteCheckOnScreen SpriteDraw SpriteDrawAll_HighPriority SpriteInitPrimary SpriteLoadSpriteset SpriteSpawnDropFollowers SpriteSpawnPrimary SpriteSpawnSecondary SpriteUpdate 
+- r8: src/sprite_debris.c :: SpriteDebrisDraw 
+- r8: src/sprite_util.c :: SpriteCheckCollidingWithSamus SpriteUtilAlignYPositionOnSlopeAtHitboxBottom SpriteUtilAlignYPositionOnSlopeAtOrigin SpriteUtilCheckObjectsTouching SpriteUtilCheckSamusNearSpriteFrontBehind SpriteUtilCheckStopSamusAgainstSolidSpriteLeft SpriteUtilCheckStopSamusAgainstSolidSpriteRight SpriteUtilDetermineEnemyDrop SpriteUtilMoveSpriteTowardsSamus SpriteUtilRidleyFireballMove SpriteUtilSamusAndSpriteCollision SpriteUtilSpriteDeath SpriteUtilUpdateSecondarySpriteFreezeTimerOfCurrent 
+- r8: src/sprites_ai/acid_worm.c :: AcidWormChangeBigBlockTopCcaa AcidWormChangeTwoGroundCcaa AcidWormExtend AcidWormHandleRotation AcidWormInit AcidWormPartIdle 
+- r8: src/sprites_ai/atomic.c :: AtomicMaybeMoveBackToIdle AtomicMove AtomicSmoothMovement 
+- r8: src/sprites_ai/baristute.c :: BaristuteDeath 
+- r8: src/sprites_ai/black_space_pirate.c :: BlackSpacePirateCollidingWithLaser BlackSpacePirateProjectileCollision BlackSpacePirateWalkingAlerted 
+- r8: src/sprites_ai/boss_statues.c :: KraidStatueInsideChangeCcaa KraidStatueOpening RidleyStatueChangeThreeCcaa RidleyStatueInsideChangeCcaa RidleyStatueOpening 
+- r8: src/sprites_ai/chozo_statue.c :: ChozoStatueInit 
+- r8: src/sprites_ai/chozo_statue_movement.c :: SpawnChozoStatueMovement 
+- r8: src/sprites_ai/crocomire.c :: CrocomireInit 
+- r8: src/sprites_ai/deorem.c :: DeoremEyeMove DeoremHandler DeoremRandomSpriteDebris DeoremSegmentSpawnGoingDownAfter DeoremSegmentSpawnGoingUpAfter DeoremSpawnDelayBeforeGoingUp DeoremSpawnDelayBeforeHead DeoremStartLeaving DeoremThrowingThorns DeoremWaitingForFight 
+- r8: src/sprites_ai/dragon.c :: DragonFireballMove 
+- r8: src/sprites_ai/elevator_statue.c :: ElevatorStatueChangeTwoGroundCcaa 
+- r8: src/sprites_ai/escape_gate.c :: EscapeGateChangeCcaa 
+- r8: src/sprites_ai/escape_ship.c :: EscapeShip EscapeShipCheckCollidingWithLaser EscapeShipPirateCollision 
+- r8: src/sprites_ai/escape_ship_pirate.c :: EscapeShipSpacePirate 
+- r8: src/sprites_ai/explosion_zebes_escape.c :: ExplosionZebesEscape 
+- r8: src/sprites_ai/gamet.c :: GametIdle 
+- r8: src/sprites_ai/geron.c :: Geron 
+- r8: src/sprites_ai/geron_norfair.c :: GeronNorfair 
+- r8: src/sprites_ai/glass_tube.c :: GlassTubeChangeCcaa GlassTubeCheckPowerBombCollision 
+- r8: src/sprites_ai/gunship.c :: GunshipInit GunshipSamusLeave 
+- r8: src/sprites_ai/hive.c :: HiveDying HiveInit MellowMove 
+- r8: src/sprites_ai/imago.c :: ImagoChargeThroughWall ImagoDestroyWall ImagoInit ImagoMoveHorizontally ImagoShootNeedles 
+- r8: src/sprites_ai/imago_cocoon.c :: ImagoCocoonChangeTwoAroundCcaa ImagoCocoonChangeTwoBlockingCcaa ImagoCocoonChangeTwoMiddleCcaa ImagoCocoonInit ImagoCocoonVineSpawnSpore WingedRipperImagoCollision 
+- r8: src/sprites_ai/imago_larva.c :: ImagoLarvaInit 
+- r8: src/sprites_ai/kraid.c :: KraidBeforeDeath KraidCheckProjectilesCollidingWithBelly KraidInit KraidNailMovement KraidOpenCloseRoutineAndProjectileCollision KraidPartCheckShouldSpawnSpikes KraidRandomSpriteDebrisOnCeiling KraidSpike 
+- r8: src/sprites_ai/map_station.c :: MapStationIdle 
+- r8: src/sprites_ai/mecha_ridley.c :: MechaRidleyClawAttack MechaRidleyCrawlingBack MechaRidleyInit MechaRidleySpawnDrops MechaRidleyStandingUp MechaRidleyUpdateHeight 
+- r8: src/sprites_ai/message_banner.c :: MessageBannerPopUp SaveYesNoCursor 
+- r8: src/sprites_ai/metroid.c :: MetroidBombDetection MetroidCheckBouncingOnMetroid MetroidMove 
+- r8: src/sprites_ai/morph_ball_launcher.c :: MorphBallLauncherChangeCcaa MorphBallLauncherDetectBomb 
+- r8: src/sprites_ai/mother_brain.c :: MotherBrainCheckGlassBroke MotherBrainHandler MotherBrainInit 
+- r8: src/sprites_ai/parasite.c :: ParasiteBombCollision ParasiteExpelledDown ParasiteExpelledUp ParasiteInit ParasiteJumpingDown ParasiteJumpingUp ParasiteMultipleExpelledDown ParasiteMultipleExpelledUp ParasiteMultipleJumpingUp 
+- r8: src/sprites_ai/reo.c :: ReoMove 
+- r8: src/sprites_ai/ridley.c :: RidleyBigFireballsAttack RidleyIdle RidleyInit RidleyPart RidleySpawning RidleyTailAttacksInit RidleyTailAttacksXMove 
+- r8: src/sprites_ai/rinka.c :: RinkaMotherBrainMove RinkaMove 
+- r8: src/sprites_ai/rising_chozo_pillar.c :: RisingChozoPillarSpawnThreePlatforms RisingChozoPillarSpawnTwoPlatforms 
+- r8: src/sprites_ai/ruins_test.c :: RuinsTestInit RuinsTestMoveToPosition 
+- r8: src/sprites_ai/searchlight_eye.c :: SearchlightEyeProjectile 
+- r8: src/sprites_ai/skree.c :: SkreeCrashGround 
+- r8: src/sprites_ai/sova.c :: SovaMove 
+- r8: src/sprites_ai/space_pirate.c :: SpacePirate SpacePirateCheckCollidingWithLaser SpacePirateCheckCollidingWithPirateWhenClimbing SpacePirateCheckCollidingWithPirateWhenWalking SpacePirateClimbingCheckWallJumpOrFire SpacePirateFireLaserGround SpacePirateFireLaserWall SpacePirateInit SpacePirateSamusDetection unk_29ef0 
+- r8: src/sprites_ai/tangle_vine.c :: TangleVineGeruta 
+- r8: src/sprites_ai/unknown_item_block.c :: UnknownItemBlockChangeClipdata 
+- r8: src/sprites_ai/unknown_item_chozo_statue.c :: ChozoStatueStandingChangeClipdata UnknownItemChozoStatueInit 
+- r8: src/sprites_ai/viola.c :: ViolaMoveDown ViolaMoveLeft ViolaMoveRight ViolaMoveUp 
+- r8: src/sprites_ai/worker_robot.c :: WorkerRobotCheckSamusInFront WorkerRobotWalkingDetectProjectile 
+- r8: src/sprites_ai/zebbo.c :: ZebboIdle 
+- r8: src/sprites_ai/zipline_generator.c :: ZiplineGeneratorChangeClipdata ZiplineGeneratorInit 
+- r8: src/text.c :: TextDrawCharacter TextDrawLocationTextCharacters TextDrawMessageCharacter TextDrawYesNoEasySleep TextProcessCurrentMessage 
+- r8: src/time_attack.c :: CheckUnlockTimeAttack TimeAttackCheckSetNewRecord TimeAttackGarbleRandomSeedValues TimeAttackGeneratePassword TimeAttackGenerateSeed TimeAttackRandomizeSeed 
+- r8: src/tourian_escape.c :: TourianEscapeCalculateBg2 TourianEscapeInit TourianEscapeProcessOam TourianEscapeSamusChasedByPirates TourianEscapeZebesExploding unk_81788 unk_818cc unk_81ad8 
+- r8: src/transfer.c :: TransferExchangeData 
+- r8: src/transparency.c :: TransparencySetRoomEffectsTransparency 

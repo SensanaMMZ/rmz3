@@ -1,0 +1,192 @@
+<!-- pokefirered :: trait=r8 :: crawled 2026-07-25 :: 225/283 files compiled -->
+- r8: src/AgbRfu_LinkManager.c :: rfu_LMAN_CHILD_checkEnableParentCandidate rfu_LMAN_CHILD_connectParent rfu_LMAN_PARENT_checkRecvChildName rfu_LMAN_REQ_callback rfu_LMAN_checkNICommunicateStatus rfu_LMAN_establishConnection rfu_LMAN_linkWatcher 
+- r8: src/agb_flash.c :: ReadFlash StartFlashTimer VerifyFlashSectorNBytes 
+- r8: src/agb_flash_1m.c :: WaitForFlashWrite_Common 
+- r8: src/agb_flash_mx.c :: ProgramFlashByte_MX ProgramFlashSector_MX 
+- r8: src/bag.c :: BagPrintTextOnWindow 
+- r8: src/battle_ai_script_commands.c :: BattleAI_ChooseMoveOrAction BattleAI_DoAIProcessing Cmd_count_alive_pokemon Cmd_get_highest_type_effectiveness Cmd_get_how_powerful_move_is Cmd_if_can_faint Cmd_if_status_in_party Cmd_if_status_not_in_party 
+- r8: src/battle_ai_switch_items.c :: FindMonThatAbsorbsOpponentsMove FindMonWithFlagsAndSuperEffective GetMostSuitableMonToSwitchInto HasSuperEffectiveMoveAgainstOpponents ModulateByTypeEffectiveness ShouldSwitch ShouldSwitchIfWonderGuard ShouldUseItem 
+- r8: src/battle_anim.c :: ClearBattleAnimationVars Cmd_end Cmd_loopsewithpan Cmd_panse Cmd_panse_adjustall Cmd_panse_adjustnone Cmd_waitplaysewithpan LaunchBattleAnimation MoveBattlerSpriteToBG RelocateBattleBgPal Task_ClearMonBgStatic 
+- r8: src/battle_anim_bug.c :: AnimMissileArc_Step 
+- r8: src/battle_anim_dark.c :: AnimTask_InitMementoShadow DoMementoShadowEffect 
+- r8: src/battle_anim_dragon.c :: AnimOverheatFlame UpdateDragonDanceScanlineEffect 
+- r8: src/battle_anim_effects_1.c :: AnimAirCutterSlice AnimFrenzyPlantRoot AnimTask_DoubleTeam AnimTask_LeafBlade_Step2 AnimTask_MoonlightEndFade AnimTask_MoonlightEndFade_Step AnimTask_MusicNotesRainbowBlend AnimWavyMusicNotes_CalcVelocity MoveAlongLinearPath 
+- r8: src/battle_anim_effects_2.c :: AnimAirWaveProjectile AnimGuillotinePincer AnimHyperVoiceRing AnimSonicBoomProjectile AnimTask_AirCutterProjectile AnimViceGripPincer CreateMinimizeSprite 
+- r8: src/battle_anim_effects_3.c :: AnimGreenStar AnimTask_AcidArmor_Step AnimTask_BarrageBall AnimTask_FlailMovement_Step AnimTask_GlareEyeDots_Step AnimTask_MonToSubstitute AnimTask_OdorSleuthMovement AnimTask_PainSplitMovement AnimTask_RolePlaySilhouette AnimTask_SlideMonForFocusBand AnimTask_SlideMonForFocusBand_Step1 AnimTask_SlideMonForFocusBand_Step2 AnimTask_SnatchOpposingMonMove CreateSweatDroplets FadeScreenToWhite_Step GetGlareEyeDotCoords InitYawnCloudPosition SetPsychicBackground_Step TormentAttacker_Step 
+- r8: src/battle_anim_electric.c :: AnimTask_ElectricBolt_Step 
+- r8: src/battle_anim_fight.c :: AnimFistOrFootRandomPos AnimSuperpowerRock_Step1 
+- r8: src/battle_anim_fire.c :: AnimTask_ShakeTargetInPattern CreateEruptionLaunchRocks 
+- r8: src/battle_anim_flying.c :: AnimFallingFeather AnimFallingFeather_Step AnimSkyAttackBird AnimTask_DrillPeckHitSplats AnimUnusedFeather_Step 
+- r8: src/battle_anim_ghost.c :: AnimDestinyBondWhiteShadow AnimShadowBall AnimTask_CurseStretchingBlackBg_Step1 AnimTask_DestinyBondWhiteShadow AnimTask_GrudgeFlames AnimTask_SpiteTargetShadow_Step1 
+- r8: src/battle_anim_ground.c :: AnimDirtScatter 
+- r8: src/battle_anim_ice.c :: AnimUnusedIceCrystalThrow GenerateHailParticle InitPoisonGasCloudAnim 
+- r8: src/battle_anim_mon_movement.c :: AnimTask_RotateMonSpriteToSide AnimTask_RotateMonToSideAndRestore AnimTask_ShakeMon2Step AnimTask_ShakeTargetBasedOnMovePowerOrDmg AnimTask_SwayMon_Step AnimTask_TranslateMonElliptical 
+- r8: src/battle_anim_mons.c :: AnimLoadCompressedBgGfx BattleAnimHelper_SetSpriteSquashParams CreateAdditionalMonSpriteForMoveAnim CreateBattlerTrace CreateInvisibleSpriteCopy GetBattlePalettesMask GetBattlerSpriteCoordAttr InitAnimFastLinearTranslation InitAnimLinearTranslation SetAnimSpriteInitialXOffset SetAverageBattlerPositions SetPriorityForVisibleBattlers TrySetSpriteRotScale 
+- r8: src/battle_anim_normal.c :: AnimTask_BlendColorCycleExclude AnimTask_InvertScreenColor AnimTask_TintPalettes UnpackSelectedBattlePalettes 
+- r8: src/battle_anim_psychic.c :: AnimTask_ExtrasensoryDistortion_Step AnimTask_TransparentCloneGrowAndShrink 
+- r8: src/battle_anim_rock.c :: AnimTask_Rollout 
+- r8: src/battle_anim_smokescreen.c :: SmokescreenImpact 
+- r8: src/battle_anim_sound_tasks.c :: SoundTask_AdjustPanningVar SoundTask_LoopSEAdjustPanning SoundTask_PlayDoubleCry_Step 
+- r8: src/battle_anim_special.c :: AnimTask_LevelUpHealthBox AnimTask_ShinySparkles AnimTask_SwapMonSpriteToFromSubstitute AnimTask_SwitchOutBallEffect AnimTask_ThrowBall AnimTask_ThrowBallSpecial AnimTask_UnusedLevelUpHealthBox_Step AnimateBallOpenParticles CreateStarsWhenBallClicks DiveBallOpenParticleAnimation DoFreeHealthboxPalsForLevelUp DoLoadHealthboxPalsForLevelUp GreatBallOpenParticleAnimation LaunchBallFadeMonTask MasterBallOpenParticleAnimation PokeBallOpenParticleAnimation PremierBallOpenParticleAnimation RepeatBallOpenParticleAnimation SafariBallOpenParticleAnimation SpriteCB_ThrowBall_DoClick TimerBallOpenParticleAnimation TryShinyAnimation UltraBallOpenParticleAnimation 
+- r8: src/battle_anim_status_effects.c :: Task_FlashingCircleImpacts 
+- r8: src/battle_anim_utility_funcs.c :: AnimTask_BlendSpriteColor_Step2 AnimTask_DrawFallingWhiteLinesOnAttacker AnimTask_DrawFallingWhiteLinesOnAttacker_Step StartMonScrollingBgMask StatsChangeAnimation_Step2 
+- r8: src/battle_anim_water.c :: AnimTask_CreateSurfWave AnimTask_CreateSurfWave_Step2 AnimTask_WaterSpoutRain_Step AnimWaterBubbleProjectile_Step1 CreateWaterPulseRingBubbles CreateWaterSpoutLaunchDroplets 
+- r8: src/battle_controller_link_opponent.c :: CopyLinkOpponentMonData Intro_TryShinyAnimShowHealthbox Intro_WaitForShinyAnimAndHealthbox LinkOpponentDoMoveAnimation LinkOpponentHandleDrawTrainerPic LinkOpponentHandleHealthBarUpdate LinkOpponentHandleLoadMonSprite SetLinkOpponentMonData StartSendOutAnim Task_StartSendOutAnim 
+- r8: src/battle_controller_link_partner.c :: CopyLinkPartnerMonData LinkPartnerDoMoveAnimation LinkPartnerHandleDrawTrainerPic LinkPartnerHandleHealthBarUpdate LinkPartnerHandleLoadMonSprite SetLinkPartnerMonData StartSendOutAnim SwitchIn_ShowHealthbox Task_StartSendOutAnim 
+- r8: src/battle_controller_oak_old_man.c :: BtlCtrl_RemoveVoiceoverMessageFrame CopyOakOldManMonData HandleInputChooseAction Intro_WaitForShinyAnimAndHealthbox OakOldManDoMoveAnimation OakOldManHandleHealthBarUpdate SetOakOldManMonData StartSendOutAnim Task_GiveExpToMon Task_GiveExpWithExpBar Task_PrepareToGiveExpWithExpBar 
+- r8: src/battle_controller_opponent.c :: GetOpponentMonData Intro_TryShinyAnimShowHealthbox OpponentDoMoveAnimation OpponentHandleDrawTrainerPic OpponentHandleHealthBarUpdate OpponentHandleLoadMonSprite OpponentHandleTrainerSlide SetOpponentMonData StartSendOutAnim Task_StartSendOutAnim 
+- r8: src/battle_controller_player.c :: CopyPlayerMonData HandleInputChooseAction HandleInputChooseMove HandleMoveSwitching Intro_TryShinyAnimShowHealthbox PlayerDoMoveAnimation PlayerHandleDrawTrainerPic PlayerHandleHealthBarUpdate PlayerHandleStatusXor SetPlayerMonData StartSendOutAnim Task_CreateLevelUpVerticalStripes Task_GiveExpToMon Task_GiveExpWithExpBar Task_PrepareToGiveExpWithExpBar Task_StartSendOutAnim 
+- r8: src/battle_controller_pokedude.c :: CopyPokedudeMonData InitPokedudePartyAndOpponent Intro_WaitForShinyAnimAndHealthbox PokedudeDoMoveAnimation PokedudeHandleDrawTrainerPic PokedudeHandleLoadMonSprite PokedudeSimulateInputChooseMove SetPokedudeMonData StartSendOutAnim Task_GiveExpToMon Task_GiveExpWithExpBar Task_PrepareToGiveExpWithExpBar 
+- r8: src/battle_controllers.c :: BtlController_EmitMoveAnimation BtlController_EmitPrintSelectionString BtlController_EmitPrintString InitLinkBtlControllers PrepareBufferDataTransferLink SetBattlePartyIds SetUpBattleVars Task_HandleCopyReceivedLinkBuffersData TryReceiveLinkBattleData 
+- r8: src/battle_gfx_sfx_util.c :: AllocateMonSpritesGfx BattleLoadOpponentMonSpriteGfx BattleLoadPlayerMonSpriteGfx CopyAllBattleSpritesInvisibilities DecompressTrainerFrontPic HandleBattleLowHpMusicChange HandleSpeciesGfxDataChange LoadAndCreateEnemyShadowSprites SetBattlerSpriteAffineMode SpriteCB_EnemyShadow TryHandleLaunchBattleTableAnimation 
+- r8: src/battle_interface.c :: AddTextPrinterAndCreateWindowOnHealthbox CalcNewBarValue CreateBattlerHealthboxSprites CreatePartyStatusSummarySprites CreateSafariPlayerHealthboxSprites Debug_DrawNumber DrawHealthbarOntoScreen MoveBattleBar MoveBattleBarGraphically PrintSafariMonInfo SwapHpBarsWithHpText Task_HidePartyStatusSummary TryAddPokeballIconToHealthbox UpdateAndDrawHealthbarOntoScreen UpdateHealthboxAttribute UpdateHpTextInHealthbox UpdateHpTextInHealthboxInDoubles UpdateNickInHealthbox UpdateOamPriorityInAllHealthboxes UpdateStatusIconInHealthbox 
+- r8: src/battle_intro.c :: BattleIntroSlide1 BattleIntroSlide2 BattleIntroSlide3 BattleIntroSlideLink CopyBattlerSpriteToBg DrawBattlerOnBgDMA 
+- r8: src/battle_main.c :: BattleIntroDrawPartySummaryScreens BattleIntroDrawTrainersOrMonsSprites BattleStartClearSetData BattleTurnPassed BufferPartyVsScreenHealth_AtEnd BufferPartyVsScreenHealth_AtStart CB2_HandleStartMultiBattle CB2_PreInitMultiBattle CreateNPCTrainerParty DoBounceEffect FaintClearSetData GetWhoStrikesFirst HandleAction_UseItem HandleAction_UseMove HandleTurnActionSelectionState LinkBattleComputeBattleTypeFlags PrepareOwnMultiPartnerBuffer SetActionsAndBattlersTurnOrder SetAllPlayersBerryData SpriteCB_FaintOpponentMon SwitchInClearSetData TryDoEventsBeforeFirstTurn TurnValuesCleanUp UpdatePartyOwnerOnSwitch_NonMulti 
+- r8: src/battle_message.c :: BattlePutTextOnWindow BattleStringExpandPlaceholders BufferStringBattle ExpandBattleTextBuffPlaceholders 
+- r8: src/battle_transition.c :: AngledWipes_DoWipe AngledWipes_SetWipeData BigPokeball_SetGfx ClockwiseWipe_Left ClockwiseWipe_Right CreateIntroTask Mugshot_SetGfx Mugshot_WaitPlayerSlide Mugshots_CreateTrainerPics PokeballsTrail_Main Ripple_Main SetCircularMask SetSinWave Slice_Main Spiral_End Spiral_UpdateFrame UpdateBlackWipe Wave_Main 
+- r8: src/battle_util.c :: AbilityBattleEffects AtkCanceller_UnableToUseMove CheckMoveLimitations DoBattlerEndTurnEffects DoFieldEndTurnEffects GetImprisonedMovesCount GetMoveTarget HandleFaintedMonActions HandleWishPerishSongOnTurnEnd HasNoMonsToSwitch IsMonDisobedient ItemBattleEffects OpponentSwitchInResetSentPokesToOpponentValue PressurePPLoseOnUsingImprison PressurePPLoseOnUsingPerishSong TrySetCantSelectMoveBattleScript 
+- r8: src/berry_crush.c :: Cmd_PrintMessage Cmd_TabulateResults CreateBerrySprites DrawPlayerNameWindows HandlePartnerInput HandlePlayerInput PrintResultsText PrintTextCentered RunOrScheduleCommand SpriteCB_Sparkle_Init StartBerryCrush Task_ShowBerryCrushRankings UpdateInputEffects printCrushingResults 
+- r8: src/berry_pouch.c :: BerryPouchPrint CreateNormalContextMenu DisplayItemMessageInBerryPouch GetBerryNameAndIndexForMenu InitBerryPouch InitTossQuantitySelectUI SetUpListMenuTemplate Task_BerryPouchMain Task_BerryPouch_Toss Task_SellBerries_PlaySfxAndRemoveBerries Task_Sell_PrintSelectMultipleUI 
+- r8: src/berry_powder.c :: DrawPlayerPowderAmount PrintBerryPowderAmount 
+- r8: src/bg.c :: BgTileAllocOp CopyRectToBgTilemapBufferRect CopyToBgTilemapBuffer CopyToBgTilemapBufferRect FillBgTilemapBufferRect_Palette0 InitBgsFromTemplates LoadBgTiles LoadBgVram SetBgAffine SetBgAffineInternal SetBgControlAttributes WriteSequenceToBgTilemapBuffer 
+- r8: src/bike.c :: BikeInputHandler_Normal BikeInputHandler_Slope 
+- r8: src/blend_palette.c :: BlendPalette BlendPalettesAt 
+- r8: src/blit.c :: BlitBitmapRect4Bit BlitBitmapRect4BitTo8Bit BlitBitmapRect4BitWithoutColorKey FillBitmapRect4Bit FillBitmapRect8Bit 
+- r8: src/buy_menu_helpers.c :: BuyMenuDisplayMessage BuyMenuPrint 
+- r8: src/cable_car_util.c :: CableCarUtil_CopyWrapped CableCarUtil_FillWrapped 
+- r8: src/clear_save_data_screen.c :: SaveClearScreen_GpuInit 
+- r8: src/coins.c :: PrintCoinsString_Parameterized ShowCoinsWindow_Parameterized 
+- r8: src/decompress.c :: LoadSpecialPokePic LoadSpecialPokePic_DontHandleDeoxys StitchObjectsOn8x8Canvas 
+- r8: src/digit_obj_util.c :: CopyWorkToOam DigitObjUtil_CreatePrinter DrawNumObjsLeadingZeros DrawNumObjsMinusInBack DrawNumObjsMinusInFront 
+- r8: src/diploma.c :: DiplomaInitScreen 
+- r8: src/dma3_manager.c :: ProcessDma3Requests RequestDma3Copy RequestDma3Fill 
+- r8: src/dodrio_berry_picking.c :: CreateBerrySprites CreateCloudSprites CreateDodrioSprite DoStatusBarIntro GetNewBerryId GetScore HandlePickBerries HandleSound_Member InitBgs InitDodrioGame InitFirstWaveOfBerries Msg_WantToPlayAgain PrintRankedScores PrintRecordsText RecvLinkData_Gameplay ResetForPlayAgainPrompt SetScoreResults ShowNames ShowResults TryIncrementDifficulty UpdateBerrySprites UpdateFallingBerries 
+- r8: src/dodrio_berry_picking_comm.c :: RecvPacket_GameState SendPacket_GameState 
+- r8: src/easy_chat.c :: ConvertEasyChatWordsToString EC_DoesEasyChatStringFitOnLine GetUnlockedWordsInAlphabeticalGroup GetUnlockedWordsInECGroup PopulateAlphabeticalGroups 
+- r8: src/easy_chat_2.c :: DoEasyChatScreen 
+- r8: src/easy_chat_3.c :: CreateRedRectangularCursorSpritePair DrawECFrameInTilemapBuffer ECInterfaceCmd_02 EC_AddTextPrinterParameterized2 MoveCursor_Alpha MoveCursor_Group PrintECFields PrintECRowsWin2 RedrawFrameByRect 
+- r8: src/ereader_screen.c :: EReader_Load 
+- r8: src/evolution_graphics.c :: CreatePostEvoSparkleSet2 CycleEvolutionMonSprite PreEvoInvisible_PostEvoVisible_KillTask PreEvoVisible_PostEvoInvisible_KillTask 
+- r8: src/evolution_scene.c :: CB2_EvolutionSceneLoadGraphics CreateShedinja EvolutionScene Task_AnimateBg Task_EvolutionScene Task_TradeEvolutionScene TradeEvolutionScene 
+- r8: src/field_camera.c :: CameraUpdate CameraUpdateNoObjectRefresh DrawMetatileAt DrawWholeMapViewInternal RedrawMapSliceEast RedrawMapSliceWest 
+- r8: src/field_door.c :: StartDoorAnimationTask 
+- r8: src/field_effect.c :: CreateDeoxysRockFragments CreateGlowingPokeballsEffect CreateMonSprite_FieldMove CreateTrainerSprite FallWarpEffect_1 MultiplyInvertedPaletteRGBComponents MultiplyPaletteRGBComponents PokeballGlowEffect_FlashFirstThree PokeballGlowEffect_FlashLast ShowMonEffect_Indoors_2 ShowMonEffect_Outdoors_2 SlideIndoorBannerOnscreen UseSurfEffect_1 WarpInObjectEventDownwards 
+- r8: src/field_weather.c :: ApplyDroughtGammaShiftWithBlend ApplyFogBlend ApplyGammaShift ApplyGammaShiftWithBlend BuildGammaShiftTables Task_WeatherMain 
+- r8: src/field_weather_effects.c :: CreateRainSprite CreateSwirlSandstormSprites InitRainSpriteMovement Snow_InitAll StartRainSpriteFall 
+- r8: src/fieldmap.c :: CameraMove FillConnection GetIncomingConnection GetMapBorderIdAt GetMapConnectionAtPos InitBackupMapLayoutData IsPosInIncomingConnectingMap LoadSavedMapView LoadTilesetPalette MapGridGetMetatileIdAt MoveMapViewToBackup SaveMapView 
+- r8: src/fldeff_softboiled.c :: Task_TryUseSoftboiledOnPartyMon 
+- r8: src/gpu_regs.c :: InitGpuRegManager 
+- r8: src/help_message.c :: DrawHelpMessageWindowTilesById 
+- r8: src/help_system_util.c :: DecompressAndRenderGlyph HS_DrawBgTilemapRect HelpSystemRenderText HelpSystem_PrintQuestionAndAnswerPair PrintListMenuItems 
+- r8: src/image_processing_effects.c :: AddPointillismPoints ApplyImageEffect_BlackAndWhite ApplyImageEffect_BlackOutline ApplyImageEffect_Blur ApplyImageEffect_BlurDown ApplyImageEffect_BlurRight ApplyImageEffect_Grayscale ApplyImageEffect_Invert ApplyImageEffect_PersonalityColor ApplyImageEffect_RedChannelGrayscale ApplyImageEffect_RedChannelGrayscaleHighlight ApplyImageEffect_Shimmer ConvertImageProcessingToGBA GetColorFromPersonality QuantizePalette_BlackAndWhite QuantizePalette_Grayscale QuantizePalette_GrayscaleSmall QuantizePalette_PrimaryColors QuantizePalette_Standard QuantizePixel_Blur QuantizePixel_BlurHard 
+- r8: src/intro.c :: CreateNidorinoRecoilDustSprites GFScene_Task_NameSparklesSmall IntroCB_Scene2 Scene3_ApplyGengarAnim Scene3_StartNidorinoEntrance Scene3_StartNidorinoHop 
+- r8: src/isagbprn.c :: AGBPrintTransferDataInternal 
+- r8: src/item_menu.c :: AbortMovingItemInPocket BackUpPlayerBag BagListMenuItemPrintFunc Bag_BuildListMenuTemplate BeginMovingItemInPocket DisplayItemMessageInBag ExecuteMoveItemInPocket GoToBagMenu InitQuantityToTossOrDeposit SwitchPockets Task_Bag_TeachyTvStatus Task_Bag_TeachyTvTMs Task_FinalizeSaleToShop Task_InitSaleQuantitySelectInterface Task_ItemContext_FieldGive Task_ItemContext_PcBoxGive Task_ItemMenuAction_Give Task_ItemMenuAction_ToggleSelect Task_ReturnToBagFromContextMenu Task_TryDoItemDeposit Task_WaitAB_RedrawAndReturnToBag UpdatePocketScrollPositions 
+- r8: src/item_menu_icons.c :: AddItemIconObjectWithCustomObjectTemplate 
+- r8: src/item_pc.c :: ItemPc_AddTextPrinterParameterized ItemPc_InsertItemIntoNewSlot ItemPc_MoveItemModeCancel ItemPc_MoveItemModeInit Task_ItemPcMoveItemModeRun Task_ItemPcSubmenuInit unused_ItemPc_AddTextPrinterParameterized 
+- r8: src/itemfinder.c :: FindHiddenItemsInConnectedMaps HiddenItemIsWithinRangeOfPlayer RegisterHiddenItemRelativeCoordsIfCloser 
+- r8: src/learn_move.c :: MoveRelearnerInitListMenuBuffersEtc MoveRelearnerStateMachine PrintTextOnWindow SpawnListMenuScrollIndicatorSprites 
+- r8: src/librfu_rfu.c :: rfu_CB_CHILD_pollConnectRecovery rfu_CB_pollConnectParent rfu_CB_recvData rfu_CB_sendData rfu_REQBN_watchLink rfu_STC_NI_constructLLSF rfu_STC_NI_receive_Receiver rfu_STC_NI_receive_Sender rfu_STC_UNI_constructLLSF rfu_STC_analyzeLLSF rfu_STC_readChildList rfu_STC_readParentCandidateList rfu_STC_removeLinkData rfu_STC_setSendData_org rfu_changeSendTarget rfu_clearAllSlot rfu_clearSlot rfu_constructSendLLFrame 
+- r8: src/librfu_sio32id.c :: AgbRFU_checkID 
+- r8: src/link.c :: CheckLinkPlayersMatchSaved DequeueRecvCmds DoHandshake DoRecv EnqueueSendCmd InitLinkTestBG LoadLinkTestBgGfx ProcessRecvCmds TestBlockTransfer 
+- r8: src/link_rfu_2.c :: CheckForLeavingGroupMembers Debug_PrintStatus GetPartnerIndexByNameAndTrainerID HandleSendFailure LinkManagerCB_Parent ResetLinkRfuGFLayer RfuHandleReceiveCommand RfuMain1_Child RfuMain2_Parent Rfu_InitBlockSend SendLastBlock SetUnionRoomChatPlayerData Task_TryConnectToUnionRoomParent 
+- r8: src/link_rfu_3.c :: InitHostRfuGameData PlayerHasMetTrainerBefore RfuRecvQueue_Dequeue Rfu_GetCompatiblePlayerData SaveLinkTrainerNames UpdateWirelessStatusIndicatorSprite 
+- r8: src/list_menu.c :: DoMysteryGiftListMenu ListMenuChangeSelection ListMenuDrawCursor ListMenuErasePrintedCursor ListMenuInitInternal ListMenuOverrideSetColors ListMenuPrintEntries ListMenuScroll 
+- r8: src/load_save.c :: LoadObjectEvents LoadPlayerBag MoveSaveBlocks_ResetHeap SaveObjectEvents SavePlayerBag 
+- r8: src/m4a.c :: CgbSound MPlayStart SetPokemonCryTone m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- r8: src/mail.c :: AddMailMessagePrinters 
+- r8: src/mail_data.c :: GiveMailToMon TakeMailFromMon2 
+- r8: src/mailbox_pc.c :: MailboxPC_InitListMenu 
+- r8: src/main.c :: AgbMain 
+- r8: src/main_menu.c :: MainMenu_DrawWindow Task_PrintMainMenuText 
+- r8: src/menu.c :: AddItemMenuActionTextPrinters CreateTopBarWindowLoadPalette CreateYesNoMenu InitMenuDefaultCursorHeight Menu_InitCursorInternal Menu_RedrawCursor MultichoiceGrid_InitCursor MultichoiceGrid_InitCursorInternal MultichoiceGrid_MoveCursor MultichoiceGrid_MoveCursorIfValid MultichoiceGrid_PrintItems MultichoiceGrid_PrintItemsCustomOrder MultichoiceGrid_RedrawCursor MultichoiceList_PrintItems PrintMenuActionTextsAtTopById PrintMenuTable PrintTextArray SetWindowTemplateFields TopBarWindowPrintTwoStrings WindowFunc_DrawDialogFrameWithCustomTileAndPalette WindowFunc_DrawStdFrameWithCustomTileAndPalette 
+- r8: src/menu2.c :: AddTextPrinterParameterized4 AddTextPrinterParameterized5 Menu_PrintFormatIntlPlayerName StartBlendTask UnusedBlitBitmapRect 
+- r8: src/menu_indicators.c :: AddScrollIndicatorArrowObject AddScrollIndicatorArrowPair ListMenuAddRedOutlineCursorObject ListMenuSetUpRedOutlineCursorSpriteOamTable 
+- r8: src/minigame_countdown.c :: CreateNumberSprite CreateStartSprite StartMinigameCountdown StartStartGraphic 
+- r8: src/mon_markings.c :: CreateMarkingComboSprite CreateMonMarkingsMenuSprites 
+- r8: src/money.c :: PrintMoneyAmount PrintMoneyAmountInMoneyBoxWithBorder 
+- r8: src/multiboot.c :: MultiBootMain 
+- r8: src/mystery_event_script.c :: MEScrCmd_givepokemon MEScrCmd_initramscript MEScrCmd_setenigmaberry 
+- r8: src/mystery_gift.c :: MysteryGift_LoadLinkGameData 
+- r8: src/mystery_gift_client.c :: MysteryGiftClient_Init 
+- r8: src/mystery_gift_menu.c :: MG_DrawCheckerboardPattern 
+- r8: src/mystery_gift_server.c :: MysteryGiftServer_Init 
+- r8: src/mystery_gift_show_card.c :: BufferCardText CreateCardSprites DrawCardWindow 
+- r8: src/mystery_gift_show_news.c :: DrawNewsWindows WonderNews_Enter 
+- r8: src/new_menu_helpers.c :: AddTextPrinterParameterized2 CopyToBufferFromBgTilemap DecompressAndCopyTileDataToVram DecompressAndCopyTileDataToVram2 DecompressAndLoadBgGfxUsingHeap DecompressAndLoadBgGfxUsingHeap2 DisplayItemMessageOnField SetBgTilemapPalette WindowFunc_DrawDialogueFrame WindowFunc_DrawStandardFrame 
+- r8: src/oak_speech.c :: CreateFadeInTask CreateFadeOutTask CreatePikachuOrPlatformSprites PrintNameChoiceOptions Task_ControlsGuide_ChangePage Task_ControlsGuide_Clear Task_ControlsGuide_LoadPage Task_OakSpeech_Init Task_OakSpeech_ShowGenderOptions Task_OakSpeech_ShrinkPlayerPic Task_PikachuIntro_Clear Task_PikachuIntro_LoadPage1 Task_SlowFadeIn Task_SlowFadeOut 
+- r8: src/option_menu.c :: BufferOptionMenuString CloseAndSaveOptionMenu DrawOptionMenuBg InitOptionMenuBg 
+- r8: src/palette.c :: BeginNormalPaletteFade BeginPlttFade BlendPalettesGradually CopyPaletteInvertedTint PaletteStruct_Copy TintPalette_CustomTone TintPlttBuffer UnfadePlttBuffer UpdateFastPaletteFade 
+- r8: src/palette_util.c :: RouletteFlash_FadePalette UnmarkUsedPulseBlendPalettes UpdatePulseBlend 
+- r8: src/party_menu_specials.c :: MoveDeleterForgetMove ShiftMoveSlot 
+- r8: src/player_pc.c :: PCMailCompaction Task_DrawMailSubmenu Task_DrawMailboxPcMenu Task_DrawPlayerPcTopMenu Task_MailboxPcHandleInput 
+- r8: src/pokeball.c :: CreatePokeballSpriteToReleaseMon CreateTradePokeballSprite SpriteCB_BallThrow SpriteCB_PlayerMonSendOut_2 SpriteCB_PokeballReleaseMon SpriteCB_ReleaseMonFromBall SpriteCB_TradePokeball Task_DoPokeballSendOutAnim 
+- r8: src/pokedex_area_markers.c :: CreatePokedexAreaMarkers 
+- r8: src/pokedex_screen.c :: DexScreen_CountMonsInOrderedList DexScreen_CreateCategoryPageSelectionCursor DexScreen_CreateCategoryPageSpeciesList DexScreen_DexPageZoomEffectFrame DexScreen_DrawMonAreaPage DexScreen_DrawMonDexPage DexScreen_DrawMonFootprint DexScreen_DrawMonPicInCategoryPage DexScreen_InitGfxForTopMenu DexScreen_IsPageUnlocked DexScreen_LoadResources DexScreen_LookUpCategoryBySpecies DexScreen_PrintMonCategory DexScreen_PrintMonDexNo DexScreen_PrintMonHeight DexScreen_PrintMonWeight DexScreen_PrintNum3LeadingZeroes DexScreen_PrintNum3RightAlign DexScreen_TryScrollMonsVertical DexScreen_TurnCategoryPage_BgEffect 
+- r8: src/pokemon.c :: Battle_PrintStatBoosterEffectMessage CalculateBaseDamage CalculateBoxMonChecksum CalculateMonStats ConvertPokemonToBattleTowerPokemon CopyPlayerPartyMonToBattleData CreateBoxMon CreateEventMon CreateMaleMon CreateMon CreateMonSpritesGfxManager CreateMonWithEVSpread CreateMonWithGenderNatureLetter CreateMonWithNature CreateSecretBaseEnemyParty DeleteFirstMoveAndGiveMoveToBoxMon DeleteFirstMoveAndGiveMoveToMon DrawSpindaSpots DrawSpindaSpotsUnused EvolutionRenameMon GetBoxMonData3 GetEvolutionTargetSpecies GetMoveRelearnerMoves GetNumberOfRelearnableMoves GiveBoxMonInitialMoveset InitMonSpritesGfx_Mode0 InitMonSpritesGfx_Mode1 MonGainEVs MonTryLearningNewMove PokemonItemUseNoEffect PokemonUseItemEffects SendMonToPC SetBoxMonData 
+- r8: src/pokemon_icon.c :: CreateMonIcon CreateMonIconSprite UpdateMonIconFrame 
+- r8: src/pokemon_jump.c :: CreateJumpMonSprite CreateJumpMonSprites HandleMonState InitPlayerAndJumpTypes PrintPokeJumpPlayerName PrintRecordsText RecvLinkData_Leader RecvLinkData_Member SendPacket_LeaderState StaticCountdown_CreateSprites Task_CommunicateMonInfo UpdateVineAnim 
+- r8: src/pokemon_size_record.c :: GetMonSizeHash GiveGiftRibbonToParty 
+- r8: src/pokemon_special_anim.c :: AllocPSA 
+- r8: src/pokemon_special_anim_scene.c :: CreateLevelUpVerticalSpritesTask CreateSprites_UseItem_OutwardSpiralDots CreateStarSprites DrawLevelUpWindowPg1 DrawLevelUpWindowPg2 InitItemIconSpriteState PSA_CreateMonSpriteAtCloseness PSA_PrintMessage PSA_SetUpItemUseOnMonAnim Task_UseItem_OutwardSpiralDots Task_ZoomAnim 
+- r8: src/pokemon_storage_system.c :: CreateBoxMonAt SeekToNextMonInBox 
+- r8: src/pokemon_storage_system_data.c :: AddMenu CompactPartySlots HandleInput_InBox_Normal HandleInput_InParty HandleInput_OnButtons RunCanReleaseMon SetDisplayMonData 
+- r8: src/pokemon_storage_system_graphics.c :: CreateBoxMonIconAtPos CreateBoxMonIconsInColumn CreateChooseBoxArrows CreateIncomingBoxTitle CreateMonIconSprite CreatePartyMonsSprites InitBoxMonSprites InitBoxTitle SetBoxSpeciesAndPersonalities SetUpScrollToBox ShiftMons 
+- r8: src/pokemon_storage_system_menu.c :: ChooseBoxMenu_PrintTextToSprite CreatePCMainMenu DrawTextWindowAndBufferTiles LoadChooseBoxMenuGfx PrintStringToBufferCopyNow UnusedWriteRectCpu UnusedWriteRectDma 
+- r8: src/pokemon_storage_system_misc.c :: CreateItemIconSprites InitItemIconInCursor Item_GiveMovingToMon Item_SwitchMonsWithMoving LoadItemIconGfx MultiMove_CanPlaceSelection MultiMove_CreatePlacedMonIcons MultiMove_GetMonsFromSelection MultiMove_RemoveMonsFromBox MultiMove_SetPlacedMonData SetItemIconPosition TryLoadItemIconAtPos UnkUtil_CpuAdd UnkUtil_DmaRun 
+- r8: src/pokemon_storage_system_tasks.c :: PrintDisplayMonInfo Task_ChangeScreen 
+- r8: src/quest_log_battle.c :: TrySetQuestLogBattleEvent TrySetQuestLogLinkBattleEvent 
+- r8: src/quest_log_objects.c :: QL_LoadObjects QL_RecordObjects 
+- r8: src/quest_log_player.c :: Task_QLFishMovement 
+- r8: src/reshow_battle_screen.c :: CreateBattlerSprite 
+- r8: src/save.c :: CopySaveSlotData GetSaveValidStatus HandleReplaceSector HandleWriteSector 
+- r8: src/save_failed_screen.c :: FillBgMapBufferRect WipeSector 
+- r8: src/scanline_effect.c :: ScanlineEffect_InitWave TaskFunc_UpdateWavePerFrame 
+- r8: src/script_menu.c :: CreatePCMenuWindow DrawSeagallopDestinationMenu DrawVerticalMultichoiceMenu OpenMuseumFossilPic ScriptMenu_MultichoiceGrid ScriptMenu_MultichoiceWithDefault ScriptMenu_ShowPokemonPic 
+- r8: src/script_pokemon_util.c :: CreateScriptedWildMon HealPlayerParty ReducePlayerPartyToThree ScriptGiveMon 
+- r8: src/shop.c :: BuyMenuCollectObjectEventData BuyMenuDrawMapBg BuyMenuDrawObjectEvents 
+- r8: src/slot_machine.c :: CalcPayout CreateReelIconSprites CreateScoreDigitSprites InitReelButtonTileMem OneReelBiasCheck SlotsTask_GraphicsInit StopReel1 StopReel2 StopReel3 Task_SlotMachine Task_SpinReels TwoReelBiasCheck UpdateCoinsDisplay UpdateReelIconSprites 
+- r8: src/sound.c :: PlayCryInternal PlaySE12WithPanning 
+- r8: src/special_field_anim.c :: SetEscalatorMetatile 
+- r8: src/sprite.c :: AddSubspritesToOamBuffer AllocSpriteTiles AnimCmd_frame AnimCmd_jump BeginAnim CreateSpriteAndAnimate CreateSpriteAt CreateSpriteAtEnd FreeSpriteTilesByTag SetOamMatrixRotationScaling SetSpriteOamFlipBits SortSprites UpdateSpriteMatrixAnchorPos 
+- r8: src/start_menu.c :: DoSetUpSaveAfterLinkBattle PrintSaveStats PrintStartMenuItems 
+- r8: src/string_util.c :: ConvertIntToDecimalStringN ConvertIntToHexStringN 
+- r8: src/task.c :: InsertTask 
+- r8: src/text.c :: CreateTextCursorSprite DrawDownArrow GetStringWidth GetStringWidthFixedWidthFont RenderTextHandleBold 
+- r8: src/text_printer.c :: AddTextPrinterParameterized CopyGlyphToWindow CopyGlyphToWindow_Parameterized GenerateFontHalfRowLookupTable RunTextPrinters 
+- r8: src/text_window.c :: DrawTextBorderInner DrawTextBorderOuter LoadUserWindowGfxByFrame LoadUserWindowGfxByFrameOnBg rbox_fill_rectangle 
+- r8: src/tilemap_util.c :: TilemapUtil_Draw TilemapUtil_DrawPrev TilemapUtil_SetTilemap 
+- r8: src/title_screen.c :: SetTitleScreenScene_Init UpdateScanlineEffectRegBuffer 
+- r8: src/tm_case.c :: CreateDiscSprite InitTMCaseListMenuItems List_ItemPrintFunc Pokedude_InitTMCase PrintMessageWithFollowupTask PrintMoveInfo TMCase_Print Task_DoSaleOfTMs Task_HandleListInput Task_InitQuantitySelectUI 
+- r8: src/trade.c :: BufferMovesString CB2_CreateTradeMenu CB2_ReturnToTradeMenuFromSummary CanTradeSelectedMon ComputePartyTradeableFlags DrawSelectedMonScreen GetUnionRoomTradeMessageId PrintLevelAndGender SetActiveMenuOptions SetTradePartyHPBarSprites ShowTradePartyMonIcons 
+- r8: src/trainer_card.c :: DrawStarsAndBadgesOnCard PrintProfilePhraseOnCard PrintTimeOnCard SetPlayerCardData Task_AnimateCardFlipDown Task_AnimateCardFlipUp 
+- r8: src/trainer_fan_club.c :: PlayerGainRandomTrainerFan PlayerLoseRandomTrainerFan 
+- r8: src/trainer_pokemon_sprites.c :: CreateMonPicSprite CreateMonPicSprite_HandleDeoxys CreatePicSprite CreatePicSprite_HandleDeoxys CreateTrainerCardMonIconSprite CreateTrainerCardSprite FreeAndDestroyPicSpriteInternal LoadPicPaletteByTagOrSlot LoadPicSpriteInWindow 
+- r8: src/union_room_battle.c :: UnionRoomBattle_CreateTextPrinter 
+- r8: src/union_room_chat.c :: SaveRegisteredTextsToSB1 
+- r8: src/union_room_chat_display.c :: FillScanlineEffectWithValue2col PlaceStdMessageWindow PlaceYesNoMenuAt PrintCurrentKeyboardPage PrintOnWin1Parameterized 
+- r8: src/util.c :: CopySpriteTiles DoBgAffineSet SetBgAffineStruct 
+- r8: src/window.c :: AddWindow BlitBitmapRectToWindow BlitBitmapRectToWindowWithColorKey CallWindowFunction FillWindowPixelRect InitWindows PutWindowRectTilemap PutWindowRectTilemapOverridePalette ScrollWindow 
+- r8: src/window_8bpp.c :: AddWindow8Bit BlitBitmapRectToWindow4BitTo8Bit FillWindowPixelRect8Bit 
+- r8: src/wireless_communication_status_screen.c :: CountPlayersInGroupAndGetActivity Task_WirelessCommunicationScreen UpdateCommunicationCounts 
+- DOUBLE-HOME: src/battle_ai_script_commands.c src/battle_anim.c :: Cmd_end
+- DOUBLE-HOME: src/berry_crush.c src/dodrio_berry_picking.c :: CreateBerrySprites
+- DOUBLE-HOME: src/dodrio_berry_picking.c src/field_weather_effects.c :: CreateCloudSprites
+- DOUBLE-HOME: src/mon_markings.c src/pokemon_storage_system_tasks.c :: CreateMarkingComboSprite
+- DOUBLE-HOME: src/pokemon_icon.c src/pokemon_storage_system_graphics.c :: CreateMonIconSprite
+- DOUBLE-HOME: src/berry_crush.c src/pokemon_jump.c :: DrawPlayerNameWindows
+- DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c src/battle_controller_safari.c :: HandleInputChooseAction
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Intro_TryShinyAnimShowHealthbox
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Intro_WaitForShinyAnimAndHealthbox
+- DOUBLE-HOME: src/dodrio_berry_picking.c src/pokemon_jump.c :: Msg_WantToPlayAgain
+- DOUBLE-HOME: src/learn_move.c src/tm_case.c :: PrintMoveInfo
+- DOUBLE-HOME: src/dodrio_berry_picking.c src/pokemon_jump.c :: PrintRecordsText
+- DOUBLE-HOME: src/dodrio_berry_picking.c src/pokemon_jump.c :: RecvLinkData_Leader
+- DOUBLE-HOME: src/dodrio_berry_picking.c src/pokemon_jump.c :: RecvLinkData_Member
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: StartSendOutAnim
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_opponent.c :: SwitchIn_ShowHealthbox
+- DOUBLE-HOME: src/dodrio_berry_picking.c src/pokemon_jump.c :: Task_CommunicateMonInfo
+- DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_GiveExpToMon
+- DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_GiveExpWithExpBar
+- DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_PrepareToGiveExpWithExpBar
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_StartSendOutAnim

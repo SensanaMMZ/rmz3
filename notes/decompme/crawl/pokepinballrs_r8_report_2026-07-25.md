@@ -1,0 +1,65 @@
+<!-- pokepinballrs :: trait=r8 :: crawled 2026-07-25 :: 77/77 files compiled -->
+- r8: src/agb_sram.c :: SetSramFastFunc 
+- r8: src/all_board_banners.c :: RenderBannerSlideAnimation 
+- r8: src/all_board_mode_change_and_debug_menu.c :: BallSaverAnimation DebugMenu_RenderAndHandleInput EndOfBallBonusSummary GameOverAnimation 
+- r8: src/all_board_pause_game.c :: AnimatePauseMenuOverlay PauseGame PositionPauseMenuSprites 
+- r8: src/all_board_pinball_game_main.c :: ReplayButtonActionsFromRecording 
+- r8: src/all_board_portrait_display.c :: LoadPortraitGraphics UpdatePortraitSpritePositions 
+- r8: src/all_board_process0_sprite_init.c :: RubyBoardProcess_0B_50918 SapphireBoardProcess_0B_50B80 
+- r8: src/all_board_process2.c :: AllBoardProcess_2A_4D6C4 ProcessBonusBoardBallDrain ProcessTiltInput 
+- r8: src/all_board_process4.c :: BonusBoardProcess_4B_19734 DetermineFlipperBallSide MainBoardProcess_4B_19490 UpdateBonusBoardFlipperPhysics UpdateMainBoardFlipperPhysics 
+- r8: src/all_board_process5.c :: BonusBoardProcess_5B_11F88 MainBoardProcess_5B_11C98 
+- r8: src/all_board_process6_collision.c :: AllBoardProcess_6B_1333C ApplyBounceBackForce CheckFlipperCollision ComputeFlipperBounce ComputeFlipperLaunchVelocity ComputeWallReflection DetectBallCollision PixelWalkCollisionDetection ProcessBonusTrapPhysics 
+- r8: src/all_board_process7.c :: BonusBoardProcess_7B_12BF8 MainBoardProcess_7B_12524 
+- r8: src/all_board_process8.c :: AllBoardProcess_8B_4CEB4 ProcessEventTimer 
+- r8: src/all_board_setup.c :: loadFieldBoardGraphics 
+- r8: src/bonus_complete_scoring_transition.c :: ProcessBonusBannerAndScoring 
+- r8: src/bonus_field_select.c :: RenderBonusFieldSelectSprites 
+- r8: src/display.c :: BrightenPalette CopyString DarkenPalette FadeInFromWhite FadeInWithCustomPalettes FadeOutToBlack FadeOutToWhite InterpolatePaletteStep PrintString SetStringPalette Unused_FadeInWithCustomPalettes Unused_FadeOutToWhite 
+- r8: src/dusclops_collision.c :: CheckDusclopsEntitiesCollision CollisionCheck_Dusclops 
+- r8: src/dusclops_process3.c :: DusclopsPhase_ProcessEntityLogicAndGraphics DuskullBonus_Setup DuskullPhase_ProcessEntityLogic DuskullPhase_ProcessGraphics SwapDuskullEntityIndex 
+- r8: src/ereader.c :: DrawEReaderTextPage Ereader_State6_343C LoadEReaderGraphics UpdateEReaderSprites UpdateEReaderSpritesViaOam 
+- r8: src/field_select.c :: RenderFieldSelectSprites 
+- r8: src/gbplayer.c :: CheckGameBoyPlayer InitGameBoyPlayer InitSio32Hardware Sio32IDIntr 
+- r8: src/groudon_collision.c :: CheckGroudonEntityCollision CollisionCheck_Groudon 
+- r8: src/groudon_process3.c :: AnimateGroudonBackground GroudonBoardProcess_3A_3B120 RenderGroudonSprites UpdateGroudonEntityLogic UpdateGroudonFieldEntities 
+- r8: src/high_scores.c :: DrawAllHighScoreText FormatScoreDigits GenerateRandomHighScores GetNewHighScoreIndex HighScore_FlashNewEntry HighScore_LinkSuccess HighScore_NameEntry HighScore_ReloadAfterLink IdleHighScore_LoadGraphics InitHighScoreData InitIdleHighScoreData InsertNewHighScore MergeReceivedTopScore PrintHighScoreNameChar RenderCompletionBanner RenderHighScoreSprites SetDefaultHighScores UpdateNameEntryCursor 
+- r8: src/intro.c :: IntroScene1Torchic_InitVars IntroScene1Torchic_RenderAllSprites IntroScene1Torchic_RenderScaledTitle IntroScene1Torchic_RenderTitleSprite IntroScene1_00_LoadTitleLettersAndTorchicScene IntroScene3Treecko_RenderPokeball IntroScene5Mudkip_RenderAllSprites IntroScene6Chinchou_RenderStarSprites IntroScene7Parade_RenderWailmer IntroScene8WailmerLaunch_58_ResetTilemap IntroScene8WailmerLaunch_RenderAllSprites IntroScene9BallFlight_RenderBallAndCloud 
+- r8: src/kecleon_collision.c :: CollisionCheck_Kecleon ProcessKecleonSkulkingDisturbanceCollisionEvent 
+- r8: src/kecleon_process3.c :: KecleonBoardProcess_3A_35860 RenderKecleonBoardElements RenderKecleonSprites SortKecleonSpritesByY UpdateKecleonEntityLogic UpdateKecleonScopeItem UpdateKecleonScopeVision 
+- r8: src/kyogre_collision.c :: CollisionCheck_Kyogre 
+- r8: src/kyogre_process3.c :: AnimateKyogreBackground RenderKyogreSprites UpdateKyogreEntityLogic UpdateKyogreFieldEntities 
+- r8: src/link.c :: DequeueRecvCmds DoHandshake DoRecv EnableSerial EnqueueSendCmd LoadSpriteSetsWithCpuCopy 
+- r8: src/m4a.c :: CgbSound MPlayStart SetPokemonCryTone m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- r8: src/main_board_bumpers.c :: DrawSapphireBumperSprites HandleRubyBumperHit UpdateSapphireBumperLogic 
+- r8: src/main_board_catch_hatch_picker.c :: BuildSpeciesWeightsForCatchEmMode BuildSpeciesWeightsForEggMode RegisterCaptureOrEvolution 
+- r8: src/main_board_catch_holes.c :: UpdateShopEntryAnimation 
+- r8: src/main_board_catch_normal_and_jirachi_modes.c :: CleanupCatchMonBoardSprite CleanupJirachiSprites DrawCatchMonBoardSprite DrawJirachiSprites LoadCatchSpriteGraphics PlayCatchMonAppearsAnimation UpdateJirachiBonus 
+- r8: src/main_board_catch_tile_logic.c :: DisableCatchTileDisplay RevealCatchTilesBurst RevealCatchTilesSequential 
+- r8: src/main_board_catch_tile_particles.c :: InitBurstTileParticles InitSequentialTileParticles UpdateBurstTileParticles UpdateSequentialTileParticles 
+- r8: src/main_board_center_capture_hole.c :: InitRouletteWheel RunMonCaptureSequence RunRouletteWheel 
+- r8: src/main_board_charge_spinner.c :: UpdatePikachuChargeCounter 
+- r8: src/main_board_evolution_mode.c :: UpdateEvolutionItemAnimation UpdateEvolutionMode 
+- r8: src/main_board_intro_mode.c :: InitBoardIntroMode UpdateBoardIntroMode 
+- r8: src/main_board_launcher_and_cutscenes.c :: AnimateBannerSlide AnimateOneUpSprite RunEvolutionCutscene RunTravelEventCutscene 
+- r8: src/main_board_pichu_entity.c :: PichuArrivalSequence UpdateKickbackLogic 
+- r8: src/main_board_to_be_split.c :: AnimateAerodactylEggDelivery AnimateCoinReward AnimateTotodileEggDelivery AnimateWasCaughtBanner InitEvolutionSuccessDisplay LoadPokemonNameGraphics ProcessChargeIndicator RenderEvolutionUI UpdateEggMode UpdateHatchCave UpdatePokemonNamePosition UpdateRubyEggHatchAnimation UpdateRubyEvolutionShopSprite 
+- r8: src/options.c :: Options_LoadGraphics 
+- r8: src/pokedex.c :: BlitGlyphToTileBuffer ClientReceivePokedexFlags LoadPokedexGraphics MasterReceivePokedexFlags Pokedex_InfoWindowSlideIn Pokedex_InfoWindowSlideOut PrintDexDescription PrintDexNumbersFromListPosition PrintSeenOwnedTotals PrintSelectedMonDexNum RenderLinkGraphics RenderPokedexSprites 
+- r8: src/pokemon_cry.c :: PlayCryInternal 
+- r8: src/rayquaza_collision.c :: CollisionCheck_Rayquaza 
+- r8: src/rayquaza_process3.c :: RenderRayquazaSprites RenderWindCloudSprites UpdateLightningGrabEntity UpdateRayquazaIntroSequence UpdateRayquazaMinionsAndEffects 
+- r8: src/ruby_collision.c :: CheckRubyBoardCollision CollisionCheck_Ruby 
+- r8: src/ruby_process3_entities_2.c :: AnimateRubyShopDoor AnimateSharpedoEntity DrawWhiscash RubyPondTriBumperHandleHitAndDraw RubyPond_EntityLogic UpdateNuzleafEntity 
+- r8: src/ruby_ramp.c :: UpdateMakuhitaEntity 
+- r8: src/ruby_trigger_targets.c :: AnimateChikoritaSprite DrawRubySideBumperSprites UpdateChikoritaAttackAnimation UpdateGulpinBossState UpdateRubySideBumperAnimation 
+- r8: src/sapphire_board_indicators.c :: AnimateHatchMachineSpinner 
+- r8: src/sapphire_collision.c :: CheckSapphireBumperCollision CollisionCheck_Sapphire ProcessSapphireCollisionEvent 
+- r8: src/sapphire_pond_and_zigzagoon.c :: AnimateWailmerEntity DrawZigzagoonAndRouletteStopPrompt UpdatePelipperPondEntity 
+- r8: src/sapphire_seedot_egg_shop.c :: DrawSapphireSeedotAndBasketSprites UpdateSapphireEggHatchAnimation UpdateSapphireEggMachine UpdateSapphireSeedotCollection 
+- r8: src/save.c :: LoadSaveDataFromSram 
+- r8: src/save_and_restore_game.c :: RestoreFieldSpecificGraphics RestoreGameState RestoreGroudonBonusGraphics RestoreKyogreBonusGraphics RestoreMainFieldDynamicGraphics RestoreRayquazaBonusGraphics RestoreRubyBoardTileGraphics RestoreSphealBonusGraphics SaveGameStateSnapshot 
+- r8: src/spheal_collision.c :: CheckSphealEntityCollision CollisionCheck_Spheal 
+- r8: src/spheal_process3.c :: SphealBoardProcess_3A_42E48 SphealBoard_PelipperDeliversBall SphealBoard_WhiscashDeliversBall UpdateSealeoEntityLogic UpdateSealeoKnockdownPhysics UpdateSphealEntityLogic UpdateSphealResultsScreen 
+- r8: src/titlescreen.c :: RenderTitleMenuNoSavedGame RenderTitleMenuSavedGame RenderTitlePressStartSprites 
+- r8: src/util.c :: ClearSprites FormatIntToString LoadSpriteSets SetMatrixScale WriteDigitsRecursive 

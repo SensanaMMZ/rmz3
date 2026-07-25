@@ -1,0 +1,121 @@
+<!-- pokeruby :: trait=mov_ip :: crawled 2026-07-25 :: 303/352 files compiled -->
+- mov_ip: src/battle/anim/aurora.c :: AnimTask_RotateMonPalette2 
+- mov_ip: src/battle/anim/battle_intro.c :: BattleIntroTask_80E4C34 BattleIntroTask_FadeScenery BattleIntroTask_ScrollAndFadeScenery BattleIntroTask_ScrollScenery sub_80E4EF8 unref_sub_80E4FDC 
+- mov_ip: src/battle/anim/bug.c :: AnimMissileArcStep sub_80DCAEC 
+- mov_ip: src/battle/anim/current.c :: sub_80D658C sub_80D6874 sub_80D6AF0 
+- mov_ip: src/battle/anim/dark.c :: sub_80E079C 
+- mov_ip: src/battle/anim/dragon.c :: sub_80DFAB0 
+- mov_ip: src/battle/anim/espeed.c :: sub_80D1A70 
+- mov_ip: src/battle/anim/flash.c :: sub_80CE4D4 
+- mov_ip: src/battle/anim/flying.c :: DestroyAnimSpriteAfterTimer sub_80DA0DC sub_80DB578 
+- mov_ip: src/battle/anim/ground.c :: AnimMudSportDirtFalling sub_80E1A2C 
+- mov_ip: src/battle/anim/ice.c :: AnimFlickerIceEffectParticle AnimTask_Haze2 AnimTask_OverlayFogTiles sub_80D7704 
+- mov_ip: src/battle/anim/love_bg.c :: sub_80D21F0 
+- mov_ip: src/battle/anim/musical.c :: sub_80CEA20 
+- mov_ip: src/battle/anim/normal.c :: sub_80E255C sub_80E2710 sub_80E29FC sub_80E32E0 sub_80E3AD0 
+- mov_ip: src/battle/anim/psychic.c :: sub_80DC3F4 
+- mov_ip: src/battle/anim/rock.c :: sub_80DD190 
+- mov_ip: src/battle/anim/roots.c :: sub_80CB710 
+- mov_ip: src/battle/anim/scary_face.c :: sub_80D24E0 
+- mov_ip: src/battle/anim/slash.c :: sub_80CDEC0 
+- mov_ip: src/battle/anim/sonic.c :: sub_80CFA20 
+- mov_ip: src/battle/anim/water.c :: AnimTask_CreateSurfWave sub_80D3B60 sub_80D3D68 
+- mov_ip: src/battle/anim/wisp_fire.c :: sub_80D60B4 
+- mov_ip: src/battle_ai_switch_items.c :: ShouldUseItem 
+- mov_ip: src/battle_anim.c :: ClearBattleAnimationVars LaunchBattleAnimation MoveBattlerSpriteToBG sub_8076380 sub_80763FC sub_8076464 
+- mov_ip: src/battle_anim_effects_3.c :: sub_812C184 sub_812C588 sub_812C64C sub_812C7C8 sub_812CDC8 sub_812D5E8 sub_812D7E8 sub_812DB84 sub_812E0F8 sub_812F314 sub_812F474 sub_812F9B0 sub_812FAF8 sub_8130424 sub_8130A94 
+- mov_ip: src/battle_anim_mon_movement.c :: AnimTask_ShakeAndSinkMonStep AnimTask_ShakeMon2Step AnimTask_TranslateMonElliptical 
+- mov_ip: src/battle_anim_status_effects.c :: sub_807BA24 
+- mov_ip: src/battle_controller_link_opponent.c :: LinkOpponentHandleMoveAnimation 
+- mov_ip: src/battle_controller_link_partner.c :: LinkPartnerHandleMoveAnimation 
+- mov_ip: src/battle_controller_opponent.c :: OpponentHandleMoveAnimation OpponentHandlecmd1 
+- mov_ip: src/battle_controller_player.c :: PlayerHandleGetRawMonData PlayerHandleMoveAnimation sub_802CA60 
+- mov_ip: src/battle_controller_wally.c :: WallyHandleMoveAnimation 
+- mov_ip: src/battle_controllers.c :: BtlController_EmitMoveAnimation BtlController_EmitPrintSelectionString BtlController_EmitPrintString InitLinkBtlControllers PrepareBufferDataTransferLink Task_HandleSendLinkBuffersData sub_800C35C 
+- mov_ip: src/battle_gfx_sfx_util.c :: BattleLoadSubstituteSprite CopyAllBattleSpritesInvisibilities sub_8031FC4 
+- mov_ip: src/battle_interface.c :: CalcBarFilledPixels CreatePartyStatusSummarySprites UpdateOamPriorityInAllHealthboxes sub_8043740 sub_8044CA0 sub_8046128 
+- mov_ip: src/battle_main.c :: BattleStartClearSetData BattleTurnPassed CheckFocusPunch_ClearVarsBeforeTurnStarts HandleAction_UseItem HandleAction_UseMove SetActionsAndBanksTurnOrder SetAllPlayersBerryData SwitchInClearSetData TurnValuesCleanUp UndoEffectsAfterFainting sub_8010320 sub_801053C sub_8010574 sub_8011384 sub_8012324 
+- mov_ip: src/battle_message.c :: BattleStringExpandPlaceholders BufferStringBattle 
+- mov_ip: src/battle_party_menu.c :: sub_8094B6C 
+- mov_ip: src/battle_script_commands.c :: ChangeStatBuffs CheckWonderGuardAndLevitate SetMoveEffect UproarWakeUpCheck atk00_attackcanceler atk03_ppreduce atk04_critcalc atk0C_datahpupdate atk19_tryfaintmon atk24 atk2C_jumpifarrayequal atk2D_jumpifarraynotequal atk49_moveend atk4A_typecalc2 atk4D_switchindataupdate atk50_openpartyscreen atk51_switchhandleorder atk5D_getmoneyreward atk5E atk7A_jumpifnexttargetvalid atk7F_setseeded atk81_trysetrest atk8A_normalisebuffs atk90_tryconversiontypechange atk9B_transformdataexecution atk9D_mimicattackcopy atkA3_disablelastusedattack atkA4_trysetencore atkA5_painsplitdmgcalc atkA6_settypetorandomresistance atkA8_copymovepermanently atkB2_trysetperishsong atkB3_rolloutdamagecalculation atkB9_magnitudedamagecalculation atkBA_jumpifnopursuitswitchdmg atkC2_selectfirstvalidtarget atkDB_tryimprison atkE2_switchoutabilities atkEB_settypetoenvironment sub_802BBD4 
+- mov_ip: src/battle_transition.c :: Phase2_Mugshot_Func2 Phase2_Mugshot_Func7 Phase2_Transition_BigPokeball_Func2 Phase2_Transition_Shards_Func3 Phase2_Transition_Slice_Func2 sub_811D978 
+- mov_ip: src/battle_util.c :: CheckMoveLimitations DoFieldEndTurnEffects HandleFaintedMonActions HandleWishPerishSongOnTurnEnd PressurePPLose PressurePPLoseOnUsingPerishSong TurnBasedEffects sub_8015740 sub_80157C4 
+- mov_ip: src/berry_blender.c :: Blender_CalculatePokeblock Blender_SortBasedOnPoints Blender_SortScores sub_804E2EC sub_8051414 
+- mov_ip: src/berry_tag_screen.c :: sub_81462B8 sub_81466E8 
+- mov_ip: src/blend_palette.c :: BlendPalette 
+- mov_ip: src/cable_car_util.c :: CableCarUtil_CopyWrapped CableCarUtil_FillWrapped 
+- mov_ip: src/contest_ai.c :: ContestAICmd_check_move_has_highest_appeal ContestAICmd_unk_2F ContestAICmd_unk_85 
+- mov_ip: src/contest_effect.c :: ContestEffect_BetterIfDiffType ContestEffect_BetterIfSameType ContestEffect_BetterWhenLater ContestEffect_DontExciteAudience ContestEffect_NextAppealEarlier ContestEffect_NextAppealLater ContestEffect_ScrambleNextTurnOrder 
+- mov_ip: src/contest_link.c :: Task_LinkContest_CommunicateCategory 
+- mov_ip: src/contest_link_util.c :: Task_LinkContest_SetUpContest sub_80C2144 sub_80C2A8C sub_80C3698 sub_80C3764 sub_80C3B30 sub_80C40D4 sub_80C42C0 
+- mov_ip: src/contest_painting.c :: LoadContestPaintingFrame _InitContestMonPixels 
+- mov_ip: src/credits.c :: LoadTheEndScreen SpriteCB_CreditsMonBg 
+- mov_ip: src/daycare.c :: BuildEggMoveset GetEggSpecies 
+- mov_ip: src/debug/matsuda_debug_menu.c :: sub_80A9FE4 
+- mov_ip: src/decompress.c :: unref_sub_800D42C 
+- mov_ip: src/decoration_inventory.c :: SortDecorationInventory 
+- mov_ip: src/dewford_trend.c :: sub_80FA364 
+- mov_ip: src/easy_chat_1.c :: ShowEasyChatScreen sub_80E6554 sub_80E6630 sub_80E75D8 sub_80E77C8 sub_80E7E50 
+- mov_ip: src/evolution_scene.c :: sub_81141F0 
+- mov_ip: src/field_camera.c :: DrawMetatile 
+- mov_ip: src/field_effect.c :: MultiplyInvertedPaletteRGBComponents SpriteCB_HallOfFameMonitor sub_8088708 
+- mov_ip: src/field_effect_helpers.c :: FindTallGrassFieldEffectSpriteId FldEff_Splash ShowDisguiseFieldEffect UpdateDisguiseFieldEffect sub_8128124 
+- mov_ip: src/field_weather.c :: ApplyDroughtGammaShiftWithBlend ApplyFogBlend ApplyGammaShift ApplyGammaShiftWithBlend BuildGammaShiftTables LoadDroughtWeatherPalette UpdateWeatherGammaShift 
+- mov_ip: src/field_weather_effects.c :: CreateRainSprite 
+- mov_ip: src/fieldmap.c :: LoadSavedMapView MoveMapViewToBackup SaveMapView 
+- mov_ip: src/fldeff_decoration.c :: DoSecretBaseGlitterMatSparkle 
+- mov_ip: src/fldeff_flash.c :: sub_810CD5C 
+- mov_ip: src/hall_of_fame.c :: HallOfFame_LoadPokemonPic sub_8142484 sub_8142570 sub_8142618 sub_8142CC8 sub_81433E0 
+- mov_ip: src/image_processing_effects.c :: ApplyImageEffect_RedChannelGrayscale ApplyImageEffect_RedChannelGrayscaleHighlight ConvertImageProcessingToGBA QuantizePalette_Standard QuantizePixel_MotionBlur 
+- mov_ip: src/intro.c :: Task_IntroLoadPart3Streaks sub_813CE88 sub_813E5E0 sub_813E804 sub_813E980 sub_813EBBC 
+- mov_ip: src/intro_credits_graphics.c :: sub_81492A0 sub_81493C4 
+- mov_ip: src/item.c :: AddBagItem CheckBagHasSpace CompactPCItems RemoveBagItem 
+- mov_ip: src/item_menu.c :: UpdateBagPocket sub_80A36B8 sub_80A3FA0 
+- mov_ip: src/libs/m4a.c :: MidiKeyToCgbFreq MidiKeyToFreq SetPokemonCryTone m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- mov_ip: src/libs/siirtc.c :: WriteCommand WriteData 
+- mov_ip: src/link.c :: DequeueRecvCmds DoHandshake DoRecv EnqueueSendCmd InitLocalLinkPlayer ProcessRecvCmds ResetRecvBuffer 
+- mov_ip: src/load_save.c :: LoadPlayerBag SavePlayerBag 
+- mov_ip: src/mail_data.c :: GiveMailToMon 
+- mov_ip: src/main_menu.c :: MainMenuProcessKeyInput Task_NewGameSpeech12 Task_NewGameSpeech27 Task_NewGameSpeech6 
+- mov_ip: src/menu.c :: sub_8072AB0 
+- mov_ip: src/menu_cursor.c :: sub_814A958 sub_814AAF8 unref_sub_814A7AC 
+- mov_ip: src/move_tutor_menu.c :: HandleMoveTutorMenuInput 
+- mov_ip: src/naming_screen.c :: NamingScreen_ClearVram sub_80B7698 sub_80B76E0 
+- mov_ip: src/option_menu.c :: CB2_InitOptionMenu 
+- mov_ip: src/palette.c :: BeginNormalPaletteFade ReadPlttIntoBuffers TintPlttBuffer UnfadePlttBuffer UpdateFastPaletteFade unused_sub_8073DFC 
+- mov_ip: src/party_menu.c :: InitPartyMenu sub_806B9A4 sub_806BA34 sub_806BA94 sub_806BB3C 
+- mov_ip: src/player_pc.c :: Mailbox_UpdateMailList 
+- mov_ip: src/pokeball.c :: sub_804748C 
+- mov_ip: src/pokeblock.c :: sub_810BC98 
+- mov_ip: src/pokeblock_feed.c :: sub_8148540 sub_814862C 
+- mov_ip: src/pokedex.c :: CB2_InitPokedex ClearPokedexView CreateMonSpriteFromNationalDexNumber HighlightScreenSelectBarItem PrintFootprint SetSearchRectHighlight SortPokedex Task_HandleSearchParameterInput Task_LoadSearchMenu UnusedPrintMonName UpdateDexListScroll UpdateSelectedMonSpriteId sub_8090644 sub_8090750 
+- mov_ip: src/pokedex_cry_screen.c :: LoadCryWaveformWindow ShowPokedexCryScreen 
+- mov_ip: src/pokemon_1.c :: MonTryLearningNewMove 
+- mov_ip: src/pokemon_2.c :: GetSpeciesName 
+- mov_ip: src/pokemon_3.c :: DrawSpindaSpots GetItemEffectParamOffset GetLevelUpMovesBySpecies GetMoveTutorMoves sub_8040574 unref_sub_803F938 
+- mov_ip: src/pokemon_icon.c :: SetPartyHPBarSprite 
+- mov_ip: src/pokemon_storage_system.c :: unref_sub_8095D08 
+- mov_ip: src/pokemon_storage_system_4.c :: CopyWallpaperTilemap sub_809B960 sub_809C464 sub_809C664 sub_809C944 sub_809D034 sub_809D16C sub_809D1C4 
+- mov_ip: src/pokenav.c :: sub_80EF624 sub_80F1E84 sub_80F2170 sub_80F29B8 sub_80F31AC sub_80F37D0 sub_80F468C sub_80F4944 sub_80F49F4 sub_80F5060 sub_80F53EC sub_80F55AC sub_80F5688 sub_80F5BF0 sub_80F5CDC sub_80F6074 sub_80F66E0 sub_80F68E8 
+- mov_ip: src/pokenav_before.c :: sub_80EBC10 
+- mov_ip: src/reset_rtc_screen.c :: CB2_InitResetRtcScreen Task_ResetRtc_1 
+- mov_ip: src/roulette.c :: sub_81159BC sub_8115B58 sub_8116880 sub_8116C34 sub_8116D54 sub_8117158 
+- mov_ip: src/roulette_gfx.c :: sub_8117AA8 sub_8117C60 sub_81182F8 sub_8118BD8 sub_8119224 
+- mov_ip: src/roulette_util.c :: sub_81249E4 
+- mov_ip: src/safari_zone.c :: GetPokeblockFeederWithinRange 
+- mov_ip: src/save.c :: WriteSingleChunk sub_81255B8 
+- mov_ip: src/save_failed_screen.c :: VBlankCB_UpdateClockGraphics 
+- mov_ip: src/scanline_effect.c :: GenerateWave TaskFunc_UpdateWavePerFrame 
+- mov_ip: src/shop.c :: BuyMenuDrawTextboxBG_Restore Shop_MoveItemListDown Shop_MoveItemListUp Task_UpdatePurchaseHistory 
+- mov_ip: src/slot_machine.c :: LoadSlotMachineWheelOverlay SlotMachineSetup_1_0 sub_810423C sub_8104D30 sub_81052EC sub_81058C4 sub_8105A38 
+- mov_ip: src/sprite.c :: AddSubspritesToOamBuffer AllocSpriteTiles CreateSprite CreateSpriteAndAnimate CreateSpriteAtEnd DestroySprite DrawPartyMenuMonText FreeSpriteTilesByTag JumpToTopOfAffineAnimLoop JumpToTopOfAnimLoop SetSpriteOamFlipBits SortSprites 
+- mov_ip: src/start_menu.c :: sub_80719FC 
+- mov_ip: src/task.c :: InsertTask 
+- mov_ip: src/text.c :: ShiftGlyphTile_ShadowedFont_Width1 ShiftGlyphTile_ShadowedFont_Width2 ShiftGlyphTile_ShadowedFont_Width3 ShiftGlyphTile_ShadowedFont_Width4 ShiftGlyphTile_UnshadowedFont_Width1 ShiftGlyphTile_UnshadowedFont_Width2 ShiftGlyphTile_UnshadowedFont_Width3 ShiftGlyphTile_UnshadowedFont_Width4 ShiftGlyphTile_UnshadowedFont_Width5 ShiftGlyphTile_UnshadowedFont_Width6 ShiftGlyphTile_UnshadowedFont_Width7 ShiftGlyphTile_UnshadowedFont_Width8 Text_FillWindowBorder Text_FillWindowRect 
+- mov_ip: src/text_window.c :: DrawStandardFrame 
+- mov_ip: src/trade.c :: sub_8048B0C sub_8048C70 sub_8049ED4 sub_804A740 sub_804A96C sub_804AA88 sub_804AADC sub_804B128 sub_804BBE8 sub_804C0F8 
+- mov_ip: src/trainer_card.c :: TrainerCard_DisplayBadges TrainerCard_ScaleDownFlipAnimation TrainerCard_ScaleUpFlipAnimation sub_8093598 
+- mov_ip: src/trainer_see.c :: sub_8084894 
+- mov_ip: src/unk_text_8095904.c :: sub_8095904 
+- mov_ip: src/util.c :: CopySpriteTiles 
+- mov_ip: src/wallclock.c :: LoadWallClockGraphics 

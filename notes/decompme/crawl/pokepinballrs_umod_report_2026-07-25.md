@@ -1,0 +1,44 @@
+<!-- pokepinballrs :: trait=umod :: crawled 2026-07-25 :: 77/77 files compiled -->
+- umod: src/all_board_mode_change_and_debug_menu.c :: EndOfBallBonusSummary EndOfBallSequence GameOverAnimation 
+- umod: src/all_board_pause_game.c :: AnimatePauseMenuOverlay 
+- umod: src/all_board_portrait_display.c :: LoadPortraitGraphics 
+- umod: src/all_board_process0_sprite_init.c :: RubyBoardProcess_0B_50918 SapphireBoardProcess_0B_50B80 
+- umod: src/all_board_process7.c :: BonusBoardProcess_7B_12BF8 
+- umod: src/all_board_process8.c :: AllBoardProcess_8B_4CEB4 ProcessEventTimer 
+- umod: src/bonus_complete_scoring_transition.c :: ProcessBonusBannerAndScoring 
+- umod: src/dusclops_process3.c :: DusclopsPhase_ProcessEntityLogicAndGraphics DuskullPhase_ProcessEntityLogic 
+- umod: src/ereader.c :: BlinkEReaderTextCursor DrawEReaderTextCharacter 
+- umod: src/game_idle.c :: PinballGameIdle0_19048 
+- umod: src/groudon_process3.c :: AnimateGroudonBackground GroudonBoardProcess_3A_3B120 UpdateGroudonEntityLogic UpdateGroudonFieldEntities 
+- umod: src/high_scores.c :: DrawAllHighScoreText FormatScoreDigits GenerateRandomHighScores HighScore_BrowseScores 
+- umod: src/intro.c :: IntroScene1Torchic_05_SpeedLineFadeIn IntroScene1Torchic_06_BrightenPokeballFlyTowardsScreen IntroScene3Treecko_22_FlipperHitTextScroll IntroScene7Parade_44_MoveMakuhita IntroScene7Parade_45_MoveMakuhitaAndSpoink IntroScene7Parade_46_MoveMakuhitaPelipperAndSpoink IntroScene7Parade_47_MoveMakuhitaPelipperWailmerAndSpoink IntroScene7Parade_48_MoveWailmerShake IntroScene9BallFlight_60_MoveBallAndSky IntroSceneX_64_HoldWhitescreen 
+- umod: src/kecleon_process3.c :: RenderKecleonBoardElements UpdateKecleonScopeItem UpdateKecleonScopeVision 
+- umod: src/kyogre_process3.c :: AnimateKyogreBackground KyogreBoardProcess_3A_383E4 RenderKyogreSprites UpdateKyogreEntityLogic UpdateKyogreFieldEntities 
+- umod: src/main_board_bumpers.c :: CalculateRubyBumperBounce DrawSapphireBumperSprites HandleRubyBumperHit 
+- umod: src/main_board_catch_hatch_picker.c :: PickSpeciesForCatchEmMode PickSpeciesForEggMode 
+- umod: src/main_board_catch_normal_and_jirachi_modes.c :: DrawCatchMonBoardSprite DrawJirachiSprites InitCatchEmMode LoadCatchSpriteGraphics LoadMonFieldSpriteGraphics UpdateJirachiBonus 
+- umod: src/main_board_catch_tile_logic.c :: RevealCatchTilesSequential 
+- umod: src/main_board_catch_tile_particles.c :: InitBurstTileParticles InitSequentialTileParticles UpdateSequentialTileParticles 
+- umod: src/main_board_center_capture_hole.c :: GivePrize InitRouletteWheel RunRouletteWheel 
+- umod: src/main_board_charge_spinner.c :: UpdatePikachuChargeCounter 
+- umod: src/main_board_evolution_mode.c :: UpdateEvolutionItemAnimation UpdateEvolutionMode 
+- umod: src/main_board_intro_mode.c :: InitBoardIntroMode UpdateBoardArrowAnimState UpdateBoardIntroMode 
+- umod: src/main_board_launcher_and_cutscenes.c :: DrawSpoinkSprite RunEvolutionCutscene RunTravelEventCutscene UpdateSpoinkAnimation 
+- umod: src/main_board_pichu_entity.c :: PichuArrivalSequence UpdateKickbackLogic 
+- umod: src/main_board_to_be_split.c :: AnimateAerodactylEggDelivery AnimateBonusTrapSprite AnimateCoinReward AnimateTotodileEggDelivery InitBonusStageSelect ProcessChargeIndicator RenderEvolutionUI UpdateBonusStageSelect UpdateEggMode UpdateHatchCave UpdateRubyEvolutionShopSprite 
+- umod: src/main_board_travel_mode.c :: UpdateTravelMode 
+- umod: src/options.c :: Options_HandleInput 
+- umod: src/pokedex.c :: LoadMonAnimationSprite LoadMonPortrait PrintSeenOwnedTotals 
+- umod: src/rayquaza_process3.c :: RayquazaBoardProcess_3A_3E79C RenderWindCloudSprites UpdateLightningGrabEntity UpdateRayquazaEntityLogic UpdateRayquazaIntroSequence UpdateRayquazaMinionsAndEffects 
+- umod: src/ruby_board_indicators.c :: AnimateRubyBallPowerUpSequence AnimateRubyCatchLightBlink AnimateRubyHoleIndicators DrawRubyProgressDigits UpdateRubyBoardAnimations 
+- umod: src/ruby_process3_entities.c :: UpdateRubyBoardEntityRendering 
+- umod: src/ruby_process3_entities_2.c :: AnimateSharpedoEntity RubyPondTriBumperHandleHitAndDraw RubyPond_EntityLogic UpdateNuzleafEntity 
+- umod: src/ruby_ramp.c :: UpdateMakuhitaEntity 
+- umod: src/ruby_trigger_targets.c :: AnimateChikoritaSprite 
+- umod: src/sapphire_board_indicators.c :: AnimatePelipperBumper AnimateSapphireCatchLightBlink AnimateSapphireHoleIndicators DrawSapphireProgressDigits UpdateSapphireBoardAnimations 
+- umod: src/sapphire_pond_and_zigzagoon.c :: DrawZigzagoonAndRouletteStopPrompt UpdatePelipperPondEntity UpdateZigzagoonEntity 
+- umod: src/sapphire_seedot_egg_shop.c :: UpdateSapphireEggMachine UpdateSapphireSeedotCollection UpdateSapphireShopSignAnimation 
+- umod: src/save_and_restore_game.c :: RestoreFieldSpecificGraphics RestoreGameState RestoreGroudonBonusGraphics RestoreKyogreBonusGraphics RestoreMainFieldDynamicGraphics RestoreRayquazaBonusGraphics RestoreRubyBoardTileGraphics 
+- umod: src/spheal_process3.c :: AnimateSphealBackground SphealBoard_PelipperDeliversBall UpdateSphealEntityLogic UpdateSphealResultsScreen 
+- umod: src/titlescreen.c :: TitleScreen1_WaitForStartButton 
+- umod: src/util.c :: WriteDigitsRecursive 

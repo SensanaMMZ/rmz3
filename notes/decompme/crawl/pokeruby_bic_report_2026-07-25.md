@@ -1,0 +1,27 @@
+<!-- pokeruby :: trait=bic :: crawled 2026-07-25 :: 303/352 files compiled -->
+- bic: src/battle_controller_link_opponent.c :: LinkOpponentBufferExecCompleted 
+- bic: src/battle_controller_link_partner.c :: LinkPartnerBufferExecCompleted 
+- bic: src/battle_controller_opponent.c :: OpponentBufferExecCompleted 
+- bic: src/battle_controller_player.c :: PlayerBufferExecCompleted sub_802CA60 
+- bic: src/battle_controller_safari.c :: SafariBufferExecCompleted 
+- bic: src/battle_controller_wally.c :: WallyBufferExecCompleted 
+- bic: src/battle_controllers.c :: PrepareBufferDataTransferLink Task_HandleCopyReceivedLinkBuffersData 
+- bic: src/battle_main.c :: SwitchInClearSetData TryEvolvePokemon UndoEffectsAfterFainting 
+- bic: src/battle_script_commands.c :: atk18_clearstatusfromeffect atk36_bicbyte atk37_bichalfword atk38_bicword atk4E_switchinanim atk50_openpartyscreen atk52_switchineffects 
+- bic: src/battle_util.c :: HandleFaintedMonActions sub_80155A4 
+- bic: src/berry_blender.c :: sub_80500A8 
+- bic: src/event_data.c :: FlagClear 
+- bic: src/field_weather_effects.c :: sub_807EC40 
+- bic: src/image_processing_effects.c :: QuantizePixel_Invert 
+- bic: src/libs/agb_flash.c :: StopFlashTimer 
+- bic: src/libs/m4a.c :: CgbSound 
+- bic: src/main.c :: ReadKeys 
+- bic: src/pc_screen_effect.c :: sub_80C5CD4 sub_80C5E38 
+- bic: src/pokemon_item_effect.c :: PokemonUseItemEffects 
+- bic: src/pokenav.c :: sub_80F4024 
+- bic: src/roulette_util.c :: sub_8124D3C 
+- bic: src/save.c :: SetSectorDamagedStatus 
+- bic: src/save_failed_screen.c :: WipeSectors 
+- bic: src/script_pokemon_util_80F99CC.c :: SwapMoveSlots 
+- bic: src/sprite.c :: AllocSpriteTiles DestroySprite FreeOamMatrix FreeSpriteTilesByTag 
+- bic: src/text.c :: ClipRight PlayerCanInterruptDelay 

@@ -1,0 +1,32 @@
+<!-- mzm :: trait=mul :: crawled 2026-07-25 :: 199/654 files compiled -->
+- mul: src/audio.c :: GetNoteDelay UpdateMusic UpdatePsgSounds UpdateTrack unk_1e2c 
+- mul: src/audio_wrappers.c :: DoSoundAction InitializeAudio SetupSoundTransfer unk_3028 
+- mul: src/bg_clip.c :: BgClipApplyClipdataChangingTransparency BgClipCheckGrabbingCrumbleBlock BgClipCheckTouchingTransitionOnElevator BgClipCheckTouchingTransitionOrTank BgClipCheckWalkingOnCrumbleBlock BgClipRemoveCollectedTanks BgClipSetBg1BlockValue BgClipSetBgBlockValue BgClipSetClipdataBlockValue BgClipSetRawBg1BlockValue 
+- mul: src/block.c :: BlockBrokenBlockRemoveCollision BlockCheckStartNewSubBombChain BlockDestroyBombChainBlock BlockDestroySingleBreakableBlock BlockDestroySquareBlock BlockProcessBombChains BlockRemoveNeverReformSingleBlock BlockSamusApplyScrewSpeedboosterDamageToEnvironment BlockStoreSingleNeverReformBlock BlockUpdateBrokenBlockAnimation BlockUpdateBrokenBlocks BlockUpdateMakeSolidBlocks 
+- mul: src/clipdata.c :: ClipdataCheckGroundEffect ClipdataProcess ClipdataProcessForSamus ClipdataUpdateCurrentAffecting 
+- mul: src/color_effects.c :: ApplyFadeOnColor ApplySmoothMonochromeToPalette ApplySmoothPaletteTransition ApplySpecialBackgroundEffectColorOnBg ApplySpecialBackgroundEffectColorOnObj ApplySpecialBackgroundFadingColor 
+- mul: src/complex_oam.c :: ProcessComplexOam 
+- mul: src/connection.c :: ConnectionLoadDoors 
+- mul: src/cutscenes/cutscene_utils.c :: CutsceneEnd 
+- mul: src/cutscenes/enter_tourian.c :: EnterTourianUpdateMetroid 
+- mul: src/cutscenes/ridley_in_space.c :: RidleyInSpaceShipLeaving RidleyInSpaceShipLeavingParticles 
+- mul: src/fixed_point.c :: FixedMultiplication 
+- mul: src/haze.c :: HazeCalculateGradient 
+- mul: src/menus/pause_screen.c :: unk_6b66c_Unused unk_6b6c4_Unused 
+- mul: src/menus/pause_screen_sub_menus.c :: ChozoStatueHintCalculateCoordinates ChozoStatueHintMovement ChozoStatueHintScrolling 
+- mul: src/menus/status_screen.c :: PauseDebugEnergyAmmoInput PauseDebugEquipTank 
+- mul: src/power_bomb_explosion.c :: PowerBombExplosion 
+- mul: src/room.c :: RoomSetInitialTilemap RoomUpdateHorizontalTilemap RoomUpdateVerticalTilemap 
+- mul: src/samus.c :: SamusDraw 
+- mul: src/scroll.c :: ScrollUpdateCurrent 
+- mul: src/sprite.c :: SpriteDraw 
+- mul: src/sprite_util.c :: SpriteUtilTakeDamageFromSprite 
+- mul: src/sprites_ai/acid_worm.c :: AcidWormHandleRotation 
+- mul: src/sprites_ai/deorem.c :: DeoremSegmentDyingInit DeoremSegmentNeckIdle DeoremSegmentNeckLeaving DeoremSegmentSpawnGoingDown DeoremSegmentSpawnGoingDownAfter DeoremSegmentSpawnGoingUp DeoremSegmentSpawnGoingUpAfter 
+- mul: src/sprites_ai/imago_cocoon.c :: WingedRipperMove 
+- mul: src/sprites_ai/kraid.c :: KraidNailMovement 
+- mul: src/sprites_ai/parasite.c :: ParasiteInit 
+- mul: src/sprites_ai/rinka.c :: RinkaMotherBrainMove RinkaMove 
+- mul: src/sprites_ai/ruins_test.c :: RuinsTestGhostMove RuinsTestMoveToPosition 
+- mul: src/sram_misc.c :: unk_fbc 
+- mul: src/transfer.c :: TransferHandleTransfer 

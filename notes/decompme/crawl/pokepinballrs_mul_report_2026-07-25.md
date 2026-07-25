@@ -1,0 +1,46 @@
+<!-- pokepinballrs :: trait=mul :: crawled 2026-07-25 :: 77/77 files compiled -->
+- mul: src/all_board_banners.c :: RenderBannerSlideAnimation 
+- mul: src/all_board_mode_change_and_debug_menu.c :: EndOfBallBonusSummary GameOverAnimation 
+- mul: src/all_board_process0_sprite_init.c :: DusclopsBoardProcess_0A_50D48 GroudonBoardProcess_0A_50FD4 KecleonBoardProcess_0A_50DE0 KyogreBoardProcess_0A_50F04 RayquazaBoardProcess_0A_51090 RubyBoardProcess_0A_50848 RubyBoardProcess_0B_50918 SapphireBoardProcess_0A_50AD4 SapphireBoardProcess_0B_50B80 SphealBoardProcess_0A_51150 
+- mul: src/all_board_process2.c :: ProcessTiltInput 
+- mul: src/all_board_process4.c :: BonusBoardProcess_4B_19734 DetermineFlipperBallSide MainBoardProcess_4B_19490 UpdateBonusBoardFlipperPhysics UpdateMainBoardFlipperPhysics 
+- mul: src/all_board_process5.c :: BonusBoardProcess_5B_11F88 MainBoardProcess_5B_11C98 
+- mul: src/all_board_process6_collision.c :: ApplyBounceBackForce ApplyTiltEffectOnCollision ComputeFlipperBounce ComputeFlipperLaunchVelocity ComputeWallReflection ProcessBonusTrapPhysics 
+- mul: src/all_board_process7.c :: BonusBoardProcess_7B_12BF8 
+- mul: src/all_board_process8.c :: AllBoardProcess_8B_4CEB4 
+- mul: src/all_board_setup.c :: loadFieldBoardGraphics 
+- mul: src/bonus_field_select.c :: RenderBonusFieldSelectSprites 
+- mul: src/display.c :: BrightenPalette DarkenPalette InterpolatePaletteStep 
+- mul: src/dusclops_process3.c :: DusclopsPhase_ProcessEntityLogicAndGraphics DuskullPhase_ProcessGraphics 
+- mul: src/ereader.c :: UpdateEReaderSprites UpdateEReaderSpritesViaOam 
+- mul: src/field_select.c :: RenderFieldSelectSprites 
+- mul: src/groudon_process3.c :: AnimateGroudonBackground RenderGroudonSprites UpdateGroudonEntityLogic UpdateGroudonFieldEntities 
+- mul: src/high_scores.c :: RenderCompletionBanner RenderHighScoreSprites UpdateNameEntryCursor 
+- mul: src/intro.c :: IntroScene1Torchic_RenderAllSprites IntroScene1Torchic_RenderScaledTitle IntroScene1Torchic_RenderTitleSprite IntroScene7Parade_RenderWailmer IntroScene8WailmerLaunch_58_ResetTilemap IntroScene8WailmerLaunch_RenderAllSprites IntroScene9BallFlight_RenderBallAndCloud 
+- mul: src/kecleon_collision.c :: CheckKecleonEntityCollision 
+- mul: src/kecleon_process3.c :: RenderKecleonBoardElements RenderKecleonSprites UpdateKecleonEntityLogic UpdateKecleonScopeItem 
+- mul: src/kyogre_process3.c :: AnimateKyogreBackground UpdateKyogreFieldEntities 
+- mul: src/link.c :: LoadSpriteSetsWithCpuCopy 
+- mul: src/m4a.c :: CgbModVol CgbSound MidiKeyToCgbFreq SampleFreqSet SetPokemonCryTone TrkVolPitSet m4aMPlayTempoControl 
+- mul: src/main.c :: Random Sin 
+- mul: src/main_board_catch_hatch_picker.c :: BuildSpeciesWeightsForEggMode PickSpeciesForEggMode 
+- mul: src/main_board_catch_normal_and_jirachi_modes.c :: UpdateJirachiBonus 
+- mul: src/main_board_catch_tile_particles.c :: InitBurstTileParticles UpdateBurstTileParticles 
+- mul: src/main_board_center_capture_hole.c :: RunMonCaptureSequence 
+- mul: src/main_board_evolution_mode.c :: UpdateEvolutionItemAnimation 
+- mul: src/main_board_intro_mode.c :: UpdateBoardIntroMode 
+- mul: src/main_board_launcher_and_cutscenes.c :: RunEvolutionCutscene 
+- mul: src/main_board_pichu_entity.c :: PichuArrivalSequence UpdateKickbackLogic 
+- mul: src/main_board_to_be_split.c :: AnimateCoinReward UpdateEggMode 
+- mul: src/pokedex.c :: PrintDexDescription RenderLinkGraphics RenderPokedexSprites 
+- mul: src/rayquaza_process3.c :: UpdateRayquazaMinionsAndEffects 
+- mul: src/ruby_process3_entities_2.c :: RubyPond_EntityLogic 
+- mul: src/ruby_ramp.c :: UpdateMakuhitaEntity 
+- mul: src/ruby_trigger_targets.c :: DrawRubySideBumperSprites 
+- mul: src/sapphire_collision.c :: ProcessSapphireCollisionEvent 
+- mul: src/sapphire_pond_and_zigzagoon.c :: DrawZigzagoonAndRouletteStopPrompt 
+- mul: src/sapphire_seedot_egg_shop.c :: DrawSapphireSeedotAndBasketSprites UpdateSapphireEggMachine 
+- mul: src/save_and_restore_game.c :: RestoreGameState SaveGameStateSnapshot 
+- mul: src/spheal_process3.c :: UpdateSphealEntityLogic UpdateSphealResultsScreen 
+- mul: src/titlescreen.c :: RenderTitleMenuNoSavedGame RenderTitleMenuSavedGame RenderTitlePressStartSprites 
+- mul: src/util.c :: ClearSprites IntPow LoadSpriteSets 

@@ -1,0 +1,100 @@
+<!-- tmc :: trait=mov_ip :: crawled 2026-07-25 :: 601/619 files compiled -->
+- mov_ip: src/beanstalkSubtask.c :: sub_0801A570 
+- mov_ip: src/code_08049DF4.c :: sub_08049EE4 sub_0804A044 sub_0804A168 
+- mov_ip: src/collision.c :: IsColliding sub_080180E8 
+- mov_ip: src/color.c :: CleanUpObjPalettes LoadObjPalette 
+- mov_ip: src/eeprom.c :: EEPROMRead EEPROMWrite 
+- mov_ip: src/enemy/acroBandits.c :: AcroBandit_OnCollision 
+- mov_ip: src/enemy/armos.c :: sub_08030150 sub_080306C4 
+- mov_ip: src/enemy/bobomb.c :: sub_0802CA94 
+- mov_ip: src/enemy/bombPeahat.c :: sub_0802AE24 sub_0802B048 
+- mov_ip: src/enemy/chuchuBoss.c :: sub_08025DD8 sub_08026110 sub_080263B4 sub_0802757C sub_080276F4 sub_080277F8 sub_080279AC sub_08027B98 
+- mov_ip: src/enemy/dust.c :: sub_08044498 
+- mov_ip: src/enemy/flyingSkull.c :: sub_08039EE4 sub_08039F4C 
+- mov_ip: src/enemy/ghini.c :: sub_0803F694 
+- mov_ip: src/enemy/gibdo.c :: Gibdo_CreateObjects 
+- mov_ip: src/enemy/gleerok.c :: sub_0802E7E4 
+- mov_ip: src/enemy/gyorgFemaleEye.c :: GyorgFemaleEye_OnCollision 
+- mov_ip: src/enemy/gyorgMale.c :: sub_08046D44 
+- mov_ip: src/enemy/likeLike.c :: LikeLike_ReleasePlayer 
+- mov_ip: src/enemy/mazaalBracelet.c :: sub_0803B798 
+- mov_ip: src/enemy/mazaalHead.c :: sub_080348A4 
+- mov_ip: src/enemy/moldorm.c :: Moldorm_OnCollision sub_08022EAC 
+- mov_ip: src/enemy/moldworm.c :: sub_0802390C 
+- mov_ip: src/enemy/octorokBoss.c :: OctorokBoss_Action1_Attack_Type2_2 OctorokBoss_Action1_Attack_Type2_3 OctorokBoss_Burning_SubAction2 OctorokBoss_Hit_SubAction1 OctorokBoss_ResetToSubAction0 sub_080369D0 
+- mov_ip: src/enemy/pesto.c :: Pesto_OnCollision 
+- mov_ip: src/enemy/rollobite.c :: sub_080207A8 
+- mov_ip: src/enemy/ropeGolden.c :: sub_08038304 
+- mov_ip: src/enemy/rupeeLike.c :: sub_080296D8 
+- mov_ip: src/enemy/spearMoblin.c :: sub_080288C0 
+- mov_ip: src/enemy/spinyBeetle.c :: sub_08033E1C 
+- mov_ip: src/enemy/vaatiArm.c :: sub_08043490 sub_0804393C sub_08043CD4 sub_08044000 
+- mov_ip: src/enemy/vaatiBall.c :: sub_08044DEC 
+- mov_ip: src/enemy/vaatiRebornEnemy.c :: VaatiRebornEnemyType1PreAction 
+- mov_ip: src/enemy/vaatiTransfigured.c :: sub_080409B0 
+- mov_ip: src/enemy/wallMaster.c :: sub_0802A7D0 
+- mov_ip: src/enemy/wallMaster2.c :: sub_0802CFD8 
+- mov_ip: src/enemy/wizzrobeWind.c :: sub_0802FA48 
+- mov_ip: src/enemyUtils.c :: EnemySetFXOffset 
+- mov_ip: src/entity.c :: GetEmptyEntity 
+- mov_ip: src/fileselect.c :: sub_08050B3C sub_08050EF4 
+- mov_ip: src/gameUtils.c :: StairsAreValid 
+- mov_ip: src/gba/m4a.c :: MidiKeyToCgbFreq MidiKeyToFreq m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- mov_ip: src/item/itemMoleMitts.c :: sub_080772A8 
+- mov_ip: src/item/itemTryPickupObject.c :: sub_08076088 
+- mov_ip: src/manager/delayedEntityLoadManager.c :: DelayedEntityLoadManager_Main 
+- mov_ip: src/manager/fightManager.c :: ReplaceMonitoredEntity 
+- mov_ip: src/manager/lightRayManager.c :: LightRayManager_Action1 sub_0805732C 
+- mov_ip: src/manager/steamOverlayManager.c :: sub_0805A114 
+- mov_ip: src/manager/vaatiAppearingManager.c :: sub_0805DA08 
+- mov_ip: src/message.c :: ChangeWindowSize DispMessageFrame 
+- mov_ip: src/movement.c :: MoveNorthEast MoveNorthWest MoveSouthEast MoveSouthWest 
+- mov_ip: src/npc/kid.c :: Kid_Head sub_080622F4 sub_0806252C 
+- mov_ip: src/npc/npc23.c :: sub_08066490 
+- mov_ip: src/npc/rem.c :: sub_0806A96C 
+- mov_ip: src/npc/talon.c :: sub_08065648 
+- mov_ip: src/npc/vaati.c :: sub_08066B74 
+- mov_ip: src/npc/zeldaFollower.c :: sub_08068318 sub_08068578 
+- mov_ip: src/npcUtils.c :: NPCInit 
+- mov_ip: src/object/barrelInside.c :: BarrelInside 
+- mov_ip: src/object/barrelSpiderweb.c :: BarrelSpiderweb_Init 
+- mov_ip: src/object/cutsceneMiscObject.c :: CutsceneMiscObject_Type14 
+- mov_ip: src/object/elementsBackground.c :: ElementsBackground_Init 
+- mov_ip: src/object/ezloCap.c :: EzloCap_Type0Init sub_08082D20 
+- mov_ip: src/object/figurineDevice.c :: FigurineDevice_ChangeShellAmount 
+- mov_ip: src/object/fileScreenObjects.c :: sub_0808EFF0 
+- mov_ip: src/object/frozenWaterElement.c :: FrozenWaterElement_Action2 
+- mov_ip: src/object/furniture.c :: sub_08090DC4 
+- mov_ip: src/object/gustJarParticle.c :: GustJarParticle_Init 
+- mov_ip: src/object/japaneseSubtitle.c :: JapaneseSubtitle_Type2 
+- mov_ip: src/object/kinstoneSpark.c :: KinstoneSpark 
+- mov_ip: src/object/lightDoor.c :: LightDoor_Action2 
+- mov_ip: src/object/lilypadLarge.c :: LilypadLarge_Init 
+- mov_ip: src/object/macroPlayer.c :: MacroPlayer_Type0_Init 
+- mov_ip: src/object/minishVillageObject.c :: MinishVillageObject_Type7 
+- mov_ip: src/object/object1F.c :: Object1F_Init 
+- mov_ip: src/object/objectOnPillar.c :: ObjectOnPillar_Init 
+- mov_ip: src/object/objectOnSpinyBeetle.c :: ObjectOnSpinyBeetle_Init 
+- mov_ip: src/object/octorokBossObject.c :: OctorokBossObject_Init 
+- mov_ip: src/object/playerClone.c :: sub_08084B1C 
+- mov_ip: src/object/pressurePlate.c :: sub_08088938 
+- mov_ip: src/object/pushableStatue.c :: sub_080894C8 sub_080894FC 
+- mov_ip: src/object/smoke.c :: sub_0808A484 
+- mov_ip: src/object/titleScreenObject.c :: sub_080A2340 
+- mov_ip: src/object/vaati1Portal.c :: Vaati1Portal_Init 
+- mov_ip: src/object/warpPoint.c :: WarpPoint_Action5 
+- mov_ip: src/objectUtils.c :: LoadObjectSprite 
+- mov_ip: src/physics.c :: sub_0806FB00 sub_0806FDA0 
+- mov_ip: src/player.c :: PlayerNormal PortalShrinkInit PortalShrinkUpdate SurfaceAction_ShallowWater sub_08073584 sub_08074060 
+- mov_ip: src/playerItem.c :: ItemInit 
+- mov_ip: src/playerItem/playerItemGustJar.c :: sub_080ADCDC 
+- mov_ip: src/playerItem/playerItemShield.c :: PlayerItemShield_Action1 
+- mov_ip: src/playerItem/playerItemSword.c :: sub_080A78B8 
+- mov_ip: src/playerUtils.c :: ClearPlayerState CreateCollisionDataBorderAroundRoom FinalizeSave ResolvePlayerAnimation SetPlayerItemGetState SetTileType ToggleDiving sub_080784E4 sub_08078AC0 sub_08079550 sub_0807BBE4 sub_0807C69C sub_0807C8B0 
+- mov_ip: src/projectile/gleerokProjectile.c :: sub_080A90D8 
+- mov_ip: src/projectile/gyorgTail.c :: GyorgTail_Action1 
+- mov_ip: src/projectile/moblinSpear.c :: MoblinSpear_OnCollision 
+- mov_ip: src/screenTileMap.c :: sub_0807D280 sub_0807D46C sub_0807D6D8 
+- mov_ip: src/scroll.c :: FillActTileForLayer Scroll1 sub_08080278 sub_080803D0 
+- mov_ip: src/ui.c :: CreateUIElement DrawHearts 
+- mov_ip: src/vram.c :: sub_080AE218 

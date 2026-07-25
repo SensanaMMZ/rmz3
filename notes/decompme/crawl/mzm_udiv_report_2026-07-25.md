@@ -1,0 +1,31 @@
+<!-- mzm :: trait=udiv :: crawled 2026-07-25 :: 199/654 files compiled -->
+- udiv: src/audio.c :: unk_1ccc 
+- udiv: src/audio_wrappers.c :: ApplyMusicSoundFading ApplyRawMusicSoundFading InitFadingMusic SetupSoundTransfer unk_2e34 unk_2f00 unk_3028 
+- udiv: src/chozodia_escape.c :: ChozodiaEscapeGetItemCountAndEndingNumber ChozodiaEscapeUpdateExplosionHaze 
+- udiv: src/color_effects.c :: ApplyMonochromeToPalette 
+- udiv: src/cutscenes/enter_tourian.c :: EnterTourianUpdateMetroid 
+- udiv: src/cutscenes/ridley_in_space.c :: RidleyInSpaceViewOfShipUpdateParticle 
+- udiv: src/ending_and_gallery.c :: EndingImageDisplayText 
+- udiv: src/fixed_point.c :: FixedDivision FixedInverse 
+- udiv: src/haze.c :: HazeCalculateGradient 
+- udiv: src/hud.c :: HudDrawEnergy HudDrawMissiles HudDrawPowerBomb HudDrawSuperMissiles 
+- udiv: src/menus/boot_debug.c :: BootDebugDrawNumber BootDebugDrawSubMenuOptionText BootDebugSectionMapDrawRoomAndDoorIds BootDebugUpdateMapScreenPosition 
+- udiv: src/menus/file_select.c :: FileSelectCopyTimeAttackTime FileSelectDisplaySaveFileTimer OptionsSoundTestUpdateIdGfx 
+- udiv: src/menus/pause_screen_map.c :: PauseScreenDrawIgtAndTanks 
+- udiv: src/menus/pause_screen_sub_menus.c :: ChozoStatueHintCalculateCoordinates 
+- udiv: src/menus/status_screen.c :: PauseDebugDrawAffectedGroups PauseDebugDrawEnergyAmmoNumber PauseDebugDrawEventName PauseDebugDrawStaticInfo StatusScreenDrawSingleTankAmount 
+- udiv: src/minimap.c :: MinimapCheckForUnexploredTile MinimapCheckIsTileExplored MinimapDrawNumber MinimapLoadTilesWithObtainedItems MinimapUpdateForCollectedItem 
+- udiv: src/projectile_util.c :: ProjectileMove 
+- udiv: src/samus.c :: SamusChangeVelocityOnSlope 
+- udiv: src/save_file.c :: SramCheckSetNewBestCompletionTime 
+- udiv: src/sprite_util.c :: SpriteUtilMoveHorizontallyForwardOnSlopeDirection SpriteUtilMoveHorizontallyForwardOnSlopeXFlip SpriteUtilTakeDamageFromSprite 
+- udiv: src/sprites_ai/deorem.c :: DeoremSegmentSpawnGoingDownAfter DeoremSegmentSpawnGoingUpAfter 
+- udiv: src/sprites_ai/imago.c :: ImagoComingDownInit ImagoMoveHorizontally ImagoPartUpdateBodyPalette ImagoShootNeedles 
+- udiv: src/sprites_ai/kraid.c :: KraidFirstStep KraidMoveFeet KraidNailMovement KraidOpenCloseRoutineAndProjectileCollision KraidPartCheckShouldSpawnSpikes KraidSecondStep 
+- udiv: src/sprites_ai/rinka.c :: RinkaMotherBrainMove RinkaMove 
+- udiv: src/sprites_ai/ruins_test.c :: RuinsTestMoveToPosition 
+- udiv: src/sprites_ai/sova.c :: SovaMove 
+- udiv: src/sprites_ai/zebetite_and_cannon.c :: Zebetite 
+- udiv: src/sprites_ai/zoomer.c :: ZoomerCrawling 
+- udiv: src/time_attack.c :: TimeAttackSeedRandomFunc3 TimeAttackSeedRandomFunc5 unk_7f60c 
+- udiv: src/transfer.c :: TransferHandleTransfer 

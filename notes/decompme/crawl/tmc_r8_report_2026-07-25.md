@@ -1,0 +1,147 @@
+<!-- tmc :: trait=r8 :: crawled 2026-07-25 :: 601/619 files compiled -->
+- r8: src/beanstalkSubtask.c :: RenderMapLayerToSubTileMap UpdatePlayerCollision sub_0801A370 sub_0801A458 sub_0801A570 sub_0801AA58 sub_0801AC98 sub_0801AFE4 
+- r8: src/code_08049DF4.c :: sub_0804A044 sub_0804A168 sub_0804A318 
+- r8: src/collision.c :: CollisionDefault sub_08017DD4 
+- r8: src/color.c :: LoadObjPalette sub_0801D48C 
+- r8: src/demo.c :: sub_080A2E40 sub_080A30AC 
+- r8: src/eeprom.c :: EEPROMWrite 
+- r8: src/enemy/acroBandits.c :: AcroBandit_OnCollision AcroBandit_Type0Action5 
+- r8: src/enemy/armos.c :: sub_080306C4 sub_0803086C 
+- r8: src/enemy/chuchuBoss.c :: sub_080269CC sub_08026C40 sub_08026E1C sub_08027064 sub_0802757C 
+- r8: src/enemy/dust.c :: sub_08044310 
+- r8: src/enemy/enemy50.c :: sub_0804122C 
+- r8: src/enemy/eyegore.c :: sub_08030F00 sub_08031024 
+- r8: src/enemy/fireballGuy.c :: FireballGuy_Action2 
+- r8: src/enemy/gleerok.c :: sub_0802D3B8 sub_0802DDD8 sub_0802E1D0 sub_0802E518 sub_0802E7E4 sub_0802EB08 
+- r8: src/enemy/gyorgMale.c :: sub_080477F0 sub_08047EA4 
+- r8: src/enemy/helmasaur.c :: sub_0802C06C 
+- r8: src/enemy/leever.c :: Leever_PlayerInRange 
+- r8: src/enemy/madderpillar.c :: sub_08029E0C 
+- r8: src/enemy/mazaalMacro.c :: sub_08035084 
+- r8: src/enemy/moldorm.c :: sub_08022C58 
+- r8: src/enemy/moldworm.c :: sub_08023288 
+- r8: src/enemy/octorokBoss.c :: OctorokBoss_Action1 OctorokBoss_ExecuteAttackVacuum OctorokBoss_Hit_SubAction1 OctorokBoss_Hit_SubAction6 OctorokBoss_Init OctorokBoss_StartRegularAttack sub_08036914 sub_080369D0 sub_08036AF0 
+- r8: src/enemy/pesto.c :: sub_080244E8 
+- r8: src/enemy/puffstool.c :: sub_0802571C sub_080257EC sub_0802594C sub_08025A54 sub_08025B18 
+- r8: src/enemy/slime.c :: sub_080450A8 
+- r8: src/enemy/spinyBeetle.c :: sub_08033B44 
+- r8: src/enemy/vaatiArm.c :: sub_08042C34 sub_08042EF4 sub_080435F4 sub_080437DC sub_0804393C sub_08043EB8 
+- r8: src/enemy/vaatiBall.c :: sub_08044868 sub_08044B04 
+- r8: src/enemy/vaatiTransfigured.c :: sub_080406A0 sub_08040770 
+- r8: src/enemy/vaatiTransfiguredEye.c :: sub_08045A28 
+- r8: src/enemy/vaatiWrath.c :: sub_08041BE8 sub_080422C0 
+- r8: src/enemy/wizzrobeWind.c :: sub_0802F8E4 
+- r8: src/enemyUtils.c :: EnemyCreateDeathFX 
+- r8: src/enterPortalSubtask.c :: sub_0804AD6C 
+- r8: src/entity.c :: GetEmptyEntity RecycleEntities 
+- r8: src/fileselect.c :: sub_0805070C sub_08050790 sub_08050B3C sub_08050EF4 
+- r8: src/gba/m4a.c :: CgbSound MPlayStart m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- r8: src/interrupts.c :: sub_080171F0 
+- r8: src/item/itemBow.c :: sub_08075E40 
+- r8: src/item/itemGustJar.c :: sub_08076DF4 
+- r8: src/item/itemLantern.c :: sub_08075B54 
+- r8: src/item/itemPegasusBoots.c :: ItemPegasusBoots sub_08076964 
+- r8: src/item/itemTryPickupObject.c :: sub_08076088 sub_08076518 
+- r8: src/itemUtils.c :: GiveItem 
+- r8: src/kinstone.c :: CreateMinishEntrance sub_08018A58 sub_08018AB4 sub_08018B10 
+- r8: src/main.c :: SetSleepMode 
+- r8: src/manager/angryStatueManager.c :: AngryStatueManager_Init sub_0805D11C 
+- r8: src/manager/delayedEntityLoadManager.c :: DelayedEntityLoadManager_Main sub_0805ACC0 
+- r8: src/manager/diggingCaveEntranceManager.c :: DiggingCaveEntranceManager_Init 
+- r8: src/manager/enemyInteractionManager.c :: EnemyInteractionManager_Action1 
+- r8: src/manager/goronMerchantShopManager.c :: GoronMerchantShopManager_Main 
+- r8: src/manager/horizontalMinishPathBackgroundManager.c :: sub_08057F20 sub_080580B0 
+- r8: src/manager/houseSignManager.c :: HouseSignManager_Main 
+- r8: src/manager/hyruleTownBellManager.c :: HyruleTownBellManager_Main 
+- r8: src/manager/lightRayManager.c :: sub_0805732C 
+- r8: src/manager/manager29.c :: sub_0805CC3C 
+- r8: src/manager/minishPortalManager.c :: CreateMagicSparklesFxAt 
+- r8: src/manager/minishRaftersBackgroundManager.c :: sub_08058244 
+- r8: src/manager/minishSizedEntranceManager.c :: MinishSizedEntranceManager_Main 
+- r8: src/manager/rollingBarrelManager.c :: sub_08058A04 sub_08058BC8 
+- r8: src/manager/steamOverlayManager.c :: sub_0805A114 
+- r8: src/manager/tilePuzzleManager.c :: TilePuzzleManager_Main 
+- r8: src/manager/vaatiAppearingManager.c :: sub_0805DA08 
+- r8: src/manager/weatherChangeManager.c :: MixPalettes sub_08059894 
+- r8: src/menu/figurineMenu.c :: FigurineMenu_080A4978 
+- r8: src/menu/kinstoneMenu.c :: KinstoneMenu_080A414C sub_080A44E0 
+- r8: src/menu/pauseMenu.c :: DrawDungeonMapActually PauseMenu_ItemMenu_Draw sub_080A57F4 sub_080A6044 sub_080A617C 
+- r8: src/menu/pauseMenuScreen6.c :: sub_080A66D0 
+- r8: src/message.c :: DispMessageFrame SwitchChoice 
+- r8: src/movement.c :: CalculateEntityTileCollisions MoveEast MoveNorth MoveNorthEast MoveNorthWest MoveSouth MoveSouthEast MoveSouthWest MoveWest 
+- r8: src/npc/castorWildsStatue.c :: sub_080675D4 
+- r8: src/npc/clothesRack.c :: sub_0806DD90 
+- r8: src/npc/kid.c :: sub_080622F4 sub_0806252C 
+- r8: src/npc/librarians.c :: sub_0806BA34 
+- r8: src/npc/npc5.c :: CheckDirectPathUnblocked TryNavBelowFromLeft TryNavBelowFromRight TryNavLeftFromAbove TryNavLeftFromBelow TryNavRightFromAbove TryNavRightFromBelow TryNavUpFromLeft TryNavUpFromRight ZeldaInitNavigate 
+- r8: src/npc/phonograph.c :: sub_0806E964 
+- r8: src/npc/postman.c :: sub_0806076C 
+- r8: src/npc/rem.c :: sub_0806AA50 
+- r8: src/npc/stockwell.c :: sub_080650CC sub_08065370 
+- r8: src/npc/syrup.c :: Syrup_Head 
+- r8: src/npc/tingleSiblings.c :: sub_08064F28 
+- r8: src/npc/zeldaFollower.c :: sub_08068318 sub_08068578 
+- r8: src/npcUtils.c :: ShowNPCDialogue 
+- r8: src/object/beanstalk.c :: Beanstalk_Action1Type7 
+- r8: src/object/bird.c :: Bird_Type8 Bird_Type9 
+- r8: src/object/blockPushed.c :: sub_080830B8 
+- r8: src/object/bush.c :: Bush_Init 
+- r8: src/object/crenelBeanSprout.c :: sub_080969A4 
+- r8: src/object/cuccoMinigame.c :: CuccoMinigame_Init sub_080A1270 
+- r8: src/object/cutsceneMiscObject.c :: sub_08095EAC 
+- r8: src/object/doubleBookshelf.c :: sub_0809B0B0 
+- r8: src/object/fan.c :: sub_0809EFB0 
+- r8: src/object/figurineDevice.c :: FigurineDevice_Draw 
+- r8: src/object/fireballChain.c :: FireballChain 
+- r8: src/object/frozenOctorok.c :: FrozenOctorok_Init sub_0809CB70 
+- r8: src/object/furniture.c :: FurnitureInit sub_08090B6C 
+- r8: src/object/giantBookLadder.c :: GiantBookLadder_OnEnterRoom 
+- r8: src/object/giantTwig.c :: sub_08093A1C 
+- r8: src/object/gleerokParticle.c :: GleerokParticle_Action2 GleerokParticle_Action4 sub_08094660 
+- r8: src/object/guruguruBar.c :: GuruguruBar_Init 
+- r8: src/object/gyorgBossObject.c :: GyorgBossObject_SetupStart GyorgBossObject_SpawnChildren 
+- r8: src/object/hitSwitch.c :: HitSwitch 
+- r8: src/object/houseDoorExterior.c :: HouseDoorExterior_Type0 
+- r8: src/object/keyStealingTakkuri.c :: sub_0809E0D4 sub_0809E238 
+- r8: src/object/ladderUp.c :: LadderUp 
+- r8: src/object/lilypadLarge.c :: LilypadLarge_Action1 sub_08085D60 
+- r8: src/object/linkEmptyingBottle.c :: sub_08094980 
+- r8: src/object/macroBook.c :: sub_0809A958 sub_0809AA00 
+- r8: src/object/minecart.c :: Minecart_Action3 
+- r8: src/object/objectA.c :: ObjectA 
+- r8: src/object/objectBlockingStairs.c :: ObjectBlockingStairs_Action1 sub_080931A4 
+- r8: src/object/octorokBossObject.c :: OctorokBossObject_Action1 OctorokBossObject_Action2 
+- r8: src/object/paper.c :: Paper_Type2 
+- r8: src/object/playerClone.c :: sub_08084B1C 
+- r8: src/object/pot.c :: Pot_Init sub_0808288C 
+- r8: src/object/pressurePlate.c :: sub_08088938 
+- r8: src/object/pullableLever.c :: sub_0809153C 
+- r8: src/object/pushableFurniture.c :: sub_0808FF50 sub_0809028C 
+- r8: src/object/pushableGrave.c :: PushableGrave_Init 
+- r8: src/object/railtrack.c :: sub_08085394 
+- r8: src/object/rotatingTrapdoor.c :: sub_0808E354 
+- r8: src/object/smokeParticle.c :: sub_080878CC 
+- r8: src/objectUtils.c :: CreateLargeRippleFxRandom CreateLinkAnimation 
+- r8: src/physics.c :: LinearMoveAngle LinearMoveDirection LoadExtraSpriteData sub_0806F824 
+- r8: src/player.c :: PortalShrinkUpdate sub_08073D20 sub_08074D34 
+- r8: src/playerItem/playerItemBomb.c :: sub_0801B418 
+- r8: src/playerItem/playerItemCellOverwriteSet.c :: PlayerItemCellOverwriteSet 
+- r8: src/playerItem/playerItemSword.c :: sub_080A78B8 sub_080A7B98 
+- r8: src/playerUtils.c :: CreateCollisionDataBorderAroundRoom CreatePlayerItem GetSurfaceCalcType LoadRoomGfx LoadRoomTileSet sub_08077CF8 sub_08077D38 sub_080784E4 sub_080789A8 sub_08079550 sub_08079C30 sub_08079E90 sub_0807A180 sub_0807A2F8 sub_0807A5B8 sub_0807A750 sub_0807A8D8 sub_0807AB44 sub_0807BB98 sub_0807BBE4 sub_0807C460 sub_0807C69C sub_0807C8B0 
+- r8: src/projectile/gyorgTail.c :: GyorgTail_Action1 sub_080AC5E4 sub_080AC7C4 
+- r8: src/projectile/mandiblesProjectile.c :: MandiblesProjectile_Action4 sub_080AA374 
+- r8: src/projectile/removableDust.c :: sub_080AA544 
+- r8: src/projectile/v1EyeLaser.c :: sub_080AB758 
+- r8: src/projectile/v1FireProjectile.c :: V1FireProjectile_Init 
+- r8: src/roomInit.c :: sub_0804BF38 
+- r8: src/save.c :: DataDoubleReadWithStatus 
+- r8: src/screenTileMap.c :: sub_0807D280 sub_0807D46C sub_0807D6D8 
+- r8: src/script.c :: ExecuteScript 
+- r8: src/scroll.c :: DoApplicableTransition FillActTileForLayer FindApplicableAreaTransition sub_08080278 sub_080803D0 
+- r8: src/staffroll.c :: StaffrollTask_State1MenuType6 
+- r8: src/subtask/subtaskAuxCutscene.c :: sub_08051F9C 
+- r8: src/subtask/subtaskLocalMapHint.c :: sub_080A6B04 
+- r8: src/text.c :: GetFontStrWith ShowTextBox sub_0805F820 sub_0805F918 
+- r8: src/ui.c :: DrawHearts 
+- r8: src/vram.c :: LoadFixedGFX MoveGFXSlots sub_080AE218 
+- r8: src/worldEvent/worldEvent5.c :: WorldEvent_5_0 

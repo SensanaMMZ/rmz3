@@ -1,0 +1,42 @@
+<!-- fireemblem8u :: trait=umod :: crawled 2026-07-25 :: 353/358 files compiled -->
+- umod: src/banim-efxmagic-excalibur.c :: efxExcaliburBG0_Loop 
+- umod: src/banim-efxmagic-naglfar.c :: efxNaglfarBG_Loop 
+- umod: src/banim-ekrdragon-demonkingobj.c :: sub_8077D80 
+- umod: src/bb.c :: PutSubtitleHelpText 
+- umod: src/bm.c :: UpdateStatArrowSprites 
+- umod: src/bmdebug.c :: DebugContinueMenuInit DebugMenu_WeatherDraw 
+- umod: src/bmdifficulty.c :: DrawTimeText DrawTimeText_WithReset DungeonRecordUi_UpdateRunningTime 
+- umod: src/bmguide.c :: GuideDetailsRedraw_Init GuideEntry_RedrawDown GuideEntry_RedrawUp MoveGuideDetailText sub_80CE414 sub_80CE750 sub_80CE858 
+- umod: src/bmio.c :: WfxSandStorm_Init 
+- umod: src/bmtrade.c :: TradeMenu_LoadForcedInitialHover 
+- umod: src/bmudisp.c :: ForceSyncUnitSpriteSheet PutUnitSpriteIconsOam SetStandingMuFacing SetStandingMuFacingWM SyncUnitSpriteSheet TornOutUnitSprite sub_8026FF4 
+- umod: src/bonusclaim.c :: DrawBonusClaimItemText 
+- umod: src/ending_details.c :: HandleTurnRecordText 
+- umod: src/eventscr.c :: Event06_SlotOperation 
+- umod: src/helpbox.c :: sub_808ACFC 
+- umod: src/mapanim_expbar.c :: ProcMAExpBar_OnIncrement 
+- umod: src/mapanim_infobox.c :: sub_807BA28 
+- umod: src/opinfo.c :: ClassIntro_LoopOut 
+- umod: src/prep_itemscreen.c :: PrepItemScreen_DpadKeyHandler PrepItemScreen_SetupGfx sub_8098CC0 sub_8098FAC sub_8099120 sub_80995D4 sub_8099AF8 sub_809A114 sub_809A274 
+- umod: src/prep_menuproc.c :: PutPrepChapterSprite_Default PutPrepChapterSprite_Ruins PutPrepChapterSprite_Tower 
+- umod: src/prep_unitselect.c :: PrepUnit_DrawUnitListNames 
+- umod: src/rng.c :: InitRN 
+- umod: src/savedraw.c :: sub_80AA7EC 
+- umod: src/scene.c :: TalkInterpret TalkPrepNextChar TalkShiftClear_OnIdle Talk_OnIdle sub_8006F00 
+- umod: src/sio_bat.c :: sub_8045F48 sub_8046234 sub_80462D4 sub_80463A8 sub_8046580 
+- umod: src/sio_battlemap.c :: sub_8049B24 
+- umod: src/sio_core.c :: SioVsync_Loop StartSioBigSend 
+- umod: src/sio_menu.c :: SioMenu_HandleDPadInput 
+- umod: src/sio_tactician.c :: Tactician_LoopCore 
+- umod: src/sio_teamlist.c :: SioTeamList_Main_HandleDPadInput 
+- umod: src/sio_term.c :: sub_8046C64 
+- umod: src/sio_uiutils.c :: LATitleBanner_Init LinkArenaMenuScroll_Loop SioMenuItem_Loop StartLinkArenaTitleBanner 
+- umod: src/soundroom.c :: DrawMusicPlayerTime InitSoundRoomShuffleBuffer 
+- umod: src/statscreen.c :: PageNumCtrl_UpdateArrows StatScreen_OnIdle 
+- umod: src/time.c :: FormatTime 
+- umod: src/uiconfig.c :: GenericOptionChangeHandler PutGameOptionRow 
+- umod: src/uidebug.c :: sub_8084880 sub_80848E0 sub_8084940 sub_80849A0 sub_80849D8 sub_8084A10 
+- umod: src/uisupport.c :: DrawSupportScreenUnitSprites SupportScreen_Loop_KeyHandler SupportScreen_SetupGraphics sub_80A199C 
+- umod: src/unitlistscreen.c :: UnitListScreenSprites_Main UnitList_PutRow UnitList_ToggleSoloAnimState 
+- umod: src/worldmap_player_interface.c :: sub_80BE5F8 sub_80BEA78 
+- umod: src/worldmap_screen.c :: sub_80BA818 sub_80BA8A0 

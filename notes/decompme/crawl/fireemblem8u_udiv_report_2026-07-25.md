@@ -1,0 +1,58 @@
+<!-- fireemblem8u :: trait=udiv :: crawled 2026-07-25 :: 353/358 files compiled -->
+- udiv: src/bm.c :: CamMove_OnLoop UnkMapCursor_OnLoop 
+- udiv: src/bmarena.c :: ArenaAdjustOpponentDamage ArenaAdjustOpponentPowerRanking ArenaGenerateOpponentUnit 
+- udiv: src/bmbattle.c :: GetBattleUnitStaffExp GetUnitRoundExp 
+- udiv: src/bmdifficulty.c :: DrawTimeText DrawTimeText_WithReset 
+- udiv: src/bmio.c :: WfxBlue_Init WfxClouds_Update 
+- udiv: src/bmlib.c :: sub_80131F0 
+- udiv: src/bmsave-bwl.c :: PidStatsGetTotalLevel RegisterChapterTimeAndTurnCount 
+- udiv: src/bmsave-lib.c :: GetTotalSupportCollection 
+- udiv: src/bmsave-xmap.c :: sub_80A6D4C 
+- udiv: src/bmtarget.c :: MakeTerrainHealTargetList 
+- udiv: src/bmtrade.c :: TradeMenu_LoadForcedInitialHover 
+- udiv: src/bonusclaim.c :: sub_80B06FC 
+- udiv: src/bonusclaim_helpbox.c :: CountDigits 
+- udiv: src/eventcall.c :: WorldFlushIn WorldFlushOut 
+- udiv: src/eventscr.c :: Event06_SlotOperation 
+- udiv: src/extramenu_unk.c :: sub_80B0458 
+- udiv: src/gameoverbgfx.c :: GameOverScreenHBlank 
+- udiv: src/gamerankings.c :: GetChapterWinPerc GetGameWinPerc 
+- udiv: src/helpbox.c :: MergeBoxDialogue2 sub_808A188 sub_808A3C4 
+- udiv: src/lightrunefx.c :: ProcLightRuneAnim2_Loop ProcLightRuneAnim3_Loop ProcLightRuneAnim_Loop 
+- udiv: src/m4a.c :: SampleFreqSet 
+- udiv: src/mapanim_eventcall.c :: sub_807FDC8 sub_807FE0C sub_808038C sub_80809D8 sub_8081208 
+- udiv: src/mapanim_infobox.c :: sub_807BA28 sub_807BB40 
+- udiv: src/mapanim_scanline.c :: sub_8082C50 
+- udiv: src/mapanim_staffeffect.c :: MapAnimTorch_Loop1 MapAnimTorch_Loop2 
+- udiv: src/minimap.c :: Minimap_AdjustDisplay 
+- udiv: src/opanim-healthsafetyscreen.c :: OpAnimHS_BrightenPalette 
+- udiv: src/opinfo.c :: ClassInfoDisplay_LoopWindowIn ClassIntro_LoopOut 
+- udiv: src/popup2.c :: NewPopup2_PlanB 
+- udiv: src/prep_itemlist.c :: PrepItemList_SwitchPageLeft PrepItemList_SwitchPageRight 
+- udiv: src/prep_itemscreen.c :: PrepItemScreen_DpadKeyHandler PrepItemScreen_SetupGfx sub_8098CC0 sub_8098FAC sub_8099120 sub_80995D4 sub_8099AF8 sub_809A08C sub_809A274 
+- udiv: src/prep_itemsupply.c :: PrepItemSupply_SwitchPageLeft PrepItemSupply_SwitchPageRight 
+- udiv: src/prep_itemuse.c :: DrawPrepScreenItemUseStatBars 
+- udiv: src/prep_menuproc.c :: PutPrepChapterSprite_Default PutPrepChapterSprite_Ruins PutPrepChapterSprite_Tower 
+- udiv: src/prep_menuscroll.c :: MenuScroll_Loop 
+- udiv: src/prep_sallycir.c :: sub_8097B98 
+- udiv: src/prep_unitswap.c :: PrepUnitSwapProc_MainLoop 
+- udiv: src/prep_utils.c :: sub_8098048 
+- udiv: src/savedraw.c :: SaveDraw_ScrollFogBG sub_80AA7EC sub_80AADE0 sub_80AB56C 
+- udiv: src/savemenu.c :: SaveMenuScrollBackToMain SaveMenuScrollSlot sub_80A9A68 sub_80A9AB0 sub_80A9AF4 sub_80A9B44 
+- udiv: src/sio_core.c :: StartSioBigSend sub_8042B68 sub_8042C44 
+- udiv: src/sio_uiutils.c :: LATitleBanner_Init LinkArenaMenuScroll_Init StartLinkArenaTitleBanner UpdateLinkArenaMenuScrollBar 
+- udiv: src/soundroom.c :: DrawMusicPlayerTime InitSoundRoomSongData SoundRoomUi_Loop_ShufflePlayUiSlideIn SoundRoomUi_Loop_ShufflePlayUiSlideOut SoundRoom_DrawSprites_Loop sub_80AFAB4 
+- udiv: src/statscreen.c :: ApplyHelpBoxPosition DisplayWeaponExp DrawStatWithBar PageNameCtrl_AnimIn PageNameCtrl_AnimOut 
+- udiv: src/sysutil.c :: BgAffinRotScaling BgAffinRotScalingHighPrecision 
+- udiv: src/time.c :: FormatTime 
+- udiv: src/uimenu.c :: ApplyMenuCursorVScroll 
+- udiv: src/uisupport.c :: DrawSupportScreenUnitSprites SupportScreen_Loop_KeyHandler SupportScreen_SetupGraphics SupportSubScreen_SwapPageIn_FromLeft SupportSubScreen_SwapPageIn_FromRight SupportSubScreen_SwapPageOut_ToLeft SupportSubScreen_SwapPageOut_ToRight sub_80A11E0 
+- udiv: src/unitlistscreen.c :: sub_8090B48 
+- udiv: src/worldmap_entry.c :: sub_80BFDA0 
+- udiv: src/worldmap_mapmu.c :: sub_80BD41C 
+- udiv: src/worldmap_palette_fade.c :: GmPalFade_Loop 
+- udiv: src/worldmap_path.c :: MapRoute_TransitionLoop 
+- udiv: src/worldmap_player_interface.c :: sub_80BE5F8 sub_80BEA78 
+- udiv: src/worldmap_radar.c :: WmMinimap_PutCursorIcon WmMinimap_PutLordIcon WmMinimap_PutSkirmishIcons WmMinimap_PutStoryNodeIcon 
+- udiv: src/worldmap_rm.c :: GmapRm_BlendIn GmapRm_BlendOut 
+- udiv: src/worldmap_text.c :: sub_80C34D0 

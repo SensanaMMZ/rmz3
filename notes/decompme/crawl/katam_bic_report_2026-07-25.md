@@ -1,0 +1,21 @@
+<!-- katam :: trait=bic :: crawled 2026-07-25 :: 169/170 files compiled -->
+- bic: src/box_boxer.c :: sub_080C7B1C sub_080C7D80 
+- bic: src/boxy.c :: sub_080D5F7C sub_080D68B0 sub_080D6A30 
+- bic: src/chip.c :: sub_080AABBC sub_080AAD14 sub_080AAE80 sub_080AB04C 
+- bic: src/code_080023A4.c :: sub_08001678 
+- bic: src/code_0800ECAC_2.c :: sub_08010944 sub_08010CE8 sub_08011250 sub_0801149C sub_08011754 sub_08011C2C sub_0801232C 
+- bic: src/code_08026044.c :: sub_08026168 sub_08027C80 sub_08027DD0 sub_080282CC sub_08028528 sub_080286C4 sub_08028758 sub_08028A1C sub_08028AA8 sub_08028B5C sub_08028D40 
+- bic: src/code_080332BC.c :: sub_080335B4 
+- bic: src/code_0806F780.c :: sub_08070BA8 sub_08070C24 sub_08070CA0 sub_08070D20 sub_08070EA0 sub_08070F24 sub_08070FA8 sub_08071024 sub_080710A4 sub_08071124 sub_080717AC sub_080734F8 sub_080737D8 sub_0807D690 sub_08085E60 sub_08086938 sub_08086A28 sub_08086B40 sub_0808781C sub_0808895C 
+- bic: src/crazy_hand.c :: sub_080DFC3C sub_080E1EC0 
+- bic: src/dark_meta_knight.c :: sub_080FC150 sub_080FF5B0 
+- bic: src/golem.c :: sub_080C55D4 
+- bic: src/intro.c :: sub_081464D4 
+- bic: src/kirby.c :: sub_0803F324 
+- bic: src/m4a.c :: CgbSound 
+- bic: src/main.c :: GetInput VBlankIntr 
+- bic: src/master_hand.c :: sub_080D1E10 sub_080D43A8 
+- bic: src/multi_08030C94.c :: sub_08030FE0 sub_080321DC 
+- bic: src/object.c :: ObjectDestroy sub_0809A580 
+- bic: src/roly_poly.c :: sub_080ACDA4 
+- bic: src/scroll_lock.c :: sub_0811D508 sub_0811D68C 

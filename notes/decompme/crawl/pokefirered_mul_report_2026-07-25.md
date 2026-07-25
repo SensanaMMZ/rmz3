@@ -1,0 +1,123 @@
+<!-- pokefirered :: trait=mul :: crawled 2026-07-25 :: 225/283 files compiled -->
+- mul: src/battle_ai_script_commands.c :: BattleAI_DoAIProcessing Cmd_count_alive_pokemon Cmd_get_ability Cmd_get_gender Cmd_get_highest_type_effectiveness Cmd_get_hold_effect Cmd_get_how_powerful_move_is Cmd_get_type Cmd_if_can_faint Cmd_if_cant_faint Cmd_if_doesnt_have_move Cmd_if_doesnt_have_move_with_effect Cmd_if_has_move Cmd_if_has_move_with_effect Cmd_if_hp_equal Cmd_if_hp_less_than Cmd_if_hp_more_than Cmd_if_hp_not_equal Cmd_if_level_compare Cmd_if_not_status Cmd_if_not_status2 Cmd_if_stat_level_equal Cmd_if_stat_level_less_than Cmd_if_stat_level_more_than Cmd_if_stat_level_not_equal Cmd_if_status Cmd_if_status2 Cmd_if_status_in_party Cmd_if_status_not_in_party Cmd_if_user_has_attacking_move Cmd_if_user_has_no_attacking_moves 
+- mul: src/battle_ai_switch_items.c :: AI_TrySwitchOrUseItem AreStatsRaised FindMonThatAbsorbsOpponentsMove FindMonWithFlagsAndSuperEffective GetMostSuitableMonToSwitchInto HasSuperEffectiveMoveAgainstOpponents ModulateByTypeEffectiveness ShouldSwitch ShouldSwitchIfNaturalCure ShouldSwitchIfWonderGuard ShouldUseItem 
+- mul: src/battle_anim.c :: LaunchBattleAnimation 
+- mul: src/battle_anim_dark.c :: AnimTask_MetallicShine 
+- mul: src/battle_anim_dragon.c :: AnimOverheatFlame UpdateDragonDanceScanlineEffect 
+- mul: src/battle_anim_effects_1.c :: AnimFlyingParticle_Step AnimFrenzyPlantRoot AnimIngrainOrb AnimPresentHealParticle AnimTask_LeafBlade AnimTask_LeafBlade_Step AnimTrickBag_Step2 MoveAlongLinearPath 
+- mul: src/battle_anim_effects_3.c :: AnimHelpingHandClap_Step AnimMeteorMashStar_Step AnimTask_RolePlaySilhouette AnimTask_SnatchOpposingMonMove AnimTask_TeeterDanceMovement_Step GetGlareEyeDotCoords 
+- mul: src/battle_anim_electric.c :: AnimSparkElectricity 
+- mul: src/battle_anim_fire.c :: AnimTask_ShakeTargetInPattern CreateEruptionLaunchRocks UpdateEruptionLaunchRockPos 
+- mul: src/battle_anim_flying.c :: AnimFallingFeather AnimFallingFeather_Step AnimUnusedFeather_Step AnimWhirlwindLine 
+- mul: src/battle_anim_ghost.c :: AnimTask_GrudgeFlames_Step 
+- mul: src/battle_anim_mon_movement.c :: AnimTask_RotateMonSpriteToSide AnimTask_RotateMonToSideAndRestore 
+- mul: src/battle_anim_mons.c :: GetBattlerSpriteCoord GetBattlerSpriteCoordAttr GetBattlerYCoordWithElevation GetBattlerYDelta GetBattlerYDeltaFromSpriteId IsBattlerSpritePresent 
+- mul: src/battle_anim_sound_tasks.c :: SoundTask_PlayCryHighPitch SoundTask_PlayDoubleCry 
+- mul: src/battle_anim_special.c :: AnimTask_SwitchOutBallEffect 
+- mul: src/battle_anim_utility_funcs.c :: AnimTask_DrawFallingWhiteLinesOnAttacker StartMonScrollingBgMask StatsChangeAnimation_Step1 
+- mul: src/battle_anim_water.c :: AnimWaterPulseRing_Step CreateWaterSpoutRainDroplet GetWaterSpoutPowerForAnim 
+- mul: src/battle_controller_link_opponent.c :: CopyLinkOpponentMonData Intro_TryShinyAnimShowHealthbox LinkOpponentHandleFaintingCry LinkOpponentHandleHealthBarUpdate LinkOpponentHandleLoadMonSprite LinkOpponentHandleSetRawMonData LinkOpponentHandleStatusIconUpdate SetLinkOpponentMonData StartSendOutAnim SwitchIn_ShowHealthbox SwitchIn_TryShinyAnim TryShinyAnimAfterMonAnim 
+- mul: src/battle_controller_link_partner.c :: CompleteOnHealthbarDone CopyLinkPartnerMonData Intro_ShowHealthbox LinkPartnerHandleFaintAnimation LinkPartnerHandleFaintingCry LinkPartnerHandleHealthBarUpdate LinkPartnerHandleLoadMonSprite LinkPartnerHandleSetRawMonData LinkPartnerHandleStatusIconUpdate LinkPartnerHandleSwitchInAnim SetLinkPartnerMonData StartSendOutAnim SwitchIn_ShowHealthbox SwitchIn_TryShinyAnim Task_StartSendOutAnim 
+- mul: src/battle_controller_oak_old_man.c :: CompleteOnHealthbarDone CopyOakOldManMonData DestroyExpTaskAndCompleteOnInactiveTextPrinter Intro_TryShinyAnimShowHealthbox Intro_WaitForShinyAnimAndHealthbox OakOldManHandleExpUpdate OakOldManHandleFaintAnimation OakOldManHandleFaintingCry OakOldManHandleHealthBarUpdate SetOakOldManMonData StartSendOutAnim Task_GiveExpToMon Task_GiveExpWithExpBar Task_PrepareToGiveExpWithExpBar Task_UpdateLvlInHealthbox 
+- mul: src/battle_controller_opponent.c :: GetOpponentMonData Intro_TryShinyAnimShowHealthbox OpponentHandleChoosePokemon OpponentHandleFaintingCry OpponentHandleGetRawMonData OpponentHandleHealthBarUpdate OpponentHandleLoadMonSprite OpponentHandleSetRawMonData OpponentHandleStatusIconUpdate SetOpponentMonData StartSendOutAnim SwitchIn_ShowHealthbox SwitchIn_TryShinyAnim TryShinyAnimAfterMonAnim 
+- mul: src/battle_controller_player.c :: CompleteOnHealthbarDone CopyPlayerMonData HandleInputChooseTarget HandleMoveSwitching Intro_TryShinyAnimShowHealthbox Intro_WaitForShinyAnimAndHealthbox MoveSelectionDisplayMoveNames PlayerHandleExpUpdate PlayerHandleFaintAnimation PlayerHandleFaintingCry PlayerHandleGetRawMonData PlayerHandleHealthBarUpdate PlayerHandleLoadMonSprite PlayerHandleSetRawMonData PlayerHandleStatusIconUpdate PlayerHandleStatusXor PlayerHandleSwitchInAnim SetPlayerMonData SpriteCB_FreePlayerSpriteLoadMonSprite StartSendOutAnim SwitchIn_HandleSoundAndEnd SwitchIn_TryShinyAnimShowHealthbox Task_GiveExpToMon Task_GiveExpWithExpBar Task_PrepareToGiveExpWithExpBar Task_StartSendOutAnim Task_UpdateLvlInHealthbox 
+- mul: src/battle_controller_pokedude.c :: CompleteOnBattlerSpritePosX_0 CompleteOnHealthbarDone CopyPokedudeMonData DestroyExpTaskAndCompleteOnInactiveTextPrinter InitPokedudePartyAndOpponent Intro_TryShinyAnimShowHealthbox Intro_WaitForShinyAnimAndHealthbox PokedudeHandleExpUpdate PokedudeHandleFaintAnimation PokedudeHandleFaintingCry PokedudeHandleHealthBarUpdate PokedudeHandleLoadMonSprite PokedudeHandleStatusIconUpdate PokedudeHandleStatusXor PokedudeHandleSwitchInAnim SetPokedudeMonData StartSendOutAnim SwitchIn_HandleSoundAndEnd SwitchIn_TryShinyAnimShowHealthbox Task_GiveExpToMon Task_GiveExpWithExpBar Task_PrepareToGiveExpWithExpBar Task_UpdateLvlInHealthbox 
+- mul: src/battle_controller_safari.c :: SafariHandleFaintingCry SafariHandleIntroTrainerBallThrow SafariHandleStatusIconUpdate 
+- mul: src/battle_gfx_sfx_util.c :: BattleInitAllSprites BattleLoadSubstituteOrMonSpriteGfx HandleBattleLowHpMusicChange HandleSpeciesGfxDataChange 
+- mul: src/battle_interface.c :: CalcBarFilledPixels GetReceivedValueInPixels GetScaledHPFraction MoveBattleBarGraphically SwapHpBarsWithHpText TryAddPokeballIconToHealthbox UpdateHealthboxAttribute UpdateNickInHealthbox UpdateStatusIconInHealthbox 
+- mul: src/battle_main.c :: BattleIntroDrawPartySummaryScreens BattleIntroDrawTrainersOrMonsSprites BattleIntroRecordMonsToDex BattleStartClearSetData BufferPartyVsScreenHealth_AtEnd BufferPartyVsScreenHealth_AtStart CheckFocusPunch_ClearVarsBeforeTurnStarts CreateNPCTrainerParty FaintClearSetData GetWhoStrikesFirst HandleAction_Run HandleAction_UseMove HandleAction_WatchesCarefully HandleEndTurn_ContinueBattle HandleEndTurn_FinishBattle HandleTurnActionSelectionState IsRunningFromBattleImpossible PrepareOwnMultiPartnerBuffer SpriteCB_FaintOpponentMon SwitchInClearSetData TryEvolvePokemon TryRunFromBattle TurnValuesCleanUp 
+- mul: src/battle_message.c :: BattleStringExpandPlaceholders BufferStringBattle ExpandBattleTextBuffPlaceholders 
+- mul: src/battle_transition.c :: Spiral_UpdateFrame 
+- mul: src/battle_util.c :: AbilityBattleEffects AtkCanceller_UnableToUseMove CancelMultiTurnMoves CastformDataTypeChange CheckMoveLimitations ClearFuryCutterDestinyBondGrudge DoBattlerEndTurnEffects DoFieldEndTurnEffects GetImprisonedMovesCount GetMoveTarget HandleFaintedMonActions HandleWishPerishSongOnTurnEnd HasNoMonsToSwitch IsBattlerModernFatefulEncounter IsMonDisobedient ItemBattleEffects PressurePPLose PressurePPLoseOnUsingImprison PressurePPLoseOnUsingPerishSong TrySetCantSelectMoveBattleScript 
+- mul: src/battle_util2.c :: AdjustFriendshipOnBattleFaint 
+- mul: src/berry_crush.c :: Cmd_TabulateResults 
+- mul: src/berry_pouch.c :: Task_AskSellMultiple Task_SellBerries_PlaySfxAndRemoveBerries Task_SellYes Task_Sell_PrintSelectMultipleUI Task_Sell_SelectMultiple 
+- mul: src/bg.c :: CopyRectToBgTilemapBufferRect CopyToBgTilemapBufferRect FillBgTilemapBufferRect_Palette0 WriteSequenceToBgTilemapBuffer 
+- mul: src/blend_palette.c :: BlendPalette BlendPalettesAt 
+- mul: src/blit.c :: BlitBitmapRect4Bit BlitBitmapRect4BitTo8Bit FillBitmapRect4Bit FillBitmapRect8Bit 
+- mul: src/digit_obj_util.c :: DrawNumObjsLeadingZeros DrawNumObjsMinusInBack DrawNumObjsMinusInFront 
+- mul: src/dodrio_berry_picking.c :: GetPlayerIdAtColumn GetScore IsDodrioInParty ReadyToEndGame_Member StartDodrioBerryPicking TryIncrementDifficulty UpdateBerrySprites 
+- mul: src/easy_chat.c :: GetEasyChatWord 
+- mul: src/easy_chat_2.c :: EasyChat_AllocateResources GetSelectedFieldIndex 
+- mul: src/easy_chat_3.c :: ECInterfaceCmd_02 MoveCursor_Group PrintECGroupsMenu PrintECRowsWin2 SetSelectWordCursorSpritePos 
+- mul: src/evolution_graphics.c :: SpriteCB_PostEvoSparkleSet2 SpriteCB_PreEvoSparkleSet1 SpriteCB_PreEvoSparkleSet2 
+- mul: src/evolution_scene.c :: CB2_EvolutionSceneLoadGraphics CB2_TradeEvolutionSceneLoadGraphics CreateShedinja EvolutionScene Task_BeginEvolutionScene Task_EvolutionScene Task_TradeEvolutionScene TradeEvolutionScene 
+- mul: src/field_effect.c :: FldEff_FieldMoveShowMonInit MultiplyInvertedPaletteRGBComponents MultiplyPaletteRGBComponents 
+- mul: src/field_poison.c :: FaintFromFieldPoison MonFaintedFromPoison 
+- mul: src/field_weather.c :: ApplyDroughtGammaShiftWithBlend ApplyFogBlend ApplyGammaShiftWithBlend 
+- mul: src/field_weather_effects.c :: StartRainSpriteFall UpdateSandstormSwirlSprite 
+- mul: src/fieldmap.c :: FillConnection GetMapBorderIdAt InitMapLayoutData LoadSavedMapView MapGridGetCollisionAt MapGridGetElevationAt MapGridGetMetatileIdAt MapGridSetMetatileEntryAt MapGridSetMetatileIdAt MapGridSetMetatileImpassabilityAt MoveMapViewToBackup SaveMapView 
+- mul: src/fldeff_softboiled.c :: SetUpFieldMove_SoftBoiled Task_DisplayHPRestoredMessage Task_SoftboiledRestoreHealth Task_TryUseSoftboiledOnPartyMon 
+- mul: src/help_message.c :: DrawHelpMessageWindowTilesById 
+- mul: src/help_system_util.c :: HS_RemoveSelectionCursorAt PlaceListMenuCursor 
+- mul: src/image_processing_effects.c :: ApplyImageEffect_BlackAndWhite ApplyImageEffect_BlackOutline ApplyImageEffect_Blur ApplyImageEffect_BlurDown ApplyImageEffect_BlurRight ApplyImageEffect_Grayscale ApplyImageEffect_Invert ApplyImageEffect_PersonalityColor ApplyImageEffect_RedChannelGrayscale ApplyImageEffect_RedChannelGrayscaleHighlight ConvertImageProcessingToGBA QuantizePalette_BlackAndWhite QuantizePalette_Grayscale QuantizePalette_GrayscaleSmall QuantizePalette_PrimaryColors QuantizePalette_Standard QuantizePixel_Blur QuantizePixel_BlurHard QuantizePixel_MotionBlur 
+- mul: src/intro.c :: CreateNidorinoRecoilDustSprites GFScene_CreateStarSparkle Scene3_Task_GengarAttack SpriteCB_NidorinoAttack SpriteCB_NidorinoRecoil SpriteCB_Star 
+- mul: src/item_menu.c :: Task_FinalizeSaleToShop Task_InitSaleQuantitySelectInterface Task_PrintSaleConfirmationText Task_SelectQuantityToSell Task_SellItem_Yes 
+- mul: src/item_pc.c :: ItemPc_MoveCursorFunc 
+- mul: src/learn_move.c :: MoveRelearnerInitListMenuBuffersEtc MoveRelearnerMenuHandleInput MoveRelearnerStateMachine SpriteCB_ListMenuScrollIndicators 
+- mul: src/librfu_rfu.c :: rfu_STC_NI_initSlot_asRecvDataEntity rfu_STC_NI_receive_Sender 
+- mul: src/link.c :: DequeueRecvCmds DoRecv DoSend EnqueueSendCmd ResetRecvBuffer ResetSendBuffer 
+- mul: src/link_rfu_3.c :: RfuRecvQueue_Dequeue RfuRecvQueue_Enqueue RfuRecvQueue_Reset 
+- mul: src/list_menu.c :: ListMenuDrawCursor ListMenuErasePrintedCursor ListMenuGetYCoordForPrintingArrowCursor ListMenuPrintEntries ListMenuScroll 
+- mul: src/load_save.c :: LoadPlayerParty SavePlayerParty 
+- mul: src/m4a.c :: CgbModVol CgbSound MidiKeyToCgbFreq SampleFreqSet SetPokemonCryTone TrkVolPitSet m4aMPlayTempoControl 
+- mul: src/mail.c :: AddMailMessagePrinters BufferMailMessage 
+- mul: src/math_util.c :: Q_8_8_mul Q_N_S_mul 
+- mul: src/menu.c :: AddItemMenuActionTextPrinters Menu_RedrawCursor MultichoiceGrid_InitCursor MultichoiceGrid_MoveCursor MultichoiceGrid_MoveCursorIfValid MultichoiceGrid_PrintItems MultichoiceGrid_PrintItemsCustomOrder MultichoiceGrid_RedrawCursor MultichoiceList_PrintItems PrintTextArray 
+- mul: src/menu2.c :: UnusedBlitBitmapRect 
+- mul: src/menu_indicators.c :: SpriteCallback_ScrollIndicatorArrow 
+- mul: src/new_menu_helpers.c :: CopyToBufferFromBgTilemap 
+- mul: src/option_menu.c :: BufferOptionMenuString LoadOptionMenuItemNames UpdateSettingSelectionDisplay 
+- mul: src/palette.c :: CopyPaletteInvertedTint PaletteStruct_Blend PaletteStruct_Copy TintPalette_CustomTone TintPalette_GrayScale TintPalette_GrayScale2 TintPalette_SepiaTone 
+- mul: src/party_menu_specials.c :: BufferMoveDeleterNicknameAndMove GetNumMovesSelectedMonHas IsSelectedMonEgg MoveDeleterForgetMove 
+- mul: src/pokeball.c :: GetBattlerPokeballItemId SpriteCB_ReleaseMonFromBall SpriteCB_ReleasedMonFlyOut Task_DoPokeballSendOutAnim 
+- mul: src/pokedex_screen.c :: DexScreen_CountMonsInOrderedList DexScreen_DrawMonAreaPage DexScreen_DrawMonDexPage DexScreen_DrawMonPicInCategoryPage DexScreen_PrintMonHeight DexScreen_PrintMonWeight 
+- mul: src/pokemon.c :: AdjustFriendship CalculateBaseDamage CalculateEnemyPartyCount CalculateMonStats CalculatePPWithBonus CalculatePlayerPartyCount CheckPartyHasHadPokerus CheckPartyPokerus CopyPlayerPartyMonToBattleData CreateBoxMon CreateMonSpritesGfxManager CreateSecretBaseEnemyParty EvolutionRenameMon GetLevelFromBoxMonExp GetLevelFromMonExp GetMonsStateToDoubles GetPlayerPartyHighestLevel GetSpeciesName GiveMonToPlayer HealStatusConditions InitMonSpritesGfx_Mode0 InitMonSpritesGfx_Mode1 IsPlayerPartyAndPokemonStorageFull ModifyStatByNature MonGainEVs PokemonItemUseNoEffect PokemonUseItemEffects SetDeoxysStats SetMonExpWithMaxLevelCheck TryIncrementMonLevel 
+- mul: src/pokemon_icon.c :: UpdateMonIconFrame 
+- mul: src/pokemon_jump.c :: IsPokemonJumpSpeciesInParty PokeJumpRandom StartPokemonJump 
+- mul: src/pokemon_size_record.c :: CompareMonSize FormatMonSizeRecord GetMonSizeHash GetMonSizeRecordInfo GiveGiftRibbonToParty 
+- mul: src/pokemon_special_anim.c :: AllocPSA StartUseItemAnim_ForgetMoveAndLearnTMorHM 
+- mul: src/pokemon_special_anim_scene.c :: CreateLevelUpVerticalSprite GetSpriteOffsetByScale GetYPosByScale PSAScene_RandomFromTask SpriteCB_OutwardSpiralDots SpriteCallback_UseItem_OutwardSpiralDots Task_UseItem_OutwardSpiralDots 
+- mul: src/pokemon_storage_system_data.c :: CompactPartySlots GetCursorCoordsByPos GetSpeciesAtCursorPosition InitCanReleaseMonVars PurgeMonOrBoxMon RunCanReleaseMon SetDisplayMonData SetMonMarkings SetMovedMonData SetPlacedMonData SetShiftedMonData TrySetDisplayMonData 
+- mul: src/pokemon_storage_system_graphics.c :: CreateBoxMonIconsInColumn CreatePartyMonsSprites 
+- mul: src/pokemon_storage_system_menu.c :: CountPartyAliveNonEggMonsExcept CountPartyMons CountPartyNonEggMons UnusedWriteRectCpu 
+- mul: src/pokemon_storage_system_misc.c :: Item_FromMonToMoving Item_GiveMovingToMon Item_SwitchMonsWithMoving Item_TakeMons TryLoadItemIconAtPos UnkUtil_CpuAdd 
+- mul: src/pokemon_storage_system_tasks.c :: GiveChosenBagItem SetPartySlotTilemaps SetPokeStorageQuestLogEvent 
+- mul: src/quest_log_battle.c :: TrySetQuestLogBattleEvent 
+- mul: src/random.c :: Random 
+- mul: src/reshow_battle_screen.c :: CB2_ReshowBattleScreenAfterMenu CreateBattlerSprite CreateHealthboxSprite LoadBattlerSpriteGfx 
+- mul: src/scanline_effect.c :: GenerateWave 
+- mul: src/script_menu.c :: ScriptMenu_MultichoiceGrid 
+- mul: src/script_pokemon_util.c :: CheckPartyMonHasHeldItem HealPlayerParty ReducePlayerPartyToThree ScriptSetMonMoveSlot 
+- mul: src/shop.c :: BuyMenuBuildListMenuTemplate LoadTmHmNameInMart RecordItemTransaction Task_BuyHowManyDialogueHandleInput 
+- mul: src/slot_machine.c :: UpdateCoinsDisplay 
+- mul: src/sprite.c :: GetAnchorCoord 
+- mul: src/string_util.c :: ConvertIntToDecimalStringN 
+- mul: src/text.c :: GetStringWidthFixedWidthFont 
+- mul: src/text_printer.c :: CopyGlyphToWindow CopyGlyphToWindow_Parameterized 
+- mul: src/tilemap_util.c :: TilemapUtil_Draw TilemapUtil_DrawPrev TilemapUtil_SetTilemap 
+- mul: src/title_screen.c :: TitleScreen_rand 
+- mul: src/tm_case.c :: GetTMNumberAndMoveString Task_AskConfirmSaleWithAmount Task_DoSaleOfTMs Task_InitQuantitySelectUI Task_PrintSaleConfirmedText Task_QuantitySelect_HandleInput 
+- mul: src/trade.c :: BufferMovesString CB2_CreateTradeMenu CB2_ReturnToTradeMenuFromSummary CanTradeSelectedMon CheckValidityOfTradeMons ComputePartyHPBarLevels ComputePartyTradeableFlags GetMonNicknameWidth PrintLevelAndGender PrintPartyNicknames 
+- mul: src/trainer_card.c :: InitTrainerCardData Task_AnimateCardFlipDown Task_AnimateCardFlipUp 
+- mul: src/trig.c :: Cos Sin 
+- mul: src/union_room_battle.c :: SetUpPartiesAndStartBattle 
+- mul: src/window.c :: AddWindow CopyWindowToVram FillWindowPixelBuffer InitWindows PutWindowRectTilemap PutWindowRectTilemapOverridePalette RemoveWindow ScrollWindow 
+- mul: src/window_8bpp.c :: AddWindow8Bit CopyWindowToVram8Bit FillWindowPixelBuffer8Bit 
+- DOUBLE-HOME: src/battle_controller_player.c src/battle_controller_pokedude.c :: CompleteOnBattlerSpritePosX_0
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: CompleteOnHealthbarDone
+- DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: DestroyExpTaskAndCompleteOnInactiveTextPrinter
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Intro_TryShinyAnimShowHealthbox
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Intro_WaitForShinyAnimAndHealthbox
+- DOUBLE-HOME: src/intro.c src/pokemon_jump.c src/pokemon_special_anim_scene.c :: SpriteCB_Star
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: StartSendOutAnim
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: SwitchIn_HandleSoundAndEnd
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_opponent.c :: SwitchIn_ShowHealthbox
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_opponent.c :: SwitchIn_TryShinyAnim
+- DOUBLE-HOME: src/battle_controller_player.c src/battle_controller_pokedude.c :: SwitchIn_TryShinyAnimShowHealthbox
+- DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_GiveExpToMon
+- DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_GiveExpWithExpBar
+- DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_PrepareToGiveExpWithExpBar
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_link_partner.c src/battle_controller_oak_old_man.c src/battle_controller_opponent.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_StartSendOutAnim
+- DOUBLE-HOME: src/battle_controller_oak_old_man.c src/battle_controller_player.c src/battle_controller_pokedude.c :: Task_UpdateLvlInHealthbox
+- DOUBLE-HOME: src/battle_controller_link_opponent.c src/battle_controller_opponent.c :: TryShinyAnimAfterMonAnim

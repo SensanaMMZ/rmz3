@@ -1,0 +1,84 @@
+<!-- pokeruby :: trait=udiv :: crawled 2026-07-25 :: 303/352 files compiled -->
+- udiv: src/battle/anim/bottle.c :: sub_80CD0CC 
+- udiv: src/battle/anim/current.c :: sub_80D72DC 
+- udiv: src/battle/anim/dark.c :: sub_80E079C 
+- udiv: src/battle/anim/dragon.c :: sub_80DFB28 sub_80DFBD8 
+- udiv: src/battle/anim/energy_wave.c :: sub_80D3554 
+- udiv: src/battle/anim/evasion.c :: sub_80CE974 
+- udiv: src/battle/anim/flying.c :: sub_80DB374 sub_80DB5E4 
+- udiv: src/battle/anim/ghost.c :: AnimShadowBallStep InitAnimShadowBall sub_80DE61C sub_80DE7B8 sub_80DE918 
+- udiv: src/battle/anim/ground.c :: sub_80E1864 
+- udiv: src/battle/anim/homing.c :: sub_80CC6CC 
+- udiv: src/battle/anim/hop.c :: sub_80CB814 sub_80CB8E8 sub_80CB9C4 
+- udiv: src/battle/anim/hop_2.c :: sub_80CBB60 
+- udiv: src/battle/anim/ice.c :: sub_80D8BA8 
+- udiv: src/battle/anim/musical.c :: sub_80CEBC4 sub_80CECE8 
+- udiv: src/battle/anim/poison.c :: sub_80D9E94 
+- udiv: src/battle/anim/psychic.c :: sub_80DBE00 
+- udiv: src/battle/anim/rock.c :: sub_80DD4D4 sub_80DD9FC sub_80DDA8C 
+- udiv: src/battle/anim/roots.c :: sub_80CB620 
+- udiv: src/battle/anim/sleep.c :: sub_80CD394 
+- udiv: src/battle/anim/strike.c :: sub_80CE670 
+- udiv: src/battle/anim/switch.c :: sub_80CBC8C 
+- udiv: src/battle/anim/unused_3.c :: sub_80CD2D4 
+- udiv: src/battle/anim/water.c :: sub_80D4C18 sub_80D4CEC 
+- udiv: src/battle_ai_script_commands.c :: BattleAICmd_if_can_faint BattleAICmd_if_cant_faint BattleAICmd_if_hp_equal BattleAICmd_if_hp_less_than BattleAICmd_if_hp_more_than BattleAICmd_if_hp_not_equal BattleAICmd_is_most_powerful_move 
+- udiv: src/battle_ai_switch_items.c :: ModulateByTypeEffectiveness 
+- udiv: src/battle_anim_effects_3.c :: sub_812E8B4 sub_812EA4C sub_812F474 sub_812F804 sub_8130424 sub_81311E4 
+- udiv: src/battle_anim_mon_movement.c :: AnimTask_WindUpLunge sub_80A9058 
+- udiv: src/battle_anim_special.c :: sub_813FEC8 
+- udiv: src/battle_interface.c :: CalcBarFilledPixels GetScaledExpFraction GetScaledHPFraction MoveBattleBar sub_8043740 sub_8045F58 
+- udiv: src/battle_main.c :: BattleStartClearSetData CreateNPCTrainerParty GetWhoStrikesFirst TryRunFromBattle 
+- udiv: src/battle_script_commands.c :: AI_CalcDmg ModulateDmgByType ModulateDmgByType2 SetMoveEffect TypeCalc Unused_ApplyRandomDmgMultiplier atk01_accuracycheck atk05_damagecalc atk06_typecalc atk07_adjustnormaldamage atk08_adjustnormaldamage2 atk23_getexp atk52_switchineffects atk73_hpthresholds atk74_hpthresholds2 atk86_stockpiletobasedamage atk87_stockpiletohpheal atkA0_psywavedamageeffect atkB6_happinesstodamagecalculation atkC0_recoverbasedonsunlight atkC1_hiddenpowercalc atkC3_trysetfutureattack atkC4_trydobeatup atkD9_scaledamagebyhealthratio atkEF_handleballthrow 
+- udiv: src/battle_util.c :: ItemBattleEffects 
+- udiv: src/berry_blender.c :: BlenderDebug_PrintBerryData Blender_CalculatePokeblock Blender_PrintBlendingResults ShowBerryBlenderRecordWindow sub_804F8C8 sub_804F9F4 sub_804FB1C sub_804FD30 sub_804FE70 sub_8051650 sub_805197C sub_8051A3C 
+- udiv: src/berry_tag_screen.c :: sub_81464E4 
+- udiv: src/calculate_base_damage.c :: CalculateBaseDamage 
+- udiv: src/contest_ai.c :: ContestAICmd_get_condition ContestAICmd_get_user_condition_maybe ContestAICmd_unk_31 ContestAICmd_unk_36 
+- udiv: src/contest_effect.c :: ContestEffect_MakeFollowingMonsNervous 
+- udiv: src/contest_link_util.c :: sub_80C3990 sub_80C39E4 sub_80C3F00 sub_80C40D4 
+- udiv: src/contest_painting.c :: GetImageEffectForContestWinner LoadContestPaintingFrame 
+- udiv: src/credits.c :: SpriteCB_CreditsMon 
+- udiv: src/daycare.c :: _ShouldEggHatch 
+- udiv: src/debug/sound_check_menu.c :: PrintSignedNumber PrintSoundNumber 
+- udiv: src/dewford_trend.c :: UpdateDewfordTrendPerDay 
+- udiv: src/easy_chat_1.c :: sub_80E7F00 
+- udiv: src/evolution_graphics.c :: SpriteCB_PostEvoSparkleSet2 SpriteCB_PreEvoSparkleSet1 SpriteCB_PreEvoSparkleSet2 sub_8149E7C sub_814A03C 
+- udiv: src/field_weather_effects.c :: CreateAshSprites CreateFog1Sprites CreateFog2Sprites CreateSandstormSprites_1 sub_807E4EC sub_807E6F0 
+- udiv: src/fldeff_softboiled.c :: SetUpFieldMove_SoftBoiled sub_8133D50 
+- udiv: src/image_processing_effects.c :: ConvertColorToGrayscale GetCoolColorFromPersonality QuantizePixel_Blur QuantizePixel_BlurHard QuantizePixel_Grayscale QuantizePixel_GrayscaleSmall QuantizePixel_MotionBlur 
+- udiv: src/intro.c :: Task_IntroSpinAndZoomPokeball sub_813D0CC 
+- udiv: src/item_menu.c :: sub_80A4BF0 
+- udiv: src/libs/m4a.c :: SampleFreqSet 
+- udiv: src/lottery_corner.c :: GetMatchingDigits 
+- udiv: src/menu.c :: MoveMenuCursor3 MoveMenuCursorGridLayout sub_8072484 sub_80724F4 
+- udiv: src/move_tutor_menu.c :: PrintMoveInfo 
+- udiv: src/option_menu.c :: FrameType_DrawChoices 
+- udiv: src/party_menu.c :: DrawMonDescriptorStatus PrintNewStatsInLevelUpWindow PrintStatGrowthsInLevelUpWindow 
+- udiv: src/pokeball.c :: SendOutPlayerMonAnimation_Step1 
+- udiv: src/pokeblock.c :: sub_810BDAC 
+- udiv: src/pokeblock_feed.c :: sub_814862C 
+- udiv: src/pokedex.c :: CreateInterfaceSprites CreateMonDexNum PrintEntryScreenDexNum SpriteCB_PokedexListMonSprite SpriteCB_Scrollbar UnusedPrintDecimalNum UpdateDexListScroll sub_8091458 sub_8091564 
+- udiv: src/pokedex_cry_screen.c :: DrawWaveformSegment 
+- udiv: src/pokemon_1.c :: CalculateMonStats CreateMonWithEVSpread 
+- udiv: src/pokemon_2.c :: CalculatePPWithBonus 
+- udiv: src/pokemon_3.c :: AdjustFriendship nature_stat_mod 
+- udiv: src/pokemon_item_effect.c :: PokemonUseItemEffects 
+- udiv: src/pokemon_size_record.c :: FormatMonSizeRecord 
+- udiv: src/pokemon_storage_system_3.c :: sub_8098D20 
+- udiv: src/pokemon_storage_system_4.c :: sub_809AACC sub_809AD94 sub_809C464 
+- udiv: src/pokenav.c :: sub_80EF624 sub_80F468C sub_80F53EC sub_80F5688 
+- udiv: src/rom_8077ABC.c :: InitAnimArcTranslation InitAnimLinearTranslation InitSpriteDataForLinearTranslation sub_8078314 sub_8078BD4 sub_8078C28 sub_8078D60 sub_8079108 sub_8079A64 sub_8079AB8 sub_8079C08 sub_807A960 
+- udiv: src/roulette.c :: sub_81157D0 sub_8115A94 sub_8116EF8 sub_8117380 sub_81174E0 
+- udiv: src/roulette_gfx.c :: sub_81180F4 sub_81181E8 sub_811889C sub_8118B30 sub_8118D2C sub_8118DE4 
+- udiv: src/scanline_effect.c :: ScanlineEffect_InitWave 
+- udiv: src/script_menu.c :: ScriptMenu_MultichoiceGrid 
+- udiv: src/shop.c :: Shop_UpdateCurItemCountToMax 
+- udiv: src/slot_machine.c :: sub_8102C84 sub_8102D28 sub_8104F18 sub_810506C sub_810535C 
+- udiv: src/sprite.c :: ConvertScaleParam 
+- udiv: src/string_util.c :: ConvertIntToDecimalString ConvertIntToDecimalStringN ConvertIntToDecimalStringN_DigitWidth6 ConvertIntToHexStringN 
+- udiv: src/trade.c :: sub_8048D44 sub_8049E9C sub_804A51C sub_804C29C sub_804D6BC 
+- udiv: src/trainer_card.c :: TrainerCard_ScaleDownFlipAnimation TrainerCard_ScaleUpFlipAnimation 
+- udiv: src/trig.c :: Sin2 
+- udiv: src/use_pokeblock.c :: sub_8136F74 
+- udiv: src/wallclock.c :: InitClockWithRtc Task_SetClock2 

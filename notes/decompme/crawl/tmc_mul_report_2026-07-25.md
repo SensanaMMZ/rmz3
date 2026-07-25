@@ -1,0 +1,43 @@
+<!-- tmc :: trait=mul :: crawled 2026-07-25 :: 601/619 files compiled -->
+- mul: src/code_08049DF4.c :: sub_08049F1C 
+- mul: src/demo.c :: sub_080A2FD0 
+- mul: src/enemy/enemy50.c :: Enemy50_Action3 
+- mul: src/enemy/gyorgMale.c :: sub_08047EA4 sub_08047F68 
+- mul: src/enemy/octorokBoss.c :: OctorokBoss_Action1 
+- mul: src/enemy/puffstool.c :: sub_080258C4 
+- mul: src/enemy/vaatiArm.c :: sub_0804393C 
+- mul: src/fileselect.c :: LoadOptionsFromSave ResetEmptyOrDeletedSaveFile ResetSaveFile SetActiveSave sub_0805070C sub_08050EB8 sub_08050EF4 sub_08051574 sub_08051874 
+- mul: src/gba/m4a.c :: CgbModVol CgbSound MidiKeyToCgbFreq SampleFreqSet TrkVolPitSet m4aMPlayTempoControl 
+- mul: src/manager/lightRayManager.c :: sub_0805732C 
+- mul: src/manager/minishRaftersBackgroundManager.c :: sub_08058244 
+- mul: src/manager/steamOverlayManager.c :: sub_0805A114 
+- mul: src/manager/vaati3StartManager.c :: Vaati3StartManager_Type0_Action1 
+- mul: src/manager/vaatiAppearingManager.c :: sub_0805DA08 
+- mul: src/manager/weatherChangeManager.c :: MixColors 
+- mul: src/menu/figurineMenu.c :: FigurineMenu_080A4978 
+- mul: src/menu/kinstoneMenu.c :: KinstoneMenu_Type1 
+- mul: src/menu/pauseMenuScreen6.c :: sub_080A69E0 
+- mul: src/message.c :: ChangeWindowSize 
+- mul: src/movement.c :: MoveEast MoveNorth MoveNorthEast MoveNorthWest MoveSouth MoveSouthEast MoveSouthWest MoveWest 
+- mul: src/npc/npc5.c :: ZeldaCalcWalkSpeed 
+- mul: src/object/cutsceneMiscObject.c :: CutsceneMiscObject_Type14 
+- mul: src/object/figurineDevice.c :: sub_0808826C 
+- mul: src/object/frozenOctorok.c :: FrozenOctorok_Action1 
+- mul: src/object/greatFairy.c :: GreatFairy_CreateForm 
+- mul: src/object/gyorgBossObject.c :: sub_080A1C9C 
+- mul: src/object/keyStealingTakkuri.c :: sub_0809E0D4 
+- mul: src/object/octorokBossObject.c :: OctorokBossObject_Action2 
+- mul: src/object/pullableLever.c :: sub_0809153C 
+- mul: src/object/shrinkingHieroglyphs.c :: ShrinkingHieroglyphs_Action1 ShrinkingHieroglyphs_Action2 ShrinkingHieroglyphs_Init 
+- mul: src/physics.c :: FixedMul PointInsideRadius sub_0806FB38 sub_0806FCF4 
+- mul: src/playerUtils.c :: sub_0807C69C sub_0807C8B0 
+- mul: src/projectile/ballAndChain.c :: sub_080AB074 sub_080AB170 
+- mul: src/projectile/guruguruBarProjectile.c :: sub_080AABB0 
+- mul: src/projectile/gyorgTail.c :: sub_080AC560 sub_080AC7C4 
+- mul: src/projectile/mazaalEnergyBeam.c :: MazaalEnergyBeam_Action1 
+- mul: src/screenTileMap.c :: sub_0807D6D8 
+- mul: src/script.c :: ScriptCommand_MoveTowardsTarget 
+- mul: src/scroll.c :: sub_080803D0 
+- mul: src/sound.c :: doPlaySound 
+- mul: src/text.c :: ShowTextBox 
+- mul: src/ui.c :: ButtonUIElement_Action1 

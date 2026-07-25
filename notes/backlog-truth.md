@@ -568,3 +568,25 @@ FUN_080098a4 collision -> CreateSmoke(3) + DIE. Lifted verbatim into
 src/vfx/unk_62.c, ROM sha1 exact first try. Only the two pool words
 differ (per-file VFX motion consts) and they are data, not code shape.
 Needed metatile.h (FUN_080098a4) added to unk_62.c includes.
+
+## FUN_080b7e3c / FUN_080bd288 — 308B scatter pair (12 bytes, regalloc tie)
+
+Best harness build/scratch/b7e3c/t4.c — instruction stream is IDENTICAL to
+the target; only a 3-way register rotation remains (ours e->r4, RNG->r2,
+LCG temp->r3; target e->r2, RNG->r3, temp->r4). Solved along the way:
+  - tbl pool load must come from its own `const s32* const* tbl = ...`
+    statement (173 -> 17 diffs);
+  - the props u16 is a KEPT pointer (used for %3 and SetMotion) but the
+    s32 at +0x78 is read DIRECTLY off p — mixing those two spellings is
+    what stops agbcc hoisting a unified objects base;
+  - flicker is `if (++(p->s).work[3] & 1)` used INLINE — a named u8 temp
+    emits lsl/lsr #24, the inline pre-increment emits the target's
+    `movs r1,#0xff; ands` (probe TU: build/scratch/b7e3c/probe.c, f6).
+CORPUS CROSS-REFERENCE (tools/decomp_crawl.py, 50589 fns / 15 projects):
+zero functions anywhere in the corpus emit our target's
+`ldr base,[base] / ldr off,[p,#n] / lsl off / add off,off,base` window;
+and every spelling of base+offset we tried (+=, single expr, named base,
+&b[i], commutative swap) canonicalizes to base-as-accumulator. Conclusion:
+the rotation is not reachable by source shape under -O2 -fshort-enums,
+same class as e58bc/elf/hazard. decomp.me candidate (cite the corpus
+evidence in the About text).

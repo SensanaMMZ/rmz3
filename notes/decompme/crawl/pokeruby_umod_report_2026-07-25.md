@@ -1,0 +1,69 @@
+<!-- pokeruby :: trait=umod :: crawled 2026-07-25 :: 303/352 files compiled -->
+- umod: src/battle/anim/angel_kiss.c :: sub_80D2A38 
+- umod: src/battle/anim/bullet.c :: sub_80D0030 
+- umod: src/battle/anim/current.c :: sub_80D6514 sub_80D672C 
+- umod: src/battle/anim/draw.c :: sub_80D0E8C 
+- umod: src/battle/anim/fight.c :: sub_80D90F4 
+- umod: src/battle/anim/normal.c :: sub_80E2870 
+- umod: src/battle/anim/rain.c :: CreateAnimRaindrops 
+- umod: src/battle/anim/ring.c :: sub_80D1504 
+- umod: src/battle/anim/scan.c :: sub_80CD67C 
+- umod: src/battle/anim/water.c :: sub_80D452C sub_80D472C sub_80D4D64 
+- umod: src/battle/anim/wisp_fire.c :: sub_80D60B4 
+- umod: src/battle_ai_script_commands.c :: BattleAICmd_if_random_100 BattleAI_GetAIActionToUse 
+- umod: src/battle_ai_switch_items.c :: FindMonThatAbsorbsOpponentsMove FindMonWithFlagsAndSuperEffective HasSuperEffectiveMoveAgainstOpponents ShouldSwitchIfWonderGuard 
+- umod: src/battle_anim_effects_3.c :: sub_812D4EC sub_812E8B4 sub_812EC78 
+- umod: src/battle_interface.c :: sub_8043740 
+- umod: src/battle_main.c :: sub_8010384 
+- umod: src/battle_script_commands.c :: SetMoveEffect atk01_accuracycheck atk04_critcalc atk07_adjustnormaldamage atk08_adjustnormaldamage2 atk15_seteffectwithchance atk69_adjustsetdamage atk8F_forcerandomswitch atkB9_magnitudedamagecalculation atkE5_pickup 
+- umod: src/battle_util.c :: AbilityBattleEffects AtkCanceller_UnableToUseMove GetMoveTarget ItemBattleEffects 
+- umod: src/berry.c :: CalcBerryYieldInternal 
+- umod: src/berry_blender.c :: Blender_CalculatePokeblock Blender_PrintBlendingResults ShowBerryBlenderRecordWindow sub_804F1BC sub_805156C sub_8051A3C sub_8051AC8 sub_8051B40 
+- umod: src/berry_tag_screen.c :: sub_81464E4 
+- umod: src/contest_effect.c :: ContestEffect_MakeFollowingMonsNervous ContestEffect_QualityDependsOnTiming ContestEffect_ScrambleNextTurnOrder ContestEffect_StartlePrevMon2 ContestEffect_StartlePrevMons2 RoundTowardsZero RoundUp 
+- umod: src/contest_link_util.c :: sub_80C3D04 sub_80C3F00 
+- umod: src/credits.c :: DeterminePokemonToShow 
+- umod: src/daycare.c :: InheritIVs _TriggerPendingDaycareEgg 
+- umod: src/debug/sound_check_menu.c :: PrintSignedNumber PrintSoundNumber 
+- umod: src/decompress.c :: LoadSpecialPokePic 
+- umod: src/dewford_trend.c :: UpdateDewfordTrendPerDay sub_80FA740 
+- umod: src/easy_chat_1.c :: sub_80E7F00 
+- umod: src/evolution_graphics.c :: CreatePostEvoSparkleSet2 
+- umod: src/field_tasks.c :: PerStepCallback_8069AA0 
+- umod: src/field_weather_effects.c :: CreateAshSprites CreateFog1Sprites CreateFog2Sprites CreateSandstormSprites_1 Rain_Main SetThunderCounter sub_807E4EC sub_807E6F0 sub_807EC40 
+- umod: src/fldeff_escalator.c :: sub_80B4710 
+- umod: src/hall_of_fame.c :: sub_81438C4 
+- umod: src/image_processing_effects.c :: AddPointillismPoints GetCoolColorFromPersonality 
+- umod: src/item_menu.c :: sub_80A4BF0 
+- umod: src/lottery_corner.c :: GetMatchingDigits 
+- umod: src/menu.c :: IsGridCursorMovementClamped MoveMenuCursor3 MoveMenuCursorGridLayout sub_8072620 
+- umod: src/naming_screen.c :: MainState_WaitPageSwap sub_80B6B9C sub_80B7740 
+- umod: src/option_menu.c :: FrameType_DrawChoices 
+- umod: src/party_menu.c :: PrintNewStatsInLevelUpWindow PrintStatGrowthsInLevelUpWindow 
+- umod: src/pokeball.c :: SendOutPlayerMonAnimation_Step1 
+- umod: src/pokeblock.c :: sub_810BDAC 
+- umod: src/pokedex.c :: CreateInterfaceSprites CreateMonDexNum PrintEntryScreenDexNum UnusedPrintDecimalNum sub_8091458 sub_8091564 
+- umod: src/pokemon_1.c :: CreateMonWithGenderNatureLetter 
+- umod: src/pokemon_2.c :: GetSecretBaseTrainerNameIndex GetSecretBaseTrainerPicIndex GetSubstruct 
+- umod: src/pokemon_3.c :: GetEvolutionTargetSpecies GetNature GetNatureFromPersonality PartySpreadPokerus RandomlyGivePartyPokerus SetWildMonHeldItem 
+- umod: src/pokemon_icon.c :: GetUnownLetterByPersonality 
+- umod: src/pokemon_size_record.c :: FormatMonSizeRecord 
+- umod: src/pokemon_storage_system_3.c :: sub_8098D20 sub_809960C 
+- umod: src/pokemon_storage_system_4.c :: sub_809AACC sub_809C464 
+- umod: src/pokenav.c :: DrawMonRibbonIcons 
+- umod: src/record_mixing.c :: ReceiveDaycareMailData sub_80B9A88 
+- umod: src/reset_rtc_screen.c :: ResetRtcScreen_PrintTime 
+- umod: src/roamer.c :: CreateInitialRoamerMon RoamerMove RoamerMoveToOtherLocationSet 
+- umod: src/rom_8077ABC.c :: GetBattlerSpriteCoordAttr sub_8077BFC sub_8078504 
+- umod: src/roulette.c :: sub_81157D0 sub_8115A94 sub_8116100 sub_8116EF8 
+- umod: src/roulette_gfx.c :: sub_81180F4 sub_81186E8 sub_8118DE4 sub_811952C 
+- umod: src/rtc.c :: IsLeapYear 
+- umod: src/save.c :: RestoreSaveBackupVarsAndIncrement WriteSaveBlockChunks WriteSingleChunk WriteSomeFlashByte0x25ToPrevSector WriteSomeFlashByteToPrevSector sub_81255B8 
+- umod: src/slot_machine.c :: GetTagOfReelSymbolOnScreenAtPos GetTagOfReelSymbolOnScreenAtPos_AdjustForPixelOffset SlotMachineSetup_0_1 dp15_jump_random_unknown sub_8102C48 sub_8102C84 sub_8102CCC sub_8102D28 sub_8102D5C sub_8102F4C sub_810463C sub_8104860 sub_8104F18 sub_810506C sub_810535C 
+- umod: src/string_util.c :: ConvertIntToDecimalString ConvertIntToHexStringN 
+- umod: src/tileset_anim.c :: sub_8073704 sub_807392C 
+- umod: src/time_events.c :: UpdateBirchState 
+- umod: src/trade.c :: SetTradeSceneStrings sub_8048D44 sub_8049ED4 sub_804A51C sub_804B2D0 sub_804DB84 sub_804E1DC 
+- umod: src/trig.c :: Sin2 
+- umod: src/use_pokeblock.c :: sub_8136F74 
+- umod: src/wallclock.c :: InitClockWithRtc Task_SetClock2 

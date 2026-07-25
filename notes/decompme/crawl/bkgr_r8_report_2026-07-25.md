@@ -1,0 +1,15 @@
+<!-- bkgr :: trait=r8 :: crawled 2026-07-25 :: 16/16 files compiled -->
+- r8: src/alloc.c :: Alloc 
+- r8: src/audio_b.c :: fade_in_volume fade_out_volume 
+- r8: src/debug.c :: display_error_message sub_8010BA8 sub_8010E40 sub_8011158 sub_801243C 
+- r8: src/gameover.c :: sub_80629E8 sub_8062D04 sub_8062FC4 
+- r8: src/hud.c :: sub_803F438 
+- r8: src/main.c :: init_memory init_save_files load_room_directly move_camera render_player start_game sub_0800B04C sub_0800BCD4 sub_0800C388 sub_0800F02C sub_800AA6C sub_800ADAC sub_800C1E8 sub_800E204 sub_800E408 sub_800EB58 update_camera update_efx update_player 
+- r8: src/menu.c :: InitMenu 
+- r8: src/pause_menu.c :: exec_options_menu exec_pause_menu exec_save_menu exec_totals_menu init init_arcade_menu open_pause_menu 
+- r8: src/player.c :: hurt_player sub_80164E0 sub_801657C 
+- r8: src/pregame.c :: ShowEraseData ShowFlashscreens ShowLanguageSelect ShowPressStart ShowSelectGame sub_80246C8 
+- r8: src/random.c :: sub_8044E5C 
+- r8: src/room.c :: SetupAnimationTiles SetupRoom sub_08013378 sub_801392C 
+- r8: src/save.c :: load_save_header save_game 
+- r8: src/script.c :: init_script_engine remove_actors render_scripts script_cmd_actor_init script_cmd_actor_move script_cmd_actor_move_from_cam script_cmd_actor_set_position script_cmd_actor_set_position_from_cam script_cmd_camera_move script_cmd_display_scene_transition script_cmd_display_time_travel_scene script_cmd_load_and_store_room script_cmd_load_room set_random_camera_position start_script sub_805D568 sub_805DB38 sub_8060568 sub_8060CC4 update_script_actor_position update_script_camera 

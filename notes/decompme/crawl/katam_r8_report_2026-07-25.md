@@ -1,0 +1,101 @@
+<!-- katam :: trait=r8 :: crawled 2026-07-25 :: 169/170 files compiled -->
+- r8: src/ability_objects.c :: sub_080A9258 sub_080A9CEC sub_080AA108 sub_080AA6F8 
+- r8: src/bang_bang.c :: sub_080C6B40 
+- r8: src/batafire.c :: sub_080C939C sub_080C9D1C sub_080CA740 sub_080CAEB8 sub_080CB02C 
+- r8: src/batty.c :: sub_080BCCB0 sub_080BCF24 sub_080BD2B4 
+- r8: src/bg.c :: sub_08153060 sub_08153184 
+- r8: src/blipper.c :: sub_080A5188 sub_080A561C sub_080A58C0 sub_080A5B1C sub_080A5C44 sub_080A5E30 sub_080A6210 sub_080A63A0 sub_080A64F0 sub_080A6704 sub_080A6914 sub_080A6AE8 sub_080A6E44 
+- r8: src/bombar.c :: sub_080D7A6C sub_080D85BC sub_080D95A4 sub_080D9764 sub_080D9A04 
+- r8: src/bonkers.c :: sub_080CF68C sub_080CFC50 sub_080D0DC0 sub_080D109C 
+- r8: src/bonus.c :: BonusAddHpOrBattery BonusCreateRandom sub_08122CEC 
+- r8: src/box_boxer.c :: sub_080C72CC sub_080C8548 sub_080C8C30 
+- r8: src/boxin.c :: sub_080B408C sub_080B4338 sub_080B4570 sub_080B479C sub_080B49E8 sub_080B4C38 
+- r8: src/boxy.c :: sub_080D571C sub_080D6E1C sub_080D73C8 
+- r8: src/cannon_fuse.c :: sub_0811DDFC sub_0811E2EC sub_0811E3D0 sub_0811E4B4 sub_0811E6FC 
+- r8: src/chest.c :: sub_0800AEB0 sub_0800B414 sub_0800B7A4 sub_0800B97C 
+- r8: src/chip.c :: sub_080AB04C 
+- r8: src/code_080023A4.c :: CreateLevelObjects sub_08001408 sub_080019F8 sub_08001FF8 sub_080021E4 sub_08003108 sub_08003438 sub_080035F4 sub_08003704 sub_0800385C sub_08004008 sub_080042BC sub_08004B58 sub_08004DBC sub_08004FA8 sub_0800520C sub_08005544 sub_080057A4 sub_08005A04 sub_08005BF8 sub_08005DE0 sub_08005FD8 sub_080061C4 sub_080063B0 sub_08006598 sub_08006960 sub_08006DF8 sub_0800705C sub_080072BC sub_08007528 sub_08007720 sub_0800798C sub_08007B84 sub_08007DE0 sub_08008038 sub_08008298 sub_08008484 sub_080086E0 sub_080088CC sub_08008C04 sub_0800913C sub_08009674 sub_080099C4 sub_0800A2B4 sub_0800A460 sub_0800A6E8 
+- r8: src/code_0800E0E4.c :: sub_0800E0E4 sub_0800E27C 
+- r8: src/code_0800ECAC.c :: sub_0800ECAC 
+- r8: src/code_0800ECAC_2.c :: sub_0800FE50 sub_08010034 sub_08010144 sub_08010294 sub_08010590 sub_08010CE8 sub_08010E3C sub_08011044 sub_08011324 sub_080115FC sub_08011754 sub_08011AD8 sub_08011D94 sub_08012190 sub_080124E0 sub_080126CC sub_08013318 sub_0801399C sub_08013C4C sub_08013D0C sub_08013DB4 sub_08013FC4 sub_080140B0 sub_080141EC sub_08014454 sub_080152B0 sub_080157B0 sub_08015AF0 sub_08016428 sub_08016C24 sub_08016EF0 
+- r8: src/code_0801C6F8.c :: sub_0801C990 sub_0801CA30 sub_0801CC30 sub_0801D080 sub_0801D16C sub_0801D220 sub_0801D398 
+- r8: src/code_0801DA58.c :: sub_0801DA58 sub_0801DC70 sub_0801DD20 sub_0801DE00 
+- r8: src/code_08026044.c :: sub_08026168 sub_08026698 sub_08026940 sub_08026BD0 sub_08026CC0 sub_08026E1C sub_08026FAC sub_08027208 sub_08027670 sub_08027814 sub_080279F4 sub_08027C80 sub_08027DD0 sub_0802801C sub_080280DC sub_08028194 sub_08028224 sub_080282CC sub_080283F8 sub_08028528 sub_08028608 sub_080286C4 sub_08028758 sub_08028A1C sub_08028AA8 sub_08028B5C sub_08028C94 sub_08028D40 sub_08028E78 sub_08028F10 sub_08028FFC sub_08029144 sub_080298C8 sub_080299B4 sub_08029B14 
+- r8: src/code_080332BC.c :: sub_080332BC sub_08033674 sub_08033790 
+- r8: src/code_0806F780.c :: sub_0806F8BC sub_0806FAC8 sub_0806FE64 sub_08070164 sub_080706A0 sub_080708DC sub_080709F8 sub_080711A8 sub_08071C9C sub_08071E34 sub_08072314 sub_080725E0 sub_080730E0 sub_080731EC sub_080732E4 sub_080733D8 sub_080734F8 sub_080737D8 sub_08073D2C sub_08073ECC sub_08074088 sub_08074420 sub_08074AB0 sub_08074C1C sub_080753CC sub_08075EDC sub_08076B84 sub_08077574 sub_08077D84 sub_08078314 sub_080788AC sub_08078EFC sub_0807988C sub_08079C28 sub_08079D64 sub_0807A7E8 sub_0807B2A8 sub_0807BCE0 sub_0807BF2C sub_0807C48C sub_0807C6C0 sub_0807C954 sub_0807CC14 sub_0807CDFC sub_0807CFE4 sub_0807D2D0 sub_0807D4B0 sub_0807D690 sub_0807DBCC sub_0807E66C sub_0807EA78 sub_0807EBAC sub_0807ECE0 sub_0807EF0C sub_0807F128 sub_080802CC sub_080806FC sub_08080870 sub_08080FBC sub_08081864 sub_08081ABC sub_08082380 sub_0808324C sub_080838DC sub_08083B04 sub_0808466C sub_080854E8 sub_08085A54 sub_08085E60 sub_08086C48 sub_08086F98 sub_08087290 sub_08087770 sub_0808781C sub_08087A78 sub_08087B58 sub_08087CEC sub_08087F98 sub_08088A38 sub_08089864 sub_08089E50 sub_0808A208 sub_0808A490 sub_0808A9C4 sub_0808AE30 sub_0808AF48 sub_0808B248 sub_0808B62C sub_0808B754 sub_0808BA6C sub_0808BB98 sub_0808BEA4 sub_0808BF88 sub_0808CC78 sub_0808CFC0 sub_0808D100 sub_0808D5E0 sub_0808D728 sub_0808D95C sub_0808DC80 sub_0808DDD0 sub_0808E2EC sub_0808E404 sub_0808E66C sub_0808E7A4 sub_0808E9C8 sub_0808EB08 sub_0808F1C8 sub_0808F774 sub_0808F8C0 sub_08090968 sub_08090CB8 sub_08091258 sub_08091438 sub_08091614 sub_08091C7C sub_08091F38 sub_080920A0 sub_08092380 sub_08092474 sub_08092568 sub_08092654 sub_08092944 sub_08092A54 sub_08093264 sub_080949C8 sub_080951E4 sub_08095468 sub_080957F4 sub_08095AD4 sub_0809603C sub_08096898 sub_08096AC4 sub_08096E24 sub_08096F80 sub_0809729C sub_08097668 sub_08097864 sub_08097C74 sub_08098184 sub_08098400 sub_08098B34 
+- r8: src/code_08123950.c :: sub_08123950 
+- r8: src/code_08138D64.c :: sub_08138B44 sub_08138D64 sub_08138F68 sub_0813914C sub_081392A0 sub_08139368 sub_081397FC sub_08139A3C sub_08139F58 sub_0813A110 sub_0813A464 sub_0813A6D0 sub_0813A908 sub_0813ACA0 sub_0813AE30 sub_0813B26C sub_0813B3C8 sub_0813B720 sub_0813B8B0 sub_0813B9C0 sub_0813BA90 sub_0813BBA0 sub_0813BCA0 sub_0813BF94 sub_0813C064 sub_0813C1C4 sub_0813C260 sub_0813C414 sub_0813CDE4 sub_0813D364 sub_0813D550 sub_0813D784 sub_0813DA34 sub_0813DB74 sub_0813DDA8 sub_0813DEF0 sub_0813E210 sub_0813E3F4 sub_0813E4A4 sub_0813E680 sub_0813E788 sub_0813EAC0 sub_0813ECBC sub_0813FF6C sub_081404AC sub_081409AC sub_08140A1C sub_08140BE8 sub_08140CD0 sub_08140E40 sub_08141300 sub_0814155C sub_081416DC sub_08141964 sub_08141A3C sub_08141BF8 
+- r8: src/code_0814A828.c :: sub_0814AB7C sub_0814ADC8 sub_0814AF04 sub_0814B024 sub_0814BAC4 sub_0814CF34 sub_0814D75C sub_0814D984 sub_0814DA28 sub_0814DB40 sub_0814DBD0 sub_0814DCBC 
+- r8: src/code_0814EBE4.c :: sub_0814ED78 sub_0814F034 
+- r8: src/code_0814F274.c :: sub_0814F274 
+- r8: src/collection_room.c :: sub_081434F8 sub_08143AF8 sub_08143DA8 sub_08143F88 sub_08144864 sub_08144C1C sub_08144EB4 sub_0814514C sub_08145324 sub_08145490 sub_08145574 
+- r8: src/crazy_hand.c :: sub_080DF5A4 sub_080DF720 sub_080E0098 sub_080E0318 sub_080E0628 sub_080E0D40 sub_080E0FC4 sub_080E1868 sub_080E1B8C sub_080E28CC sub_080E2E94 sub_080E31D4 sub_080E3610 
+- r8: src/cupie.c :: sub_080A2B6C sub_080A31D8 
+- r8: src/dark_meta_knight.c :: sub_080F5974 sub_080F5A6C sub_080F5CD0 sub_080F5DA0 sub_080F6104 sub_080F6300 sub_080F6454 sub_080F6544 sub_080F6728 sub_080F6AEC sub_080F704C sub_080F714C sub_080F77D0 sub_080F7B34 sub_080F7DB8 sub_080F850C sub_080F88C0 sub_080F8C84 sub_080F96B4 sub_080F9E18 sub_080FB700 sub_080FB9FC sub_080FC150 sub_080FCA94 sub_080FCE70 sub_080FD26C sub_080FD6BC sub_080FD8B4 sub_080FDC68 sub_080FE2AC sub_080FE954 sub_080FEA70 sub_080FEEC0 sub_080FEFB0 sub_080FF3F4 sub_080FF5B0 
+- r8: src/dark_mind.c :: CreateDarkMindForm2 DarkMindForm2CreateLaserShower DarkMindForm2CreateRandomEnemies DarkMindForm2FlipSprites sub_081003EC sub_08100538 sub_08100BD0 sub_08100F18 sub_081013C8 sub_08101630 sub_08102A80 sub_08103404 sub_08103688 sub_08103AE4 sub_08103CD0 sub_08103E60 sub_08104080 sub_08104424 sub_0810457C sub_081047D0 sub_0810487C sub_08104E04 sub_081050E8 sub_08105698 sub_081059A8 sub_08105EC4 sub_081060C0 sub_081062B4 sub_081068F8 sub_081069BC sub_08106BE0 sub_08107254 sub_081075DC sub_08107A48 sub_08107BA8 sub_08108368 sub_08108960 sub_08108A50 sub_08109304 sub_081094C4 sub_0810A168 sub_0810A3D0 sub_0810A71C sub_0810AC70 sub_0810B1F4 sub_0810C15C sub_0810C6A4 sub_0810EDEC sub_0810F13C sub_0810F5A4 sub_0810FC44 sub_08110F80 sub_08111314 sub_08111C5C sub_08111EF4 sub_08112024 sub_081122A0 sub_081123CC sub_081126C0 sub_08112880 sub_08112D58 sub_081135A8 sub_0811370C sub_08113940 sub_08114CBC sub_0811589C sub_08116654 sub_08116920 sub_08116C54 sub_081171BC sub_08117298 sub_08117530 sub_08117964 sub_08117A9C sub_08117C84 sub_08117DA0 sub_08117F6C sub_08118220 sub_08118310 
+- r8: src/demo.c :: sub_08025F84 
+- r8: src/droppy.c :: sub_0809FF6C sub_080A0144 sub_080A03A4 sub_080A049C sub_080A05C8 
+- r8: src/flamer.c :: sub_080B75D0 sub_080B819C 
+- r8: src/foley.c :: sub_080C066C 
+- r8: src/glunk.c :: sub_080AF204 
+- r8: src/goal_game_bonus.c :: CreateGoalGameBonus sub_0801B678 
+- r8: src/gobbler.c :: sub_080E3FFC sub_080E41D0 sub_080E588C sub_080E5F20 sub_080E6784 sub_080E72C0 sub_080E74E4 sub_080E7848 
+- r8: src/heavy_knight.c :: sub_080BED38 sub_080BEF58 sub_080BF198 sub_080BF414 
+- r8: src/inhalable_star.c :: sub_080A8C28 sub_080A8D18 sub_080A8F64 sub_080A9038 
+- r8: src/init.c :: sub_080002C8 
+- r8: src/intro.c :: sub_08145B64 sub_08146414 sub_081465C4 sub_0814669C sub_0814682C sub_081469D4 sub_08146C60 sub_081471E8 sub_0814889C sub_08148E24 sub_08149154 
+- r8: src/king_golem.c :: sub_080DA2BC sub_080DA540 sub_080DA68C sub_080DA768 sub_080DAB00 sub_080DB1B8 sub_080DB43C 
+- r8: src/kirby.c :: CreateKirby sub_0803D368 sub_0803D46C sub_0803D5CC sub_0803D6B4 sub_0803D9A8 sub_0803DAB8 sub_0803DBC8 sub_0803DD58 sub_0803DE54 sub_0803E050 sub_0803E558 sub_0803E778 sub_0803EA90 sub_0803EE18 sub_0803F46C sub_0803F790 sub_0803FF64 sub_08040930 sub_080412AC sub_08041C50 sub_080425F0 sub_08042E28 sub_080435F8 sub_08043E68 sub_0804464C sub_08044FD4 sub_08045A34 sub_080464AC sub_08046E10 sub_08047814 sub_0804805C sub_080488E0 sub_080491E4 sub_08049A60 sub_0804A728 sub_0804B36C sub_0804B6FC sub_0804BD98 sub_0804C7D0 sub_0804D4E4 sub_0804D9D4 sub_0804E09C sub_0804E3E4 sub_0804E60C sub_0804F894 sub_0804FBFC sub_080502E0 sub_080506A8 sub_08050908 sub_08050B44 sub_080510EC sub_08051874 sub_08051C40 sub_080525C0 sub_080528E4 sub_080531B4 sub_080534D0 sub_08053DAC sub_0805405C sub_08054414 sub_08054950 sub_0805545C sub_08055920 sub_080562D0 sub_080566E0 sub_08056C2C sub_08056E40 sub_08057AD0 sub_08058158 sub_08058714 sub_08059008 sub_080598E8 sub_0805ABE0 sub_0805C11C sub_0805C3B8 sub_0805E448 sub_08061B44 sub_080622A0 sub_080668A4 sub_08067830 sub_08068724 sub_08068CA4 sub_08068DE8 sub_08068EF4 sub_08069270 sub_08069578 sub_08069BA0 sub_0806A85C sub_0806B234 sub_0806BBD8 sub_0806C5AC 
+- r8: src/kracko.c :: sub_080DBAF8 sub_080DBCA0 sub_080DD044 sub_080DD62C sub_080DD8D8 sub_080DD9B4 sub_080DE064 sub_080DE188 sub_080DE2B4 sub_080DE658 sub_080DEA94 
+- r8: src/laser_ball.c :: sub_080B2330 sub_080B2780 
+- r8: src/lava_wall.c :: sub_0811C5D8 
+- r8: src/lever_wall.c :: LeverWallAction 
+- r8: src/logo.c :: LogoCopyPalette 
+- r8: src/m4a.c :: CgbSound MPlayStart m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- r8: src/main.c :: GameInit GetInput WaitForInput 
+- r8: src/malloc_vram.c :: VramMalloc 
+- r8: src/master_hand.c :: sub_080D1780 sub_080D230C sub_080D25DC sub_080D2954 sub_080D30D0 sub_080D3380 sub_080D3C58 sub_080D4004 sub_080D4DA4 
+- r8: src/mega_titan.c :: sub_080EDAD0 sub_080EDC94 sub_080EDD0C sub_080EF010 sub_080EF2A0 sub_080EF7D8 sub_080EFE9C sub_080F05CC sub_080F09E4 sub_080F0EAC sub_080F1400 sub_080F1690 sub_080F1BB0 sub_080F1FD8 sub_080F2268 sub_080F27A0 sub_080F2BDC sub_080F2E6C sub_080F3388 sub_080F3974 sub_080F3A98 sub_080F3E40 sub_080F4190 sub_080F4484 sub_080F486C sub_080F4CA8 sub_080F5284 sub_080F53A0 
+- r8: src/metal_guardian.c :: sub_080BD634 sub_080BDA70 sub_080BDE7C 
+- r8: src/mirror_door.c :: CreateMirrorDoor sub_0811A084 sub_0811A234 
+- r8: src/moley.c :: sub_080EB4B8 sub_080EB700 sub_080EBBD0 sub_080EC650 sub_080EC8E8 
+- r8: src/mr_frosty.c :: sub_080CB7E8 sub_080CC6F0 sub_080CCEE0 
+- r8: src/multi_08019F28.c :: sub_0801A0AC 
+- r8: src/multi_08030C94.c :: sub_08030D4C sub_08030E44 sub_08030FE0 sub_080315B8 sub_08031860 sub_08031AA8 sub_08032024 sub_080321DC sub_080324BC sub_080326C0 sub_08032888 
+- r8: src/multi_boot.c :: MultiBootMain MultiBootStartMaster 
+- r8: src/multi_boot_util.c :: MultiBootInitWithParams sub_080302EC sub_08030898 
+- r8: src/multi_sio.c :: MultiSioMain MultiSioRecvDataCheck 
+- r8: src/noddy.c :: sub_080C2438 
+- r8: src/object.c :: InitObject ObjectDestroy ObjectInitSprite sub_0809A630 sub_0809A7A4 sub_0809AA10 sub_0809AF38 sub_0809B1E4 sub_0809C994 sub_0809CE80 sub_0809D7C8 sub_0809E424 sub_0809E55C sub_0809E79C sub_0809E8D4 sub_0809EB90 sub_0809ECD0 
+- r8: src/palette.c :: ConvertToBlackAndWhite ConvertToGrayscale InvertRgbMap LoadBgPaletteWithTransformation LoadObjPaletteWithTransformation sub_08158434 sub_081584E8 sub_08158654 sub_081587E0 
+- r8: src/parasol.c :: sub_080C29C0 sub_080C2BB4 sub_080C2D44 
+- r8: src/pause_area_map.c :: AreaMapDrawKirbysInRoom AreaMapDrawTextLabels AreaMapFindRoomsWithKirbys AreaMapKirbySpritesInit AreaMapMain AreaMapRoomsChooseTile AreaMapRoomsOverwriteTilemap AreaMapTextLabelInit AreaMapUpdateDynamics CreateAreaMap MapDisableUIElementsThunk sub_08126C48 
+- r8: src/pause_help.c :: CreateHelpMenu HelpMenuBGInit PauseMenuMain 
+- r8: src/pause_world_map.c :: CreateWorldMapLine WorldMapLineDrawing WorldMapLoadPalettes WorldMapSetKirbySprites WorldMapUnlockInitBg 
+- r8: src/phan_phan.c :: sub_080CD6C0 sub_080CE94C sub_080CEEC8 
+- r8: src/prank.c :: sub_080A170C 
+- r8: src/save.c :: InitSaveBuffers 
+- r8: src/scarfy.c :: sub_080A75C4 sub_080A78E4 sub_080A7D90 
+- r8: src/scroll_lock.c :: ScrollLockDestroy sub_0811C9D4 sub_0811CEF4 sub_0811D158 sub_0811D508 sub_0811D68C 
+- r8: src/shadow_kirby.c :: sub_08023B14 sub_08024644 sub_08024B44 sub_08024E20 
+- r8: src/shard.c :: CreateShard sub_0801BA18 sub_0801BD68 sub_0801BE4C sub_0801C0A8 sub_0801C3F4 
+- r8: src/shooty.c :: sub_080C0E70 sub_080C1818 
+- r8: src/sio32_multi_load.c :: Sio32MultiLoadInit 
+- r8: src/sir_kibble.c :: sub_080B1850 sub_080B1AC4 
+- r8: src/soarar.c :: sub_080ABEAC sub_080AC45C 
+- r8: src/special_doors.c :: CreateDoorToHub sub_0802AE9C 
+- r8: src/special_hub_mirror.c :: SpecialHubMirrorClearTiles 
+- r8: src/sprite_1.c :: sub_08153E6C sub_08154148 
+- r8: src/sprite_2.c :: DrawToOamBuffer sub_0815604C sub_081564D8 sub_081569A0 
+- r8: src/squishy.c :: sub_080AF9C4 sub_080AFD80 
+- r8: src/star_platform.c :: sub_0811FA90 
+- r8: src/subgame_menu.c :: sub_0801E754 sub_0801E9DC sub_0801EDF8 sub_0801F1F4 sub_0801F34C sub_0801F7F8 sub_0801F8EC 
+- r8: src/subgames.c :: CrackityHackDrawCracks sub_08128F44 sub_08129C34 sub_08129F28 sub_0812A3F4 sub_0812A8F0 sub_0812AAE0 sub_0812B418 sub_0812B63C sub_0812BEE0 sub_0812C168 sub_0812C63C sub_0812C814 sub_0812CA84 sub_0812CBDC sub_0812CDD4 sub_0812D1EC sub_0812D4F4 sub_0812DBB4 sub_0812E0C8 sub_0812E194 sub_0812E468 sub_0812E6E4 sub_0812E818 sub_0812EA4C sub_0812F0E0 sub_0812F404 sub_0812FA28 sub_08130534 sub_081309B0 sub_0813119C sub_081315AC sub_081316F0 sub_081317FC sub_08131F78 sub_08132034 sub_08132160 sub_08132280 sub_081325A4 sub_08132650 sub_081326F8 sub_08132888 sub_08132AC8 sub_08132B84 sub_08133344 sub_081334DC sub_08133804 sub_0813399C sub_08133B74 sub_08133D44 sub_08133EEC sub_081340AC sub_081341B0 sub_0813457C sub_08134930 sub_08134E54 sub_081359EC sub_08135B38 sub_08135E9C sub_08136078 sub_081361B4 sub_08136518 sub_081366B8 sub_0813683C sub_08136C68 sub_08136F3C sub_08137204 sub_081378D4 sub_08137AF8 sub_08137E24 sub_081380C0 sub_081382A0 
+- r8: src/task.c :: TaskCreate TasksExec sub_08152EBC 
+- r8: src/title_screen.c :: TitleScreenGraphicsInit TitleScreenSpriteInit sub_0814A39C 
+- r8: src/twister.c :: sub_080BBF54 
+- r8: src/ufo.c :: sub_080C4B70 sub_080C4D10 sub_080C4EDC 
+- r8: src/unknown_75.c :: sub_0811C29C 
+- r8: src/waddle_doo.c :: sub_080B6DDC 
+- r8: src/warp_star.c :: sub_0800BFC8 sub_0800C270 sub_0800C42C sub_0800C4D0 sub_0800C558 sub_0800C6E8 sub_0800C918 sub_0800CA84 sub_0800CB54 sub_0800CBF0 sub_0800CDE8 sub_0800D0EC sub_0800D194 sub_0800D2E0 sub_0800D3B0 sub_0800D5D8 sub_0800D6C0 sub_0800D7A8 sub_0800DCC0 sub_0800DD40 sub_0800DE20 
+- r8: src/wiz.c :: sub_080E8430 sub_080E8588 sub_080E9384 sub_080E9524 sub_080E96F8 sub_080E9A54 sub_080E9C58 sub_080E9FC0 sub_080EA1C0 sub_080EA27C sub_080EA3B8 

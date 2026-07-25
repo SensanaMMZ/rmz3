@@ -1,0 +1,212 @@
+<!-- pmd-red :: trait=r8 :: crawled 2026-07-25 :: 673/696 files compiled -->
+- r8: src/adventure_info.c :: UpdateAdventureAchievements 
+- r8: src/agb_flash.c :: ReadFlash StartFlashTimer VerifyFlashSectorNBytes 
+- r8: src/agb_flash_1m.c :: WaitForFlashWrite_Common 
+- r8: src/agb_flash_mx.c :: ProgramFlashSector_MX 
+- r8: src/blow_away.c :: BlowAwayTarget sub_807D068 
+- r8: src/code_8004AA0.c :: UpdateAnimatedColors sub_8004B78 sub_8004C00 
+- r8: src/code_800D090.c :: sub_800D098 sub_800D224 sub_800D600 sub_800D6AC sub_800D820 sub_800D9B8 
+- r8: src/code_8015080.c :: sub_8015080 
+- r8: src/code_801AFA4.c :: GetNumMonsAbleToLearnItemMove sub_801B178 
+- r8: src/code_801C8C4.c :: sub_801C8C4 sub_801CCD8 sub_801CE58 
+- r8: src/code_801D014.c :: LoadTeamRankBadge sub_801D220 
+- r8: src/code_801EE10.c :: sub_801EE10 sub_801F280 
+- r8: src/code_801F428.c :: sub_801F428 
+- r8: src/code_80227B8.c :: sub_802293C 
+- r8: src/code_8023144.c :: sub_8023144 sub_80234BC sub_8023758 sub_80237E0 
+- r8: src/code_8031D70.c :: DrawSOSPasswordScreen 
+- r8: src/code_803C1B4.c :: sub_803C21C sub_803C37C sub_803C3E0 sub_803C45C sub_803C4F0 sub_803C580 sub_803C610 
+- r8: src/code_803D0D8.c :: DecodeWonderMailPassword sub_803D110 sub_803D204 sub_803D2C0 sub_803D414 
+- r8: src/code_803DA7C_2.c :: sub_803E02C 
+- r8: src/code_8040094_1.c :: sub_8040BB0 sub_8040C4C sub_8040DA0 sub_8041038 sub_8041168 
+- r8: src/code_80958E8.c :: GenerateMailJobDungeonInfo GenerateMailJobInfo GeneratePelipperJobs ShiftJobSlotsDown ShiftMailboxSlotsDown ShiftPelipperJobsDown SortJobSlots SortMailboxSlots SortPelipperJobs sub_8095E78 sub_80961D8 sub_809693C sub_8096EEC 
+- r8: src/code_80A26CC.c :: sub_80A293C sub_80A29B0 sub_80A2A5C 
+- r8: src/cpu.c :: VBlank_CB 
+- r8: src/credits1.c :: DrawCredits 
+- r8: src/debug_field_map.c :: DebugMapViewer 
+- r8: src/debug_field_map_window.c :: PrintCurrentPageText 
+- r8: src/debug_menu1.c :: CreateDebugMenu sub_803A3BC 
+- r8: src/decompress_at.c :: DecompressAT DecompressATGlobal 
+- r8: src/drought_orb.c :: HandleDroughtOrb 
+- r8: src/dungeon_8041AD0.c :: sub_8041550 sub_804225C sub_8042520 sub_8042B34 sub_8042CC0 sub_8042EC8 
+- r8: src/dungeon_action.c :: sub_8044E24 sub_8045064 
+- r8: src/dungeon_action_execution.c :: ExecuteEntityDungeonAction_Async HandleSleepTalk HandleSnore 
+- r8: src/dungeon_action_handler.c :: HandleGiveItemAction_Async HandleTakeItemAction_Async sub_8066BD4_Async sub_8066E14 sub_8066FA4 sub_80671A0 sub_8067558 sub_8067904 
+- r8: src/dungeon_ai.c :: RunMonsterAI 
+- r8: src/dungeon_ai_attack.c :: AIConsiderMove ChooseAIMove HandleUseOrbAction_Async IsAITargetEligible IsTargetInRange TargetRegularAttack TryAddTargetToAITargetList WeightMove 
+- r8: src/dungeon_ai_items.c :: AIDecideUseItem GetPossibleAIArcItemTargets GetPossibleAIThrownItemDirections MonTryPickUpItem TargetThrownItem 
+- r8: src/dungeon_ai_movement.c :: AvoidEnemies ChooseTargetPosition DecideMovement Wander 
+- r8: src/dungeon_cleared_window.c :: ShowDungeonClearedWindow_Async 
+- r8: src/dungeon_cutscene.c :: CutsceneLookDir_Async SetDungeonBGColorRGB ShiftCameraToPosition sub_8085374 sub_80854D4 sub_80856E0 sub_80857B8 sub_8085B80 sub_8085EC8 sub_80861F8 
+- r8: src/dungeon_cutscene_articuno.c :: ArticunoPreFightDialogue 
+- r8: src/dungeon_cutscene_celebi.c :: CelebiJoinDialogue 
+- r8: src/dungeon_cutscene_groudon.c :: GroudonPreFightDialogue sub_808862C 
+- r8: src/dungeon_cutscene_jirachi.c :: JirachiWish_Async 
+- r8: src/dungeon_cutscene_magma_cavern.c :: MagmaCavernMidDialogue sub_8088DC0 sub_8088E5C 
+- r8: src/dungeon_cutscene_meanies.c :: sub_8087144 
+- r8: src/dungeon_cutscene_skarmory.c :: SkarmoryPreFightDialogue sub_8086B14 
+- r8: src/dungeon_cutscene_zapdos.c :: ZapdosPreFightDialogue 
+- r8: src/dungeon_damage.c :: ApplyAtkDefStatBoosts CalcDamage DealDamageToEntity_Async HandleDealingDamageInternal_Async HandleDealingDamage_Async WeightWeakTypePicker sub_806E100 sub_806F2BC sub_806F370_Async 
+- r8: src/dungeon_engine.c :: TrySpawnMonsterAndActivatePlusMinus_Async sub_8044574_Async sub_8044820_Async 
+- r8: src/dungeon_entity_movement.c :: DisplayActions_Async TryInteractWithTile sub_8075050 
+- r8: src/dungeon_exit.c :: SetUpDungeonExitData 
+- r8: src/dungeon_floor_spawns.c :: GetAvailableMonsToTransform GetRandomFloorItem SetFloorItemMonsterSpawns SetMonsterSpawnsArray 
+- r8: src/dungeon_generation.c :: AssignGridCellConnections AssignRandomGridCellConnections AssignRooms CreateGridCellConnections CreateHallway CreateRoomsAndAnchors CreateRoomsAndAnchorsForFixedFloor EnsureConnectedGrid FinalizeJunctions GenerateBeetleFloor GenerateCrossFloor GenerateCrossroadsFloor GenerateExtraHallways GenerateFloor GenerateKecleonShop GenerateLineFloor GenerateMaze GenerateMazeLine GenerateMazeRoom GenerateMonsterHouse GenerateOneRoomMonsterHouseFloor GenerateOuterRingFloor GenerateOuterRoomsFloor GenerateRoomImperfections GenerateSecondaryStructure GenerateSecondaryStructures GenerateSecondaryTerrainFormations GenerateStandardFloor GenerateTwoRoomsWithMonsterHouseFloor GetGridPositions InitDungeonGrid IsNextToHallway MergeRoomsVertically ProcessFixedRoom ResetFloor ResolveInvalidSpawns SpawnEnemies SpawnNonEnemies StairsAlwaysReachable sub_804B534 sub_804C790 sub_804FC74 sub_805124C sub_8051288 sub_8051438 sub_8051654 
+- r8: src/dungeon_generation_fixed.c :: PlaceFixedRoomTile SpawnEnemyTrapAtPos SpawnSpeciesAtPos sub_8051E7C 
+- r8: src/dungeon_info.c :: BufferDungeonRequirementsText 
+- r8: src/dungeon_item_action.c :: BlastSeedItemAction GinsengItemAction HandleGummiItemAction HandleLinkBoxAction sub_80479B8 sub_80482FC sub_8048950 sub_8048A68 
+- r8: src/dungeon_items.c :: CreateFloorItems SpawnDroppedItem TryLeaderItemPickUp_Async sub_80462AC sub_8046734 sub_804687C 
+- r8: src/dungeon_jobs.c :: sub_80842F0 sub_80845E0 
+- r8: src/dungeon_kecleon_shop.c :: sub_807EC28 sub_807EFFC 
+- r8: src/dungeon_leveling.c :: EnemyEvolution LevelDownTarget LevelUp LevelUpTarget sub_80725A4 sub_8072778 sub_8072938 sub_8072B78 
+- r8: src/dungeon_list_menu.c :: CountAvailableDungeons DungeonListMenu_Init PrintCurrentPage 
+- r8: src/dungeon_logic.c :: CanAIMonsterMoveInDirection sub_80717A4 
+- r8: src/dungeon_main.c :: CheckLeaderTile DungeonHandlePlayerInput PrintOnMainMenu ShowMainMenu TryCreateModeArrows sub_805E738 sub_805E874 sub_805EC4C sub_805EFB4 sub_805F02C 
+- r8: src/dungeon_map.c :: CopyDungeonMapToVram DrawMinimapTile InitDungeonMap LoadDungeonMapPalette UpdateBgTilemapForDungeonMap 
+- r8: src/dungeon_map_access.c :: ChangeDungeonCameraPos DiscoverMinimap LoadDungeonTilesetAssets UpdateTrapsVisibility sub_80495E4 sub_80498A8 sub_8049BB0 sub_804A1F0 sub_804A49C sub_804AAD4 sub_804AD34 sub_804AE08 
+- r8: src/dungeon_menu_items.c :: PrintOnDungeonItemsMenu SetSubMenuActions ShowDungeonItemsMenu sub_8060D64 
+- r8: src/dungeon_menu_moves.c :: ActionDelinkMoves ActionSetOrUnsetMove AddMovesSubMenuOptions PrintMoveNamesOnWindow ShowDungeonMovesMenu ShowMovesFromTeamMenu ShowMovesInfoWindow ShowMovesMenuWindows sub_8063E70 sub_8064228 
+- r8: src/dungeon_menu_others.c :: PrintDungeonOptions PrintGameOptions PrintHintsMenu PrintOthersMenuOptions PrintOthersOptions PrintQuickSaveMenuOptions ShowChosenHintWindow ShowDungeonOptions ShowDungeonOthersMenu ShowGameOptionsMenu ShowHintsMenu ShowOthersOptions ShowQuickSaveGiveUpMenu 
+- r8: src/dungeon_menu_recruitment.c :: PrintAvailableMons SetRecruitableMons ShowRecruitmentSearchMenu 
+- r8: src/dungeon_menu_stairs.c :: ShowDungeonStairsMenu ShowStairsDescription 
+- r8: src/dungeon_menu_team.c :: PrintMonTactics PrintMoveNamesOnBottomWindow PrintOnDungeonTeamMenu ShowDungeonSummaryOrIQMenu ShowDungeonTacticsMenu ShowDungeonTeamMenu ShowDungeonToWhichMonMenu ShowIqDescriptionWindow ShowStatusInfoWindow ShowStatusesDescriptionMenu ShowTacticDescriptionWindow ShowUpArrowSprite 
+- r8: src/dungeon_menu_tile.c :: ShowDungeonTileMenu ShowTileDescription 
+- r8: src/dungeon_message.c :: DisplayDungeonDialogue_Async DisplayDungeonMenuMessage DisplayMessageAddToLog_Async sub_8052740 sub_8052FB8 xxx_draw_string_80524F0 
+- r8: src/dungeon_message_log.c :: CopyStringToMessageLog PutStringsOnMessageLog 
+- r8: src/dungeon_misc.c :: DisplayMsgIfNewIqSkillLearned HandleFaint_Async SetDungeonMonsFromTeam SetMonSummaryInfoFromEntity sub_8068BDC sub_80694C0 sub_8069F9C sub_806A458 sub_806A5B8 sub_806A914 sub_806AA70 sub_806AB2C 
+- r8: src/dungeon_mon_recruit.c :: HandleSpecialEntityJoinSequence MonsterJoinSequence_Async TryRecruitMonster sub_806F910 
+- r8: src/dungeon_mon_spawn.c :: CalcSpeciesAtkAtLevel CalcSpeciesDefAtLevel CalcSpeciesHPAtLevel InitEntityFromSpawnInfo ResetMonEntityData SpawnTeamMember SpawnWildMon SpawnWildMonsOnFloor UpdateEntitySpecies sub_806AD3C sub_806AED8 sub_806B09C sub_806B168 sub_806B404 sub_806C1D8 sub_806C3C0 
+- r8: src/dungeon_mon_sprite_render.c :: UpdateMonsterSprite sub_806CCB4 
+- r8: src/dungeon_monster_house.c :: TriggerMonsterHouse_Async TryWakeSleepingWildPokemon 
+- r8: src/dungeon_move.c :: HandleDamagingMove TargetNotImmuneTo TryHitTarget_Async UseMoveAgainstTargets sub_80556BC 
+- r8: src/dungeon_move_util.c :: AccuracyCalc CanAIUseMove SetNewTarget SetTargetsForMove TryUseChosenMove sub_8055A00 sub_8056468 sub_8056564 sub_80566F8 sub_8057144 
+- r8: src/dungeon_name_banner.c :: DisplayCharOnScreen ShowDungeonNameBanner_Async sub_803DD30 
+- r8: src/dungeon_pokemon_sprites.c :: AddPokemonDungeonSprite DrawStatusSprite FrameUpdateDungeonStatusSprites LoadStatusGraphics 
+- r8: src/dungeon_projectile_throw.c :: HandleCurvedProjectileThrow HandleStraightProjectileThrow 
+- r8: src/dungeon_range.c :: sub_8083660 sub_808384C sub_8083904 
+- r8: src/dungeon_recruit_release_menu.c :: ShowPokemonSummary ShowRecruitReleaseMenu ShowUpArrowSprite sub_8067F00 
+- r8: src/dungeon_run_end.c :: PrintOnDungeonFinishedWindow 
+- r8: src/dungeon_serializer.c :: ReadDungeonFloor ReadDungeonTraps ReadMonster WriteDungeonFloor WriteMonster sub_80828E0 sub_8082A08 
+- r8: src/dungeon_tilemap.c :: HandleLuminousOrbAction UpdateCamera sub_803F27C sub_803F38C sub_803F878 sub_803FA4C sub_803FB74 sub_803FE30 sub_803FF18 
+- r8: src/dungeon_turn_effects.c :: DoEndOfTurnEffects_Async TickStatusAndHealthRegen 
+- r8: src/dungeon_util.c :: SpawnItemEntity SpawnTrap sub_80453AC sub_804550C 
+- r8: src/dungeon_vram.c :: sub_803E250 sub_803E874 sub_803EA10 sub_803ED30 sub_803EDF0 sub_803EF90 
+- r8: src/dungeon_wild_mon_spawn.c :: TrySpawnWildMonster 
+- r8: src/effect_main.c :: sub_800DD0C sub_800DE8C sub_800E49C sub_800E52C sub_800EB24 
+- r8: src/effect_sub_1.c :: sub_800EF64 
+- r8: src/event_flag.c :: JudgeVarWithVar UpdateScriptVarWithImmediate UpdateScriptVarWithVar 
+- r8: src/exclusive_pokemon.c :: ReadExclusivePokemon WriteExclusivePokemon 
+- r8: src/explosion.c :: HandleExplosion sub_807E1A0 
+- r8: src/expose_trap.c :: sub_807D3CC 
+- r8: src/felicity_bank.c :: CreateFelicityMoneySavingsHeader 
+- r8: src/file_system.c :: OpenFile 
+- r8: src/flash.c :: ReadFlashData 
+- r8: src/friend_area.c :: GetFriendAreaCapacity2 sub_8092404 
+- r8: src/friend_areas_map.c :: ChooseAreaInLocation_Async ChooseLocation_Async InitMapLocations MoveToNewLocation_Async 
+- r8: src/friend_areas_map_util.c :: AnimateSprites FriendAreasMap_InitGfx FriendAreasMap_PrintAvailableSubAreas FriendAreasMap_ShowDirectionArrows FriendAreasMap_UpdateBg 
+- r8: src/friend_list.c :: FriendList_Init FriendList_ShowWindow SortbyAlphabetNo SortbyInternalNo SortbyName sub_8023BD8 
+- r8: src/game_options.c :: ReadGameOptionsBits 
+- r8: src/gba_color_util.c :: InterpolateRGBColorGradient 
+- r8: src/graphics_memory.c :: sub_8009A7C sub_8009BE4 
+- r8: src/ground_bg.c :: BmaLayerNrlDecompressor InitMapTilemapRenderContext RenderChunksToBgTilemapWrapAround_3x3 RenderChunksToBgTilemap_2x2 RenderChunksToBgTilemap_3x3 RenderChunksToBgTilemaps_2x2 RenderChunksToBgTilemaps_3x3 UpdateMapCameraPosition _UncompressCell sub_80A2E64 sub_80A2FBC sub_80A3440 sub_80A3BB0 sub_80A4764 sub_80A49E8 
+- r8: src/ground_effect.c :: GroundEffect_Action GroundEffect_Add GroundEffect_Cancel GroundEffect_CancelBlank GroundEffectsNotifyAll sub_80AD7AC 
+- r8: src/ground_event.c :: GroundEvent_Add GroundEvent_Cancel UnusedFindGroundEvent 
+- r8: src/ground_lives.c :: GetLivesCollision_80A92A0 GroundLivesNotifyAll GroundLives_Action GroundLives_Add GroundLives_Cancel GroundLives_CancelBlank_1 sub_80A7DDC sub_80A91A0 sub_80A9344 sub_80A9488 sub_80A95AC sub_80AA2BC sub_80AA3F8 sub_80AA690 sub_80AA7B0 sub_80AA8BC sub_80AAAE8 sub_80AB5D4 sub_80ABA7C 
+- r8: src/ground_lives_helper.c :: sub_809CDC8 
+- r8: src/ground_main.c :: sub_80990EC 
+- r8: src/ground_map.c :: GroundMap_ExecuteStation GroundMap_GetStationScript GroundMap_SelectDungeon _080A5222 _080A5344 _080A535A _080A548A _080A54FE _080A5516 _080A553C _080A554C _080A5586 _080A5590 _080A5604 _080A561E _080A5644 _080A5656 _080A5684 _080A568C sub_80A59DC 
+- r8: src/ground_object.c :: GetObjectCollision_80AC5F4 GroundObject_Action GroundObject_Add GroundObject_Cancel GroundObject_CancelBlank GroundObjectsNotifyAll sub_80AC554 sub_80ACAD4 
+- r8: src/ground_script.c :: ExecuteScriptCommand HandleAction InitActionWithParams ResolveJump sub_80A14E8 
+- r8: src/ground_sprite.c :: GroundSprite_ExtendPaletteAdd GroundSprite_Reset sub_80A64A4 sub_80A6CF4 sub_80A7094 sub_80A7310 
+- r8: src/ground_sprite_monster.c :: sub_80A7428 sub_80A7524 
+- r8: src/gulpin_shop.c :: CreateGulpinShop sub_801E980 
+- r8: src/gulpin_shop_801FB50.c :: sub_801FDC0 
+- r8: src/hurl_orb.c :: HandleHurlOrb 
+- r8: src/iq_skill_list_menu.c :: BuildIQSkillList 
+- r8: src/items.c :: BufferItemName ChooseKecleonShopInventory ConvertMoneyItemToMoney GetGummiItemStatBoost GetRandomItemForSet ItemIdToItem SortKecleonShopInventory SortKecleonWareInventory WriteHighDecimal sub_80913E0 
+- r8: src/kangaskhan_storage2.c :: BuildKangaskhanStorage2MainMenu 
+- r8: src/kecleon_bros2.c :: sub_801A0D8 
+- r8: src/kecleon_bros3.c :: sub_801A4A4 
+- r8: src/kecleon_bros4.c :: SortInventoryItems sub_801A5D8 sub_801A9E0 
+- r8: src/load_screen.c :: CreateLoadScreen DrawLoadScreenText DrawQuestIcons 
+- r8: src/luminous_cave.c :: sub_8024804 
+- r8: src/m4a.c :: CgbSound MPlayStart m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- r8: src/mailbox.c :: sub_802E0A0 
+- r8: src/main_loops.c :: GameLoop_Async LoadTitleScreen RunGameMode_Async 
+- r8: src/main_menu1.c :: SetMenuItems 
+- r8: src/main_menu2.c :: DrawMainMenu 
+- r8: src/makuhita_dojo2.c :: MakuhitaDojo_DrawCourseList sub_80302E8 
+- r8: src/math.c :: F48_16_Pow F48_16_SDiv F48_16_SMul F48_16_UDiv F48_16_UMul FP48_16_Hypot u24_8_div u24_8_mul 
+- r8: src/memory.c :: DoFree DoInitHeap _LocateSetBack _LocateSetFront 
+- r8: src/menu_input.c :: PrintNumOnWindow sub_8012CAC sub_8012D60 sub_8012E04 sub_8012EBC 
+- r8: src/mini_printf.c :: mini_itoa mini_vpprintf 
+- r8: src/move_checks.c :: CanUseOnTargetWithStatusChecker 
+- r8: src/move_orb_actions_1.c :: AncientPowerMoveAction BasicFireMoveAction BrickBreakMoveAction DigMoveAction EndeavorMoveAction FlameWheelMoveAction GigaDrainMoveAction LowKickMoveAction MementoMoveAction OverheatMoveAction PainSplitMoveAction ReturnMoveAction SnoreMoveAction SpiteMoveAction SuperFangMoveAction TickleMoveAction TormentMoveAction WeatherBallMoveAction 
+- r8: src/move_orb_actions_2.c :: AbsorbMoveAction ConversionMoveAction DiveMoveAction ExplosionMoveAction FissureMoveAction HornDrillMoveAction NaturePowerMoveAction SelfDestructMoveAction SketchMoveAction SkillSwapMoveAction SkyAttackMoveAction SolarBeamMoveAction SonicboomMoveAction sub_80595EC sub_8059A2C 
+- r8: src/move_orb_actions_3.c :: BeatUpMoveAction BlastBurnMoveAction BlazeKickMoveAction BounceMoveAction EruptionMoveAction HiJumpKickMoveAction JumpKickMoveAction KnockOffMoveAction MagnitudeMoveAction SplashMoveAction TrickMoveAction sub_805A7D4 sub_805B17C 
+- r8: src/move_orb_actions_4.c :: CleanseOrbAction DragonRageMoveAction DreamEaterMoveAction FrustrationMoveAction MetronomeMoveAction MimicMoveAction OneShotOrbAction RecycleMoveAction RollcallOrbAction StruggleMoveAction ThiefAction TransferOrbAction TrapbustOrbAction TwoEdgeMoveAction sub_805C208 
+- r8: src/move_orb_actions_5.c :: FillInOrbAction 
+- r8: src/move_orb_effects_1.c :: ApplyDefensiveStatMultiplier ApplyOffensiveStatMultiplier BadlyPoisonedStatusTarget BoostDefensiveStat BoostOffensiveStat BoostSpeed BurnedStatusTarget FrozenStatusTarget IngrainedStatusTarget LowerDefensiveStat LowerOffensiveStat LowerSpeed NappingStatusTarget NightmareStatusTarget PausedStatusTarget PoisonedStatusTarget SleepStatusTarget SqueezedStatusTarget TryInflictParalysisStatus WrapTarget 
+- r8: src/move_orb_effects_2.c :: DestinyBondStatusTarget EncoreStatusTarget ExposeStatusTarget HandleLeechSeed HealTargetHP RestorePPTarget SnatchStatusTarget TransformStatusTarget sub_80783C4 sub_8078A58 sub_8078B5C 
+- r8: src/move_orb_effects_3.c :: SetChargeStatusTarget 
+- r8: src/move_orb_effects_4.c :: CounterStatusTarget sub_8079E34 
+- r8: src/move_orb_effects_5.c :: EndSleepClassStatus sub_8079F20 
+- r8: src/moves.c :: BufferMoveName sub_8092D54 sub_80935B8 unk_LinkedSequencesToMoves4 unk_LinkedSequencesToMoves8 unk_LinkedSequencesToMoves8_v2 unk_PrintMoveDescription unk_SetMoveToFirstInLinkedSequence4 unk_SetMoveToFirstInLinkedSequence8 unk_SetMoveToFirstInLinkedSequence8_v2 unk_SetMoveToLastInLinkedSequence4 unk_SetMoveToLastInLinkedSequence8 unk_SetMoveToLastInLinkedSequence8_v2 
+- r8: src/music.c :: FadeOutFanfareSE PlayFanfareSE SetSoundEffectVolume StopFanfareSE UpdateSound 
+- r8: src/naming_screen.c :: NamingScreen_Init UpdateInputWindow UpdatePassword1Window UpdatePassword2Window 
+- r8: src/number_util.c :: FixedPoint_Div 
+- r8: src/one_room_orb.c :: HandleOneRoomOrb 
+- r8: src/options_menu1.c :: sub_801DD84 
+- r8: src/other_menus1.c :: sub_8036FDC 
+- r8: src/palette_fade_util.c :: ApplyRowPaletteBrightness BlendRowPalette BlendSinglePalette DesaturateRow DesaturateSingle ModulatePaletteRow ModulatePaletteSingle PerEntryBlendRow sub_80038F0 
+- r8: src/palette_util.c :: sub_809977C 
+- r8: src/party_list_menu.c :: PartyListMenu_CreateMenu1 sub_802608C 
+- r8: src/pelipper_board.c :: sub_802E94C 
+- r8: src/personality_test2.c :: GetValidPartners 
+- r8: src/pixelpos_math.c :: InterpolatePixelPos 
+- r8: src/pokemon.c :: CreateLeaderPartnerData CreateLevel1Pokemon GetMovesLearnedAtLevel InitShadowSprites InitializeLevel1MovesBySpecies PokemonToDungeonMon TryAddPokemonToRecruited sub_808D6E8 sub_808D750 sub_808E218 sub_808E400 
+- r8: src/pokemon_3.c :: GetNumAvailableIQSkills RestoreRecruitedPokemon SaveRecruitedPokemon sub_808ED00 
+- r8: src/pokemon_evolution.c :: SetMonEvolveStatus 
+- r8: src/pokemon_mail.c :: CreateRescueDescription 
+- r8: src/pokemon_news1.c :: sub_802B640 
+- r8: src/pokemon_news3.c :: CreateMailMenu sub_802BD14 
+- r8: src/pokemon_summary_window.c :: SetMonSummaryInfo ShowPokemonSummaryWindow 
+- r8: src/post_office_guide2.c :: DisplayMissionObjectives sub_80319A4 
+- r8: src/pounce_orb.c :: HandlePounceOrb 
+- r8: src/quick_save_write.c :: PrepareQuickSaveWrite 
+- r8: src/random_mersenne_twister.c :: MersenneTwister_MixSeeds Random32MersenneTwister 
+- r8: src/reg_control.c :: VBlankIntr VCountIntr sub_800B720 sub_800BB44 
+- r8: src/rescue_password_menu.c :: CreateRescuePasswordMenu 
+- r8: src/run_dungeon.c :: RunDungeon_Async sub_8043D60 sub_8043FD0 
+- r8: src/save.c :: ReadSaveFromPak 
+- r8: src/save_menu.c :: CreateSaveMenu 
+- r8: src/script_item.c :: TryGiveScriptItem 
+- r8: src/sprite.c :: AddAxSprite AddSprite sub_800533C sub_8005770 
+- r8: src/status_strings.c :: PrepareStatusStringArrays 
+- r8: src/string_format.c :: CreateMenuDialogueBoxAndPortrait DrawDialogueBoxString_Async FormatString PrintFormattedStringOnWindow PrintFormattedStringOnWindow2 
+- r8: src/text_1.c :: AddWindow LoadCharmaps PutHeaderWindowTopBorderTilemap PutWindowBottomBorderTilemap PutWindowTopBorderTilemap ShowWindowsInternal sub_8007334 
+- r8: src/text_2.c :: AddDoubleUnderScoreHighlight AddUnderScoreHighlightInternal DisplayMonPortrait DisplayMonPortraitFlipped DrawCharOnWindowInternal DrawWindowBg PrepareTextbox_8008C6C WriteGFXToBG0Window WriteGFXToWindow sub_80078E8 sub_8007AA4 sub_8007BA8 sub_8007D00 sub_8007FEC sub_8008030 sub_80081A4 sub_8008468 sub_80084A4 sub_80086C8 sub_8008818 xxx_update_bg_vram 
+- r8: src/text_3.c :: DrawStringInternal HandleCharFormatInternal sub_8008E58 sub_8009388 sub_8009408 sub_8009488 sub_8009524 
+- r8: src/text_4.c :: ScrollDownWindowInternal ScrollUpWindowInternal sub_82729B8 
+- r8: src/textbox.c :: ScriptPrintTextInternal sub_809A8B8 sub_809B028 
+- r8: src/trade_items_menu.c :: sub_80365AC 
+- r8: src/trap.c :: HandleGrimyTrap HandlePPZeroTrap HandlePitfallTrap HandlePokemonTrap HandleSealTrap HandleStickyTrap HandleSummonTrap LayTrap TryTriggerTrap sub_807FA9C 
+- r8: src/trawl_orb.c :: HandleTrawlOrb 
+- r8: src/unk_ds_only_feature.c :: sub_809C770 
+- r8: src/unk_dungeon_load_maybe.c :: sub_80ADD9C sub_80ADFB8 
+- r8: src/unk_menu_203B360.c :: sub_80382E4 
+- r8: src/warp_target.c :: WarpTarget 
+- r8: src/weather.c :: sub_807E698 sub_807E8F0 sub_807EAA0 
+- r8: src/wigglytuff_shop1.c :: sub_8021494 
+- r8: src/wigglytuff_shop2.c :: CreateWigglytuffShopFriendAreaMenu PopulateWigglytuffShopFriendAreaInfoScreen 
+- r8: src/window_buffer.c :: CopyWindowBgBuffer 
+- r8: src/wonder_mail_2.c :: WM2_InitStateDialogue 
+- r8: src/wonder_mail_4.c :: sub_80306A8 sub_803092C 
+- r8: src/wonder_mail_5.c :: sub_8030E48 
+- r8: src/wonder_mail_802C10C.c :: sub_802C10C 
+- r8: src/wonder_mail_802C4C8.c :: sub_802C4C8 
+- r8: src/wonder_mail_802D098.c :: sub_802D1B8 
+- r8: src/wonder_mail_main_menu.c :: WonderMailMainMenuCallback 
+- r8: src/world_map.c :: AnimateMonPath_Async AnimateSprites UpdateBg sub_8010494 sub_801059C 
+- DOUBLE-HOME: src/friend_areas_map_util.c src/world_map.c :: AnimateSprites
+- DOUBLE-HOME: src/dungeon_menu_team.c src/dungeon_recruit_release_menu.c :: ShowUpArrowSprite

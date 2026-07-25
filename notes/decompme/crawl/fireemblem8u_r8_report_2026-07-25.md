@@ -1,0 +1,242 @@
+<!-- fireemblem8u :: trait=r8 :: crawled 2026-07-25 :: 353/358 files compiled -->
+- r8: src/agb_sram.c :: SetSramFastFunc 
+- r8: src/animedrv.c :: AnimDisplayPrivate 
+- r8: src/ap.c :: APProc_Create AP_QueueObjGraphics AP_QueueObjRotScale 
+- r8: src/banim-battleparse.c :: ParseBattleHitToBanimCmd 
+- r8: src/banim-efxbattle.c :: NewEfxHitQuake efxHitQuake_Loop efxQuake_Loop 
+- r8: src/banim-efxdeath.c :: NewEfxDeadDragonAlpha 
+- r8: src/banim-efxflashunit.c :: NewEfxFlashUnit NewEfxFlashUnitEffectEnd NewEfxHpBarColorChange 
+- r8: src/banim-efxhpbar.c :: EfxHpBarResire_DeclineToDeath EfxNoDamageYureMain 
+- r8: src/banim-efxlvup.c :: BanimDrawStatupAp NewEfxLvupOBJ2 NewEfxleveluphb PutEkrLvupStatGainLabelGfx1 PutEkrLvupStatGainLabelGfx2 
+- r8: src/banim-efxmagic-crimsoneye.c :: StartSubSpell_efxCrimsonEyeOBJ StartSubSpell_efxCrimsonEyeOBJFinishPiece efxCrimsonEyeOBJ_Loop_A efxCrimsonEyeOBJ_Loop_B efxCrimsonEyeOBJ_Loop_C efxCrimsonEyeOBJ_Loop_D sub_806A590 sub_806A6FC 
+- r8: src/banim-efxmagic-demonlight.c :: StartSubSpell_efxMaohFlashEyeFire1OBJ1 StartSubSpell_efxMaohFlashEyeFire2OBJ1 StartSubSpell_efxMaohFlashEyeLOBJ2 StartSubSpell_efxMaohFlashEyeOBJ1 StartSubSpell_efxMaohFlashEyeROBJ2 StartSubSpell_efxMaohFlashThunderOBJ2 
+- r8: src/banim-efxmagic-demonsurge.c :: StartSubSpell_efxGorgonOBJTwister StartSubSpell_efxGorgonOBJTwisterPiece sub_806B940 sub_806BACC sub_806C1B8 sub_806C2D4 sub_806C478 
+- r8: src/banim-efxmagic-eclipse.c :: StartSubSpell_efxHazymoonOBJ3RND efxHazymoonBG_Loop 
+- r8: src/banim-efxmagic-effectstaves.c :: StartSubSpell_efxBerserkBG efxHammarne_Loop_Main efxSilence_Loop_Main efxSleep_Loop_Main 
+- r8: src/banim-efxmagic-ereshkigal.c :: efxSuperdruidBG3_Loop 
+- r8: src/banim-efxmagic-evileye.c :: StartSubSpell_efxEvilEyeOBJ 
+- r8: src/banim-efxmagic-excalibur.c :: efxExcaliburSCR_Loop 
+- r8: src/banim-efxmagic-fenrir.c :: efxFenrirBG2_Loop 
+- r8: src/banim-efxmagic-fimbulvetr.c :: StartSubSpell_efxFimbulvetrOBJ2Fall 
+- r8: src/banim-efxmagic-fire.c :: Loop6C_efxFire 
+- r8: src/banim-efxmagic-gleipnir.c :: NewEfxDarkGradoOBJ01piece StartSubSpell_efxDarkGradoOBJ02piece_A StartSubSpell_efxDarkGradoOBJ02piece_B efxDarkGradoBG01_Loop sub_8069530 
+- r8: src/banim-efxmagic-healstaves.c :: StartSubSpell_efxLiveALPHA StartSubSpell_efxReserveBG2 efxReblowOBJ_Loop_A efxRest_Loop_Main 
+- r8: src/banim-efxmagic-ivaldi.c :: StartSubSpell_efxIvaldiOBJ1 StartSubSpell_efxIvaldiOBJ2 
+- r8: src/banim-efxmagic-light.c :: StartSubSpell_efxPurgeOBJ efxLightningBG_Loop efxPurgeBG_Loop 
+- r8: src/banim-efxmagic-luna.c :: efxLunaSCR_Loop 
+- r8: src/banim-efxmagic-naglfar.c :: StartSubSpell_efxNaglfarOBJ StartSubSpell_efxNaglfarOBJ2 
+- r8: src/banim-efxmagic-refresh.c :: efxSongBG_Loop 
+- r8: src/banim-efxmagic-shadowshot.c :: sub_806B344 
+- r8: src/banim-efxmagic-shine.c :: StartSubSpell_efxShineOBJ 
+- r8: src/banim-efxmagic-stone.c :: StartSubSpell_efxStoneOBJ 
+- r8: src/banim-efxmagic.c :: EfxCircleWINMain Loop6C_efxMagicQUAKE NewEfxALPHA NewEfxRestWIN NewEfxRestWINH NewefxRestRST StartSpellThing_MagicQuake efxRestRSTMain sub_805BB24 
+- r8: src/banim-efxmisc.c :: NewEfxChillAnime NewEfxMantBatabata 
+- r8: src/banim-efxop.c :: CRSpellCreateFrontAnim StartCRSubSpell_efxopLiveALPHA 
+- r8: src/banim-efxskill.c :: EfxSkillType01BGMain NewEfxSkillType01BG sub_806E6E0 sub_806E79C 
+- r8: src/banim-efxsound.c :: EfxPlaySEwithCmdCtrl GetProperAnimSoundLocation 
+- r8: src/banim-efxstatusunit.c :: EfxStatusUnitFlashing 
+- r8: src/banim-efxutils.c :: BanimUpdateSpriteRotScale EfxDecodeSplitedPalette EfxPalBlackInOut EfxPalFlashingInOut EfxPalModifyPetrifyEffect EfxPalWhiteInOut EfxSplitColorPetrify EfxTmCpyExt EfxTmCpyExtHFlip EfxTmModifyPal EkrPalModifyUnused NewEkrsubAnimeEmulator sub_8070D04 sub_8070DBC sub_8071574 
+- r8: src/banim-ekrarena.c :: ekrTogiInit_Init 
+- r8: src/banim-ekrbattle.c :: ekrBattleExecExpGain ekrBattleInRoundIdle ekrBattleWaitExpBarIdle 
+- r8: src/banim-ekrbattleending.c :: ekrBattleEnding_8056390 
+- r8: src/banim-ekrbattleintro.c :: GetBattleAnimationId_WithUnique PrepareBattleGraphicsMaybe 
+- r8: src/banim-ekrbattlestarting.c :: ekrBaStart_InitScreen ekrBaStart_SreenFailIn 
+- r8: src/banim-ekrclasschg.c :: EfxClasschgBgMain NewEfxClasschgFIN NewEfxClasschgRST 
+- r8: src/banim-ekrcmd.c :: GetBattleAnimationId 
+- r8: src/banim-ekrdispup.c :: ekrDispUPMain sub_8051E00 
+- r8: src/banim-ekrdragon-8070710.c :: sub_8070710 
+- r8: src/banim-ekrdragon-demonking.c :: EfxDKUpdateFrontAnimPostion EfxTmDecompress sub_8077474 sub_8077C54 
+- r8: src/banim-ekrdragon-demonkingobj.c :: CopyPalWithFade EfxSelfThunderBGUpdateAnim sub_8077D38 
+- r8: src/banim-ekrdragon-myrrh.c :: RegisterEkrDragonStatusType 
+- r8: src/banim-ekrdragon-utils.c :: EkrDragonQuakeMain NewEkrDragonQuake 
+- r8: src/banim-ekrgauge.c :: NewEkrGauge ekrGaugeMain 
+- r8: src/banim-ekrlvup.c :: EkrLvup_InitLevelUpBox EkrLvup_InitScreen EkrLvup_InitStatusText EkrLvup_MainAnime EkrLvup_PutWindowOnScreen 
+- r8: src/banim-ekrmain.c :: InitLeftAnim UpdateBanimFrame 
+- r8: src/banim-ekrmainmini.c :: InitMainMiniAnim sub_805A7B4 sub_805AA68 sub_805AE58 
+- r8: src/banim-ekrpopup.c :: DrawBattlePopup MakeBattlePopupTileMapFromTSA 
+- r8: src/banim-ekrtriangle.c :: EfxTriangleQUAKEMain EkrTriangleMain NewEkrTriArmorKnight NewEkrTriArmorKnightOBJ NewEkrTriArmorKnightOBJ2 NewEkrTriPegasusKnight NewEkrTriPegasusKnightOBJ 
+- r8: src/banim-ekrutils.c :: SpellFx_SetSomeColorEffect StartBattleAnimHitEffects StartBattleAnimResireHitEffects sub_8055A64 
+- r8: src/banim-main.c :: BattleAIS_ExecCommands 
+- r8: src/bb.c :: InitSubtitleHelpText 
+- r8: src/bksel.c :: BattleForecast_LoopSlideIn BattleForecast_LoopSlideOut DrawBattleForecastContentsStandard InitBattleForecastBattleStats InitBattleForecastIconPaletteBuffer PutBattleForecastItemName PutBattleForecastUnitName 
+- r8: src/bm.c :: EnsureCameraOntoPosition PutMapCursor 
+- r8: src/bmarena.c :: ArenaGenerateOpposingClassId 
+- r8: src/bmbattle.c :: ApplyUnitDefaultPromotion ApplyUnitPromotion BattleCheckGreatShield BattleCheckTriangleAttack BattleGenerateArena BattleGenerateHitAttributes BattleGenerateRoundHits BattleGenerateSimulationInternal CheckBattleUnitLevelUp ComputeBattleUnitAttack SetBattleUnitWeapon UnitLevelUp 
+- r8: src/bmdebug.c :: DebugMenuMapIdleCore DebugPrint DebugPrintWithProc 
+- r8: src/bmdifficulty.c :: DrawDungeonRecordUiText DrawNumberText DrawNumberText_WithReset DrawTimeText DrawTimeText_WithReset DungeonRecordUi_UpdateEnemiesDefeatedCount SetupDungeonRecordUi sub_8038F78 sub_803901C 
+- r8: src/bmguide.c :: GuideEntry_RedrawDown GuideEntry_RedrawUp Guide_Init MoveGuideDetailText sub_80CE414 sub_80CE750 sub_80CE858 
+- r8: src/bmidoten.c :: GenerateBestMovementScript GenerateDangerZoneRange GenerateMovementMap GenerateMovementMapOnWorkingMap GenerateUnitCompleteAttackRange GenerateUnitCompleteStaffRange MapAddInRange MapSetInRange MarkMovementMapEdges MarkWorkingMapEdges sub_801A570 
+- r8: src/bmio.c :: InitPlayConfig WfxBlue_Init WfxFlamesInitGradient WfxFlamesInitGradientPublic WfxFlamesUpdateParticles WfxRain_VSync 
+- r8: src/bmitem.c :: DrawItemMenuLine DrawItemMenuLineLong DrawItemMenuLineNoColor DrawItemStatScreenLine 
+- r8: src/bmitemuse.c :: WarpSelect_OnInit 
+- r8: src/bmlib-hblank.c :: StartBgVerticalScroll 
+- r8: src/bmlib.c :: ApplyBitmap NumberToStringSJis PalFade_OnLoop PutDrawTextCentered PutStringCentered StartPalFade StartPaletteAnimatorExt WriteFadedPaletteFromArchive sub_80131F0 sub_8013278 sub_8013800 sub_8014560 sub_80145C8 sub_80146A0 sub_801474C sub_8014804 
+- r8: src/bmmap.c :: InitBaseTilesBmMap RefreshTerrainBmMap RenderBmMapColumn RenderBmMapLine RevertMapChange sub_8019624 
+- r8: src/bmmenu.c :: FillBallistaRange IsAdjacentForSupply PlayCommandEffect 
+- r8: src/bmmind.c :: ActionSupport BATTLE_HandleItemDrop DeathDropSpriteAnim_Loop 
+- r8: src/bmpatharrowdisp.c :: DrawPathArrow 
+- r8: src/bmreliance.c :: GetUnitSupportBonuses InitUnitsupports ProcessTurnSupportExp 
+- r8: src/bmsave-bwl.c :: ClearPidChStatsSaveData PidStatsRecordLoseData 
+- r8: src/bmsave-gmap.c :: ReadWorldMapNodes WriteWorldMapNodes WriteWorldMapUnits 
+- r8: src/bmsave-lib.c :: GenerateGameRankSaveData GetGlobalBestSupport GetGlobalSupportListFromSave WriteSupplyItems 
+- r8: src/bmsave-misc.c :: EraseInvalidSaveData 
+- r8: src/bmsave-multiarena.c :: CopyMultiArenaSaveTeam ReadMultiArenaSaveTeam SwapMultiArenaSaveTeams WriteMultiArenaSaveTeam WriteNewMultiArenaSave 
+- r8: src/bmsave.c :: CopyGameSave EncodeSuspendSavePackedUnit LoadSavedUnit ReadGameSave ReadSuspendSave ReadSuspendSavePackedUnit WriteGameSave WriteGameSavePackedUnit WriteNewGameSave WriteSuspendSave 
+- r8: src/bmshop.c :: DrawShopItemPriceLine Shop_Init StartShopScreen 
+- r8: src/bmtarget.c :: ForEachUnitInMagBy2Range MakeGorgonEggHatchTargetList MakePoisonDamageTargetList MakeTargetListForLatona MakeTargetListForWeapon MakeTerrainHealTargetList sub_8024FD8 sub_8026414 
+- r8: src/bmtrade.c :: TradeMenu_HelpBox_OnLoop TradeMenu_InitUnitNameDisplay TradeMenu_RefreshItemText TradeMenu_RefreshSelectableCells 
+- r8: src/bmtrick.c :: ApplyMapChangesById GenerateGasTrapTargets 
+- r8: src/bmudisp.c :: ApplyUnitSpriteImage16x16 ApplyUnitSpriteImage16x32 ApplyUnitSpriteImage32x32 ApplyUnitSpriteUiImage16x16 PutBlendWindowUnitSprite PutUnitSprite PutUnitSpriteForClassId PutUnitSpriteIconsOam RefreshUnitSprites SMS_DisplayOne StartUiSMS StartWorldMapSMS TornOutUnitSprite sub_8027CFC sub_8027DB4 sub_8027E4C sub_8028160 
+- r8: src/bmunit.c :: CanUnitMove GetUnitWeaponUsabilityBits TickActiveFactionTurn UnitGetDeathDropLocation 
+- r8: src/bmusailment.c :: StatusHealEffect_BlendedSprite_Init 
+- r8: src/bmusemind.c :: ActionStaffDoorChestUseItem ExecUnitPromotion GetRescueStaffeePosition sub_802F598 sub_802F760 
+- r8: src/bonusclaim.c :: BonusClaim_DrawItemSentPopup BonusClaim_Init BonusClaim_Loop_MainKeyHandler BonusClaim_StartSelectTargetSubMenu DrawBonusClaimItemText InitBonusClaimData TryClaimBonusItem 
+- r8: src/cg.c :: DisplayCGfx 
+- r8: src/cgtext.c :: CgTextInterpreter_808FF18 CgTextInterpreter_Loop_Main CgText_Init GetCgTextBoxDimensions GetCgTextDimensions StartCgText StartYesNoChoice sub_808F5C8 sub_808FEA4 
+- r8: src/chapterintrofx.c :: ChapterIntro_End ChapterIntro_Init ChapterIntro_LightExplosion_Loop ChapterIntro_TwinLights_Loop PutOppositeLightExplosionSprites PutScreenFogEffect PutScreenFogEffectOverlayed 
+- r8: src/chapterintrofx_title.c :: ChapterIntroTitle_InitBgImg 
+- r8: src/classchg-handler.c :: PromoHandler_SetupAndStartUI 
+- r8: src/classchg-sel.c :: LoadBattleSpritesForBranchScreen Make6C_PromotionMenuSelect sub_80CD34C sub_80CD47C 
+- r8: src/code_8086934.c :: sub_808683C 
+- r8: src/code_80AC6AC.c :: sub_80AC6AC sub_80AC784 
+- r8: src/colorfade.c :: ColFadeIn_Loop ColFadeOut_Loop 
+- r8: src/cp_0803E2F4.c :: AiBallistaRideExit AiEquipGetDanger AiEquipGetFlags AiFillDangerMap AiFunc_CountEnemiesInRange AiTryDoDanceAdjacent AiTryGetNearestHealPoint sub_803EEB0 sub_803F15C sub_803F51C sub_803F6B8 
+- r8: src/cp_battle.c :: AiAttemptBallistaCombat AiAttemptCombatWithinMovement AiAttemptOffensiveAction AiAttemptStealActionWithinMovement AiFillReversedAttackRangeMap AiFloodMovementAndRange AiGetFriendZoneCombatPositionScoreComponent AiGetFriendZoneCombatScoreComponent AiSimulateBestBallistaBattleAgainstTarget AiSimulateBestBattleAgainstTarget 
+- r8: src/cp_decide.c :: AiSetDecision 
+- r8: src/cp_order.c :: BuildAiUnitList CpOrderBerserkInit GetUnitBattleAiPriority SortAiUnitList 
+- r8: src/cp_perform.c :: AiStartStealAction CpPerform_MoveCameraOntoTarget 
+- r8: src/cp_script.c :: sub_803CFB4 sub_803D124 
+- r8: src/cp_staff.c :: AiStaffFortify AiStaffHealMendRecover AiStaffPhysicRescue AiStaffRestore AiStaffSilence AiStaffSleepBerserk AiStaffWarp AiTryDoStaff GetAiSafestAccessibleAdjacentPosition sub_8040668 
+- r8: src/cp_utility.c :: AiCountNearbyAlliedUnits AiCountNearbyEnemyUnits AiCountNearbyUnits AiCountUnitsInRange AiFindBestAdjacentPositionByFunc AiFindClosestTerrainAdjacentPosition AiFindClosestTerrainPosition AiFindClosestUnlockPosition AiFindSafestReachableLocation AiFindTargetInReachByCharId AiFindTargetInReachByClassId AiFindTargetInReachByFunc AiFindTargetInReachNeglectWallByFunc AiGetUnitClosestValidPosition AiRandomMove AiTryMoveTowards AiTryMoveTowardsNeglectWall FillMovementAndRangeMapForItem SaveNumberOfAlliedUnitsIn0To8Range sub_803B678 sub_803C284 sub_803C3B0 
+- r8: src/cpextra_80407F0.c :: AiDetermineNightmareEffectiveness AiTryDKSummon AiTryUseNightmareStaff 
+- r8: src/cursor_hand.c :: SetUiCursorHandConfig sub_80AC844 
+- r8: src/difficultymenu.c :: DrawDifficultySprites_Loop SaveDrawSetDifficultSlotPalette SaveMenuInitSlotPalette sub_80ABF74 sub_80AC4F8 
+- r8: src/emitstarfx.c :: Calcs_Interpolate LetsEmitStars StartEmitStarsAnim 
+- r8: src/ending_credits.c :: sub_80C4238 
+- r8: src/ending_details.c :: CharacterEnding_LoadUnitBattleStats EndingBattleInitText HandleTurnRecordText PairedEndingBattleDisp_Init PairedEndingBattleDisp_Loop_SlideIn SoloEndingBattleDisp_Init TurnRecord_Init sub_80B689C sub_80B7BD8 sub_80B8190 
+- r8: src/eventcall.c :: WorldFlushInit WorldFlushOut 
+- r8: src/eventfx-fade.c :: EventFadefx_Loop NewEventFadefx 
+- r8: src/eventfx-shinningstone.c :: Eventfx_SetScreenConfig 
+- r8: src/eventinfo.c :: CheckAnyBlueUnitArea CheckAnyRedUnitArea SearchAvailableEvent sub_8083FFC 
+- r8: src/events_script.c :: AutoGenerateUnitdef AutolevelSecondaryLord 
+- r8: src/events_script_utils.c :: sub_8085E94 sub_8085F88 sub_808613C sub_808635C 
+- r8: src/eventscr.c :: Event0A_Call Event18_ColorFade Event21_TextBg Event26_CameraControl Event27_MapChange Event2C_LoadUnits Event2F_MoveUnit Event3D_MenuOverride Event3F_ScriptBattle Event40_PromoteUnit EventLoadUnitSliently EventLoadUnitWithMovement LoadUnit_800F704 sub_800E31C sub_800EF48 
+- r8: src/eventscr3.c :: AssignUnitToFreeDeploySlot ChangeAiForCharacter ChangeAiForPositions EventPromoteUnitExt EvtBattleGenerateRealInternal InitPlayerUnitPositionsForPrepScreen StartEventBattle 
+- r8: src/eventscr_gmap.c :: Event87_WmScrollCameraOntoNode Event88_WmScrollCameraOntoUnit Event9A_WmSetStoryNodeSilent EventA8_WmUnitMoveFree 
+- r8: src/eventscr_utils.c :: CopyBgImage 
+- r8: src/eventwarpfx.c :: StartEventWarpAnim StartEventWarpAnim_unused 
+- r8: src/face.c :: PutFace80x72 PutFace80x72_Core PutFaceChibi PutFaceOnBackGround PutFaceTm StartFace StartFace2 StartFaceChibiSpr StartFaceFadeIn UnpackFaceChibiSprGraphics sub_8006134 
+- r8: src/fogmap.c :: FillWarpRangeMap 
+- r8: src/gamerankings.c :: GetChapterWinPerc GetGameExpRank GetGameFundsRank GetGameTacticsRank sub_80B6104 
+- r8: src/hardware.c :: AddAttr2dBitMap ColorFadeSetupFromBlack ColorFadeSetupFromColorToBlack ColorFadeSetupFromColorToWhite ColorFadeSetupFromWhite MaybeSmoothChangeSomePal SetBlendTargetA SetBlendTargetB sub_8000E14 sub_80016C4 sub_80017B4 sub_8001A6C sub_80021E4 
+- r8: src/helpbox.c :: BoxDialogueInterpreter_Main DisplayHelpBoxObj DrawBoxDialogueText HelpBoxIntroDrawTexts sub_808A3C4 sub_808A530 sub_808A7B0 sub_808A8E4 sub_808AA04 sub_808AA6C sub_808ACFC 
+- r8: src/koido.c :: Make6CKOIDO 
+- r8: src/m4a.c :: CgbSound MPlayStart m4aMPlayLFOSpeedSet m4aMPlayModDepthSet m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- r8: src/mapanim_api.c :: MakeBattleMOVEUNIT SetupMapBattleAnim sub_807B4D0 
+- r8: src/mapanim_debug.c :: MADebug_FormatPrint MADebug_InitScreen MADebug_MainLoop 
+- r8: src/mapanim_eventcall.c :: sub_807F964 sub_807FAA0 sub_807FE0C sub_8080138 sub_8080288 sub_8080498 sub_8080530 sub_80805AC sub_8080730 sub_80807C8 sub_8080890 sub_8080900 sub_80809D8 sub_8080B18 
+- r8: src/mapanim_expbar.c :: DrawMAExpBar 
+- r8: src/mapanim_infobox.c :: DisplayBattleInfoBox sub_807BA28 sub_807BCA8 
+- r8: src/mapanim_lvup.c :: ManimLevelUp_PutStatGainLabels 
+- r8: src/mapanim_lvupfx.c :: PutManimLevelUpFrame PutManimLevelUpStat StartManimLevelUpStatGainLabelAnim StartManimLevelUpStatGainLabels StartPrepItemBoostStatGainLabelAnim 
+- r8: src/mapanim_scanline.c :: MapAnimScanlineCore PrepareGradientScanlineBuf StartManimFrameGradientScanlineEffect UpdateMapAnimScanline sub_808218C sub_8082658 sub_8082730 sub_8082764 sub_80829A4 sub_8082C50 sub_8082E40 
+- r8: src/mapanim_spellassoc.c :: MapAnim_BeginRoundSpecificAnims 
+- r8: src/mapanim_spellassocfx.c :: StartStarRotationEffect 
+- r8: src/mapanim_staffeffect.c :: MapAnimUnlock_Loop1 NewMapAnimEffectAnimator NewMapLatonaShiningfx SetDefaultMapAnimScreenConf 
+- r8: src/mapanim_summon.c :: GenerateSummonUnitDef SelectSummonPos 
+- r8: src/menuitempanel.c :: ForceMenuItemPanel MenuItemPanelProcIdle UpdateMenuItemPanel 
+- r8: src/minimap.c :: DrawMinimapInternal GetMinimapSeaKindAt GetMinimapWaterKindAt InitMinimapFlashPalette Minimap_CloseAnim Minimap_InitOpenAnim Minimap_OpenAnim 
+- r8: src/monstergen.c :: GenerateMonsterItems 
+- r8: src/mu.c :: MuFogBump_Init MuFogBump_ScaleLoop Mu_OnStateMovement SortMus StartMuInternal 
+- r8: src/muctrl.c :: AdjustNewUnitPosition CopyEventMoveREDAs MuCtr_ExecREDA_807A358 MuCtr_InitDefinedMove MuCtr_StartDefinedMove MuCtr_StartMoveTowards sub_807A644 
+- r8: src/mural_background.c :: StartMuralBackgroundAlt StartMuralBackgroundExt 
+- r8: src/opanim-healthsafetyscreen.c :: GameIntroPrepareNintendofx OpAnimHS_BrightenPalette PrepareHealthAndSafetyScreen sub_80CBFC0 
+- r8: src/opanim-main.c :: OpAnim1_UpdateScrollOneLine OpAnimEphraimExit OpAnimEphraimfxFlyIn sub_80C7900 sub_80C7F90 sub_80C835C sub_80C9B6C sub_80CA26C sub_80CA940 sub_80CAA38 sub_80CABB0 sub_80CAE20 sub_80CB20C sub_80CB320 sub_80CB594 sub_80CB6A0 sub_80CB878 sub_80CBA64 sub_80CBC40 
+- r8: src/opanimfx.c :: TsaModifyFirstPalMaybe sub_80C689C sub_80C69B0 
+- r8: src/opinfo.c :: ClassInfoDisplay_Init ClassInfoDisplay_LoopWindowIn ClassIntroBurst_Loop ClassIntroFlare_Loop ClassIntro_Init ClassStatsDisplay_Loop PutClassIntroBurstSprites sub_80B2A14 sub_80B30FC sub_80B3740 
+- r8: src/opsubtitle.c :: Subtitle_LightFlareFx_Loop sub_80C4BB4 sub_80C5218 
+- r8: src/phasechangefx.c :: PhaseIntroSquares_InLoop PhaseIntroSquares_OutLoop PhaseIntroUnk_Loop PhaseIntro_InitDisp 
+- r8: src/player_interface.c :: DrawHpBar DrawMenuButtonAt DrawTerrainDisplayWindow DrawUnitBurstMapUi DrawUnitMapUi MMB_Loop_SlideIn MMB_Loop_SlideOut UnitMapUiUpdate sub_808D514 
+- r8: src/popup.c :: BrownTextBox_Loop PopupProc_GfxDraw StartBrownTextBoxCore 
+- r8: src/popup2.c :: NewPopup2_PlanB NewPopup2_PlanC NewPopup2_PlanD 
+- r8: src/prep_80A0760.c :: FortuneSubMenu_Unused_SetupText 
+- r8: src/prep_atmenu.c :: AtMenu_CtrlLoop AtMenu_Reinitialize 
+- r8: src/prep_itemlist.c :: PrepItemList_DrawCurrentOwnerText PrepItemList_InitGfx PrepItemList_Loop_MainKeyHandler PrepItemList_ScrollVertical PrepItemList_SwitchPageLeft PrepItemList_SwitchPageRight sub_809F498 sub_809F5F4 
+- r8: src/prep_itemscreen.c :: PrepItemDrawPopupBox PrepItemScreen_DpadKeyHandler PrepItemScreen_DrawSelectedUnitDetails PrepItemScreen_DrawUnitItems PrepItemScreen_SetupGfx PutPrepItemScreenPromptText UpdatePrepItemScreenFace sub_8099328 sub_80996E8 sub_8099AF8 sub_809A114 
+- r8: src/prep_itemsupply.c :: PrepItemSupply_InitGfx PrepItemSupply_ScrollVertical PrepItemSupply_SwitchPageRight sub_809D300 sub_809D418 sub_809D47C sub_809E184 sub_809E2C8 sub_809E420 
+- r8: src/prep_itemtrade.c :: DrawPrepScreenItems PrepItemTrade_Init PrepItemTrade_Loop_MainKeyHandler 
+- r8: src/prep_itemuse.c :: DrawPrepScreenItemUseStatBars DrawPrepScreenItemUseStatLabels PrepItemUse_InitDisplay 
+- r8: src/prep_itemusemind.c :: PrepItemUseBooster_OnDraw PrepItemUseJuna_OnDraw PrepItemUseJuna_OnInit 
+- r8: src/prep_menuproc.c :: DrawPrepScreenMenuFrameAt DrawPrepScreenSprites PrepMenu_CtrlLoop PutPrepChapterSprite_Default PutPrepChapterSprite_Ruins PutPrepChapterSprite_Tower SetPrepScreenMenuItem SetPrepScreenMenuPosition sub_8096C34 
+- r8: src/prep_menuscroll.c :: MenuScroll_Loop StartMenuScrollBarExt 
+- r8: src/prep_sallycir.c :: SallyCir_Init SallyCir_Loop sub_80977AC sub_8097ACC sub_8097B98 
+- r8: src/prep_unitselect.c :: PrepUnit_DrawLeftUnitName PrepUnit_DrawSMSAndObjs PrepUnit_DrawUnitItems PrepUnit_DrawUnitListNames 
+- r8: src/prep_unitswap.c :: PrepUnitSwapProc_Init PrepUnitSwapProc_MainLoop StartPrepUnitSwap 
+- r8: src/prep_utils.c :: SomethingPrepListRelated sub_8098048 
+- r8: src/prep_wm_sell.c :: WmSell_Setup 
+- r8: src/prepscreen.c :: RemoveSomeUnitItems sub_8095138 
+- r8: src/savedraw.c :: SaveDrawCursor_Loop SaveDraw_ScrollFogBG sub_80AA7EC sub_80AABC4 sub_80AAC40 sub_80AACBC sub_80AAE90 sub_80AAF6C sub_80AB05C sub_80AB56C 
+- r8: src/savemenu.c :: SaveMenuWaitSlotBoxScrolling SaveMenu_InitScreen sub_80AA550 
+- r8: src/scene.c :: GetStrTalkLen MoveTalkFace PrintStringToTexts PutTalkBubble PutTalkBubbleTm StartScreenFlashing StartTalkChoice StartTalkWaitForInputUnk TalkInterpret TalkPutSpriteText_OnIdle Talk_OnIdle sub_8008F64 
+- r8: src/sio_804B920.c :: sub_804B9E4 sub_804BC84 
+- r8: src/sio_bat.c :: sub_8045930 sub_8045A64 sub_8045AF4 sub_8045C68 sub_8045CEC sub_80464B0 sub_8046580 sub_8046838 
+- r8: src/sio_battlemap.c :: LinkArenaFogSprite_Loop sub_80493D0 sub_80494F0 sub_80495F4 sub_8049D24 sub_8049F44 sub_804A298 sub_804A51C sub_804A614 sub_804A6A4 sub_804A7C0 sub_804A914 sub_804A9A4 sub_804AC68 sub_804ADA0 sub_804AE08 sub_804AF5C sub_804B1C0 
+- r8: src/sio_core.c :: SioEmitData SioHandleIrq_Serial SioMain_Loop SioReceiveData SioSend StartSioBigSend sub_8041718 sub_80423B0 
+- r8: src/sio_main2.c :: StartSioHold 
+- r8: src/sio_menu.c :: SioMenu_8047C60 SioMenu_80480B4 SioMenu_RestartGraphicsMaybe sub_8047CF0 
+- r8: src/sio_mu.c :: StartLinkArenaButtonSpriteDraw StartSioWarpFx sub_804C260 
+- r8: src/sio_multiboot.c :: MultiBootMain 
+- r8: src/sio_points.c :: DrawLinkArenaScoreNumber LAPointsBox_LoadBoxes PointsNumberMover_LoopNumberEmerge PointsSpriteText_LoopIn PointsSpriteText_LoopOut sub_8048884 sub_80490EC 
+- r8: src/sio_postbattle.c :: StartDrawLinkArenaRankSprites sub_804556C 
+- r8: src/sio_result.c :: DrawLinkArenaRankingRow DrawLinkArenaRankings SioResult_NewHS_Init SioResult_NewHS_LoopScroll 
+- r8: src/sio_rulesettings.c :: SioRuleSettings_Init sub_80476CC 
+- r8: src/sio_tactician.c :: SioUpdateTeam TacticianTryAppendChar Tactician_InitScreen Tactician_Loop sub_8044560 sub_8044614 sub_8044B78 
+- r8: src/sio_teamlist.c :: DrawLinkArenaTeamName SioTeamList_8043D8C SioTeamList_EraseTeam SioTeamList_Loop_MainKeyHandler SioTeamList_SetupGfx SioTeamList_SwapTeams sub_80433C0 sub_8043548 sub_80437C0 
+- r8: src/sio_term.c :: sub_80469C4 
+- r8: src/sio_uiutils.c :: LAPhaseIntro_Init LATeamSpriteDraw_Loop LATitleBanner_Init LAVersusSpriteDraw_Loop LinkArenaMenuScroll_Loop PutLinkArenaTeamSprites RuleSettingSprites_Interactive_Loop SioMenuBurstFx_Loop SioMenuItem_Loop StartLinkArenaMenuScrollBar StartLinkArenaTitleBanner StartLinkArenaVersusSpriteDraw StartNameEntrySpriteDraw StartSioMenuItem sub_804C3AC sub_804C894 sub_804CAEC sub_804D7DC 
+- r8: src/sioerror.c :: PutSioErrorMessage 
+- r8: src/soundroom.c :: DrawMusicPlayerTime DrawSoundRoomVolumeGraphSprites InitSoundRoomShuffleBuffer InitSoundRoomSongData SoundRoomUi_80AFBBC SoundRoomUi_Init SoundRoomUi_Loop_ShufflePlayUiSlideIn VolumeGraphBuffer_Loop sub_80AFAB4 sub_80B0088 
+- r8: src/soundwrapper.c :: ChangeBgm MusicFi_OnLoop MusicVc_OnLoop StartBgmFadeIn 
+- r8: src/spinning_arrow.c :: UiSpinningArrows_Loop 
+- r8: src/spline.c :: _DivArm2 sub_800A42C sub_800A518 sub_800A680 sub_800A7D8 sub_800A950 sub_800AB58 sub_800ACEC sub_800AE7C sub_800AF64 sub_800B198 sub_800B388 sub_800B574 sub_800B764 
+- r8: src/sprite-animfx.c :: EventSpriteAnim_Init 
+- r8: src/statbar.c :: DrawStatBar DrawStatBarGfx 
+- r8: src/statscreen.c :: ApplyHelpBoxPosition DisplayLeftPanel DisplayPage1 DisplaySupportList DisplayWeaponExp DrawStatWithBar PageNameCtrl_AnimIn PageNameCtrl_AnimOut PageNameCtrl_OnInit PageNumCtrl_UpdateArrows StartHelpBoxExt_Unk StartHelpPromptSprite StartPageSlide StatScreen_InitDisplay 
+- r8: src/sysutil.c :: BgAffinRotScaling BgAffinRotScalingHighPrecision BmBgfx_Loop EnableSysBlackBox EnableSysBrownBox EnableUnransportWindow MixPaletteCore NewSysboxText StartBmBgfx StartMixPalette StartSpriteAnimfx StartSysBrownBox SysBlackBox_Main SysBrownBox_Loop SysGrayBox_Loop sub_80AE044 sub_80AE0F0 
+- r8: src/time.c :: FormatTime 
+- r8: src/titlescreen.c :: DrawTitleLightBubbleSprites Title_Loop_LightExplosionFx 
+- r8: src/trapfx.c :: StartGasTrapAnim StartUnkTrapAnim 
+- r8: src/uiarena.c :: ArenaUi_Init 
+- r8: src/uichapterstatus.c :: ChapterStatus_DrawText ChapterStatus_Init StatusScreenSpriteDraw_Loop 
+- r8: src/uiconfig.c :: Config_Init DrawGameOptionText DrawOptionValueTexts GenericOptionChangeHandler 
+- r8: src/uimenu.c :: RedrawMenu StartMenuCore 
+- r8: src/uiselecttarget.c :: AddTarget GetLinkedTargetsNear 
+- r8: src/uisupport.c :: DrawSupportScreenUnitSprites DrawSupportSubScreenUnitPartnerText InitSupportSubScreenPartners InitSupportSubScreenRemainingSupports SupportScreen_Loop_KeyHandler SupportScreen_SetupGraphics SupportScreen_SetupUnits SupportSubScreen_Loop_KeyHandler SupportSubScreen_ReinitAfterSwapPage SupportSubScreen_SwapPageIn_FromLeft SupportSubScreen_SwapPageIn_FromRight UiSupport_GetSupportTalkSong sub_80A0F6C sub_80A199C sub_80A1AE4 sub_80A221C sub_80A2730 
+- r8: src/uiutils.c :: ClearUiFrame ClearUiItemHover ClearUiItemHoverExt DrawUiFrame DrawUiFrame2 DrawUiItemHoverExt 
+- r8: src/unitinfowindow.c :: RefreshHammerneUnitInfoWindow RefreshUnitGiveInfoWindows RefreshUnitHpStatusInfoWindow RefreshUnitInventoryInfoWindow RefreshUnitRescueInfoWindows RefreshUnitStaffOffenseInfoWindow RefreshUnitStealInventoryInfoWindow RefreshUnitTakeInfoWindows UnitInfoWindow_DrawBase 
+- r8: src/unitlistscreen.c :: SortUnitList UnitListScreenSprites_Main UnitList_DrawColumnNames UnitList_PutRow sub_80901BC sub_8090238 sub_8090358 sub_8090418 sub_8090B48 sub_8090D80 sub_809144C sub_80917D8 sub_8091D54 
+- r8: src/whitecircularfadefx.c :: ProcWhiteCircleFx_Loop 
+- r8: src/worldmap_80C0834.c :: sub_80C089C 
+- r8: src/worldmap_cursor.c :: NewGmapCursor 
+- r8: src/worldmap_draw.c :: SetGmCharUnit SetGmClassUnit 
+- r8: src/worldmap_effect.c :: GmapEffectPal_Loop GmapEffect_80C119C 
+- r8: src/worldmap_entry.c :: sub_80BFDA0 
+- r8: src/worldmap_face.c :: HandleWMFaceFade HideWmFace WMFaceCtrl_LoopExt WmDrawFace sub_80B82C8 
+- r8: src/worldmap_gmapunit.c :: GmapUnitFade_Loop GmapUnit_Loop NewMapUnit StartGmapUnitFade sub_80BB0E0 sub_80BB26C sub_80BB4C0 sub_80BB538 
+- r8: src/worldmap_hb.c :: SetWorldMapHblank 
+- r8: src/worldmap_line_fade.c :: GmapLineFade_80C0358 
+- r8: src/worldmap_main.c :: WmMain_MoveCursor WmMergeFace sub_80B8A7C sub_80B8BA4 sub_80B9028 sub_80B95B0 sub_80B961C sub_80B9AEC sub_80BA100 sub_80BA1F4 
+- r8: src/worldmap_mapmu.c :: GmMuPrim_80BD444 GmMuPrim_80BD830 GmMu_SetUnit MapMUPrim_MakeUnitForChar sub_80BD6A8 sub_80BE194 
+- r8: src/worldmap_palette_fade.c :: GmPalFade_Loop 
+- r8: src/worldmap_path.c :: MapRoute_80BC2DC RefreshGmNodeLinksExt StartGMapRoute sub_80BBBF4 sub_80BBCC8 sub_80BBDA4 sub_80BBF60 sub_80BCAB8 sub_80BCBAC sub_80BCCFC sub_80BCE34 
+- r8: src/worldmap_player_interface.c :: sub_80BE65C sub_80BECB8 
+- r8: src/worldmap_radar.c :: WmMinimap_PutSkirmishIcons 
+- r8: src/worldmap_rm.c :: GmapRmBorder1_PutSprite2 GmapRm_80C214C StartWmPlaceDot WmShowNationHighlightedMap sub_80C2C80 
+- r8: src/worldmap_screen.c :: GMScreenVSync_Loop sub_80BA4D0 sub_80BA818 sub_80BA8A0 
+- r8: src/worldmap_screen2.c :: GetNodeAtPosition GmapScreen2_Loop StartGmNodeIconDisplay 
+- r8: src/worldmap_scrollmanage.c :: StartGmScroll 
+- r8: src/worldmap_sogu.c :: GmapSogu_Init GmapSogu_Loop1 GmapSugoAdvance 
+- r8: src/worldmap_status_ui.c :: PutWorldmapStatusDetails 
+- r8: src/worldmap_text.c :: sub_80C34D0 
+- r8: src/worldmap_timemons.c :: GenerateRandomonsterMergeConf GmapTimeMons_ExecMonsterMergeMu WmShowMonsters 
+- r8: src/worldmap_tm_confront.c :: GmTmConfront_LoadPositions GmTmConfront_Loop_MoveUnitPositions 

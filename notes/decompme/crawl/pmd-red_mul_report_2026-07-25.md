@@ -1,0 +1,102 @@
+<!-- pmd-red :: trait=mul :: crawled 2026-07-25 :: 673/696 files compiled -->
+- mul: src/adventure_log.c :: DisplayAdventureLog 
+- mul: src/bg_palette_buffer.c :: SetBGPaletteBufferColorRGB 
+- mul: src/code_801AFA4.c :: GetNumMonsAbleToLearnItemMove sub_801B178 sub_801B200 
+- mul: src/code_801C8C4.c :: sub_801CB24 sub_801CCD8 
+- mul: src/code_801D014.c :: sub_801D014 
+- mul: src/code_801EE10.c :: sub_801EE10 
+- mul: src/code_801F428.c :: sub_801F428 sub_801F5B4 sub_801F700 
+- mul: src/code_8023144.c :: sub_802331C sub_80234BC 
+- mul: src/code_8031D70.c :: DrawSOSPasswordScreen 
+- mul: src/code_803B050.c :: sub_803B168 sub_803B284 
+- mul: src/code_803C1B4.c :: sub_803C21C 
+- mul: src/code_809D148.c :: sub_809D25C 
+- mul: src/debug_field_map.c :: DebugMapViewer 
+- mul: src/debug_field_map_window.c :: DebugFieldMapWindow_GetCurrentIndex PrintCurrentPageText 
+- mul: src/debug_menu3.c :: sub_803ABC8 
+- mul: src/debug_menu4.c :: sub_803AF38 
+- mul: src/direction_util.c :: SetVecFromDirectionSpeed 
+- mul: src/dungeon_action_handler.c :: sub_8067794 
+- mul: src/dungeon_cutscene.c :: sub_8085B80 
+- mul: src/dungeon_damage.c :: ApplyAtkDefStatBoosts HandleDealingDamageInternal_Async HandleDealingDamage_Async WeightWeakTypePicker 
+- mul: src/dungeon_engine.c :: RunLeaderTurn_Async sub_8044574_Async sub_8044820_Async 
+- mul: src/dungeon_entity_movement.c :: sub_8074FB0 
+- mul: src/dungeon_generation.c :: AssignRooms sub_804C790 
+- mul: src/dungeon_generation_fixed.c :: sub_805210C 
+- mul: src/dungeon_info.c :: BufferDungeonRequirementsText TeamMonWithMove 
+- mul: src/dungeon_item_action.c :: sub_8048A68 
+- mul: src/dungeon_items.c :: sub_804687C 
+- mul: src/dungeon_list_menu.c :: DungeonListMenu_GetCurrentRescueDungeonId PrintCurrentPage 
+- mul: src/dungeon_logic.c :: CopyEntityNameForDungeonExitSummary SetMessageArgument_2 sub_8070968 
+- mul: src/dungeon_main.c :: TryCreateModeArrows sub_805F02C 
+- mul: src/dungeon_menu_recruitment.c :: SetRecruitableMons 
+- mul: src/dungeon_menu_team.c :: AddTeamSubMenuOptions PrintOnDungeonTeamMenu 
+- mul: src/dungeon_message.c :: DisplayDungeonDialogue_Async 
+- mul: src/dungeon_misc.c :: HandleFaint_Async LoadDungeonPokemonSprites SetDungeonMonsFromTeam sub_8068A84 sub_8068BDC sub_8068F28 sub_806AA70 
+- mul: src/dungeon_mon_recruit.c :: HandleSpecialEntityJoinSequence MonsterJoinSequence_Async 
+- mul: src/dungeon_mon_spawn.c :: sub_806B09C sub_806B168 sub_806B404 sub_806C264 
+- mul: src/dungeon_mon_sprite_render.c :: UpdateMonsterSprite 
+- mul: src/dungeon_move.c :: TargetNotImmuneTo 
+- mul: src/dungeon_move_util.c :: AccuracyCalc sub_80566F8 
+- mul: src/dungeon_pokemon_sprites.c :: LoadStatusGraphics 
+- mul: src/dungeon_projectile_throw.c :: HandleCurvedProjectileThrow 
+- mul: src/dungeon_random.c :: DungeonRand16Bit DungeonRandInt GenerateDungeonRNGSeed 
+- mul: src/dungeon_range.c :: sub_8083904 
+- mul: src/effect_main.c :: sub_800DC14 sub_800E308 sub_800E3AC sub_800E52C sub_800E698 sub_800E6D8 sub_800E8AC sub_800EAE4 sub_800EB24 sub_800EC28 
+- mul: src/event_flag.c :: _FlagCalc 
+- mul: src/friend_area.c :: GetFriendAreaCapacity GetFriendAreaCapacity2 sub_8092404 sub_809249C 
+- mul: src/friend_area_action_menu.c :: CreateFriendActionMenu sub_80277FC sub_80278B4 
+- mul: src/friend_areas_map.c :: InitMapLocations MoveToNewLocation_Async 
+- mul: src/friend_list.c :: FriendList_GetCurrId FriendList_ShowWindow SortbyAlphabetNo SortbyInternalNo sub_8023BD8 sub_8023F8C sub_8024108 sub_80243E8 
+- mul: src/friend_list_menu.c :: sub_8025728 sub_80259F0 
+- mul: src/friend_rescue.c :: sub_8032828 
+- mul: src/gba_color_util.c :: ScaleRGBColor 
+- mul: src/ground_lives.c :: sub_80A7B94 sub_80A7DDC sub_80A8D54 sub_80AA3F8 sub_80AA690 sub_80AA8BC 
+- mul: src/gulpin_shop.c :: sub_801EA28 
+- mul: src/gulpin_shop_801FB50.c :: sub_801FF28 sub_8020A80 
+- mul: src/hints_menu1.c :: GetChosenHintIndex 
+- mul: src/input.c :: UpdateInput 
+- mul: src/iq_skill_list_menu.c :: BuildIQSkillList CreateIQSkillListMenu GetIQSkillSelection HasNoAvailIQSkills 
+- mul: src/iq_skill_menu.c :: CreateIQSkillMenu 
+- mul: src/items.c :: ClearAllItems_8091FB4 GetActualBuyPrice GetActualSellPrice GetItemPossessionCount GetStackBuyValue GetStackSellValue 
+- mul: src/kecleon_bros1.c :: UpdateKecleonStoreDialogue 
+- mul: src/kecleon_bros2.c :: sub_8019FB0 sub_801A0D8 
+- mul: src/kecleon_bros3.c :: sub_801A37C sub_801A4A4 
+- mul: src/kecleon_bros4.c :: sub_801A8AC sub_801A9E0 
+- mul: src/m4a.c :: CgbModVol CgbSound MidiKeyToCgbFreq SampleFreqSet TrkVolPitSet m4aMPlayTempoControl 
+- mul: src/main_loops.c :: RemoveAllMoneyAndItems RemoveMoneyAndRandomItems 
+- mul: src/makuhita_dojo2.c :: MakuhitaDojo_DrawCourseList sub_8030418 
+- mul: src/menu_input.c :: GetMenuEntryYCoord 
+- mul: src/move_orb_actions_2.c :: PsywaveMoveAction 
+- mul: src/number_util.c :: FixedPoint_Div 
+- mul: src/other_menus1.c :: sub_8037400 
+- mul: src/other_random.c :: OtherRandInt OtherRandom16 
+- mul: src/palette_fade_util.c :: ApplyRowPaletteBrightness ApplySinglePaletteBrightness BlendRowPalette BlendSinglePalette DesaturateRow DesaturateSingle FadeToBlackRow FadeToBlackSingle ModulatePaletteRow ModulatePaletteSingle PerEntryBlendRow PerEntryBlendSingle 
+- mul: src/palette_util.c :: sub_80998E0 
+- mul: src/party_list_menu.c :: CreatePartyListMenu PartyListMenu_CreateMenu1 PartyListMenu_HandleMenu1 
+- mul: src/personality_test1.c :: HandleTestTrackerState 
+- mul: src/pixelpos_math.c :: InterpolatePixelPos 
+- mul: src/pokemon.c :: CalculateEXPGain ComparePokemonNames CreateLeaderPartnerData DungeonMonToRecruitedPokemon GetLeaderMon1 GetPartnerMon GivePokemonItem PeekPokemonItem RecruitedPokemonToDungeonMon TryAddPokemonToRecruited sub_808D278 sub_808D6E8 sub_808D750 sub_808DFDC 
+- mul: src/pokemon_3.c :: RestorePoke2s RestoreRecruitedPokemon SavePoke2s SaveRecruitedPokemon sub_808ED00 
+- mul: src/pokemon_news1.c :: CreatePKMNNewsMenu GetPokemonNewsIndex 
+- mul: src/pokemon_news3.c :: CreateMailMenu sub_802BE74 
+- mul: src/random.c :: Rand16Bit RandInt SeedRng 
+- mul: src/random_mersenne_twister.c :: MersenneTwister_InitializeState MersenneTwister_MixSeeds 
+- mul: src/recruited_mon_summary_menu.c :: RecruitedMonSummaryMenu_InitSummaryMenu 
+- mul: src/run_dungeon.c :: EnforceMaxItemsAndMoney sub_8043FD0 
+- mul: src/text_1.c :: AddWindow ShowWindowsInternal 
+- mul: src/text_2.c :: AddUnderScoreHighlightInternal DisplayMonPortrait DisplayMonPortraitFlipped DrawCharOnWindowInternal PrepareTextbox_8008C6C WriteGFXToWindow sub_8007AA4 sub_8007BA8 sub_8007D00 sub_8008030 sub_80081A4 sub_80086C8 sub_8008818 
+- mul: src/text_3.c :: CalcEntriesTotalHeight CalcTwoLinesEntriesTotalHeight 
+- mul: src/text_4.c :: ScrollDownWindowInternal ScrollUpWindowInternal 
+- mul: src/trawl_orb.c :: HandleTrawlOrb 
+- mul: src/unk_dungeon_load_maybe.c :: sub_80ADD9C sub_80ADF8C 
+- mul: src/util.c :: ConvertFromBCD ConvertFromDecimal 
+- mul: src/wigglytuff_shop1.c :: sub_802132C sub_8021494 
+- mul: src/wigglytuff_shop2.c :: sub_8021A60 
+- mul: src/window_buffer.c :: CopyWindowBgBuffer 
+- mul: src/wonder_mail.c :: sub_8028348 
+- mul: src/wonder_mail_4.c :: sub_80307EC sub_803092C 
+- mul: src/wonder_mail_802C10C.c :: DrawPelipperBoardJobMenu sub_802C26C 
+- mul: src/wonder_mail_802C4C8.c :: DrawJobListMenu GetPelipperBoardSlotIndex 
+- mul: src/wonder_mail_802CDD4.c :: sub_802CEBC sub_802CFD0 
+- mul: src/world_map.c :: AnimateMonPath_Async 

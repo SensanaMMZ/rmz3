@@ -1,0 +1,113 @@
+<!-- mzm :: trait=mov_ip :: crawled 2026-07-25 :: 199/654 files compiled -->
+- mov_ip: src/animated_graphics.c :: AnimatedGraphicsLoad AnimatedPaletteUpdate 
+- mov_ip: src/audio.c :: unk_1e2c 
+- mov_ip: src/audio_wrappers.c :: InitializeAudio unk_2f00 unk_30b4 
+- mov_ip: src/bg_clip.c :: BgClipCheckOpeningHatch BgClipCheckTouchingTransitionOrTank BgClipRemoveCollectedTanks BgClipSetBg1BlockValue BgClipSetBgBlockValue BgClipSetItemAsCollected 
+- mov_ip: src/block.c :: BlockCheckRevealBombChainBlock BlockRemoveNeverReformSingleBlock BlockShiftNeverReformBlocks BlockStartBombChain BlockStoreBrokenReformBlock BlockUpdateMakeSolidBlocks 
+- mov_ip: src/chozodia_escape.c :: ChozodiaEscapeGetItemCountAndEndingNumber ChozodiaEscapeProcessOam_1 ChozodiaEscapeProcessOam_2 ChozodiaEscapeShipBlowingUp 
+- mov_ip: src/color_effects.c :: ApplyFadeOnColor ApplySmoothMonochromeToPalette ApplySmoothPaletteTransition ApplySpecialBackgroundEffectColorOnBg ApplySpecialBackgroundEffectColorOnObj ApplySpecialBackgroundFadingColor PowerBombYellowTint 
+- mov_ip: src/complex_oam.c :: ProcessComplexOam 
+- mov_ip: src/connection.c :: ConnectionCheckAreaConnection ConnectionCheckEnterDoor ConnectionLoadDoors ConnectionSetHatchAsOpened 
+- mov_ip: src/cutscenes/cutscene_utils.c :: CutsceneReset CutsceneStartBackgroundScrolling 
+- mov_ip: src/cutscenes/enter_tourian.c :: EnterTourianInit EnterTourianUpdateMetroid 
+- mov_ip: src/cutscenes/getting_fully_powered_suit.c :: GettingFullyPoweredSuitUpdateSparkleAroundRing 
+- mov_ip: src/cutscenes/mother_brain_close_up.c :: MotherBrainCloseUpInitBubbles MotherBrainCloseUpUpdateEye 
+- mov_ip: src/cutscenes/ridley_in_space.c :: RidleyInSpaceInit RidleyInSpaceShipLeavingParticles RidleyInSpaceViewOfShipParticles 
+- mov_ip: src/cutscenes/statue_opening.c :: StatueOpeningInit 
+- mov_ip: src/dma.c :: BitFill DmaTransfer 
+- mov_ip: src/ending_and_gallery.c :: CreditsDisplayLine EndingImageDisplayLinePermanently EndingImageDisplayText EndingImageLoadIGTAndPercentageGraphics GalleryDisplay GalleryInit UnlockedOptionsPopUp 
+- mov_ip: src/gadora_hatch.c :: GadoraHatchUpdate 
+- mov_ip: src/haze.c :: Haze_Bg3 Haze_Bg3Bg2Bg1 Haze_Bg3StrongWeak Haze_PowerBombExpanding Haze_PowerBombRetracting 
+- mov_ip: src/hud.c :: HudDrawMissileDigits HudDrawMissiles HudDrawPowerBombDigits HudDrawSuperMissileDigits HudUpdateOam 
+- mov_ip: src/hud_generic.c :: HudGenericResetHudData 
+- mov_ip: src/in_game.c :: VBlankCodeInGame VBlankCodeInGameLoad 
+- mov_ip: src/in_game_cutscene.c :: InGameCutsceneUpgradingSuit unk_5fd58 
+- mov_ip: src/intro.c :: IntroFuzzProcessOam IntroProcessText IntroTextProcessOam IntroViewOfZebesProcessOam 
+- mov_ip: src/link.c :: LinkDequeueRecvCmds LinkDoHandshake LinkDoRecv LinkEnqueueSendCmd LinkMain 
+- mov_ip: src/menus/boot_debug.c :: BootDebugDrawSubMenuOptionText BootDebugDrawTextAtAddress BootDebugDrawTextAtPosition BootDebugHandleInput BootDebugSaveUpdateText BootDebugSectionMapRoomOrDoorUpdated BootDebugSectionSetFilesColor BootDebugUpdateMapScreenPosition 
+- mov_ip: src/menus/erase_sram.c :: EraseSramResetOam 
+- mov_ip: src/menus/file_select.c :: FileScreenProcessText FileSelectDisplaySaveFileMiscInfo FileSelectUpdateCopyArrow OptionsSetupTiletable OptionsTimeAttackLoadRecord unk_7eedc 
+- mov_ip: src/menus/pause_screen.c :: PauseScreenApplyFading PauseScreenDetermineMapsViewable PauseScreenDrawCompletionInfo PauseScreenLoadAreaNamesAndIcons PauseScreenMoveDebugCursor PauseScreenUpdateBottomVisorOverlay PauseScreenUpdateMapArrows PauseScreenUpdateStatusScreenOam PauseScreenUpdateWireframeSamus PauseScreenUpdateWorldMap ProcessMenuOam 
+- mov_ip: src/menus/pause_screen_map.c :: MapScreenHandler PauseScreenMapDownload PauseScreenMapGetAbsoluteMapBordersPositions PauseScreenMapUpdateMapBordersForTargets 
+- mov_ip: src/menus/pause_screen_sub_menus.c :: ChozoStatueHintChangeArea ChozoStatueHintDeterminePath ChozoStatueHintHandler ChozoStatueHintMovement 
+- mov_ip: src/menus/status_screen.c :: LoadPauseScreenBgPalette PauseDebugDrawAbilityGroup PauseDebugDrawAffectedGroups PauseDebugDrawStaticInfo PauseDebugEnergyAmmoInput PauseDebugEventListInput PauseDebugStatusScreen StatusScreenDrawItems StatusScreenFullyPoweredItems StatusScreenGetSlotForNewItem StatusScreenSetBeamsVisibility StatusScreenSetBombsVisibility StatusScreenSetMiscsVisibility StatusScreenSetMissilesVisibility StatusScreenSetPistolVisibility StatusScreenSetSuitsVisibility StatusScreenToggleItem StatusScreenUpdateRow UpdateMinimapAnimatedPalette 
+- mov_ip: src/menus/title_screen.c :: TitleScreenCometsView 
+- mov_ip: src/minimap.c :: MinimapCheckSetAreaNameAsExplored MinimapCopyTileGfx MinimapCopyTileXFlippedGfx MinimapCopyTileXYFlippedGfx MinimapCopyTileYFlippedGfx MinimapSetDownloadedTiles MinimapSetTilesWithObtainedItems 
+- mov_ip: src/multiboot.c :: MultiBootMain 
+- mov_ip: src/music_wrappers.c :: CheckPlayFadingMusic 
+- mov_ip: src/particle.c :: ParticleCheckOnScreen ParticleDraw ParticleSamusReflection ParticleSet 
+- mov_ip: src/projectile.c :: ProjectileCheckSamusBombBounce 
+- mov_ip: src/projectile_util.c :: ProjectileCheckDespawn ProjectileDraw ProjectileInit 
+- mov_ip: src/room.c :: RoomReset RoomSetInitialTilemap RoomUpdateHorizontalTilemap RoomUpdateVerticalTilemap 
+- mov_ip: src/samus.c :: SamusDraw SamusInit SamusUpdateArmCannonPositionOffset SamusUpdateDrawDistanceAndStandingStatus SamusUpdateGraphicsOam SamusUpdateHitboxMovingDirection SamusUpdatePalette 
+- mov_ip: src/save_file.c :: SramCheck_FileScreenOptionsUnlocked SramRead_FromEwram SramRead_MostRecentSaveFile SramRead_SoundMode SramWrite_FileInfo SramWrite_ToEwram unk_74624 
+- mov_ip: src/save_file_load.c :: Sram_InitSaveFile 
+- mov_ip: src/scroll.c :: ScrollUpdateCurrent ScrollUpdateEffectAndHazePosition 
+- mov_ip: src/sprite.c :: SpriteCheckOnScreen SpriteDraw SpriteDrawAll_HighPriority SpriteInitPrimary SpriteSpawnDropFollowers SpriteSpawnPrimary SpriteSpawnSecondary 
+- mov_ip: src/sprite_debris.c :: SpriteDebrisDraw SpriteDebrisInit 
+- mov_ip: src/sprite_util.c :: SpriteUtilCheckSamusNearSpriteFrontBehind SpriteUtilCurrentSpriteFall SpriteUtilDetermineEnemyDrop SpriteUtilInitLocationText SpriteUtilMoveSpriteTowardsSamus SpriteUtilRidleyFireballMove SpriteUtilSamusAndSpriteCollision SpriteUtilUpdateSecondarySpriteFreezeTimerOfCurrent 
+- mov_ip: src/sprites_ai/acid_worm.c :: AcidWormExtended AcidWormHandleRotation AcidWormPartInit AcidWormSpitInit AcidWormWiggleHorizontally 
+- mov_ip: src/sprites_ai/atomic.c :: AtomicCheckShootElectricity AtomicIdle AtomicInit 
+- mov_ip: src/sprites_ai/baristute.c :: BaristuteFalling 
+- mov_ip: src/sprites_ai/black_space_pirate.c :: BlackSpacePirateInit 
+- mov_ip: src/sprites_ai/charge_beam.c :: ChargeBeamGlowInit ChargeBeamIdle ChargeBeamInit ChargeBeamVisibleInit 
+- mov_ip: src/sprites_ai/chozo_ball.c :: ChozoBallInit ChozoBallRevealingInit 
+- mov_ip: src/sprites_ai/chozo_statue.c :: ChozoStatuePartInit ChozoStatueRefill 
+- mov_ip: src/sprites_ai/chozo_statue_movement.c :: SpawnChozoStatueMovement 
+- mov_ip: src/sprites_ai/crocomire.c :: CrocomireInit 
+- mov_ip: src/sprites_ai/deorem.c :: DeoremEyeMove DeoremInit DeoremSegmentDownIdle DeoremSegmentGoingDown DeoremSegmentGoingUp DeoremSegmentInit DeoremSegmentNeckIdle DeoremSegmentNeckLeaving DeoremSegmentSpawnGoingDown DeoremSegmentSpawnGoingUp DeoremSegmentUpIdle DeoremThornInit DeoremThornMovement 
+- mov_ip: src/sprites_ai/dessgeega.c :: DessgeegaFallingCeiling DessgeegaFallingGround 
+- mov_ip: src/sprites_ai/dragon.c :: DragonFireballInit DragonFireballMove 
+- mov_ip: src/sprites_ai/elevator_pad.c :: ElevatorPad 
+- mov_ip: src/sprites_ai/enemy_drop.c :: EnemyDropInit 
+- mov_ip: src/sprites_ai/escape_ship.c :: EscapeShipPart 
+- mov_ip: src/sprites_ai/escape_ship_pirate.c :: EscapeShipSpacePirate 
+- mov_ip: src/sprites_ai/explosion_zebes_escape.c :: ExplosionZebesEscape 
+- mov_ip: src/sprites_ai/gadora.c :: GadoraCheckOpeningEyeAnimEnded GadoraDeathGfxInit 
+- mov_ip: src/sprites_ai/geron.c :: Geron 
+- mov_ip: src/sprites_ai/gunship.c :: GunshipAfterRefill GunshipFlying GunshipStartEscaping GunshipTakingOff 
+- mov_ip: src/sprites_ai/hive.c :: HiveCountMellows HiveDying HiveInit HiveRoots HiveRootsInit MellowMove 
+- mov_ip: src/sprites_ai/holtz.c :: HoltzBackToCeiling HoltzCheckWarningAnimEnded HoltzGoingDownMove HoltzGoingUpMove HoltzIdle HoltzInit 
+- mov_ip: src/sprites_ai/imago.c :: ImagoAttackingGoingUp ImagoCoreFlashingAnim ImagoDamagedStinger ImagoDyingInit 
+- mov_ip: src/sprites_ai/imago_cocoon.c :: ImagoCocoonChangeOamScaling ImagoCocoonSporeInit ImagoCocoonVineInit WingedRipperInit 
+- mov_ip: src/sprites_ai/imago_larva.c :: ImagoLarvaPartInit 
+- mov_ip: src/sprites_ai/imago_larva_right_side.c :: ImagoLarvaRightSide 
+- mov_ip: src/sprites_ai/kraid.c :: KraidOpenCloseRoutineAndProjectileCollision KraidPartInit 
+- mov_ip: src/sprites_ai/mecha_ridley.c :: MechaRidleyCrawlingBackwardsInit MechaRidleyDying MechaRidleyFirstEyeGlow MechaRidleyInit MechaRidleyPartGreenGlow MechaRidleyPartInit MechaRidleyPartRightArmIdle MechaRidleySpawnDrops 
+- mov_ip: src/sprites_ai/mella.c :: MellaIdle MellaInit 
+- mov_ip: src/sprites_ai/message_banner.c :: MessageBannerInit 
+- mov_ip: src/sprites_ai/metroid.c :: MetroidCheckBouncingOnMetroid MetroidDeath MetroidSamusGrabbedInit MetroidShell MetroidSpawning 
+- mov_ip: src/sprites_ai/morph_ball.c :: MorphBallGet MorphBallInit MorphBallOutsideInit 
+- mov_ip: src/sprites_ai/morph_ball_launcher.c :: MorphBallLauncherDetectBomb MorphBallLauncherInit 
+- mov_ip: src/sprites_ai/mother_brain.c :: MotherBrainDeath MotherBrainGlassBreaking MotherBrainHandler MotherBrainPartInit 
+- mov_ip: src/sprites_ai/parasite.c :: ParasiteGeronGrabbed ParasiteSamusGrabbed 
+- mov_ip: src/sprites_ai/polyp.c :: PolypProjectileMove PolypSpawnProjectile 
+- mov_ip: src/sprites_ai/reo.c :: ReoIdle 
+- mov_ip: src/sprites_ai/ridley.c :: RidleyBigFireballsAttackInit RidleyCheckPlayCutscene RidleyFireballInit RidleyIdle RidleyPart RidleySmallFireballsAttack RidleyTail 
+- mov_ip: src/sprites_ai/rinka.c :: RinkaInit 
+- mov_ip: src/sprites_ai/ripper2.c :: Ripper2Init 
+- mov_ip: src/sprites_ai/ruins_test.c :: RuinsTestGhostMoveSymbolToPlace RuinsTestMoveAtomPattern RuinsTestProjectileCollision RuinsTestReflectionCover RuinsTestSamusReflectionStart RuinsTestSpawnGhost RuinsTestSymbol 
+- mov_ip: src/sprites_ai/save_platform.c :: SavePlatformOpenedOffInit SavePlatformPartInit SavePlatformPartSpawnRay 
+- mov_ip: src/sprites_ai/save_platform_chozodia.c :: SavePlatformChozodiaCheckRefill SavePlatformChozodiaOpenedOffInit SavePlatformChozodiaPartInit SavePlatformChozodiaPartSpawnRay 
+- mov_ip: src/sprites_ai/searchlight_eye.c :: SearchlightEyeBeamInit SearchlightEyeInit SearchlightEyeProjectile SearchlightEyeShoot 
+- mov_ip: src/sprites_ai/security_gate.c :: SecurityGateDefaultClosedInit SecurityGateDefaultOpenInit 
+- mov_ip: src/sprites_ai/security_laser.c :: SecurityLaserIdle 
+- mov_ip: src/sprites_ai/sidehopper.c :: SidehopperFallingCeiling SidehopperFallingGround 
+- mov_ip: src/sprites_ai/skree.c :: SkreeExplosionInit SkreeGoDown 
+- mov_ip: src/sprites_ai/sova.c :: SovaFalling 
+- mov_ip: src/sprites_ai/space_pirate.c :: SpacePirate SpacePirateClimbingUpInit SpacePirateFallingWhileCrawling SpacePirateLaserInit 
+- mov_ip: src/sprites_ai/squeept.c :: SqueeptGoDown 
+- mov_ip: src/sprites_ai/unknown_item_block.c :: UnknownItemBlock 
+- mov_ip: src/sprites_ai/unknown_item_chozo_statue.c :: UnknownItemChozoStatuePartInit UnknownItemChozoStatueRefill 
+- mov_ip: src/sprites_ai/viola.c :: ViolaFalling 
+- mov_ip: src/sprites_ai/water_drop.c :: WaterDrop 
+- mov_ip: src/sprites_ai/worker_robot.c :: WorkerRobotCheckSamusInFront WorkerRobotFalling WorkerRobotFallingSleep WorkerRobotStandingInit 
+- mov_ip: src/sprites_ai/zebetite_and_cannon.c :: Cannon CannonFireBullet 
+- mov_ip: src/sprites_ai/zeela.c :: ZeelaEyesInit ZeelaEyesMove ZeelaFalling 
+- mov_ip: src/sprites_ai/zipline.c :: ZiplineButtonInit ZiplineInit 
+- mov_ip: src/sprites_ai/zoomer.c :: ZoomerFalling 
+- mov_ip: src/text.c :: TextDrawCharacter TextDrawLocationTextCharacters TextDrawMessageCharacter unk_6f0a8 
+- mov_ip: src/time_attack.c :: CheckUnlockTimeAttack TimeAttackCheckSetNewRecord TimeAttackGenerateSeed TimeAttackRandomizeSeed 
+- mov_ip: src/tourian_escape.c :: TourianEscapeProcessOam TourianEscapeSamusChasedByPirates TourianEscapeSamusChasedByPiratesFiring TourianEscapeSamusGettingShot TourianEscapeSamusLookingAround TourianEscapeVBlankZebesExploding TourianEscapeZebesExploding unk_81788 unk_818cc unk_81ad8 
+- mov_ip: src/transfer.c :: TransferExchangeData 
+- mov_ip: src/transparency.c :: TransparencySetRoomEffectsTransparency 

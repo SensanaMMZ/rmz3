@@ -1,0 +1,8 @@
+<!-- bkgr :: trait=shift_24 :: crawled 2026-07-25 :: 16/16 files compiled -->
+- shift_24: src/main.c :: decrease_eggs increase_eggs select_next_available_egg set_eggs sub_0800BCD4 sub_800A37C sub_800E408 sub_800E9EC update_player 
+- shift_24: src/player.c :: interact_with_object set_player_direction set_player_in_climb_state shoot_egg state_candle_jump state_candle_jump_attack_start state_candle_jump_fall state_climb state_dialogue state_dialogue_start state_dive_rise state_dive_sink state_feathery_flap state_flap_flip state_flap_flip_fall state_jump state_jump_fall state_kazooie_fall state_kazooie_jump state_mouse_jump state_mouse_jump_fall state_octopus_dive_rise state_octopus_dive_sink state_octopus_jump state_octopus_jump_fall state_octopus_water_jump state_octopus_water_jump_fall state_shock_jump state_shock_jump_fall state_shooter_fall state_shooter_jump state_wonderwing_fall state_wonderwing_jump state_wonderwing_start sub_8018BB0 update_wonderwing 
+- shift_24: src/pregame.c :: sub_8024200 
+- shift_24: src/random.c :: sub_8044E5C 
+- shift_24: src/room.c :: sub_801392C 
+- shift_24: src/save.c :: load_game load_save_header 
+- shift_24: src/script.c :: end_all_scripts init_script_engine remove_actors render_scripts render_scripts_direct script_cmd_actor_move script_cmd_actor_move_from_cam script_cmd_actor_rotate_to_target script_cmd_alloc_actors script_cmd_camera_move script_cmd_display_time_travel_scene script_cmd_set_player_direction script_cmd_stop_sfx script_cmd_wait_for_cond set_random_camera_position start_script sub_805D568 sub_805DD20 sub_8060CC4 update_script_actor_position update_script_camera 

@@ -1,0 +1,29 @@
+<!-- tmc :: trait=bic :: crawled 2026-07-25 :: 601/619 files compiled -->
+- bic: src/code_08049CD4.c :: EnemyEnableRespawn 
+- bic: src/code_0805EC04.c :: UpdatePlayerInput 
+- bic: src/enemy/armos.c :: sub_08030150 
+- bic: src/enemy/gyorgFemaleEye.c :: sub_08048BB0 
+- bic: src/enemy/mazaalBracelet.c :: sub_0803B3F4 
+- bic: src/enemy/moldorm.c :: sub_08022EAC 
+- bic: src/enemy/vaatiEyesMacro.c :: VaatiEyesMacro_OnCollision 
+- bic: src/enemy/vaatiWrath.c :: sub_080422C0 
+- bic: src/gba/m4a.c :: CgbSound 
+- bic: src/item/itemBow.c :: sub_08075E40 
+- bic: src/item/itemGustJar.c :: sub_08076E60 sub_08076F64 
+- bic: src/item/itemLantern.c :: sub_08075ADC 
+- bic: src/item/itemPegasusBoots.c :: sub_08076964 
+- bic: src/item/itemShield.c :: sub_08076D34 
+- bic: src/item/itemSword.c :: sub_08075580 sub_08075738 
+- bic: src/manager/armosInteriorManager.c :: ArmosInteriorManager_Main 
+- bic: src/manager/minishSizedEntranceManager.c :: MinishSizedEntranceManager_Main 
+- bic: src/menu/pauseMenu.c :: sub_080A6378 
+- bic: src/object/houseDoorExterior.c :: HouseDoorExterior_Type1 
+- bic: src/object/houseSign.c :: HouseSign 
+- bic: src/object/playerClone.c :: sub_08084CAC 
+- bic: src/object/specialFx.c :: sub_08084630 
+- bic: src/object/warpPoint.c :: WarpPoint_Action2 
+- bic: src/playerItem/playerItemBoomerang.c :: PlayerItemBoomerang_Init 
+- bic: src/playerUtils.c :: DeleteItemBehavior sub_0807B480 
+- bic: src/script.c :: ResetPlayerFlag ScriptCommand_CheckSyncFlagAndClear ScriptCommand_ClearSyncFlag ScriptCommand_WaitForSyncFlagAndClear 
+- bic: src/ui.c :: DrawUI 
+- bic: src/worldEvent/worldEvent17.c :: sub_08054F64 

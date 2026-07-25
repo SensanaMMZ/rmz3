@@ -1,0 +1,118 @@
+<!-- pmd-red :: trait=mov_ip :: crawled 2026-07-25 :: 673/696 files compiled -->
+- mov_ip: src/adventure_info.c :: UpdateAdventureAchievements 
+- mov_ip: src/code_800D090.c :: sub_800D16C sub_800D1E0 sub_800D224 sub_800D2EC sub_800D600 sub_800D6AC sub_800D820 
+- mov_ip: src/code_8015080.c :: sub_8015080 
+- mov_ip: src/code_801B60C.c :: sub_801B760 sub_801BB5C sub_801BC24 
+- mov_ip: src/code_801D014.c :: sub_801D220 
+- mov_ip: src/code_80227B8.c :: sub_802293C sub_8022D2C 
+- mov_ip: src/code_803B050.c :: sub_803B050 
+- mov_ip: src/code_803D0D8.c :: DecodeWonderMailPassword sub_803D204 
+- mov_ip: src/code_803DA7C_2.c :: sub_803E02C 
+- mov_ip: src/code_80958E8.c :: ShiftJobSlotsDown ShiftMailboxSlotsDown ShiftPelipperJobsDown SortJobSlots SortMailboxSlots SortPelipperJobs sub_8096EEC sub_8096F50 
+- mov_ip: src/credits1.c :: DrawCredits 
+- mov_ip: src/debug_menu1.c :: CreateDebugMenu 
+- mov_ip: src/debug_menu2.c :: sub_803A51C 
+- mov_ip: src/debug_menu3.c :: sub_803A93C sub_803AA34 
+- mov_ip: src/decompress_at.c :: DecompressAT 
+- mov_ip: src/dungeon_8041AD0.c :: sub_8042DD4 
+- mov_ip: src/dungeon_action.c :: sub_8045064 
+- mov_ip: src/dungeon_action_execution.c :: ExecuteEntityDungeonAction_Async 
+- mov_ip: src/dungeon_ai_attack.c :: ChooseAIMove 
+- mov_ip: src/dungeon_ai_items.c :: MonTryPickUpItem 
+- mov_ip: src/dungeon_ai_movement.c :: AvoidEnemies 
+- mov_ip: src/dungeon_cutscene.c :: SetupBossFightHP 
+- mov_ip: src/dungeon_damage.c :: HandleDealingDamageInternal_Async WeightWeakTypePicker sub_806F2BC sub_806F370_Async sub_806F500 
+- mov_ip: src/dungeon_exit.c :: SetUpDungeonExitData 
+- mov_ip: src/dungeon_floor_spawns.c :: SetFloorItemMonsterSpawns 
+- mov_ip: src/dungeon_generation.c :: AssignRooms CreateGridCellConnections FinalizeJunctions GenerateCrossFloor GenerateMazeRoom GenerateOuterRoomsFloor InitDungeonGrid StairsAlwaysReachable 
+- mov_ip: src/dungeon_info.c :: TeamMonWithMove 
+- mov_ip: src/dungeon_items.c :: TryLeaderItemPickUp_Async 
+- mov_ip: src/dungeon_leveling.c :: LevelUp sub_80725A4 
+- mov_ip: src/dungeon_logic.c :: MonsterHasNegativeStatus 
+- mov_ip: src/dungeon_main.c :: DungeonHandlePlayerInput TryCreateModeArrows 
+- mov_ip: src/dungeon_map.c :: UpdateBgTilemapForDungeonMap 
+- mov_ip: src/dungeon_map_access.c :: sub_80495E4 
+- mov_ip: src/dungeon_menu_items.c :: ShowDungeonItemsMenu sub_8060800 
+- mov_ip: src/dungeon_menu_moves.c :: ActionDelinkMoves ActionSetOrUnsetMove ActionShowMoveInfo ShowMovesMenuWindows sub_8063E70 sub_8064228 
+- mov_ip: src/dungeon_menu_recruitment.c :: CreateScrollingArrow 
+- mov_ip: src/dungeon_menu_team.c :: PrintOnDungeonTeamMenu 
+- mov_ip: src/dungeon_message_log.c :: CopyStringToMessageLog CreateMessageLogArrow 
+- mov_ip: src/dungeon_misc.c :: MarkLastUsedMonMove SetMonSummaryInfoFromEntity TargetTileInFront 
+- mov_ip: src/dungeon_mon_recruit.c :: MonsterJoinSequence_Async 
+- mov_ip: src/dungeon_mon_spawn.c :: SpawnTeamMember sub_806C1D8 sub_806C264 sub_806C330 
+- mov_ip: src/dungeon_move.c :: TargetNotImmuneTo 
+- mov_ip: src/dungeon_move_util.c :: SetNewTarget 
+- mov_ip: src/dungeon_name_banner.c :: DisplayCharOnScreen sub_803DD30 
+- mov_ip: src/dungeon_pokemon_sprites.c :: DrawStatusSprite 
+- mov_ip: src/dungeon_tilemap.c :: sub_803FA4C sub_803FE30 sub_803FF18 
+- mov_ip: src/dungeon_vram.c :: sub_803E250 sub_803EDF0 sub_803EF90 
+- mov_ip: src/effect_main.c :: sub_800EB24 
+- mov_ip: src/felicity_bank.c :: CreateFelicityBankShopMenu Felicity_DepositMoney Felicity_WithdrawMoney UpdateFelicityBankDialogue sub_801645C 
+- mov_ip: src/friend_area.c :: GetFriendAreaCapacity GetFriendAreaCapacity2 
+- mov_ip: src/friend_area_action_menu.c :: CreateFriendActionMenu sub_80276A8 
+- mov_ip: src/friend_areas_map_util.c :: FriendAreasMap_UpdateBg 
+- mov_ip: src/friend_list.c :: sub_8023BD8 
+- mov_ip: src/friend_list_menu.c :: sub_8025728 sub_802591C 
+- mov_ip: src/graphics_memory.c :: sub_8009A7C sub_8009BE4 
+- mov_ip: src/ground_bg.c :: BmaLayerNrlDecompressor InitMapTilemapRenderContext RenderChunksToBgTilemapWrapAround_3x3 RenderChunksToBgTilemap_2x2 RenderChunksToBgTilemap_3x3 RenderChunksToBgTilemaps_2x2 RenderChunksToBgTilemaps_3x3 _UncompressCell 
+- mov_ip: src/ground_effect.c :: sub_80AD3E0 sub_80AD430 
+- mov_ip: src/ground_event.c :: FindGroundEvent GroundEvent_Add UnusedFindGroundEvent 
+- mov_ip: src/ground_lives.c :: GetLivesCollision_80A92A0 sub_80A9344 sub_80A93F0 sub_80A9488 sub_80A9750 sub_80AA7B0 sub_80AB5D4 
+- mov_ip: src/ground_map.c :: CheckMapCollision_80A585C GroundMap_Select GroundMap_SelectDungeon sub_80A579C sub_80A58C8 
+- mov_ip: src/ground_object.c :: GetObjectCollision_80AC5F4 sub_80AC4C8 sub_80AC554 
+- mov_ip: src/ground_script.c :: ExecuteScriptCommand 
+- mov_ip: src/ground_sprite.c :: sub_80A68F8 sub_80A69FC sub_80A6CF4 sub_80A6EFC sub_80A7310 
+- mov_ip: src/gulpin_shop.c :: sub_801E980 sub_801EBC4 
+- mov_ip: src/gulpin_shop_801FB50.c :: CreateGulpinLinkMenu sub_801FDC0 sub_80205D0 sub_802069C sub_8021178 
+- mov_ip: src/iq_skill_menu.c :: sub_801BFCC 
+- mov_ip: src/items.c :: GetRandomItemForSet WriteHighDecimal 
+- mov_ip: src/kangaskhan_storage1.c :: BuildKangaskhanMainMenu sub_8016E80 sub_80176B8 sub_8017758 
+- mov_ip: src/kangaskhan_storage2.c :: BuildKangaskhanStorage2MainMenu BuildKangaskhanStorage2StoreMenu BuildKangaskhanStorage2TakeMenu sub_8017F28 
+- mov_ip: src/kecleon_bros1.c :: BuildKecleonBrosBuyItemMenu BuildKecleonBrosMainMenu BuildKecleonBrosSellItemMenu sub_8018D30 
+- mov_ip: src/load_screen.c :: CreateLoadScreen 
+- mov_ip: src/luminous_cave.c :: sub_8024804 sub_8024D48 sub_8024DBC sub_8024E30 
+- mov_ip: src/m4a.c :: MidiKeyToCgbFreq MidiKeyToFreq m4aMPlayPanpotControl m4aMPlayPitchControl m4aMPlayVolumeControl 
+- mov_ip: src/mailbox.c :: CreateMailActionMenu CreateMailboxMenu sub_802E0A0 
+- mov_ip: src/main_loops.c :: LoadTitleScreen 
+- mov_ip: src/main_menu2.c :: DrawMainMenu 
+- mov_ip: src/makuhita_dojo1.c :: sub_802FF1C 
+- mov_ip: src/math.c :: F48_16_UMul u24_8_mul 
+- mov_ip: src/memory.c :: DoFree _LocateSetBack _LocateSetFront xxx_unused_memory_free 
+- mov_ip: src/menu_input.c :: sub_8012D60 
+- mov_ip: src/mission_reward.c :: MR_InitStateWindows 
+- mov_ip: src/move_checks.c :: CanUseOnTargetWithStatusChecker 
+- mov_ip: src/move_orb_actions_1.c :: ReversalMoveAction SpiteMoveAction 
+- mov_ip: src/move_orb_actions_2.c :: EarthquakeMoveAction SketchMoveAction SkillSwapMoveAction WaterSpoutMoveAction 
+- mov_ip: src/move_orb_actions_3.c :: MagnitudeMoveAction 
+- mov_ip: src/move_orb_effects_2.c :: EncoreStatusTarget HealTargetHP 
+- mov_ip: src/move_orb_effects_4.c :: sub_8079E34 
+- mov_ip: src/moves.c :: RemoveLinkSequenceFromMoves8 RemoveLinkSequenceFromMoves8_v2 UnlinkMovesAfter sub_80935B8 unk_LinkedSequencesToMoves4 unk_LinkedSequencesToMoves8 unk_LinkedSequencesToMoves8_v2 
+- mov_ip: src/naming_screen.c :: NamingScreen_Init SetLetterCursorSpritePosition 
+- mov_ip: src/options_menu1.c :: sub_801DD84 
+- mov_ip: src/other_menus1.c :: sub_8036FDC 
+- mov_ip: src/palette_fade_util.c :: BlendSinglePalette PerEntryBlendRow sub_800388C 
+- mov_ip: src/party_list_menu.c :: PartyListMenu_BuildYesNoMenu PartyListMenu_CreateMenu1 PartyListMenu_CreateMenu2 sub_802608C 
+- mov_ip: src/pelipper_board.c :: CreatePelipperBoardMenu sub_802E94C 
+- mov_ip: src/pokemon.c :: GetRecruitedMonBySpecies InitShadowSprites PokemonToDungeonMon sub_808D580 sub_808E218 
+- mov_ip: src/pokemon_3.c :: SetIQSkill 
+- mov_ip: src/pokemon_summary_window.c :: SetMonSummaryInfo 
+- mov_ip: src/random_mersenne_twister.c :: MersenneTwister_MixSeeds Random32MersenneTwister 
+- mov_ip: src/reg_control.c :: VBlankIntr sub_800B720 
+- mov_ip: src/rescue_password_menu.c :: CreateRescuePasswordMenu 
+- mov_ip: src/save_menu.c :: CreateSaveMenu sub_8038830 
+- mov_ip: src/sprite.c :: AddAxSprite 
+- mov_ip: src/text_1.c :: LoadCharmaps PutHeaderWindowTopBorderTilemap PutWindowBottomBorderTilemap PutWindowTopBorderTilemap sub_8007334 
+- mov_ip: src/text_2.c :: AddUnderScoreHighlightInternal DisplayMonPortrait DrawCharOnWindowInternal DrawWindowBg PrepareTextbox_8008C6C WriteGFXToWindow sub_8007AA4 sub_8007BA8 sub_8007D00 sub_80081A4 sub_8008334 sub_80084A4 sub_80086C8 sub_8008818 
+- mov_ip: src/text_3.c :: sub_8008DF4 sub_8008E58 sub_8009388 sub_8009408 sub_8009488 sub_8009524 
+- mov_ip: src/text_4.c :: ScrollDownWindowInternal ScrollUpWindowInternal sub_82729B8 sub_8272A8C 
+- mov_ip: src/textbox.c :: ScriptPrintTextInternal 
+- mov_ip: src/thank_you_messages.c :: TYM_InitStateWindows 
+- mov_ip: src/trap.c :: HandleGrimyTrap HandlePPZeroTrap HandleSealTrap 
+- mov_ip: src/unk_menu_203B360.c :: sub_80382E4 sub_8038440 
+- mov_ip: src/weather.c :: sub_807E698 
+- mov_ip: src/wigglytuff_shop3.c :: sub_8021D5C sub_8022380 
+- mov_ip: src/window_buffer.c :: CopyWindowBgBuffer 
+- mov_ip: src/wonder_mail_3_mid.c :: sub_802F004 sub_802F108 
+- mov_ip: src/wonder_mail_802C860.c :: sub_802CAA4 sub_802CBAC 
+- mov_ip: src/wonder_mail_802D098.c :: sub_802D1B8 sub_802D5A4 sub_802D63C sub_802D690 sub_802D73C 
+- mov_ip: src/world_map.c :: UpdateBg 
