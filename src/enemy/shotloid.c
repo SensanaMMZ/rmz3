@@ -3,6 +3,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
 #include "metatile.h"
 
 static const struct Collision sCollisions[];
@@ -146,7 +147,20 @@ void Shotloid_Update(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shotloid_pre_p2_b.inc");
+
+static const EnemyFunc sDeads[3];
+
+// 0x08093d74
+void Shotloid_Die(struct Enemy* p) {
+  if ((p->s).work[1] == 0 && IS_METTAUR) {
+    u8 fl = (p->s).flags & ~DISPLAY;
+    (p->s).flags = fl & ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  } else {
+    (sDeads[(p->s).mode[1]])(p);
+  }
+}
 
 void FUN_08093de0(struct Enemy* p) {}
 

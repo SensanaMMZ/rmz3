@@ -654,3 +654,16 @@ statement groups rather than one shared tail — consider that the original
 may not be an if/else at all but two sequential `if` blocks each ending in
 its own `zeroAttack` tail-merge candidate. Worth a corpus grep for
 functions with a duplicated store pair around a shared call tail.
+
+## Shotloid_Die / PantheonFist_Die (SOLVED, 108B x2, first try)
+
+Standard _Die dispatcher plus a two-condition gate:
+`if (work[1] == 0 && IS_METTAUR) { hide; EXIT_BODY; DISAPPEAR; }
+ else (sDeads[mode[1]])(p);`
+The only non-obvious part is the hide, which is the intermediate-u8
+lever already in the table: `u8 fl = flags & ~DISPLAY;
+flags = fl & ~FLIPABLE;` — one ldrb, two ands, one strb. Writing it as
+two `flags &= ~X` statements would emit two load/store pairs.
+EXIT_BODY supplies the body zeroing AND the trailing
+`flags &= ~COLLIDABLE`, which is why that AND appears after the three
+body stores rather than with the other two.
