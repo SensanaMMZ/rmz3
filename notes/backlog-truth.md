@@ -2142,3 +2142,34 @@ into r3 and copies it (`ldr r3,pool / add r1,r3,#0`) where the ROM stores from r
 directly, and it materialises the `mode[2] = 0` zero several instructions early.
 Tried `(u16)` cast, `motion_t*` via Enemy props[8], separate motionID/motionSubID
 stores, and SetMotion on the child: 45/45/53/27 diffs.
+
+## Two levers from the mode-handler vein
+
+**1. `work[n]--` then RE-READ, not a `u8` temp.** The countdown-and-test idiom
+appears constantly in this vein, and the store/truncate order distinguishes them:
+
+    u8 n = work[2] - 1;        ->  ldrb / sub / lsl#24 / lsr#24 / strb / cmp
+    work[2] = n; if (n == X)       (truncate BEFORE the store)
+
+    work[2]--;                 ->  ldrb / sub / strb / lsl#24 / lsr#24 / cmp
+    if (work[2] == X)              (store the untruncated value, truncate for
+                                    the compare only)  <-- what the ROM does
+
+So `strb` sitting between the `subs` and the `lsls/lsrs` pair means a plain
+`--` followed by an independent re-read of the field. This fixed both
+FUN_080dd894 and FUN_0808772c.
+
+**2. Pinning applies to a bare CONSTANT operand too.** For
+`d.x = 0x400 - (work[2] & 1) * 0x800` agbcc evaluates the masked term first;
+the ROM materialises 0x400 first. Swapping the multiply operands, using PIXEL(),
+and writing the shift by hand all still gave 13 diffs. Only
+
+    s32 speed = 0x400;
+    d.x = speed - (work[2] & 1) * 0x800;
+
+matches. I had this lever recorded for subexpressions; it applies to plain
+constants as well.
+
+- **FUN_080dd894** (solid/cat) also shows `mode[1]++` reusing the `ldrb r3` from
+  the enclosing `mode[1] != 0` test (`adds r0,r3,#1`) -- write `++`, not `= 1`,
+  even though the value is provably 1 on that path.
