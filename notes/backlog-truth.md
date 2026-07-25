@@ -1667,3 +1667,12 @@ ApplyElementEffect vein: 19 found, 6 matched, 13 left.
   rodata 0x08369134+0x1f6) rather than assumed.
 
 ApplyElementEffect vein: 19 found, 7 matched, 12 left.
+- **FUN_0804d0a4** (0x54, bee_server) **PARKED** at 4 bytes. Body and control flow
+  exact. Residual: the final `*(u16*)&(p->props).raw[4] = 0xFC00;` materialises
+  the constant in r2 and copies (`movs r2,#0xfc / lsls r2,#8 / adds r0,r2,#0 /
+  strh r0,[r1]`); the ROM builds it straight in r0 (`movs r0,#0xfc / lsls r0,#8 /
+  strh r0,[r1]`). Tried u16/s16/negative-constant/pointer-local forms; s16 with
+  -0x400 makes it worse (pool load of 0xFFFFFC00). Register choice for a constant,
+  same class as the other parks.
+  Its third argument is the shared global **Coord_0836331c** (defined in
+  bee_server.c itself), and ApplyElementEffect's first argument is 18.
