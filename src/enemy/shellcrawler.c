@@ -3,6 +3,7 @@
 #include "global.h"
 #include "story.h"
 #include "motion.h"
+#include "physics.h"
 
 // 左右 0xA00 の位置に足場があるか (どちらか一方でもあれば TRUE)
 bool8 FUN_08095d80(struct Enemy* p) {
@@ -16,6 +17,26 @@ bool8 FUN_08095d80(struct Enemy* p) {
   t = FUN_08009f6c((p->s).coord.x - 0xA00, (p->s).coord.y);
   if (t - (p->s).coord.y <= 0x43F) {
     r = TRUE;
+  }
+  return r;
+}
+
+// 左右 0xA00 のうち高い方の足場に吸着する (0x400 以内なら)
+bool8 FUN_08095dc8(struct Enemy* p) {
+  bool8 r = FALSE;
+  s32 a = PushoutToUp1((p->s).coord.x + 0xA00, (p->s).coord.y);
+  s32 b = FUN_08009f6c((p->s).coord.x - 0xA00, (p->s).coord.y);
+
+  if (a < b) {
+    if (a < 0 && a > -0x400) {
+      (p->s).coord.y += a;
+      r = TRUE;
+    }
+  } else {
+    if (b < 0 && b > -0x400) {
+      (p->s).coord.y += b;
+      r = TRUE;
+    }
   }
   return r;
 }
@@ -36,8 +57,6 @@ void Shellcrawler_Die(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/shellcrawler_pre_p1_p1_b.inc");
-
-bool8 FUN_08095d80(struct Enemy* p);
 
 void FUN_08096438(struct Enemy* p) {
   if (FUN_08095d80(p) == 0) {

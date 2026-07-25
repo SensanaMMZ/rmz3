@@ -5,56 +5,6 @@
 	.text
 
 
-	thumb_func_start FUN_08095dc8
-FUN_08095dc8: @ 0x08095DC8
-	push {r4, r5, r6, lr}
-	adds r4, r0, #0
-	movs r6, #0
-	ldr r0, [r4, #0x54]
-	movs r1, #0xa0
-	lsls r1, r1, #4
-	adds r0, r0, r1
-	ldr r1, [r4, #0x58]
-	bl PushoutToUp1
-	adds r5, r0, #0
-	ldr r0, [r4, #0x54]
-	ldr r1, _08095E00 @ =0xFFFFF600
-	adds r0, r0, r1
-	ldr r1, [r4, #0x58]
-	bl FUN_08009f6c
-	adds r1, r0, #0
-	cmp r5, r1
-	bge _08095E08
-	cmp r5, #0
-	bge _08095E1A
-	ldr r0, _08095E04 @ =0xFFFFFC00
-	cmp r5, r0
-	ble _08095E1A
-	ldr r0, [r4, #0x58]
-	adds r0, r0, r5
-	b _08095E16
-	.align 2, 0
-_08095E00: .4byte 0xFFFFF600
-_08095E04: .4byte 0xFFFFFC00
-_08095E08:
-	cmp r1, #0
-	bge _08095E1A
-	ldr r0, _08095E24 @ =0xFFFFFC00
-	cmp r1, r0
-	ble _08095E1A
-	ldr r0, [r4, #0x58]
-	adds r0, r0, r1
-_08095E16:
-	str r0, [r4, #0x58]
-	movs r6, #1
-_08095E1A:
-	adds r0, r6, #0
-	pop {r4, r5, r6}
-	pop {r1}
-	bx r1
-	.align 2, 0
-_08095E24: .4byte 0xFFFFFC00
-
 	thumb_func_start FUN_08095e28
 FUN_08095e28: @ 0x08095E28
 	push {r4, r5, r6, lr}
