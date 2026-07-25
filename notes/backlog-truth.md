@@ -1084,3 +1084,19 @@ Tried POW2 (include/definition.h:9) — it is literally `#define POW2(n)
 answer here; the extra copies are an allocation artefact, same class as
 the other residuals. Useful corollary: POW2(x) and x*x are
 interchangeable, so never spend a probe distinguishing them.
+
+## FUN_080c17e8 (SOLVED, 68B) — VFX56 frame-throttle
+
+  if (p->work[2] == 0) { UpdateMotionGraphic(p); p->work[2] = 3; }
+  else                 { p->work[2]--; }
+  if ((p->motion).state == 3) { SET_VFX_ROUTINE(p, ENTITY_DIE); VFX56_Die(p); }
+The single `strb ...,[r4,#0x12]` at the join is agbcc cross-jumping the
+two arms' stores — write them naturally (confirms the blazin_080403a0
+rule: a SHARED tail in the target means let the compiler merge).
+OFFSET PINNED: struct Motion is 8 bytes and sits at 0x6C in Entity, so
+0x6C=cmds, 0x70=step, 0x71=cmdIdx, 0x72=duration, 0x73=state. Any lone
+byte access at +0x73 is `motion.state` — worth remembering, several VFX
+updaters test it.
+NOTE: the file's forward declaration said `struct VFX*` while the
+function really takes `struct Entity*` (the rest of unk_56.c already
+uses struct Entity*); retyping the decl was needed to build.

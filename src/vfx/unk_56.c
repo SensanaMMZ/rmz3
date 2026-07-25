@@ -50,7 +50,7 @@ static void VFX56_Init(struct Entity* p) {
   (sInitializers[p->work[0]])((void*)p);
 }
 
-void FUN_080c17e8(struct VFX* vfx);
+void FUN_080c17e8(struct Entity* p);
 void FUN_080c182c(struct Entity* p);
 void FUN_080c188c(struct Entity* p);
 
@@ -71,6 +71,20 @@ static void VFX56_Die(struct Entity* p) {
 // --------------------------------------------
 
 INCASM("asm/vfx/unk_56.inc");
+
+// 0x080c17e8
+void FUN_080c17e8(struct Entity* p) {
+  if (p->work[2] == 0) {
+    UpdateMotionGraphic(p);
+    p->work[2] = 3;
+  } else {
+    p->work[2]--;
+  }
+  if ((p->motion).state == 3) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    VFX56_Die(p);
+  }
+}
 
 void FUN_080c182c(struct Entity* p) {
   u32 c = p->work[2];
