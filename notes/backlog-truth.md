@@ -677,3 +677,20 @@ flicker in the NO-TRUNCATION spelling (`work[2]++;` on its own line, then
 `if (work[2] & 1)`) — see the trichotomy table in matching-workflow.md;
 then `if (FUN_080098a4(coord.x, coord.y))` -> CreateSmoke(3) + DIE.
 asm/vfx/unk_72.inc split into _a/_b around the lifted body.
+
+## MobNPC inits, second wave (SOLVED): da01c/da114/da41c/da500
+
+Four more from the same family, ROM sha1 exact. TWO body shapes:
+ A (da114, da41c — 120B, &sCollisions[1]): identical to the da21c
+   template except unk_05 = 0 instead of 1.
+ B (da01c, da500 — 124B, &sCollisions[0]): the three motion stores come
+   FIRST, before `flags |= COLLIDABLE`; m_c0 gets sMotions[work[0]] + 1;
+   then unk_05 = 1, unk_04 = 0x30, unk_08 = 0x100, mode[1] = 1.
+   agbcc computes 0x100 as 0x30 + 0xD0 off the just-stored unk_04 value
+   and reuses the `1` for mode[1] — both fall out of writing the
+   constants literally, no contortion needed.
+The B shape's chained `adds r1,#2` addressing (0xBE -> 0xC0 -> 0xC2) is
+what tells you the three motion stores are consecutive statements with
+nothing between them; in shape A they are recomputed from p each time
+because the flags/InitBody block sits in front.
+All eight MobNPC initializers in this family are now C.

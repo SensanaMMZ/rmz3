@@ -12,20 +12,18 @@ holdout's own relocations (`tools/fnbytes.py` verifies).
 - **FREE via C twin** (52 B): holdouts `FUN_080e964c`*; C `FUN_0803a5c8`
 - **solve-one-get-3** (108 B): holdouts `FUN_080e58bc`*; asm `FUN_080e2510`, `FUN_080e2b78`
 
-## Identical modulo call targets (6 clusters) — bl offset bits masked; everything else identical
+## Identical modulo call targets (5 clusters) — bl offset bits masked; everything else identical
 
-- **solve-one-get-2** (112 B): asm `FUN_080c6c60`, `FUN_080c7250`
 - **solve-one-get-5** (116 B): holdouts `_zeroTryAttack`*, `FUN_0802e338`*, `air1`*, `zero_wall_080303d4`*, `zero_ladder_08030ee0`*
 - **solve-one-get-2** (120 B): asm `FUN_080da114`, `FUN_080da41c`
 - **solve-one-get-2** (124 B): asm `FUN_080da01c`, `FUN_080da500`
 - **solve-one-get-2** (216 B): asm `SeaOtterElf_Init`, `BirdElf_Init`
 - **FREE via C twin** (232 B): holdouts `Ghost28_Init`; C `VFX59_Init`, `Ghost66_Init`
 
-## Identical modulo calls and pool literals (8 clusters) — bl bits and address-like pool words masked
+## Identical modulo calls and pool literals (7 clusters) — bl bits and address-like pool words masked
 
 - **solve-one-get-2** (36 B): asm `FUN_08000994`, `FUN_08000c64`
 - **solve-one-get-3** (108 B): holdouts `FUN_080e58bc`*; asm `FUN_080e2510`, `FUN_080e2b78`
-- **solve-one-get-2** (112 B): asm `FUN_080c6c60`, `FUN_080c7250`
 - **solve-one-get-2** (120 B): asm `FUN_080da114`, `FUN_080da41c`
 - **solve-one-get-2** (124 B): asm `FUN_080da01c`, `FUN_080da500`
 - **solve-one-get-2** (216 B): asm `SeaOtterElf_Init`, `BirdElf_Init`
