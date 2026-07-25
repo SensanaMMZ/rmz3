@@ -1,7 +1,7 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-
+	
 	.text
 
 	thumb_func_start FUN_080c2390
@@ -133,67 +133,3 @@ _080C2480:
 	pop {r0}
 	bx r0
 	.align 2, 0
-
-	thumb_func_start FUN_080c248c
-FUN_080c248c: @ 0x080C248C
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _080C249C
-	cmp r0, #1
-	beq _080C24B2
-	b _080C24F4
-_080C249C:
-	adds r0, r4, #0
-	adds r0, #0x80
-	ldrh r1, [r0]
-	adds r0, r4, #0
-	bl SetMotion
-	movs r0, #0x28
-	strb r0, [r4, #0x12]
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_080C24B2:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-	ldrb r1, [r4, #0x12]
-	movs r0, #1
-	ands r0, r1
-	cmp r0, #0
-	beq _080C24CA
-	ldrb r1, [r4, #0xa]
-	movs r0, #1
-	orrs r0, r1
-	b _080C24D0
-_080C24CA:
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xfe
-	ands r0, r1
-_080C24D0:
-	strb r0, [r4, #0xa]
-	ldrb r0, [r4, #0x12]
-	cmp r0, #0
-	beq _080C24F4
-	subs r0, #1
-	strb r0, [r4, #0x12]
-	lsls r0, r0, #0x18
-	cmp r0, #0
-	bne _080C24F4
-	ldr r1, _080C24FC @ =gVFXFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r4, #0x14]
-_080C24F4:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C24FC: .4byte gVFXFnTable
-

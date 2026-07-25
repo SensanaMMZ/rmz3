@@ -2202,3 +2202,23 @@ constants as well.
     in the ROM means two separate statements in the source.
   * FUN_080c094c's guard is `if (work[3] == 0 || --work[3] == 0)` -- note the
     truncation is a bare `lsls #24` with no `lsrs`, i.e. a test-for-zero only.
+
+## Reading `||` vs `&&` off the countdown guard's BRANCH TARGET
+
+Two functions in this vein have a byte-identical instruction sequence for the
+countdown guard, and differ ONLY in where the first `beq` lands:
+
+    ldrb work[n] / cmp #0 / beq X / subs #1 / strb / lsls #24 / cmp #0 / bne END
+    <body>
+    END:
+
+  * X == the BODY   ->  `if (work[n] == 0 || --work[n] == 0)`   (FUN_080c094c)
+  * X == END        ->  `if (work[n] != 0 && --work[n] == 0)`   (FUN_080c248c)
+
+I wrote the `||` form for both; FUN_080c248c came out with exactly ONE differing
+byte -- the `beq` displacement (0xD004 vs 0xD00D). Everything else, including the
+length, was identical. **Resolve the branch target before choosing the connective;
+a one-byte diff in a `beq` is a control-flow error, not a scheduling artefact.**
+
+- **FUN_080bba18** (vfx 33) matched first probe; `if (unk_28->mode[0] > 1)` guards
+  a disappear, else the usual mode switch, tracking `pZero2` with a -0x1000 y offset.

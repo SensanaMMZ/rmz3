@@ -175,7 +175,30 @@ void FUN_080c2364(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_58_post_p2.inc");
+INCASM("asm/vfx/unk_58_post_p2_a.inc");
+
+#include "motion.h"
+
+void FUN_080c248c(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, *(motion_t*)&(p->props).raw[12]);
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] & 1) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+      if ((p->s).work[2] != 0 && --(p->s).work[2] == 0) {
+        SET_VFX_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
 
 extern const s32* const PTR_s32_ARRAY_0836f2f0[3];
 
