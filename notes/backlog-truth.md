@@ -1716,3 +1716,15 @@ ApplyElementEffect vein: 19 found, 8 matched, 2 parked, 9 left.
   **shotcounter_08066da0 differs** despite matching size — its constants appear in
   a different order (movs #5 / movs #2 / movs #7) and it diffs from byte 6, so it
   is NOT a third clone; treat separately.
+- **shotcounter_08066da0** (0x94) MATCHED after correcting the offsets. It IS the
+  same shape as batring/cattatank after all, with the same constants as batring
+  (8, 5, 7) — what differed was where the fields live:
+  slot at **props[12]** (0xC0) and the flag byte at **props[11]** (0xBF), versus
+  slot at props[8] (0xBC) and flag at props[12] (0xC0) in the other two.
+  My earlier note calling it "not a third clone" was wrong: the byte-6 diff was
+  the `adds r6,#0xc0` vs `#0xbc` offset, not a structural difference. Read the
+  offsets out of the disassembly per instance instead of inheriting them from the
+  sibling. (Its declaration was already bool8 — the only one of the family that
+  was right.)
+
+ApplyElementEffect vein: 19 found, 11 matched, 2 parked, 6 left.

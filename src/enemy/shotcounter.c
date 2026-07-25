@@ -818,6 +818,46 @@ bool8 FUN_08066bdc(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/shotcounter_p8.inc");
 
+#include "element.h"
+#include "vfx.h"
+
+extern const struct Coord Coord_08365e84;
+
+bool8 shotcounter_08066da0(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)&p->props[12];
+  struct VFX* e;
+  u8 attr;
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    e = ApplyElementEffect(0, &p->s, &Coord_08365e84);
+    *slot = e;
+    if ((p->s).mode[1] != 8) {
+      if (e != NULL) {
+        attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+        if (attr == 0x10) {
+          p->props[11] = 1;
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = 0;
+        } else if (attr == 0x30) {
+          p->props[11] = 2;
+          (p->s).mode[1] = 7;
+          (p->s).mode[2] = 0;
+        }
+      }
+    } else if (e != NULL) {
+      attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+      if (attr == 0x10) {
+        p->props[11] = 1;
+      } else if (attr == 0x30) {
+        p->props[11] = 2;
+      }
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/shotcounter_p8_b.inc");
+
 // 0x08365D64
 static const struct Collision sCollisions[12] = {
     [0] = {
