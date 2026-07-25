@@ -139,3 +139,11 @@ echo "  cd $OUTDIR && ./compile.sh base.c -o /tmp/check.o && echo OK"
 echo
 echo "Run permuter:"
 echo "  $PY $REPO/tools/decomp-permuter/permuter.py $OUTDIR"
+
+# --- 2026-07-25: guard against the settings.toml copy trap -------------------
+# Copying another function's dir (rather than running this script) leaves
+# func_name pointing at the WRONG symbol. The permuter then reports
+# "Function X not found in base.c" and grinds on nothing, which silently
+# invalidates any "permuter found no improvement" conclusion. Audit with:
+#   for d in tools/permuter-setup/*/settings.toml; do #     fn=$(grep -o 'func_name = "[^"]*"' $d | cut -d'"' -f2); #     dir=$(basename $(dirname $d)); #     [ "$fn" != "$dir" ] && echo "MISMATCH: $dir -> $fn"; done
+# (Beetank_Update_v* and onCollision_doorblue mismatch on purpose.)

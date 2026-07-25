@@ -713,3 +713,16 @@ reused). `s8 kind` is WRONG too — it re-truncates and costs 4 bytes.
 Tried and failed to flip the r2/r5 pair: `mode[2] = 0` literal (96B,
 worse), explicit `!= 0` / `== 0` on the work[0] mask (identical).
 Same regalloc-tie class as the rest; park.
+
+### CORRECTION (2026-07-25): the FUN_080b7e3c permuter result was invalid
+
+The run reported earlier as "permuter found nothing" never permuted that
+function. Its settings.toml had been copied from the CheckZeroHazard dir,
+so func_name still said "CheckZeroHazard"; the permuter printed
+"Function CheckZeroHazard not found in base.c" and then ran against
+nothing. Any conclusion drawn from that run is void. Re-run with the
+corrected settings. The corpus evidence (zero hits for the target's
+instruction window across 95k functions) is UNAFFECTED — that came from
+the index, not the permuter.
+Lesson: copying a permuter dir silently mis-targets it; audit loop added
+to tools/permuter-setup/setup_fn.sh.
