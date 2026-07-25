@@ -190,7 +190,37 @@ void FUN_0807472c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/snakecord_p2.inc");
+INCASM("asm/enemy/snakecord_p2_a.inc");
+
+#include "motion.h"
+
+void FUN_08074d18(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x28, 0x05));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 4) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      SetMotion(&p->s, MOTION(0x28, 0x06));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 4) {
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/snakecord_p2_b.inc");
 
 void Snakecord_Init(struct Enemy* p);
 void Snakecord_Update(struct Enemy* p);

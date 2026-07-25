@@ -2182,3 +2182,11 @@ constants as well.
   `struct FlopperObject`, not the `s32` I inferred from a props[] cast; the
   struct was already in the file and I should have used it first.
   The field also holds the phase modulo 0x10000: `unk_08 = (unk_08 + 0x200) & 0xFFFF`.
+
+- **FUN_08074d18** (snakecord), **FUN_080cb2f8** (door_2d_blue),
+  **FUN_080d0804** (door_2d_gray_v) -- all matched first probe from the
+  mode-handler skeleton. The two doors are identical apart from the motion id
+  (0x12 vs 0x7a). Their guard is
+  `if ((work[0] & 2) && !FLAG(gCurStory.s.gameflags, FLAG_2))`; agbcc reuses the
+  switch value (mode[2] == 2, still live in r4) as the mask constant on its own,
+  so writing the literal `& 2` is correct -- no temp needed.
