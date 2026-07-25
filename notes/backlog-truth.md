@@ -349,7 +349,31 @@ unk_28->mode[0] access form, or a kept-pointer for unk_28). The
 whitepaint test idiom confirmed from entity.c:172:
 `gWhitePaintFlags[id >> 5] & (1 << (id & 0x1F))`.
 
-## SeaOtterElf_Init / BirdElf_Init — 216 B pair (in progress)
+## SeaOtterElf_Init / BirdElf_Init — 216 B pair (in progress, m4 = best)
+
+2026-07-24 update: best harness build/scratch/elf2/m4.c — 216/216 with
+only 22 diff bytes, all in the buffer[12..15] block. SOLVED pieces:
+plain `flags |= DISPLAY; flags |= FLIPABLE;` DOES keep two ORs in a
+full-context compile (agbcc dead-store-elims the intermediate RMW; the
+earlier fold-to-3 came from the compound v=1 form, NOT the plain form —
+Elf0_Init ground truth); the r8 zero park is a pure compiler artifact
+(no source var needed); `oam.xflip = FALSE` alone emits the
+movs #0x11 / rsbs / ands trio (-0x11 == ~0x10 synthesis).
+REMAINING 22 bytes: target does
+`adds r2,#0x78 / movs r1,#0 / movs r0,#0x80 / lsls / strh r0,[r2]` then
+buffer[12] strb r1 — i.e. buffer[14] addressed from the DEAD oam
+pointer (r2=p+0x4a) and a FRESH zero in r1. Ours always picks r1+6
+(from the buffer[8] pointer) and reuses the r8 zero for buffer[12].
+Hypothesis: in the original, the zero temp allocates INTO r1 before the
+strh, killing the r1=p+0xbc equivalence, which forces cse to the
+r2+0x78 base. Tried and failed: hp var from p (m1/m2), plain (m3),
+zz-before-strh (m4, closest), ob = oam-byte pointer + hp = ob+0x78
+(t13 — cse still canonicalizes to r1+6). Next ideas: give the zero a
+use that pins r1 (e.g. pass it through a u16 expression), or an
+`s16 zero = 0` typed temp; or try `p->buffer[12] = 0; ... reordered`
+permutations under the permuter.
+
+(old notes below)
 
 Structure decoded and size-exact at 216: player from buffer[0],
 `struct Rect r = gZeroRanges[z->posture]` (packed x/y word read), init +
