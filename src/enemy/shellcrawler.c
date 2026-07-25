@@ -10,6 +10,9 @@
 #include "constants/song.h"
 #include "constants/entity/enemy.h"
 #include "projectile.h"
+#include "vfx.h"
+#include "definition.h"
+#include "mission.h"
 
 // 左右 0xA00 の位置に足場があるか (どちらか一方でもあれば TRUE)
 bool8 FUN_08095d80(struct Enemy* p) {
@@ -445,6 +448,8 @@ void FUN_08096950(struct Enemy* p) {
 }
 
 void FUN_080b145c(struct Coord* c, s32 dx);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+void FUN_080c68cc(struct Entity* e, struct Coord* c);
 
 // 殻に籠もって弾を撃つ
 void FUN_080969d0(struct Enemy* p) {
@@ -520,6 +525,34 @@ void FUN_08096a90(struct Enemy* p) {
       }
       (p->s).coord.x = (q->s).coord.x;
       (p->s).coord.y = (q->s).coord.y;
+      break;
+  }
+}
+
+// 撃破演出
+void FUN_08096b84(struct Enemy* p) {
+  struct Coord c;
+  struct Coord* pc;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags &= ~DISPLAY;
+      EXIT_BODY(p);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y - PIXEL(8);
+      CreateSmoke(1, &c);
+      FUN_080c68cc(&p->s, &c);
+      PlaySound(SE_ZAKO_EXPLODE);
+      pc = &(p->s).coord;
+      TryDropItem(2, pc);
+      if (gMission.enemyCount <= 0x270E) {
+        gMission.enemyCount++;
+      }
+      TryDropZakoDisk(p, pc);
+      SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
       break;
   }
 }
