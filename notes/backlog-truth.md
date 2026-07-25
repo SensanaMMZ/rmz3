@@ -1728,3 +1728,19 @@ ApplyElementEffect vein: 19 found, 8 matched, 2 parked, 9 left.
   was right.)
 
 ApplyElementEffect vein: 19 found, 11 matched, 2 parked, 6 left.
+- **cubit_080544c0** (0x70) MATCHED in 3 probes. Two real mistakes on the way,
+  both worth avoiding next time:
+  1. **Scope**: I put the trailing `if (*slot != NULL) *slot = NULL;` outside the
+     outer `if`. The ROM's early exit (`*slot != NULL`) branches straight to the
+     `movs r0,#1` return, *skipping* that block — so it lives INSIDE the outer if.
+     Read where the early-exit branch actually lands before placing trailing code.
+  2. **Halfword order**: I read the motion constant off the disassembler's
+     `b019 / 0000` rendering as 0x19B0. The word is **0xB019** — the first
+     halfword printed IS the low half. So the test is MOTION(0xb0, 0x19).
+     Verify pool constants with `struct.unpack('<I', rom[off:off+4])`, never by
+     eye from two halfword mnemonics.
+  Also confirms the composite-motion idiom from hellbat.c:
+  `(((p->s).motionID << 8) | (p->s).motion.step) == MOTION(a, b)`, with
+  motion.step at entity offset 0x70. Sixth wrong `void` declaration corrected.
+
+ApplyElementEffect vein: 19 found, 12 matched, 2 parked, 5 left.

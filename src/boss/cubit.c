@@ -43,7 +43,7 @@ INCASM("asm/boss/cubit_p1_pre_a.inc");
 
 static const BossFunc sUpdates1[12];
 static const BossFunc sUpdates2[12];
-void cubit_080544c0(struct Boss* p);
+bool8 cubit_080544c0(struct Boss* p);
 
 void Cubit_Update(struct Boss* p) {
   if (!((p->body).status & BODY_STATUS_DEAD)) {
@@ -206,6 +206,31 @@ void cubitMode10(struct Boss* p) {
 bool8 FUN_0805433c(struct Boss* p) { return TRUE; }
 
 INCASM("asm/boss/cubit_p13_p1.inc");
+
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoords[2];
+
+bool8 cubit_080544c0(struct Boss* p) {
+  struct VFX** slot = (struct VFX**)&(p->props).raw[12];
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    if ((((p->s).motionID << 8) | (p->s).motion.step) == MOTION(0xb0, 0x19)) {
+      if ((p->s).mode[1] == 4 && (p->s).mode[2] != 6) {
+        *slot = ApplyElementEffect(22, &p->s, &sElementCoords[1]);
+      }
+    } else {
+      *slot = ApplyElementEffect(22, &p->s, &sElementCoords[0]);
+    }
+    if (*(struct VFX**)&(p->props).raw[12] != NULL) {
+      *(struct VFX**)&(p->props).raw[12] = NULL;
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/boss/cubit_p13_p1_b.inc");
 
 bool8 cubit_08054674(struct Boss* p) {
   if (*(u8*)((u8*)p + 0xc8) != 0) {
