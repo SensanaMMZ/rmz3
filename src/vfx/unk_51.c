@@ -1,4 +1,7 @@
 #include "global.h"
+#include "metatile.h"
+#include "motion.h"
+#include "definition.h"
 #include "vfx.h"
 
 static const VFXFunc sUpdates[1];
@@ -37,7 +40,44 @@ void VFX51_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_51_post.inc");
+void FUN_080c0b68(struct VFX* v) {
+  s32 n;
+
+  switch ((v->s).mode[2]) {
+    case 0:
+      RNG_0202f388 = LCG(RNG_0202f388);
+      (v->s).d.x = ((RNG_0202f388 >> 16) & 0x3FF) - 0x200;
+      RNG_0202f388 = LCG(RNG_0202f388);
+      (v->s).d.y = -((RNG_0202f388 >> 16) & 0x1FF);
+      RNG_0202f388 = LCG(RNG_0202f388);
+      SetMotion(&v->s, MOTION(0x54, 0x0b) + ((RNG_0202f388 >> 16) & 1));
+      (v->s).work[2] = 0;
+      (v->s).mode[2]++;
+      // fallthrough
+    case 1:
+      n = (v->s).work[2] + 1;
+      (v->s).work[2] = n;
+      if (n & 1) {
+        (v->s).flags |= DISPLAY;
+      } else {
+        (v->s).flags &= ~DISPLAY;
+      }
+      (v->s).coord.x += (v->s).d.x;
+      (v->s).d.y += 0x40;
+      if ((v->s).d.y > 0x700) {
+        (v->s).d.y = 0x700;
+      }
+      (v->s).coord.y += (v->s).d.y;
+      UpdateMotionGraphic(&v->s);
+      if (FUN_080098a4((v->s).coord.x, (v->s).coord.y) != 0) {
+        CreateSmoke(3, &(v->s).coord);
+        (v->s).flags &= ~DISPLAY;
+        (v->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(v, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
 
 void VFX51_Init(struct VFX* vfx);
 void VFX51_Update(struct VFX* vfx);

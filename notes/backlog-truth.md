@@ -1455,3 +1455,15 @@ before hypothesising anything structural.
 - **FUN_080b36e0** (0xBC) MATCHED first probe; zero_death_effect.c now 100% C.
   `(v->s).work[2] = 2` in case 2 reuses the switch's mode[1] register (== 2 on
   that path) — write the literal, agbcc finds the reuse itself.
+- **FUN_080ba07c** (0xF0) MATCHED first probe; vfx/unk_28.c now 100% C.
+  Three-draw LCG: `RNG_0202f388 = LCG(RNG_0202f388)` assigned repeatedly with no
+  call between — agbcc dead-store-eliminates all but the last write and keeps the
+  intermediates in a register, exactly as the ROM does. Read the draw with
+  `(RNG_0202f388 >> 16) & mask`, NOT `>> 17` as childre.c uses: the ROM's
+  `lsrs rX, rX, #0x11` operates on the pre-`>>1` value, so it is `>> 16` of the
+  stored seed.
+- **FUN_080c0b68** (0xF8) MATCHED in 2 probes; vfx/unk_51.c now 100% C.
+  Lever: `if (++(v->s).work[2] & 1)` emits a redundant `movs r1,#255 / ands`
+  (u8 truncation of the pre-increment value). The ROM has none, so the source
+  keeps the incremented value in an int:
+  `n = work[2] + 1; work[2] = n; if (n & 1)`.
