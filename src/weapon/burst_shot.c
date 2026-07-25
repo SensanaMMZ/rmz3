@@ -3,6 +3,8 @@
 #include "mission.h"
 #include "motion.h"
 #include "weapon.h"
+#include "zero.h"
+#include "entity/macros.h"
 
 // A firework of Burst shot
 
@@ -74,7 +76,24 @@ struct Weapon* CreateBurstShot(struct Zero* z, struct Weapon* p, u8 n, s32 x, s3
   return w;
 }
 
-INCASM("asm/weapon/burst_shot_pre_p1.inc");
+static const motion_t sMotions[3];
+void FUN_0803b73c(struct Body* body, struct Coord* c1, struct Coord* c2);
+
+void BurstShot_Init(struct Weapon* w) {
+  struct Zero* z = (struct Zero*)(w->s).unk_28;
+  struct Entity* q = (w->s).unk_2c;
+
+  SET_WEAPON_ROUTINE(w, ENTITY_UPDATE);
+  InitNonAffineMotion(&w->s);
+  ResetDynamicMotion(&w->s);
+  (w->s).flags |= DISPLAY;
+  (w->s).flags |= FLIPABLE;
+  SetMotion(&w->s, sMotions[(w->s).work[0]]);
+  INIT_BODY(w, &sCollision, 1, NULL);
+  InitWeaponBody(&w->body, &sCollision, (u8)(CalcBusterBonus(z) + 2), 2, 2, (q->work[3] >> 2) + 2);
+  SET_BODY_INTERSECT_HANDLER(w, FUN_0803b73c);
+  BurstShot_Update(w);
+}
 
 void BurstShot_Update(struct Weapon* w) {
   UpdateMotionGraphic(&w->s);
@@ -89,7 +108,7 @@ void BurstShot_Die(struct Weapon* p) {
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
 }
 
-void FUN_0803b73c(struct Body* body) {
+void FUN_0803b73c(struct Body* body, struct Coord* c1, struct Coord* c2) {
   if (body->hitboxFlags & BODY_STATUS_B2) {
     if (gMission.weaponCount[WEAPON_BUSTER] <= 0xFFFE) {
       gMission.weaponCount[WEAPON_BUSTER]++;
