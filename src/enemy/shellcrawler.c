@@ -449,6 +449,9 @@ void FUN_08096950(struct Enemy* p) {
 
 void FUN_080b145c(struct Coord* c, s32 dx);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+void FUN_080c6934(struct Entity* e, u8 n);
+struct Entity* FUN_080b2b40(u8 kind, struct Coord* c, u16 r2, bool16 isDirRight);
+struct VFX* FUN_080c6880(struct Entity* e);
 void FUN_080c68cc(struct Entity* e, struct Coord* c);
 
 // 殻に籠もって弾を撃つ
@@ -553,6 +556,68 @@ void FUN_08096b84(struct Enemy* p) {
       }
       TryDropZakoDisk(p, pc);
       SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      break;
+  }
+}
+
+// 吹き飛ばされながらの撃破演出
+void FUN_08096c28(struct Enemy* p) {
+  struct Coord c;
+  struct Coord* pc;
+  u16 dir;
+  u8 n;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      if (p->props[8] == 0) {
+        p->props[8] = 1;
+        n = 0;
+        if (*(s32*)&p->props[0] > 0) {
+          n = 1;
+        }
+        FUN_080c6934(&p->s, n);
+      }
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y - PIXEL(8);
+      dir = 0;
+      if (*(s32*)&p->props[0] > 0) {
+        dir = 1;
+      }
+      FUN_080b2b40(0, &c, 0x200, dir);
+      SetMotion(&p->s, MOTION(0xdb, 9));
+      (p->s).d.x = 0x200 - dir * 0x400;
+      (p->s).work[2] = 0x14;
+      EXIT_BODY(p);
+      FUN_080c6880(&p->s);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.x = (p->s).d.x * 240 / 256;
+      FUN_08095e28(p);
+      if (--(p->s).work[2] == 0) {
+        (p->s).flags &= ~DISPLAY;
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y - PIXEL(8);
+        CreateSmoke(1, &c);
+        PlaySound(SE_ZAKO_EXPLODE);
+        pc = &(p->s).coord;
+        TryDropItem(2, pc);
+        if (gMission.enemyCount <= 0x270E) {
+          gMission.enemyCount++;
+        }
+        TryDropZakoDisk(p, pc);
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      (p->s).flags &= ~DISPLAY;
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+      } else {
+        SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      }
       break;
   }
 }

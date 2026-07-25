@@ -1347,3 +1347,16 @@ here). Both headers are needed when a function uses all four.
   and — more importantly — the local is what leaves a register provably holding
   zero on the fall-through path, which the second EXIT_BODY then reuses instead
   of emitting its own `movs r2,#0`. Two teardown blocks, only one materialises 0.
+- **FUN_08096b84** (0xA4) MATCHED first probe. Death handler: `flags &= ~DISPLAY`
+  then EXIT_BODY (whose zero reuses the switch's `mode[2]` register), drop calls
+  through a `struct Coord* pc = &(p->s).coord` local, `gMission.enemyCount`
+  capped at 0x270E, then SET_ENEMY_ROUTINE(p, ENTITY_EXIT).
+- **FUN_08096c28** (0x15C) MATCHED in 5 probes. Structure fell out first try; the
+  whole cost was one declaration: **`dir` must be `u16`**, matching the
+  `bool16 isDirRight` parameter of FUN_080b2b40. As `s32` the code is
+  instruction-for-instruction identical but every callee-saved register rotates
+  by one (p in r6 instead of r5), so all 59 diffs were register numbers. When a
+  probe is the right size and the right shape but differs from byte 4 onward,
+  suspect an argument type before suspecting the control flow.
+  Also confirms the documented signed-power-of-two idiom: `d.x * 240 / 256`
+  compiles to `lsls #4; subs; lsls #4` then `cmp; bge; adds #0xff; asrs #8`.
