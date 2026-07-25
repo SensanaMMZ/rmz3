@@ -157,3 +157,13 @@ not a check.** Detectors now print their own coverage (`detect_handwritten_asm.p
 reports segments scanned and warns if too many parse empty), and comparisons are
 calibrated in both directions — confirm the tool reports IDENTICAL for a known
 match *and* DIFFERS for a known mismatch before believing either.
+
+Addendum to the byte-evidence table: **a declaration's return type is
+load-bearing in every CALLER, not just the definition** — retyping a
+bool8 helper to bool32 deletes the `lsls #24` truncation at each call
+site that tests the result (Mellnet_Update shrank 2 bytes and shifted
+the whole ROM). When lifting a stub whose declared type you want to
+change, grep its callers first; the sha1 gate is the only reliable
+catch. Related: probe TUs never verify declaration-type effects on
+callers, and reloc masking never verifies data-index addends — both
+are ROM-build-only checks (cattatank, mellnet 2026-07-24).
