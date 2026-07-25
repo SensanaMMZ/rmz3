@@ -1467,3 +1467,12 @@ before hypothesising anything structural.
   (u8 truncation of the pre-increment value). The ROM has none, so the source
   keeps the incremented value in an int:
   `n = work[2] + 1; work[2] = n; if (n & 1)`.
+- **FUN_080c3574** (0x104) **PARKED** after 5 probes at 4 bytes / 109 diffs.
+  Structure is right and `s32 v` (not u8) removed the truncation block around
+  `v = 2 - v`. Residual is another register permutation: ROM keeps &RNG_0202f388
+  in r6 (reusing the register that held &spr.xflip); we run out and shuttle it
+  through ip (`mov ip,r3` / `mov r0,ip`, +4 bytes). Tried: flip as u8/s32,
+  declaration order, SET_XFLIP(p, TRUE) vs SET_XFLIP(p, v). Unexplained tell:
+  the ROM emits a **dead `movs r6,#0`** at the top, so the original had one more
+  pseudo than my version — find what that zero is and the allocation likely falls
+  into place. Same permuter-not-hand class as OmegaGoldProjectile_Init.
