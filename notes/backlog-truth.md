@@ -379,3 +379,17 @@ case-0 brace scope). Next: declare ang in the else-scope (not inside
 braced case 0), or at top; if head still breaks, transcribe register
 roles from the disasm at 0x9D688. Solving retires both twins +
 doOmega1Hoopshot (113/115, same file, same levers likely).
+
+## b963c pair addendum (t4 state)
+
+t4 = build/scratch/b963c/t4.c at 204/208 (was 192). Confirmed by disasm:
+the gate is the ||-die form (die inline, bhi into it, countdown bne over
+it); the flicker is a PLAIN post-increment (`work[3]++ & 1`, arms
+|= DISPLAY on true / &= ~DISPLAY on false — no truncation temp); the
+hide condition is a TRIPLE || starting with the parent body's
+invincibleTime != 0 (Ghidra's draft hid it), then the whitepaint bitset,
+then status & WHITE. Remaining: e allocated r3 (ours) vs r2 (target,
+with a mid-block r2→r3 copy), and 4 missing bytes near the
+invincibleTime address formation. Next: try `struct CollidableEntity*
+e` typed directly (drops the casts, may change the addressing form),
+or hoist `struct Body* b = &e->body;`.
