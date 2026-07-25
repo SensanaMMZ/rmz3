@@ -44,7 +44,36 @@ bool8 FUN_0807d724(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/mellnet_pre_p2_a_a.inc");
+extern const EnemyFunc sUpdates1[7];
+extern const EnemyFunc sUpdates2[7];
+
+bool8 FUN_0807d780(struct Enemy* p) {
+  if ((p->s).mode[1] != 6 && *(struct VFX**)&p->props[0] == NULL) {
+    switch ((p->s).mode[3]) {
+      case 0:
+        if (IsFrozen(&p->s)) {
+          (sUpdates1[(p->s).mode[1]])(p);
+          (sUpdates2[(p->s).mode[1]])(p);
+          (p->s).mode[3]++;
+          UpdateMotionGraphic(&p->s);
+          return TRUE;
+        }
+        break;
+      case 1:
+        if (IsFrozen(&p->s)) {
+          if (((p->body).status & 0x20001) == 0x20001) {
+            (p->s).mode[3] = 0;
+          } else {
+            return TRUE;
+          }
+        } else {
+          (p->s).mode[3] = 0;
+        }
+        break;
+    }
+  }
+  return FALSE;
+}
 
 static const struct Coord sElementCoord;
 
