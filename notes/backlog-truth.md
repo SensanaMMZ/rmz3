@@ -1302,3 +1302,17 @@ here). Both headers are needed when a function uses all four.
   `if (--work[3] == 0)`, and `*(s32*)&p->props[0]` compiling to
   `adds r0,r4,#0 / adds r0,#0xb4 / ldr r0,[r0]` (offset > 124 defeats ldr imm5).
   Required splitting shellcrawler_post_post.inc into _a/_b (see matching-workflow.md).
+- **FUN_0809678c** (0x88) MATCHED first probe — byte-for-byte sibling of
+  FUN_08096950 with MOTION(0xdb,1) and the FUN_08096570 `m = work[0]` idiom for
+  mode[1]. Note the `--work[3]` test compiles as `lsls #24; cmp #0` here but
+  `lsls #24; lsrs #24; cmp r1,#0` in FUN_08096950 — the extra `lsrs` appears only
+  because that function reuses the zero for `mode[2] = 0`. Same source, different
+  bytes: do not treat that pair as a discrepancy.
+- **FUN_080966fc** (0x90) MATCHED first probe. Two known-value reuses in one
+  function: `SetDDP(&p->body, ...)` reuses the `&p->motion.state` address register
+  via `adds r0,#1` (0x73 + 1 = 0x74 = &body), and `SET_ENEMY_ROUTINE(c,
+  ENTITY_DISAPPEAR)` stores r5 — the local holding `motion.state`, provably 3
+  after the `!= 3` guard — instead of materialising the constant 3. The guard
+  value must therefore be a *local*, not an inline `(p->s).motion.state != 3`.
+  `0x0836A08C` resolved to this file's own `sCollisions` via nm + the .map
+  (.rodata at 0x0836a078 = gShellcrawlerRoutine, 5 ptrs, then sCollisions).

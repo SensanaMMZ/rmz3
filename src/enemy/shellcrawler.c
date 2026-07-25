@@ -230,6 +230,80 @@ void FUN_0809660c(struct Enemy* p) {
 
 INCASM("asm/enemy/shellcrawler_post_post_a.inc");
 
+static const struct Collision sCollisions[16];
+
+// 殻を脱ぎ捨てる (子Entityを消して当たり判定を殻なしのものに差し替える)
+void FUN_080966fc(struct Enemy* p) {
+  struct Enemy* c;
+  u8 state;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xdb, 0x10));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      state = (p->s).motion.state;
+      if (state != 3) {
+        break;
+      }
+      SetDDP(&p->body, sCollisions);
+      c = (struct Enemy*)(p->s).unk_2c;
+      if (c != NULL) {
+        (c->s).flags &= ~DISPLAY;
+        (c->s).flags &= ~FLIPABLE;
+        EXIT_BODY(c);
+        SET_ENEMY_ROUTINE(c, ENTITY_DISAPPEAR);
+        (p->s).unk_2c = NULL;
+      }
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 1;
+      (p->s).work[2] = 0x60;
+      break;
+  }
+}
+
+// のけぞり (殻あり)
+void FUN_0809678c(struct Enemy* p) {
+  s32 v;
+  u8 m;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xdb, 1));
+      (p->s).unk_coord.x = (p->s).d.x;
+      (p->s).d.x = 0x100;
+      v = 0x100;
+      if (*(s32*)&p->props[0] > 0) {
+        v = -0x100;
+      }
+      (p->s).d.x = v;
+      (p->s).work[3] = 2;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      FUN_08095e28(p);
+      if ((p->s).work[2] > 1) {
+        (p->s).work[2]--;
+      }
+      if (--(p->s).work[3] == 0) {
+        (p->s).d.x = (p->s).unk_coord.x;
+        m = (p->s).work[0];
+        if (m != 0) {
+          m = 6;
+        }
+        (p->s).mode[1] = m;
+        (p->s).mode[2] = 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/shellcrawler_post_post_b.inc");
+
 // のけぞり (ゼロと反対向きに一定時間押し出される)
 void FUN_08096950(struct Enemy* p) {
   s32 v;
@@ -263,7 +337,7 @@ void FUN_08096950(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shellcrawler_post_post_b.inc");
+INCASM("asm/enemy/shellcrawler_post_post_c.inc");
 
 void Shellcrawler_Init(struct Enemy* p);
 void Shellcrawler_Update(struct Enemy* p);
