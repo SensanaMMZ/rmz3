@@ -1316,3 +1316,23 @@ here). Both headers are needed when a function uses all four.
   value must therefore be a *local*, not an inline `(p->s).motion.state != 3`.
   `0x0836A08C` resolved to this file's own `sCollisions` via nm + the .map
   (.rodata at 0x0836a078 = gShellcrawlerRoutine, 5 ptrs, then sCollisions).
+- **FUN_0809664c** (0xB0) MATCHED in 1 probe. Standard spawn idiom already in the
+  tree (cf. CreateBlazin): `taskCol = 24; INIT_ENEMY_ROUTINE(...); tileNum = 0,
+  palID = 0; flags2 |= WHITE_PAINTABLE; invincibleID = uniqueID;`. The comma
+  operator in `tileNum = 0, palID = 0` is load-bearing — it is why the two zeroes
+  land in different registers (one reuses the known-zero mode[2]).
+- **FUN_08096814** (0x13C) MATCHED in 9 probes. Four independent levers:
+  1. Case 0's select temp and case 2's abs temp must be **separate** variables.
+     Reusing one name creates a single long-lived pseudo, bumps pressure, and
+     shifts the whole register assignment (r2/r3 instead of ROM's r1/r2).
+  2. `p->props[9]++; if (p->props[9] == 3)` — GCC forwards the stored value and
+     truncates it (`strb; lsls #24; lsrs #24`) rather than reloading. Writing it
+     with an explicit `u8 n` temp reverses the store/truncate order; writing it as
+     `++p->props[9] == 3` makes GCC hoist `movs r3,#255` and use `ands` instead.
+     Only the store-then-test form gives the ROM bytes.
+  3. `coord.x - PIXEL(12) + dir * PIXEL(24)` gets reassociated — GCC sinks the
+     constant onto the multiply. An explicit `x = coord.x - PIXEL(12);` temp
+     pins the order, and the final add must be `dir * PIXEL(24) + x` (multiply
+     first) or the result lands in the wrong register.
+  4. `dir` must be **s32**. As u32, GCC rewrites `dir * 0x80 - 0x80` into
+     `+ 0x80` because only the low byte survives the u8 truncation.

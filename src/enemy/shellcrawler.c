@@ -9,6 +9,7 @@
 #include "sound.h"
 #include "constants/song.h"
 #include "constants/entity/enemy.h"
+#include "projectile.h"
 
 // 左右 0xA00 の位置に足場があるか (どちらか一方でもあれば TRUE)
 bool8 FUN_08095d80(struct Enemy* p) {
@@ -340,7 +341,75 @@ void FUN_0809678c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shellcrawler_post_post_b.inc");
+// 歩行しながら豆を撃つ
+void FUN_08096814(struct Enemy* p) {
+  struct Coord c;
+  s32 v;
+  s32 a;
+  s32 dir;
+  s32 x;
+  u8 flip;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x3c;
+      (p->s).work[3] = 6;
+      p->props[9] = 0;
+      flip = (p->s).flags & X_FLIP;
+      v = 1;
+      if (flip) {
+        v = -1;
+      }
+      (p->s).d.x = v;
+      (p->s).unk_coord.x = 0x10;
+      v = 0x10;
+      if (flip) {
+        v = -0x10;
+      }
+      (p->s).unk_coord.x = v;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).d.x < 0) {
+        SetMotion(&p->s, MOTION(0xdb, 0x0f));
+      } else {
+        SetMotion(&p->s, MOTION(0xdb, 5));
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 2:
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+      } else if (--(p->s).work[3] == 0) {
+        (p->s).work[3] = 6;
+        p->props[9]++;
+        if (p->props[9] == 3) {
+          p->props[9] = 0;
+          (p->s).work[2] = 0x3c;
+        }
+        dir = ((p->s).flags >> 4) & 1;
+        x = (p->s).coord.x - PIXEL(12);
+        c.x = dir * PIXEL(24) + x;
+        c.y = (p->s).coord.y - PIXEL(10);
+        PlaySound(SE_ENEMY_SHOT);
+        CreateLemon(&c, -PIXEL(3), dir * 0x80 - 0x80);
+      }
+      (p->s).coord.x += (p->s).d.x;
+      a = (p->s).d.x;
+      if (a < 0) {
+        a = -a;
+      }
+      if (a <= 0x13F) {
+        (p->s).d.x += (p->s).unk_coord.x;
+      }
+      if (FUN_08095e28(p)) {
+        (p->s).d.x = -(p->s).d.x;
+        (p->s).mode[2] = 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 // のけぞり (ゼロと反対向きに一定時間押し出される)
 void FUN_08096950(struct Enemy* p) {
