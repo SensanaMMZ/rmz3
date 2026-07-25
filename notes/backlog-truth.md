@@ -445,3 +445,17 @@ ce = (struct CollidableEntity*)parent; if (t) ...`. The intervening
 assignment emits between the mask and the test, and the adds/copy
 clobbers flags which forces the `cmp` to exist at all. Also confirmed:
 Ghidra hid the invincibleTime leg of the triple-|| entirely.
+
+## FUN_080c2500 / FUN_080c25f4 — 244B RNG-scatter pair (SOLVED)
+
+Both matched, ROM sha1 exact, second try. Body: mode[2] switch; case 0
+picks a scatter row via `u16 idx = *mp % 3` (mp = kept u16* to
+props.unk25.unk_80, used again for SetMotion — the pool-anchor kept-
+pointer form), base = PTR_s32_ARRAY_0836f2f0[idx] (lives in r8), then
+d.y/d.x from table minus/plus LCG rands. THE lever: the first table
+access must be hoisted into `const s32* e = base + work[1]*2;` AS ITS
+OWN STATEMENT BEFORE the first `RNG = LCG(RNG)` — that single position
+change snapped base into r8 and fixed every downstream register role
+(37 diffs -> 0). The second access stays as a fresh expression (the RNG
+global store aliases work[1], forcing the reload seen in the target).
+Tail: `if (work[2] == 0 || --work[2] == 0) DIE` || form.
