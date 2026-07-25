@@ -472,3 +472,18 @@ tail (bne backwards), 2 bytes shorter; the != / early-return-TRUE
 spelling emits a second movs#1 and never merges. The two mode[3]=0
 stores pick up per-arm known-zero registers (r5 = props word, r0 =
 IsFrozen result) automatically.
+
+## FUN_0809c664 / FUN_0809e7c0 — 504B bounce pair (SOLVED, first try)
+
+Biggest pair of the run, matched on the first probe (502/504 with only
+the sCollisions reloc word). Enemy/Projectile twins (unk_72.c /
+blazin.c, sCollisions[1] in both — blazin index verified from its naked
+pool: sCollisions base 0x0836ad60). Shape: triple die-gate
+(parent-mode>1 / status&0x200 double-smoke with a stack struct Coord /
+--work[2]) with agbcc auto-crossjumping the shared smoke+DIE tail;
+case 0 = SetMotion(0xA304) + parent-xflip copy via constant-folded
+SET_XFLIP(p,0)/SET_XFLIP(p,1) per arm; case 1 = && DDP-arm timer,
+gravity clamp 0x700, PushoutToUp1 bounce (d.y=-0x300), wall pushouts
+(Left at +0x800 when d.x>0, Right at -0x800 otherwise) with
+SET_XFLIP(p, !((flags >> 4) & 1)) toggle and coord.x += push. All
+levers were table lookups from this session's catalog — zero new ones.
