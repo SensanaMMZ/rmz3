@@ -85,35 +85,3 @@ _0807A68A:
 _0807A69C: .4byte 0x08367664
 _0807A6A0: .4byte nop_0807a5bc
 
-	thumb_func_start DeathtanzRock_Update
-DeathtanzRock_Update: @ 0x0807A6A4
-	push {r4, lr}
-	adds r4, r0, #0
-	bl FUN_0807a5c0
-	lsls r0, r0, #0x18
-	cmp r0, #0
-	bne _0807A6D2
-	ldr r1, _0807A6D8 @ =0x08367648
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	ldr r1, _0807A6DC @ =0x08367654
-	ldrb r0, [r4, #0xd]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-
-	non_word_aligned_thumb_func_start FUN_0807a6ce
-FUN_0807a6ce: @ 0x0807A6CE
-	bl _call_via_r1
-_0807A6D2:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0807A6D8: .4byte 0x08367648
-_0807A6DC: .4byte 0x08367654

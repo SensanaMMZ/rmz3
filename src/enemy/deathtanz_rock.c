@@ -22,6 +22,16 @@ static bool8 FUN_0807a5c0(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/deathtanz_rock_p2_post_pre.inc");
+static const EnemyFunc sUpdates1[3];
+static const EnemyFunc sUpdates2[3];
+
+// 0x0807a6a4
+void DeathtanzRock_Update(struct Enemy* p) {
+  if (!FUN_0807a5c0(p)) {
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
 
 void DeathtanzRock_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);

@@ -804,3 +804,22 @@ candidates. Sorting by size and preferring files where a sibling is
 already matched is a much better target picker than the dup-scan
 cluster list, which is now exhausted. Reusable snippet is in this
 session's transcript; consider promoting it to tools/.
+
+## DeathtanzRock_Update (SOLVED) + a fnbytes.py measurement trap
+
+Standard update dispatcher:
+  `if (!FUN_0807a5c0(p)) { (sUpdates1[mode[1]])(p); (sUpdates2[mode[1]])(p); }`
+ROM sha1 exact.
+
+TRAP worth knowing: rom_symbols.txt gives this function size 0x2A, but
+the real function runs to 0x3C — the symbol table SPLIT it, with the
+tail carrying its own `non_word_aligned_thumb_func_start FUN_0807a6ce`
+label. Comparing our 60-byte output against the 42-byte "symbol" made a
+correct match look wrong (ours "bigger", plus a bogus diff at byte 6).
+Whenever our output is LARGER than the claimed symbol size, check the
+.inc for a non_word_aligned_thumb_func_start immediately after it and
+re-measure against the real extent before touching the C.
+Second reminder from the same probe: standalone harnesses that only
+DECLARE the dispatch tables produce a wrong pool addend (0x10 vs the
+ROM's 0xC) because the arrays are never laid out — that difference is a
+probe artifact, not a mismatch. The ROM build is the arbiter.
