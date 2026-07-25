@@ -773,7 +773,17 @@ iterations — it holds `i << 16` in r0, does `asrs r2,r0,#0x10` to use it,
 and closes with `subs r0,r2,#1; lsls r0,r0,#0x10; bge`. It also derives
 the loop start as `(len<<16) + 0xFFFF0000` from the SAME `len<<16` it
 used for `buf[len] = 0`. Ours sign-extends len once (`asr r3,r3,#0x10`)
-and then works with the unshifted counter. Next idea: make the buffer
-index expression itself force the sign-extension per use (e.g. keep a
-`s16 i` but index with `buf[i]` where the array is addressed through a
-pointer that GCC cannot fold), or try `for (i = len; --i >= 0;)`.
+and then works with the unshifted counter. ALL loop-form spellings tried (2026-07-25), best is still t3 at 90/108:
+  `while (--i >= 0)`                          -> 98B / 76 diffs
+  `for (i = (s16)len - 1; ...)`               -> 96B / 67 diffs
+  `buf[(s16)len]=0; for (i=(s16)(len-1);...)` -> 96B / 67 diffs (t6)
+ROOT CAUSE of the residual: the target materialises len TWICE — first
+zero-extended (`lsrs r0,r3,#16`, the plain u16 param value) and then
+sign-extended from that (`lsls r2,r0,#16; asrs r0,r0,#16`), keeping
+`len<<16` live to build `(len-1)<<16` by adding 0xFFFF0000. agbcc folds
+our u16->s16 conversion into ONE `asrs r0,r3,#16` because we only ever
+use len in a signed context, and no spelling of the cast prevents the
+fold. That is the same materialisation/allocation class as
+FUN_080d7e5c and FUN_080b7e3c — the pressure that forces the target to
+keep both forms comes from outside the expression. The loop BODY is
+correct in t3/t6; only the head differs. Park.
