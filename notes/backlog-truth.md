@@ -874,3 +874,18 @@ BGnHOFS/BGnVOFS idiom as FUN_08013bdc, different arithmetic:
 because the family idiom was already pinned. Remaining sibling of this
 family: snowyplains_080133b4 (52B, has a phase==0 guard and a bgcnt
 read-modify-write on top of the same bgofs writes).
+
+## snowyplains_080133b4 (SOLVED, 52B, first try) — family complete
+
+  if (l->phase == 0) {
+    const u16 n = l->bgIdx;
+    BGCNT16(n >> 4) = (BGCNT16(n >> 4) & 0xFFFC) | 3;
+    l->phase++;
+  }
+STRUCT FACT this pinned: `struct BgCnt` is 2 bytes, so gVideoRegBuffer is
+dispcnt(0..1), bgcnt[4] at 4..11 (the ALIGNED(4) is on the ARRAY, not the
+element), bgofs at 12 — which is why BGnHOFS/BGnVOFS pool +12 and
+BGCNT16 indexes 4 + 2n. The stage-layer draw family is now complete:
+FUN_08013bdc, giantElevator_08014a34/_08014ad4, snowyplains_080133b4.
+Four functions, one idiom, three of them first-probe once the idiom and
+the offsets were known.

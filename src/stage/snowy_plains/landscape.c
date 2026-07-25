@@ -141,7 +141,18 @@ void snowyplains_0801320c(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
-INCASM("asm/stage_gfx/snowy_plains_c.inc");
+INCASM("asm/stage_gfx/snowy_plains_c_a.inc");
+
+// 0x080133b4
+void snowyplains_080133b4(struct StageLayer* l, const struct Stage* _ UNUSED) {
+  if (l->phase == 0) {
+    const u16 n = l->bgIdx;
+    BGCNT16(n >> 4) = (BGCNT16(n >> 4) & 0xFFFC) | 3;
+    l->phase++;
+  }
+}
+
+INCASM("asm/stage_gfx/snowy_plains_c_b.inc");
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
