@@ -1630,3 +1630,15 @@ this per-callee is a much better target picker than sorting by size.
 **lift_fn.py --keep-inc places the C BEFORE the kept INCASM.** When splitting an
 inc and keeping the first half, the order must be INCASM(first); C; INCASM(rest).
 Caught by the sha1; fixed by reordering. Worth adding a flag for this case.
+- **FUN_0808c4e8** (0x50) and **FUN_08075e8c** (0x54) MATCHED first probe — a
+  fourth element-effect shape, this one with a frozen check first:
+  `frozen = (p->body).status & 0x20000; if (frozen) { mode[1]=N; mode[2]=0; }
+   else { *slot = ApplyElementEffect(...); if (*slot) { mode[1]=0; mode[2]=0; } }`
+  Both `mode[2] = 0` stores reuse an already-zero register (`*slot` in the frozen
+  arm, `frozen` in the else arm) — write the literal, agbcc finds it.
+  In FUN_0808c4e8 the `(p->body).status & 1` also reuses the `1` from the
+  `work[0] == 1` compare; that falls out for free when work[0] is compared to 1
+  and not otherwise (FUN_08075e8c compares to 0 and materialises a fresh 1).
+
+Running tally of the ApplyElementEffect vein: 19 found, 4 matched
+(FUN_08061ef0, crossbyne_0807cdc4, FUN_0808c4e8, FUN_08075e8c), 15 left.

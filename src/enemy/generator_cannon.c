@@ -43,6 +43,35 @@ static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struc
 
 INCASM("asm/enemy/generator_cannon_pre_a.inc");
 
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoord;
+
+void FUN_0808c4e8(struct Enemy* p) {
+  struct VFX** slot;
+  u32 frozen;
+
+  if ((p->s).work[0] == 1) {
+    slot = (struct VFX**)&p->props[0];
+    if (*slot == NULL && ((p->body).status & 1)) {
+      frozen = (p->body).status & 0x20000;
+      if (frozen != 0) {
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = 0;
+      } else {
+        *slot = ApplyElementEffect(0, &p->s, &sElementCoord);
+        if (*slot != NULL) {
+          (p->s).mode[1] = 0;
+          (p->s).mode[2] = 0;
+        }
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/generator_cannon_pre_a_b.inc");
+
 void GeneratorCannon_Update(struct Enemy* p) {
   u8 sf = (u8)(gCurStory.s.gameflags[4] & 2);
   if (sf) {

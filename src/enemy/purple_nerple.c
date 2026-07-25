@@ -7,6 +7,35 @@ static const struct Collision sCollisions[];
 
 INCASM("asm/enemy/purple_nerple_p1_a.inc");
 
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoord;
+
+void FUN_08075e8c(struct Enemy* p) {
+  struct VFX** slot;
+  u32 frozen;
+
+  if ((p->s).work[0] == 0) {
+    slot = (struct VFX**)&p->props[0];
+    if (*slot == NULL && ((p->body).status & 1)) {
+      frozen = (p->body).status & 0x20000;
+      if (frozen != 0) {
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = 0;
+      } else {
+        *slot = ApplyElementEffect(0, &p->s, &sElementCoord);
+        if (*slot != NULL) {
+          (p->s).mode[1] = 0;
+          (p->s).mode[2] = 0;
+        }
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/purple_nerple_p1_a_b.inc");
+
 extern const EnemyFunc PTR_ARRAY_083670d0[10];
 extern const EnemyFunc PTR_ARRAY_083670f8[10];
 bool8 FUN_08075d40(struct Enemy* p);
