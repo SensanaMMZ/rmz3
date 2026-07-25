@@ -350,3 +350,16 @@ Next: transcribe the flag-OR + zero-parking region exactly
 `(p->s).unk_2c = NULL` hoisted between the ORs by scheduling; try
 declaring `struct Entity* none = NULL;` early or moving unk_2c=NULL
 before the flag ORs.
+
+## SeaOtterElf/BirdElf_Init addendum (8 variants)
+
+The or-region bytes are IDENTICAL to target, only the r8-zero park
+position rotates (pure emission order), and any named fl temp costs +4
+(a spill — register pressure with r8 zero + struct-copy head). t8
+(unk_2c=NULL hoisted before the ORs) restores 216B but emits the store
+early. Harnesses t1..t8 in build/scratch/elf2/. Next ideas: eliminate
+the fl temp but block the constant fold some other way (the |= two
+statements with BLOCK_CROSS_JUMP between costs ldrb/strb pairs — no);
+or accept the two-OR fuse is downstream of something else and try
+transcribing the zero park via `struct Entity* n = NULL;` used for
+BOTH xflip stores and unk_2c.
