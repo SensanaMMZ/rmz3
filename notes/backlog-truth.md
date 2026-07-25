@@ -1964,3 +1964,22 @@ elf_080e4bf4 differs in one instruction: it writes `unk_coord.x = satelite_slot`
   Tried a shared `u32 one` local (+4B), props[5] moved earlier (21 diffs, and it
   confirms store order = source order), and a `bool8 flip` temp (identical to the
   plain form). Register assignment only.
+
+**The SET_XFLIP spawners** (FUN_080aac7c, FUN_080aad0c, FUN_080aada0,
+FUN_080aab38 -- all projectile 32). The tell is a long inline sequence that looks
+like open-coded bit twiddling but is exactly the SET_XFLIP macro:
+
+    cmp / ldrb [x,#0xa] / orrs #0x10   (or  movs #0xef / ands)   -> flags
+    strb [x,#0xa] / ... strb [x,#0x4c]                            -> spr.xflip
+    movs #0x4a / mov ip / lsls #4 / movs #0x11 / rsbs / ands / orrs -> spr.oam.xflip
+
+`__xflip__ & 1` materialises as `movs r1,#1 / ands r1,r2` when the value came
+from a u8 PARAMETER, but folds to a plain `adds r1,r2,#0` when agbcc can prove
+it is already 0/1 (`(e->flags >> 4) & 1`, or `e->d.x > 0`). That difference is
+diagnostic, not a mismatch.
+- FUN_080aad0c additionally sets `unk_2c = e->unk_28`.
+- FUN_080aab38 takes a `struct Enemy*`, does `coord = e->coord` then overwrites
+  `coord.y` from `*(s32*)&e->props[4]`.
+- FUN_08071470 (carry_arm, enemy 17, 5 args) links the new entity into a list:
+  `if (e->unk_2c != NULL) { unk_2c = NULL; props[4] = 1; }
+   else { unk_2c = e; props[4] = 0; e->unk_2c = p; }`

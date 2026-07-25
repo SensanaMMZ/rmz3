@@ -43,7 +43,24 @@ void blizzack_080aaae0(struct Entity* e, u8 n) {
   }
 }
 
-INCASM("asm/projectile/unk_32_p1_pre_pre_c.inc");
+#include "enemy.h"
+
+void FUN_080aab38(struct Enemy* e, struct Entity* parent) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 32);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 2;
+    (p->s).work[1] = 0;
+    (p->s).unk_28 = parent;
+    SET_XFLIP(p, (e->s).d.x > 0);
+    (p->s).coord = (e->s).coord;
+    (p->s).coord.y = *(s32*)&e->props[4];
+  }
+}
 
 void FUN_080aabd4(struct Entity* e) {
   struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
@@ -73,7 +90,56 @@ void FUN_080aac28(struct Entity* e) {
   }
 }
 
-INCASM("asm/projectile/unk_32_p1_pre_pre_b.inc");
+void FUN_080aac7c(struct Coord* c, bool8 xflip, struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 32);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 5;
+    (p->s).work[1] = 0;
+    (p->s).coord = *c;
+    SET_XFLIP(p, xflip);
+    (p->s).unk_28 = e;
+  }
+}
+
+void FUN_080aad0c(struct Coord* c, bool8 xflip, struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 32);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 6;
+    (p->s).work[1] = 0;
+    (p->s).coord = *c;
+    SET_XFLIP(p, xflip);
+    (p->s).unk_28 = e;
+    (p->s).unk_2c = e->unk_28;
+  }
+}
+
+void FUN_080aada0(struct Entity* e, u8 n) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 32);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 7;
+    (p->s).work[1] = n;
+    (p->s).coord = e->coord;
+    SET_XFLIP(p, (e->flags >> 4) & 1);
+    (p->s).unk_28 = e;
+  }
+}
+
+INCASM("asm/projectile/unk_32_p1_pre_pre_b_b_b_b.inc");
 
 void Projectile32_Init(struct Projectile* p) {
   (sInitializers[(p->s).work[0]])(p);

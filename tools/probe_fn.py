@@ -29,6 +29,16 @@ def main():
     rom = open('baseimg.gba', 'rb').read()
     tgt = rom[base:base + size].hex()
     ob, tb = len(ours) // 2, len(tgt) // 2
+    pad = ''
+    if 0 < tb - ob < 4 and (ob + (tb - ob)) % 4 == 0 \
+            and set(tgt[ob * 2:]) == {'0'}:
+        # The ROM slice runs to the NEXT symbol, so it can include 1-3 bytes of
+        # zero alignment padding that the following object's `.align 2, 0`
+        # regenerates. Trim it -- but only zero bytes, only up to a 4-boundary.
+        # The seimeran orphan was 4 bytes of NONZERO `bx lr`, so it still trips
+        # the check below.
+        pad = ' (+%dB rom align padding)' % (tb - ob)
+        tgt, tb = tgt[:ob * 2], ob
     if ob != tb:
         print('%s: SIZE MISMATCH ours=%dB rom=%dB  (delta %+d) -- NOT a match; '
               'check for orphan bytes after the final pool' % (sym, ob, tb, ob - tb))
@@ -45,8 +55,8 @@ def main():
                 i += 2; continue
             d.append(i // 2)
         i += 2
-    print('%s: %dB/%dB diffs=%d %s' % (sym, ob, tb, len(d),
-          [hex(x) for x in d[:8]] if d else '<< MATCH'))
+    print('%s: %dB/%dB diffs=%d %s%s' % (sym, ob, tb, len(d),
+          [hex(x) for x in d[:8]] if d else '<< MATCH', pad))
     return 0
 
 sys.exit(main())

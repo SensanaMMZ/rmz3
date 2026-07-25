@@ -385,3 +385,17 @@ The very next carve silently dropped an orphan `.byte 0x70, 0x47` block.
 **A replace/patch step must assert the substring was found, and a success
 message must be printed only on the verified path.** For anything non-trivial,
 rewrite the file with Write instead of patching it with replace().
+
+## Trailing zero bytes in a ROM slice are alignment padding, not a mismatch
+A function measured as "next symbol - start" can include 1-3 bytes of zero
+padding emitted by the FOLLOWING object's `.align 2, 0`. FUN_080aada0 and
+FUN_08071470 both looked 2 bytes short when they were byte-perfect.
+probe_fn.py now trims that, but ONLY when the surplus is <4 bytes, all zero, and
+takes the length to a 4-boundary. The seimeran orphan (4 bytes of nonzero
+`bx lr`) still fails the size check, which is the whole point.
+
+## fnsize.py: "last pool + 4" is wrong when the pool is mid-function
+agbcc dumps a literal pool after any unconditional branch, so a pool can sit in
+the MIDDLE of a function with code after it -- every SET_XFLIP spawner does this.
+The tool now checks for instructions after the last pool entry and falls back to
+the next symbol's address, or refuses to answer rather than guessing.
