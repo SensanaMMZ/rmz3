@@ -622,6 +622,58 @@ void FUN_08096c28(struct Enemy* p) {
   }
 }
 
+// 打ち上げられながらの撃破演出
+void FUN_08096d84(struct Enemy* p) {
+  struct Coord c;
+  struct Coord* pc;
+  s32 dir;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      EXIT_BODY(p);
+      dir = 0;
+      if (*(s32*)&p->props[0] > 0) {
+        dir = 1;
+      }
+      (p->s).d.x = 0x280 - dir * 0x500;
+      (p->s).d.y = -0x480;
+      (p->s).work[2] = 0x14;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      UpdateMotionGraphic(&p->s);
+      if (--(p->s).work[2] == 0 || FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y + PIXEL(1);
+        CreateSmoke(1, &c);
+        FUN_080c68cc(&p->s, &c);
+        PlaySound(SE_ZAKO_EXPLODE);
+        pc = &(p->s).coord;
+        TryDropItem(2, pc);
+        if (gMission.enemyCount <= 0x270E) {
+          gMission.enemyCount++;
+        }
+        TryDropZakoDisk(p, pc);
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).flags &= ~DISPLAY;
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+      } else {
+        SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      }
+      break;
+  }
+}
+
 INCASM("asm/enemy/shellcrawler_post_post_c.inc");
 
 void Shellcrawler_Init(struct Enemy* p);
