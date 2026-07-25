@@ -189,7 +189,27 @@ static const StageLayerRoutine sLayerRoutine[4] = {
 };
 // clang-format on
 
-INCASM("asm/stage_gfx/sub_arcadia_p1.inc");
+void FUN_08014efc(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    if (l->viewportCenterPixel.x > 0x870) {
+      l->scrollPower.x = 0x100;
+      l->scrollPower.y = 0x40;
+      l->scroll.x = 0;
+      l->scroll.y = 0x708;
+    } else if (l->viewportCenterPixel.y <= 0x1DF) {
+      l->scrollPower.x = 0x80;
+      l->scrollPower.y = 0x80;
+      l->scroll.x = 0x78;
+      l->scroll.y = 0x50;
+    } else {
+      l->scrollPower.x = 0x40;
+      l->scrollPower.y = 0x40;
+      l->scroll.x = 0x168;
+      l->scroll.y = 0x2d0;
+    }
+    l->phase++;
+  }
+}
 
 void FUN_08014f58(struct StageLayer* l, const struct Stage* stage) {
   if (l->phase == 0) {
