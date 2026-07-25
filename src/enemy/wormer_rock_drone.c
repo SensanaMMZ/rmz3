@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "metatile.h"
+#include "stagerun.h"
+#include "entity/macros.h"
 #include "trig.h"
 #include "vfx.h"
 
@@ -68,7 +71,31 @@ void WormerRockDrone_Die(struct Enemy* p) {
 
 void FUN_08076fe4(struct Enemy* p) {}
 
-INCASM("asm/enemy/wormer_rock_drone_p3_a.inc");
+void FUN_08076fe8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).palID = (p->s).work[2];
+      SetMotion(&p->s, MOTION(0x2c, 1));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x2000) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+        break;
+      }
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = 0;
+      }
+      break;
+  }
+}
 
 extern void FUN_080b7f70(struct Enemy* p, struct Coord* c, motion_t* m, s32 n);
 
