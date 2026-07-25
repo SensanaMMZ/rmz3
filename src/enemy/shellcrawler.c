@@ -16,6 +16,16 @@
 #include "zero.h"
 #include "gba/syscall.h"
 
+void FUN_080b145c(struct Coord* c, s32 dx);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+void FUN_080c68cc(struct Entity* e, struct Coord* c);
+void FUN_080c6934(struct Entity* e, u8 n);
+struct Entity* FUN_080b2b40(u8 kind, struct Coord* c, u16 r2, bool16 isDirRight);
+struct VFX* FUN_080c6880(struct Entity* e);
+void FUN_08096b84(struct Enemy* p);
+static const struct Collision sCollisions[16];
+
+
 // 左右 0xA00 の位置に足場があるか (どちらか一方でもあれば TRUE)
 bool8 FUN_08095d80(struct Enemy* p) {
   bool8 r = FALSE;
@@ -107,7 +117,56 @@ void Shellcrawler_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/shellcrawler_pre_p1_p1_b.inc");
+// 被弾ハンドラ。
+// 注意: 原作のバグをそのまま再現している。子Entityを NULL にしてから、その
+// NULL ポインタ経由で書き込んでいるため、0x8C/0x90/0x94 という絶対アドレス
+// (GBAのBIOS領域=書き込み無視) へのストアになっていて、実際には何もしない。
+void FUN_08096348(struct Body* body) {
+  struct Enemy* p = (struct Enemy*)body->parent;
+  struct Enemy* c;
+  u8 m;
+  u8 n;
+
+  *(s32*)&p->props[0] = (pZero2->s).coord.x - (p->s).coord.x;
+  if ((body->hitboxFlags & 1) == 0) {
+    return;
+  }
+  if ((p->s).work[0] == 4) {
+    p = (struct Enemy*)(p->s).unk_28;
+  } else {
+    m = (p->s).mode[1];
+    if (m == 3 || m == 4 || m == 8) {
+      return;
+    }
+  }
+  if (p->props[8] != 0) {
+    return;
+  }
+  p->props[8] = 1;
+  if ((p->s).work[0] != 4 && (p->s).unk_2c != NULL) {
+    c = NULL;
+    (p->s).unk_2c = (struct Entity*)c;
+    (c->s).flags &= ~DISPLAY;
+    (c->s).flags &= ~FLIPABLE;
+    EXIT_BODY(c);
+    SET_ENEMY_ROUTINE(c, ENTITY_DISAPPEAR);
+  }
+  (p->s).work[0] = 1;
+  (p->s).mode[1] = 7;
+  (p->s).mode[2] = 0;
+  SetMotion(&p->s, MOTION(0xdb, 8));
+  UpdateMotionGraphic(&p->s);
+  if (*(u32*)&p->props[4] == 0) {
+    SetDDP(&p->body, &sCollisions[2]);
+  } else {
+    SetDDP(&p->body, &sCollisions[12]);
+  }
+  n = 0;
+  if (*(s32*)&p->props[0] > 0) {
+    n = 1;
+  }
+  FUN_080c6934(&p->s, n);
+}
 
 void FUN_08096438(struct Enemy* p) {
   if (FUN_08095d80(p) == 0) {
@@ -238,7 +297,6 @@ void FUN_0809660c(struct Enemy* p) {
   }
 }
 
-static const struct Collision sCollisions[16];
 
 // 殻を構える / 弾(子Entity)を生成する
 void FUN_0809664c(struct Enemy* p) {
@@ -449,13 +507,6 @@ void FUN_08096950(struct Enemy* p) {
   }
 }
 
-void FUN_080b145c(struct Coord* c, s32 dx);
-void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
-void FUN_080c6934(struct Entity* e, u8 n);
-void FUN_08096b84(struct Enemy* p);
-struct Entity* FUN_080b2b40(u8 kind, struct Coord* c, u16 r2, bool16 isDirRight);
-struct VFX* FUN_080c6880(struct Entity* e);
-void FUN_080c68cc(struct Entity* e, struct Coord* c);
 
 // 殻に籠もって弾を撃つ
 void FUN_080969d0(struct Enemy* p) {
@@ -933,7 +984,6 @@ static const EnemyFunc sUpdates2[11] = {
 };
 // clang-format on
 
-void FUN_08096b84(struct Enemy* p);
 void FUN_08096c28(struct Enemy* p);
 void FUN_08096d84(struct Enemy* p);
 void FUN_08096eac(struct Enemy* p);

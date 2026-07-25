@@ -1373,3 +1373,20 @@ here). Both headers are needed when a function uses all four.
   is 0x104. The probe reported "260B/256B, 4 bytes over" and I spent a cycle
   hunting phantom extra bytes. Get the size from the *next* thumb_func_start,
   not by counting.
+- **FUN_08096348** (0xF0) MATCHED first probe; retires shellcrawler_pre_p1_p1_b.inc.
+  **Contains a genuine original-game bug that must be reproduced verbatim.** The
+  detach block nulls the child pointer and then dereferences it:
+
+      c = NULL;
+      (p->s).unk_2c = (struct Entity*)c;
+      (c->s).flags &= ~DISPLAY;   /* address 0x0A  */
+      EXIT_BODY(c);               /* 0x8C/0x90/0x94 */
+      SET_ENEMY_ROUTINE(c, ENTITY_DISAPPEAR);
+
+  agbcc constant-folds `NULL + offset` into absolute addresses, so the ROM really
+  contains `movs r0,#0x8c / str r2,[r0]`. Those land in GBA BIOS space, where
+  writes are ignored — the whole teardown is a silent no-op at runtime.
+  The checked-in `asm/enemy/shellcrawler_pre_p1_p1_b.inc` listing was NOT wrong;
+  I doubted it first and verified against baseimg.gba, which is the right order.
+  Also note `if (m == 3 || m == 4 || m == 8)` compiles to the range test
+  `subs r0,r1,#3; lsls/lsrs #24; cmp r0,#1; bls` followed by `cmp r1,#8; beq`.
