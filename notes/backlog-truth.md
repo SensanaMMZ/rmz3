@@ -1791,3 +1791,19 @@ ApplyElementEffect vein: 19 found, 14 matched, 1 parked, 4 left.
   — and `strb r0,[r3,#9]` reuses the 24 from taskCol), FUN_08061c74 returns the
   Boss while FUN_08061ccc returns void, and both write invincibleID **twice**
   (own uniqueID, then the parent's).
+- **FUN_080afbb0 / FUN_080afc9c / FUN_080afda4** (phantom projectile spawners)
+  MATCHED first probe, three at once. All id 40, taskCol 8; they differ only in
+  the allocator (AllocEntityLast vs AllocEntityFirst), work[0] (n / 2 / 5), and
+  whether work[2] is set. Required a four-way inc split (they sit at positions
+  2, 4 and 6 of an eight-function inc).
+
+**Best target picker so far:** decode every `bl` in each remaining asm function
+and rank callees by how many small functions call them. Then take the ones whose
+ONLY call is to a known simple helper. `AllocEntityFirst`/`AllocEntityLast` gives
+42 such "pure spawn helper" candidates — the INIT_*_ROUTINE idiom, usually one
+probe each. Two caveats learned this round:
+  * always resolve the header/table pool words: spearook's spawners use
+    **gBossHeaderPtr / gBossFnTable**, not the Enemy ones, despite living in a
+    file full of enemies;
+  * spawners with a `flags2 |= ...` RMW plus a double invincibleID write hit
+    the scheduler (see the spearook park); the plain ones do not.

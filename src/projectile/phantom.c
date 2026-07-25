@@ -315,6 +315,57 @@ void FUN_080afb1c(struct Projectile* p) {
 
 INCASM("asm/projectile/phantom_p2_p2_p2_b.inc");
 
+#include "entity/macros.h"
+
+struct Projectile* FUN_080afbb0(struct Entity* e, u8 n) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 40);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = n;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/phantom_p2_p2_p2_c.inc");
+
+struct Projectile* FUN_080afc9c(struct Entity* e, u8 n) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 40);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 2;
+    (p->s).work[2] = n;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/phantom_p2_p2_p2_d.inc");
+
+struct Projectile* FUN_080afda4(struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 40);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 5;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/phantom_p2_p2_p2_e.inc");
+
 void FUN_080af518(struct Projectile* p);
 void FUN_080af5cc(struct Projectile* p);
 void FUN_080af5f4(struct Projectile* p);
