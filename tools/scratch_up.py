@@ -91,6 +91,8 @@ def main():
         'diff_label': a.fn,
     }
     d = post('/api/scratch', payload)
+    # NOTE: success=False is a FAILURE — never hand out a claim link for a
+    # scratch that does not compile server-side (2026-07-25 lesson).
     slug = d['slug']
 
     if a.desc_file:
@@ -110,6 +112,11 @@ def main():
     try:
         c = post('/api/scratch/%s/compile' % slug, {})
         print('compiled: success=%s' % c.get('success'))
+        if not c.get('success'):
+            print('*** SCRATCH DOES NOT COMPILE — fix the context and re-post')
+            print('*** before sharing the claim link (see notes/decompme/fixes/).')
+            for ln in (c.get('compiler_output') or '').splitlines()[:6]:
+                print('   |', ln)
     except Exception as e:
         print('compile probe skipped (%s)' % e)
 
