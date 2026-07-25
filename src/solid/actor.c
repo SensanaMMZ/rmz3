@@ -1209,6 +1209,24 @@ void Actor15_Update(struct Solid* p) {
   }
 }
 
+
+// 0x080d2934
+void ActorOperator_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      (p->s).coord.x += ((p->s).work[1] != 0) ? 0xC00 : -0xC00;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - 0x1B00;
+      SetMotion(&p->s, 0xC900 | (p->s).work[1]);
+      (p->s).taskCol = 0x1F;
+      SET_XFLIP(p, (p->s).work[1] == 0);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 INCASM("asm/solid/actor_p1_p1_b.inc");
 
 extern const struct Rect Rect_08370c60;

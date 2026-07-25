@@ -951,3 +951,19 @@ Remaining in this vein (all still asm, same file):
 ActorOperator_Update, Actor17_Update, Actor8/10/13_Update,
 ActorCrashedPantheon_Update, ActorLeviathan11_Update,
 ActorFefnir12_Update.
+
+## ActorOperator_Update (SOLVED, 156B, first try) — actor vein, 3rd
+
+Same dispatcher skeleton, richer case 0:
+  coord.x += (work[1] != 0) ? 0xC00 : -0xC00;   // ternary, ONE add
+  coord.y  = FUN_08009f6c(coord.x, coord.y) - 0x1B00;
+  SetMotion(&p->s, 0xC900 | work[1]);
+  taskCol = 0x1F;
+  SET_XFLIP(p, work[1] == 0);
+  mode[1]++;  FALLTHROUGH;  case 1: UpdateMotionGraphic.
+Recognising SET_XFLIP from its asm signature is what made this
+first-probe: the macro expands to the flags AND/OR pair, then a strb to
++0x4C (spr.xflip) and a masked read-modify-write at +0x4A with the
+constant -0x11 (spr.oam.xflip). Any time you see `movs r0,#0x11; rsbs
+r0,r0,#0; ands; orrs` around offsets 0x4A/0x4C, it is SET_XFLIP/SET_YFLIP
+— do not hand-roll the three writes.
