@@ -1,5 +1,8 @@
 #include "entity.h"
 #include "global.h"
+#include "entity/macros.h"
+#include "motion.h"
+#include "definition.h"
 #include "vfx.h"
 
 /*
@@ -174,4 +177,38 @@ static void FUN_080b3698(struct VFX* p) {
   ZeroDeathEffect_Update(p);
 }
 
-INCASM("asm/vfx/zero_death_effect.inc");
+void FUN_080b36e0(struct VFX* v) {
+  (v->s).coord.x += (v->s).d.x;
+  (v->s).coord.y += (v->s).d.y;
+
+  switch ((v->s).mode[1]) {
+    case 0:
+      SetMotion(&v->s, MOTION(0xeb, 0));
+      (v->s).flags |= DISPLAY;
+      (v->s).mode[1]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&v->s);
+      if ((v->s).motion.state == 3) {
+        (v->s).mode[1]++;
+      }
+      break;
+    case 2:
+      (v->s).work[2] = 2;
+      (v->s).flags &= ~DISPLAY;
+      (v->s).mode[1]++;
+      // fallthrough
+    case 3:
+      if (--(v->s).work[2] == 0) {
+        (v->s).mode[1] = 0;
+      }
+      break;
+  }
+
+  if ((v->s).work[1] != 0 && (v->s).work[3] == 0x6c) {
+    CreateFirework(*(s32*)&(v->props).raw[0], *(s32*)&(v->props).raw[4], FALSE);
+  }
+  if (--(v->s).work[3] == 0) {
+    SET_VFX_ROUTINE(v, ENTITY_DIE);
+  }
+}

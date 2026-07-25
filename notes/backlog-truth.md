@@ -1451,3 +1451,7 @@ before hypothesising anything structural.
   local to cut p's refcount, chained `mode[3] = mode[2] = 0`, and assigning v
   inside each branch. This is the regalloc-tie class documented earlier — the
   one that survives hand levers. Revisit with the permuter, not by hand.
+- **FUN_08076fe8** (0xC4) MATCHED first probe; wormer_rock_drone.c now 100% C.
+- **FUN_080b36e0** (0xBC) MATCHED first probe; zero_death_effect.c now 100% C.
+  `(v->s).work[2] = 2` in case 2 reuses the switch's mode[1] register (== 2 on
+  that path) — write the literal, agbcc finds the reuse itself.
