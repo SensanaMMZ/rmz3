@@ -1676,3 +1676,17 @@ ApplyElementEffect vein: 19 found, 7 matched, 12 left.
   same class as the other parks.
   Its third argument is the shared global **Coord_0836331c** (defined in
   bee_server.c itself), and ApplyElementEffect's first argument is 18.
+- **FUN_08068f08** (0x60, piller_cannon) **PARKED** at 12 bytes short (84 vs 96)
+  after 3 probes. Two anomalies in the ROM that no straightforward source
+  reproduces:
+  1. **Dead code**: `ldrb r1,[r4,#0xa] / movs r0,#0x10 / ands r0,r1` computes
+     `flags & X_FLIP` and both registers are overwritten before use. Tried an
+     expression statement and duplicated if/else arms; neither emits it.
+  2. **Redundant address recompute**: the first read and the store of
+     `*(struct VFX**)&p->props[8]` go through a cached r5, but the *second* read
+     recomputes `adds r0,r4,#0 / adds r0,#0xbc / ldr r0,[r0]`. Writing the raw
+     expression there just gets CSE'd back to r5.
+  Together those are the missing 12 bytes. It does return **bool8** (TRUE) —
+  fourth stub declared `void` that the epilogue contradicts. Suspect the original
+  used a macro that expands to something with the flip value; revisit with the
+  corpus grep (tools/decomp_crawl.py) for a matching idiom rather than guessing.
