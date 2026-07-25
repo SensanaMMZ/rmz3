@@ -1171,3 +1171,13 @@ mode[2]` known-zero reuse carries over unchanged.
 Pantheon-hunter now has two of its mode handlers in C; the file's
 remaining asm follows the same skeleton, so the template should keep
 paying there.
+
+## phunter_080651c0 (SOLVED, 88B, first try) — decel glide
+
+  if (mode[2] == 0) { SetMotion(0x1300); unk_coord.x = d.x / 32;
+                      work[2] = 0x1F; mode[2]++; }
+  UpdateMotionGraphic; coord.x += d.x; d.x -= unk_coord.x;
+  work[2]--; if (work[2] == 0xFF) { mode[1] = 0; mode[2] = 0; }
+unk_coord is used here as a per-frame decel step — a nice confirmation
+that Entity.unk_coord (0x64) is a general scratch Coord, as its header
+comment suggests. The `/ 32` is the signed-division idiom (see workflow).

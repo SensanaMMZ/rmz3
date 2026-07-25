@@ -283,3 +283,12 @@ expression. rmz3 has a lot of these (BGnHOFS/BGnVOFS, BGCNT16,
 RESET_BGOFS, SCREEN_BASE_16, SEA, W_TERRAIN_V2, HAZARD, ...). Hand-rolled
 pointer anchors get the arithmetic right but usually miss the exact pool
 form and cost several failed probes. `grep -n <field> include/*.h` first.
+
+## Signed division by a power of two — recognise the bias
+
+`ldr rX,[..]; cmp rX,#0; bge L; adds rX,#(2^n - 1); L: asrs rX,#n`
+is NOT a hand-written round-toward-zero; it is plain `x / (1 << n)` on a
+SIGNED value. agbcc adds the (2^n - 1) bias only on the negative path so
+the shift truncates toward zero. Write `x / 32`, never `x >> 5` (that
+would drop the bias and the compare) and never a hand-rolled ternary.
+Confirmed on phunter_080651c0 (`unk_coord.x = d.x / 32`, 88/88 exact).
