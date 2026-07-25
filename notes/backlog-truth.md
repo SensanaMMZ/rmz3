@@ -320,3 +320,15 @@ mix; coord recomputed per call, saved in r5 for the smokes; the
 CreateSmoke if/else arms LOOK identical in the draft but 40 bytes are
 missing vs our probe. Probe harness: build/scratch/b9cf8/t.c (144/184).
 Next: transcribe the full 184-byte disasm and diff arm by arm.
+
+## FUN_080b963c / FUN_080c2294 — follow-parent flicker pair (in progress)
+
+208 B each. Draft fully decoded (parent-mode<2 gate with --work[2]
+countdown, SetMotion(0xB01) phase, follow parent + props s32 offsets at
++0x74/+0x78, post-increment parity flicker on work[3], whitepaint-bitset
+OR body-WHITE hide, else ENTITY_DIE). Best harness:
+build/scratch/b963c/t2.c at 192/208 with diffs from byte 10 — the head
+diverges early (suspect the compound && evaluation order, the
+unk_28->mode[0] access form, or a kept-pointer for unk_28). The
+whitepaint test idiom confirmed from entity.c:172:
+`gWhitePaintFlags[id >> 5] & (1 << (id & 0x1F))`.
