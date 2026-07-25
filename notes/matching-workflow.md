@@ -425,3 +425,21 @@ recovery: host-tool timestamps had to be refreshed (`touch tools/*/*.exe`), all
 715 output dirs recreated, and every asm object built by explicit target before
 the link would succeed. To force a rebuild, touch the source or delete the single
 .o -- never the tree. Restored sha1 ff7a8017... after the repair.
+
+## Upstream (mmzret/rmz3) contribution conventions
+Policy from the upstream dev, 2026-07-25. The fork still uses the OLD nested
+style, so anything ported upstream must be converted:
+
+* Entity types are being flattened onto `COLLISION_OBJECT_HDR` (or
+  `ENTITY_HDR` + `ENTITY_SPRITE`), so field access is `p->mode[2]`, NOT
+  `(p->s).mode[2]`. entity.h upstream is mixed today: `Boss` is flat,
+  `struct Enemy` is not yet.
+* The dev states the flattening "hasn't affected the compilation results" --
+  i.e. the conversion is codegen-neutral and a matched function stays
+  byte-exact. Re-probe every converted function anyway; `&p->s` ->
+  `(struct Entity*)p` at call sites is where codegen could still move.
+* Functions taking `struct Entity*` get a wrapper macro rather than casts at
+  each call site:  `void _Func(struct Entity*); #define Func(e) (_Func((struct Entity*)(e)))`
+* Prefer `typedef`'d struct names (`Boss`, `Projectile`, `VFX50`, `Coords32`).
+* "Motion" is being renamed "SpriteAnimation" -- don't entrench `Motion` in new
+  upstream-facing names.
