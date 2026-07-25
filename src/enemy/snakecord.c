@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "physics.h"
 #include "story.h"
 
 
@@ -20,6 +21,29 @@ u32 FUN_08073ea8(struct Entity* p, s32 dx) {
     s32 push = PushoutToLeft2(p->coord.x, p->coord.y);
     if (push < 0) {
       p->coord.x += push;
+      return 1;
+    }
+  }
+  return 0;
+}
+
+
+// 0x08073ef0
+u32 FUN_08073ef0(struct Entity* p, s32 dy) {
+  if (dy == 0) {
+    return 0;
+  }
+  p->coord.y += dy;
+  if (dy < 0) {
+    s32 push = PushoutToDown2(p->coord.x, p->coord.y);
+    if (push > 0) {
+      p->coord.y += push;
+      return 2;
+    }
+  } else {
+    s32 push = PushoutToUp2(p->coord.x, p->coord.y);
+    if (push < 0) {
+      p->coord.y += push;
       return 1;
     }
   }

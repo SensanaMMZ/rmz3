@@ -1250,3 +1250,13 @@ Direction mapping is the counter-intuitive part and comes straight from
 the branch: dx < 0 (moving LEFT) probes PushoutToRight2 and returns 2;
 dx >= 0 probes PushoutToLeft2 and returns 1. The push sign tests differ
 per arm (> 0 vs < 0) — do not "tidy" them into != 0.
+
+## FUN_08073ef0 (SOLVED, 76B, first try) — vertical twin of FUN_08073ea8
+
+Identical shape on the Y axis: dy < 0 probes PushoutToDown2 and returns
+2; dy >= 0 probes PushoutToUp2 and returns 1. Derived from the matched
+horizontal version by pure substitution.
+DECL NOTE: PushoutToLeft2/Right2 live in include/definition.h while
+PushoutToUp2/Down2 live in include/physics.h — the four siblings are
+split across two headers, which is easy to trip over (cost one build
+here). Both headers are needed when a function uses all four.
