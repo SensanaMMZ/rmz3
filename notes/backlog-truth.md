@@ -1122,3 +1122,21 @@ variable and store THAT in both places, rather than writing 0.
 Note `struct Solid` has `props.raw[16]` (NOT `buffer[]` like Enemy/Elf) —
 the per-kind field name differs by entity type: Enemy/Elf use buffer[],
 Solid/Boss/VFX use props. Check the struct before writing the accessor.
+
+## copyx_08056bd0 + FUN_08064e38 (SOLVED, 68B each, first try)
+
+copyx_08056bd0: if (mode[2]) { SetMotion(0xB303); mode[2]=0; work[2]=0x40; }
+  UpdateMotionGraphic; then `u8 st = motion.state; if (st == 3) {
+  mode[1] = st; mode[2]=1; mode[3]=2; work[2]=4; }` — mode[1] takes the
+  COMPARED VARIABLE, not a literal 3.
+FUN_08064e38: `u8 m = mode[2]; if (m == 0) { SetMotion(0x1300);
+  work[2]=0x1E; d.y = m; d.x = m; mode[2]++; }` — the two zero stores
+  take m (known 0 there), and d.y is written BEFORE d.x.
+  Tail: work[2]--; if (work[2] == 0xFF) { mode[1] = mode[3]; mode[2]=0; }
+
+Both are instances of one rule that keeps paying: when a store's value
+equals something already in a register (the switch selector, the compared
+value, a just-masked flag), the ORIGINAL wrote the variable, not the
+literal. Writing the literal costs a `movs` every time. Reuse candidates
+to check first: the mode/selector byte, the comparison operand, and any
+value produced by the preceding test.

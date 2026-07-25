@@ -654,7 +654,28 @@ void FUN_08056a80(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2.inc");
+INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_a.inc");
+
+// 0x08056bd0
+void copyx_08056bd0(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, 0xB303);
+    (p->s).mode[2] = 0;
+    (p->s).work[2] = 0x40;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    u8 st = (p->s).motion.state;
+    if (st == 3) {
+      (p->s).mode[1] = st;
+      (p->s).mode[2] = 1;
+      (p->s).mode[3] = 2;
+      (p->s).work[2] = 4;
+    }
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b.inc");
 
 void CopyX_OnDamage(struct Body* body) {
   if (body->hitboxFlags & 1) {

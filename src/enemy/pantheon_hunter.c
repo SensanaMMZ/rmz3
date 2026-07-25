@@ -627,7 +627,27 @@ void FUN_08064e0c(struct Enemy* p) {
 
 void nop_08064e34(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_hunter_p3.inc");
+INCASM("asm/enemy/pantheon_hunter_p3_a.inc");
+
+// 0x08064e38
+void FUN_08064e38(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  if (m == 0) {
+    SetMotion(&p->s, 0x1300);
+    (p->s).work[2] = 0x1E;
+    (p->s).d.y = m;
+    (p->s).d.x = m;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[2]--;
+  if ((p->s).work[2] == 0xFF) {
+    (p->s).mode[1] = (p->s).mode[3];
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/pantheon_hunter_p3_b.inc");
 
 // 0x080656cc
 static void FUN_080656cc(struct Entity* p) {
