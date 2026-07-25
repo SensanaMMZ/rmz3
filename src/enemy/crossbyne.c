@@ -88,7 +88,31 @@ void FUN_0807cce0(s32 x, s32 y) {
 
 void nop_0807cd70(struct Enemy* p) {}
 
+
 INCASM("asm/enemy/crossbyne_p2_pre_a.inc");
+
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoord;
+
+void crossbyne_0807cdc4(struct Enemy* p) {
+  struct VFX** slot;
+
+  if ((p->s).work[0] <= 1 && (p->s).mode[1] == 2) {
+    slot = (struct VFX**)&p->props[0];
+    if (*slot == NULL && ((p->body).status & 1)) {
+      *slot = ApplyElementEffect(0, &p->s, &sElementCoord);
+      if (*slot != NULL) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/crossbyne_p2_pre_a_b.inc");
+
 
 extern const EnemyFunc sUpdates1[7];
 extern const EnemyFunc sUpdates2[7];

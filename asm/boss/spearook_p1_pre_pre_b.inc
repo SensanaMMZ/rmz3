@@ -1,0 +1,399 @@
+	.include "asm/macros.inc"
+
+	.syntax unified
+	
+	.text
+
+	thumb_func_start Spearook_Init
+Spearook_Init: @ 0x08061F38
+	push {r4, r5, r6, r7, lr}
+	mov r7, sl
+	mov r6, sb
+	mov r5, r8
+	push {r5, r6, r7}
+	adds r7, r0, #0
+	ldr r1, _08061F88 @ =gBossFnTable
+	ldrb r0, [r7, #9]
+	lsls r0, r0, #2
+	adds r0, r0, r1
+	movs r1, #1
+	str r1, [r7, #0xc]
+	ldr r0, [r0]
+	ldr r0, [r0, #4]
+	str r0, [r7, #0x14]
+	ldr r1, _08061F8C @ =0x08365934
+	ldrb r0, [r7, #0x10]
+	adds r0, r0, r1
+	ldrb r0, [r0]
+	movs r4, #0
+	strb r0, [r7, #0xd]
+	ldrb r0, [r7, #0xa]
+	movs r1, #2
+	orrs r0, r1
+	movs r1, #1
+	orrs r0, r1
+	strb r0, [r7, #0xa]
+	ldrb r0, [r7, #0x10]
+	cmp r0, #1
+	bne _08061F90
+	adds r0, r7, #0
+	bl InitRotatableMotion
+	adds r0, r7, #0
+	adds r0, #0xb8
+	strh r4, [r0]
+	adds r0, #2
+	strh r4, [r0]
+	b _08061FA2
+	.align 2, 0
+_08061F88: .4byte gBossFnTable
+_08061F8C: .4byte 0x08365934
+_08061F90:
+	cmp r0, #3
+	bne _08061F9C
+	adds r0, r7, #0
+	bl InitRotatableMotion
+	b _08061FA2
+_08061F9C:
+	adds r0, r7, #0
+	bl InitNonAffineMotion
+_08061FA2:
+	ldr r1, _0806208C @ =sCollisions
+	adds r0, r7, #0
+	movs r2, #0x60
+	bl ResetBossBody
+	ldr r1, _08062090 @ =FUN_08061d24
+	adds r0, r7, #0
+	adds r0, #0x74
+	str r1, [r0, #0x24]
+	adds r0, #0x40
+	movs r1, #0
+	str r1, [r0]
+	ldrb r0, [r7, #0x10]
+	cmp r0, #0
+	bne _0806205C
+	adds r0, r7, #0
+	bl FUN_08061c74
+	adds r1, r0, #0
+	adds r0, r7, #0
+	bl FUN_08061ccc
+	ldr r5, _08062094 @ =0x000010B8
+	ldr r2, _08062098 @ =gStaticMotionGraphics
+	mov sb, r2
+	adds r0, r5, r2
+	ldr r1, _0806209C @ =wStaticGraphicTilenums
+	mov r8, r1
+	movs r4, #0xd6
+	lsls r4, r4, #1
+	adds r1, r1, r4
+	ldrh r1, [r1]
+	ldrh r2, [r0, #6]
+	lsrs r2, r2, #6
+	subs r1, r1, r2
+	lsls r1, r1, #5
+	movs r2, #0x80
+	lsls r2, r2, #9
+	adds r1, r1, r2
+	bl LoadGraphic
+	ldr r0, _080620A0 @ =gStaticMotionGraphics+12
+	adds r5, r5, r0
+	ldr r6, _080620A4 @ =wStaticMotionPalIDs
+	adds r4, r6, r4
+	ldrh r1, [r4]
+	ldrb r0, [r5, #7]
+	subs r1, r1, r0
+	lsls r1, r1, #5
+	movs r2, #0x80
+	lsls r2, r2, #2
+	mov sl, r2
+	add r1, sl
+	adds r0, r5, #0
+	bl LoadPalette
+	ldr r4, _080620A8 @ =0x000010CC
+	add sb, r4
+	movs r5, #0xd7
+	lsls r5, r5, #1
+	add r8, r5
+	mov r0, r8
+	ldrh r1, [r0]
+	mov r2, sb
+	ldrh r0, [r2, #6]
+	lsrs r0, r0, #6
+	subs r1, r1, r0
+	lsls r1, r1, #5
+	movs r0, #0x80
+	lsls r0, r0, #9
+	adds r1, r1, r0
+	mov r0, sb
+	bl LoadGraphic
+	ldr r1, _080620A0 @ =gStaticMotionGraphics+12
+	adds r4, r4, r1
+	adds r6, r6, r5
+	ldrh r1, [r6]
+	ldrb r0, [r4, #7]
+	subs r1, r1, r0
+	lsls r1, r1, #5
+	add r1, sl
+	adds r0, r4, #0
+	bl LoadPalette
+	adds r0, r7, #0
+	adds r0, #0xbc
+	movs r2, #0
+	str r2, [r0]
+	adds r1, r7, #0
+	adds r1, #0xc1
+	movs r0, #0x60
+	strb r0, [r1]
+_0806205C:
+	adds r0, r7, #0
+	adds r0, #0xc0
+	movs r1, #0
+	strb r1, [r0]
+	adds r1, r7, #0
+	adds r1, #0xc2
+	movs r0, #0xff
+	strb r0, [r1]
+	adds r0, r7, #0
+	adds r0, #0xc3
+	movs r2, #0
+	strb r2, [r0]
+	adds r0, #1
+	strb r2, [r0]
+	adds r0, r7, #0
+	bl Spearook_Update
+	pop {r3, r4, r5}
+	mov r8, r3
+	mov sb, r4
+	mov sl, r5
+	pop {r4, r5, r6, r7}
+	pop {r0}
+	bx r0
+	.align 2, 0
+_0806208C: .4byte sCollisions
+_08062090: .4byte FUN_08061d24
+_08062094: .4byte 0x000010B8
+_08062098: .4byte gStaticMotionGraphics
+_0806209C: .4byte wStaticGraphicTilenums
+_080620A0: .4byte gStaticMotionGraphics+12
+_080620A4: .4byte wStaticMotionPalIDs
+_080620A8: .4byte 0x000010CC
+
+	thumb_func_start Spearook_Update
+Spearook_Update: @ 0x080620AC
+	push {r4, r5, lr}
+	adds r4, r0, #0
+	bl FUN_08061e24
+	lsls r0, r0, #0x18
+	lsrs r5, r0, #0x18
+	cmp r5, #0
+	beq _080620BE
+	b _08062246
+_080620BE:
+	adds r0, r4, #0
+	bl FUN_08061ef0
+	ldr r1, _08062158 @ =0x083656E8
+	ldrb r0, [r4, #0xd]
+	lsls r0, r0, #2
+	adds r0, r0, r1
+	ldr r1, [r0]
+	adds r0, r4, #0
+	bl _call_via_r1
+	ldr r1, _0806215C @ =0x0836572C
+	ldrb r0, [r4, #0xd]
+	lsls r0, r0, #2
+	adds r0, r0, r1
+	ldr r1, [r0]
+	adds r0, r4, #0
+	bl _call_via_r1
+	ldrb r0, [r4, #0x10]
+	cmp r0, #1
+	beq _080620EC
+	b _08062246
+_080620EC:
+	ldr r3, [r4, #0x28]
+	adds r2, r3, #0
+	adds r2, #0xbc
+	ldr r0, [r2]
+	movs r1, #0x40
+	ands r0, r1
+	movs r1, #0xba
+	adds r1, r1, r4
+	mov ip, r1
+	cmp r0, #0
+	beq _08062170
+	ldrb r0, [r4, #0xd]
+	subs r0, #0xa
+	lsls r0, r0, #0x18
+	lsrs r0, r0, #0x18
+	cmp r0, #2
+	bhi _0806211E
+	movs r0, #2
+	strb r0, [r4, #0xd]
+	strb r5, [r4, #0xe]
+	ldr r0, [r2]
+	movs r1, #0x21
+	rsbs r1, r1, #0
+	ands r0, r1
+	str r0, [r2]
+_0806211E:
+	ldr r0, [r2]
+	movs r1, #0x41
+	rsbs r1, r1, #0
+	ands r0, r1
+	str r0, [r2]
+	movs r2, #0xc0
+	lsls r2, r2, #6
+	adds r1, r2, #0
+	mov r5, ip
+	ldrh r5, [r5]
+	adds r1, r1, r5
+	mov r0, ip
+	strh r1, [r0]
+	adds r0, r3, #0
+	adds r0, #0xc0
+	ldrb r2, [r0]
+	lsls r0, r2, #1
+	adds r0, r0, r2
+	lsls r0, r0, #0xd
+	subs r1, r1, r0
+	mov r2, ip
+	strh r1, [r2]
+	lsls r1, r1, #0x10
+	asrs r1, r1, #0x10
+	ldr r0, _08062160 @ =0xFFFFC000
+	cmp r1, r0
+	bge _08062164
+	strh r0, [r2]
+	b _08062170
+	.align 2, 0
+_08062158: .4byte 0x083656E8
+_0806215C: .4byte 0x0836572C
+_08062160: .4byte 0xFFFFC000
+_08062164:
+	movs r0, #0x80
+	lsls r0, r0, #7
+	cmp r1, r0
+	ble _08062170
+	mov r5, ip
+	strh r0, [r5]
+_08062170:
+	adds r2, r4, #0
+	adds r2, #0xb8
+	mov r0, ip
+	movs r5, #0
+	ldrsh r1, [r0, r5]
+	movs r5, #0
+	ldrsh r0, [r2, r5]
+	subs r0, r1, r0
+	cmp r0, #0
+	bge _08062186
+	adds r0, #0xf
+_08062186:
+	asrs r0, r0, #4
+	ldrh r5, [r2]
+	adds r1, r0, r5
+	strh r1, [r2]
+	adds r0, r3, #0
+	adds r0, #0xb4
+	ldr r5, [r0]
+	cmp r5, #0
+	bne _080621E2
+	lsls r0, r1, #0x10
+	cmp r0, #0
+	ble _080621C0
+	mov r1, ip
+	ldrh r0, [r1]
+	subs r0, #0x80
+	strh r0, [r1]
+	lsls r0, r0, #0x10
+	cmp r0, #0
+	bge _080621AE
+	strh r5, [r1]
+_080621AE:
+	ldrh r0, [r2]
+	subs r0, #0x80
+	strh r0, [r2]
+	lsls r0, r0, #0x10
+	adds r3, #0xbc
+	cmp r0, #0
+	bge _08062202
+	strh r5, [r2]
+	b _08062202
+_080621C0:
+	mov r1, ip
+	ldrh r0, [r1]
+	adds r0, #0x80
+	strh r0, [r1]
+	lsls r0, r0, #0x10
+	cmp r0, #0
+	ble _080621D0
+	strh r5, [r1]
+_080621D0:
+	ldrh r0, [r2]
+	adds r0, #0x80
+	strh r0, [r2]
+	lsls r0, r0, #0x10
+	adds r3, #0xbc
+	cmp r0, #0
+	ble _08062202
+	strh r5, [r2]
+	b _08062202
+_080621E2:
+	ldrb r0, [r4, #0xd]
+	subs r0, #0xa
+	lsls r0, r0, #0x18
+	lsrs r0, r0, #0x18
+	adds r3, #0xbc
+	cmp r0, #2
+	bhi _08062202
+	movs r0, #2
+	strb r0, [r4, #0xd]
+	movs r0, #0
+	strb r0, [r4, #0xe]
+	ldr r0, [r3]
+	movs r1, #0x21
+	rsbs r1, r1, #0
+	ands r0, r1
+	str r0, [r3]
+_08062202:
+	mov r5, ip
+	movs r1, #0
+	ldrsh r0, [r5, r1]
+	movs r5, #0x80
+	lsls r5, r5, #5
+	adds r0, r0, r5
+	movs r1, #0x80
+	lsls r1, r1, #6
+	cmp r0, r1
+	bls _0806221E
+	ldr r0, [r3]
+	movs r1, #2
+	orrs r0, r1
+	b _08062226
+_0806221E:
+	ldr r0, [r3]
+	movs r1, #3
+	rsbs r1, r1, #0
+	ands r0, r1
+_08062226:
+	str r0, [r3]
+	ldrb r1, [r4, #0xa]
+	movs r0, #0x10
+	ands r0, r1
+	cmp r0, #0
+	beq _0806223C
+	ldrh r0, [r2]
+	lsls r0, r0, #0x10
+	asrs r0, r0, #0x18
+	rsbs r0, r0, #0
+	b _08062240
+_0806223C:
+	ldrh r0, [r2]
+	lsrs r0, r0, #8
+_08062240:
+	adds r1, r4, #0
+	adds r1, #0x24
+	strb r0, [r1]
+_08062246:
+	pop {r4, r5}
+	pop {r0}
+	bx r0

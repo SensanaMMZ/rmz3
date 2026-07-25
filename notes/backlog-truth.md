@@ -1613,3 +1613,20 @@ dropped forward declarations five times this session, costing a build each.
   **Second wrong `void` declaration corrected** (after beetank's FUN_0807be50):
   mothjiro.c declared it void, the ROM ends `movs r0,#1 / pop`, so it is bool8.
   Whenever a stub declaration says void, check the epilogue before trusting it.
+- **FUN_08061ef0** (0x48, spearook) and **crossbyne_0807cdc4** (0x48) MATCHED,
+  both element-effect-slot variants. spearook clears a flag
+  (`*(u32*)&(p->props).raw[8] &= ~4;`) then sets mode[1]=15; crossbyne guards on
+  `(p->s).work[0] <= 1 && (p->s).mode[1] == 2` and zeroes both modes.
+  **struct Boss's buffer is `props.raw[48]` (a union), not `props[]`.** Enemy and
+  Projectile use a plain `props[16]`/`work[]` array; Boss and VFX use a named
+  union with a `raw` member. Check the struct before writing `&p->props[0]`.
+
+**Scan that found these:** decode every `bl` in each remaining asm function
+(Thumb BL is two halfwords, F000-F7FF then F800-FFFF, offset sign-extended from
+22 bits) and look for a known callee address — 0x08025250 = ApplyElementEffect
+turned up 19 remaining callers of an idiom already matched three times. Doing
+this per-callee is a much better target picker than sorting by size.
+
+**lift_fn.py --keep-inc places the C BEFORE the kept INCASM.** When splitting an
+inc and keeping the first half, the order must be INCASM(first); C; INCASM(rest).
+Caught by the sha1; fixed by reordering. Worth adding a flag for this case.

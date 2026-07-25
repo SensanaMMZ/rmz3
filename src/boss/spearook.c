@@ -6,7 +6,29 @@
 
 static const BossFunc sDeads[5];
 
+
 INCASM("asm/boss/spearook_p1_pre_pre.inc");
+
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoord;
+
+void FUN_08061ef0(struct Boss* p) {
+  struct VFX** slot = (struct VFX**)&(p->props).raw[0];
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    *slot = ApplyElementEffect(0, &p->s, &sElementCoord);
+    if (*slot != NULL) {
+      *(u32*)&(p->props).raw[8] &= ~4;
+      (p->s).mode[1] = 15;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
+INCASM("asm/boss/spearook_p1_pre_pre_b.inc");
+
 
 void Spearook_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
