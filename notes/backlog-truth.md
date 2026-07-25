@@ -992,3 +992,17 @@ Same class as the FlushOAM/BGnHOFS pool-anchor problem — the fix is
 probably an existing accessor macro that does not yet exist in
 include/stagerun.h. Worth revisiting when another function needs the
 same read; several actor updates do.
+
+## FUN_08016080 (SOLVED, 20B, first try) — smallest match of the session
+
+  void FUN_08016080(u32 a) { STAGE.unk_00c = a; }
+where landscape.c already had `#define STAGE (gOverworld.work.weilLabo)`.
+The pool constant 0x0002D034 decodes as gOverworld.work (which starts at
+0x2D028) + 12, i.e. WeilLaboState.unk_00c. Two greps (the STAGE macro,
+the props header) and it was done — step 4c working exactly as intended.
+The whole asm/stage_gfx/weil_labo_p1_p2_b.inc file is now gone.
+
+RE-SCAN NOTE: this candidate did NOT appear in the earlier 0x18..0x50
+sweep because that run excluded sizes under 0x18. Re-running the scan
+after each batch surfaces newly-smallest candidates as incs get split
+and removed; the current list has 178 functions at <= 0x60 bytes.

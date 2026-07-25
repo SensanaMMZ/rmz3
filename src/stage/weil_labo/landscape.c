@@ -295,7 +295,11 @@ void FUN_08016018(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
-INCASM("asm/stage_gfx/weil_labo_p1_p2_b.inc");
+
+// 0x08016080
+void FUN_08016080(u32 a) {
+  STAGE.unk_00c = a;
+}
 
 void FUN_08016094(s32 a, s32 b, s32 c) {
   STAGE.unk_018 = a;
