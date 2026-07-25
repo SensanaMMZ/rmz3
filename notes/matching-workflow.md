@@ -306,3 +306,17 @@ means a ternary. Proven on phunter_080652e8 (two -> if/else, 136/136
 exact; the ternary form was 132B with 104 diffs).
 This composes with the earlier polarity rule: which constant is
 materialised BEFORE the compare tells you the false-branch value.
+
+## Cross-jumping, part 3: when to hoist the call result yourself
+
+Earlier rule said "target has a shared tail -> write the natural
+per-branch code and let agbcc merge". That holds for pure stores
+(blazin_080403a0, FUN_080c17e8), but NOT when the shared tail tests a
+CALL RESULT. Writing
+    if (c) { ...; if (Call(a)) Snd(); } else { ...; if (Call(b)) Snd(); }
+merges too aggressively and comes out 6 bytes SHORT, while
+    if (c) { ...; q = Call(a); } else { ...; q = Call(b); }
+    if (q != NULL) Snd();
+is exact (phunterShotBuster, 168/168). Rule of thumb: duplicate STORES
+may be left to the compiler; a duplicated TEST OF A CALL RESULT should
+be hoisted into a variable in the source.

@@ -1196,3 +1196,12 @@ comment suggests. The `/ 32` is the signed-division idiom (see workflow).
 struct Enemy uses `props[16]` (not buffer[]) — third time this per-type
 naming has cost a compile; the list is Enemy/Boss/Solid/VFX = props,
 Elf/Weapon = buffer.
+
+## phunterShotBuster (SOLVED, 168B) — buster volley
+
+switch (work[2]) with cases 0/5/10 sharing a body and case 0x30 ending
+the mode; work[2]++ after the switch. Fires CreateLemon(&c, 0x240, dir)
+from a stack Coord whose y is set before the X_FLIP branch and whose x
+is set inside each arm. See the workflow note on hoisting the call
+result — the `if (q != NULL) PlaySound(0x2C);` must be ONE test after
+the if/else, not duplicated in both arms.

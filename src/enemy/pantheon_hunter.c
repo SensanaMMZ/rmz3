@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "sound.h"
+#include "projectile.h"
 #include "metatile.h"
 #include "motion.h"
 #include "vfx.h"
@@ -667,7 +669,44 @@ void phunterRaiseArm(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_hunter_p3_b_2_x.inc");
+INCASM("asm/enemy/pantheon_hunter_p3_b_2_x_m.inc");
+
+// 0x0806505c
+void phunterShotBuster(struct Enemy* p) {
+  struct Coord c;
+  struct Projectile* q;
+  u8 m = (p->s).mode[2];
+  if (m == 0) {
+    SetMotion(&p->s, 0x1302);
+    (p->s).work[2] = m;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  switch ((p->s).work[2]) {
+    case 0:
+    case 5:
+    case 10:
+      c.y = (p->s).coord.y - 0x1200;
+      if ((p->s).flags & X_FLIP) {
+        c.x = (p->s).coord.x + 0x1B00;
+        q = CreateLemon(&c, 0x240, 0x80);
+      } else {
+        c.x = (p->s).coord.x - 0x1B00;
+        q = CreateLemon(&c, 0x240, 0);
+      }
+      if (q != NULL) {
+        PlaySound(0x2C);
+      }
+      break;
+    case 0x30:
+      (p->s).mode[1] = 5;
+      (p->s).mode[2] = 0;
+      break;
+  }
+  (p->s).work[2]++;
+}
+
+INCASM("asm/enemy/pantheon_hunter_p3_b_2_x_n.inc");
 
 // 0x080651c0
 void phunter_080651c0(struct Enemy* p) {
