@@ -2019,3 +2019,35 @@ i.e. `d.x = Cos(angle, speed)`, `d.y = Sin(angle, speed)`. A trailing
 what produces the `lsls #0x18 / lsrs #0x17` pair (cast then scale by 2), so seeing
 a 24/23 shift pair rather than 24/24 means an s16 table index, not a plain u8.
 FUN_080bc6ac also bumps a counter on its parent: `*((u8*)e + 0xCF) += 1`.
+
+## A SPLIT `flags2 |= WHITE_PAINTABLE` means the source does it TWICE
+
+This retracts the "register allocation" verdict I recorded for
+createGlacierleSucker, FUN_08061c74 and FUN_08061ccc. All three now MATCH.
+
+The signature is a read-modify-write torn apart by unrelated stores:
+
+    ldrb r2,[r3,#0xb]      <- load hoisted to the top
+    movs r1,#0x10
+    ... invincibleID / work[0] / unk_28 / unk_2c stores ...
+    orrs r1,r2             <- OR and store sunk to the bottom
+    strb r1,[r3,#0xb]
+
+That is not the scheduler. It is agbcc CSEing **two** identical
+`(p->s).flags2 |= WHITE_PAINTABLE;` statements -- one in the usual header
+position after palID, one again after the later stores -- into a single
+load-early/store-late pair. Writing it once can never reproduce it: I tried
+flags2-first, flags2-in-place, an explicit read-early/write-late temp, and
+reordering the stores, and got 16/16/14/26 diffs. Writing it twice gives 0.
+
+I had also noted a correlation with "the second invincibleID write" on three
+functions. That was reading the wrong feature: the real marker is that these
+functions set invincibleID twice AND flags2 twice, and only the flags2
+duplication has any effect on codegen.
+
+- **createGlacierleJoint** (0x08082218, 204B) matched once the in-place coord
+  fixup was written as `+=`:
+      coord.x = prev->coord.x;  ...  coord.x += prev->coord.x - prev->unk_2c->coord.x;
+  Writing `coord.x = prev->coord.x + (prev->coord.x - ...)` lets agbcc fold the
+  repeated load and comes out 10 bytes short; the `+=` keeps the already-stored
+  value live in a register and re-loads prev->coord.x for the subtraction.

@@ -7,7 +7,47 @@
 static const BossFunc sDeads[5];
 
 
-INCASM("asm/boss/spearook_p1_pre_pre.inc");
+INCASM("asm/boss/spearook_p1_pre_pre_a.inc");
+
+#include "entity/macros.h"
+
+struct Boss* FUN_08061c74(struct Entity* e) {
+  struct Boss* p = (struct Boss*)AllocEntityFirst(gBossHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_BOSS_ROUTINE(p, 24);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 1;
+    (p->s).unk_28 = e;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = e->uniqueID;
+  }
+  return p;
+}
+
+void FUN_08061ccc(struct Entity* e, struct Entity* e2) {
+  struct Boss* p = (struct Boss*)AllocEntityFirst(gBossHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_BOSS_ROUTINE(p, 24);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 2;
+    (p->s).unk_28 = e;
+    (p->s).unk_2c = e2;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = e->uniqueID;
+  }
+}
+
+INCASM("asm/boss/spearook_p1_pre_pre_bc_b.inc");
 
 #include "element.h"
 #include "vfx.h"
