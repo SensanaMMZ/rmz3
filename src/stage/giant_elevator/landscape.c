@@ -160,7 +160,23 @@ static const StageLayerRoutine sLayerRoutine[9] = {
 };
 // clang-format on
 
-INCASM("asm/stage_gfx/giant_elevator_p1.inc");
+INCASM("asm/stage_gfx/giant_elevator_p1_a.inc");
+
+// 0x08014a34
+void giantElevator_08014a34(struct StageLayer* l, const struct Stage* _ UNUSED) {
+  const u16 n = l->bgIdx;
+  BGnHOFS(n >> 4) = (l->viewportCenterPixel.x - 0x1428) >> 2;
+  BGnVOFS(n >> 4) = l->unk_10;
+}
+
+INCASM("asm/stage_gfx/giant_elevator_p1_b.inc");
+
+// 0x08014ad4
+void giantElevator_08014ad4(struct StageLayer* l, const struct Stage* _ UNUSED) {
+  const u16 n = l->bgIdx;
+  BGnHOFS(n >> 4) = (l->viewportCenterPixel.x - 0x1428) >> 7;
+  BGnVOFS(n >> 4) = l->unk_10 >> 2;
+}
 
 void FUN_08014b04(void) {
   ShiftMetatile(0xb4, 0x72, (const struct MetatileShift*)0x083458BC);

@@ -863,3 +863,14 @@ then GCC collapses both stores onto one base register (40B, too small).
 Need the form that keeps the +12 anchor AND two separate address
 computations. This is the FlushOAM pool-anchor lever again — see
 notes/matching-workflow.md step 4.
+
+## giantElevator_08014a34 / _08014ad4 (SOLVED, 48B each, first try)
+
+Direct payoff of workflow step 4c (grep for the accessor macro). Same
+BGnHOFS/BGnVOFS idiom as FUN_08013bdc, different arithmetic:
+  a34: BGnHOFS = (viewportCenterPixel.x - 0x1428) >> 2;  BGnVOFS = unk_10;
+  ad4: BGnHOFS = (viewportCenterPixel.x - 0x1428) >> 7;  BGnVOFS = unk_10 >> 2;
+(0xFFFFEBD8 in the pool is -0x1428.) Both matched on the first probe
+because the family idiom was already pinned. Remaining sibling of this
+family: snowyplains_080133b4 (52B, has a phase==0 guard and a bgcnt
+read-modify-write on top of the same bgofs writes).
