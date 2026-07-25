@@ -115,7 +115,51 @@ void doGoldOmega1Laser2(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/omega_gold_post_p2.inc");
+static const s32* const PTR_ARRAY_0836c6f4[4];
+
+// 0x080ac700
+void FUN_080ac700(struct Projectile* p) {
+  if ((p->body).status & 0x200) {
+    (p->body).status = 0;
+    (p->body).prevStatus = 0;
+    (p->body).invincibleTime = 0;
+    (p->s).flags &= ~4;
+    CreateSmoke(1, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else {
+    switch ((p->s).mode[2]) {
+      case 0: {
+        const s32* base = PTR_ARRAY_0836c6f4[(p->s).work[1] % 4];
+        RNG_0202f388 = LCG(RNG_0202f388);
+        (p->s).d.y = base[1] - ((RNG_0202f388 >> 16) & 0x1F);
+        {
+          s32 x = base[0] - 0x20;
+          RNG_0202f388 = LCG(RNG_0202f388);
+          (p->s).d.x = x + ((RNG_0202f388 >> 16) & 0x3F);
+        }
+        SetMotion(&p->s, 0xC01);
+        (p->s).work[2] = 0x3C;
+        (p->s).mode[2]++;
+        FALLTHROUGH;
+      }
+      case 1:
+        if ((p->s).work[2] == 0x32) {
+          SetDDP(&p->body, &sCollisions[2]);
+        }
+        (p->s).d.y += 0x20;
+        if ((p->s).d.y > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        (p->s).coord.x += (p->s).d.x;
+        UpdateMotionGraphic(&p->s);
+        if ((p->s).work[2] == 0 || --(p->s).work[2] == 0) {
+          SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+        }
+        break;
+    }
+  }
+}
 
 void OmegaGoldProjectile_Init(struct Projectile* p);
 void OmegaGoldProjectile_Update(struct Projectile* p);

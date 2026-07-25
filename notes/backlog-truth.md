@@ -487,3 +487,15 @@ gravity clamp 0x700, PushoutToUp1 bounce (d.y=-0x300), wall pushouts
 (Left at +0x800 when d.x>0, Right at -0x800 otherwise) with
 SET_XFLIP(p, !((flags >> 4) & 1)) toggle and coord.x += push. All
 levers were table lookups from this session's catalog — zero new ones.
+
+## FUN_080ac700 — gold omega scatter debris (SOLVED)
+
+280B, matched. c2500-family variant: status&0x200 head that CLEARS the
+body (status/prevStatus/invincibleTime = 0, flags &= ~4, smoke, DIE);
+scatter case uses PTR_ARRAY_0836c6f4[work[1] % 4] — the index MUST be
+spelled % 4, not & 3: the umod strength-reduction route puts the value
+in the and's dest register (ldrb r0 / movs r1,#3 / ands r0,r1), while a
+literal & 3 materializes the mask first and accumulates into it. New
+lever for the table: power-of-two % vs & are NOT interchangeable
+spellings under agbcc. SetDDP fires at work[2]==0x32 (not a --timer),
+tail is the ||-die form after UpdateMotionGraphic.
