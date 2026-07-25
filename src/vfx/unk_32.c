@@ -253,7 +253,17 @@ void FUN_080bacec(struct VFX* v) {
   (v->s).mode[3] = 0;
 }
 
-INCASM("asm/vfx/unk_32_pre_pre_b.inc");
+void FUN_080bad34(struct VFX* v) {
+  InitNonAffineMotion(&v->s);
+  (v->props).unk32.unk_8 = 0x100;
+  (v->s).spr.mag.x = 0x100;
+  (v->s).spr.mag.y = (v->props).unk32.unk_8;
+  (v->s).angle = 0;
+  SET_VFX_ROUTINE(v, ENTITY_UPDATE);
+  (v->s).mode[1] = 7;
+  (v->s).mode[2] = 0;
+  (v->s).mode[3] = 0;
+}
 
 void Ghost32_Update(struct VFX* p) {
   if (IS_METTAUR) {

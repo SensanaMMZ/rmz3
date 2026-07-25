@@ -1517,3 +1517,14 @@ check that the disassembly's branch targets all fall inside. A related tell:
 FUN_080a449c "starts" with `ldr` and ends with a `pop` that restores r8/r9 with
 no matching `push` — it is the tail of a split function, not a function. Skip
 those rather than trying to match them.
+- **FUN_080bad34** (0x48) MATCHED first probe — fourth sibling of the unk_32
+  init family (InitNonAffineMotion, mode[1] = 7); retires unk_32_pre_pre_b.inc.
+- **FUN_08093a20** (0x44) **PARKED** after 5 probes at 2 bytes / 8 diffs.
+  Progress made and worth keeping if revisited:
+    * `push {lr}` only (no r4) requires `zx -= 0x6000;` as its own statement —
+      writing `(zx - 0x6000) + dir * 0xC000` lets agbcc reassociate, which needs
+      a fifth live value and forces r4 into the prologue;
+    * `struct Zero* z = pZero2;` as an explicit local reproduces the ROM's order
+      (load the global pointer, load x, then deref) and took it 18 diffs -> 8.
+  Residual is the usual register permutation (ROM dir=r3/x=r2/zx=r0; ours
+  dir=r2/x=r3/zx=r1). Permuter class.
