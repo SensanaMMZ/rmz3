@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "vfx.h"
+#include "entity.h"
+#include "entity/macros.h"
 #include "physics.h"
 #include "story.h"
 
@@ -133,7 +136,49 @@ void FUN_0807461c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/snakecord_p1_p2.inc");
+static const struct Collision sCollisions[];
+
+void FUN_0807465c(struct Enemy* p) {
+  struct VFX* c;
+
+  if ((p->body).status & 0x800) {
+    return;
+  }
+  (p->s).taskCol = 24;
+  c = (struct VFX*)(p->s).unk_2c;
+  if (c != NULL) {
+    (c->s).flags &= ~DISPLAY;
+    (c->s).flags &= ~FLIPABLE;
+    SET_VFX_ROUTINE(c, ENTITY_DISAPPEAR);
+  }
+  if (PushoutToUp2((p->s).coord.x, (p->s).coord.y) < 0) {
+    (p->s).mode[1] = 11;
+  } else {
+    (p->s).mode[1] = 4;
+  }
+  (p->s).mode[2] = 0;
+}
+
+void FUN_080746c0(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)&p->props[0];
+
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    SetDDP(&p->body, &sCollisions[4]);
+    if (IsFrozen(&p->s) == 0) {
+      if (PushoutToUp2((p->s).coord.x, (p->s).coord.y) < 0) {
+        (p->s).mode[1] = 11;
+      } else {
+        (p->s).mode[1] = 4;
+      }
+      (p->s).mode[2] = 0;
+    }
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 10;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void FUN_0807472c(struct Enemy* p) {
   u32 status = (p->body).status;

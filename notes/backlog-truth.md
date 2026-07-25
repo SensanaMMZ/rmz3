@@ -1491,3 +1491,16 @@ Three consecutive parks (OmegaGoldProjectile_Init, FUN_080c3574, Solid53_Die) al
 fail on the same axis: agbcc register allocation under pressure. That is the
 documented permuter class. Switching selection strategy to smallest-function-first
 rather than one-function-file-first.
+- **FUN_0807465c / FUN_080746c0** (0x62 / 0x6C) MATCHED; retires
+  asm/enemy/snakecord_p1_p2.inc. FUN_080746c0 is another `||` short-circuit
+  (`*slot == NULL || isKilled(*slot)`).
+  **Method error worth remembering:** my byte-compare masks "relocation" pool
+  words by offset. I masked 0x50 in FUN_0807465c on the assumption it was
+  gEnemyFnTable, the probe reported MATCH, and the in-tree build then failed on
+  exactly those 2 bytes — the word is **gVFXFnTable** (0x0836D900), i.e. the
+  child in `unk_2c` is a struct VFX*, not a struct Enemy*, so the macro is
+  SET_VFX_ROUTINE. A masked byte is an *unverified* byte: only mask pool words
+  after resolving them with nm, and never treat a probe MATCH with masked words
+  as final. The in-tree sha1 caught it, as it is supposed to.
+  Also: my size estimates from `.byte` blob line counts were over by 6 and 8
+  bytes; real sizes come from the next symbol's address.
