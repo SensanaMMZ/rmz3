@@ -1281,3 +1281,11 @@ here). Both headers are needed when a function uses all four.
      agbcc emits `lsl #2; add; lsl #10` for the `* 0x1400`.
   3. Final `if (attr) return 0; return 2;` compiles with the arms swapped versus
      the ROM; `if (attr == 0) return 2; return 0;` puts them in ROM order.
+- **FUN_080964c0** (0xB0) MATCHED after 18 probes. Three separate levers stacked:
+  case 0 needs the `-0x40` as its own short-lived constant (so agbcc reuses the
+  live `0x60` via `subs r0,#0xa0`) plus a *separate* variable for the flip value;
+  case 1 needs the `||` short-circuit (see matching-workflow.md, "Branch polarity");
+  case 2 needs `if (--work[2] == 0)`.
+  Side effect: the call site proves **FUN_08095e28 returns u8**, not u32 — the
+  caller truncates with `lsls #24`. Changing the declaration did not disturb
+  FUN_08095e28's own codegen (ROM sha1 still exact).

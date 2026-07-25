@@ -43,7 +43,7 @@ bool8 FUN_08095dc8(struct Enemy* p) {
 }
 
 // 進行方向の壁を調べる (1: 壁で押し戻された, 0: 曲がり角, 2: 直進可)
-u32 FUN_08095e28(struct Enemy* p) {
+u8 FUN_08095e28(struct Enemy* p) {
   s32 v;
   s32 dir;
   s32 dx;
@@ -128,6 +128,46 @@ void FUN_08096484(struct Enemy* p) {
 }
 
 void FUN_080964bc(struct Enemy* p) {}
+
+// 直進 (向きと進行方向が食い違うときは歩行モーションを差し替える)
+void FUN_080964c0(struct Enemy* p) {
+  s32 v;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x60;
+      (p->s).d.x = -0x40;
+      v = -0x40;
+      if ((p->s).flags & X_FLIP) {
+        v = 0x40;
+      }
+      (p->s).d.x = v;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      v = (p->s).d.x < 0;
+      if ((((p->s).flags & X_FLIP) && v == 0) || (((p->s).flags & X_FLIP) == 0 && v != 0)) {
+        SetMotion(&p->s, MOTION(0xdb, 0));
+      } else {
+        SetMotion(&p->s, MOTION(0xdb, 2));
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 2:
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+        break;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      if (FUN_08095e28(p)) {
+        (p->s).d.x = -(p->s).d.x;
+        (p->s).mode[2] = 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 INCASM("asm/enemy/shellcrawler_post_pre.inc");
 

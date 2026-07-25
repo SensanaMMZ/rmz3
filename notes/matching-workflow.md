@@ -320,3 +320,35 @@ merges too aggressively and comes out 6 bytes SHORT, while
 is exact (phunterShotBuster, 168/168). Rule of thumb: duplicate STORES
 may be left to the compiler; a duplicated TEST OF A CALL RESULT should
 be hoisted into a variable in the source.
+
+### Branch polarity distinguishes `||` from a fused/ternary condition
+
+Symptom: the whole function is byte-identical except one conditional branch,
+where the ROM has `cmp rX, #0 / beq <then>` and we emit `cmp rX, #0 / bne <else>`
+(same targets, opposite sense, same size).
+
+agbcc emits **branch-if-FALSE to the else block** for a plain condition or a
+`?:` condition, but **branch-if-TRUE to the then block** for the *left* operand
+of a short-circuit `||`. So that polarity flip is a reliable signal that the
+original condition was written `if (A || B)`, not `if (A ? x : y)`.
+
+Two supporting tells, both seen on `FUN_080964c0`:
+
+- **`cmp` against 0 on every path** means the sub-conditions are separate tests
+  (`v == 0`, `v != 0`). Any *fused* boolean compare (`(flag != 0) != v`) folds the
+  flag to a constant on one side and produces `cmp rX, #1` on that path — which
+  no amount of arm-swapping removes.
+- **Two complete call blocks** (each with its own `adds r0,r4,#0 / bl`) means one
+  if/else, not nested ifs. Nested ifs give four arms that agbcc tail-merges only
+  partially, stranding a `ldr rN, =const` head and forcing an extra literal pool
+  mid-function (+6 bytes, and the pool position is the giveaway).
+
+Worked example — ROM shape recovered as:
+
+```c
+v = (p->s).d.x < 0;
+if ((((p->s).flags & X_FLIP) && v == 0) || (((p->s).flags & X_FLIP) == 0 && v != 0)) {
+```
+
+agbcc CSEs the repeated `flags & X_FLIP` and jump-threads the second test away,
+so the duplicated-looking source compiles to a single flag test.
