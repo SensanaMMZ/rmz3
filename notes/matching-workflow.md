@@ -416,3 +416,12 @@ existing struct covering 0xB4.. -- several files have one.
 When switching a function's parameter to that struct type, the file's forward
 declarations and its EnemyFunc/ProjectileFunc tables need updating too
 (`(EnemyFunc)FUN_x` in the table), or the build fails on conflicting types.
+
+## NEVER `rm -rf build` in this repo
+The makefile does not recreate its output directory tree (SUBDIRS is not wired as
+an order-only prerequisite), and `find src -type f -name '*.s'` objects are only
+built when named explicitly once the tree is gone. Deleting build/ cost a long
+recovery: host-tool timestamps had to be refreshed (`touch tools/*/*.exe`), all
+715 output dirs recreated, and every asm object built by explicit target before
+the link would succeed. To force a rebuild, touch the source or delete the single
+.o -- never the tree. Restored sha1 ff7a8017... after the repair.
