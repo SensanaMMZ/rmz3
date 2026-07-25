@@ -1744,3 +1744,27 @@ ApplyElementEffect vein: 19 found, 11 matched, 2 parked, 6 left.
   motion.step at entity offset 0x70. Sixth wrong `void` declaration corrected.
 
 ApplyElementEffect vein: 19 found, 12 matched, 2 parked, 5 left.
+- **FUN_08085c4c** (0x78, capsule_cannon) and **FUN_08068f08** (0x60,
+  piller_cannon) MATCHED. **The dead-code puzzle is solved.**
+  The `ldrb flags / movs #0x10 / ands` whose result is immediately overwritten
+  comes from an if/else with **identical arms**:
+
+      if ((p->s).flags & X_FLIP) {
+        *slot = ApplyElementEffect(0, &p->s, coord);
+      } else {
+        *slot = ApplyElementEffect(0, &p->s, coord);
+      }
+
+  agbcc merges the two arms into one call but leaves the condition computed.
+  This also explains the paired identical pool words seen in mothjiro and
+  capsule_cannon (both SetDDP arms using the same &sCollisions[N]) — same
+  duplicated-arm construct, arms merged, pools not deduped.
+  FUN_08068f08 had been PARKED at 12 bytes; this insight closed it. Its second
+  slot read genuinely recomputes the address, so use the raw expression there.
+  **Fourth masked-pool-word burn**: piller_cannon has no sElementCoord at all —
+  the third argument is the shared global **Coord_083661ec**. My placeholder
+  `static const struct Coord sElementCoord;` became a tentative .bss definition
+  and the LINKER caught it ("`.bss' referenced ... defined in discarded section").
+  Resolve every pool word with nm BEFORE writing the C, not after.
+
+ApplyElementEffect vein: 19 found, 14 matched, 1 parked, 4 left.

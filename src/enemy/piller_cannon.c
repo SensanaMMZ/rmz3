@@ -39,7 +39,7 @@ INCASM("asm/enemy/piller_cannon_p1_a.inc");
 
 extern const EnemyFunc sUpdates1[9];
 extern const EnemyFunc sUpdates2[9];
-void FUN_08068f08(struct Enemy* p);
+bool8 FUN_08068f08(struct Enemy* p);
 void PillerCannon_Die(struct Enemy* p);
 
 void PillerCannon_Update(struct Enemy* p) {
@@ -144,7 +144,32 @@ void FUN_08068ebc(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/piller_cannon_p10.inc");
+#include "element.h"
+#include "vfx.h"
+
+extern const struct Coord Coord_083661ec;
+
+bool8 FUN_08068f08(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)&p->props[8];
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    if ((p->s).flags & X_FLIP) {
+      *slot = ApplyElementEffect(0, &p->s, &Coord_083661ec);
+    } else {
+      *slot = ApplyElementEffect(0, &p->s, &Coord_083661ec);
+    }
+    if (*(struct VFX**)&p->props[8] == NULL) {
+      if ((*(u8*)((u8*)p + 0x97) & 0xf0) == 0x20) {
+        if (p->props[12] == 0) {
+          p->props[12] = 100;
+        }
+      }
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/piller_cannon_p10_b.inc");
 
 bool8 FUN_0806860c(struct Enemy* p);
 bool8 FUN_08068614(struct Enemy* p);

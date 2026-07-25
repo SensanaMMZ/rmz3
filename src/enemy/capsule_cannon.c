@@ -36,7 +36,7 @@ INCASM("asm/enemy/capsule_cannon_pre_p1_p1_a.inc");
 extern const EnemyFunc sUpdates1[6];
 extern const EnemyFunc sUpdates2[6];
 extern const struct Collision sCollisions[4];
-void FUN_08085c4c(struct Enemy* p);
+bool8 FUN_08085c4c(struct Enemy* p);
 void CapsuleCannon_Die(struct Enemy* p);
 
 void CapsuleCannon_Update(struct Enemy* p) {
@@ -105,7 +105,34 @@ void FUN_08085c38(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/capsule_cannon_post_post_post.inc");
+#include "element.h"
+#include "vfx.h"
+
+static const struct Coord sElementCoord;
+
+bool8 FUN_08085c4c(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)&p->props[8];
+  u8 attr;
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    if ((p->s).flags & X_FLIP) {
+      *slot = ApplyElementEffect(0, &p->s, &sElementCoord);
+    } else {
+      *slot = ApplyElementEffect(0, &p->s, &sElementCoord);
+    }
+    if (*(struct VFX**)&p->props[8] != NULL) {
+      attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+      if (attr == 0x10) {
+        SetDDP(&p->body, &sCollisions[3]);
+      } else if (attr == 0x30) {
+        SetDDP(&p->body, &sCollisions[3]);
+      }
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/enemy/capsule_cannon_post_post_post_b.inc");
 
 bool8 FUN_08085a08(struct Enemy* p);
 bool8 FUN_08085a10(struct Enemy* p);
