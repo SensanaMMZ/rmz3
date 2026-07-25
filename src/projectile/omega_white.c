@@ -251,7 +251,41 @@ void doOmega1BallLaser2(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/omega_white_p2.inc");
+void doOmega1Hoopshot(struct Projectile* p) {
+  if (--(p->s).work[2] == 0) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else {
+    s32 push;
+    switch ((p->s).mode[2]) {
+      case 0:
+        (p->s).work[3] = 0;
+        SetMotion(&p->s, 0xA07);
+        SetDDP(&p->body, &sCollisions[1]);
+        (p->s).d.x = -((u32)((p->prevCoord).x * gSineTable[p->work[0]]) >> 8);
+        (p->s).d.y = (u32)((p->prevCoord).x * gSineTable[(u8)(p->work[0] + 0x40)]) >> 8;
+        p->work[1] = 1;
+        PlaySound(0x12C);
+        (p->s).mode[2]++;
+        FALLTHROUGH;
+      case 1: {
+        u8 t = (p->s).work[3]++;
+        if ((t & 1) == 0) {
+          FUN_080b9184(&(p->s).coord, 0);
+        }
+      }
+        (p->s).coord.x += (p->s).d.x;
+        (p->s).coord.y += (p->s).d.y;
+        push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (push != 0 && p->work[1] != 0) {
+          p->work[1] = 0;
+          (p->s).coord.y += push;
+          (p->s).d.y = -(p->s).d.y;
+        }
+        UpdateMotionGraphic(&p->s);
+        break;
+    }
+  }
+}
 
 static const struct Collision sCollisions[2] = {
     {

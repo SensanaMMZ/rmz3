@@ -392,7 +392,7 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/player/zero/update.c:1881 | `NAKED static void zeroMode7Phase2(struct Zero* z)` |
 | src/projectile/blazin.c:100 | `NAKED static void Projectile9_Init(struct Projectile* p)` |
 | src/projectile/lemon.c:45 | `NAKED static struct Projectile* unused_0809ca34(struct Coord* c, s32 r1, u8 r2) { INCCODE("asm/unused/unused_0809ca34.inc"); }` |
-| src/projectile/omega_white.c:61 | `NAKED static void OmegaWhiteProjectile_Init(struct Projectile* p)` |
+| src/projectile/omega_white.c:63 | `NAKED static void OmegaWhiteProjectile_Init(struct Projectile* p)` |
 | src/projectile/omega_zero.c:263 | `NAKED static void Messenkou_Update(struct Projectile* p)` |
 | src/projectile/omega_zero.c:268 | `NAKED static void ArcBlade_Update(struct Projectile* p)` |
 | src/projectile/omega_zero.c:273 | `NAKED static void Rekkoha_Update(struct Projectile* p)` |
