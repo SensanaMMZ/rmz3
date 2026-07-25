@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "global.h"
+#include "physics.h"
 #include "projectile.h"
+#include "sound.h"
 #include "vfx.h"
 
 static const ProjectileFunc sUpdates[3];
@@ -68,6 +70,47 @@ void doGoldOmega1Laser1(struct Projectile* p) {
     if ((p->prevCoord).y == 0 || --(p->prevCoord).y == 0) {
       (p->s).mode[1] = 1;
       (p->s).mode[2] = 0;
+    }
+  }
+}
+
+static const struct Collision sCollisions[4];
+void FUN_080c1b98(struct Coord* c, u8 kind);
+
+void doGoldOmega1Laser2(struct Projectile* p) {
+  if ((p->s).unk_28->mode[0] > 1 || --(p->s).work[2] == 0) {
+    CreateSmoke(3, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  } else {
+    s32 push;
+    switch ((p->s).mode[2]) {
+      case 0:
+        (p->prevCoord).x = (u32)((p->prevCoord).x * 5 << 6) >> 8;
+        (p->s).work[3] = 0;
+        SetMotion(&p->s, 0xA07);
+        SetDDP(&p->body, &sCollisions[3]);
+        (p->s).d.x = -((u32)(gSineTable[p->work[0]] * (p->prevCoord).x) >> 8);
+        (p->s).d.y = (u32)(gSineTable[(u8)(p->work[0] + 0x40)] * (p->prevCoord).x) >> 8;
+        p->work[1] = 1;
+        PlaySound(0x12C);
+        (p->s).mode[2]++;
+        FALLTHROUGH;
+      case 1: {
+        u8 t = (p->s).work[3]++;
+        if ((t & 1) == 0) {
+          FUN_080c1b98(&(p->s).coord, 0);
+        }
+      }
+        (p->s).coord.x += (p->s).d.x;
+        (p->s).coord.y += (p->s).d.y;
+        push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (push != 0 && p->work[1] != 0) {
+          p->work[1] = 0;
+          (p->s).coord.y += push;
+          (p->s).d.y = -(p->s).d.y;
+        }
+        UpdateMotionGraphic(&p->s);
+        break;
     }
   }
 }
