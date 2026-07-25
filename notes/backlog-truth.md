@@ -1656,3 +1656,14 @@ Running tally of the ApplyElementEffect vein: 19 found, 4 matched
   discarded when the element attribute is not 0x10.
 
 ApplyElementEffect vein: 19 found, 6 matched, 13 left.
+- **FUN_0808d4a0** (0x58) MATCHED first probe. Fourth instance of the frozen-check
+  element shape. Its guard is a two-value exclusion written naturally as
+  `if ((p->s).work[0] != 8 && (p->s).work[0] != 9)`, which agbcc compiles to the
+  range test `subs r0,#8 / lsls #24 / lsrs #24 / cmp r0,#1 / bls` — same
+  transformation as the `m == 3 || m == 4` case in FUN_08096348. Recognising a
+  `subs K / cmp #N / bls` block as an N+1-value range test on the ORIGINAL value
+  is now a reliable read.
+  Pool word verified with nm before lifting (0x08369314 sits inside deathlock's
+  rodata 0x08369134+0x1f6) rather than assumed.
+
+ApplyElementEffect vein: 19 found, 7 matched, 12 left.
