@@ -1,4 +1,5 @@
 #include "global.h"
+#include "metatile.h"
 #include "vfx.h"
 
 static const motion_t sMotions[3];
@@ -39,6 +40,18 @@ void VFX62_Die(struct VFX* vfx) {
 }
 
 INCASM("asm/vfx/unk_62_post.inc");
+
+// 0x080c3678
+void FUN_080c3678(struct VFX* p) {
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += PIXEL(1) / 4;
+  UpdateMotionGraphic(&p->s);
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    CreateSmoke(3, &(p->s).coord);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void VFX62_Init(struct VFX* vfx);
 void VFX62_Update(struct VFX* vfx);

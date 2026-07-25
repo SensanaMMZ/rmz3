@@ -16,3 +16,15 @@ Original post below for the analysis text (still accurate):
 - root cause: regalloc-tie / pseudo-priority (p-copy r2 vs r3 swap; fl r1 vs r0)
 - payoff: 3 byte-identical functions (FUN_080e58bc, FUN_080e2510, FUN_080e2b78), 108 B each
 - best local harness: build/scratch/e58bc/v3.c
+- LIVE scratch is uJ5Jm (ldwqE was broken); paste kit in notes/decompme/fixes/ldwqE-*.c
+
+## ABOUT-TAB (uJ5Jm, current)
+
+FUN_080e58bc — a cyber-elf per-frame update (108 bytes). Three
+byte-identical twins (FUN_080e58bc, FUN_080e2510, FUN_080e2b78), so a
+match here solves all three. agbcc -mthumb-interwork -O2 -fshort-enums.
+Structurally complete and size-exact; only a register-allocation tie
+remains: the parent pointer lands in r3 vs the target's r2 (pseudo-copy
+priority), and fl in r1 vs r0. Everything else matches. Looking for the
+source spelling that flips those two register roles.
+

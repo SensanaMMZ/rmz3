@@ -559,3 +559,12 @@ candidates accumulate in tools/permuter-setup/<fn>/output-<score>-N/.
 Setup-recipe corrections for future targets are in the project memory
 (preprocess candidates, replace NAKED stubs, trim multi-fn incs,
 ASFLAGS -I repo, permuter_base_fix.py).
+
+## FUN_080c3678 — VFX62 gravity-fall debris (SOLVED, free twin)
+
+Match 107. Byte-identical C twin of the already-matched FUN_080b6b8c
+(src/vfx/unk_17.c): coord += d, d.y += PIXEL(1)/4, UMG, then
+FUN_080098a4 collision -> CreateSmoke(3) + DIE. Lifted verbatim into
+src/vfx/unk_62.c, ROM sha1 exact first try. Only the two pool words
+differ (per-file VFX motion consts) and they are data, not code shape.
+Needed metatile.h (FUN_080098a4) added to unk_62.c includes.
