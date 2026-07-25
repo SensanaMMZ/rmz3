@@ -66,7 +66,21 @@ u32 FUN_08095014(struct Enemy* p, s32 d) {
   return 0;
 }
 
-INCASM("asm/enemy/pantheon_fist_pre_p1_p2_p2.inc");
+u32 FUN_08095074(struct Enemy* p, s32 dx) {
+  if (dx == 0) {
+    return 0;
+  }
+  if (dx < 0) {
+    if (FUN_080098a4((p->s).coord.x - 0xE00, (p->s).coord.y - 0xA00) != 0) {
+      return 1;
+    }
+  } else {
+    if (FUN_080098a4((p->s).coord.x + 0xE00, (p->s).coord.y - 0xA00) != 0) {
+      return 2;
+    }
+  }
+  return 0;
+}
 
 void nop_080950cc(struct Enemy* p) {}
 
