@@ -1,4 +1,4 @@
-void FUN_080e58bc_TEST(struct Elf* p) {
+void FUN_080e58bc(struct Elf* p) {
 
   struct Elf* e = *(struct Elf**)p->buffer;
   u8 z = (p->s).work[2];

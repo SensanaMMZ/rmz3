@@ -2197,7 +2197,6 @@ static const ElfFunc sUpdates[2] = {
 
 void FUN_080bfce8(struct Coord* c, s32 r1);
 
-asm(".section .text\n  .include \"" "asm/cyberelf/bird_p1.inc" "\"\n          .align 2, 0\n     .syntax divided\n");;
 
 void BirdElf_Die(struct Elf* p) {
   FUN_080bfce8(&(p->s).coord, 0);
@@ -2205,4 +2204,3 @@ void BirdElf_Die(struct Elf* p) {
   { u32 tbl, id; EntityFunc** routine_table; tbl = (u32)(gElfFnTable); id = (((struct Entity*)p)->id) << 2; routine_table = (EntityFunc**)(tbl + id); *(u32*)(((struct Entity*)p)->mode) = 4; ((struct Entity*)p)->onUpdate = (void*)(*routine_table)[4]; };
 }
 
-asm(".section .text\n  .include \"" "asm/cyberelf/bird_p2.inc" "\"\n          .align 2, 0\n     .syntax divided\n");;
