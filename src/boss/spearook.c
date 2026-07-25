@@ -36,7 +36,28 @@ void FUN_08062304(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/spearook_p1_post_p2.inc");
+INCASM("asm/boss/spearook_p1_post_p2_a.inc");
+
+// 0x08062b70
+void FUN_08062b70(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      *(u32*)&(p->props).raw[8] |= 0x20;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      u32 f = *(u32*)&(p->props).raw[8] & 0x20;
+      if (f == 0) {
+        (p->s).mode[1] = f;
+        (p->s).mode[2] = f;
+      }
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/spearook_p1_post_p2_b.inc");
 
 void nop_0806316c(struct Boss* p) {}
 

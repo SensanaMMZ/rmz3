@@ -1100,3 +1100,13 @@ updaters test it.
 NOTE: the file's forward declaration said `struct VFX*` while the
 function really takes `struct Entity*` (the rest of unk_56.c already
 uses struct Entity*); retyping the decl was needed to build.
+
+## FUN_08062b70 (SOLVED, 68B, first try) — spearook flag gate
+
+  case 0: *(u32*)&(p->props).raw[8] |= 0x20;  mode[2]++;  FALLTHROUGH;
+  case 1: u32 f = *(u32*)&(p->props).raw[8] & 0x20;
+          if (f == 0) { mode[1] = f; mode[2] = f; }
+          coord.y = FUN_08009f6c(coord.x, coord.y);
+The two `strb` of the SAME masked value f (not a literal 0) is the
+known-zero-register reuse pattern: assign the masked result to a named
+variable and store THAT in both places, rather than writing 0.
