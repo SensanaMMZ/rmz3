@@ -183,3 +183,37 @@ Second addendum (byte-evidence table growth, 2026-07-24):
   same variable is NOT a contradiction: GCC 2.9 combine is per-basic-
   block, so the arm that only copies a cross-block value keeps its
   truncation while the arm that computes a fresh OR loses it.
+
+## 4b. Cross-reference the decomp corpus BEFORE contorting a harness
+
+Added 2026-07-25. `tools/decomp_crawl.py` mirrors every repo in
+`notes/urls-of-gba-decomps/list-of-decomps.md` into `../decomp-corpus/`,
+compiles each project's `src/**/*.c` with OUR agbcc, and indexes every
+function's instruction stream. That turns "which C shape produces this
+instruction?" into a lookup instead of a guess.
+
+```sh
+python3 tools/decomp_crawl.py clone [proj ...]   # shallow clone / fetch
+python3 tools/decomp_crawl.py index [proj ...]   # compile + index + dated reports
+python3 tools/decomp_crawl.py grep 'mov\s+r8'    # corpus-wide instruction search
+python3 tools/decomp_crawl.py check              # weekly: which upstreams moved
+```
+
+Reports land in `notes/decompme/crawl/<proj>_<trait>_report_<YYYY-MM-DD>.md`
+(same format as the original `pokeruby_r8_report.md`), one file per trait per
+crawl date, so old reports stay as a record and new ones never overwrite them.
+Traits indexed: r8/high-reg pinning, `and #0xff` vs `lsl/lsr #24` byte
+truncation, `__umodsi3`/`__udivsi3`, `mul`, `rsb`, `bic`, `tst`, `mov ip`.
+`../decomp-corpus/manifest.json` records each project's commit + crawl date.
+
+**Ordering rule:** corpus grep comes AFTER the byte diff names the property
+(step 4) and BEFORE escalating to decomp.me (step 5). Posting a scratch
+without having grepped the corpus for the offending instruction wastes a
+community ask on something the corpus can answer — and the scratch write-up
+should cite what the corpus did or did not show.
+
+**Cadence:** re-run `check` weekly; re-clone + re-index only the projects it
+reports as moved. Note that projects using non-agbcc toolchains still index
+usefully (their C compiles under agbcc often enough to be a source-shape
+corpus), but `files_failed` in the manifest tells you how much of a project
+was unusable.

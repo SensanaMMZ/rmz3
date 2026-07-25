@@ -40,3 +40,4 @@ nonmatchings/
 pyghidra_mcp_projects/
 *.gba_ghidra/
 *_ghidra/
+decomp-corpus/
