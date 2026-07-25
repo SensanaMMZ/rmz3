@@ -4,44 +4,6 @@
 	
 	.text
 
-	thumb_func_start Actor15_Update
-Actor15_Update: @ 0x080D28EC
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xd]
-	cmp r0, #0
-	beq _080D28FC
-	cmp r0, #1
-	beq _080D2922
-	b _080D2928
-_080D28FC:
-	ldr r0, [r4, #0x54]
-	ldr r1, [r4, #0x58]
-	bl FUN_08009f6c
-	ldr r1, _080D2930 @ =0xFFFFE400
-	adds r0, r0, r1
-	str r0, [r4, #0x58]
-	movs r1, #0xca
-	lsls r1, r1, #8
-	adds r0, r4, #0
-	bl SetMotion
-	adds r1, r4, #0
-	adds r1, #0x25
-	movs r0, #0x1f
-	strb r0, [r1]
-	ldrb r0, [r4, #0xd]
-	adds r0, #1
-	strb r0, [r4, #0xd]
-_080D2922:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_080D2928:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080D2930: .4byte 0xFFFFE400
-
 	thumb_func_start ActorOperator_Update
 ActorOperator_Update: @ 0x080D2934
 	push {r4, lr}

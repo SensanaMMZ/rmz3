@@ -935,3 +935,19 @@ functions of exactly this shape (Actor8/10/13/15_Update,
 ActorCrashedPantheon_Update, ActorLeviathan11_Update,
 ActorFefnir12_Update ...), all still asm. That single 3203-line inc is
 probably the densest remaining vein of easy dispatchers in the repo.
+
+## Actor15_Update (SOLVED, 72B) — actor vein, 2nd of the family
+
+Same dispatcher as ActorSaveSelectCiel_Update with different constants:
+  coord.y = FUN_08009f6c(coord.x, coord.y) - 0x1C00;   (pool 0xFFFFE400)
+  SetMotion(&p->s, 0xCA00);  taskCol = 0x1F;  mode[1]++;  FALLTHROUGH;
+  case 1: UpdateMotionGraphic.
+FIELD NOTE: offset 0x25 is `taskCol`, NOT spr.spriteIdx — guessing
+spriteIdx compiled to within ONE byte of correct, which is exactly the
+kind of near-miss that could be mistaken for a regalloc tie. When a
+single byte differs inside a store, re-check the FIELD before blaming
+allocation: grep the offset in include/entity/entity.h.
+Remaining in this vein (all still asm, same file):
+ActorOperator_Update, Actor17_Update, Actor8/10/13_Update,
+ActorCrashedPantheon_Update, ActorLeviathan11_Update,
+ActorFefnir12_Update.

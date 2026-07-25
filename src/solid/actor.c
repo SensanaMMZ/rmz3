@@ -1193,6 +1193,22 @@ void ActorSaveSelectCiel_Update(struct Solid* p) {
   }
 }
 
+
+// 0x080d28ec
+void Actor15_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - 0x1C00;
+      SetMotion(&p->s, 0xCA00);
+      (p->s).taskCol = 0x1F;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 INCASM("asm/solid/actor_p1_p1_b.inc");
 
 extern const struct Rect Rect_08370c60;
