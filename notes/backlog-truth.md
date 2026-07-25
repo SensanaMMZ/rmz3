@@ -1006,3 +1006,18 @@ RE-SCAN NOTE: this candidate did NOT appear in the earlier 0x18..0x50
 sweep because that run excluded sizes under 0x18. Re-running the scan
 after each batch surfaces newly-smallest candidates as incs get split
 and removed; the current list has 178 functions at <= 0x60 bytes.
+
+## blazin_080403a0 (SOLVED, 36B, first try) — crossjumping used FOR us
+
+A 4-way pointer selector out of the Boss props union:
+  n==0 -> raw[0x20], n==1 -> raw[0x24], n==2 -> raw[0x28], else raw[0x2C]
+written as four plain `return *(struct Entity**)&(p->props).raw[N];`
+branches. The target has ONE shared `ldr r0,[r0]; pop; bx` at the join,
+which looks like the source computed an address per branch and
+dereferenced once — but it is just agbcc cross-jumping the four
+identical loads. This is the same cross-jumping that BLOCKS the
+_zeroTryAttack five-pack; here it works in our favour, so do not
+contort the source to reproduce a shared tail — write the natural
+per-branch returns and let it merge.
+Offsets: Boss props union starts at 0xB4, so the pool offsets
+0xD4/0xD8/0xDC/0xE0 are raw[0x20/0x24/0x28/0x2C].

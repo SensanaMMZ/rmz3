@@ -780,7 +780,19 @@ s32 howFarBlazin(struct Boss* p) {
   return 2;
 }
 
-INCASM("asm/boss/blazin_p12_p2_p2.inc");
+
+// 0x080403a0
+struct Entity* blazin_080403a0(struct Boss* p, u32 n) {
+  if (n == 0) {
+    return *(struct Entity**)&(p->props).raw[0x20];
+  } else if (n == 1) {
+    return *(struct Entity**)&(p->props).raw[0x24];
+  } else if (n == 2) {
+    return *(struct Entity**)&(p->props).raw[0x28];
+  } else {
+    return *(struct Entity**)&(p->props).raw[0x2C];
+  }
+}
 
 // 0x080403c4
 static void setBlazinDirection(struct Entity* p) {
