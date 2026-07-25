@@ -2084,3 +2084,19 @@ per-iteration `+= 0x3800`, which is why the ROM looks like a pointer walk.
   epilogue is `pop {r1} / bx r1`, i.e. r0 is LIVE at exit, so it returns
   something -- but adding `return p` emits an extra `adds r0,r4,#0` and comes out
   4 bytes LONG. So it returns a value that is already in r0 by other means.
+
+- **createStretchedGrabArm / createStretchedArms** (pantheon_aqua_mod_obj, enemy
+  38). One spawn plus a 6-iteration loop; createStretchedArms wraps the whole
+  thing in a second loop over n. Both needed the reassociation temp:
+
+      coord.x = e->coord.x - 0x1700 + n * 0x2E00;   -> agbcc folds -0x1700 into
+                                                       the multiply chain, 4B short
+      base = e->coord.x - 0x1700;
+      coord.x = base + n * 0x2E00;                  -> MATCH
+
+  The ROM's `ldr =0xFFFFE900 / adds` against the loaded coord BEFORE the
+  `lsls/adds/lsls/subs/lsls` multiply chain is the tell: if the ROM adds the
+  constant to the base first, the source pinned it in a temp. The multiply here
+  is n*23 built as `((n*3) << 3) - n`, then `<< 9`.
+  Inner-loop `work[2] = i + 1` shows up as `adds r3,r5,#1` hoisted ABOVE the NULL
+  check, because the same value is reused as the next loop counter.

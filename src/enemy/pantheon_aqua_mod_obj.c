@@ -113,7 +113,89 @@ void createSweepLaserSign(struct Entity* e) {
   }
 }
 
-INCASM("asm/enemy/pantheon_aqua_mod_obj_p1_p5.inc");
+#include "entity/macros.h"
+
+void createStretchedGrabArm(struct Entity* e, u8 n) {
+  struct Enemy* arm = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+  s32 i;
+  s32 base;
+
+  if (arm != NULL) {
+    (arm->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(arm, 38);
+    (arm->s).tileNum = 0;
+    (arm->s).palID = 0;
+    (arm->s).flags2 |= WHITE_PAINTABLE;
+    (arm->s).invincibleID = (arm->s).uniqueID;
+    (arm->s).work[0] = 5;
+    (arm->s).work[1] = n;
+    base = e->coord.x - 0x1700;
+    (arm->s).coord.x = base + n * 0x2E00;
+    (arm->s).coord.y = e->coord.y - 0x400;
+    (arm->s).unk_28 = e;
+  }
+
+  for (i = 0; i <= 5; i++) {
+    struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+
+    if (p != NULL) {
+      (p->s).taskCol = 24;
+      INIT_ENEMY_ROUTINE(p, 38);
+      (p->s).tileNum = 0;
+      (p->s).palID = 0;
+      (p->s).flags2 |= WHITE_PAINTABLE;
+      (p->s).invincibleID = (p->s).uniqueID;
+      (p->s).work[0] = 4;
+      (p->s).work[1] = n;
+      (p->s).unk_28 = e;
+      (p->s).unk_2c = (struct Entity*)arm;
+      (p->s).work[2] = i + 1;
+    }
+  }
+}
+
+void createStretchedArms(struct Entity* e) {
+  s32 n;
+  s32 i;
+  s32 base;
+
+  for (n = 0; n <= 1; n++) {
+    struct Enemy* arm = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+
+    if (arm != NULL) {
+      (arm->s).taskCol = 24;
+      INIT_ENEMY_ROUTINE(arm, 38);
+      (arm->s).tileNum = 0;
+      (arm->s).palID = 0;
+      (arm->s).flags2 |= WHITE_PAINTABLE;
+      (arm->s).invincibleID = (arm->s).uniqueID;
+      (arm->s).work[0] = 7;
+      (arm->s).work[1] = n;
+      base = e->coord.x - 0x1700;
+      (arm->s).coord.x = base + n * 0x2E00;
+      (arm->s).coord.y = e->coord.y + 0x400;
+      (arm->s).unk_28 = e;
+    }
+
+    for (i = 0; i <= 5; i++) {
+      struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+
+      if (p != NULL) {
+        (p->s).taskCol = 24;
+        INIT_ENEMY_ROUTINE(p, 38);
+        (p->s).tileNum = 0;
+        (p->s).palID = 0;
+        (p->s).flags2 |= WHITE_PAINTABLE;
+        (p->s).invincibleID = (p->s).uniqueID;
+        (p->s).work[0] = 4;
+        (p->s).work[1] = n;
+        (p->s).unk_28 = e;
+        (p->s).unk_2c = (struct Entity*)arm;
+        (p->s).work[2] = i + 1;
+      }
+    }
+  }
+}
 
 #include "entity/macros.h"
 
