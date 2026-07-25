@@ -1,4 +1,6 @@
 #include "global.h"
+#include "entity/macros.h"
+#include "motion.h"
 #include "story.h"
 #include "vfx.h"
 
@@ -200,6 +202,18 @@ void FUN_080bab54(struct VFX* p) {
 
 INCASM("asm/vfx/unk_32_pre_pre_a.inc");
 
+void FUN_080bac14(struct VFX* v) {
+  InitScalerotMotion1(&v->s);
+  (v->props).unk32.unk_8 = 0x100;
+  (v->s).spr.mag.x = 0x100;
+  (v->s).spr.mag.y = (v->props).unk32.unk_8;
+  (v->s).angle = 0;
+  SET_VFX_ROUTINE(v, ENTITY_UPDATE);
+  (v->s).mode[1] = 3;
+  (v->s).mode[2] = 0;
+  (v->s).mode[3] = 0;
+}
+
 // 0x080bac5c
 NON_MATCH void FUN_080bac5c(struct VFX* p) {
 #if MODERN
@@ -213,6 +227,30 @@ NON_MATCH void FUN_080bac5c(struct VFX* p) {
 #else
   INCCODE("asm/wip/FUN_080bac5c.inc");
 #endif
+}
+
+void FUN_080baca4(struct VFX* v) {
+  InitScalerotMotion1(&v->s);
+  (v->props).unk32.unk_8 = 0x100;
+  (v->s).spr.mag.x = 0x100;
+  (v->s).spr.mag.y = (v->props).unk32.unk_8;
+  (v->s).angle = 0;
+  SET_VFX_ROUTINE(v, ENTITY_UPDATE);
+  (v->s).mode[1] = 5;
+  (v->s).mode[2] = 0;
+  (v->s).mode[3] = 0;
+}
+
+void FUN_080bacec(struct VFX* v) {
+  InitNonAffineMotion(&v->s);
+  (v->props).unk32.unk_8 = 0x100;
+  (v->s).spr.mag.x = 0x100;
+  (v->s).spr.mag.y = (v->props).unk32.unk_8;
+  (v->s).angle = 0;
+  SET_VFX_ROUTINE(v, ENTITY_UPDATE);
+  (v->s).mode[1] = 6;
+  (v->s).mode[2] = 0;
+  (v->s).mode[3] = 0;
 }
 
 INCASM("asm/vfx/unk_32_pre_pre_b.inc");

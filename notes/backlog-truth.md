@@ -1504,3 +1504,16 @@ rather than one-function-file-first.
   as final. The in-tree sha1 caught it, as it is supposed to.
   Also: my size estimates from `.byte` blob line counts were over by 6 and 8
   bytes; real sizes come from the next symbol's address.
+- **FUN_0808bd1c** (0x74) MATCHED first probe (omega_gold_sword); retires
+  omega_gold_sword_p3_p1_b.inc.
+- **FUN_080bac14 / FUN_080baca4 / FUN_080bacec** (0x48 each) MATCHED first probe,
+  three siblings in one pass. Identical bodies differing only in the init call
+  (InitScalerotMotion1 vs InitNonAffineMotion) and mode[1] (3/5/6).
+
+**Sizing rule (third time this bit me).** `rom_symbols.txt` sizes are unreliable:
+FUN_0808bd1c is listed 0x46 but is really 0x74 — the listed size stops at an
+internal label. Derive the true size from the *next symbol's address*, and sanity
+check that the disassembly's branch targets all fall inside. A related tell:
+FUN_080a449c "starts" with `ldr` and ends with a `pop` that restores r8/r9 with
+no matching `push` — it is the tail of a split function, not a function. Skip
+those rather than trying to match them.
