@@ -1,4 +1,6 @@
 #include "global.h"
+#include "motion.h"
+#include "entity/macros.h"
 #include "vfx.h"
 
 static const VFXFunc sUpdates[9];
@@ -138,6 +140,50 @@ void Ghost64_Die(struct VFX* p) {
 }
 
 INCASM("asm/vfx/unk_64_p3.inc");
+
+void FUN_080c3f1c(struct VFX* v) {
+  u8 state;
+
+  switch ((v->s).mode[2]) {
+    case 0:
+      SetMotion(&v->s, MOTION(0x80, 4));
+      (v->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&v->s);
+      state = (v->s).motion.state;
+      if (state == 3) {
+        (v->s).flags &= ~DISPLAY;
+        (v->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(v, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
+INCASM("asm/vfx/unk_64_p3_b.inc");
+
+void FUN_080c40ec(struct VFX* v) {
+  u8 state;
+
+  switch ((v->s).mode[2]) {
+    case 0:
+      SetMotion(&v->s, MOTION(0x80, 6));
+      (v->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&v->s);
+      state = (v->s).motion.state;
+      if (state == 3) {
+        (v->s).flags &= ~DISPLAY;
+        (v->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(v, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
+INCASM("asm/vfx/unk_64_p3_c.inc");
 
 void Ghost64_Init(struct VFX* p);
 

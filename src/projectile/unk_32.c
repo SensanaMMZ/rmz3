@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "entity/macros.h"
 #include "gpu_regs.h"
 #include "projectile.h"
 #include "sound.h"
@@ -11,6 +12,36 @@ static const ProjectileFunc sInitializers[9];
 static const ProjectileFunc PTR_ARRAY_0836c408[9];
 
 INCASM("asm/projectile/unk_32_p1_pre_pre.inc");
+
+void FUN_080aabd4(struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 32);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 3;
+    (p->s).work[1] = 0;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+  }
+}
+
+void FUN_080aac28(struct Entity* e) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 32);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 4;
+    (p->s).work[1] = 0;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+  }
+}
+
+INCASM("asm/projectile/unk_32_p1_pre_pre_b.inc");
 
 void Projectile32_Init(struct Projectile* p) {
   (sInitializers[(p->s).work[0]])(p);

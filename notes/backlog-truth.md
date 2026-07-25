@@ -1540,3 +1540,14 @@ really are siblings by disassembling two — the phantom_p2_p2_p2 group of four 
 0x4C was a *coincidence* of size, not a family, so check before writing. When
 they are real siblings, write all of them in one probe and lift in one build;
 the unk_32 inits (4) and these hellbat spawners (3) each cost one probe total.
+- **FUN_080aabd4 / FUN_080aac28** (0x54 each) and **FUN_080c3f1c / FUN_080c40ec**
+  (0x58 each) MATCHED — two families, four functions, two probes total.
+  The unk_32 spawners took a second probe for one reason: they return **void**,
+  not `struct Projectile*`. Tell: the epilogue is `pop {r4} / pop {r0} / bx r0`,
+  i.e. r0 is clobbered by the pop that reloads the return address, and there is
+  no `adds r0, rN, #0` before it. A pointer-returning sibling (the hellbat trio)
+  ends `adds r0,r3,#0 / pop {r4,r5} / pop {r1} / bx r1` instead. **Read the
+  epilogue to decide the return type before writing the body.**
+  unk_64: `SET_VFX_ROUTINE(v, ENTITY_DISAPPEAR)` reuses the register holding
+  `motion.state` (== 3 after the guard), so the guard needs a `u8 state` local —
+  same lever as FUN_080966fc.
