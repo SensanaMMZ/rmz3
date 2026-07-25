@@ -547,3 +547,15 @@ notes/matching-workflow.md: the original observation was right, but
 the reason is "not any compiler's output", not a flag difference.
 The r7-as-global-base and push {r7,lr} frames are asm-programmer
 idioms, consistent with this conclusion.
+
+## Permuter campaign state (2026-07-25, end of cont 17)
+
+Round 1+2 results: SeaOtterElf_Init plateaued at score 465 (best
+mutation = the semantics-safe m1 store order: strh 0x200 before
+buffer[12]=zz); CheckZeroHazard crept 1800 -> 1515 but its top
+snapshots include SEMANTICS-BROKEN mutations — behavior-check anything
+before lifting. Two 6-hour --stop-on-zero -j6 longruns launched; best
+candidates accumulate in tools/permuter-setup/<fn>/output-<score>-N/.
+Setup-recipe corrections for future targets are in the project memory
+(preprocess candidates, replace NAKED stubs, trim multi-fn incs,
+ASFLAGS -I repo, permuter_base_fix.py).
