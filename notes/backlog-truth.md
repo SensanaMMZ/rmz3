@@ -1821,3 +1821,15 @@ probe each. Two caveats learned this round:
   after the alloc — so agbcc simply chose a callee-saved register where we chose
   a scratch one. Note its two-argument sibling FUN_0807b0d0 matches exactly,
   so this only bites the single-argument spawners.
+- **babyelf_0809f9f0 / FUN_0809fa9c** (0x54, unk_13 projectile) and
+  **FUN_0807b184** (0x58, wormer_snow_ball) MATCHED first probe, three at once.
+  **Correction to the previous note**: the single-vs-multi-argument theory for
+  FUN_08093994's register-class mismatch is wrong. FUN_0807b184 takes two args and
+  keeps the entity in **r3** (`push {r4,r5,lr}`) while FUN_0807b0d0 also takes two
+  and keeps it in **r4** (`push {r4,r5,r6,lr}`). The actual difference is
+  `work[0] = 0` vs `work[0] = 1`: a zero lets agbcc reuse the already-live zero
+  register, which changes pressure and pushes the entity into a callee-saved reg.
+  So: **a `= 0` field store is not free — it changes allocation.** Write the
+  literal the ROM implies and let that fall out; do not generalise from arity.
+  Field-write ORDER also differs between the two unk_13 twins (coord before
+  work[2] in one, after in the other) and must be copied per instance.
