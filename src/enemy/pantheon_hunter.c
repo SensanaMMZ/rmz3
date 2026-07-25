@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "metatile.h"
 #include "motion.h"
 #include "vfx.h"
 
@@ -686,7 +687,36 @@ void phunter_080651c0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_hunter_p3_b_2_y.inc");
+INCASM("asm/enemy/pantheon_hunter_p3_b_2_y_p.inc");
+
+// 0x080652e8
+void phunter_080652e8(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    if (p->props[9] != 0) {
+      (p->s).d.x = 0x80;
+    } else {
+      (p->s).d.x = -0x80;
+    }
+    (p->s).d.y = -0x300;
+    (p->s).mode[2]++;
+  }
+  SetMotion(&p->s, 0x1309);
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    *(s32*)&p->props[4] = (p->s).coord.y;
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/pantheon_hunter_p3_b_2_y_q.inc");
 
 // 0x080656cc
 static void FUN_080656cc(struct Entity* p) {

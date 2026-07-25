@@ -1181,3 +1181,18 @@ paying there.
 unk_coord is used here as a per-frame decel step — a nice confirmation
 that Entity.unk_coord (0x64) is a general scratch Coord, as its header
 comment suggests. The `/ 32` is the signed-division idiom (see workflow).
+
+## phunter_080652e8 (SOLVED, 136B) — hunter dive
+
+  if (mode[2] == 0) { if (props[9]) d.x = 0x80; else d.x = -0x80;
+                      d.y = -0x300; mode[2]++; }
+  SetMotion(0x1309);            // EVERY frame, outside the guard
+  UpdateMotionGraphic; coord += d; d.y += 0x40; clamp 0x700;
+  if (FUN_080098a4(coord.x, coord.y)) {
+    coord.y = FUN_08009f6c(coord.x, coord.y);
+    *(s32*)&p->props[4] = coord.y;      // same register reused
+    mode[1] = 5; mode[2] = 0;
+  }
+struct Enemy uses `props[16]` (not buffer[]) — third time this per-type
+naming has cost a compile; the list is Enemy/Boss/Solid/VFX = props,
+Elf/Weapon = buffer.

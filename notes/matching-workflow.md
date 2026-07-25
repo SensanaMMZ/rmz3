@@ -292,3 +292,17 @@ SIGNED value. agbcc adds the (2^n - 1) bias only on the negative path so
 the shift truncates toward zero. Write `x / 32`, never `x >> 5` (that
 would drop the bias and the compare) and never a hand-rolled ternary.
 Confirmed on phunter_080651c0 (`unk_coord.x = d.x / 32`, 88/88 exact).
+
+## Ternary vs if/else for +/-CONST — count the constant materialisations
+
+Both compile to a branch, but they differ in how many times the constant
+is built:
+  TERNARY `d.x = c ? K : -K;`  -> ONE `movs #K`, then `neg` on one path
+                                  (the constant is shared)
+  IF/ELSE `if (c) d.x = K; else d.x = -K;` -> TWO `movs #K`, the false
+                                  arm following with `rsbs`
+So: count the `movs #K` in the target. Two of them means if/else, one
+means a ternary. Proven on phunter_080652e8 (two -> if/else, 136/136
+exact; the ternary form was 132B with 104 diffs).
+This composes with the earlier polarity rule: which constant is
+materialised BEFORE the compare tells you the false-branch value.
