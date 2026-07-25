@@ -1781,3 +1781,13 @@ ApplyElementEffect vein: 19 found, 14 matched, 1 parked, 4 left.
   the `bne` in ours. Assigning `slot` before the test moves it but then the
   address goes straight to r5 with no temp (back to 11 diffs). Independent-copy
   scheduling, same class as createPantheonZombie.
+- **FUN_08061c74 / FUN_08061ccc** (0x58 each, spearook) **PARKED** at 14/15 bytes
+  after 3 probes. Correct size and identical instruction multiset; the ROM hoists
+  the `flags2` load and its 0x10 mask to the top of the tail block, we emit them
+  adjacent to the OR/store. Moving `flags2 |= WHITE_PAINTABLE` earlier in the
+  source does not move them; an explicit `u8 f2 = (e->s).flags2; ... = f2 | ...`
+  helps slightly (16->14) but does not close it. RMW scheduling.
+  Settled facts: they spawn a **Boss** (gBossHeaderPtr / INIT_BOSS_ROUTINE, id 24
+  — and `strb r0,[r3,#9]` reuses the 24 from taskCol), FUN_08061c74 returns the
+  Boss while FUN_08061ccc returns void, and both write invincibleID **twice**
+  (own uniqueID, then the parent's).
