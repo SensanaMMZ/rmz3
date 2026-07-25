@@ -1833,3 +1833,15 @@ probe each. Two caveats learned this round:
   literal the ROM implies and let that fall out; do not generalise from arity.
   Field-write ORDER also differs between the two unk_13 twins (coord before
   work[2] in one, after in the other) and must be copied per instance.
+- **deathtanz_080a09a0** (0x54) MATCHED first probe — identical in shape to
+  babyelf_0809f9f0 (4 args, AllocEntityLast, work[0]=2, coord, work[2]=n,
+  unk_28=parent), only the projectile id differs (14 vs 13).
+- **FUN_08093994 still PARKED.** Field-write order is NOT the factor either
+  (tried unk_28 early / mid / late, and invincibleID from the parent: 42/53/33
+  diffs, never the right prologue). The ROM keeps the new entity in a
+  callee-saved r4 where a scratch r3 would do, and I have not found the source
+  property that forces that. Recording what it is NOT, so the next attempt does
+  not repeat: not arity, not `work[0]` value, not field order.
+
+The 4-argument spawners (parent, x, y, u8) are the reliable subset: five matched
+first-probe (phantom x3, babyelf, FUN_0809fa9c, deathtanz). Prefer those.

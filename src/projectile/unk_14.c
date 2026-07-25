@@ -38,6 +38,26 @@ void FUN_080a08e0(struct Entity* e, s32 x, s32 y, u8 a3) {
 
 INCASM("asm/projectile/unk_14_p1_p1_p3.inc");
 
+#include "entity/macros.h"
+
+void deathtanz_080a09a0(struct Entity* parent, s32 x, s32 y, u8 n) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 14);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 2;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[2] = n;
+    (p->s).unk_28 = parent;
+  }
+}
+
+INCASM("asm/projectile/unk_14_p1_p1_p3_b.inc");
+
 void Projectile14_Update(struct Projectile* p) {
   (sUpdates1[(p->s).mode[1]])(p);
   (sUpdates2[(p->s).mode[1]])(p);
