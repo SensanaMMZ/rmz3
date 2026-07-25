@@ -1227,7 +1227,10 @@ REMAINING: inside SET_XFLIP the target keeps the macro's `__xflip__ & 1`
 later `(flags >> 4) & 1`. We pass a comparison result, so agbcc proves
 it is 0/1 and elides the AND, which also stops the constant being
 shared — 4 bytes plus downstream branch shifts. Needs a value that is
-NOT provably boolean; the other SET_XFLIP matches this session
-(ActorOperator_Update, Actor13_Update) passed literals or a
-`work[1] == 0` test and did keep the AND, so compare those call sites
-before retrying.
+NOT provably boolean; CHECKED: ActorOperator_Update's ROM asm has `adds r1, r2, #0` with NO
+and-mask — identical to our output — confirming that a comparison
+argument makes agbcc drop the mask. So phunter_08065218's argument is
+NOT a comparison; it must be a value agbcc cannot range-analyse to 0/1
+(a field read, a helper return, or a masked flag). Look for a source of
+the flip direction other than `coord.x < pZero2->coord.x` when the
+minigame/hunter files are further decompiled.
