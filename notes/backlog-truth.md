@@ -1690,3 +1690,17 @@ ApplyElementEffect vein: 19 found, 7 matched, 12 left.
   fourth stub declared `void` that the epilogue contradicts. Suspect the original
   used a macro that expands to something with the flip value; revisit with the
   corpus grep (tools/decomp_crawl.py) for a matching idiom rather than guessing.
+- **hellbat_0804cbe4** (0x54) MATCHED first probe. ApplyElementEffect with first
+  argument **17**, and the interesting part is a **duplicated `*slot = NULL`**:
+  the ROM stores NULL once right after the non-null check and again in the else
+  arm of the attribute test. Written literally as
+  `*slot = NULL; if (attr == 0x30) { PlaySound(0x8a); } else { *slot = NULL; }`
+  it matches exactly — do not "clean up" the redundant store, and do not assume
+  agbcc would have hoisted it.
+  **Fourth wrong `void` declaration corrected** (beetank, mothjiro, blazin, now
+  hellbat). Every one of these element-effect helpers returns bool8 TRUE and was
+  stubbed `void`; treat that as the default expectation for the family.
+  Pool word verified with nm first: sElementCoord at 0x08363208 is immediately
+  followed by sExplosionCoords, matching hellbat.c's own declaration order.
+
+ApplyElementEffect vein: 19 found, 8 matched, 2 parked, 9 left.

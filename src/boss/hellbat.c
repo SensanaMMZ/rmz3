@@ -7,7 +7,7 @@
 static const struct Collision sCollisions[];
 static const struct Coord sExplosionCoords[2];
 
-void hellbat_0804cbe4(struct Boss* p);
+bool8 hellbat_0804cbe4(struct Boss* p);
 
 static void Hellbat_Init(struct Boss* p);
 static void Hellbat_Update(struct Boss* p);
@@ -857,6 +857,31 @@ void hellbatDamage(struct Boss* p) {
 bool8 FUN_0804caa0(struct Boss* p) { return TRUE; }
 
 INCASM("asm/boss/hellbat_p9.inc");
+
+#include "element.h"
+#include "vfx.h"
+#include "sound.h"
+
+static const struct Coord sElementCoord;
+
+bool8 hellbat_0804cbe4(struct Boss* p) {
+  struct VFX** slot = (struct VFX**)&(p->props).raw[12];
+
+  if (*slot == NULL && ((p->body).status & 1)) {
+    *slot = ApplyElementEffect(17, &p->s, &sElementCoord);
+    if (*slot != NULL) {
+      *slot = NULL;
+      if ((*(u8*)((u8*)p + 0x97) & 0xf0) == 0x30) {
+        PlaySound(0x8a);
+      } else {
+        *slot = NULL;
+      }
+    }
+  }
+  return TRUE;
+}
+
+INCASM("asm/boss/hellbat_p9_b.inc");
 
 extern const u16 u16_ARRAY_080feedc[6];
 
