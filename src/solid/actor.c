@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "gpu_regs.h"
 #include "overworld.h"
 #include "solid.h"
 #include "vfx.h"
@@ -1240,7 +1241,31 @@ void initActor23(struct Solid* p) {
   Actor_Update(p);
 }
 
-INCASM("asm/solid/actor_p1_p2.inc");
+INCASM("asm/solid/actor_p1_p2_a.inc");
+
+// 0x080d38a4
+void initActor28(struct Solid* p) {
+  gWindowRegBuffer.dispcnt |= 0x4000;
+  gWindowRegBuffer.winin[1] = 0;
+  gWindowRegBuffer.winin[2] |= 0xFE;
+  (p->s).work[2] = 0;
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  Actor_Update(p);
+}
+
+INCASM("asm/solid/actor_p1_p2_b_a.inc");
+
+// 0x080d3de4
+void initActor32(struct Solid* p) {
+  gWindowRegBuffer.dispcnt |= 0x4000;
+  gWindowRegBuffer.winin[1] = 4;
+  gWindowRegBuffer.winin[2] |= 0xFE;
+  (p->s).work[2] = 0;
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  Actor_Update(p);
+}
+
+INCASM("asm/solid/actor_p1_p2_b_b.inc");
 
 void Actor48_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {

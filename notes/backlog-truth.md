@@ -1140,3 +1140,24 @@ value, a just-masked flag), the ORIGINAL wrote the variable, not the
 literal. Writing the literal costs a `movs` every time. Reuse candidates
 to check first: the mode/selector byte, the comparison operand, and any
 value produced by the preceding test.
+
+## initActor28 / initActor32 (SOLVED, 68B each) + initActor21 (14B off)
+
+Window-register setup family in src/solid/actor.c:
+  gWindowRegBuffer.dispcnt |= 0x4000;      // 0x80<<7
+  gWindowRegBuffer.winin[1] = <0 or 4>;
+  gWindowRegBuffer.winin[2] |= 0xFE;
+  (p->s).work[2] = 0;
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  Actor_Update(p);
+initActor28 (winin[1]=0) and initActor32 (winin[1]=4) match exactly.
+STRUCT: gWindowRegBuffer is dispcnt(0), _(2), winH(4), winV(8),
+winin[4](0xC..0xF) — so [r2,#0xd] is winin[1] and [r2,#0xe] is winin[2].
+
+initActor21 is the SAME body with the two winin statements swapped
+(winin[2] |= 0xFE first, then winin[1] = 0). Our output has the identical
+instruction sequence but agbcc places the `movs r3,#1` that feeds
+SET_SOLID_ROUTINE differently: the target hoists it between the two
+winin stores, we emit it just before the `str`. 14 bytes of downstream
+encoding shift from one scheduling choice. Parked — pure scheduling,
+same class as the other residuals.
