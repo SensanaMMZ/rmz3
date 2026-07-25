@@ -1078,5 +1078,9 @@ extra copies. That pattern means the two multiply operands are DISTINCT
 pseudos in the original, so the source probably squares via two separate
 variables or a macro rather than `x * x` on one variable. Tried: shifting
 inside the expression, shifting as separate statements (both 58B).
-Next idea: `s32 ax = dx >> 8; s32 bx = ax; ... ax * bx` style, or look
-for a SQUARE/Pow2 helper macro in the headers (step 4c).
+Tried POW2 (include/definition.h:9) — it is literally `#define POW2(n)
+(n * n)`, i.e. textually identical to what we already had, and compiles
+2 bytes SMALLER (56B). So the codebase's own square macro is NOT the
+answer here; the extra copies are an allocation artefact, same class as
+the other residuals. Useful corollary: POW2(x) and x*x are
+interchangeable, so never spend a probe distinguishing them.
