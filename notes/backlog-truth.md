@@ -2222,3 +2222,15 @@ a one-byte diff in a `beq` is a control-flow error, not a scheduling artefact.**
 
 - **FUN_080bba18** (vfx 33) matched first probe; `if (unk_28->mode[0] > 1)` guards
   a disappear, else the usual mode switch, tracking `pZero2` with a -0x1000 y offset.
+
+- **FUN_080a3418** (projectile 18), **FUN_080c3e98** / **FUN_080c3f74** (vfx 64) --
+  all three first probe. Two more macro sightings for the vocabulary:
+  * `adds r0,#0x8c / str r2 / adds r0,#4 / str r2 / adds r0,#4 / strb r2` plus a
+    following `flags &= ~4` is the **EXIT_BODY** macro (body.status,
+    body.prevStatus, body.invincibleTime, then flags &= ~COLLIDABLE). The
+    walking `adds r0,#4` between stores is the macro's three consecutive fields,
+    not hand-written pointer arithmetic.
+  * The vfx_64 pair run their mode switch and THEN, outside it, an unconditional
+    `if (unk_28->mode[0] > 1)` teardown -- so the same disappear block appears
+    twice in the function. That is real duplication in the source, not a
+    tail-merge failure.

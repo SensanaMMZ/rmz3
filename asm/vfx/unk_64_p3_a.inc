@@ -1,7 +1,7 @@
 	.include "asm/macros.inc"
 
 	.syntax unified
-
+	
 	.text
 
 	thumb_func_start FUN_080c3cbc
@@ -255,74 +255,3 @@ _080C3E7E:
 _080C3E8C: .4byte gSineTable
 _080C3E90: .4byte 0x0000010F
 _080C3E94: .4byte gVFXFnTable
-
-	thumb_func_start FUN_080c3e98
-FUN_080c3e98: @ 0x080C3E98
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	ldr r5, [r4, #0x28]
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _080C3EAA
-	cmp r0, #1
-	beq _080C3EBE
-	b _080C3EEE
-_080C3EAA:
-	movs r1, #0x80
-	lsls r1, r1, #8
-	adds r0, r4, #0
-	bl SetMotion
-	movs r0, #0xe
-	strb r0, [r4, #0x12]
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_080C3EBE:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-	ldrb r0, [r4, #0x12]
-	subs r0, #1
-	strb r0, [r4, #0x12]
-	lsls r0, r0, #0x18
-	cmp r0, #0
-	bne _080C3EEE
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xfe
-	ands r0, r1
-	movs r1, #0xfd
-	ands r0, r1
-	strb r0, [r4, #0xa]
-	ldr r1, _080C3F18 @ =gVFXFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #3
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #0xc]
-	str r0, [r4, #0x14]
-_080C3EEE:
-	ldrb r0, [r5, #0xc]
-	cmp r0, #1
-	bls _080C3F12
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xfe
-	ands r0, r1
-	movs r1, #0xfd
-	ands r0, r1
-	strb r0, [r4, #0xa]
-	ldr r1, _080C3F18 @ =gVFXFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #3
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #0xc]
-	str r0, [r4, #0x14]
-_080C3F12:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C3F18: .4byte gVFXFnTable

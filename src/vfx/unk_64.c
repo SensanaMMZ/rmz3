@@ -139,7 +139,35 @@ void Ghost64_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_64_p3.inc");
+INCASM("asm/vfx/unk_64_p3_a.inc");
+
+#include "motion.h"
+
+void FUN_080c3e98(struct VFX* p) {
+  struct Entity* e = (p->s).unk_28;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x80, 0x00));
+      (p->s).work[2] = 0xe;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (--(p->s).work[2] == 0) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+
+  if (e->mode[0] > 1) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
 
 void FUN_080c3f1c(struct VFX* v) {
   u8 state;
@@ -161,7 +189,33 @@ void FUN_080c3f1c(struct VFX* v) {
   }
 }
 
-INCASM("asm/vfx/unk_64_p3_b.inc");
+void FUN_080c3f74(struct VFX* p) {
+  struct Entity* e = (p->s).unk_28;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x80, 0x0a));
+      (p->s).work[2] = 0xe;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (--(p->s).work[2] == 0) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+
+  if (e->mode[0] > 1) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
+
+INCASM("asm/vfx/unk_64_p3_b_b.inc");
 
 void FUN_080c40ec(struct VFX* v) {
   u8 state;
