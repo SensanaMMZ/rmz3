@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 #include "overworld_terrain.h"
@@ -22,7 +23,7 @@ INCASM("asm/enemy/puffy_p1_p2_a.inc");
 
 extern const EnemyFunc PTR_ARRAY_08367aec[4];
 extern const EnemyFunc PTR_ARRAY_08367afc[4];
-void FUN_0807cb50(struct Enemy* p);
+bool32 FUN_0807cb50(struct Enemy* p);
 void Puffy_Die(struct Enemy* p);
 
 void Puffy_Update(struct Enemy* p) {
@@ -68,6 +69,27 @@ void nop_0807cacc(struct Enemy* p) {}
 bool8 nop_0807cad0(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/puffy_p5_p1.inc");
+
+static const struct Coord sElementCoord;
+
+bool32 FUN_0807cb50(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)((u8*)p + 0xBC);
+  struct VFX* e = *slot;
+  if (e == NULL && ((p->body).status & BODY_STATUS_WHITE)) {
+    struct VFX* n = ApplyElementEffect(0, &p->s, &sElementCoord);
+    *slot = n;
+    if (n != NULL) {
+      u8 b = *((u8*)p + 0x97) & 0xF0;
+      if (b == 0x10) {
+        // e is provably NULL here; stored through it to keep the register
+        (p->s).mode[1] = 1, (p->s).mode[2] = (u32)e;
+      } else if (b == 0x30) {
+        (p->s).mode[1] = 3, (p->s).mode[2] = (u32)e;
+      }
+    }
+  }
+  return TRUE;
+}
 
 void FUN_0807cba4(struct Body* body) {
   struct Enemy* parent = (struct Enemy*)body->parent;
