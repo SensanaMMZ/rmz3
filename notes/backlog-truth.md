@@ -1915,3 +1915,26 @@ function actually needs — anything after the final pool must be preserved.**
   This function has the double `invincibleID` write (own uniqueID, then the
   parent's) that I already flagged as a divergence trigger elsewhere -- that
   correlation now holds on a third function.
+
+**The cyberelf CreateXxxElf family.** CreateBirdElf (12), CreateNurseEElf (4),
+CreateSeaotterElf (9), elf_080e4bf4 (10) are all the same shape as the already-
+decompiled CreateNurseBElf: `(struct Zero* z, u8 breed, u8 availability,
+u8 satelite_slot)`, a local `struct CyberElfXxx` with `struct Zero* player` at
+0xB4, and `work[3] = satelite_slot == 0 ? SATELITE_1 : SATELITE_2`. The SATELITE
+macros in zero.h expand `z` by name, so the parameter MUST be called `z`.
+elf_080e4bf4 differs in one instruction: it writes `unk_coord.x = satelite_slot`
+(`str r5,[r3,#0x64]`) where the others write `work[2]` (`strb r5,[r3,#0x12]`).
+
+- **FUN_0808f27c** (seimeran, enemy 57): writes `unk_coord.x` and `coord.x` from
+  the same argument, then `coord.y`, `work[2]`, `unk_28`. seimeran.c is now 100% C.
+- **summonPurpleNerple**: `coord.y = (&gStageRun.vm.camera)->viewport.y - PIXEL(112)`.
+  Writing it as `gStageRun.vm.camera.viewport.y` costs 8 bytes -- agbcc pools
+  `gStageRun` and materialises 292 with `mov #0x92 / lsl #1`. Taking the address
+  of the *camera* pools `gStageRun+232` and reaches the member with `[r0,#0x3c]`.
+  Same idiom already in volcano_bomb.c:67 and omega_zero_rock.c:33.
+- **createFlameRain1 / createFlameRain2** (cubit projectile 22): the third
+  parameter is **s32, not u8** -- the ROM prologue has a plain `adds r5,r2,#0`
+  with no `lsl #24 / lsr #24`, even though the value is later stored with `strb`.
+  A zero-extending prologue in the ROM proves a u8 parameter; its ABSENCE proves
+  a wider one. Both functions shuttle the entity through `ip`, which agbcc
+  reproduces on its own here -- `ip` is not automatically a hard residual.

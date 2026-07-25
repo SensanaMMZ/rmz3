@@ -5,7 +5,33 @@
 
 // コロップ、ソロップ(つまり、画面上を飛行するエルフ？)
 
-INCASM("asm/cyberelf/nurse_e_p1.inc");
+#include "zero.h"
+
+struct CyberElfNurseE {
+  OBJECT_HDR;
+  // props (16bytes, offset: 0xB4..)
+  struct Zero* player;  // 0xB4
+  u8 unk_b8[12];        // 0xB8
+};
+
+struct Elf* CreateNurseEElf(struct Zero* z, u8 breed, u8 availability, u8 satelite_slot) {
+  struct CyberElfNurseE* p = (struct CyberElfNurseE*)AllocEntityFirst(gElfHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 16;
+    INIT_ELF_ROUTINE(p, 4);
+    (p->s).tileNum = 0, (p->s).palID = 0;
+    p->player = z;
+    (p->s).work[0] = breed, (p->s).work[1] = availability, (p->s).work[2] = satelite_slot;
+    if (satelite_slot == 0) {
+      (p->s).work[3] = SATELITE_1;
+    } else {
+      (p->s).work[3] = SATELITE_2;
+    }
+  }
+  return (struct Elf*)p;
+}
+
+INCASM("asm/cyberelf/nurse_e_p1_b.inc");
 
 void NurseE_Die(struct Elf* p) {
   FUN_080bfce8(&(p->s).coord, 0);

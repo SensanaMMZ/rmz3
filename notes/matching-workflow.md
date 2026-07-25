@@ -375,3 +375,13 @@ already existed (`purple_nerple_p1_a_b.inc`, `unk_32_p1_pre_pre_b.inc`) because
 earlier splits had already claimed those names. `git status` caught it -- they
 showed as ` M` instead of `??`. carve_inc.py now probes for a free suffix.
 **After any inc split, read `git status` and confirm every new half is `??`.**
+
+## Verify that a patch actually patched
+I "hardened" carve_inc.py with a python `s.replace(old, new)` where `old` was
+written in a NON-raw triple-quoted string containing `\n\t\.align` -- Python
+turned those into a real newline and tab, so the text never matched, replace()
+returned the input unchanged, and my script still printed its success message.
+The very next carve silently dropped an orphan `.byte 0x70, 0x47` block.
+**A replace/patch step must assert the substring was found, and a success
+message must be printed only on the verified path.** For anything non-trivial,
+rewrite the file with Write instead of patching it with replace().

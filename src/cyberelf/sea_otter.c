@@ -50,7 +50,33 @@ NON_MATCH void MenuExit_SeaOtterElf(struct Elf* e) {
 #endif
 }
 
-INCASM("asm/cyberelf/sea_otter_p1.inc");
+#include "zero.h"
+
+struct CyberElfSeaOtter {
+  OBJECT_HDR;
+  // props (16bytes, offset: 0xB4..)
+  struct Zero* player;  // 0xB4
+  u8 unk_b8[12];        // 0xB8
+};
+
+struct Elf* CreateSeaotterElf(struct Zero* z, u8 breed, u8 availability, u8 satelite_slot) {
+  struct CyberElfSeaOtter* p = (struct CyberElfSeaOtter*)AllocEntityFirst(gElfHeaderPtr);
+  if (p != NULL) {
+    (p->s).taskCol = 16;
+    INIT_ELF_ROUTINE(p, 9);
+    (p->s).tileNum = 0, (p->s).palID = 0;
+    p->player = z;
+    (p->s).work[0] = breed, (p->s).work[1] = availability, (p->s).work[2] = satelite_slot;
+    if (satelite_slot == 0) {
+      (p->s).work[3] = SATELITE_1;
+    } else {
+      (p->s).work[3] = SATELITE_2;
+    }
+  }
+  return (struct Elf*)p;
+}
+
+INCASM("asm/cyberelf/sea_otter_p1_b.inc");
 
 void SeaOtterElf_Die(struct Elf* p) {
   struct Entity* parent = (p->s).unk_2c;

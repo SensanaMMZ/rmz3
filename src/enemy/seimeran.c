@@ -27,7 +27,25 @@ extern const EnemyFunc sUpdates1[8];
 extern const EnemyFunc sUpdates2[8];
 extern const struct Coord sElementCoord;
 
-INCASM("asm/enemy/seimeran_p1.inc");
+struct Enemy* FUN_0808f27c(struct Entity* e, s32 x, s32 y, u8 n) {
+  struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, 57);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 1;
+    (p->s).unk_coord.x = x;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).work[2] = n;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
 
 #include "entity/macros.h"
 
