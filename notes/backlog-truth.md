@@ -898,3 +898,27 @@ BEFORE the `if (l->phase == 0)` guard, so the load and its `lsls #16`
 hoist above the compare (the `lsrs #0x14` stays inside). Declaring n
 inside the if would sink both. That hoist/sink split is a cheap, reliable
 tell for where a local is declared relative to a guard.
+
+## FUN_080ddec0 (ciel minigame obj update, 52B) — 8 bytes, accumulator order
+
+Body is certain:
+  e = (p->s).unk_28;            // loaded BEFORE the call, kept in r4
+  UpdateMotionGraphic(&p->s);
+  if (*(u16*)((u8*)e + 0xDF0 + (p->s).work[1] * 2) == 0xFF)
+      flags |= DISPLAY; else flags &= ~DISPLAY;
+Tail (the two arms computing into one register with a shared strb) is
+byte-identical already.
+REMAINING: the address computation accumulates into the BASE register in
+the target (`movs r1,#0xdf; lsls r1,#4; adds r4,r4,r1; adds r4,r4,r0;
+ldrh r0,[r4]`) but into the INDEX register for us (`adds r0,r0,r4; ...;
+adds r0,r0,r1; ldrh r0,[r0]`). Tried: inline cast expression, an inner
+`((u16*)((u8*)e+0xDF0))[i]` cast, a `u16* t` assigned before the call
+(52B but the base then hoists above the call, 40 diffs), and `u16* t`
+assigned after the call (50B, 13 diffs — worse). agbcc reassociates all
+of them the same way.
+NOTE the caller (asm/minigame/ciel.inc) is still asm, so unk_28's real
+type is unknown and 0xDF0 stays a raw offset for now; naming it may
+change the codegen and is worth retrying once the minigame file lands.
+TOOLING NOTE: when hand-diffing objdump output, filter BOTH files
+identically — dropping lines containing `<` removes bl/branch lines from
+one side only and makes instruction counts meaningless.
