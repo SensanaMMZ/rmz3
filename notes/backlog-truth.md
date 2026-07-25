@@ -1161,3 +1161,13 @@ SET_SOLID_ROUTINE differently: the target hoists it between the two
 winin stores, we emit it just before the `str`. 14 bytes of downstream
 encoding shift from one scheduling choice. Parked — pure scheduling,
 same class as the other residuals.
+
+## phunterRaiseArm (SOLVED, 68B, first try) — twin of FUN_08064e38
+
+Identical template to FUN_08064e38, three constants changed: motion
+0x1301 (vs 0x1300), only d.x is zeroed (not d.y), and the timeout sets
+mode[1] = 8 (a literal here, where 08064e38 copied mode[3]). The `u8 m =
+mode[2]` known-zero reuse carries over unchanged.
+Pantheon-hunter now has two of its mode handlers in C; the file's
+remaining asm follows the same skeleton, so the template should keep
+paying there.

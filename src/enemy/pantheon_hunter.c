@@ -647,7 +647,26 @@ void FUN_08064e38(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_hunter_p3_b.inc");
+INCASM("asm/enemy/pantheon_hunter_p3_b_1.inc");
+
+// 0x08065018
+void phunterRaiseArm(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  if (m == 0) {
+    SetMotion(&p->s, 0x1301);
+    (p->s).work[2] = 0x1E;
+    (p->s).d.x = m;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[2]--;
+  if ((p->s).work[2] == 0xFF) {
+    (p->s).mode[1] = 8;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/pantheon_hunter_p3_b_2.inc");
 
 // 0x080656cc
 static void FUN_080656cc(struct Entity* p) {
