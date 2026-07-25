@@ -1260,3 +1260,24 @@ DECL NOTE: PushoutToLeft2/Right2 live in include/definition.h while
 PushoutToUp2/Down2 live in include/physics.h — the four siblings are
 split across two headers, which is easy to trip over (cost one build
 here). Both headers are needed when a function uses all four.
+
+## shellcrawler (2026-07-25)
+
+- **FUN_08095d80** (0x48) MATCHED. Two `FUN_08009f6c` probes at `x ± PIXEL(10)`,
+  each `<= 0x43F` from `coord.y`, OR-ing a bool8. Key: the call result must be a
+  *named local* (`t = FUN_...(); if (t - y <= ...)`), which forces the
+  `adds r2, r0, #0` copy at both sites. Inlining the call into the comparison
+  drops the copy and loses 4 bytes.
+- **FUN_08095dc8** (0x60) MATCHED first probe. `PushoutToUp1` right / `FUN_08009f6c`
+  left, `if (a < b) {...} else {...}` with *duplicated* bodies
+  (`if (v < 0 && v > -0x400) { coord.y += v; r = TRUE; }`). Cross-jumping merges
+  only the `str`/`movs #1` tail — writing it as a min() would not.
+- **FUN_08095e28** (0x9C) MATCHED in 3 probes. Two lessons:
+  1. The pushout-result temp and the probe-y temp are the **same variable** in the
+     original. Separate variables let agbcc keep the first in a caller-saved reg
+     (r2); one variable spans the `PushoutToLeft1` call and must be callee-saved,
+     which is what puts `p` in r5 and the temp in r4 as in the ROM.
+  2. `dir * PIXEL(20) - PIXEL(10)` is literal source, not a compiled ternary —
+     agbcc emits `lsl #2; add; lsl #10` for the `* 0x1400`.
+  3. Final `if (attr) return 0; return 2;` compiles with the arms swapped versus
+     the ROM; `if (attr == 0) return 2; return 0;` puts them in ROM order.

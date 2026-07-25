@@ -4,6 +4,7 @@
 #include "story.h"
 #include "motion.h"
 #include "physics.h"
+#include "metatile.h"
 
 // 左右 0xA00 の位置に足場があるか (どちらか一方でもあれば TRUE)
 bool8 FUN_08095d80(struct Enemy* p) {
@@ -39,6 +40,46 @@ bool8 FUN_08095dc8(struct Enemy* p) {
     }
   }
   return r;
+}
+
+// 進行方向の壁を調べる (1: 壁で押し戻された, 0: 曲がり角, 2: 直進可)
+u32 FUN_08095e28(struct Enemy* p) {
+  s32 v;
+  s32 dir;
+  s32 dx;
+  s32 push;
+
+  v = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  if (v - (p->s).coord.y <= 0x43F) {
+    (p->s).coord.y = v;
+  }
+
+  dir = 0;
+  if ((p->s).d.x > 0) {
+    dir = 1;
+  }
+  dx = dir * PIXEL(20) - PIXEL(10);
+  v = (p->s).coord.y - PIXEL(8);
+
+  if (dir != 0) {
+    push = PushoutToLeft1((p->s).coord.x + dx, v);
+    if (push < 0) {
+      (p->s).coord.x += push;
+      return 1;
+    }
+  } else {
+    push = PushoutToRight1((p->s).coord.x + dx, v);
+    if (push > 0) {
+      (p->s).coord.x += push;
+      return 1;
+    }
+  }
+
+  v += PIXEL(16);
+  if (FUN_080098a4((p->s).coord.x + dx, v) == 0) {
+    return 2;
+  }
+  return 0;
 }
 
 INCASM("asm/enemy/shellcrawler_pre_p1_p1_a.inc");
