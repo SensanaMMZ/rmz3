@@ -590,3 +590,23 @@ and every spelling of base+offset we tried (+=, single expr, named base,
 the rotation is not reachable by source shape under -O2 -fshort-enums,
 same class as e58bc/elf/hazard. decomp.me candidate (cite the corpus
 evidence in the About text).
+
+## MobNPC init cluster FUN_080da21c/320/5e8/6f0 (SOLVED, 4 x 120B)
+
+Four byte-identical NPC initializers, one C body each, ROM sha1 exact.
+Shape: flags |= COLLIDABLE; InitBody(b, sCollisions, &coord, 1);
+b->parent = p; b->fn = NULL; three separate `sMotions[work[0]]` stores
+to motion/m_c0/m_c2 (each re-loads work[0] — write them as three
+statements, not one temp); unk_05 = 1; unk_04 = 0; unk_08 = 0;
+mode[1] = 0; tail call MobNPC_Update.
+TWO levers, both about WHERE the body pointer is created:
+ 1. `struct Body* b` must be a kept pointer used for the InitBody arg AND
+    both field stores — otherwise the two stores recompute p+0xA0 and the
+    function grows 4 bytes (124 vs 120);
+ 2. b must be ASSIGNED AFTER the flags |= line, not initialised at its
+    declaration — an initialiser hoists `adds r4,#0x74` above the flags
+    RMW and shifts 16 bytes of the head.
+struct MobObject refined: unk_00[8] split into unk_00[4]/unk_04/unk_05/
+unk_06[2], and unk_0c[4] into m_c0/m_c2 (two more motion_t).
+asm/solid/mob_npc_pre_p1.inc split into _1.._5 to interleave the four C
+bodies in ROM order.
