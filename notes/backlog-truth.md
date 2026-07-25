@@ -752,3 +752,28 @@ its "improvement" is not a step toward the match.
 NET: the 3-way register rotation survives a valid permuter run too. Same
 disposition as FUN_080d7e5c. Do not re-run either without a new idea
 about the SURROUNDING code — the tie is not inside these functions.
+
+## unused_080e9d94 (hex formatter, 108B) — reconstructed to 90B, in progress
+
+Right-aligned hex-string formatter into a 16-byte stack buffer, then
+PrintUnicodeString. FOUR params, not the three the current NAKED
+declaration in src/bg0/text.c claims — fix the decl when landing it:
+    void unused_080e9d94(u32 v, u16 x, u16 y, u16 len)
+Harness: build/scratch/hexs/t3.c (90/108, 62 diffs; t.c was 88/73).
+CONFIRMED from the asm:
+  * `v` is UNSIGNED — the target shifts with `lsrs r4,r4,#4`; an s32
+    parameter gives `asrs` and is wrong;
+  * the digit char needs its own u8 temp (`u8 ch = d + 0x30;`) so the
+    `> 0x39` test emits the `ands r5` (0xFF) truncation, and the second
+    store must recompute `d + 0x37` (writing `buf[i] = ch + 7` folds to
+    `adds r0,#7` and loses 4 bytes);
+  * x goes to ip and y to r7/r6 — both are u16 params zero-extended.
+STILL WRONG (18 bytes): the target keeps the loop counter SHIFTED across
+iterations — it holds `i << 16` in r0, does `asrs r2,r0,#0x10` to use it,
+and closes with `subs r0,r2,#1; lsls r0,r0,#0x10; bge`. It also derives
+the loop start as `(len<<16) + 0xFFFF0000` from the SAME `len<<16` it
+used for `buf[len] = 0`. Ours sign-extends len once (`asr r3,r3,#0x10`)
+and then works with the unshifted counter. Next idea: make the buffer
+index expression itself force the sign-extension per use (e.g. keep a
+`s16 i` but index with `buf[i]` where the array is addressed through a
+pointer that GCC cannot fold), or try `for (i = len; --i >= 0;)`.
