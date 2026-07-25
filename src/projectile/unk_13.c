@@ -42,7 +42,22 @@ void FUN_0809f8fc(s32 x, s32 y, u8 angle) {
   }
 }
 
-INCASM("asm/projectile/unk_13_p1_post.inc");
+void FUN_0809f970(s32 x, s32 y, u8 n) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 13);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).work[2] = n;
+    (p->s).unk_coord.x = x;
+    (p->s).unk_coord.y = y;
+    (p->s).coord.x = x - 0x400 + (RANDOM(RNG_0202f388) & 0x7FF);
+    (p->s).coord.y = y;
+  }
+}
 
 #include "entity/macros.h"
 

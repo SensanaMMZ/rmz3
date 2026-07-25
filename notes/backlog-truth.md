@@ -1983,3 +1983,25 @@ diagnostic, not a mismatch.
 - FUN_08071470 (carry_arm, enemy 17, 5 args) links the new entity into a list:
   `if (e->unk_2c != NULL) { unk_2c = NULL; props[4] = 1; }
    else { unk_2c = e; props[4] = 0; e->unk_2c = p; }`
+
+- **FUN_080949d4 / FUN_08094a54** (enemy 63) also **corrected a data type**. The
+  table at 0x08369F44 was declared `static const struct Coord16 [4]`; it is
+  actually `static const s16 [4][2]`. Nothing else in the tree referenced it, so
+  the struct form was only ever a guess. The two forms differ by 4 bytes:
+
+      arr[n].x / arr[n].y   -> one base `tbl + n*4`, reused with ldrsh offsets 0 and 2
+      arr[n][0] / arr[n][1] -> `lsls n,#2` CSEd, but base recomputed: `adds r1,#2`
+                               then `adds r2,r2,r1`   <-- what the ROM does
+
+  So `adds <base>, #2` followed by re-adding the scaled index means a 2D array,
+  NOT a struct member. FUN_08094a54 additionally halves both with the signed
+  power-of-two divide.
+- **FUN_0809f970** (projectile 13): `coord.x = x - 0x400 + (RANDOM(RNG_0202f388) & 0x7FF)`.
+  Operand order is load-bearing and all three groupings are 128B, so only the
+  byte compare distinguishes them:
+      x + (rnd & 0x7FF) - 0x400     -> add x first, then the constant  (5 diffs)
+      x + ((rnd & 0x7FF) - 0x400)   -> needs an extra callee-saved reg (50 diffs)
+      (rnd & 0x7FF) - 0x400 + x     -> right shape, x still added last (3 diffs)
+      x - 0x400 + (rnd & 0x7FF)     -> MATCH
+  `(v << 4) >> 0x15` after the LCG is `(RANDOM(rng) & 0x7FF)` -- a mask built
+  from a shift pair, not an `ands`.

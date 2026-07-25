@@ -6,11 +6,50 @@ static const EnemyFunc sUpdates1[4];
 static const EnemyFunc sUpdates2[4];
 static const struct Collision sCollisions[3];
 static const u8 sInitModes[6];
+static const s16 s16_ARRAY_ARRAY_08369f44[4][2];
 static const s8 s8_ARRAY_ARRAY_08369f5a[4][2];
 
 void Enemy63_Update(struct Enemy* p);
 
-INCASM("asm/enemy/unk_63_p1.inc");
+#include "entity/macros.h"
+
+void FUN_080949d4(s32 x, s32 y, u8 n) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, 63);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 4;
+    (p->s).work[1] = n;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).d.x = s16_ARRAY_ARRAY_08369f44[n][0];
+    (p->s).d.y = s16_ARRAY_ARRAY_08369f44[n][1];
+    (p->s).unk_coord.x = 0x180;
+  }
+}
+
+void FUN_08094a54(s32 x, s32 y, u8 n) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, 63);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 5;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).d.x = s16_ARRAY_ARRAY_08369f44[n][0] / 2;
+    (p->s).d.y = s16_ARRAY_ARRAY_08369f44[n][1] / 2;
+  }
+}
 
 void nop_08094ad8(struct Enemy* p) {}
 
@@ -122,7 +161,7 @@ static const struct Collision sCollisions[3] = {
     },
 };
 
-static const struct Coord16 Coord16_ARRAY_08369f44[4] = {
+static const s16 s16_ARRAY_ARRAY_08369f44[4][2] = {
     {-0x0180, 0x0000},
     {0x0180, 0x0000},
     {0x0000, -0x0180},
