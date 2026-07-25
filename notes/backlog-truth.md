@@ -1289,3 +1289,11 @@ here). Both headers are needed when a function uses all four.
   Side effect: the call site proves **FUN_08095e28 returns u8**, not u32 — the
   caller truncates with `lsls #24`. Changing the declaration did not disturb
   FUN_08095e28's own codegen (ROM sha1 still exact).
+- **FUN_08096570** (0x9C) MATCHED in 2 probes; retires `shellcrawler_post_pre.inc`
+  entirely. Lever: `mode[1] = work[0] ? 6 : 0` is NOT a ternary — the ROM reuses
+  the register already holding `work[0]` for the zero case. Source is a local:
+  `m = work[0]; if (m != 0) { m = 6; } mode[1] = m;`. A ternary or if/else
+  materialises a fresh `movs rN, #0` (+2 bytes, +2 more from pool realignment).
+  Note this is the *same* known-value-reuse family as FUN_080964c0's
+  `movs r0,#0x60 / subs r0,#0xa0`: when the ROM omits a constant you expect,
+  look for a register that already provably holds it.

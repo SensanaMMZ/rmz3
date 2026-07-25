@@ -169,7 +169,48 @@ void FUN_080964c0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shellcrawler_post_pre.inc");
+// 落下 (着地したら mode[1] を戻す)
+void FUN_08096570(struct Enemy* p) {
+  u8 m;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.y = 0;
+      if ((p->s).work[0] == 0) {
+        if ((p->s).d.x < 0) {
+          SetMotion(&p->s, MOTION(0xdb, 0));
+        } else {
+          SetMotion(&p->s, MOTION(0xdb, 2));
+        }
+      } else {
+        if ((p->s).d.x < 0) {
+          SetMotion(&p->s, MOTION(0xdb, 0x0f));
+        } else {
+          SetMotion(&p->s, MOTION(0xdb, 5));
+        }
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      FUN_08095e28(p);
+      if (FUN_08095dc8(p)) {
+        m = (p->s).work[0];
+        if (m != 0) {
+          m = 6;
+        }
+        (p->s).mode[1] = m;
+        (p->s).mode[2] = 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void FUN_0809660c(struct Enemy* p) {
   switch ((p->s).mode[2]) {
