@@ -1768,3 +1768,16 @@ ApplyElementEffect vein: 19 found, 12 matched, 2 parked, 5 left.
   Resolve every pool word with nm BEFORE writing the C, not after.
 
 ApplyElementEffect vein: 19 found, 14 matched, 1 parked, 4 left.
+- **FUN_080742ec** (0x74, snakecord) **PARKED** at 6 bytes after 4 probes.
+  Correct size and every instruction present. Two levers found and kept:
+  * the coord must be selected by **duplicated calls** in both arms, not by a
+    `const struct Coord* c` temp — the temp costs a callee-saved register
+    (push {r4,r5,r6,lr} instead of {r4,r5,lr}) and 12 bytes;
+  * testing the slot with the **raw expression** while assigning `slot` inside
+    the block keeps the address in a temp, which is what lets agbcc derive the
+    status address as `subs r0,#0x28` from the props address instead of
+    recomputing `adds r0,#0x8c`. That alone took 11 diffs -> 6.
+  Residual: the `adds r5,r0,#0` copy sits before the `cmp` in the ROM and after
+  the `bne` in ours. Assigning `slot` before the test moves it but then the
+  address goes straight to r5 with no temp (back to 11 diffs). Independent-copy
+  scheduling, same class as createPantheonZombie.
