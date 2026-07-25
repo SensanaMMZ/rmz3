@@ -167,3 +167,17 @@ change, grep its callers first; the sha1 gate is the only reliable
 catch. Related: probe TUs never verify declaration-type effects on
 callers, and reloc masking never verifies data-index addends — both
 are ROM-build-only checks (cattatank, mellnet 2026-07-24).
+
+Second addendum (byte-evidence table growth, 2026-07-24):
+- an unexplained register copy WEDGED INSIDE a condition evaluation
+  (between `ands` and `cmp`) = the source computes the condition into a
+  named temp, assigns an unrelated variable, then tests the temp
+  (`t = x & 1; ptr = other; if (t)`) — proven on FUN_080b963c;
+- `movs rX,#1; orrs rX,rY` with the 1 landing DIRECTLY in the result
+  register = compound two-statement form (`v = 1; v |= y;`); both
+  `v = y | 1` and `v = 1 | y` route the constant through a scratch reg
+  first — proven on FUN_080b9cf8;
+- an asymmetric (u8) truncation between two if/else arms assigning the
+  same variable is NOT a contradiction: GCC 2.9 combine is per-basic-
+  block, so the arm that only copies a cross-block value keeps its
+  truncation while the arm that computes a fresh OR loses it.

@@ -307,7 +307,23 @@ arrays. Harness: build/scratch/batch4/t2.c (byte-identical mod that one
 word, index [8] = +0xE0). To finish: reconstruct the file's true data
 split (what symbol starts at 0x0836A550) and re-land both lifts.
 
-## FUN_080b9cf8 / FUN_080b9db0 — slash-death VFX pair (in progress)
+## FUN_080b9cf8 / FUN_080b9db0 — slash-death VFX pair (SOLVED)
+
+Both matched, ROM sha1 exact. Winning shape (t5): per call a scoped block
+computing `u8 f = flags & X_FLIP; u32 hi = f ? 0x10 : 0;` (agbcc emits
+the ternary branchless: rsbs/asrs #31/ands #0x10, and keeps f's (u8)
+truncation because f has 2+ uses), then a branchy if:
+`if (f) { arg = 1; arg |= hi; } else { arg = hi; }` — the TRUE arm MUST
+be the compound two-statement form; `arg = hi | 1` and `arg = 1 | hi`
+both materialize the 1 into a separate pseudo (movs r0,#1; mov r3,r0).
+The false arm keeps its truncation because GCC 2.9 combine is per-BB and
+the hi producer sits in the entry block. The second block assigns the
+smoke-coord pointer BETWEEN hi and the if (interleave lever, same as
+b963c). The identical CreateSmoke(2,...) if/else arms are real — agbcc
+does not crossjump call-containing arms. Data = sSlashedEnemies[2]/[3],
+de-static'd in gyro_cannon.c (symbol visibility only; ROM unchanged).
+
+(original notes below)
 
 184 B each; draft in build/ghidra-drafts/FUN_080b9cf8.c is UNRELIABLE
 (Ghidra deduped the CreateSmoke arms and hid a VRAM pool word

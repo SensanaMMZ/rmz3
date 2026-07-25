@@ -1,5 +1,6 @@
 #include "entity.h"
 #include "global.h"
+#include "sound.h"
 #include "story.h"
 #include "vfx.h"
 
@@ -66,6 +67,8 @@ static void Ghost27_Update(struct VFX* p) {
 
 void FUN_080b9cf8(struct VFX* p);
 void FUN_080b9db0(struct VFX* p);
+
+extern const struct SlashedEnemy sSlashedEnemies[4];
 
 static void Ghost27_Die(struct VFX* p) {
   static const VFXFunc sDeinitializers[] = {
@@ -136,4 +139,87 @@ void FUN_080b9ca4(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_27_p2_p2.inc");
+
+// 0x080b9cf8
+void FUN_080b9cf8(struct VFX* p) {
+  struct Coord* sc;
+  {
+    struct Coord* c = &(p->s).coord;
+    const struct SlashedEnemy* d = &sSlashedEnemies[2];
+    u8 f = (p->s).flags & X_FLIP;
+    u32 hi = f ? 0x10 : 0;
+    u8 arg;
+    if (f) {
+      arg = 1;
+      arg |= hi;
+    } else {
+      arg = hi;
+    }
+    CreateSlashedEnemy(c, d, 0, arg);
+  }
+  {
+    struct Coord* c = &(p->s).coord;
+    const struct SlashedEnemy* d = &sSlashedEnemies[3];
+    u8 f = (p->s).flags & X_FLIP;
+    u32 hi = f ? 0x10 : 0;
+    u8 arg;
+    sc = c;
+    if (f) {
+      arg = 1;
+      arg |= hi;
+    } else {
+      arg = hi;
+    }
+    CreateSlashedEnemy(c, d, 0, arg);
+  }
+  CreateSmoke(1, sc);
+  if ((p->s).flags & X_FLIP) {
+    CreateSmoke(2, sc);
+  } else {
+    CreateSmoke(2, sc);
+  }
+  PlaySound(0x2A);
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+// 0x080b9db0
+void FUN_080b9db0(struct VFX* p) {
+  struct Coord* sc;
+  {
+    struct Coord* c = &(p->s).coord;
+    const struct SlashedEnemy* d = &sSlashedEnemies[2];
+    u8 f = (p->s).flags & X_FLIP;
+    u32 hi = f ? 0x10 : 0;
+    u8 arg;
+    if (f) {
+      arg = 1;
+      arg |= hi;
+    } else {
+      arg = hi;
+    }
+    CreateSlashedEnemy(c, d, 0, arg);
+  }
+  {
+    struct Coord* c = &(p->s).coord;
+    const struct SlashedEnemy* d = &sSlashedEnemies[3];
+    u8 f = (p->s).flags & X_FLIP;
+    u32 hi = f ? 0x10 : 0;
+    u8 arg;
+    sc = c;
+    if (f) {
+      arg = 1;
+      arg |= hi;
+    } else {
+      arg = hi;
+    }
+    CreateSlashedEnemy(c, d, 0, arg);
+  }
+  CreateSmoke(1, sc);
+  if ((p->s).flags & X_FLIP) {
+    CreateSmoke(2, sc);
+  } else {
+    CreateSmoke(2, sc);
+  }
+  PlaySound(0x2A);
+  SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
