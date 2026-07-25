@@ -352,3 +352,19 @@ if ((((p->s).flags & X_FLIP) && v == 0) || (((p->s).flags & X_FLIP) == 0 && v !=
 
 agbcc CSEs the repeated `flags & X_FLIP` and jump-threads the second test away,
 so the duplicated-looking source compiles to a single flag test.
+
+### Lifting a function from the MIDDLE of an .inc requires splitting the .inc
+
+If the target is not the first `thumb_func_start` in its `.inc`, you cannot just
+delete its block and put the C above the existing `INCASM(...)` — the C function
+is emitted where the `INCASM` was, so every asm function that *preceded* the
+target inside that `.inc` shifts to a later address. The isolated byte probe
+still reports MATCH (it only compares the one function), but the ROM sha1 breaks
+and the diff starts at the *first* function of that `.inc`, not at the target.
+
+Correct procedure: split the `.inc` in two at the target — `<name>_a.inc` for the
+functions before it, `<name>_b.inc` for those after (both keep the original
+header lines) — then emit `INCASM(a); <C function>; INCASM(b);`.
+
+This is exactly why only the in-tree ROM sha1 build is authoritative. Cost when
+skipped: one broken build, caught immediately by `make`.

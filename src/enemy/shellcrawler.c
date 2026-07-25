@@ -228,7 +228,42 @@ void FUN_0809660c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shellcrawler_post_post.inc");
+INCASM("asm/enemy/shellcrawler_post_post_a.inc");
+
+// のけぞり (ゼロと反対向きに一定時間押し出される)
+void FUN_08096950(struct Enemy* p) {
+  s32 v;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xdb, 8));
+      (p->s).unk_coord.x = (p->s).d.x;
+      (p->s).d.x = 0x100;
+      v = 0x100;
+      if (*(s32*)&p->props[0] > 0) {
+        v = -0x100;
+      }
+      (p->s).d.x = v;
+      (p->s).work[3] = 2;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      FUN_08095e28(p);
+      if ((p->s).work[2] > 1) {
+        (p->s).work[2]--;
+      }
+      if (--(p->s).work[3] == 0) {
+        (p->s).d.x = (p->s).unk_coord.x;
+        (p->s).mode[1] = 6;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/shellcrawler_post_post_b.inc");
 
 void Shellcrawler_Init(struct Enemy* p);
 void Shellcrawler_Update(struct Enemy* p);

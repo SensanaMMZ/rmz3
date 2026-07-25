@@ -1297,3 +1297,8 @@ here). Both headers are needed when a function uses all four.
   Note this is the *same* known-value-reuse family as FUN_080964c0's
   `movs r0,#0x60 / subs r0,#0xa0`: when the ROM omits a constant you expect,
   look for a register that already provably holds it.
+- **FUN_08096950** (0x80) MATCHED first probe — the documented levers transferred
+  directly: store-then-select-then-store for `d.x` (as FUN_080964c0 case 0),
+  `if (--work[3] == 0)`, and `*(s32*)&p->props[0]` compiling to
+  `adds r0,r4,#0 / adds r0,#0xb4 / ldr r0,[r0]` (offset > 124 defeats ldr imm5).
+  Required splitting shellcrawler_post_post.inc into _a/_b (see matching-workflow.md).
