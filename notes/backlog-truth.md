@@ -1875,3 +1875,20 @@ Two things let it through:
 Fix: split the orphan tail into its own inc and INCASM it after the C.
 **Before lifting the LAST function of an inc, diff the inc against what the
 function actually needs — anything after the final pool must be preserved.**
+
+- **FUN_08075b74** (purple_nerple, enemy 22, `unk_28` + `props[5]`),
+  **FUN_0807b124** (wormer_snow_ball, enemy 29, coord+d from 4 args),
+  **blizzack_080aaae0** (projectile 32, work[0]=1/work[1]=n) -- all matched first probe.
+- **FUN_080aa7a8** (projectile 31) needed one iteration and gives a **new lever**:
+  an early-return guard is NOT the same shape as a positive if-block.
+
+      if (p == NULL) { return NULL; }        -> beq to the return, body falls through
+      body; return p;                           (92B, pool after the body's `b`)
+
+      if (p != NULL) { body; return p; }     -> bne to the body, return-NULL falls
+      return NULL;                              through (96B, matches ROM)
+
+  Same instructions, both orders; only the layout differs, and the mid-function
+  pool + its `.align 2, 0` padding makes the ROM form 4 bytes LONGER. So for a
+  spawn helper that RETURNS the entity, write the positive if-block with a
+  trailing `return NULL;` -- never the guard clause.

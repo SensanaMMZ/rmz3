@@ -5,7 +5,27 @@
 
 static const struct Collision sCollisions[];
 
-INCASM("asm/enemy/purple_nerple_p1_a.inc");
+INCASM("asm/enemy/purple_nerple_p1_a_a.inc");
+
+#include "entity/macros.h"
+
+void FUN_08075b74(struct Entity* e, u8 n) {
+  struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, 22);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 1;
+    (p->s).unk_28 = e;
+    p->props[5] = n;
+  }
+}
+
+INCASM("asm/enemy/purple_nerple_p1_a_c.inc");
 
 #include "element.h"
 #include "vfx.h"

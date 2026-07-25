@@ -25,7 +25,23 @@ void FUN_0807b0d0(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/enemy/wormer_snow_ball_p1_b.inc");
+void FUN_0807b124(s32 x, s32 y, s32 dx, s32 dy) {
+  struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, 29);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 2;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).d.x = dx;
+    (p->s).d.y = dy;
+  }
+}
 
 void FUN_0807b184(s32 x, s32 y) {
   struct Enemy* e = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);

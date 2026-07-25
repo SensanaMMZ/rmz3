@@ -23,7 +23,7 @@ def main():
     reloc = set()
     if len(sys.argv) > 5 and sys.argv[5]:
         reloc = {int(x, 0) for x in sys.argv[5].split(',')}
-    base, size = int(addr, 16), int(size, 16)
+    base, size = int(addr, 16) & 0xFFFFFF, int(size, 16)
     ours = subprocess.run([sys.executable, 'tools/fnbytes.py', obj, sym],
                           capture_output=True, text=True).stdout.strip()
     rom = open('baseimg.gba', 'rb').read()

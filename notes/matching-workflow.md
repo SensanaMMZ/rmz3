@@ -368,3 +368,10 @@ header lines) — then emit `INCASM(a); <C function>; INCASM(b);`.
 
 This is exactly why only the in-tree ROM sha1 build is authoritative. Cost when
 skipped: one broken build, caught immediately by `make`.
+
+## carve_inc.py: never let a split clobber an existing .inc
+Splitting `foo.inc` into `foo_a`/`foo_b` silently overwrote two files that
+already existed (`purple_nerple_p1_a_b.inc`, `unk_32_p1_pre_pre_b.inc`) because
+earlier splits had already claimed those names. `git status` caught it -- they
+showed as ` M` instead of `??`. carve_inc.py now probes for a free suffix.
+**After any inc split, read `git status` and confirm every new half is `??`.**

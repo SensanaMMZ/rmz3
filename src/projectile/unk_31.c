@@ -18,7 +18,26 @@ const ProjectileRoutine gProjectile31Routine = {
 
 // --------------------------------------------
 
-INCASM("asm/projectile/unk_31.inc");
+#include "entity/macros.h"
+
+struct Projectile* FUN_080aa7a8(struct Entity* e, u8 a, u8 b) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 31);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = a;
+    (p->s).work[1] = b;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+    return p;
+  }
+  return NULL;
+}
+
+INCASM("asm/projectile/unk_31_b.inc");
 
 static void Projectile31_Die(struct Projectile* p) {
   EXIT_BODY(p);

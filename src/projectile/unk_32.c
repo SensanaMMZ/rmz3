@@ -11,7 +11,24 @@ static const ProjectileFunc sUpdates[9];
 static const ProjectileFunc sInitializers[9];
 static const ProjectileFunc PTR_ARRAY_0836c408[9];
 
-INCASM("asm/projectile/unk_32_p1_pre_pre.inc");
+INCASM("asm/projectile/unk_32_p1_pre_pre_a.inc");
+
+void blizzack_080aaae0(struct Entity* e, u8 n) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 32);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).work[1] = n;
+    (p->s).unk_28 = e;
+    (p->s).coord = e->coord;
+  }
+}
+
+INCASM("asm/projectile/unk_32_p1_pre_pre_c.inc");
 
 void FUN_080aabd4(struct Entity* e) {
   struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
