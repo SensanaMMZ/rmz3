@@ -3,6 +3,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "mission.h"
+#include "physics.h"
 #include "stagerun.h"
 
 struct Enemy* FUN_08098838(struct Coord* c, u8 mode) {
@@ -118,7 +119,38 @@ INCASM("asm/enemy/cattatank_p8.inc");
 
 bool8 nop_08099ce0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/cattatank_p9.inc");
+static const struct Collision sCollisions[18];
+
+// 0x08099ce4
+void FUN_08099ce4(struct Enemy* p) {
+  s32 r;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[6]);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if ((r = PushoutToUp1((p->s).coord.x - PIXEL(10), (p->s).coord.y)) != 0 ||
+          (r = PushoutToUp1((p->s).coord.x + PIXEL(10), (p->s).coord.y)) != 0) {
+        (p->s).coord.y += r;
+        (p->s).d.y = 0;
+      }
+      break;
+  }
+  if (isKilled(*(struct Entity**)&p->props[8])) {
+    p->props[12] = 0;
+    *(struct Entity**)&p->props[8] = NULL;
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
 
 bool8 nop_08099d7c(struct Enemy* p) { return TRUE; }
 
@@ -126,6 +158,37 @@ bool8 nop_08099d7c(struct Enemy* p) { return TRUE; }
 void nop_08099d80(struct Enemy* p) {}
 
 bool8 nop_08099d84(struct Enemy* p) { return TRUE; }
+
+// 0x08099d88
+void FUN_08099d88(struct Enemy* p) {
+  s32 r;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[6]);
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if ((r = PushoutToUp1((p->s).coord.x - PIXEL(10), (p->s).coord.y)) != 0 ||
+          (r = PushoutToUp1((p->s).coord.x + PIXEL(10), (p->s).coord.y)) != 0) {
+        (p->s).coord.y += r;
+        (p->s).d.y = 0;
+      }
+      break;
+  }
+  if (isKilled(*(struct Entity**)&p->props[8])) {
+    p->props[12] = 0;
+    *(struct Entity**)&p->props[8] = NULL;
+    (p->s).mode[1] = 1;
+    (p->s).mode[2] = 0;
+  }
+}
 
 INCASM("asm/enemy/cattatank_p11.inc");
 

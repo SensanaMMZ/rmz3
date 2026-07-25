@@ -296,7 +296,16 @@ Body-pointer block for the stores (much worse), explicit p-copy local
 decomp.me candidate; solving it retires 3 functions (108 B each).
 Test harness: build/scratch/e58bc/v3.c (best variant).
 
-## FUN_08099ce4 / FUN_08099d88 (cattatank) — matched shape, blocked on data layout
+## FUN_08099ce4 / FUN_08099d88 (cattatank) — SOLVED (the blocker was arithmetic)
+
+2026-07-25: both matched, ROM sha1 exact, NO data split needed. The
+"non-integral sCollisions+0xB0" conclusion was wrong twice over: struct
+Collision in this file is 24 bytes (not 28), and the current-build map
+places cattatank .rodata at 0x0836a45c with sCollisions at +0x64
+(routine 0x14 + sUpdates1 0x28 + sUpdates2 0x28), so the pool word
+0x0836a550 is sCollisions + 0x90 = &sCollisions[6] exactly. Lesson
+re-proven: NEVER hand-derive collision indexes — read the map
+(build/rmz3/rmz3.map) and subtract. (original notes below)
 
 The gravity-fall bodies match byte-for-byte in probe (switch with
 fallthrough, PushoutToUp1 pair at +/-PIXEL(10), the isKilled tail) EXCEPT
