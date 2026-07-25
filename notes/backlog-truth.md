@@ -1234,3 +1234,19 @@ NOT a comparison; it must be a value agbcc cannot range-analyse to 0/1
 (a field read, a helper return, or a masked flag). Look for a source of
 the flip direction other than `coord.x < pZero2->coord.x` when the
 minigame/hunter files are further decompiled.
+
+## FUN_08073ea8 (SOLVED, 72B, first try) — snakecord horizontal step
+
+  u32 FUN_08073ea8(struct Entity* p, s32 dx) {
+    if (dx == 0) return 0;
+    p->coord.x += dx;
+    if (dx < 0) { push = PushoutToRight2(coord.x, coord.y);
+                  if (push > 0) { coord.x += push; return 2; } }
+    else        { push = PushoutToLeft2 (coord.x, coord.y);
+                  if (push < 0) { coord.x += push; return 1; } }
+    return 0;
+  }
+Direction mapping is the counter-intuitive part and comes straight from
+the branch: dx < 0 (moving LEFT) probes PushoutToRight2 and returns 2;
+dx >= 0 probes PushoutToLeft2 and returns 1. The push sign tests differ
+per arm (> 0 vs < 0) — do not "tidy" them into != 0.

@@ -3,6 +3,29 @@
 #include "global.h"
 #include "story.h"
 
+
+// 0x08073ea8
+u32 FUN_08073ea8(struct Entity* p, s32 dx) {
+  if (dx == 0) {
+    return 0;
+  }
+  p->coord.x += dx;
+  if (dx < 0) {
+    s32 push = PushoutToRight2(p->coord.x, p->coord.y);
+    if (push > 0) {
+      p->coord.x += push;
+      return 2;
+    }
+  } else {
+    s32 push = PushoutToLeft2(p->coord.x, p->coord.y);
+    if (push < 0) {
+      p->coord.x += push;
+      return 1;
+    }
+  }
+  return 0;
+}
+
 INCASM("asm/enemy/snakecord_p1_p1_a_p1.inc");
 
 void FUN_080740e4(struct Enemy* p);
