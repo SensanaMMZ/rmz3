@@ -295,3 +295,14 @@ Body-pointer block for the stores (much worse), explicit p-copy local
 (macro conflicts). Root cause tag: regalloc-tie / pseudo-priority.
 decomp.me candidate; solving it retires 3 functions (108 B each).
 Test harness: build/scratch/e58bc/v3.c (best variant).
+
+## FUN_08099ce4 / FUN_08099d88 (cattatank) — matched shape, blocked on data layout
+
+The gravity-fall bodies match byte-for-byte in probe (switch with
+fallthrough, PushoutToUp1 pair at +/-PIXEL(10), the isKilled tail) EXCEPT
+the SetDDP pool word: the ROM points at sCollisions+0xB0, which is not an
+integral index of our merged sCollisions[18] (28-byte entries). The
+original file evidently declared its collision data as differently-split
+arrays. Harness: build/scratch/batch4/t2.c (byte-identical mod that one
+word, index [8] = +0xE0). To finish: reconstruct the file's true data
+split (what symbol starts at 0x0836A550) and re-land both lifts.
