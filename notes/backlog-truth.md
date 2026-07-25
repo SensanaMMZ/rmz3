@@ -1436,3 +1436,18 @@ matches differed only in which side of a comparison was the fallthrough. agbcc
 puts the *then* block in the fallthrough position, so read the ROM's branch and
 write the condition whose false-arm it jumps to. Cheap to test, so check it
 before hypothesising anything structural.
+- **BurstShot_Init** (0xC8) MATCHED first probe; burst_shot.c now 100% C.
+  `unk_28` (Zero*) and `unk_2c` load at the very top and live across every call,
+  which is what forces sl/sb. FUN_0803b73c needed the 3-arg BodyFunc signature.
+- **OmegaGoldProjectile_Init** (0xC0) **PARKED** after 6 probes, 37 diffs, correct
+  size. Residual is a pure two-pseudo register tie: ROM has p=r6 and the
+  zero-carrier=r5; we get p=r5, carrier=r6. Everything else is byte-identical.
+  Two reachable states, neither complete:
+    * no zero variable -> registers correct, but the shared tail materialises a
+      fresh `movs r0,#0` for mode[2]/mode[3] (+4 bytes, 20 diffs from 0x74);
+    * `u8 v = (p->s).work[0]` threaded through body->fn/taskCol/mode[1..3] ->
+      exact size and the tail uses the carrier, but p and v swap registers.
+  Ruled out: v as u8/u16/u32/s32 (identical), split declaration, an `e = &p->s`
+  local to cut p's refcount, chained `mode[3] = mode[2] = 0`, and assigning v
+  inside each branch. This is the regalloc-tie class documented earlier — the
+  one that survives hand levers. Revisit with the permuter, not by hand.
