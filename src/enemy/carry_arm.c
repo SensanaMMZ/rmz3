@@ -4,7 +4,27 @@
 
 const EnemyFunc PTR_ARRAY_08366b78[2];
 
-INCASM("asm/enemy/carry_arm_p1.inc");
+INCASM("asm/enemy/carry_arm_p1_a.inc");
+
+#include "entity/macros.h"
+
+struct Enemy* FUN_08071508(struct Entity* e, s32 x, s32 y) {
+  struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, 17);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 1;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    *(struct Entity**)&p->props[0] = e;
+  }
+  return p;
+}
 
 void nop_08071568(struct Enemy* p) {}
 

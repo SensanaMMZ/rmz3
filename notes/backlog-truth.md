@@ -1892,3 +1892,26 @@ function actually needs — anything after the final pool must be preserved.**
   pool + its `.align 2, 0` padding makes the ROM form 4 bytes LONGER. So for a
   spawn helper that RETURNS the entity, write the positive if-block with a
   trailing `return NULL;` -- never the guard clause.
+
+- **FUN_08071508** (carry_arm, enemy 17, `props[0]` holds a 32-bit `struct Entity*`),
+  **FUN_08099f54** (minigame leviathan, enemy 68, writes coord.x/y, unk_coord.y, d.x),
+  **FUN_080a60c8** (cubit projectile 22, `coord = *c` from a Coord*, work[1]/work[2]),
+  **FUN_080aaa80** (projectile 32) -- all matched first probe.
+  FUN_08071508 / FUN_080a60c8 return the entity on BOTH paths (`adds r0,r3,#0`
+  sits *after* the join label), so they are `if (p != NULL) { ... } return p;`
+  -- distinct from FUN_080aa7a8's `return p;` inside the block + `return NULL;`.
+
+- **createGlacierleSucker** (0x080822E4) PARKED. Right length (100B), right
+  instruction multiset, right STORE order -- but the ROM keeps `flags2` (r2) and
+  the constant 0x10 (r1) live across three unrelated stores and does the
+  `orrs`/`strb` late:
+
+      ldrb r2,[r3,#0xb] / movs r1,#0x10 / <inv, work0, unk_2c stores> / orrs r1,r2 / strb r1,[r3,#0xb]
+
+  Store order alone is settled: it follows source order exactly, and the ROM's
+  is inv1, work0, unk_2c, flags2, inv2, props8. Tried flags2-first, flags2-in-
+  place, a read-early/write-late temp (`fl = flags2; ... flags2 = fl | 0x10;`),
+  and props8-before-inv2: 16/16/14/26 diffs, never 0. Register allocation only.
+  This function has the double `invincibleID` write (own uniqueID, then the
+  parent's) that I already flagged as a divergence trigger elsewhere -- that
+  correlation now holds on a third function.

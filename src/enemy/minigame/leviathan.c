@@ -4,7 +4,27 @@
 
 static const EnemyFunc sDeads[4];
 
-INCASM("asm/enemy/minigame_leviathan_p1.inc");
+#include "entity/macros.h"
+
+void FUN_08099f54(s32 x, s32 y, s32 a, s32 b) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, 68);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 6;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).unk_coord.y = a;
+    (p->s).d.x = b;
+  }
+}
+
+INCASM("asm/enemy/minigame_leviathan_p1_b.inc");
 
 void nop_0809a0b4(struct Enemy* p) {}
 

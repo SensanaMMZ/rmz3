@@ -80,7 +80,26 @@ struct Projectile* cubit_080a6078(struct Entity* e) {
   return p;
 }
 
-INCASM("asm/projectile/cubit_pre_pre_p3.inc");
+#include "entity/macros.h"
+
+struct Projectile* FUN_080a60c8(struct Entity* e, struct Coord* c, u8 a, u8 b) {
+  struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 22);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 6;
+    (p->s).coord = *c;
+    p->work[1] = b;
+    p->work[2] = a;
+    (p->s).unk_28 = e;
+  }
+  return p;
+}
+
+INCASM("asm/projectile/cubit_pre_pre_p3_b.inc");
 
 void CubitProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]][(p->s).mode[1]])(p);
