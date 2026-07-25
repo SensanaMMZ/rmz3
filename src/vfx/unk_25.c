@@ -135,7 +135,7 @@ static void VFX25_Init(struct VFX25* p) {
 // --------------------------------------------
 
 static void FUN_080b9494(struct Entity* p);
-void FUN_080b94dc(struct VFX* vfx);
+void FUN_080b94dc(struct Entity* p);
 void FUN_080b9530(struct VFX* vfx);
 void FUN_080b963c(struct VFX* vfx);
 void FUN_080b970c(struct VFX* vfx);
@@ -183,6 +183,22 @@ static void FUN_080b9494(struct Entity* p) {
     case 1: {
       UpdateMotionGraphic(p);
       break;
+    }
+  }
+}
+
+void FUN_080b94dc(struct Entity* p) {
+  if (--p->work[2] == 0) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  } else {
+    switch (p->mode[2]) {
+      case 0:
+        SetMotion(p, 0xA09);
+        p->mode[2]++;
+        FALLTHROUGH;
+      case 1:
+        UpdateMotionGraphic(p);
+        break;
     }
   }
 }

@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 #include "story.h"
@@ -43,7 +44,27 @@ bool8 FUN_0807d724(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/mellnet_pre_p2_a.inc");
+INCASM("asm/enemy/mellnet_pre_p2_a_a.inc");
+
+static const struct Coord sElementCoord;
+
+void FUN_0807d810(struct Enemy* p) {
+  if (*(struct VFX**)&p->props[0] == NULL && ((p->body).status & BODY_STATUS_WHITE)) {
+    if (((p->body).status & BODY_STATUS_RECOILED)) {
+      (p->s).mode[1] = 6;
+      (p->s).mode[2] = 0;
+    } else {
+      struct VFX* e = ApplyElementEffect(0, &p->s, &sElementCoord);
+      *(struct VFX**)&p->props[0] = e;
+      if (e != NULL) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/mellnet_pre_p2_a_b.inc");
 
 extern const EnemyFunc sUpdates1[7];
 extern const EnemyFunc sUpdates2[7];

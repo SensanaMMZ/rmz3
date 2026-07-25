@@ -1,5 +1,6 @@
 #include "camera.h"
 #include "collision.h"
+#include "element.h"
 #include "enemy.h"
 #include "global.h"
 #include "stagerun.h"
@@ -53,7 +54,27 @@ void FUN_0806e590(struct Entity* e, u8 kind1, u8 kind2, u8 kind3) {
 // 0x0806e600
 static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) { return; }
 
-INCASM("asm/enemy/lemmingles_p1_a.inc");
+INCASM("asm/enemy/lemmingles_p1_a_a.inc");
+
+static const struct Coord sElementCoord;
+
+void FUN_0806e704(struct Enemy* p) {
+  if (*(struct VFX**)&p->props[0] == NULL && ((p->body).status & BODY_STATUS_WHITE)) {
+    if (((p->body).status & BODY_STATUS_RECOILED)) {
+      (p->s).mode[1] = 6;
+      (p->s).mode[2] = 0;
+    } else {
+      struct VFX* e = ApplyElementEffect(0, &p->s, &sElementCoord);
+      *(struct VFX**)&p->props[0] = e;
+      if (e != NULL) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/lemmingles_p1_a_b.inc");
 
 static const EnemyFunc sUpdates1[7];
 static const EnemyFunc sUpdates2[7];

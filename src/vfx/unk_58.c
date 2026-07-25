@@ -113,6 +113,22 @@ void FUN_080c2124(struct VFX* vfx) {
   }
 }
 
+void FUN_080c216c(struct Entity* p) {
+  if (--p->work[2] == 0) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  } else {
+    switch (p->mode[2]) {
+      case 0:
+        SetMotion(p, 0xA09);
+        p->mode[2]++;
+        FALLTHROUGH;
+      case 1:
+        UpdateMotionGraphic(p);
+        break;
+    }
+  }
+}
+
 INCASM("asm/vfx/unk_58_post_p1.inc");
 
 void FUN_080c2364(struct VFX* p) {
@@ -140,7 +156,7 @@ const VFXRoutine gVFX58Routine = {
 // --------------------------------------------
 
 void FUN_080c2124(struct VFX* vfx);
-void FUN_080c216c(struct VFX* vfx);
+void FUN_080c216c(struct Entity* p);
 void FUN_080c21c0(struct VFX* vfx);
 void FUN_080c2294(struct VFX* vfx);
 void FUN_080c2364(struct VFX* vfx);
@@ -152,7 +168,7 @@ void FUN_080c25f4(struct VFX* vfx);
 // clang-format off
 static const VFXFunc sUpdates[9] = {
     FUN_080c2124,
-    FUN_080c216c,
+    (VFXFunc)FUN_080c216c,
     FUN_080c21c0,
     FUN_080c2294,
     FUN_080c2364,
