@@ -1,5 +1,9 @@
 #include "entity.h"
 #include "global.h"
+#include "constants/song.h"
+#include "sound.h"
+#include "motion.h"
+#include "definition.h"
 #include "story.h"
 #include "vfx.h"
 
@@ -111,7 +115,41 @@ static void Ghost28_Die(struct VFX* p) {
 
 static void nop_080ba078(void* _ UNUSED) { return; }
 
-INCASM("asm/vfx/unk_28.inc");
+void FUN_080ba07c(struct VFX* v) {
+  struct Coord c;
+  u32 n;
+
+  if (--(v->s).work[2] == 0) {
+    CreateSmoke(2, &(v->s).coord);
+    RNG_0202f388 = LCG(RNG_0202f388);
+    n = (RNG_0202f388 >> 16) & 3;
+    c.x = (v->s).coord.x;
+    c.y = (v->s).coord.y;
+    FUN_080b9ebc(&c, (v->s).work[0], 0x190C, n);
+    FUN_080b9ebc(&c, (v->s).work[0], 0x190D, n);
+    FUN_080b9ebc(&c, (v->s).work[0], 0x190E, n);
+    PlaySound(SE_ZAKO_EXPLODE);
+    SET_VFX_ROUTINE(v, ENTITY_DIE);
+  } else {
+    switch ((v->s).mode[2]) {
+      case 0:
+        (v->s).work[2] = 0x1e;
+        (v->s).d.y = -0x200;
+        SetMotion(&v->s, MOTION(0x19, 0x0b));
+        (v->s).mode[2]++;
+        // fallthrough
+      case 1:
+        (v->s).d.y += 0x20;
+        if ((v->s).d.y > 0x700) {
+          (v->s).d.y = 0x700;
+        }
+        (v->s).coord.y += (v->s).d.y;
+        (v->s).coord.x += (v->s).d.x;
+        UpdateMotionGraphic(&v->s);
+        break;
+    }
+  }
+}
 
 static const s32* const PTR_ARRAY_0836ebac[3];
 
