@@ -839,7 +839,22 @@ STRUCT OFFSETS PINNED (useful for the whole family): bgIdx is the u32 at
 drawPivotOffset 0x2C, viewportCenterPixel 0x34, prevViewportCenterPixel
 0x3C, scrollPower 0x44, scroll 0x4C, scrollCopy 0x54.
 
-REMAINING (8 bytes): the target pools `gVideoRegBuffer+12` (i.e. &bgofs)
+SOLVED — the answer was an existing macro. include/gpu_regs.h already
+defines BGnHOFS(n)/BGnVOFS(n) as
+  *(u16*)((u8*)gVideoRegBuffer.bgofs + ((n) << 2)      )
+  *(u16*)((u8*)gVideoRegBuffer.bgofs + ((n) << 2) + 2  )
+which is EXACTLY the byte arithmetic the target shows, and pools
+&bgofs (= gVideoRegBuffer+0xC) instead of the struct base. Using them:
+  BGnHOFS(n >> 4) = (l->viewportCenterPixel.x * 3) >> 2;
+  BGnVOFS(n >> 4) = (l->viewportCenterPixel.y * 3) >> 2;
+matches 48/48 (last word is the +0xC relocation addend).
+LESSON: before inventing pointer-anchor spellings, GREP THE HEADERS for
+an existing accessor macro — the codebase usually already has the exact
+idiom, and hand-rolled equivalents miss the pool form. Cost here: two
+failed spellings (52B with the plain member expression, 40B with a
+hand-rolled anchor) before checking gpu_regs.h.
+
+(superseded) the target pools `gVideoRegBuffer+12` (i.e. &bgofs)
 and then derives BOTH stores from it — index*4 in one register, and the
 second address by `adds r4,#2; adds r2,r2,r4`. Writing the plain member
 expression pools gVideoRegBuffer+0 and adds 0xC (52B, too big);

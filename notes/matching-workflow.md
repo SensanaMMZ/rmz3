@@ -273,3 +273,13 @@ by exactly one duplicated block, stop. Do not spend another cycle on
 spellings — record it, and treat the function as a permuter/decomp.me
 candidate or leave it as asm. Recognising this class early is worth more
 than any individual match.
+
+## 4c. Grep the headers for an accessor macro BEFORE inventing a spelling
+
+Added 2026-07-25 after FUN_08013bdc. When a pool word points at
+`global + N` rather than `global + 0`, the source almost certainly went
+through an existing accessor macro that bakes N into the address
+expression. rmz3 has a lot of these (BGnHOFS/BGnVOFS, BGCNT16,
+RESET_BGOFS, SCREEN_BASE_16, SEA, W_TERRAIN_V2, HAZARD, ...). Hand-rolled
+pointer anchors get the arithmetic right but usually miss the exact pool
+form and cost several failed probes. `grep -n <field> include/*.h` first.
