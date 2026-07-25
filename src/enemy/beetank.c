@@ -1,12 +1,14 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "vfx.h"
+#include "element.h"
 
 void Beetank_Init(struct Enemy* p);
 void Beetank_Update(struct Enemy* p);
 void Beetank_Die(struct Enemy* p);
 
-void FUN_0807be50(struct Enemy* p);
+bool8 FUN_0807be50(struct Enemy* p);
 static const EnemyFunc sUpdates1[5];
 static const EnemyFunc sUpdates2[5];
 
@@ -118,7 +120,26 @@ void FUN_0807be20(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/beetank_p6_p1_p2.inc");
+static const struct Coord sElementCoord;
+
+bool8 FUN_0807be50(struct Enemy* p) {
+  struct VFX** slot = (struct VFX**)((u8*)p + 0xbc);
+  if (*slot == NULL && ((p->body).status & 1)) {
+    struct VFX* e = ApplyElementEffect(0, &p->s, &sElementCoord);
+    *slot = e;
+    if (e != NULL) {
+      u8 attr = *(u8*)((u8*)p + 0x97) & 0xf0;
+      if (attr == 0x10) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      } else if (attr == 0x30) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+  return TRUE;
+}
 
 void nop_0807bea4(struct Enemy* p) {}
 

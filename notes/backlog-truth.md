@@ -1574,3 +1574,12 @@ Resolving `bl` targets via rom_symbols.txt address lookup is reliable and fast â
 both of this pair's unknown calls (0x08024F3C -> TryDropZakoDisk,
 0x080BEA80 -> CreateIceballParticle4) came straight from it. Do that before
 guessing at a helper's identity from context.
+- **FUN_0807be50** (0x54) MATCHED first probe; retires beetank_p6_p1_p2.inc.
+  Byte-for-byte the claveker.c `FUN_0808f1e0` idiom (element-effect slot at
+  props[8], attr = `*(u8*)((u8*)p + 0x97) & 0xf0`, 0x10 -> mode[1]=2,
+  0x30 -> mode[1]=4).
+  **The tree's forward declaration was wrong**: beetank.c declared
+  `void FUN_0807be50(struct Enemy* p);` but the ROM ends `movs r0,#1 / pop ...`,
+  i.e. it returns a value. Matched as `bool8` returning TRUE (same as its
+  claveker twin) and corrected the declaration. The ROM is the authority on
+  signatures, not the existing stub declaration â€” cf. the porter-comments rule.
