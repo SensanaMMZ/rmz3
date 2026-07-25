@@ -407,3 +407,12 @@ held THREE functions and I had lifted one, so the link failed on two missing
 symbols. Deleting an .inc outright is only correct when it contains exactly ONE
 thumb_func_start; otherwise carve it. Confirm the count in a SEPARATE tool call
 before the delete.
+
+## Check the file's OWN struct before casting into props[]
+flopper.c already defined `struct FlopperObject { OBJECT_HDR; struct Coord c;
+u32 unk_08; ... }`. I wrote `*(s32*)&p->props[8]` instead and lost a byte to
+signedness. Before reaching for a props[] cast, grep the target .c for an
+existing struct covering 0xB4.. -- several files have one.
+When switching a function's parameter to that struct type, the file's forward
+declarations and its EnemyFunc/ProjectileFunc tables need updating too
+(`(EnemyFunc)FUN_x` in the table), or the build fails on conflicting types.

@@ -2173,3 +2173,12 @@ constants as well.
 - **FUN_080dd894** (solid/cat) also shows `mode[1]++` reusing the `ldrb r3` from
   the enclosing `mode[1] != 0` test (`adds r0,r3,#1`) -- write `++`, not `= 1`,
   even though the value is provably 1 on that path.
+
+- **FUN_0806bfdc / FUN_0806c04c** (flopper, one per axis). A wobble driven by
+  `SIN(angle) * 45` -- agbcc builds *45 as `v*3` then `(v*3 << 4) - v*3`.
+  These came down to ONE byte: `asrs r0,r0,#8` vs the ROM's `lsrs r0,r0,#8`.
+  **An arithmetic vs logical shift right is a signedness assertion about the
+  field.** The angle accumulator had to be the `u32 unk_08` from the file's own
+  `struct FlopperObject`, not the `s32` I inferred from a props[] cast; the
+  struct was already in the file and I should have used it first.
+  The field also holds the phase modulo 0x10000: `unk_08 = (unk_08 + 0x200) & 0xFFFF`.

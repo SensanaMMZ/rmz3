@@ -78,7 +78,42 @@ INCASM("asm/enemy/flopper_p1.inc");
 
 void Flopper_onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {}
 
-INCASM("asm/enemy/flopper_p2.inc");
+#include "motion.h"
+#include "trig.h"
+
+void FUN_0806bfdc(struct FlopperObject* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      p->unk_08 = 0;
+      SetMotion(&p->s, MOTION(0x16, 0x00));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.y = (p->c).y;
+      (p->s).coord.y += SIN(p->unk_08 >> 8) * 45;
+      p->unk_08 = (p->unk_08 + 0x200) & 0xFFFF;
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+void FUN_0806c04c(struct FlopperObject* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      p->unk_08 = 0;
+      SetMotion(&p->s, MOTION(0x16, 0x00));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x = (p->c).x;
+      (p->s).coord.x += SIN(p->unk_08 >> 8) * 45;
+      p->unk_08 = (p->unk_08 + 0x200) & 0xFFFF;
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/flopper_p2_b_b.inc");
 
 static const struct Collision sCollisions[2] = {
     {
@@ -101,14 +136,14 @@ static const struct Collision sCollisions[2] = {
     },
 };
 
-void FUN_0806bfdc(struct Enemy* p);
-void FUN_0806c04c(struct Enemy* p);
+void FUN_0806bfdc(struct FlopperObject* p);
+void FUN_0806c04c(struct FlopperObject* p);
 void FUN_0806c0bc(struct Enemy* p);
 void FUN_0806c150(struct Enemy* p);
 
 static const EnemyFunc sUpdates[4] = {
-    FUN_0806bfdc,
-    FUN_0806c04c,
+    (EnemyFunc)FUN_0806bfdc,
+    (EnemyFunc)FUN_0806c04c,
     FUN_0806c0bc,
     FUN_0806c150,
 };
