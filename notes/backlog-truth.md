@@ -1405,3 +1405,15 @@ here). Both headers are needed when a function uses all four.
   Also: `BodyFunc` is `void (*)(struct Body*, struct Coord*, struct Coord*)`, so
   FUN_08096348 had to take three params. The two extra unused args do not change
   its codegen (ROM sha1 unchanged).
+- **Shellcrawler_Update** (0x284) MATCHED in 4 probes. **src/enemy/shellcrawler.c
+  is now fully decompiled — zero INCASM.** Three levers:
+  1. The element-effect slot is NOT a cached local. The ROM re-loads
+     `*(struct VFX**)((u8*)p + 0xb8)` at every test; a `struct VFX** slot` local
+     caches the *value* and also loses the `adds r5,r0,#0` address copy.
+     Use the raw expression at each use site and let agbcc CSE the address.
+  2. `mode[1] = 0` in the death-cause chain must be written
+     `(p->s).mode[1] = (p->body).status & 0x20000;` — the ROM reuses the AND
+     result (provably 0 on that path) rather than materialising `movs r0,#0`.
+  3. Control flow needs `goto`. Two sites jump out of nested ifs into a shared
+     tail; no structured rewrite reproduces it. `goto` is precedented in this
+     tree (anubis.c, cubit.c, text_window.c, hanumachine.c).

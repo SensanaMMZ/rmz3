@@ -15,10 +15,17 @@
 #include "mission.h"
 #include "zero.h"
 #include "syssav.h"
+#include "element.h"
+#include "stagerun.h"
+#include "entity.h"
 #include "gba/syscall.h"
 
 void FUN_08096348(struct Body* body, struct Coord* c1, struct Coord* c2);
 void Shellcrawler_Update(struct Enemy* p);
+void Shellcrawler_Die(struct Enemy* p);
+extern const struct Coord Coord_080ff05c;
+static const EnemyFunc sUpdates1[11];
+static const EnemyFunc sUpdates2[11];
 void FUN_080b145c(struct Coord* c, s32 dx);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 void FUN_080c68cc(struct Entity* e, struct Coord* c);
@@ -141,7 +148,130 @@ void Shellcrawler_Init(struct Enemy* p) {
   Shellcrawler_Update(p);
 }
 
-INCASM("asm/enemy/shellcrawler_pre_p1_p1_a.inc");
+// メイン更新 (被弾/画面外/凍結/落下 を処理してから状態ハンドラを呼ぶ)
+void Shellcrawler_Update(struct Enemy* p) {
+  struct Coord c = Coord_080ff05c;
+  u32 st;
+  u8 n;
+  u8 m;
+  s32 t;
+
+  st = (p->body).status & 0x200;
+  if (st != 0) {
+    if ((p->s).work[0] == 4) {
+      goto handlers;
+    }
+    m = (p->s).mode[1];
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if (((p->body).status & 0x18000) == 0x10000) {
+      (p->s).mode[1] = 1;
+    } else if ((p->body).status & 0x20000) {
+      (p->s).mode[1] = 3;
+    } else {
+      (p->s).mode[1] = (p->body).status & 0x20000;
+    }
+    (p->s).mode[3] = m;
+    Shellcrawler_Die(p);
+    return;
+  }
+  if ((p->s).work[0] == 4) {
+    goto handlers;
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x8000) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    (p->body).status = st;
+    (p->body).prevStatus = st;
+    (p->body).invincibleTime = st;
+    (p->s).flags &= ~COLLIDABLE;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  if ((*(struct VFX**)((u8*)p + 0xb8)) == NULL && ((p->body).status & 1)) {
+    if ((p->s).mode[1] == 0xa) {
+      goto check;
+    }
+    (*(struct VFX**)((u8*)p + 0xb8)) = ApplyElementEffect(0, &p->s, &c);
+    if ((*(struct VFX**)((u8*)p + 0xb8)) != NULL) {
+      if ((p->s).work[0] == 0) {
+        SetDDP(&p->body, &sCollisions[4]);
+      } else {
+        SetDDP(&p->body, &sCollisions[12]);
+      }
+      (p->s).unk_coord.y = (p->s).d.y;
+      (p->s).d.y = 0;
+    }
+  }
+  if ((p->s).mode[1] == 0xa) {
+    goto check;
+  }
+  if ((*(struct VFX**)((u8*)p + 0xb8)) != NULL) {
+    goto check2;
+  }
+  n = (p->s).mode[3];
+  if (n == 0) {
+    if (IsFrozen(&p->s)) {
+      (p->s).mode[3] = 1;
+    }
+    n = (p->s).mode[3];
+    if (n == 0) {
+      goto check;
+    }
+  }
+  if (n == 1) {
+    UpdateMotionGraphic(&p->s);
+    (p->s).mode[3] = 2;
+  }
+  if (!IsFrozen(&p->s)) {
+    (p->s).mode[3] = 0;
+  }
+  if (((p->body).status & 0x00020001) != 0x00020001) {
+    return;
+  }
+check:
+  if ((*(struct VFX**)((u8*)p + 0xb8)) == NULL) {
+    goto handlers;
+  }
+check2:
+  if ((p->s).mode[1] != 0xa) {
+    goto rest;
+  }
+handlers:
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+  return;
+rest:
+  if (isKilled((struct Entity*)(*(struct VFX**)((u8*)p + 0xb8)))) {
+    if ((p->s).work[0] == 0) {
+      SetDDP(&p->body, sCollisions);
+    } else {
+      SetDDP(&p->body, &sCollisions[2]);
+    }
+    (*(struct VFX**)((u8*)p + 0xb8)) = NULL;
+    (p->s).d.y = (p->s).unk_coord.y;
+  } else if (!IsFrozen(&p->s)) {
+    if (PushoutToUp1((p->s).coord.x - 0xA00, (p->s).coord.y) >= 0 &&
+        PushoutToUp1((p->s).coord.x + 0xA00, (p->s).coord.y) >= 0) {
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      t = PushoutToUp1((p->s).coord.x - 0x800, (p->s).coord.y);
+      if (t < 0) {
+        (p->s).coord.y += t;
+      }
+      t = PushoutToUp1((p->s).coord.x + 0x800, (p->s).coord.y);
+      if (t < 0) {
+        (p->s).coord.y += t;
+      }
+    }
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 0xa;
+    (p->s).mode[2] = 0;
+  }
+}
 
 static const EnemyFunc sDeads[4];
 
