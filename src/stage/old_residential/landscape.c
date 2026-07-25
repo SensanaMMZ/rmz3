@@ -435,7 +435,22 @@ void FUN_0800e2c4(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/stage_gfx/old_residential.inc");
+extern const struct MetatilePatch ALIGNED(2) MetatilePatch_0833dfe2;
+static const struct MetatilePatch2x1 ALIGNED(2) sMetatilePatch2x1_0833dffa;
+static const struct MetatilePatch2x1 ALIGNED(2) sMetatilePatch2x1_0833e032;
+
+void FUN_0800e308(struct Coord* c) {
+  s32 x = METACOORD(c->x - PIXEL(16));
+  s32 y = METACOORD(c->y + PIXEL(8));
+
+  if (y <= 0x13) {
+    PatchMetatileMap(x, y, (struct MetatilePatch*)((struct MetatilePatch2x1*)&MetatilePatch_0833dfe2 + ((x - 0xf8) >> 1)));
+  } else if (y > 0x38) {
+    PatchMetatileMap(x, y, (struct MetatilePatch*)((struct MetatilePatch2x1*)&sMetatilePatch2x1_0833e032 + ((x - 0xf6) >> 1)));
+  } else {
+    PatchMetatileMap(x, y, (struct MetatilePatch*)((struct MetatilePatch2x1*)&sMetatilePatch2x1_0833dffa + ((x - 0xf2) >> 1)));
+  }
+}
 
 struct MetatilePatch2x2 {
   struct MetatilePatch size;

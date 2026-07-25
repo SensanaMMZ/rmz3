@@ -1417,3 +1417,22 @@ here). Both headers are needed when a function uses all four.
   3. Control flow needs `goto`. Two sites jump out of nested ifs into a shared
      tail; no structured rewrite reproduces it. `goto` is precedented in this
      tree (anubis.c, cubit.c, text_window.c, hanumachine.c).
+
+## "one function left" vein (2026-07-25)
+
+Target picker: for each src/*.c, count thumb_func_start across the .inc files it
+INCASMs; sort ascending. 14 files sit at exactly one remaining function, so each
+match completes a whole file. This is the highest-value vein currently open.
+
+- **FUN_08014efc** (0x5C) MATCHED in 2 probes; sub_arcadia/landscape.c now 100% C.
+- **FUN_0800e308** (0x68) MATCHED in 3 probes; old_residential/landscape.c now 100% C.
+  Note the patch tables are *adjacent 8-byte records*, so the ROM indexes off one
+  symbol with stride 8 even when that symbol is declared `struct MetatilePatch`
+  (4 bytes). Reproduce with an explicit cast:
+  `(struct MetatilePatch2x1*)&MetatilePatch_0833dfe2 + ((x - 0xf8) >> 1)`.
+
+**Recurring lever across this whole vein: arm order.** Three of the last four
+matches differed only in which side of a comparison was the fallthrough. agbcc
+puts the *then* block in the fallthrough position, so read the ROM's branch and
+write the condition whose false-arm it jumps to. Cheap to test, so check it
+before hypothesising anything structural.
