@@ -726,3 +726,13 @@ instruction window across 95k functions) is UNAFFECTED — that came from
 the index, not the permuter.
 Lesson: copying a permuter dir silently mis-targets it; audit loop added
 to tools/permuter-setup/setup_fn.sh.
+
+### FUN_080d7e5c permuter verdict (VALID run, 2026-07-25)
+
+tools/permuter-setup/FUN_080d7e5c, settings verified to target the right
+symbol (base score 40 = the r2/r5 pair). 1013 iterations, -j6: NO
+improvement below base, no output-* snapshot produced. So the two-register
+transposition is not reachable by the permuter's source mutations either.
+Conclusion for the class stands: instruction-identical-modulo-registers
+targets need either a different reconstruction of the surrounding code
+(not this function alone) or acceptance as asm.
