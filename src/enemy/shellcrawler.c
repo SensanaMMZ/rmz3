@@ -444,6 +444,48 @@ void FUN_08096950(struct Enemy* p) {
   }
 }
 
+void FUN_080b145c(struct Coord* c, s32 dx);
+
+// 殻に籠もって弾を撃つ
+void FUN_080969d0(struct Enemy* p) {
+  struct Coord c;
+  s32 dir;
+  s32 x;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xdb, 4));
+      (p->s).work[2] = 8;
+      (p->s).mode[2]++;
+      UpdateMotionGraphic(&p->s);
+      // fallthrough
+    case 1:
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      if ((p->s).work[2] == 2) {
+        dir = ((p->s).flags >> 4) & 1;
+        x = (p->s).coord.x - PIXEL(16);
+        c.x = dir * PIXEL(32) + x;
+        c.y = (p->s).coord.y - PIXEL(10);
+        FUN_080b145c(&c, dir * PIXEL(6) - PIXEL(3));
+      }
+      (p->s).work[2]++;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 INCASM("asm/enemy/shellcrawler_post_post_c.inc");
 
 void Shellcrawler_Init(struct Enemy* p);
