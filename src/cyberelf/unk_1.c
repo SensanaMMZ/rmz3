@@ -67,7 +67,22 @@ void Elf1_Init(struct CyberElf1* p) {
   Elf1_Update(p);
 }
 
-INCASM("asm/cyberelf/unk_1_p1.inc");
+INCASM("asm/cyberelf/unk_1_p1_a.inc");
+
+bool8 FUN_080e1578(struct Coord* c1, struct Coord* c2, struct Coord* c3, u8* param_4, s16 param_5);
+
+// 0x080e2310
+void FUN_080e2310(struct Elf* p) {
+  struct Coord c;
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  c.x = (z->s).coord.x;
+  c.y = (z->s).coord.y;
+  if (FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c, &p->buffer[6], 0xA0)) {
+    (p->s).mode[1]++;
+  }
+}
+
+INCASM("asm/cyberelf/unk_1_p1_b.inc");
 
 void FUN_080e23fc(struct Elf* p) {
   if (((struct CyberElf1*)p)->unk_b8 == 0) {

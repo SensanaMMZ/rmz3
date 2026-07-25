@@ -1021,3 +1021,21 @@ contort the source to reproduce a shared tail — write the natural
 per-branch returns and let it merge.
 Offsets: Boss props union starts at 0xB4, so the pool offsets
 0xD4/0xD8/0xDC/0xE0 are raw[0x20/0x24/0x28/0x2C].
+
+## FUN_080e2310 (SOLVED, 60B, first try) — 5-arg call with a stack Coord
+
+  struct Coord c;
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  c.x = (z->s).coord.x;  c.y = (z->s).coord.y;
+  if (FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c,
+                   &p->buffer[6], 0xA0))
+    (p->s).mode[1]++;
+The 5th argument goes on the stack (`str r2,[sp]` before the bl) and the
+local Coord lives at sp+4 — `sub sp,#0xc` covers both. Getting the
+callee's real signature from src/cyberelf.c:89 (it is NAKED there but
+the prototype is written out) is what made this first-probe; do not
+guess arity from the asm when a prototype already exists somewhere.
+
+ALSO: FUN_080a449c (36B, tretista) is NOT a function — the preceding
+function branches into it (`bne _080A44AE`). It is a split tail like
+DeathtanzRock_Update's. Skip it in candidate lists.
