@@ -14,8 +14,11 @@
 #include "definition.h"
 #include "mission.h"
 #include "zero.h"
+#include "syssav.h"
 #include "gba/syscall.h"
 
+void FUN_08096348(struct Body* body, struct Coord* c1, struct Coord* c2);
+void Shellcrawler_Update(struct Enemy* p);
 void FUN_080b145c(struct Coord* c, s32 dx);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 void FUN_080c68cc(struct Entity* e, struct Coord* c);
@@ -102,6 +105,42 @@ u8 FUN_08095e28(struct Enemy* p) {
   return 0;
 }
 
+// 初期化 (work[0]==4 は殻side)
+void Shellcrawler_Init(struct Enemy* p) {
+  u8 f;
+
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  if ((p->s).work[0] == 4) {
+    (p->s).mode[1] = 9;
+    (p->s).flags |= FLIPABLE;
+    INIT_BODY(p, &sCollisions[6], 1, FUN_08096348);
+  } else {
+    (p->s).mode[1] = 0;
+    (p->s).flags |= FLIPABLE;
+    InitNonAffineMotion(&p->s);
+    (p->s).flags |= DISPLAY;
+    if ((gSystemSavedataManager.mods[12] & 0x10) && (f = gCurStory.s.gameflags[0] & 0x40) == 0) {
+      INIT_BODY(p, sCollisions, 0x10, NULL);
+    } else {
+      INIT_BODY(p, sCollisions, 0xc, NULL);
+    }
+    SET_BODY_INTERSECT_HANDLER(p, FUN_08096348);
+    SetMotion(&p->s, MOTION(0xdb, 1));
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    if ((p->s).work[0] == 0) {
+      SET_XFLIP(p, (pZero2->s).coord.x - (p->s).coord.x > 0);
+    } else if ((p->s).work[0] == 2) {
+      SET_XFLIP(p, FALSE);
+    } else {
+      SET_XFLIP(p, TRUE);
+    }
+    (p->s).work[0] = 0;
+    p->props[8] = 0;
+    *(u32*)&p->props[4] = 0;
+  }
+  Shellcrawler_Update(p);
+}
+
 INCASM("asm/enemy/shellcrawler_pre_p1_p1_a.inc");
 
 static const EnemyFunc sDeads[4];
@@ -121,7 +160,7 @@ void Shellcrawler_Die(struct Enemy* p) {
 // 注意: 原作のバグをそのまま再現している。子Entityを NULL にしてから、その
 // NULL ポインタ経由で書き込んでいるため、0x8C/0x90/0x94 という絶対アドレス
 // (GBAのBIOS領域=書き込み無視) へのストアになっていて、実際には何もしない。
-void FUN_08096348(struct Body* body) {
+void FUN_08096348(struct Body* body, struct Coord* c1, struct Coord* c2) {
   struct Enemy* p = (struct Enemy*)body->parent;
   struct Enemy* c;
   u8 m;

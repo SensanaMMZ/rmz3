@@ -1390,3 +1390,18 @@ here). Both headers are needed when a function uses all four.
   I doubted it first and verified against baseimg.gba, which is the right order.
   Also note `if (m == 3 || m == 4 || m == 8)` compiles to the range test
   `subs r0,r1,#3; lsls/lsrs #24; cmp r0,#1; bls` followed by `cmp r1,#8; beq`.
+- **Shellcrawler_Init** (0x1A0) MATCHED in 7 probes. The whole cost was one
+  wrong arm order. Written as
+  `if (A == 0 || (f = B) != 0) { hp = 0xc } else { hp = 0x10 }` agbcc hoists a
+  single zero into a *fourth* callee-saved register (r7), shared between
+  `mode[1] = 0` and the `body->fn = NULL` of INIT_BODY, so the prologue becomes
+  `push {r4,r5,r6,r7,lr}` and every register shifts. Written the other way round,
+  `if (A && (f = B) == 0) { hp = 0x10 } else { hp = 0xc }`, the NULL pseudo
+  coalesces with `f` instead — which is what the ROM does (`str r5,[r4,#0x24]`,
+  r5 = f, provably 0 on that path) — and the prologue drops back to three.
+  **Diagnostic worth reusing:** a differing `push` mask is a register-count
+  signal, not a code-shape signal. Find which pseudo owns the extra register
+  (`objdump | grep r7`) and ask what two values agbcc coalesced.
+  Also: `BodyFunc` is `void (*)(struct Body*, struct Coord*, struct Coord*)`, so
+  FUN_08096348 had to take three params. The two extra unused args do not change
+  its codegen (ROM sha1 unchanged).
