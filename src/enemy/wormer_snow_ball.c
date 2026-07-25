@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "vfx.h"
+#include "mission.h"
+#include "entity/macros.h"
 
 static const EnemyFunc sDeads[3];
 
@@ -57,7 +60,18 @@ void FUN_0807b7c0(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/wormer_snow_ball_p3_p2_p2.inc");
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+void CreateIceballParticle4(s32 x, s32 y);
+
+void FUN_0807b800(struct Enemy* p) {
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, &(p->s).coord);
+  EXIT_BODY(p);
+  CreateIceballParticle4((p->s).coord.x, (p->s).coord.y);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
 
 void WormerSnowBall_Init(struct Enemy* p);
 void WormerSnowBall_Update(struct Enemy* p);

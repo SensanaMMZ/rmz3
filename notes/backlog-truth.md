@@ -1563,3 +1563,14 @@ the unk_32 inits (4) and these hellbat spawners (3) each cost one probe total.
 **Two more "same size != same family" false positives** this round
 (unk_55 FUN_080c123c/FUN_080c13c8, unk_1_p1_b pair). Always disassemble two
 before writing. The check costs one objdump and has now saved three wasted probes.
+- **FUN_08095074** (0x58) MATCHED first probe; retires pantheon_fist_pre_p1_p2_p2.inc.
+  Same shape as snakecord's FUN_08073ea8: `if (dx == 0) return 0;` then a
+  `dx < 0` / else pair of FUN_080098a4 probes returning 1 / 2.
+- **FUN_0807b800** (0x60) MATCHED first probe; retires wormer_snow_ball_p3_p2_p2.inc.
+  gMission.enemyCount cap, TryDropZakoDisk, EXIT_BODY, CreateIceballParticle4,
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT).
+
+Resolving `bl` targets via rom_symbols.txt address lookup is reliable and fast —
+both of this pair's unknown calls (0x08024F3C -> TryDropZakoDisk,
+0x080BEA80 -> CreateIceballParticle4) came straight from it. Do that before
+guessing at a helper's identity from context.
