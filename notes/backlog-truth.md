@@ -694,3 +694,22 @@ what tells you the three motion stores are consecutive statements with
 nothing between them; in shape A they are recomputed from p each time
 because the flags/InitBody block sits in front.
 All eight MobNPC initializers in this family are now C.
+
+## FUN_080d7e5c (gray-h door collision, 92B) — 8 bytes, pure r2/r5 swap
+
+Harness build/scratch/dgh/t4.c: 92/92, instruction stream IDENTICAL to
+the target, only two registers transposed (target keeps `kind` in r2 and
+the constant 1 in r5; we get the mirror). Reconstructed from scratch off
+asm/solid/door_gray_h_collision.inc with field names borrowed from the
+blue door's MODERN body (isAreaChange, gStageRun.vm.unk_004,
+door->props.raw).
+KEY TYPE FINDING: `kind` is `s8` in ENTITY_HDR, and the target reads it
+with `movs r2,#8; ldrsb r2,[r4,r2]` — the register-offset form Thumb
+requires for a SIGNED byte load. Declaring the local `u8` (or reading
+inline) produces `ldrb` and a 4-byte-larger function; the local must be
+`s32 kind = (z->s).kind;` to get ldrsb AND keep the value live for the
+later `mode[2] = kind` store (that store is how the known-zero is
+reused). `s8 kind` is WRONG too — it re-truncates and costs 4 bytes.
+Tried and failed to flip the r2/r5 pair: `mode[2] = 0` literal (96B,
+worse), explicit `!= 0` / `== 0` on the work[0] mask (identical).
+Same regalloc-tie class as the rest; park.
