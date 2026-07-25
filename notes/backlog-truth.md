@@ -2005,3 +2005,17 @@ diagnostic, not a mismatch.
       x - 0x400 + (rnd & 0x7FF)     -> MATCH
   `(v << 4) >> 0x15` after the LCG is `(RANDOM(rng) & 0x7FF)` -- a mask built
   from a shift pair, not an `ands`.
+
+**The gSineTable velocity idiom** (FUN_080afbfc, FUN_080bc6ac, FUN_080bc7a4 --
+all matched first probe). ~10 instructions per axis that look like open-coded
+table math are just the `Cos`/`Sin` static inlines from trig.h:
+
+    adds r0,angle,#0 / adds r0,#0x40 / lsls #0x18 / lsrs #0x17  -> COS index
+    lsls r0,angle,#1                                            -> SIN index
+    adds r0,r0,gSineTable / ldrsh / muls speed / cmp #0 / bge / adds #0xff / asrs #8
+
+i.e. `d.x = Cos(angle, speed)`, `d.y = Sin(angle, speed)`. A trailing
+`rsbs r0,r0,#0` is `-Sin(...)`. The `(u8)` cast inside the SIN/COS macros is
+what produces the `lsls #0x18 / lsrs #0x17` pair (cast then scale by 2), so seeing
+a 24/23 shift pair rather than 24/24 means an s16 table index, not a plain u8.
+FUN_080bc6ac also bumps a counter on its parent: `*((u8*)e + 0xCF) += 1`.

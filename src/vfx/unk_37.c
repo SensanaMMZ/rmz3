@@ -82,7 +82,25 @@ void FUN_080bc660(s32 x, s32 y) {
 
 extern const VFXFunc PTR_ARRAY_0836edd4[7];
 
-INCASM("asm/vfx/unk_37_pre_pre_p1.inc");
+#include "trig.h"
+
+void FUN_080bc6ac(struct Entity* e, s32 x, s32 y, s32 speed, u8 angle) {
+  struct VFX* p = (struct VFX*)AllocEntityLast(gVFXHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, 37);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 4;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).d.x = Cos(angle, speed);
+    (p->s).d.y = -Sin(angle, speed);
+    (p->s).unk_28 = e;
+    *((u8*)e + 0xCF) += 1;
+  }
+}
 
 void FUN_080bc758(s32 x, s32 y) {
   struct Entity* p = AllocEntityFirst(gVFXHeaderPtr);
@@ -97,7 +115,22 @@ void FUN_080bc758(s32 x, s32 y) {
   }
 }
 
-INCASM("asm/vfx/unk_37_pre_pre_p2_p1.inc");
+void FUN_080bc7a4(s32 x, s32 y, s32 speed, u8 angle, u8 n) {
+  struct VFX* p = (struct VFX*)AllocEntityLast(gVFXHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 1;
+    INIT_VFX_ROUTINE(p, 37);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 6;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    (p->s).d.x = Cos(angle, speed);
+    (p->s).d.y = -Sin(angle, speed);
+    (p->s).work[2] = n;
+  }
+}
 
 extern const u8 u8_ARRAY_0836edf0[7];
 

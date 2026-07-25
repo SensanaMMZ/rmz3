@@ -331,7 +331,25 @@ struct Projectile* FUN_080afbb0(struct Entity* e, u8 n) {
   return p;
 }
 
-INCASM("asm/projectile/phantom_p2_p2_p2_c.inc");
+#include "trig.h"
+
+struct Projectile* FUN_080afbfc(struct Coord* c, s32 speed, u8 angle, u8 n) {
+  struct Projectile* p = (struct Projectile*)AllocEntityLast(gProjectileHeaderPtr);
+
+  if (p != NULL) {
+    (p->s).taskCol = 8;
+    INIT_PROJECTILE_ROUTINE(p, 40);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).work[0] = 1;
+    (p->s).coord = *c;
+    (p->s).d.x = Cos(angle, speed);
+    (p->s).d.y = Sin(angle, speed);
+    (p->s).work[2] = angle;
+    (p->s).work[1] = n;
+  }
+  return p;
+}
 
 struct Projectile* FUN_080afc9c(struct Entity* e, u8 n) {
   struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
