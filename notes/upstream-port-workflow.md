@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 5d805cb6-0db5-4f16-b98a-f26a825712bb
-  modified: 2026-07-26T01:14:10.248Z
+  modified: 2026-07-26T02:23:38.742Z
 ---
 
 The end-to-end procedure for getting a matched fork function into an upstream PR,
@@ -41,6 +41,37 @@ scratchpad; recreate them from this description if absent.
 8. **Provenance scrub**, commit as SensanaMMZ, push to
    **`SensanaMMZ/rmz3-upstream`** (see [[rmz3-upstream-decomp-policy]]), open the
    PR against `dev`.
+
+## MANDATORY before building a work list or pushing anything
+
+**1. Check the open PRs first.** An unmerged PR leaves its functions as asm on
+`dev`, so "still `thumb_func_start` upstream" does NOT mean unclaimed. Filtering
+only on the asm state produced **205 duplicate submissions** across three PRs
+that had to be closed (#71/#72/#73 duplicated #39/#37/#38 — whose titles named
+the very files I re-ported, and which I had listed myself an hour earlier).
+
+Build the claimed-set from every open PR's patch and subtract it:
+
+```python
+claimed = set()
+for p in api('/repos/mmzret/rmz3/pulls?state=open&per_page=100'):
+    for f in api('/repos/mmzret/rmz3/pulls/%d/files?per_page=100' % p['number']):
+        for line in (f.get('patch') or '').split('\n'):
+            if line.startswith('+'):
+                m = re.match(r'\+\s*(?:static\s+)?[A-Za-z_][\w \*]*?\b(\w+)\([^;)]*\)\s*\{', line)
+                if m: claimed.add(m.group(1))
+portable = (fork_C & still_asm_upstream) - claimed
+```
+
+That took the list from 914 to **468**. Do this at the START of every session —
+the queue moves, and it includes other contributors, not just mine.
+
+**2. Track shipped vs in-flight in three states**, not two:
+   * **merged upstream** — gone from `dev`'s asm; nothing to do
+   * **in an open PR** — still asm on `dev` but CLAIMED; do not touch
+   * **unclaimed** — the only real work list
+
+**3. Never claim "verified" without a build.** See the CI section below.
 
 ## Mistakes that have already cost hours — do not repeat
 
@@ -81,6 +112,44 @@ scratchpad; recreate them from this description if absent.
   `buffer[]` BEFORE flattening, or it aliases the entity `work[]` at 0x10.
 * Prefer the DEFINITION's return type over an existing prototype's — the
   definition is the byte-verified one; correct the prototype instead.
+
+## CI is the only real verification — the byte probe is NOT sufficient
+
+`.github/workflows/build.yml` (branch `contrib/build-fixes`) builds in the
+`devkitpro/devkitarm` container, installs Deno (INSTALL.md prerequisite — the
+metasprite rules shell out to it) and agbcc from pret, then runs `make compare`
+against `rmz3.sha1`. **It passes on the upstream baseline.**
+
+**Every one of ten port branches byte-verified green and then FAILED CI.** Two
+reasons, both invisible to the probe:
+
+* **The probe masks `BL` targets as relocations.** A call to a function that does
+  not exist upstream is byte-IDENTICAL to a correct one and only fails at link.
+* **I was not compiling with the project's CFLAGS.** The real build uses
+  `-Wimplicit -Wparentheses -Werror`, so an implicit declaration is an ERROR
+  there and was an invisible warning to me.
+
+So: compile with `-Wimplicit -Wparentheses -Werror`, and resolve every symbol
+**by ROM address**, not by name.
+
+### Confirmed fork -> upstream renames (verified by matching addresses)
+
+| fork | upstream | address |
+| --- | --- | --- |
+| `UpdateMotionGraphic` | `UpdateEntityAnim` | 0x0801765C |
+| `CalcFromCamera` | `Camera_GetDistance` | 0x0801A810 |
+| `FUN_080b145c` | `CreateProjectile43` | 0x080B145C |
+| `gMission` | `gScore` (score.h) | — |
+| `gSystemSavedataManager.mods[N]` | `gSystemSavedata.flags[7+N]` | — |
+| `taskCol` | `renderPrio` | 0x25 |
+| `struct Motion motion` | `AnimState motion` | — |
+
+Signature changes: `ApplyElementEffect(u8, struct CollisionObject*, const struct Coord*)`
+returns `struct Entity*` upstream (fork: `struct Entity*` -> `struct VFX*`);
+`TryDropZakoDisk` takes `struct Entity*`.
+
+**To find a rename:** get the fork address from `build/rmz3/rmz3.map`, then grep
+upstream for `// 0x<ADDR>` or `@ 0x<ADDR>`.
 
 ## Keep upstream in sync — check `mmzret/rmz3` dev every 12 hours
 
