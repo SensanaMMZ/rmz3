@@ -81,3 +81,12 @@ scratchpad; recreate them from this description if absent.
   `buffer[]` BEFORE flattening, or it aliases the entity `work[]` at 0x10.
 * Prefer the DEFINITION's return type over an existing prototype's — the
   definition is the byte-verified one; correct the prototype instead.
+
+## Keep upstream in sync — check `mmzret/rmz3` dev every 12 hours
+
+Standing instruction from the user (2026-07-25): poll upstream `dev` twice a day
+so the fork does not drift further. `git fetch upstream dev` and compare the tip;
+when it moves, rebuild the portable list, check whether any open PR now
+conflicts, and flag any file with an open PR that upstream has since touched.
+A cron job does this in-session, but cron is session-only — **re-create it at the
+start of each session**, or do the check manually before starting a batch.
