@@ -2,6 +2,9 @@
 #include "gfx.h"
 #include "global.h"
 #include "solid.h"
+#include "stagerun.h"
+#include "story.h"
+#include "zero.h"
 
 // 2D Door(Gray, Vertical)
 
@@ -57,8 +60,58 @@ static void Door2DGray_Die(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
 
-NAKED static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+// One instruction from matching, same tie as door_2d_blue: retail keeps
+// the duplicated mode[2]=story stores in both arms (story stays in r2);
+// agbcc copies story to r4 and cross-jumps the second arm into the
+// non-flag2 tail. Four source shapes tried, all 77 vs 78.
+NON_MATCH static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+#if MODERN
+  struct Solid* door = (struct Solid*)body->parent;
+  struct Zero* z = (struct Zero*)(body->enemy)->parent;
+  u8 flag2;
+  u8 story;
+  if ((z->s).kind != ENTITY_PLAYER) {
+    return;
+  }
+  if ((door->s).coord.y < (z->s).coord.y) {
+    return;
+  }
+  if ((door->s).coord.y - (z->s).coord.y > PIXEL(8)) {
+    return;
+  }
+  flag2 = (door->s).work[0] & 2;
+  if (flag2) {
+    story = FLAG(gCurStory.s.gameflags, FLAG_2);
+    if (story) {
+      return;
+    }
+    if ((door->s).coord.x > (z->s).coord.x) {
+      (door->s).mode[1] = 1;
+      (door->s).mode[2] = story;
+    } else {
+      (door->s).mode[1] = 2;
+      (door->s).mode[2] = story;
+    }
+  } else {
+    if ((door->s).coord.x > (z->s).coord.x) {
+      if ((door->s).work[0] & 1) {
+        return;
+      }
+      (door->s).mode[1] = 1;
+    } else {
+      if (!((door->s).work[0] & 1)) {
+        return;
+      }
+      (door->s).mode[1] = 2;
+    }
+    (door->s).mode[2] = flag2;
+  }
+  z->isAreaChange = TRUE;
+  gStageRun.vm.unk_004 |= 1;
+  *(struct Zero**)door->props.raw = z;
+#else
   INCCODE("asm/solid/door_gray_v_collision.inc");
+#endif
 }
 
 static void FUN_080d0478(struct Solid* p) {
