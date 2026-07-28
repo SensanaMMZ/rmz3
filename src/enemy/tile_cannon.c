@@ -3,6 +3,8 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "story.h"
+#include "syssav.h"
 
 static const struct Collision sCollisions[9];
 
@@ -68,7 +70,32 @@ void tilecannon_08078210(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/tile_cannon_p2_post_a_b.inc");
+static const u8 sInitModes[3];
+void TileCannon_Update(struct Enemy* p);
+
+void TileCannon_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  if ((p->s).work[0] != 2) {
+    INIT_BODY(p, sCollisions, 1, NULL);
+    (p->s).coord.x += PIXEL(8);
+    (p->s).coord.y += PIXEL(9);
+  } else {
+    if ((gSystemSavedataManager.mods[14] & 2) && !FLAG(gCurStory.s.gameflags, 6)) {
+      INIT_BODY(p, &sCollisions[7], 10, NULL);
+    } else {
+      INIT_BODY(p, &sCollisions[7], 6, NULL);
+    }
+  }
+  SET_BODY_INTERSECT_HANDLER(p, FUN_08078170);
+  *(u32*)&p->props[0] = 0;
+  (p->s).work[2] = 0x28;
+  (p->s).taskCol = 0x1F;
+  TileCannon_Update(p);
+}
 
 extern const EnemyFunc sUpdates1[9];
 extern const EnemyFunc sUpdates2[9];
