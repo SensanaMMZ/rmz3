@@ -28,6 +28,21 @@ struct Elf* FUN_080e5048(s32 a0, s32 a1, u8 mode) {
   return (struct Elf*)p;
 }
 
+static const ElfFunc sInitializers[4];
+void Elf11_Update(struct Elf* p);
+
+void Elf11_Init(struct Elf* p) {
+  SET_ELF_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).palID = 1;
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  (p->s).flags2 &= ~DYNAMIC;
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  (sInitializers[((p->s).work)[0]])(p);
+  Elf11_Update(p);
+}
+
 INCASM("asm/cyberelf/unk_11_p1_p2.inc");
 
 void Elf11_Die(struct Elf* p) {

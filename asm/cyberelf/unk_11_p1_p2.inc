@@ -4,52 +4,6 @@
 
 	.text
 
-	thumb_func_start Elf11_Init
-Elf11_Init: @ 0x080E509C
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	ldr r1, _080E50F4 @ =gElfFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #1
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #4]
-	str r0, [r4, #0x14]
-	adds r0, r4, #0
-	adds r0, #0x22
-	movs r5, #1
-	strb r1, [r0]
-	adds r0, r4, #0
-	bl InitNonAffineMotion
-	adds r0, r4, #0
-	bl ResetDynamicMotion
-	ldrb r1, [r4, #0xb]
-	movs r0, #0xfb
-	ands r0, r1
-	strb r0, [r4, #0xb]
-	ldrb r0, [r4, #0xa]
-	orrs r0, r5
-	movs r1, #2
-	orrs r0, r1
-	strb r0, [r4, #0xa]
-	ldr r1, _080E50F8 @ =sInitializers
-	ldrb r0, [r4, #0x10]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	adds r0, r4, #0
-	bl Elf11_Update
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080E50F4: .4byte gElfFnTable
-_080E50F8: .4byte sInitializers
-
 	thumb_func_start Elf11_Update
 Elf11_Update: @ 0x080E50FC
 	push {r4, r5, lr}
@@ -112,3 +66,4 @@ _080E5170:
 	bx r0
 	.align 2, 0
 _080E5178: .4byte sUpdates
+
