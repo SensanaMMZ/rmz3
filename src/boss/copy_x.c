@@ -580,6 +580,28 @@ void copyxMode4(struct Boss* p) {
 
 INCASM("asm/boss/copy_x_p2_p1.inc");
 
+void copyxMode8(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb3, 0x10));
+    (p->s).mode[2] = 0;
+    {
+      s32 t = (p->s).d.x >> 3;
+      *(s16*)((u8*)p + 0xc8) = t;
+    }
+  }
+  (p->s).d.x += *(s16*)((u8*)p + 0xc8);
+  (p->s).coord.x += (p->s).d.x;
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 1;
+    (p->s).mode[3] = 2;
+    SetMotion(&p->s, MOTION(0xb3, 0x00));
+    (p->s).work[2] = 8;
+    SetDDP(&p->body, sCollisions);
+  }
+  UpdateMotionGraphic(&p->s);
+}
+
 void copyxMode9(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
     SetMotion(&p->s, 0xB305);
