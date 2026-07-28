@@ -88,6 +88,25 @@ void FUN_080a9d88(struct Projectile* p) {
   Projectile28_Update(&p->s);
 }
 
+void FUN_080a9fe4(struct Sprite* t, struct DrawPivot* c);
+
+void FUN_080a9e74(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  SetTaskCallback((void*)&(p->s).spr, FUN_080a9fe4);
+  ((p->s).spr).sprites = (void*)p;
+  (p->s).flags &= ~OAM_PRIO;
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  (p->s).coord = q->coord;
+  gWindowRegBuffer.dispcnt |= DISPCNT_WIN1_ON;
+  gWindowRegBuffer.winin[1] = WININ_WIN0_CLR | WININ_WIN0_OBJ | WININ_WIN0_BG0;
+  gWindowRegBuffer.winin[2] |= WINOUT_WIN01_BG3 | WINOUT_WIN01_BG2 | WINOUT_WIN01_BG1;
+  (*(u16*)(&gPaletteManager.buf[0])) = RGB_WHITE;
+  (p->s).work[2] = (p->s).work[3] = 0;
+  Projectile28_Update(&p->s);
+}
+
 INCASM("asm/projectile/unk_28_p2_p1.inc");
 
 void FUN_080aa120(struct Projectile* p) {
