@@ -16,7 +16,29 @@ static void ShieldFly_Init(struct Weapon* w);
 static void ShieldFly_Update(struct Weapon* w);
 static void ShieldFly_Die(struct Weapon* w);
 
-NAKED void MenuExit_ShieldFly(struct Weapon* w) { INCCODE("asm/todo/MenuExit_ShieldFly.inc"); }
+void MenuExit_ShieldFly(struct Weapon* w) {
+  struct WeaponProps* b4 = &PROP;
+  struct Zero* z;
+  struct Zero_b4* zb4;
+  z = b4->z;
+  zb4 = &z->unk_b4;
+  if (z->elfMotion != 0) {
+    (w->s).flags &= ~DISPLAY;
+    (w->s).flags &= ~FLIPABLE;
+    EXIT_BODY(w);
+    SET_WEAPON_ROUTINE(w, ENTITY_DISAPPEAR);
+    return;
+  }
+  if ((zb4->status).element == b4->props[1][1]) {
+    if (!(z->unk_136 & (1 << WEAPON_SHIELD))) {
+      return;
+    }
+  }
+  (w->s).flags &= ~DISPLAY;
+  (w->s).flags &= ~FLIPABLE;
+  EXIT_BODY(w);
+  SET_WEAPON_ROUTINE(w, ENTITY_DISAPPEAR);
+}
 
 struct Weapon* CreateWeaponShieldFly(struct Zero* z, u8 r1) {
   struct Weapon* w;
