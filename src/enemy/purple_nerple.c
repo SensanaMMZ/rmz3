@@ -193,6 +193,27 @@ void FUN_080761b8(struct Enemy* p) {
 
 INCASM("asm/enemy/purple_nerple_p2_p2_p4.inc");
 
+extern const motion_t sMotions[9];
+struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+
+void FUN_08076df8(struct Enemy* p) {
+  struct Coord c;
+  {
+    u8 z;
+    (p->body).status = z = 0;
+    (p->body).prevStatus = z;
+    (p->body).invincibleTime = z;
+    z = ~COLLIDABLE & (p->s).flags;
+    z = z & ~DISPLAY;
+    (p->s).flags = z;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  CreateSmoke(2, &c);
+  FUN_080b7f70(&p->s, &c, (motion_t*)&sMotions[7], 2);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
 void PurpleNerple_Init(struct Enemy* p);
 void PurpleNerple_Update(struct Enemy* p);
 void PurpleNerple_Die(struct Enemy* p);
