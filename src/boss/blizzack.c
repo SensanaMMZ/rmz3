@@ -207,6 +207,35 @@ NON_MATCH void blizzackEndBlizzard(struct Boss* p) {
 
 INCASM("asm/boss/blizzack_post_p2_a.inc");
 
+// Same regmove tie as blizzackMode0: the mode[2]=0 zero and the 0x64xx pool
+// load fight for the same slot, spilling the constant through r3.
+NON_MATCH void blizzackBombFall(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb4, 0x03));
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6403;
+    (p->s).mode[2] = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x60;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  if (FUN_08009f6c((p->s).coord.x, (p->s).coord.y) < (p->s).coord.y) {
+    (p->s).mode[1] = 0x10;
+    (p->s).mode[2] = 1;
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  }
+#else
+  INCCODE("asm/boss/blizzack_bombfall_body.inc");
+#endif
+}
+
+INCASM("asm/boss/blizzack_post_p2_a2.inc");
+
 void FUN_0805af14(struct Boss* p) {
   if ((p->s).coord.x < *(s32*)((u8*)p + 0xb4) + 0x2000 ||
       (p->s).coord.x > *(s32*)((u8*)p + 0xd8) - 0x2000) {
