@@ -162,12 +162,17 @@ extern const u8 unk_080fefb8[24];
 
 // 1 insn from parity (151 vs 152) with switch-block layout differences;
 // logic verified case-by-case against the asm. Layout tie.
+// Semantics corrected by the oam.xflip bitfield insert (the old draft wrote
+// spriteIdx); laser table pools exactly via the hoisted index. Three ties
+// left: retail splits the d.y address (base+0x5C, str +4), reuses the masked
+// zero for the else-arm mode[3] store, and materializes 0x4D0 before the
+// table load.
 NON_MATCH void goldOmega1Laser(struct Boss* p) {
 #if MODERN
   switch ((p->s).mode[2]) {
     case 0: {
-      ((p->s).spr).spriteIdx = 0;
-      ((p->s).spr).xflip &= ~0x11;
+      (p->s).spr.xflip = 0;
+      (p->s).spr.oam.xflip = 0;
       (p->s).flags &= ~X_FLIP;
       (p->s).d.y = 0;
       (p->s).d.x = 0;
@@ -178,14 +183,16 @@ NON_MATCH void goldOmega1Laser(struct Boss* p) {
         (p->s).mode[3] = 0;
       }
       (p->s).mode[2]++;
-      FALLTHROUGH;
+      /* fallthrough */
     }
     case 1: {
       (p->s).work[3] = 0x30;
       if ((p->s).mode[3] == 0) {
-        createGoldOmega1Laser(0x4D0, unk_080fefb8[(p->s).work[2] - 1], 0x30, &p->s);
+        s32 i = (p->s).work[2] - 1;
+        createGoldOmega1Laser(0x4D0, unk_080fefb8[i], 0x30, &p->s);
       } else {
-        createGoldOmega1Laser(0x4D0, (unk_080fefb8 + 3)[(p->s).work[2] - 1], 0x30, &p->s);
+        s32 i = (p->s).work[2] - 1;
+        createGoldOmega1Laser(0x4D0, (unk_080fefb8 + 3)[i], 0x30, &p->s);
       }
       StepPaletteAnimation(0xb);
       (p->s).mode[2]++;
@@ -365,7 +372,7 @@ static void FUN_0805b878(struct Entity* p) {
     case 0: {
       (p->d).x = 0, (p->d).y = 0;
       p->mode[2]++;
-      FALLTHROUGH;
+      /* fallthrough */
     }
     case 1: {
       (p->d).y += (PIXEL(1) / 4);
