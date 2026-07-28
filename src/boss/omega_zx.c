@@ -547,7 +547,24 @@ void FUN_080615dc(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/omega_zx_p10_p2_a.inc");
+extern const u16 u16_ARRAY_080feffa[5];
+
+u32 FUN_08061648(struct Boss* p, u32 m) {
+  s32 i;
+  if ((p->body).hp <= 0x20) {
+    for (i = 0; i <= 4; i++) {
+      if (u16_ARRAY_080feffa[i] == m) {
+        return u16_ARRAY_080feffa[(i + 1) % 5];
+      }
+    }
+  } else {
+    for (i = 0; i <= 3; i++) {
+      if (u16_ARRAY_080feffa[i] == m) {
+        return u16_ARRAY_080feffa[(i + 1) % 4];
+      }
+    }
+  }
+}
 
 void FUN_080616b8(struct Boss* p) {
   struct Entity* slot;
