@@ -373,6 +373,47 @@ static void Necro_Die(struct VFX* vfx) {
 
 // --------------------------------------------
 
+void FUN_080b8804(struct VFX* p) {
+  bool8 xflip = (((p->s).unk_28)->flags & X_FLIP) != 0;
+  bool8 yflip = (((p->s).unk_28)->flags & Y_FLIP) != 0;
+  u32 idx = (p->s).work[1];
+  switch ((p->s).mode[2]) {
+    case 0: {
+      (p->s).flags |= DISPLAY;
+      SET_XFLIP(p, xflip);
+      SET_YFLIP(p, yflip);
+      SetMotion(&p->s, (p->props).necro.motions[idx]);
+      if (xflip) idx = 2 - idx;
+      ((p->s).d).x = PIXEL(idx - 1) + (RANDOM(RNG_0202f388) & 0x1FF) - PIXEL(1);
+      ((p->s).d).y = -(RANDOM(RNG_0202f388) & 0x1FF) - PIXEL(2);
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      (p->s).work[2]++;
+      if ((p->s).work[2] & 1) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+      ((p->s).coord).x += ((p->s).d).x;
+      ((p->s).coord).y += ((p->s).d).y;
+      ((p->s).d).y += PIXEL(1) / 4;
+      FUN_0801779c(&p->s);
+      if (FUN_080098a4(((p->s).coord).x, ((p->s).coord).y) && ((p->s).d).y > 0) {
+        if ((p->props).necro.unk_05 == 0) {
+          CreateSmoke(3, &(p->s).coord);
+        } else {
+          CreateSmoke(2, &(p->s).coord);
+        }
+        SET_VFX_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/vfx/necro.inc");
 
 static const u8 sInitModes[5] = {0, 1, 2, 3, 4};
