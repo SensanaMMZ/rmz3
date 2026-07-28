@@ -35,6 +35,16 @@ void CopyXProjectile_Die(struct Projectile* p) {
 
 INCASM("asm/projectile/copy_x_post_p2.inc");
 
+void moveNovaStrikeSonicBoom(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x = ((p->s).flags & X_FLIP) ? ((q->coord).x + PIXEL(24)) : ((q->coord).x - PIXEL(24));
+  (p->s).coord.y = (q->coord).y - PIXEL(26);
+  if (q->mode[1] != 15) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 void CopyXProjectile_Init(struct Projectile* p);
 void CopyXProjectile_Update(struct Projectile* p);
 void CopyXProjectile_Die(struct Projectile* p);
