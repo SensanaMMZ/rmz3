@@ -2246,3 +2246,10 @@ FUN_0807db9c: .byte blob (inline jumptable) in mellnet_post_post_post.inc - Ghid
 - FUN_0807db9c (mellnet, 188B): .byte blob (inline jumptable) - Ghidra pass with FUN_08094534.
 - dd24 queued for a background permuter run (residual = pure allocation/schedule tie, ideal target).
 - Levers from FUN_0805fc1c + FUN_08076df8: (a) label-filtered mdiff hides branch-POLARITY inversions - write the if with the target's taken-branch (goto snap idiom); (b) double-mask flags RMW that refuses to fold = ONE u8 var reused for the body-zero AND the mask accumulator (`(p->body).status = z = 0;` chain keeps the movs after the addr; redefining z kills the zero-value CSE exploit and claims its register); (c) coord stack copies are per-member here, struct-copy pairs elsewhere - check the load/store interleave first.
+- EXIT-SHAPE SOLVED (carry_arm FUN_08071b88 exact): the double-mask + body-zero release idiom is
+    u8 f = ~DISPLAY & (p->s).flags;
+    s32 z = 0;              <- declared BETWEEN the two mask statements (slots the movs)
+    f = f & ~FLIPABLE;
+    (p->s).flags = f;
+    (p->body).status = z; prevStatus = z; invincibleTime = z;
+  RETRY the energy-facility door twins with this exact shape - their ip-parking may have been downstream of the f/z structure, not a real basin.
