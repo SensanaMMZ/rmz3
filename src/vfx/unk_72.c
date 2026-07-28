@@ -130,6 +130,20 @@ void FUN_080c6c60(struct VFX* p) {
 
 INCASM("asm/vfx/unk_72_b.inc");
 
+void FUN_080c6dc4(struct VFX* p) {
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  UpdateMotionGraphic(&p->s);
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    CreateSmoke(1, &(p->s).coord);
+    if ((p->s).work[1] == 1) {
+      PlaySound(0x2A);
+    }
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 // --------------------------------------------
 
 const motion_t motion_t_ARRAY_0836f854[3] = {
