@@ -13,7 +13,21 @@ static const struct Coord sElementCoord;
 static const EnemyFunc sUpdates1[8];
 static const EnemyFunc sUpdates2[8];
 
-INCASM("asm/enemy/pantheon_zombie_p1_pre_p1.inc");
+void createPantheonZombie(struct Boss* anubis, s32 x, s32 y) {
+  struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (p != NULL) {
+    (anubis->props).anubis.pzombieCount++;
+    (p->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(p, ENEMY_P_ZOMBIE);
+    (p->s).tileNum = 0;
+    (p->s).palID = 0;
+    (p->s).flags2 |= WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+    (p->s).work[0] = 0;
+    (p->s).unk_28 = (void*)anubis;
+    ((p->s).coord).x = x, ((p->s).coord).y = y;
+  }
+}
 
 void FUN_0807fd84(struct Body* body) {
   struct Enemy* self = (struct Enemy*)body->parent;

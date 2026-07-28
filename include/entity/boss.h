@@ -77,6 +77,14 @@ struct PAquaModProps {
   u8 unk_c0[36];
 };
 
+struct AnubisProps {
+  u8 unk_b4[12];    // 0xB4
+  u32 unk_c0;       // 0xC0
+  u8 unk_c4[7];     // 0xC4
+  u8 pzombieCount;  // 0xCB
+  u8 unk_cc[24];    // 0xCC
+};
+
 struct MegamilpaProps {
   struct Coord c_b4;  // 0xB4
   u8 unk_bc;          // 0xBC
@@ -95,6 +103,7 @@ struct Boss {
   union {
     u8 raw[48];
     struct MegamilpaProps megamilpa;
+    struct AnubisProps anubis;
     struct OmegaWhiteProps omegaWhite;
     struct CopyXProps copyx;
     struct GlacierleProps glacierle;
