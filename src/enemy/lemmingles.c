@@ -55,7 +55,25 @@ void FUN_0806e590(struct Entity* e, u8 kind1, u8 kind2, u8 kind3) {
 // 0x0806e600
 static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) { return; }
 
-INCASM("asm/enemy/lemmingles_p1_a_a.inc");
+bool8 FUN_0806e604(struct Enemy* p) {
+  if ((p->body).status & 0x200) {
+    struct Entity* nest = (p->s).unk_28;
+    if (nest != NULL) {
+      *(u32*)((u8*)nest + 0xb4) &= ~(1 << (p->s).work[1]);
+    }
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if ((p->body).status & 0x10000) {
+      (p->s).mode[1] = 1;
+    } else if ((p->body).status & 0x20000) {
+      (p->s).mode[1] = 2;
+    } else {
+      (p->s).mode[1] = 0;
+    }
+    Lemmingles_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
 
 static const EnemyFunc sUpdates1[7];
 static const EnemyFunc sUpdates2[7];
