@@ -1869,4 +1869,14 @@ void Rod_Die(struct Weapon* p) {
 
 INCASM("asm/weapon/rod_post.inc");
 
+// upstream name: DeleteFlyingShield (0x080399FC)
+void FUN_080399fc(struct Weapon* w) {
+  if ((w->s).id == WEAPON_MOVE_SHIELD_FLY) {
+    (w->s).flags &= ~DISPLAY;
+    (w->s).flags &= ~FLIPABLE;
+    EXIT_BODY(w);
+    SET_WEAPON_ROUTINE(w, ENTITY_DISAPPEAR);
+  }
+}
+
 #undef PROP
