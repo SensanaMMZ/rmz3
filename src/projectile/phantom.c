@@ -407,6 +407,29 @@ NON_MATCH bool8 FUN_080afdf0(struct Entity* e, struct Coord* a, struct Coord* b,
 
 INCASM("asm/projectile/phantom_p2_p2_p2_e.inc");
 
+// 3 insns over: same pointer-copy allocation tie as its sibling FUN_080afdf0.
+NON_MATCH bool8 FUN_080afe38(struct Entity* e, struct Coord* a, struct Coord* b, struct Coord* c) {
+#if MODERN
+  s32 cx = c->x;
+  s32 by;
+  b->x += cx;
+  by = b->y;
+  if (by > -0x80) {
+    by -= 8;
+    b->y = by;
+  }
+  a->x += b->x;
+  a->y += by;
+  if ((u32)(b->x + 0x3FF) <= 0x7FE) {
+    return FALSE;
+  }
+  c->x = -cx;
+  return TRUE;
+#else
+  INCCODE("asm/projectile/phantom_afe38.inc");
+#endif
+}
+
 void FUN_080af518(struct Projectile* p);
 void FUN_080af5cc(struct Projectile* p);
 void FUN_080af5f4(struct Projectile* p);
