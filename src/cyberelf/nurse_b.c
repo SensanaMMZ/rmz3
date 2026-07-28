@@ -37,7 +37,64 @@ void NurseB_Die(struct Elf* p) {
   SET_ELF_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/cyberelf/nurse_b_p2.inc");
+bool8 FUN_080e1578(struct Coord* c1, struct Coord* c2, struct Coord* c3, u8* param_4, s16 param_5);
+
+void FUN_080e284c(struct Elf* p) {
+  struct Coord c;
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  c.x = (z->s).coord.x;
+  c.y = (z->s).coord.y;
+  {
+    bool8 hit;
+    if ((p->s).work[2] != 0) {
+      hit = FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c, &p->buffer[6], 0x180);
+    } else {
+      hit = FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c, &p->buffer[6], 0xC0);
+    }
+    if (hit) {
+      (p->s).mode[1] = ((p->s).mode[1] + 1) & 3;
+    }
+  }
+}
+
+void FUN_080e28a8(struct Elf* p) {
+  struct Coord c;
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  struct Rect r = gZeroRanges[z->posture];
+  c.x = (z->s).coord.x;
+  c.y = (z->s).coord.y + r.y;
+  {
+    bool8 hit;
+    if ((p->s).work[2] != 0) {
+      hit = FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c, &p->buffer[6], 0x180);
+    } else {
+      hit = FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c, &p->buffer[6], 0xC0);
+    }
+    if (hit) {
+      (p->s).mode[1] = ((p->s).mode[1] + 1) & 3;
+    }
+  }
+}
+
+void FUN_080e2920(struct Elf* p) {
+  struct Coord c;
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  struct Rect r = gZeroRanges[z->posture];
+  c.x = (z->s).coord.x;
+  c.y = (z->s).coord.y - r.h;
+  {
+    bool8 hit;
+    if ((p->s).work[2] != 0) {
+      hit = FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c, &p->buffer[6], 0x180);
+    } else {
+      hit = FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c, &p->buffer[6], 0xC0);
+    }
+    if (hit) {
+      (p->s).mode[1] = ((p->s).mode[1] + 1) & 3;
+    }
+  }
+}
+
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
