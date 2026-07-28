@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
 #include "overworld_terrain.h"
 
 static const struct Collision sCollisions[];
@@ -159,6 +160,25 @@ void FUN_0807336c(struct Body* body, struct Coord* c) {
 }
 
 INCASM("asm/enemy/pantheon_aqua_p10.inc");
+
+extern const u8 u8_ARRAY_080ff00c[80];
+
+s32 FUN_080735ac(struct Enemy* p) {
+  s32 dy = (p->s).coord.y - (pZero2->s).coord.y;
+  if (dy < 0) {
+    dy = -dy;
+  }
+  if (dy <= 0x1FFF) {
+    s32 i = RANDOM(RNG_0202f388) & 0xF;
+    if (u8_ARRAY_080ff00c[i] == 1) {
+      return 2;
+    }
+    return 1;
+  }
+  return 0;
+}
+
+INCASM("asm/enemy/pantheon_aqua_p10b.inc");
 
 void PantheonAqua_Init(struct Enemy* p);
 void PantheonAqua_Update(struct Enemy* p);
