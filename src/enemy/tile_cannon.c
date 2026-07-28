@@ -145,6 +145,28 @@ void FUN_080784b4(struct Enemy* p) {
   }
 }
 
+void FUN_080784d8(struct Enemy* p) {
+  u32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, sCollisions);
+      p->props[4] = m;
+      (p->s).flags &= ~X_FLIP;
+      (p->s).spr.xflip = m;
+      (p->s).spr.oam.xflip = 0;
+      SetMotion(&p->s, (p->s).work[0] | MOTION(0x2f, 0x00));
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 INCASM("asm/enemy/tile_cannon_p3_post_pre.inc");
 
 void FUN_080785bc(struct Enemy* p) {

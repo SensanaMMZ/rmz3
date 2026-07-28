@@ -4,68 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080784d8
-FUN_080784d8: @ 0x080784D8
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	ldrb r5, [r4, #0xe]
-	cmp r5, #0
-	beq _080784E8
-	cmp r5, #1
-	beq _08078530
-	b _08078544
-_080784E8:
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _0807854C @ =0x08367460
-	bl SetDDP
-	adds r0, r4, #0
-	adds r0, #0xb8
-	strb r5, [r0]
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xef
-	ands r0, r1
-	strb r0, [r4, #0xa]
-	adds r0, r4, #0
-	adds r0, #0x4c
-	strb r5, [r0]
-	adds r2, r4, #0
-	adds r2, #0x4a
-	ldrb r1, [r2]
-	movs r0, #0x11
-	rsbs r0, r0, #0
-	ands r0, r1
-	strb r0, [r2]
-	ldrb r1, [r4, #0x10]
-	movs r2, #0xbc
-	lsls r2, r2, #6
-	adds r0, r2, #0
-	orrs r1, r0
-	adds r0, r4, #0
-	bl SetMotion
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_08078530:
-	ldrb r0, [r4, #0x12]
-	subs r0, #1
-	strb r0, [r4, #0x12]
-	lsls r0, r0, #0x18
-	lsrs r1, r0, #0x18
-	cmp r1, #0
-	bne _08078544
-	movs r0, #2
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_08078544:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0807854C: .4byte 0x08367460
-
 	thumb_func_start FUN_08078550
 FUN_08078550: @ 0x08078550
 	push {r4, lr}
