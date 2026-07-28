@@ -74,7 +74,24 @@ static bool8 FUN_0807b1e0(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/wormer_snow_ball_p2_post_pre_a.inc");
+static const u8 sInitModes[4];
+static const struct Collision sCollisions[17];
+void WormerSnowBall_Update(struct Enemy* p);
+
+void WormerSnowBall_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  if ((p->s).work[0] <= 1) {
+    INIT_BODY(p, sCollisions, 2, NULL);
+  } else {
+    INIT_BODY(p, sCollisions, 6, NULL);
+  }
+  SET_BODY_INTERSECT_HANDLER(p, nop_0807b1dc);
+  WormerSnowBall_Update(p);
+}
 
 extern const EnemyFunc sUpdates1[4];
 extern const EnemyFunc sUpdates2[4];
