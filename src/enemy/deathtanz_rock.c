@@ -60,7 +60,25 @@ static bool8 FUN_0807a5c0(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/deathtanz_rock_p2_post_pre.inc");
+static const u8 sInitModes[2];
+static const struct Collision sCollisions[9];
+void DeathtanzRock_Update(struct Enemy* p);
+
+void DeathtanzRock_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  if ((p->s).work[0] == 0) {
+    INIT_BODY(p, sCollisions, 20, NULL);
+    p->props[0] = 3;
+  } else {
+    INIT_BODY(p, sCollisions, 6, NULL);
+  }
+  SET_BODY_INTERSECT_HANDLER(p, nop_0807a5bc);
+  DeathtanzRock_Update(p);
+}
 static const EnemyFunc sUpdates1[3];
 static const EnemyFunc sUpdates2[3];
 
