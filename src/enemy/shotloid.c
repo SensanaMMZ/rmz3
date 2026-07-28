@@ -5,6 +5,7 @@
 #include "global.h"
 #include "story.h"
 #include "metatile.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[];
 
@@ -42,7 +43,25 @@ bool8 FUN_080939e8(struct Enemy* p, s32 d) {
   return FALSE;
 }
 
-INCASM("asm/enemy/shotloid_pre_p1_p1_b.inc");
+u32 FUN_08093a20(struct Enemy* p) {
+  u32 xflip = 0;
+  struct Zero* z = pZero2;
+  s32 px = (p->s).coord.x;
+  s32 zx = (z->s).coord.x;
+  if (px > zx) {
+    xflip = 1;
+  }
+  {
+    s32 t = zx - PIXEL(96);
+    t += xflip * PIXEL(192);
+    t -= px;
+    t += PIXEL(8);
+    if ((u32)t <= 0xFFF) {
+      return 2;
+    }
+  }
+  return xflip;
+}
 
 bool8 FUN_08093a64(struct Enemy* p, s32 dy) {
   if (dy > 0) {
