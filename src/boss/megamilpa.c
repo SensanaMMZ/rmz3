@@ -585,6 +585,79 @@ static void nop_0803d6a0(void* _) {}
 
 // --------------------------------------------
 
+extern const struct Collision gMegamilpaCoreHitbox;
+
+void FUN_0803d6a4(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      (p->s).flags &= ~DISPLAY;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      if (((p->s).scriptEntity)->flags & (1 << 0)) (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      if (!(gStageRun.vm.active & 1)) (p->s).mode[1] = 1, (p->s).mode[2] = 0;
+      break;
+    }
+  }
+}
+
+void FUN_0803d6fc(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      (p->s).work[2] = 60;
+      SetDDP(&p->body, &gMegamilpaCoreHitbox);
+      (p->s).flags &= ~DISPLAY;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      (p->s).work[2]--;
+      if ((p->s).work[2] == 0) {
+        u8 val;
+        do {
+          val = u8_ARRAY_08361ac4[RANDOM(RNG_0202f388) & 1];
+          if (val == (p->props).megamilpa.unk_bd) {
+            (p->props).megamilpa.unk_bc++;
+          } else {
+            (p->props).megamilpa.unk_bc = 0;
+          }
+        } while ((p->props).megamilpa.unk_bc > 1);
+        (p->props).megamilpa.unk_bd = val;
+        (p->s).mode[1] = val, (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
+
+void FUN_0803d7a0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      PlaySound(SE_UNK_10d);
+      (p->s).work[2] = 32;
+      (p->props).megamilpa.unk_be[0] = RANDOM(RNG_0202f388) & 1;
+      (p->props).megamilpa.unk_be[1] = RANDOM(RNG_0202f388) & 1;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      if (((p->s).work[2] & 3) == 0) FUN_0803d454(p, 0, 0);
+      if ((p->s).work[2] > 0) {
+        (p->s).work[2]--;
+      } else {
+        (p->props).megamilpa.unk_c0 |= 1;
+        (p->s).mode[1] = 3, (p->s).mode[2] = 0;
+      }
+      AppendQuake(3, &(p->s).coord);
+      break;
+    }
+  }
+}
+
 INCASM("asm/boss/megamilpa.inc");
 
 // --------------------------------------------

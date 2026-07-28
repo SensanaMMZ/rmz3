@@ -77,11 +77,24 @@ struct PAquaModProps {
   u8 unk_c0[36];
 };
 
+struct MegamilpaProps {
+  struct Coord c_b4;  // 0xB4
+  u8 unk_bc;          // 0xBC
+  u8 unk_bd;          // 0xBD
+  u8 unk_be[2];       // 0xBE
+  s32 unk_c0;         // 0xC0
+  s32 unk_c4;         // 0xC4
+  bool8 unk_c8;       // 0xC8
+  u8 unk_c9[3];       // 0xC9
+  u8 buffer[24];      // 0xCC
+};
+
 struct Boss {
   OBJECT_HDR;
 
   union {
     u8 raw[48];
+    struct MegamilpaProps megamilpa;
     struct OmegaWhiteProps omegaWhite;
     struct CopyXProps copyx;
     struct GlacierleProps glacierle;
