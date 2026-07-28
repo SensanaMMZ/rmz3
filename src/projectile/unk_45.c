@@ -85,6 +85,59 @@ void FUN_080b1b40(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_45_p2_p1.inc");
 
+// 1 insn from matching: retail keeps the work[1] load in r0 and copies it
+// into the a register; agbcc coalesces the copy away (allocation tie).
+NON_MATCH void FUN_080b2178(struct Body* body) {
+#if MODERN
+  u8 win = 0;
+  struct CollidableEntity* parent = body->parent;
+  struct CollidableEntity* other = (body->enemy)->parent;
+  u32 a;
+  if (((struct Entity*)parent)->work[1] == 0 && ((struct Entity*)other)->work[1] == 2) {
+    win = 1;
+  }
+  a = ((struct Entity*)parent)->work[1];
+  if (a == 1 && ((struct Entity*)other)->work[1] == 0) {
+    win = 1;
+  }
+  if (a == 2 && ((struct Entity*)other)->work[1] == 1) {
+    win = 1;
+  }
+  *(u8*)((u8*)parent + 0xbc) = 1;
+  if (win == 1) {
+    *(u8*)((u8*)parent + 0xbc) = win;
+  }
+#else
+  INCCODE("asm/projectile/unk_45_2178.inc");
+#endif
+}
+
+// 1 insn from matching: retail keeps the work[1] load in r0 and copies it
+// into the a register; agbcc coalesces the copy away (allocation tie).
+NON_MATCH void FUN_080b21c0(struct Body* body) {
+#if MODERN
+  u8 win = 0;
+  struct CollidableEntity* parent = body->parent;
+  struct CollidableEntity* other = (body->enemy)->parent;
+  u32 a;
+  if (((struct Entity*)other)->work[1] == 0 && ((struct Entity*)parent)->work[1] == 2) {
+    win = 1;
+  }
+  a = ((struct Entity*)other)->work[1];
+  if (a == 1 && ((struct Entity*)parent)->work[1] == 0) {
+    win = 1;
+  }
+  if (a == 2 && ((struct Entity*)parent)->work[1] == 1) {
+    win = 1;
+  }
+  if (win == 1) {
+    *(u8*)((u8*)parent + 0xbc) = win;
+  }
+#else
+  INCCODE("asm/projectile/unk_45_21c0.inc");
+#endif
+}
+
 void FUN_080b2204(struct Body* body) {
   struct CollidableEntity* parent = body->parent;
   if ((body->enemy->processing)->faction == 0) {
