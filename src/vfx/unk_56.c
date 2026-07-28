@@ -70,7 +70,9 @@ static void VFX56_Die(struct Entity* p) {
 
 // --------------------------------------------
 
-// Draft improved by the oam-byte-6 remap (childreMode0 discovery): 15 real
+// One instruction from a match: retail materializes the shared zero before
+// the flags RMW where agbcc places it after (scheduling tie). Everything
+// else reproduces via the oam.xflip bitfield insert and paired coord loads.
 // diffs left, dominated by the ip-parking arg-copy basin.
 // (arg-copy basin, same class as FadeBlack).
 NON_MATCH void FUN_080c15d4(struct VFX* vfx) {
@@ -78,10 +80,14 @@ NON_MATCH void FUN_080c15d4(struct VFX* vfx) {
   struct Entity* q = (vfx->s).unk_28;
   (vfx->s).flags &= ~X_FLIP;
   ((vfx->s).spr).xflip = 0;
-  *((u8*)&((vfx->s).spr).oam + 6) &= ~0x11;
+  ((vfx->s).spr).oam.xflip = 0;
   (vfx->s).taskCol = 9;
-  (vfx->s).coord.x = q->coord.x;
-  (vfx->s).coord.y = q->coord.y;
+  {
+    s32 x = q->coord.x;
+    s32 y = q->coord.y;
+    (vfx->s).coord.x = x;
+    (vfx->s).coord.y = y;
+  }
   (vfx->s).work[2] = 0;
   VFX56_Update(&vfx->s);
 #else
