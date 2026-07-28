@@ -78,7 +78,34 @@ void nop_0807c4b0(struct Enemy* p) {}
 
 bool8 FUN_0807c4b4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/swordy_p5.inc");
+void FUN_0807c4b8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + (p->s).d.y + PIXEL(16))) {
+        (p->s).d.y = 0;
+        (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - PIXEL(16);
+      } else {
+        (p->s).coord.y += (p->s).d.y;
+      }
+      break;
+  }
+  {
+    struct Entity** slot = (struct Entity**)&p->props[8];
+    if (isKilled(*slot)) {
+      *slot = NULL;
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
 
 static const struct Coord sElementCoord;
 
