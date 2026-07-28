@@ -5,9 +5,12 @@
 #include "entity/macros.h"
 #include "story.h"
 #include "motion.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[4];
-static const motion_t sMotions[18];
+static const motion_t sMotions[4];
+static const motion_t sDiveMotions[3][2];
+static const motion_t sMotions2[8];
 
 void FUN_0807d6c0(s32 x, s32 y, u8 a2) {
   struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
@@ -179,6 +182,81 @@ void FUN_0807da34(struct Enemy* p) {
 
 INCASM("asm/enemy/mellnet_post_post_post.inc");
 
+// Everything reproduces (bitfield oam.xflip insert, 2D dive table, homing
+// divide) except two ties: cmdIdx lands in r3 where retail uses r7, and one
+// d.y shift schedules after the d.x store instead of before it.
+NON_MATCH void FUN_0807dd24(struct Enemy* p) {
+#if MODERN
+  s32 onLeft, dx, dy, dist, c;
+  s16 v;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      SetDDP(&p->body, &sCollisions[1]);
+      onLeft = 0;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        onLeft = 1;
+      }
+      if (onLeft) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+      v = onLeft;
+      ((p->s).spr).xflip = v;
+      ((p->s).spr).oam.xflip = v;
+      dx = (pZero2->s).coord.x - (p->s).coord.x;
+      dy = (pZero2->s).coord.y - PIXEL(24);
+      dy -= (p->s).coord.y;
+      dist = (dx >> 8) * (dx >> 8);
+      dist += (dy >> 8) * (dy >> 8);
+      dist = Sqrt(dist) << 8;
+      dx = (dx << 8) / dist;
+      dy = (dy << 8) / dist;
+      (p->s).d.x = dx << 2;
+      (p->s).d.y = dy << 2;
+      c = (p->s).motion.cmdIdx;
+      GotoMotion(&p->s, sDiveMotions[0][((p->s).flags & 0x10) ? 1 : 0], c, 3);
+      (p->s).work[2] = 3;
+      (p->s).mode[2]++;
+      goto tick;
+    }
+    case 2: {
+      c = (p->s).motion.cmdIdx;
+      GotoMotion(&p->s, sDiveMotions[1][((p->s).flags & 0x10) ? 1 : 0], c, 3);
+      (p->s).work[2] = 0xF;
+    }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+    case 3:
+    tick:
+      UpdateMotionGraphic(&p->s);
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 4: {
+      c = (p->s).motion.cmdIdx;
+      GotoMotion(&p->s, sDiveMotions[2][((p->s).flags & 0x10) ? 1 : 0], c, 3);
+      (p->s).work[2] = 3;
+    }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+#else
+  INCCODE("asm/enemy/mellnet_dd24.inc");
+#endif
+}
+
+INCASM("asm/enemy/mellnet_post_post_post_b.inc");
+
 void Mellnet_Init(struct Enemy* p);
 void Mellnet_Update(struct Enemy* p);
 void Mellnet_Die(struct Enemy* p);
@@ -283,17 +361,20 @@ static const struct Coord sElementCoord = {PIXEL(0), PIXEL(0)};
 static const u8 sInitModes[2] = {1, 2};
 
 // clang-format off
-static const motion_t sMotions[18] = {
+static const motion_t sMotions[4] = {
     MOTION(SM071_MELLNET, 0x00),
     MOTION(SM071_MELLNET, 0x0A),
     MOTION(SM071_MELLNET, 0x00),
     MOTION(SM071_MELLNET, 0x0A),
-    MOTION(SM071_MELLNET, 0x01),
-    MOTION(SM071_MELLNET, 0x0B),
-    MOTION(SM071_MELLNET, 0x02),
-    MOTION(SM071_MELLNET, 0x0C),
-    MOTION(SM071_MELLNET, 0x03),
-    MOTION(SM071_MELLNET, 0x0D),
+};
+
+static const motion_t sDiveMotions[3][2] = {
+    {MOTION(SM071_MELLNET, 0x01), MOTION(SM071_MELLNET, 0x0B)},
+    {MOTION(SM071_MELLNET, 0x02), MOTION(SM071_MELLNET, 0x0C)},
+    {MOTION(SM071_MELLNET, 0x03), MOTION(SM071_MELLNET, 0x0D)},
+};
+
+static const motion_t sMotions2[8] = {
     MOTION(SM071_MELLNET, 0x04),
     MOTION(SM071_MELLNET, 0x0E),
     MOTION(SM071_MELLNET, 0x07),
