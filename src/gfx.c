@@ -303,7 +303,9 @@ void LoadPalette(const struct Palette* p, u32 ofs) {
 // retail shifts BEFORE the multiply there, the pre-shift product overflows).
 // Still 5 insns off: agbcc copies all four args into ip/r4/r5/r7 and fuses the
 // pointer advances into ldmia/stmia; retail keeps args in place, parks dst in
-// lr per-iteration, and reloads mask[i] per use. Arg-copy basin -> permuter.
+// lr per-iteration, and reloads mask[i] per use. Permuter verdict (17k iters):
+// plateaued at 1620/3320 and the best candidate was a semantic artifact
+// (hoisted the src read out of the loop) -- allocation basin, not permutable.
 NON_MATCH static void FadeBlack(u32* src, u32* dst, u32 lv, u32* mask) {
 #if MODERN
   s32 i;
