@@ -1,4 +1,5 @@
 #include "global.h"
+#include "palette_animation.h"
 #include "vfx.h"
 
 // コピーエックスが変身する際のエフェクト?
@@ -85,4 +86,53 @@ static void FUN_080c11e0(struct VFX* vfx) {
   (vfx->s).work[2] = 42;
 }
 
+void FUN_080c123c(struct VFX* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 t;
+  s16 v;
+  SetMotion(&p->s, MOTION(0x61, 0x00));
+  UpdateMotionGraphic(&p->s);
+  t = (q->flags >> 4) & 1;
+  if (t) {
+    (p->s).flags |= X_FLIP;
+  } else {
+    (p->s).flags &= ~X_FLIP;
+  }
+  v = t;
+  (p->s).spr.xflip = v;
+  (p->s).spr.oam.xflip = v;
+  *((u8*)&(p->s).spr.oam + 5) |= 0xC;
+  {
+    s32 x = q->coord.x;
+    s32 y = q->coord.y;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+  StartPaletteAnimation(0x61, 0x300);
+  (p->s).work[2] = 0;
+}
+
 INCASM("asm/vfx/unk_55.inc");
+
+void FUN_080c13c8(struct VFX* p) {
+  struct Entity* q = (p->s).unk_28;
+  UpdateMotionGraphic(&p->s);
+  StepPaletteAnimation(0x61);
+  {
+    s32 w = (p->s).work[2] + 1;
+    (p->s).work[2] = w;
+    if (w & 1) {
+      (p->s).flags |= DISPLAY;
+    } else {
+      (p->s).flags &= ~DISPLAY;
+    }
+  }
+  if ((p->s).motion.state == 3 ||
+      ((q->motionID << 8) | q->motion.step) != MOTION(0xb3, 0x1b)) {
+    RemovePaletteAnimation(0x61);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    VFX55_Die(p);
+  }
+}
+
+INCASM("asm/vfx/unk_55c.inc");
