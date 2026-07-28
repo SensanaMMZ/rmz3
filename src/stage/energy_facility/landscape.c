@@ -923,7 +923,23 @@ NON_MATCH void FUN_08012924(struct StageLayer* l, const struct Stage* stage) {
 #endif
 }
 
-INCASM("asm/stage_gfx/energy_facility_b.inc");
+void FUN_08012988(struct StageLayer* l, const struct Stage* stage) {
+  s16 i;
+  if (l->phase == 0) {
+    s32 z;
+    for (i = 0, z = 0; i <= 3; i++) {
+      *(s32*)&l->work.energyFacility.doors[i] = z;
+    }
+    l->phase++;
+  } else {
+    for (i = 0; i <= 3; i++) {
+      struct EFDoorRow* row = (struct EFDoorRow*)((u8*)(i * 4) + (u32)l);
+      if (row->door == NULL) {
+        row->door = CreateStructuralSteel(0x272000, (((i * 3 + 0x13) << 4) + 8) << 8, i >> 1, i & 1, 1);
+      }
+    }
+  }
+}
 
 NON_MATCH void FUN_08012a00(struct StageLayer* l, const struct Stage* stage) {
 #if MODERN
@@ -948,7 +964,25 @@ NON_MATCH void FUN_08012a00(struct StageLayer* l, const struct Stage* stage) {
 #endif
 }
 
-INCASM("asm/stage_gfx/energy_facility_c.inc");
+static u8 FUN_08012518(struct Coord* pixels);
+static const struct Coord Coord_ARRAY_08342784[6];
+static const struct Coord Coord_083427b4;
+
+const struct Coord* FUN_08012a64(struct Coord* c) {
+  struct Coord px;
+  px.x = c->x >> 8;
+  px.y = c->y >> 8;
+  if ((gOverworld.terrain.id & 0x7F) == 0xB) {
+    u8 r = FUN_08012518(&px);
+    if (r != 6 && ((gCurStory.unk_54 >> r) & 1)) {
+      if (r == 2 && c->x > 0x87000) {
+        return &Coord_083427b4;
+      }
+      return &Coord_ARRAY_08342784[r];
+    }
+  }
+  return NULL;
+}
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
