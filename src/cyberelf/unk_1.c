@@ -82,7 +82,27 @@ void FUN_080e2310(struct Elf* p) {
   }
 }
 
-INCASM("asm/cyberelf/unk_1_p1_b.inc");
+void FUN_080e234c(struct Elf* p) {
+  struct Coord c;
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  struct Rect r = gZeroRanges[z->posture];
+  c.x = (z->s).coord.x;
+  c.y = (z->s).coord.y + r.y;
+  if (FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c, &p->buffer[6], 0xA0)) {
+    (p->s).mode[1]++;
+  }
+}
+
+void FUN_080e23a4(struct Elf* p) {
+  struct Coord c;
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  struct Rect r = gZeroRanges[z->posture];
+  c.x = (z->s).coord.x;
+  c.y = (z->s).coord.y - r.h;
+  if (FUN_080e1578((struct Coord*)&p->buffer[8], &(p->s).unk_coord, &c, &p->buffer[6], 0xA0)) {
+    (p->s).mode[1]++;
+  }
+}
 
 void FUN_080e23fc(struct Elf* p) {
   if (((struct CyberElf1*)p)->unk_b8 == 0) {
