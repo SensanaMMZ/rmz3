@@ -4,78 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08094bf0
-FUN_08094bf0: @ 0x08094BF0
-	push {r4, r5, lr}
-	sub sp, #8
-	adds r4, r0, #0
-	adds r5, r4, #0
-	adds r5, #0x8c
-	ldr r0, [r5]
-	movs r1, #0x80
-	lsls r1, r1, #4
-	ands r0, r1
-	cmp r0, #0
-	beq _08094C16
-	ldr r0, _08094C70 @ =pZero2
-	ldr r0, [r0]
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #1
-	ands r0, r1
-	cmp r0, #0
-	beq _08094C68
-_08094C16:
-	movs r0, #0x3f
-	bl PlaySound
-	ldr r0, [r4, #0x54]
-	str r0, [sp]
-	ldr r0, [r4, #0x58]
-	ldr r1, _08094C74 @ =0xFFFFF000
-	adds r0, r0, r1
-	str r0, [sp, #4]
-	ldr r2, _08094C78 @ =0x08369F62
-	adds r0, r4, #0
-	mov r1, sp
-	movs r3, #4
-	bl FUN_080b7ffc
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xfe
-	ands r0, r1
-	movs r2, #0
-	movs r1, #0xfd
-	ands r0, r1
-	strb r0, [r4, #0xa]
-	str r2, [r5]
-	adds r0, r4, #0
-	adds r0, #0x90
-	str r2, [r0]
-	adds r0, #4
-	strb r2, [r0]
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xfb
-	ands r0, r1
-	strb r0, [r4, #0xa]
-	ldr r1, _08094C7C @ =gEnemyFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #3
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #0xc]
-	str r0, [r4, #0x14]
-_08094C68:
-	add sp, #8
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08094C70: .4byte pZero2
-_08094C74: .4byte 0xFFFFF000
-_08094C78: .4byte 0x08369F62
-_08094C7C: .4byte gEnemyFnTable
-
 	thumb_func_start FUN_08094c80
 FUN_08094c80: @ 0x08094C80
 	push {r4, lr}
@@ -439,3 +367,4 @@ _08094F38:
 	pop {r0}
 	bx r0
 	.align 2, 0
+

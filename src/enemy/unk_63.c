@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "vfx.h"
+#include "zero.h"
 
 static const EnemyFunc sUpdates1[4];
 static const EnemyFunc sUpdates2[4];
@@ -85,6 +87,21 @@ void FUN_08094bd0(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_BINDING) {
     (p->s).mode[1] = 3;
     (p->s).mode[2] = 0;
+  }
+}
+
+static const motion_t sMotions[4];
+
+void FUN_08094bf0(struct Enemy* p) {
+  if (!((p->body).status & BODY_STATUS_BINDING) || ((pZero2->body).status & BODY_STATUS_WHITE)) {
+    struct Coord c;
+    PlaySound(SE_ICE_BREAK);
+    c.x = (p->s).coord.x, c.y = (p->s).coord.y - PIXEL(16);
+    FUN_080b7ffc((void*)p, &c, (motion_t*)sMotions, 4);
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
   }
 }
 
