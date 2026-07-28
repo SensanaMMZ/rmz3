@@ -757,6 +757,27 @@ void copyx_08056bd0(struct Boss* p) {
 
 INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b.inc");
 
+void copyx_08057520(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    (p->s).mode[2] = 0;
+    PlaySound(0x11A);
+    StartPaletteAnimation(0x62, 0x280);
+    (p->s).work[2] = 0x24;
+  }
+  UpdateMotionGraphic(&p->s);
+  StepPaletteAnimation(0x62);
+  (p->s).spr.xflip = 0;
+  (p->s).spr.oam.xflip = 0;
+  (p->s).flags &= ~X_FLIP;
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    RemovePaletteAnimation(0x62);
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p2_b2.inc");
+
 void CopyX_OnDamage(struct Body* body) {
   if (body->hitboxFlags & 1) {
     struct Boss* self = (struct Boss*)body->parent;
