@@ -162,6 +162,33 @@ void FUN_080cc968(struct LavaGeyserObject* p) {
 
 INCASM("asm/solid/lava_geyser_p4.inc");
 
+void FUN_080ccae0(struct Solid* p) {
+  s32 a;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      a = (p->s).unk_coord.x;
+      {
+        s32 t = a - PIXEL(2);
+        (p->s).coord.x = t + (RANDOM(RNG_0202f388) & 0x1FF);
+      }
+      if (--(p->s).work[2] == 0) {
+        (p->s).coord.x = a;
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/lava_geyser_p4b.inc");
+
 // --------------------------------------------
 
 void nop_080cc930(struct Solid* p);
