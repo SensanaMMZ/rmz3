@@ -109,6 +109,28 @@ void FUN_080e4a88(struct Elf* p) {
   }
 }
 
+void FUN_080e4ae8(struct Elf* p) {
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  struct Entity* parent = (p->s).unk_2c;
+  if ((p->s).mode[2] == 0) {
+    (p->s).mode[3] = 0x40;
+    (p->s).mode[2]++;
+  }
+  if (parent->mode[0] > 1 || !CheckPlayerStandStill(z)) {
+    parent->flags2 &= 0x7f;
+    (p->s).unk_2c = NULL;
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  } else if ((u8)--(p->s).mode[3] == 0xFF) {
+    parent->flags2 &= 0x7f;
+    (p->s).unk_2c = NULL;
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  } else {
+    parent->flags2 |= 0x80;
+  }
+}
+
 INCASM("asm/cyberelf/sea_otter_p2b.inc");
 
 void FUN_080e4a3c(struct Elf* p);
