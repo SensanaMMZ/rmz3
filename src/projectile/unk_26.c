@@ -44,7 +44,21 @@ void Projectile26_Update(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
 }
 
-INCASM("asm/projectile/unk_26_post.inc");
+INCASM("asm/projectile/unk_26_post_a.inc");
+
+metatile_attr_t FUN_080098a4(s32 x, s32 y);
+
+void FUN_080a8fa8(struct Projectile* p) {
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += PIXEL(1) / 4;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    FUN_080a88fc(&p->s, 5, 0);
+  }
+}
+
+INCASM("asm/projectile/unk_26_post_b.inc");
 
 void Projectile26_Init(struct Projectile* p);
 void Projectile26_Die(struct Projectile* p);
