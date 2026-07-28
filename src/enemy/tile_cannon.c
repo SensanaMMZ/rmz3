@@ -147,6 +147,26 @@ void FUN_080784b4(struct Enemy* p) {
 
 INCASM("asm/enemy/tile_cannon_p3_post_pre.inc");
 
+void FUN_080785bc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, sCollisions);
+      (p->s).unk_2c = (struct Entity*)FUN_08078108(&p->s);
+      SetMotion(&p->s, MOTION(0x2f, 0x04) + (p->s).work[0]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      u8 r = FUN_080780c4(p);
+      if (r == 0 && p->props[4] != 0) {
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = r;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 void FUN_08078624(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0:
