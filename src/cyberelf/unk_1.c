@@ -1,6 +1,7 @@
 #include "cyberelf.h"
 #include "entity.h"
 #include "global.h"
+#include "mission.h"
 #include "zero.h"
 
 struct Zero;
@@ -68,6 +69,29 @@ void Elf1_Init(struct CyberElf1* p) {
 }
 
 INCASM("asm/cyberelf/unk_1_p1_a.inc");
+
+// Three instructions short of retail, which keeps the 0x121 offset in r5 and
+// schedules the pool loads ahead of the index math; agbcc folds the address
+// chains tighter in every spelling tried.
+NON_MATCH void Elf1_Die(struct Elf* p) {
+#if MODERN
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  u16* use = (u16*)((u8*)z + 0xb4);
+  gPause = FALSE;
+  {
+    u8* flag = *gUnlockedElfPtr + *((u8*)z + 0x121);
+    *flag |= 2;
+  }
+  use[2]++;
+  if (*(u8*)((u8*)gMission.unk_00 + 0x4c) <= 0x62) {
+    *(u8*)((u8*)gMission.unk_00 + 0x4c) += 1;
+  }
+  (p->s).flags &= ~DISPLAY;
+  SET_ELF_ROUTINE(p, ENTITY_EXIT);
+#else
+  INCCODE("asm/cyberelf/elf1_die.inc");
+#endif
+}
 
 bool8 FUN_080e1578(struct Coord* c1, struct Coord* c2, struct Coord* c3, u8* param_4, s16 param_5);
 
