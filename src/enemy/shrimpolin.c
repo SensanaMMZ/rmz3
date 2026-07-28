@@ -443,6 +443,24 @@ static void shrimporin_08069c24(struct ShrimporinObject* p) {
 
 INCASM("asm/enemy/shrimpolin.inc");
 
+void shrimporinIceCrash(s32 x, s32 y, u8 frame);
+
+void shrimporin_0806a4ec(struct Enemy* p) {
+  (p->body).status = 0;
+  (p->body).prevStatus = 0;
+  (p->body).invincibleTime = 0;
+  (p->s).flags &= ~COLLIDABLE;
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+  if ((p->s).work[1] == 0) {
+    PlaySound(0x3F);
+  } else {
+    PlaySound(0x122);
+  }
+  shrimporinIceCrash((p->s).coord.x, (p->s).coord.y, (p->s).work[1]);
+}
+
+INCASM("asm/enemy/shrimpolin_b.inc");
+
 // --------------------------------------------
 
 static const struct Collision sCollisions[6] = {
