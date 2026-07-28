@@ -691,6 +691,26 @@ void FUN_08056a80(struct Boss* p) {
 
 INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_a.inc");
 
+void FUN_080a9aa0(struct Entity* e, u8 kind1, u8 kind2);
+
+void copyx_08056b6c(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb3, 0x03));
+    (p->s).mode[2] = 0;
+    (p->s).work[2] = 0x40;
+    PlaySound(0x46);
+  }
+  UpdateMotionGraphic(&p->s);
+  if (((p->s).work[2] & 7) == 0) {
+    FUN_080a9aa0(&p->s, 0, 0);
+  }
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    (p->s).mode[1] = 0x20;
+    (p->s).mode[2] = 1;
+    *(u8*)((u8*)p + 0xc6) = 0;
+  }
+}
+
 // 0x08056bd0
 void copyx_08056bd0(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
