@@ -226,6 +226,20 @@ void FUN_080abb2c(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
+void FUN_080abb44(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x62, 0x07));
+  INIT_BODY(p, &sCollisions[10], 0x40, NULL);
+  (p->s).d.x = 0x80;
+  (p->s).d.y = 0;
+  (p->s).work[2] = 0;
+  (p->s).work[3] = 0;
+  Projectile32_Update(p);
+}
+
 INCASM("asm/projectile/unk_32_p4_p3_p1.inc");
 
 void FUN_080abdc8(struct Projectile* p) {

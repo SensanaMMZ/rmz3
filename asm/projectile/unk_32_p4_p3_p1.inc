@@ -4,60 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080abb44
-FUN_080abb44: @ 0x080ABB44
-	push {r4, r5, r6, lr}
-	adds r4, r0, #0
-	ldr r1, _080ABBAC @ =gProjectileFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #1
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #4]
-	str r0, [r4, #0x14]
-	adds r0, r4, #0
-	bl InitNonAffineMotion
-	ldrb r1, [r4, #0xa]
-	movs r0, #1
-	movs r6, #0
-	orrs r0, r1
-	movs r1, #2
-	orrs r0, r1
-	strb r0, [r4, #0xa]
-	ldr r1, _080ABBB0 @ =0x00006207
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r1, [r4, #0xa]
-	movs r0, #4
-	orrs r0, r1
-	strb r0, [r4, #0xa]
-	adds r5, r4, #0
-	adds r5, #0x74
-	ldr r1, _080ABBB4 @ =0x0836C51C
-	adds r2, r4, #0
-	adds r2, #0x54
-	adds r0, r5, #0
-	movs r3, #0x40
-	bl InitBody
-	str r4, [r5, #0x2c]
-	str r6, [r5, #0x24]
-	movs r0, #0x80
-	str r0, [r4, #0x5c]
-	str r6, [r4, #0x60]
-	strb r6, [r4, #0x12]
-	strb r6, [r4, #0x13]
-	adds r0, r4, #0
-	bl Projectile32_Update
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080ABBAC: .4byte gProjectileFnTable
-_080ABBB0: .4byte 0x00006207
-_080ABBB4: .4byte 0x0836C51C
-
 	thumb_func_start FUN_080abbb8
 FUN_080abbb8: @ 0x080ABBB8
 	push {r4, r5, r6, r7, lr}
