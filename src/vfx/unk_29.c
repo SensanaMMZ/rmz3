@@ -20,7 +20,7 @@ const VFXRoutine gGhost29Routine = {
 
 static void Ghost29_Init(struct VFX* vfx) {
   (vfx->s).flags |= FLIPABLE;
-  FUN_080cb4c0((struct Solid*)vfx);
+  FUN_080cb4c0((struct Entity*)vfx);
   SET_VFX_ROUTINE(vfx, ENTITY_UPDATE);
   Ghost29_Update(vfx);
 }

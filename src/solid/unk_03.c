@@ -41,7 +41,46 @@ struct Solid* CreateLeafBurn(u8 r0) {
   return p;
 }
 
-INCASM("asm/solid/unk_03_p1.inc");
+INCASM("asm/solid/unk_03_p1a.inc");
+
+void FUN_080cb4c0(struct Entity* p) {
+  s32 y, y2;
+  p->flags |= DISPLAY;
+  InitNonAffineMotion(p);
+  SetMotion(p, MOTION(SM032_UNK, 0));
+  (p->spr).oam.priority = 0;
+  if (p->work[0] == 0) {
+    y = (p->coord).y;
+  } else {
+    y = (p->coord).y - PIXEL(480);
+  }
+  y >>= 12;
+  y2 = y;
+  if (y < 0) {
+    y += 31;
+  }
+  p->taskCol = 31 - (y2 - (y >> 5) * 32);
+  p->work[2] = (p->work[1] & 3) + 5;
+}
+
+INCASM("asm/solid/unk_03_p1b.inc");
+
+void FUN_080cb980(struct Body* body, struct Coord* r1, struct Coord* r2);
+
+void Solid3_Init(struct Solid* p) {
+  (p->s).flags |= FLIPABLE;
+  if ((p->s).work[1] == 0) {
+    INIT_BODY(p, &sCollision, 0, FUN_080cb980);
+    (p->s).flags2 &= ~WHITE_PAINTABLE;
+    (p->s).invincibleID = (p->s).uniqueID;
+  } else {
+    FUN_080cb4c0(&p->s);
+  }
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  Solid3_Update(p);
+}
+
+INCASM("asm/solid/unk_03_p1c.inc");
 
 void Solid3_Die(struct Solid* p) {}
 

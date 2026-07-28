@@ -14,7 +14,7 @@ extern const SolidRoutine* const gSolidFnTable[SOLID_ENTITY_COUNT];
 
 void DeleteSolid(Object* p);
 u16 FUN_080d0934(struct Entity* p, motion_t m, u8 r2);
-void FUN_080cb4c0(struct Solid* p);
+void FUN_080cb4c0(struct Entity* p);
 struct Solid* CreateLeafBurn(u8 r0);
 struct Solid* CreateResistanceBaseElevator(u8 floor);
 void CreateLavaRiverPlatform(u32 x, u32 y);
