@@ -55,7 +55,7 @@ struct NecroProps {
 };
 
 struct BubbleProps {
-  u8 unk_0[4];
+  s32 unk_0;
   s32 unk_4;
   u8 unk_8[8];
 };
