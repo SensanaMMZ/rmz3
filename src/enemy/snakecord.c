@@ -209,6 +209,32 @@ void FUN_0807472c(struct Enemy* p) {
 
 INCASM("asm/enemy/snakecord_p2_a.inc");
 
+void FUN_08074cb4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.y = 0;
+      SetMotion(&p->s, MOTION(0x28, 0x09));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 r;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      r = PushoutToUp2((p->s).coord.x, (p->s).coord.y);
+      if (r < 0) {
+        (p->s).coord.y += r;
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 #include "motion.h"
 
 void FUN_08074d18(struct Enemy* p) {
