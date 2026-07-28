@@ -91,7 +91,40 @@ void Projectile43_Update(struct Projectile* p) {
   (PTR_ARRAY_0836d748[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/unk_43_post_p2_p3_b.inc");
+static const struct Collision sCollision[2];
+
+void FUN_080b155c(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      INIT_BODY(p, sCollision, 0, NULL);
+      InitNonAffineMotion(&p->s);
+      SetMotion(&p->s, MOTION(SM219_SHELLCRAWLER, 13));
+      SET_XFLIP(p, (p->s).work[2]);
+      (p->s).mode[2]++;
+      (p->s).work[3] = 85;
+      (p->s).work[2] = 6;
+      FALLTHROUGH;
+    }
+    case 1: {
+      (p->s).work[3]--;
+      if ((p->s).work[3] == 0) {
+        CreateSmoke(3, &(p->s).coord);
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+        return;
+      }
+      if ((p->s).work[2] == 0) {
+        u8 attr;
+        (p->s).coord.x += (p->s).d.x;
+        attr = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+        if (attr != 0 && !(attr & (1 << 7))) SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      } else {
+        (p->s).work[2]--;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void Projectile43_Init(struct Projectile* p);
 void Projectile43_Update(struct Projectile* p);
