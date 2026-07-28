@@ -160,6 +160,47 @@ static const StageLayerRoutine sLayerRoutine[9] = {
 };
 // clang-format on
 
+void FUN_080140a8(struct StageLayer* l, const struct Stage* stage) {
+  if (l->viewportCenterPixel.x <= 0xB3F && l->viewportCenterPixel.y <= 0x3BF) {
+    l->scrollPower.x = 0x40;
+    l->scrollPower.y = 0x40;
+    l->scroll.x = 0x4EC;
+    l->scroll.y = 0xF0;
+  } else if (l->viewportCenterPixel.x <= 0xEFF) {
+    l->scrollPower.x = 0x80;
+    l->scrollPower.y = 0x80;
+    l->scroll.x = 0x5A0;
+    if (l->viewportCenterPixel.y <= 0x3BF) {
+      l->scroll.y = 0x190;
+    } else {
+      l->scroll.y = 0x320;
+    }
+  } else {
+    l->scrollPower.x = 0x80;
+    l->scrollPower.y = 0x80;
+    l->scroll.x = 0x8E8;
+    l->scroll.y = 0x410;
+  }
+}
+
+void giant_elevator_08014124(struct StageLayer* l, const struct Stage* stage) {
+  u32 ph = l->phase;
+  if (ph == 0) {
+    u16 b = l->bgIdx;
+    u32 n = b >> 4;
+    BGCNT16(n) = l->prio | l->screenBase | 0x44;
+    RESET_BGOFS(n);
+    LoadBgMap(b, gBgMapOffsets, 0x62, 0, 0);
+    l->unk_10 = 0;
+    l->phase++;
+  }
+  if (l->viewportCenterPixel.x <= 0x34F) {
+    l->unk_10--;
+  } else {
+    l->unk_10++;
+  }
+}
+
 INCASM("asm/stage_gfx/giant_elevator_p1_a.inc");
 
 void giantElevator_08014880(struct StageLayer* p, const struct Stage* _) {
