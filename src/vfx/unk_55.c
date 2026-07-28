@@ -112,7 +112,56 @@ void FUN_080c123c(struct VFX* p) {
   (p->s).work[2] = 0;
 }
 
-INCASM("asm/vfx/unk_55.inc");
+void FUN_080c12b0(struct VFX* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 t;
+  s16 v;
+  SetMotion(&p->s, MOTION(0x61, 0x01));
+  UpdateMotionGraphic(&p->s);
+  t = (q->flags >> 4) & 1;
+  if (t) {
+    (p->s).flags |= X_FLIP;
+  } else {
+    (p->s).flags &= ~X_FLIP;
+  }
+  v = t;
+  (p->s).spr.xflip = v;
+  (p->s).spr.oam.xflip = v;
+  *((u8*)&(p->s).spr.oam + 5) |= 0xC;
+  {
+    s32 x = q->coord.x;
+    s32 y = q->coord.y;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+  StartPaletteAnimation(0x61, 0x300);
+  (p->s).work[2] = 0;
+}
+
+void FUN_080c1328(struct VFX* p) {
+  if ((p->s).mode[2] == 0) {
+    if ((u8)--(p->s).work[2] == 0xFF) {
+      (p->s).flags |= DISPLAY;
+      UpdateMotionGraphic(&p->s);
+      StartPaletteAnimation(0x65, 0x280);
+      StartPaletteAnimation(0x60, 0x300);
+      StepPaletteAnimation(0x65);
+      StepPaletteAnimation(0x60);
+      PlaySound(0x11A);
+      (p->s).mode[2]++;
+    }
+  } else {
+    UpdateMotionGraphic(&p->s);
+    StepPaletteAnimation(0x65);
+    StepPaletteAnimation(0x60);
+    if ((p->s).motion.state == 3) {
+      RemovePaletteAnimation(0x65);
+      RemovePaletteAnimation(0x60);
+      SET_VFX_ROUTINE(p, ENTITY_DIE);
+      VFX55_Die(p);
+    }
+  }
+}
 
 void FUN_080c13c8(struct VFX* p) {
   struct Entity* q = (p->s).unk_28;
