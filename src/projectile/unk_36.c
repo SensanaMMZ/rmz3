@@ -52,6 +52,25 @@ void Projectile36_Die(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_36_pre_post_p2_p1.inc");
 
+void FUN_080ad7d0(struct Projectile* p) {
+  struct Projectile* q = (struct Projectile*)(p->s).unk_28;
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x6a, 0x01));
+  (p->s).taskCol = 9;
+  (p->s).d.x = (q->s).d.x;
+  (p->s).d.y = (q->s).d.y;
+  (p->s).coord.x = *(s32*)((u8*)q + 0xb4);
+  (p->s).coord.y = *(s32*)((u8*)q + 0xb8);
+  *(s32*)((u8*)p + 0xb4) = (p->s).coord.x;
+  *(s32*)((u8*)p + 0xb8) = (p->s).coord.y;
+  (p->s).work[3] = (p->s).work[1];
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  Projectile36_Update(p);
+}
+
+INCASM("asm/projectile/unk_36_pre_post_p2_p1b.inc");
+
 void FUN_080ad958(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
   (p->s).work[2] += (p->s).work[3];
