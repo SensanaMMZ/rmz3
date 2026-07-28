@@ -1228,7 +1228,24 @@ void ActorOperator_Update(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/actor_p1_p1_b.inc");
+INCASM("asm/solid/actor_b_a.inc");
+
+// Identical instructions except the routine constant lands in r3 (retail)
+// vs r2 (agbcc) -- register-number tie.
+NON_MATCH void initActor21(struct Solid* p) {
+#if MODERN
+  gWindowRegBuffer.dispcnt |= DISPCNT_WIN1_ON;
+  gWindowRegBuffer.winin[2] |= 0xFE;
+  gWindowRegBuffer.winin[1] = 0;
+  (p->s).work[2] = 0;
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  Actor_Update(p);
+#else
+  INCCODE("asm/solid/actor_initActor21.inc");
+#endif
+}
+
+INCASM("asm/solid/actor_b_b.inc");
 
 extern const struct Rect Rect_08370c60;
 
