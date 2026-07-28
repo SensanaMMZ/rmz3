@@ -788,6 +788,31 @@ bool8 FUN_0803ffc0(struct Boss* p) {
 
 INCASM("asm/boss/blazin_p12_p2_p1.inc");
 
+struct Projectile* blazin_0809e620(struct Entity* e, struct Coord* c, struct Coord* d);
+
+// One scheduling slot apart: retail hoists the &c arg add into the coord.y
+// load shadow; agbcc orders the pool load first (and swaps r3/r4 with the
+// plain member store). Same 41 instructions either way.
+NON_MATCH struct Projectile* blazin_080402a4(struct Boss* p) {
+#if MODERN
+  struct Coord v;
+  struct Coord c;
+  u32 angle = 0x54;
+  if (!((p->s).flags & X_FLIP)) {
+    angle = 0xAC;
+  }
+  v.x = gSineTable[angle];
+  v.y = -gSineTable[(u8)(angle + 0x40)];
+  c.x = (p->s).coord.x;
+  ((s32*)&c)[1] = (p->s).coord.y - PIXEL(8);
+  return blazin_0809e620(&p->s, &c, &v);
+#else
+  INCCODE("asm/boss/blazin_402a4.inc");
+#endif
+}
+
+INCASM("asm/boss/blazin_p12_p2_p1b.inc");
+
 s32 howFarBlazin(struct Boss* p) {
   s32 zx = (pZero2->s).coord.x;
   s32 sx = (p->s).coord.x;
