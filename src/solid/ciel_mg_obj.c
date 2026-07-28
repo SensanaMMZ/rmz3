@@ -44,7 +44,25 @@ void CielMinigameObj_Die(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/solid/ciel_mg_obj_post.inc");
+INCASM("asm/solid/ciel_mg_obj_post_a.inc");
+
+// Same 24 instructions, one address-accumulation ordering tie: retail adds
+// 0xDF0 into q's register then the index; agbcc builds idx+q first.
+NON_MATCH void FUN_080ddec0(struct Solid* p) {
+#if MODERN
+  struct Entity* q = (p->s).unk_28;
+  UpdateMotionGraphic(&p->s);
+  if (((u16*)((u8*)q + 0xDF0))[(p->s).work[1]] == 0xFF) {
+    (p->s).flags |= DISPLAY;
+  } else {
+    (p->s).flags &= ~DISPLAY;
+  }
+#else
+  INCCODE("asm/solid/ciel_mg_obj_ddec0.inc");
+#endif
+}
+
+INCASM("asm/solid/ciel_mg_obj_post_b.inc");
 
 // シエルのミニゲームで使う様々なオブジェクト
 
