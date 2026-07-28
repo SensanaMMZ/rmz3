@@ -3,6 +3,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "physics.h"
 #include "stagerun.h"
 #include "story.h"
 
@@ -182,6 +183,36 @@ void FUN_0806e990(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
     (p->s).mode[1] = 6;
     (p->s).mode[2] = 0;
+  }
+}
+
+void FUN_0806e9fc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 f = IsFrozen(&p->s);
+      if (f != 0) {
+        break;
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      {
+        s32 r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (r < 0) {
+          (p->s).d.y = f;
+          (p->s).coord.y += r;
+        }
+      }
+      break;
+    }
   }
 }
 
