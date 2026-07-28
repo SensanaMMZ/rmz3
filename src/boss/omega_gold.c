@@ -158,7 +158,81 @@ void goldOmega1Neutral(struct Boss* p) {
 
 bool8 nop_0805b5dc(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_gold_p5.inc");
+extern const u8 unk_080fefb8[24];
+
+// 1 insn from parity (151 vs 152) with switch-block layout differences;
+// logic verified case-by-case against the asm. Layout tie.
+NON_MATCH void goldOmega1Laser(struct Boss* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      ((p->s).spr).spriteIdx = 0;
+      ((p->s).spr).xflip &= ~0x11;
+      (p->s).flags &= ~X_FLIP;
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).work[2] = 3;
+      if (RANDOM(RNG_0202f388) & 1) {
+        (p->s).mode[3] = 1;
+      } else {
+        (p->s).mode[3] = 0;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      (p->s).work[3] = 0x30;
+      if ((p->s).mode[3] == 0) {
+        createGoldOmega1Laser(0x4D0, unk_080fefb8[(p->s).work[2] - 1], 0x30, &p->s);
+      } else {
+        createGoldOmega1Laser(0x4D0, (unk_080fefb8 + 3)[(p->s).work[2] - 1], 0x30, &p->s);
+      }
+      StepPaletteAnimation(0xb);
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      floatGoldOmega1(p);
+      if ((p->s).work[3] != 0) {
+        (p->s).work[3]--;
+        if ((p->s).work[3] == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      floatGoldOmega1(p);
+      StepPaletteAnimation(0xb);
+      break;
+    }
+    case 3: {
+      floatGoldOmega1(p);
+      (p->s).work[2]--;
+      if ((p->s).work[2] == 0) {
+        *(s32*)((u8*)p + 0xbc) = 0;
+        (p->s).work[2] = 0x3C;
+        (p->s).mode[2]++;
+      } else {
+        (p->s).mode[2] = 1;
+      }
+      StepPaletteAnimation(0xb);
+      break;
+    }
+    case 4: {
+      floatGoldOmega1(p);
+      StepPaletteAnimation(0xb);
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+        if ((p->s).work[2] == 0) {
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = 0;
+        }
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/boss/omega_gold_laser.inc");
+#endif
+}
 
 bool8 nop_0805b740(struct Boss* p) { return TRUE; }
 
