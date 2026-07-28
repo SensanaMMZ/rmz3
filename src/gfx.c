@@ -299,16 +299,20 @@ void LoadPalette(const struct Palette* p, u32 ofs) {
 /**
  * @note 0x08003cf0
  */
-WIP static void FadeBlack(u32* src, u32* dst, u32 lv, u32* mask) {
-#ifdef ALWAYS_FALSE
-  // 画面が黄色くなるので、コードがおかしい
+// Logic now correct (the old draft's yellow screen was the high channel:
+// retail shifts BEFORE the multiply there, the pre-shift product overflows).
+// Still 5 insns off: agbcc copies all four args into ip/r4/r5/r7 and fuses the
+// pointer advances into ldmia/stmia; retail keeps args in place, parks dst in
+// lr per-iteration, and reloads mask[i] per use. Arg-copy basin -> permuter.
+NON_MATCH static void FadeBlack(u32* src, u32* dst, u32 lv, u32* mask) {
+#if MODERN
   s32 i;
-  for (i = 0; i < 256; i++) {
+  for (i = 255; i >= 0; i--) {
     u32 c = *src;
-    u32 r = (((c & mask[0]) * lv) >> 5) & mask[0];
-    u32 g = (((c & mask[1]) * lv) >> 5) & mask[1];
-    u32 b = (((c & mask[2]) * lv) >> 5) & mask[2];
-    *dst = r | g | b;
+    u32 out = (((c & mask[0]) * lv) >> 5) & mask[0];
+    out |= (((c & mask[1]) * lv) >> 5) & mask[1];
+    out |= (((c & mask[2]) >> 5) * lv) & mask[2];
+    *dst = out;
     src++;
     dst++;
   }
