@@ -50,6 +50,34 @@ void FUN_08042894(struct Boss* p) {
 
 INCASM("asm/boss/wormer_p2_p1_p2.inc");
 
+void FUN_08042914(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[0] == 1) {
+        *((u8*)&(p->s).spr.oam + 5) |= 0xC;
+      }
+      (p->s).flags &= ~DISPLAY;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).mode[2] = 3;
+      // fallthrough
+    case 3:
+      if (!(gStageRun.vm.active & 1)) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/wormer_p2_p1_p2b.inc");
+
 void FUN_08042d4c(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0:
