@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "element.h"
 #include "global.h"
+#include "stagerun.h"
 #include "motion.h"
 
 void nop_0805474c(struct Boss* p) {}
@@ -63,6 +64,40 @@ void FUN_08054adc(struct Boss* p) {
       UpdateMotionGraphic(&p->s);
       break;
   }
+}
+
+// A pure r0/r1 swap from a match: retail allocates the 0xBD store's value
+// register below its address register; agbcc picks the opposite pair in
+// every spelling tried (plain, shared var, chained init, s16).
+NON_MATCH void FUN_08054b20(struct Boss* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      InitRotatableMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x54, 0x00));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      (p->s).mode[2] = 3;
+      // fallthrough
+    case 3:
+      *((u8*)p + 0xbd) = 1;
+      if (!(gStageRun.vm.active & 1)) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+#else
+  INCCODE("asm/boss/locomo_54b20.inc");
+#endif
 }
 
 INCASM("asm/boss/locomo_if_p2_post.inc");
