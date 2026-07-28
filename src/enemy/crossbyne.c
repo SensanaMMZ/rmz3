@@ -2,6 +2,8 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "story.h"
+#include "syssav.h"
 
 static const motion_t sMotions[19];
 
@@ -111,7 +113,27 @@ void crossbyne_0807cdc4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/crossbyne_p2_pre_a_b.inc");
+static const u8 sInitModes[4];
+
+void Crossbyne_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  if ((p->s).work[0] > 1) {
+    INIT_BODY(p, sCollisions, 2, NULL);
+  } else if ((gSystemSavedataManager.mods[9] & 4) && !FLAG(gCurStory.s.gameflags, 6)) {
+    INIT_BODY(p, sCollisions, 8, NULL);
+  } else {
+    INIT_BODY(p, sCollisions, 4, NULL);
+  }
+  SET_BODY_INTERSECT_HANDLER(p, nop_0807cd70);
+  *(u32*)&p->props[0] = 0;
+  p->props[4] = 1;
+  (p->s).taskCol = 0x14;
+  Crossbyne_Update(p);
+}
 
 
 extern const EnemyFunc sUpdates1[7];
