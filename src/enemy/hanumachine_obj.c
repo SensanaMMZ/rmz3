@@ -84,7 +84,46 @@ void HanumachineObj_Die(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
+void FUN_0808693c(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).work[2] = ((p->s).work[0] << 3) + 2;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  {
+    u8 f = (p->s).flags & X_FLIP;
+    s32 off = -0xA00;
+    if (f) {
+      off = 0xA00;
+    }
+    if ((u8)--(p->s).work[2] == 0xFF || FUN_080098a4((p->s).coord.x + off, (p->s).coord.y)) {
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
 INCASM("asm/enemy/hanumachine_obj_post.inc");
+
+void FUN_08086dcc(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    InitNonAffineMotion(&p->s);
+    SetMotion(&p->s, MOTION(0x6a, 0x03));
+    SetDDP(&p->body, &sCollisions[1]);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/enemy/hanumachine_obj_post_b.inc");
 
 void HanumachineObj_Init(struct Enemy* p);
 void HanumachineObj_Update(struct Enemy* p);
