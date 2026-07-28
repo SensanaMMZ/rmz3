@@ -197,6 +197,18 @@ void FUN_080113dc(struct StageLayer* l, const struct Stage* stage) {
 
 INCASM("asm/stage_gfx/frostline_ice_base_p2.inc");
 
+void icebase_080114d0(struct StageLayer* l, const struct Stage* stage) {
+  u32 ph = l->phase;
+  if (ph == 0) {
+    u32 n = (u16)l->bgIdx >> 4;
+    BGCNT16(n) = l->screenBase | 0x45;
+    RESET_BGOFS(n);
+    gVideoRegBuffer.dispcnt &= 0xDBFF;
+    CpuFastSet((void*)(*(s32*)0x085223A4 + 0x085223AC), (void*)(VRAM + SCREEN_BASE_16(n)), 0x200);
+    l->phase++;
+  }
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------
 
 extern const struct ChunkMap sChunkMap1;
