@@ -128,6 +128,19 @@ struct Weapon* CreateThrowBlade(struct Zero* z, struct Weapon* saber, bool8 isIc
 
 INCASM("asm/weapon/throw_blade_pre.inc");
 
+void ThrowBlade_Update(struct Weapon* w) {
+  UpdateMotionGraphic(&w->s);
+  if ((w->body).status & 0x1000) {
+    PlaySound(0x2B);
+  }
+  if (--(w->s).work[2] != 0) {
+    (w->s).coord.x += (w->s).d.x;
+  } else {
+    SET_WEAPON_ROUTINE(w, ENTITY_DIE);
+    ThrowBlade_Die(w);
+  }
+}
+
 void ThrowBlade_Die(struct Weapon* p) {
   (p->s).flags &= ~DISPLAY;
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
