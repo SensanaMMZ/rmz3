@@ -676,6 +676,28 @@ _08057F34: .4byte gStageRun\n\
 
 INCASM("asm/boss/glacierle.inc");
 
+static const u8 u8_ARRAY_08364ab9[3];
+
+void glacierle_08058168(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x90);
+      SetMotion(&p->s, MOTION(0xb2, 0x06));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = 0;
+      }
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364ab9[(p->s).motion.cmdIdx]]);
+      break;
+  }
+}
+
+INCASM("asm/boss/glacierle_mid.inc");
+
 void glacierle_0805836c(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0:
