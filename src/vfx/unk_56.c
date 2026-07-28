@@ -70,6 +70,24 @@ static void VFX56_Die(struct Entity* p) {
 
 // --------------------------------------------
 
+// 1 insn over: retail parks the entity pointer in ip for the whole body
+// (arg-copy basin, same class as FadeBlack).
+NON_MATCH void FUN_080c15d4(struct VFX* vfx) {
+#if MODERN
+  struct Entity* q = (vfx->s).unk_28;
+  (vfx->s).flags &= ~X_FLIP;
+  ((vfx->s).spr).spriteIdx = 0;
+  ((vfx->s).spr).xflip &= ~0x11;
+  (vfx->s).taskCol = 9;
+  (vfx->s).coord.x = q->coord.x;
+  (vfx->s).coord.y = q->coord.y;
+  (vfx->s).work[2] = 0;
+  VFX56_Update(&vfx->s);
+#else
+  INCCODE("asm/vfx/unk_56_c15d4.inc");
+#endif
+}
+
 INCASM("asm/vfx/unk_56.inc");
 
 // 0x080c17e8
