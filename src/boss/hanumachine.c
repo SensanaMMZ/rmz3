@@ -92,6 +92,25 @@ void FUN_0805c3cc(struct Boss* p) {
 
 INCASM("asm/boss/hanumachine_p2_p1.inc");
 
+void FUN_0805c760(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    GotoMotion(&p->s, MOTION(0xb5, 0x0c), 2, 5);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (FUN_0805d594(p, (p->s).unk_coord.x, 0) == 0) {
+    (p->s).coord.x += (p->s).d.x;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 0xf;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/boss/hanumachine_p2_p1b.inc");
+
 void FUN_0805d568(struct Body* body) {
   if (body->hitboxFlags & 1) {
     struct Boss* atk = (struct Boss*)((body->enemy)->parent);
