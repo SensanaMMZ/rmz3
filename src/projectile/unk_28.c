@@ -88,6 +88,8 @@ void FUN_080a9d88(struct Projectile* p) {
   Projectile28_Update(&p->s);
 }
 
+INCASM("asm/projectile/unk_28_p2_p1a.inc");
+
 void FUN_080a9fe4(struct Sprite* t, struct DrawPivot* c);
 
 void FUN_080a9e74(struct Projectile* p) {
@@ -107,7 +109,7 @@ void FUN_080a9e74(struct Projectile* p) {
   Projectile28_Update(&p->s);
 }
 
-INCASM("asm/projectile/unk_28_p2_p1.inc");
+INCASM("asm/projectile/unk_28_p2_p1b.inc");
 
 void FUN_080aa120(struct Projectile* p) {
   struct Entity* par = (p->s).unk_28;
