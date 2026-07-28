@@ -104,6 +104,26 @@ void FUN_080716a8(struct Enemy* p) {}
 
 INCASM("asm/enemy/carry_arm_p3_p1.inc");
 
+void FUN_08071b88(struct Enemy* p) {
+  (p->s).d.y -= 0x10;
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  if ((p->s).coord.y <= 0x19FFF) {
+    u8 f = ~DISPLAY & (p->s).flags;
+    s32 z = 0;
+    f = f & ~FLIPABLE;
+    (p->s).flags = f;
+    (p->body).status = z;
+    (p->body).prevStatus = z;
+    (p->body).invincibleTime = z;
+    (p->s).flags &= ~COLLIDABLE;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+  UpdateMotionGraphic(&p->s);
+}
+
+INCASM("asm/enemy/carry_arm_p3_p1b.inc");
+
 void FUN_08071c70(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
