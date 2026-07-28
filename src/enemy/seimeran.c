@@ -135,6 +135,26 @@ void FUN_0808f728(struct Enemy* p) {}
 
 INCASM("asm/enemy/seimeran_p2_p1.inc");
 
+static const u8 sCollisionIdxs[16];
+
+void FUN_0808f7ac(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    u8* c = (u8*)p + 0xc0;
+    if (*c == 0xC) {
+      SetMotion(&p->s, MOTION(0x77, 0x00));
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[12]);
+    } else {
+      GotoMotion(&p->s, MOTION(0x77, 0x01), *c, 3);
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &(&sCollisions[1])[sCollisionIdxs[*c]]);
+    }
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/enemy/seimeran_p2_p1b.inc");
+
 void FUN_0808f8e0(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0:
