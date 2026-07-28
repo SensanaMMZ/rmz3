@@ -2,6 +2,7 @@
 #include "global.h"
 #include "entity/macros.h"
 #include "projectile.h"
+#include "vfx.h"
 
 static void PhantomProjectile_Init(struct Projectile* p);
 static void PhantomProjectile_Update(struct Projectile* p);
@@ -313,7 +314,12 @@ void FUN_080afb1c(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/phantom_p2_p2_p2_b.inc");
+void PhantomProjectile_Die(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+  CreateSmoke(1, &(p->s).coord);
+  EXIT_BODY(p);
+  (p->s).flags &= ~DISPLAY;
+}
 
 #include "entity/macros.h"
 
