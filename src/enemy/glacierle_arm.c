@@ -96,7 +96,57 @@ struct Enemy* createGlacierleSucker(struct Entity* e, struct Entity* parent) {
   return p;
 }
 
-INCASM("asm/enemy/glacierle_arm_p1_p2_b_b.inc");
+INCASM("asm/enemy/glacierle_arm_bb_a.inc");
+
+void FUN_08082348(struct Entity* e);
+
+// One insn over: retail hoists the target count 10 into a register and
+// compares const-left; plain literals compare the other way (ordering tie).
+NON_MATCH void FUN_080823a4(struct Entity* e, struct Entity* parent) {
+#if MODERN
+  s32 n;
+  u8 cur = ((struct Enemy*)e)->props[0];
+  if (cur != 10) {
+    if (10 > cur) {
+      n = 10 - cur;
+      if (n > 0) {
+        do {
+          createGlacierleJoint(e, parent);
+        } while (--n);
+      }
+    } else {
+      n = cur - 10;
+      if (n > 0) {
+        do {
+          FUN_08082348(e);
+        } while (--n);
+      }
+    }
+  }
+#else
+  INCCODE("asm/enemy/glacierle_arm_823a4.inc");
+#endif
+}
+
+// 3 insns short: register naming/eval-order tie in the distance math.
+NON_MATCH u32 FUN_080823ec(struct Enemy* p) {
+#if MODERN
+  struct Entity* a = (p->s).unk_2c;
+  if (a != NULL) {
+    struct Entity* b = a->unk_2c;
+    if (b != NULL) {
+      s32 dx = ((b->coord).x - (a->coord).x) >> 8;
+      s32 dy = ((b->coord).y - (a->coord).y) >> 8;
+      return (u16)Sqrt(dx * dx + dy * dy) << 8;
+    }
+  }
+  return 0;
+#else
+  INCCODE("asm/enemy/glacierle_arm_823ec.inc");
+#endif
+}
+
+INCASM("asm/enemy/glacierle_arm_bb_b.inc");
 
 void nop_080828dc(struct Enemy* p) {}
 
