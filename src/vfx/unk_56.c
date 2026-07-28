@@ -70,14 +70,15 @@ static void VFX56_Die(struct Entity* p) {
 
 // --------------------------------------------
 
-// 1 insn over: retail parks the entity pointer in ip for the whole body
+// Draft improved by the oam-byte-6 remap (childreMode0 discovery): 15 real
+// diffs left, dominated by the ip-parking arg-copy basin.
 // (arg-copy basin, same class as FadeBlack).
 NON_MATCH void FUN_080c15d4(struct VFX* vfx) {
 #if MODERN
   struct Entity* q = (vfx->s).unk_28;
   (vfx->s).flags &= ~X_FLIP;
-  ((vfx->s).spr).spriteIdx = 0;
-  ((vfx->s).spr).xflip &= ~0x11;
+  ((vfx->s).spr).xflip = 0;
+  *((u8*)&((vfx->s).spr).oam + 6) &= ~0x11;
   (vfx->s).taskCol = 9;
   (vfx->s).coord.x = q->coord.x;
   (vfx->s).coord.y = q->coord.y;
