@@ -49,6 +49,19 @@ void FUN_080b22f8(struct Projectile* p) {
   (PTR_ARRAY_0836d8c8[(p->s).work[0]])(p);
 }
 
+void FUN_080b2310(struct Projectile* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(SM234_UNK, 0));
+  UpdateMotionGraphic(&p->s);
+  SET_XFLIP(p, FALSE);
+  ((p->s).coord).x = PIXEL(((p->s).work[1] * 32) + 24);
+  ((p->s).coord).y = PIXEL(0);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  FUN_080b22e0(p);
+}
+
 INCASM("asm/projectile/unk_46_p4_p1.inc");
 
 void FUN_080b274c(struct Projectile* p) {

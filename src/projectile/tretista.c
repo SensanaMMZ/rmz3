@@ -90,6 +90,22 @@ void FUN_080a4ef8(struct Entity* e) {
   }
 }
 
+void FUN_080bf438(s32 x, s32 y, u8 r2);
+
+void FUN_080a4f3c(struct Projectile* p) {
+  s32 i;
+  for (i = 0; i < 4; i++) {
+    register s32 x asm("r4");
+    s32 y;
+    x = ((p->s).coord).x - PIXEL(16);
+    x += (RANDOM(RNG_0202f388) & 0x1FFF);
+    y = FUN_08009f6c(x, ((p->s).coord).y);
+    if (((y - ((p->s).coord).y) >= -PIXEL(24)) && ((y - ((p->s).coord).y) < PIXEL(24))) {
+      FUN_080bf438(x, y, 1);
+    }
+  }
+}
+
 INCASM("asm/projectile/tretista_post_p2_p2.inc");
 
 void TretistaProjectile_Init(struct Projectile* p);
