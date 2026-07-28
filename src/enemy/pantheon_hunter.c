@@ -584,6 +584,18 @@ static const EnemyFunc sDeads[3] = {
 
 INCASM("asm/enemy/pantheon_hunter_p1_p1.inc");
 
+void phunter_08064bc8(struct Enemy* p) {
+  if ((p->s).mode[1] > 1 && (p->s).mode[1] != 12) {
+    if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y + PIXEL(8))) {
+      (p->s).coord.y -= PIXEL(16);
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    } else {
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
 void phunter_08064c10(struct Enemy* p) {
   if ((p->s).mode[1] == 2) return;
   if (((p->body).status & 0x00020001) == 0x00020001) {
