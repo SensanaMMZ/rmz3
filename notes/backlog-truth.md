@@ -2234,3 +2234,14 @@ a one-byte diff in a `beq` is a control-flow error, not a scheduling artefact.**
     `if (unk_28->mode[0] > 1)` teardown -- so the same disappear block appears
     twice in the function. That is real duplication in the source, not a
     tail-merge failure.
+FUN_080a449c: FALSE BOUNDARY - shared tail of FUN_080a3c58 (uses caller r7, no prologue); match only via the parent
+FUN_08094534: .byte blob in shotloid_post_p2_p2.inc - needs Ghidra decode pass
+REVISIT: vfx56 FUN_080c15d4 + goldOmega1Laser parks used spr.xflip for the 0x4A RMW; correct target is oam byte6 (unused:4/xflip:1 bits) — remap and retry
+FUN_0807db9c: .byte blob (inline jumptable) in mellnet_post_post_post.inc - Ghidra pass
+- FUN_0807dd24 (mellnet dive): PARKED at 2 ties (cmdIdx r3-vs-r7, one d.y lsls schedule). Three NEW levers proven here, retry the parked set with them:
+  1. oam attr1 flip RMW = BITFIELD INSERT `spr.oam.xflip = v` (s16 v temp) - emits the -0x11 mask + value copy natively. Applies to vfx56 + goldOmega1Laser + future flip dances.
+  2. flip-select motion tables with +4/+8 base offsets = 2D array `motion_t tbl[N][2]`, direct ternary index `[k][(flags & 0x10) ? 1 : 0]` - keeps scc branchless and pools the symbol with adds #4/#8.
+  3. one function-scope temp for repeated per-case loads (cmdIdx) unifies its register across cases.
+  NEVER pin asm("r7") in thumb - generates mov r0,sp garbage (frame reg alias).
+- FUN_0807db9c (mellnet, 188B): .byte blob (inline jumptable) - Ghidra pass with FUN_08094534.
+- dd24 queued for a background permuter run (residual = pure allocation/schedule tie, ideal target).
