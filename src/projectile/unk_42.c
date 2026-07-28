@@ -39,8 +39,12 @@ void FUN_080b13d8(struct Projectile* p);
 void FUN_080b13dc(struct Projectile* p);
 
 // clang-format off
-static const ProjectileFunc PTR_ARRAY_0836d710[2] = {
+// two adjacent 1-entry dispatch tables: Projectile42_Update loads each
+// base from its own literal pool slot
+const ProjectileFunc PTR_ARRAY_0836d710[1] = {
     FUN_080b13d8,
+};
+const ProjectileFunc PTR_ARRAY_0836d714[1] = {
     FUN_080b13dc,
 };
 // clang-format on

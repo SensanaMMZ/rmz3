@@ -8,7 +8,21 @@ static const u8 u8_ARRAY_0836d77c[4];
 
 void Projectile43_Update(struct Projectile* p);
 
-INCASM("asm/projectile/unk_43_pre_p1.inc");
+extern const ProjectileFunc PTR_ARRAY_0836d710[1];
+extern const ProjectileFunc PTR_ARRAY_0836d714[1];
+
+void Projectile42_Update(struct Projectile* p) {
+  if (((p->s).work[0] == 0) && IS_METTAUR) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (PTR_ARRAY_0836d710[(p->s).mode[1]])(p);
+  (PTR_ARRAY_0836d714[(p->s).mode[1]])(p);
+}
+
 
 void Projectile42_Die(struct Projectile* p) {
   EXIT_BODY(p);
