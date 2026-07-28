@@ -192,6 +192,24 @@ static void FUN_08013908(struct StageLayer* l UNUSED, const struct Stage* _ UNUS
 
 INCASM("asm/stage_gfx/sunken_library_a.inc");
 
+// One pool apart: retail keeps &gStageTilesetOffsets[18] twice — once as the
+// relocated symbol for the deref, once as the raw address for the
+// SELF_REL_PTR addend — where agbcc folds the two link constants together.
+NON_MATCH void FUN_08013a98(struct StageLayer* l, const struct Stage* stage) {
+#if MODERN
+  u16 b = l->bgIdx;
+  s32 vy = l->viewportCenterPixel.y - (SEA >> 8) + 5;
+  BGnHOFS(b >> 4) = l->viewportCenterPixel.x;
+  BGnVOFS(b >> 4) = vy;
+  RequestGraphicTransfer(&(TILESETS(18, 0)[(u16)l->unk_10 >> 2]).g, (void*)0x4000);
+  LoadPalette(&(TILESETS(18, 0)[(u16)l->unk_10 >> 2]).pal, 0);
+#else
+  INCCODE("asm/stage_gfx/sunkenlib_13a98.inc");
+#endif
+}
+
+INCASM("asm/stage_gfx/sunken_library_a2.inc");
+
 // 0x08013bdc
 void FUN_08013bdc(struct StageLayer* l, const struct Stage* _ UNUSED) {
   const u16 n = l->bgIdx;
