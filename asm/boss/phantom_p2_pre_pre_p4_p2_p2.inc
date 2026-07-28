@@ -4,61 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0805fb24
-FUN_0805fb24: @ 0x0805FB24
-	push {r4, lr}
-	adds r4, r0, #0
-	adds r0, #0x74
-	ldr r1, _0805FB4C @ =0x08365350
-	bl SetDDP
-	adds r0, r4, #0
-	adds r0, #0x73
-	ldrb r0, [r0]
-	cmp r0, #3
-	bne _0805FB50
-	movs r0, #5
-	strb r0, [r4, #0xf]
-	adds r0, r4, #0
-	movs r1, #0xf
-	bl FUN_080607a0
-	movs r0, #4
-	strb r0, [r4, #0x12]
-	b _0805FB84
-	.align 2, 0
-_0805FB4C: .4byte 0x08365350
-_0805FB50:
-	adds r0, r4, #0
-	adds r0, #0x71
-	movs r1, #0
-	ldrsb r1, [r0, r1]
-	cmp r1, #0
-	bne _0805FB84
-	adds r0, #1
-	ldrb r0, [r0]
-	lsls r0, r0, #0x18
-	asrs r0, r0, #0x18
-	cmp r0, #1
-	bgt _0805FB84
-	adds r0, r4, #0
-	adds r0, #0x4c
-	strb r1, [r0]
-	adds r2, r4, #0
-	adds r2, #0x4a
-	ldrb r1, [r2]
-	movs r0, #0x11
-	rsbs r0, r0, #0
-	ands r0, r1
-	strb r0, [r2]
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xef
-	ands r0, r1
-	strb r0, [r4, #0xa]
-_0805FB84:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-
 	thumb_func_start FUN_0805fb8c
 FUN_0805fb8c: @ 0x0805FB8C
 	push {r4, r5, r6, lr}

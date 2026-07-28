@@ -481,6 +481,21 @@ void FUN_0805fafc(struct Boss* p) {
   }
 }
 
+void FUN_080607a0(struct Boss* p, s32 idx);
+
+void FUN_0805fb24(struct Boss* p) {
+  SetDDP(&p->body, &sCollisions[6]);
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[3] = 5;
+    FUN_080607a0(p, 0xf);
+    (p->s).work[2] = 4;
+  } else if ((p->s).motion.cmdIdx == 0 && (p->s).motion.duration <= 1) {
+    (p->s).spr.xflip = 0;
+    (p->s).spr.oam.xflip = 0;
+    (p->s).flags &= ~X_FLIP;
+  }
+}
+
 INCASM("asm/boss/phantom_p2_pre_pre_p4_p2_p2.inc");
 
 void FUN_0805fc1c(struct Boss* p) {
