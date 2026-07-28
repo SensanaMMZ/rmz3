@@ -652,7 +652,16 @@ _08005580: .4byte 0x000001FF\n\
 }
 
 #if MODERN == 0
-NAKED static void unused_08005584(struct LayerGraphic* r0, struct Coord* c, u32 mapAddr) { INCCODE("asm/unused/unused_08005584.inc"); }
+static void unused_08005584(struct LayerGraphic* g, struct Coord* c, u32 mapAddr) {
+  s16 i, j;
+  for (i = 0; i < 10; i++) {
+    for (j = 0; j < 15; j++) {
+      u32* dst = (u32*)&((u16*)g)[(i * 64) + (j * 2)];
+      dst[0] = *(u32*)((u8*)c + (((u16*)mapAddr)[(i * 15) + j] * 8));
+      dst[16] = *(u32*)((u8*)c + (((u16*)mapAddr)[(i * 15) + j] * 8) + 4);
+    }
+  }
+}
 NAKED static void unused_080055e8(struct LayerGraphic* r0, struct Coord* c, u32 mapAddr) { INCCODE("asm/unused/unused_080055e8.inc"); }
 NAKED static void unused_08005674(struct LayerGraphic* r0, struct Coord* c, u32 mapAddr) { INCCODE("asm/unused/unused_08005674.inc"); }
 #endif
