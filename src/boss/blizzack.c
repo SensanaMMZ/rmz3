@@ -124,6 +124,87 @@ void blizzackMode8(struct Boss* p) {
   }
 }
 
+static const struct Collision sCollisions[4];
+struct Entity* CreateEnemy42(struct Entity* e, u8 type, u8 param_3);
+void FUN_080aac28(struct Entity* e);
+
+// Same regmove tie as blizzackMode0: agbcc hoists the mode[2]=0 zero above
+// the 0x64xx pool load, spilling the constant into r3 + copy.
+NON_MATCH void blizzackMode9(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb4, 0x08));
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6408;
+    (p->s).mode[2] = 0;
+    (p->s).work[2] = 8;
+    SetDDP(&p->body, sCollisions);
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((u8)--(p->s).work[2] == 0xff) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 1;
+  }
+#else
+  INCCODE("asm/boss/blizzack_mode9_body.inc");
+#endif
+}
+
+NON_MATCH void blizzackStartBlizzard(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb4, 0x09));
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6409;
+    (p->s).mode[2] = 0;
+    SetDDP(&p->body, &sCollisions[2]);
+  }
+  UpdateMotionGraphic(&p->s);
+  if (*(u8*)((u8*)p + 0x73) == 3) {
+    (p->s).mode[1] = 0xb;
+    (p->s).mode[2] = 1;
+  }
+#else
+  INCCODE("asm/boss/blizzack_startbliz_body.inc");
+#endif
+}
+
+void blizzackBlizzard(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    (p->s).mode[2] = 0;
+    (p->s).work[2] = 0xb4;
+    FUN_080aac28(&p->s);
+    CreateEnemy42(&p->s, 1, ((p->s).flags >> 4) & 1);
+    *(s16*)((u8*)p + 0xc8) = PlaySound(0x44);
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((u8)--(p->s).work[2] == 0xff) {
+    (p->s).mode[1] = 0xc;
+    (p->s).mode[2] = 1;
+  }
+}
+
+NON_MATCH void blizzackEndBlizzard(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb4, 0x08));
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6408;
+    (p->s).mode[2] = 0;
+    (p->s).work[2] = 8;
+    StopSound(*(s16*)((u8*)p + 0xc8));
+    SetDDP(&p->body, sCollisions);
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((u8)--(p->s).work[2] == 0xff) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 1;
+  }
+#else
+  INCCODE("asm/boss/blizzack_endbliz_body.inc");
+#endif
+}
+
 INCASM("asm/boss/blizzack_post_p2_a.inc");
 
 void FUN_0805af14(struct Boss* p) {
