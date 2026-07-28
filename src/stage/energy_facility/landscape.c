@@ -868,6 +868,33 @@ static void LayerExit_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
   RemovePaletteAnimation(243);
 }
 
+struct Solid* CreateStructuralSteel(s32 x, s32 y, u8 r2, u8 r3, u8 n);
+
+// Row view of StageLayer at +i*4: keeps the loop's induction base (l + i*4)
+// with the door slot as a folded 0x68 offset, matching retail's giv shape.
+struct EFDoorRow {
+  u8 pad[0x68];
+  struct Solid* door;
+};
+
+void FUN_080128bc(struct StageLayer* l, const struct Stage* stage) {
+  s16 i;
+  if (l->phase == 0) {
+    s32 z;
+    for (i = 0, z = 0; i <= 5; i++) {
+      *(s32*)&l->work.energyFacility.doors[i] = z;
+    }
+    l->phase++;
+  } else {
+    for (i = 0; i <= 5; i++) {
+      struct EFDoorRow* row = (struct EFDoorRow*)((u8*)(i * 4) + (u32)l);
+      if (row->door == NULL) {
+        row->door = CreateStructuralSteel(0x18A000, 0x17800, i, 0, 0);
+      }
+    }
+  }
+}
+
 INCASM("asm/stage_gfx/energy_facility.inc");
 
 // A byte-exact body exists (carry_arm exit shape with `doors[i] = z`), but it
