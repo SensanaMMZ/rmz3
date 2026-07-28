@@ -382,6 +382,29 @@ struct Projectile* FUN_080afda4(struct Entity* e) {
   return p;
 }
 
+// Same 33 instructions; retail pools the -PIXEL(38)/-PIXEL(76) constants
+// where agbcc rebuilds them inline (pressure/pooling tie).
+NON_MATCH bool8 FUN_080afdf0(struct Entity* e, struct Coord* a, struct Coord* b, struct Coord* c) {
+#if MODERN
+  s32 t;
+  s32 dx = b->x;
+  a->x += dx;
+  a->y += b->y;
+  {
+    s32 limit = *(s32*)((u8*)e + 0xdc) - PIXEL(76);
+    t = (a->x - PIXEL(38)) - *(s32*)((u8*)e + 0xd4);
+    if ((u32)t > (u32)limit) {
+      if (t * dx > 0) {
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+#else
+  INCCODE("asm/projectile/phantom_afdf0.inc");
+#endif
+}
+
 INCASM("asm/projectile/phantom_p2_p2_p2_e.inc");
 
 void FUN_080af518(struct Projectile* p);
