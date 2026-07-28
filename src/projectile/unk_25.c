@@ -36,7 +36,53 @@ void Projectile25_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
+static const struct Collision sCollisions[6];
+
 INCASM("asm/projectile/unk_25_post_p2.inc");
+
+void FUN_080a8684(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  InitRotatableMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(SM093_COPYX_NORMAL_SHOT, 0));
+  UpdateMotionGraphic(&p->s);
+  SET_XFLIP(p, (q->flags & X_FLIP) != 0);
+  if ((p->s).flags & X_FLIP) {
+    (p->s).coord.x += PIXEL(16);
+    (p->s).d.x = COS(32) << 2, (p->s).d.y = SIN(32) << 2;
+  } else {
+    (p->s).coord.x -= PIXEL(16);
+    (p->s).d.x = SIN(128 + 32) << 2, (p->s).d.y = COS(32) << 2;
+  }
+  *(&(p->s).angle) = 0xE0;
+  (p->s).coord.y -= PIXEL(18);
+  INIT_BODY(p, &sCollisions[4], 64, NULL);
+  Projectile25_Update(p);
+}
+
+void FUN_080a8794(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  InitRotatableMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(SM093_COPYX_NORMAL_SHOT, 1));
+  UpdateMotionGraphic(&p->s);
+  SET_XFLIP(p, (q->flags & X_FLIP) != 0);
+  if ((p->s).flags & X_FLIP) {
+    (p->s).coord.x += PIXEL(16);
+    (p->s).d.x = COS(32) << 2, (p->s).d.y = SIN(32) << 2;
+  } else {
+    (p->s).coord.x -= PIXEL(16);
+    (p->s).d.x = SIN(128 + 32) << 2, (p->s).d.y = COS(32) << 2;
+  }
+  *(&(p->s).angle) = 0xE0;
+  (p->s).coord.y -= PIXEL(18);
+  INIT_BODY(p, &sCollisions[2], 64, NULL);
+  Projectile25_Update(p);
+}
 
 void Projectile25_Init(struct Projectile* p);
 void Projectile25_Update(struct Projectile* p);
