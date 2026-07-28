@@ -63,6 +63,12 @@ struct SaberWave_b4 {
   u8 unk_c4[40];
 };
 
+struct ReflectLaser_b4 {
+  struct Entity* q;   // the laser being reflected
+  struct Coord c_b8;
+  u8 unk_c0[44];
+};
+
 struct Weapon {
   OBJECT_HDR;
   // props (16bytes, offset: 0xB4..)
@@ -73,6 +79,7 @@ struct Weapon {
     struct Saber_b4 saber;
     struct SaberWave_b4 wave;  // Not EXSkill
     struct Rod_b4 rod;
+    struct ReflectLaser_b4 reflect;
   } props;
 };  // 236 bytes
 

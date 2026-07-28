@@ -93,6 +93,29 @@ NAKED static struct Weapon* unused_CreateReflectLaser(struct Zero* z, struct Ent
 
 INCASM("asm/weapon/reflect_laser_p1.inc");
 
+void ReflectLaser_Update(struct Weapon* w) {
+  struct ReflectLaser_b4* b4 = &(w->props).reflect;
+  struct Entity* q = b4->q;
+  if (q->mode[0] >= ENTITY_DIE) {
+    (w->s).flags &= ~DISPLAY;
+    (w->s).flags &= ~FLIPABLE;
+    EXIT_BODY(w);
+    SET_WEAPON_ROUTINE(w, ENTITY_DISAPPEAR);
+    return;
+  }
+
+  UpdateMotionGraphic(&w->s);
+  if ((w->s).work[0] & 1) {
+    (w->s).coord.x = (b4->c_b8).x;
+    (w->s).coord.y = (b4->c_b8).y;
+  } else {
+    (w->s).coord.x = (q->coord).x + (((b4->c_b8).x - (q->coord).x) >> 1);
+    (w->s).coord.y = (q->coord).y + (((b4->c_b8).y - (q->coord).y) >> 1);
+  }
+  ((&(w->props).reflect)->c_b8).x = (q->coord).x;
+  ((&(w->props).reflect)->c_b8).y = (q->coord).y;
+}
+
 void ReflectLaser_Die(struct Weapon* w) {
   EXIT_BODY(w);
   (w->s).flags &= ~DISPLAY;
