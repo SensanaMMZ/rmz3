@@ -69,6 +69,28 @@ void FUN_080ad7d0(struct Projectile* p) {
   Projectile36_Update(p);
 }
 
+void FUN_080ad840(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).work[3] != 0) {
+    if (--(p->s).work[3] == 0) {
+      (p->s).flags |= DISPLAY;
+    }
+  } else {
+    u32 w = (p->s).work[2] + 1;
+    (p->s).work[2] = w;
+    (p->s).coord.x += (p->s).d.x;
+    (p->s).coord.y += (p->s).d.y;
+    if ((w & 3) > 1) {
+      (p->s).flags |= DISPLAY;
+    } else {
+      (p->s).flags &= ~DISPLAY;
+    }
+  }
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 INCASM("asm/projectile/unk_36_pre_post_p2_p1b.inc");
 
 void FUN_080ad958(struct Projectile* p) {
