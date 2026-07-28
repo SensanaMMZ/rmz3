@@ -73,6 +73,9 @@ struct StageLayer {
       struct Coord c;
       u8 unk_74[20];
     } missile;
+    struct {
+      struct Solid* doors[8];
+    } energyFacility;
   } work;
 
   // ステージによる？
