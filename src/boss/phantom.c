@@ -483,6 +483,35 @@ void FUN_0805fafc(struct Boss* p) {
 
 INCASM("asm/boss/phantom_p2_pre_pre_p4_p2_p2.inc");
 
+void FUN_0805fc1c(struct Boss* p) {
+  s32 t;
+  *(s32*)((u8*)p + 0xc4) = 0;
+  (p->s).work[2]++;
+  if (((p->s).work[2] & 3) != 0) {
+    (p->s).flags |= DISPLAY;
+  } else {
+    (p->s).flags &= ~DISPLAY;
+  }
+  (p->s).coord.x += (p->s).d.x;
+  t = (p->s).unk_coord.x - (p->s).coord.x;
+  if (t >= 0) {
+    if (t <= 0xff) {
+      goto snap;
+    }
+    return;
+  }
+  if ((p->s).coord.x - (p->s).unk_coord.x > 0xff) {
+    return;
+  }
+snap:
+  (p->s).coord.x = (p->s).unk_coord.x;
+  *(u16*)&(p->s).mode[2] = 2;
+  (p->s).work[3] = 0x8d - (p->s).work[2];
+  (p->s).work[2] = 0;
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p4_p2_p2b.inc");
+
 void FUN_0805fd5c(struct Boss* p) {
   (PTR_ARRAY_08365520[(p->s).mode[3]])(p);
 }
