@@ -41,6 +41,26 @@ static void CreateGeneratorCannon(s32 x, s32 y, u8 n) {
 
 static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) { return; }
 
+bool8 FUN_0808c3ec(struct Enemy* p) {
+  if ((p->body).status & 0x200) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if ((p->s).work[0] != 0) {
+      if ((p->body).status & 0x10000) {
+        (p->s).mode[1] = 2;
+      } else if ((p->body).status & 0x20000) {
+        (p->s).mode[1] = 3;
+      } else {
+        (p->s).mode[1] = 1;
+      }
+    } else {
+      (p->s).mode[1] = 0;
+    }
+    GeneratorCannon_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
 INCASM("asm/enemy/generator_cannon_pre_a.inc");
 
 #include "element.h"
