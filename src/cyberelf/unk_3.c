@@ -48,7 +48,22 @@ void Elf3_Init(Object* p) {
   Elf3_Update((void*)p);
 }
 
-INCASM("asm/cyberelf/unk_3_pre.inc");
+void Elf3_Update(struct Elf* p) {
+  struct CollidableEntity* t = (struct CollidableEntity*)(p->s).unk_2c;
+  if ((p->s).unk_28->mode[0] > 1 || t->body.hp == 0) {
+    SET_ELF_ROUTINE(p, ENTITY_DIE);
+    Elf3_Die(p);
+  } else {
+    s32 x = (t->s).coord.x;
+    s32 y = (t->s).coord.y;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+    if (!(t->body.status & 0x200) && t->body.hp != 0 && (p->s).work[2] != 0) {
+      gLifeRecoverAmount += (p->s).work[2] << 2;
+      (p->s).work[2] = 0;
+    }
+  }
+}
 
 void Elf3_Die(struct Elf* p) {
   (p->s).flags &= ~DISPLAY;
