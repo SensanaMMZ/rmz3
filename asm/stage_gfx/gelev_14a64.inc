@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-	thumb_func_start giantElevator_08014a64
-giantElevator_08014a64: @ 0x08014A64
 	push {r4, r5, r6, r7, lr}
 	sub sp, #4
 	adds r5, r0, #0
