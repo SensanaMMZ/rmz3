@@ -85,7 +85,23 @@ void FUN_08062268(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/spearook_p1_post_p1.inc");
+void FUN_0806228c(struct Boss* p) {
+  if ((p->body).status & 8) {
+    if ((p->body).status & 0x20000) {
+      *(s16*)((u8*)p + 0xba) += 0x4000;
+      *(s16*)((u8*)p + 0xba) -= *((u8*)p + 0xc0) << 15;
+    } else {
+      *(s16*)((u8*)p + 0xba) += 0x800;
+      *(s16*)((u8*)p + 0xba) -= *((u8*)p + 0xc0) << 12;
+    }
+    if (*(s16*)((u8*)p + 0xba) < -0x4000) {
+      u16 c = 0xC000;
+      *(u16*)((u8*)p + 0xba) = c;
+    } else if (*(s16*)((u8*)p + 0xba) > 0x4000) {
+      *(s16*)((u8*)p + 0xba) = 0x4000;
+    }
+  }
+}
 
 void FUN_08062304(struct Boss* p) {
   u32 v = *(u32*)((u8*)p + 0x8c);
