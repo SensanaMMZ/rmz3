@@ -127,6 +127,35 @@ void FUN_080ce760(struct Solid* p) {
 
 INCASM("asm/solid/locomoif_platform_part3_b.inc");
 
+// One mechanism apart: agbcc fuses the branch-taught zero with a u8 copy of
+// the work[2] decrement (lsrs into r5) where retail materializes an
+// independent r5 zero before the calls. Equal length, same behavior.
+NON_MATCH void FUN_080ce80c(struct Solid* p) {
+#if MODERN
+  struct Entity* owner = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x40;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).d.x -= 4;
+      *(u16*)&(p->props).raw[0] += (p->s).d.x;
+      FUN_080ce538(p);
+      UpdateMotionGraphic(&p->s);
+      if (--(p->s).work[2] == 0) {
+        StopSound(0x10B);
+        *(u8*)((u8*)owner + 0xbd) = 0;
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+#else
+  INCCODE("asm/solid/locomoif_ce80c.inc");
+#endif
+}
+
 // --------------------------------------------
 
 void nop_080ce70c(struct Solid* p);
