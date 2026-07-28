@@ -55,6 +55,23 @@ u32 FUN_08073ef0(struct Entity* p, s32 dy) {
 
 INCASM("asm/enemy/snakecord_p1_p1_a_p1.inc");
 
+void FUN_080740e4(struct Enemy* p) {
+  while ((p->s).unk_28 != NULL) {
+    p = (struct Enemy*)(p->s).unk_28;
+  }
+  while (p != NULL) {
+    if ((p->s).work[2] < 2) {
+      SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      (p->s).mode[1] = 1;
+      ((p->s).unk_2c)->unk_28 = NULL;
+    }
+    if ((p->s).work[0] == 0) {
+      (p->s).mode[1] = 3, (p->s).mode[2] = 0;
+    }
+    p = (struct Enemy*)(p->s).unk_2c;
+  }
+}
+
 void FUN_080740e4(struct Enemy* p);
 
 void FUN_08074134(struct Body* body) {
