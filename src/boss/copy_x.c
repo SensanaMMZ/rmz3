@@ -664,7 +664,31 @@ void copyxNovaStrike2(struct Boss* p) {
 
 INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a.inc");
 
+extern const u8 u8_ARRAY_080fefb0[4];
 extern const u8 u8_ARRAY_080fefb4[4];
+
+void copyx_080566b0(struct Boss* p) {
+  u8 arr[4];
+  memcpy(arr, u8_ARRAY_080fefb0, 4);
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb3, 0x15));
+    (p->s).mode[2] = 0;
+    (p->s).d.x = 0;
+    (p->s).d.y = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x10;
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 0x17;
+    (p->s).mode[2] = 1;
+    if (*((u8*)p + 0xc6) != 0) {
+      (p->s).work[3] = 1;
+    } else {
+      (p->s).work[3] = arr[*((u8*)p + 0xc5)];
+    }
+  }
+}
 
 void copyx_08056724(struct Boss* p) {
   u8 arr[4];
