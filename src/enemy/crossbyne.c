@@ -191,6 +191,34 @@ void FUN_0807cfac(struct Enemy* p) {
 
 INCASM("asm/enemy/crossbyne_p3_post_post.inc");
 
+void crossbyne_0807d080(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x2C);
+      if ((p->s).work[0] == 0) {
+        FUN_0807cc50((p->s).coord.x, (p->s).coord.y);
+      } else {
+        FUN_0807cce0((p->s).coord.x, (p->s).coord.y);
+      }
+      p->props[4] = 0;
+      {
+        const motion_t* t = &sMotions[4];
+        SetMotion(&p->s, t[(p->s).work[0]]);
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/crossbyne_p3_post_postb.inc");
+
 // --------------------------------------------
 
 void FUN_0807cf5c(struct Enemy* p);
