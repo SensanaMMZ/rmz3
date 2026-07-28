@@ -88,6 +88,28 @@ void MgNinjaStar_Die(struct Solid* p) {
 
 void nop_080d9304(struct Solid* p) {}
 
+extern const struct Rect Rect_ARRAY_08371194[2];
+
+void FUN_080d9308(struct Solid* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x86, 0));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((*(struct Entity**)((u8*)q + 8))->coord.y < (p->s).coord.y - PIXEL(1)) {
+        (p->s).flags2 |= 8;
+        (p->s).size = Rect_ARRAY_08371194;
+        (p->s).hazardAttr = 1;
+      } else {
+        (p->s).flags2 &= ~8;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 INCASM("asm/solid/minigame_ninjastar_p2.inc");
 
 // --------------------------------------------
