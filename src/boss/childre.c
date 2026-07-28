@@ -252,7 +252,86 @@ static void nop_08040788(struct Boss* p) {
   return;
 }
 
-INCASM("asm/boss/childre_pre.inc");
+INCASM("asm/boss/childre_pre_a.inc");
+
+// 170==170 instructions; register-name ties in the side-check subtraction
+// and the attr1 anchor (same class as childreMode1's recorded tie).
+NON_MATCH void childreMode0(struct Boss* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 onLeft;
+      (p->s).coord.y = *(s32*)((u8*)p + 0xc0);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0;
+      onLeft = (u32)((pZero2->s).coord.x - (p->s).coord.x) >> 31;
+      if ((p->s).flags & X_FLIP) {
+        if (onLeft != 0) goto turn;
+      } else if (onLeft == 0) {
+        goto turn;
+      }
+      (p->s).mode[2] += 2;
+      break;
+    turn:
+      PlaySound(0x67);
+      SetMotion(&p->s, MOTION(0xA4, 8));
+      (p->s).d.y = -0x200;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      t = *(s32*)((u8*)p + 0xc0) - (p->s).coord.y;
+      if (t < 0) {
+        (p->s).coord.y += t;
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == MOTION_END) {
+        (p->s).work[2] = 1;
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2: {
+      if ((p->s).work[2] != 0) {
+        u8 inv;
+        ((p->s).spr).xflip = (((p->s).flags >> 4) ^ 1) & 1;
+        inv = (((p->s).flags >> 4) ^ 1) & 1;
+        *((u8*)&((p->s).spr).oam + 6) = (*((u8*)&((p->s).spr).oam + 6) & ~0x11) | (inv << 4);
+        if (inv) {
+          (p->s).flags |= X_FLIP;
+        } else {
+          (p->s).flags &= ~X_FLIP;
+        }
+      }
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0x20;
+      SetMotion(&p->s, MOTION(0xA4, 0));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      (p->s).work[2]--;
+      if ((p->s).work[2] == 0) {
+        if (!((pZero2->body).status & BODY_STATUS_DEAD) && (pZero2->body).hp != 0) {
+          childre_08040428(p);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/boss/childre_mode0.inc");
+#endif
+}
+
+INCASM("asm/boss/childre_pre_b.inc");
 
 void childreEndEarShot(struct Boss* p) {
   switch ((p->s).mode[2]) {
