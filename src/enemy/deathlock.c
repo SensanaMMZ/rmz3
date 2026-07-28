@@ -38,6 +38,30 @@ INCASM("asm/enemy/deathlock_pre_p1_p3.inc");
 
 void nop_0808d2f4(struct Enemy* p) {}
 
+void Deathlock_Die(struct Enemy* p);
+
+bool8 FUN_0808d2f8(struct Enemy* p) {
+  if ((p->body).status & 0x200) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if ((p->s).work[0] == 9) {
+      (p->s).mode[1] = 0;
+    } else if ((p->body).status & 0x10000) {
+      p->props[7] = 1;
+      (p->s).mode[1] = 2;
+    } else {
+      p->props[7] = 0;
+      if ((p->body).status & 0x20000) {
+        (p->s).mode[1] = 3;
+      } else {
+        (p->s).mode[1] = 1;
+      }
+    }
+    Deathlock_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
 INCASM("asm/enemy/deathlock_pre_p2_pre_a.inc");
 
 #include "element.h"
