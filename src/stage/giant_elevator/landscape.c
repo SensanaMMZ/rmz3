@@ -162,6 +162,18 @@ static const StageLayerRoutine sLayerRoutine[9] = {
 
 INCASM("asm/stage_gfx/giant_elevator_p1_a.inc");
 
+void giantElevator_08014880(struct StageLayer* p, const struct Stage* _) {
+  if (gOverworld.state[0] <= 9) {
+    s32 n = (u16)p->bgIdx >> 4;
+    BGnHOFS(n) = gOverworld.work.giantElevator.unk_028 >> 8;
+    BGnVOFS(n) = gOverworld.work.giantElevator.unk_02c >> 8;
+  } else {
+    DrawGeneralStageLayer(p, _);
+  }
+}
+
+INCASM("asm/stage_gfx/giant_elevator_p1_a2.inc");
+
 // 0x08014a34
 void giantElevator_08014a34(struct StageLayer* l, const struct Stage* _ UNUSED) {
   const u16 n = l->bgIdx;
