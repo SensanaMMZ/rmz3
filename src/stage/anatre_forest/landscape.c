@@ -345,6 +345,16 @@ static void LayerExit_AnatreForest_5(struct StageLayer* l, const struct Stage* _
 
 INCASM("asm/stage_gfx/anatre_forest.inc");
 
+s32 FUN_08010d70(s32 x, s32 y) {
+  if (x > 0x1A3FFF && (u32)(y - 0xA000) <= 0x13FFF) {
+    return gOverworld.terrain.tilemap[MAP_OFFSET(gOverworld.terrain.tilemap, x >> 12, y >> 12)] !=
+           gOverworld.terrain.tilemap[MAP_OFFSET(gOverworld.terrain.tilemap, x >> 12, (y + 0x28000) >> 12)];
+  }
+  return 0;
+}
+
+INCASM("asm/stage_gfx/anatre_forest_b.inc");
+
 extern const struct ChunkMap sChunkMap1;
 INCBIN_STATIC(sChunkMap1, "data/stage/anatre_forest/layer1.bin");  // ./tools/dumper/bin.ts ./baserom.gba 0x0833f890 0x0833fa54 ./data/stage/anatre_forest/layer1.bin
 
