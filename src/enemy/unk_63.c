@@ -107,6 +107,34 @@ void FUN_08094bf0(struct Enemy* p) {
 
 INCASM("asm/enemy/unk_63_p3_p2.inc");
 
+void FUN_08094e0c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      SetMotion(&p->s, MOTION(SM200_SMOKE, 1));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == MOTION_END) (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      (p->s).flags &= ~DISPLAY;
+      (p->s).flags &= ~FLIPABLE;
+      EXIT_BODY(p);
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/unk_63_p3_p3.inc");
+
+
+
 void Enemy63_Init(struct Enemy* p);
 void Enemy63_Update(struct Enemy* p);
 void Enemy63_Die(struct Enemy* p);
