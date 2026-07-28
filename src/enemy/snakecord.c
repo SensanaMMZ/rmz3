@@ -87,6 +87,52 @@ void FUN_08074134(struct Body* body) {
 
 INCASM("asm/enemy/snakecord_p1_p1_a_p2.inc");
 
+static const struct Coord sElementCoords[2];
+
+// Four instructions short: retail materializes the props address once, copies
+// it for the slot variable, and derives the body-status address from it
+// (subs 0x28); agbcc coalesces the copy in every spelling tried.
+NON_MATCH void FUN_080742ec(struct Enemy* p) {
+#if MODERN
+  struct VFX** slot;
+  struct VFX* e;
+  const struct Coord* c;
+  if ((p->s).work[0] != 0) {
+    return;
+  }
+  if ((p->s).mode[1] == 1) {
+    return;
+  }
+  e = *(struct VFX**)&p->props[0];
+  slot = (struct VFX**)&p->props[0];
+  if (e != NULL) {
+    return;
+  }
+  if (!((p->body).status & 1)) {
+    return;
+  }
+  if ((p->body).status & 0x20000) {
+    (p->s).mode[1] = 0xA;
+    (p->s).mode[2] = 0;
+    return;
+  }
+  if ((*((u8*)p + 0x97) & 0xF0) == 0x20) {
+    c = &sElementCoords[1];
+  } else {
+    c = &sElementCoords[0];
+  }
+  *slot = ApplyElementEffect(0, &p->s, c);
+  if (*slot != NULL) {
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+#else
+  INCCODE("asm/enemy/snakecord_742ec.inc");
+#endif
+}
+
+INCASM("asm/enemy/snakecord_p1_p1_a_p2b.inc");
+
 static const EnemyFunc PTR_ARRAY_08366e30[12];
 extern const EnemyFunc PTR_ARRAY_08366e60[12];
 bool8 FUN_0807415c(struct Enemy* p);
