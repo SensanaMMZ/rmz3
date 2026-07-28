@@ -107,6 +107,17 @@ static void BossExplosion_Die(struct Entity* p) {
 
 INCASM("asm/vfx/boss_explosion.inc");
 
+void FUN_080c7bc4(struct VFX* p) {
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(SM000_BATTLE_EFFECT, 1));
+  UpdateMotionGraphic(&p->s);
+  ((p->s).d).x = COS((p->s).work[1]), ((p->s).d).y = SIN((p->s).work[1]);
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  BossExplosion_Update((void*)p);
+}
+
 static void initFireball(struct Entity* p) {
   InitScalerotMotion1(p);
   p->flags |= DISPLAY;
