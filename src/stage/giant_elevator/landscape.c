@@ -201,6 +201,43 @@ void giant_elevator_08014124(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
+void FUN_08014194(struct StageLayer* l, const struct Stage* stage) {
+  u16 b = l->bgIdx;
+  if (l->viewportCenterPixel.x <= 0x34F) {
+    BGnHOFS(b >> 4) = (l->viewportCenterPixel.x - 0xF0) >> 1;
+  } else {
+    BGnHOFS(b >> 4) = (l->viewportCenterPixel.x - 0x4B0) >> 1;
+  }
+  BGnVOFS(b >> 4) = l->viewportCenterPixel.y + (l->unk_10 >> 1);
+}
+
+void FUN_080141f0(struct StageLayer* l, const struct Stage* stage) {
+  u32 ph = l->phase;
+  if (ph == 0) {
+    u16 b = l->bgIdx;
+    u32 n = b >> 4;
+    BGCNT16(n) = l->prio | l->screenBase | 0x44;
+    LoadBgMap(b, gBgMapOffsets, 0x61, 0, 0);
+    l->unk_10 = 0;
+    l->phase++;
+  }
+  if (l->viewportCenterPixel.x <= 0x34F) {
+    l->unk_10++;
+  } else {
+    l->unk_10--;
+  }
+}
+
+void FUN_08014258(struct StageLayer* l, const struct Stage* stage) {
+  u16 b = l->bgIdx;
+  if (l->viewportCenterPixel.x <= 0x34F) {
+    BGnHOFS(b >> 4) = (l->viewportCenterPixel.x - 0xF0) >> 2;
+  } else {
+    BGnHOFS(b >> 4) = (l->viewportCenterPixel.x - 0x4B0) >> 2;
+  }
+  BGnVOFS(b >> 4) = l->viewportCenterPixel.y + (l->unk_10 >> 2);
+}
+
 INCASM("asm/stage_gfx/giant_elevator_p1_a.inc");
 
 void giantElevator_08014880(struct StageLayer* p, const struct Stage* _) {
