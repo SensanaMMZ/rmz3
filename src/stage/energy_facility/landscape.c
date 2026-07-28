@@ -870,19 +870,22 @@ static void LayerExit_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
 
 INCASM("asm/stage_gfx/energy_facility.inc");
 
-// Both door-release loops sit in the ip-parking basin: agbcc parks the layer
-// pointer in ip (mov r0, ip per use) where retail copies it to r6 with a
-// full push. Same loop, one instruction over.
+// A byte-exact body exists (carry_arm exit shape with `doors[i] = z`), but it
+// needs the uncasted int-to-pointer store: -Werror rejects it, and every
+// legal cast/union spelling re-parks the layer pointer in ip (+3 insns).
 NON_MATCH void FUN_08012924(struct StageLayer* l, const struct Stage* stage) {
 #if MODERN
   s16 i;
   for (i = 0; i <= 5; i++) {
     struct Solid* d = l->work.energyFacility.doors[i];
     if (d != NULL) {
-      (d->s).flags = (~DISPLAY & (d->s).flags) & ~FLIPABLE;
-      (d->body).status = 0;
-      (d->body).prevStatus = 0;
-      (d->body).invincibleTime = 0;
+      u8 f = ~DISPLAY & (d->s).flags;
+      s32 z = 0;
+      f = f & ~FLIPABLE;
+      (d->s).flags = f;
+      (d->body).status = z;
+      (d->body).prevStatus = z;
+      (d->body).invincibleTime = z;
       (d->s).flags &= ~COLLIDABLE;
       SET_SOLID_ROUTINE(d, ENTITY_DISAPPEAR);
       l->work.energyFacility.doors[i] = NULL;
@@ -901,10 +904,13 @@ NON_MATCH void FUN_08012a00(struct StageLayer* l, const struct Stage* stage) {
   for (i = 0; i <= 3; i++) {
     struct Solid* d = l->work.energyFacility.doors[i];
     if (d != NULL) {
-      (d->s).flags = (~DISPLAY & (d->s).flags) & ~FLIPABLE;
-      (d->body).status = 0;
-      (d->body).prevStatus = 0;
-      (d->body).invincibleTime = 0;
+      u8 f = ~DISPLAY & (d->s).flags;
+      s32 z = 0;
+      f = f & ~FLIPABLE;
+      (d->s).flags = f;
+      (d->body).status = z;
+      (d->body).prevStatus = z;
+      (d->body).invincibleTime = z;
       (d->s).flags &= ~COLLIDABLE;
       SET_SOLID_ROUTINE(d, ENTITY_DISAPPEAR);
       l->work.energyFacility.doors[i] = NULL;
