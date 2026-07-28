@@ -45,6 +45,18 @@ void VFX57_Die(struct VFX* vfx) {
 
 INCASM("asm/vfx/unk_57_post.inc");
 
+void FUN_080c1aec(struct VFX* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  if ((p->s).motion.state == MOTION_NEXT) {
+    (p->s).flags &= ~DISPLAY;
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/vfx/unk_57_post_b.inc");
+
 void VFX57_Init(struct VFX* vfx);
 void VFX57_Update(struct VFX* vfx);
 void VFX57_Die(struct VFX* vfx);
