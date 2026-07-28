@@ -317,6 +317,35 @@ void FUN_0807760c(struct Enemy* p) {
 
 INCASM("asm/enemy/volcaire_p2_pre_p2.inc");
 
+void FUN_080777cc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).work[3] != 0) {
+        (p->s).work[2] = 0xC0;
+      } else {
+        (p->s).work[3] = 1;
+        (p->s).work[2] = 0x28;
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 2:
+      if ((u8)--(p->s).work[2] == 0) {
+        if (p->props[4] <= 3) {
+          FUN_08077174(&p->s);
+        }
+        (p->s).mode[2] = 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/volcaire_p2_pre_p2b.inc");
+
 void FUN_08077af8(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0:
