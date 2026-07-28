@@ -90,6 +90,27 @@ void SeaOtterElf_Die(struct Elf* p) {
 
 INCASM("asm/cyberelf/sea_otter_p2.inc");
 
+bool8 CheckPlayerStandStill(struct Zero* z);
+
+void FUN_080e4a88(struct Elf* p) {
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  struct Entity* parent = (p->s).unk_2c;
+  if ((p->s).mode[2] == 0) {
+    (p->s).mode[2]++;
+  }
+  if (parent->mode[0] > 1 || !CheckPlayerStandStill(z)) {
+    (p->s).unk_2c = NULL;
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  } else if ((u32)((p->s).unk_coord.x - (p->s).coord.x + PIXEL(8)) <= PIXEL(16) &&
+             (u32)((p->s).unk_coord.y - (p->s).coord.y + PIXEL(8)) <= PIXEL(16)) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/cyberelf/sea_otter_p2b.inc");
+
 void FUN_080e4a3c(struct Elf* p);
 void FUN_080e4a88(struct Elf* p);
 void FUN_080e4ae8(struct Elf* p);
