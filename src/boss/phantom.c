@@ -458,7 +458,21 @@ void FUN_0805fa44(struct Boss* p) {
   (PTR_ARRAY_08365504[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p4_p1.inc");
+void FUN_0805fac4(struct Boss* p);
+
+void FUN_0805fa5c(struct Boss* p) {
+  (p->s).mode[3] = 1;
+  (p->s).d.x = (*(s32*)((u8*)p + 0xe0) - (p->s).coord.x) / 0x2E;
+  (p->s).d.y = -0x5C0;
+  FUN_080608c8(p);
+  *(s32*)((u8*)p + 0xc4) = 0;
+  *(u8*)((u8*)p + 0xc8) = 1;
+  {
+    u8 r = RANDOM(RNG_0202f388) & 1;
+    *(u8*)((u8*)p + 0xc9) = r;
+  }
+  FUN_0805fac4(p);
+}
 
 void FUN_0805fac4(struct Boss* p) {
   if (FUN_080608e0(p)) {
