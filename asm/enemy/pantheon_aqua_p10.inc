@@ -4,49 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0807336c
-FUN_0807336c: @ 0x0807336C
-	push {lr}
-	adds r2, r0, #0
-	adds r3, r1, #0
-	ldr r0, [r2, #0xc]
-	ldr r0, [r0, #4]
-	ldrb r0, [r0, #4]
-	cmp r0, #3
-	beq _08073384
-	cmp r0, #0xe
-	beq _08073384
-	cmp r0, #0xf
-	bne _080733AE
-_08073384:
-	ldr r2, [r2, #0x2c]
-	adds r0, r2, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #0x80
-	lsls r1, r1, #2
-	ands r0, r1
-	cmp r0, #0
-	beq _080733AE
-	ldr r1, [r2, #0x54]
-	ldr r0, [r3]
-	cmp r1, r0
-	bge _080733A6
-	adds r1, r2, #0
-	adds r1, #0xbb
-	movs r0, #0xff
-	b _080733AC
-_080733A6:
-	adds r1, r2, #0
-	adds r1, #0xbb
-	movs r0, #0xfe
-_080733AC:
-	strb r0, [r1]
-_080733AE:
-	pop {r0}
-	bx r0
-	.align 2, 0
-
 	thumb_func_start FUN_080733b4
 FUN_080733b4: @ 0x080733B4
 	push {r4, r5, lr}
@@ -388,3 +345,4 @@ _0807365A:
 	pop {r4}
 	pop {r1}
 	bx r1
+

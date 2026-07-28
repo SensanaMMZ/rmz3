@@ -144,6 +144,20 @@ INCASM("asm/enemy/pantheon_aqua_p9.inc");
 
 s32 FUN_08073368(struct Enemy* p) { return TRUE; }
 
+void FUN_0807336c(struct Body* body, struct Coord* c) {
+  u8 t = ((body->enemy)->processing)->atkType;
+  if (t == 3 || t == 14 || t == 15) {
+    struct CollidableEntity* parent = body->parent;
+    if ((parent->body).status & BODY_STATUS_DEAD) {
+      if ((parent->s).coord.x < c->x) {
+        ((struct Enemy*)parent)->props[7] = 0xFF;
+      } else {
+        ((struct Enemy*)parent)->props[7] = 0xFE;
+      }
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_aqua_p10.inc");
 
 void PantheonAqua_Init(struct Enemy* p);
