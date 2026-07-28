@@ -132,7 +132,19 @@ bool8 FUN_08085c4c(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/capsule_cannon_post_post_post_b.inc");
+void FUN_08085cc4(struct Body* body, struct Coord* c) {
+  u8 t = ((body->enemy)->processing)->atkType;
+  if (t == 3 || t == 14 || t == 15) {
+    struct CollidableEntity* parent = body->parent;
+    if ((parent->body).status & BODY_STATUS_DEAD) {
+      if ((parent->s).coord.x < c->x) {
+        ((struct Enemy*)parent)->props[6] = 0xFF;
+      } else {
+        ((struct Enemy*)parent)->props[6] = 0xFE;
+      }
+    }
+  }
+}
 
 bool8 FUN_08085a08(struct Enemy* p);
 bool8 FUN_08085a10(struct Enemy* p);
