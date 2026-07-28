@@ -140,7 +140,23 @@ void PurpleNerple_Update(struct Enemy* p) {
   (PTR_ARRAY_083670f8[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/purple_nerple_p1_b.inc");
+extern const EnemyFunc PTR_ARRAY_08367120[6];
+
+void PurpleNerple_Die(struct Enemy* p) {
+  u8 v = p->props[5];
+  if (v == 0 && FLAG(gCurStory.s.gameflags, 38)) {
+    u8 f = ~DISPLAY & (p->s).flags;
+    f = f & ~FLIPABLE;
+    (p->s).flags = f;
+    (p->body).status = v;
+    (p->body).prevStatus = v;
+    (p->body).invincibleTime = v;
+    (p->s).flags &= ~COLLIDABLE;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  } else {
+    (PTR_ARRAY_08367120[(p->s).mode[1]])(p);
+  }
+}
 
 void FUN_08076140(struct Enemy* p) {}
 
