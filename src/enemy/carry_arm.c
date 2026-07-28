@@ -65,7 +65,26 @@ static bool8 FUN_0807156c(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/carry_arm_p2_post_pre_a.inc");
+static const struct Collision sCollisions[2];
+extern const u8 u8_ARRAY_08366bb0[2];
+void CarryArm_Update(struct Enemy* p);
+
+void CarryArm_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_08366bb0[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  if ((p->s).work[0] == 1) {
+    INIT_BODY(p, &sCollisions[1], 2, NULL);
+    (p->s).unk_28 = NULL;
+    (p->s).unk_2c = NULL;
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  } else {
+    INIT_BODY(p, &sCollisions[0], 2, (void*)nop_08071568);
+  }
+  CarryArm_Update(p);
+}
 
 extern const EnemyFunc PTR_ARRAY_08366b48[6];
 extern const EnemyFunc PTR_ARRAY_08366b60[6];
