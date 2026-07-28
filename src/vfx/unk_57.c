@@ -55,7 +55,20 @@ void FUN_080c1aec(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_57_post_b.inc");
+void FUN_080c1b34(struct VFX* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if ((p->s).work[2]++ & 1) {
+    (p->s).flags &= ~DISPLAY;
+  } else {
+    (p->s).flags |= DISPLAY;
+  }
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void VFX57_Init(struct VFX* vfx);
 void VFX57_Update(struct VFX* vfx);
