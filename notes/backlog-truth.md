@@ -2253,3 +2253,4 @@ FUN_0807db9c: .byte blob (inline jumptable) in mellnet_post_post_post.inc - Ghid
     (p->s).flags = f;
     (p->body).status = z; prevStatus = z; invincibleTime = z;
   RETRY the energy-facility door twins with this exact shape - their ip-parking may have been downstream of the f/z structure, not a real basin.
+- MILESTONE 100/689 dispositioned (76 matches / 20 dual-forms / 2 triage / 2 blobs). New levers today: exit-shape (u8 f + interleaved z), phase/result-register equivalence, offset-struct row views for giv shapes, pointer-typed index for adds operand order. 58-68B bands drained.
