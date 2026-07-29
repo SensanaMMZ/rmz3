@@ -75,6 +75,43 @@ s32 FUN_08088bc8(struct Enemy* p, s32 dx, s32 dy) {
 
 INCASM("asm/enemy/mettaur_swim_p1_pre_p1.inc");
 
+bool8 FUN_08088cfc(struct Enemy* p) {
+  u8 f[2];
+  u8* b;
+  u8* a;
+  b = f;
+  a = f;
+  a[1] = 0;
+  b[0] = 0;
+  {
+    register s32 x asm("r2") = (p->s).coord.x;
+    register s32 c asm("r3");
+    register s32 yl asm("r0");
+    s32 y;
+    yl = (p->s).coord.y;
+    c = -PIXEL(16);
+    asm("" : "+r"(c));
+    y = yl + c;
+    if (PushoutToDown1(x, y) > 0) {
+      f[0] = 1;
+    }
+  }
+  {
+    register s32 x asm("r2") = (p->s).coord.x;
+    register s32 c asm("r3");
+    register s32 yl asm("r0");
+    s32 y;
+    yl = (p->s).coord.y;
+    c = PIXEL(1);
+    asm("" : "+r"(c));
+    y = yl + c;
+    if (PushoutToUp1(x, y) < 0) {
+      f[1] = 1;
+    }
+  }
+  return f[0] & f[1];
+}
+
 void CreateVFX62(struct Entity* e, struct Coord* c);
 
 void FUN_08088d54(struct Enemy* p) {
