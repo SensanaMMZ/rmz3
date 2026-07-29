@@ -852,6 +852,25 @@ void copyx_08057520(struct Boss* p) {
 
 INCASM("asm/boss/copy_x_p2_p2_b2.inc");
 
+void copyx_08057744(struct Boss* p) {
+  s32 b = *(s32*)&((p->props).copyx).unk_b4[0];
+  s32 x;
+  s32 lim = b + 0x1000;
+  if ((x = (p->s).coord.x) < lim || x > b + 0x14000) {
+    (p->s).coord.x = *(s32*)&((p->props).copyx).unk_b4[8];
+  }
+  *(s32*)&((p->props).copyx).unk_b4[8] = (p->s).coord.x;
+  {
+    s32 b2 = *(s32*)&((p->props).copyx).unk_b4[4];
+    s32 y;
+    s32 lim2 = b2 + 0x3000;
+    if ((y = (p->s).coord.y) < lim2) {
+      (p->s).coord.y = *(s32*)&((p->props).copyx).unk_b4[0xc];
+    }
+    *(s32*)&((p->props).copyx).unk_b4[0xc] = (p->s).coord.y;
+  }
+}
+
 void CopyX_OnDamage(struct Body* body) {
   if (body->hitboxFlags & 1) {
     struct Boss* self = (struct Boss*)body->parent;
