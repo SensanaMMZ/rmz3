@@ -95,7 +95,35 @@ void deathtanz_080a09f4(struct Entity* e, s32 x, s32 y, u8 a3, u8 a4) {
   }
 }
 
-INCASM("asm/projectile/unk_14_p1_p1_p3_b_b.inc");
+static const u8 u8_ARRAY_0836b20c[5];
+static const struct Collision sCollisions[10];
+void Projectile14_Update(struct Projectile* p);
+
+static void nop_080a0a5c(struct Body* body, struct Coord* c) {}
+
+void Projectile14_Init(struct Projectile* p) {
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_0836b20c[(p->s).work[0]];
+  {
+    u8 f = (p->s).flags;
+    f |= FLIPABLE;
+    f |= DISPLAY;
+    (p->s).flags = f;
+  }
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 1, (void*)nop_080a0a5c);
+  {
+    u8* src = (u8*)(p->s).unk_28;
+    s32* dst = (s32*)&p->work[0];
+    *dst = *(s32*)(src + 0xb4);
+  }
+  {
+    s32* q = (s32*)((u8*)&p->body + 0x44);
+    *q = (p->s).coord.y >> 8;
+    *q = *q / 0xA0 * 5 << 13;
+  }
+  Projectile14_Update(p);
+}
 
 void Projectile14_Update(struct Projectile* p) {
   (sUpdates1[(p->s).mode[1]])(p);
