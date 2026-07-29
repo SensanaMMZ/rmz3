@@ -164,13 +164,18 @@ void FUN_080aac28(struct Entity* e);
 
 // Same regmove tie as blizzackMode0: agbcc hoists the mode[2]=0 zero above
 // the 0x64xx pool load, spilling the constant into r3 + copy.
-NON_MATCH void blizzackMode9(struct Boss* p) {
-#if MODERN
+void blizzackMode9(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
     SetMotion(&p->s, MOTION(0xb4, 0x08));
     ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
-    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6408;
-    (p->s).mode[2] = 0;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x6408;
+    *t = v;
+    (p->s).mode[2] = z;
     (p->s).work[2] = 8;
     SetDDP(&p->body, sCollisions);
   }
@@ -179,18 +184,20 @@ NON_MATCH void blizzackMode9(struct Boss* p) {
     (p->s).mode[1] = 3;
     (p->s).mode[2] = 1;
   }
-#else
-  INCCODE("asm/boss/blizzack_mode9_body.inc");
-#endif
 }
 
-NON_MATCH void blizzackStartBlizzard(struct Boss* p) {
-#if MODERN
+void blizzackStartBlizzard(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
     SetMotion(&p->s, MOTION(0xb4, 0x09));
     ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
-    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6409;
-    (p->s).mode[2] = 0;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x6409;
+    *t = v;
+    (p->s).mode[2] = z;
     SetDDP(&p->body, &sCollisions[2]);
   }
   UpdateMotionGraphic(&p->s);
@@ -198,9 +205,6 @@ NON_MATCH void blizzackStartBlizzard(struct Boss* p) {
     (p->s).mode[1] = 0xb;
     (p->s).mode[2] = 1;
   }
-#else
-  INCCODE("asm/boss/blizzack_startbliz_body.inc");
-#endif
 }
 
 void blizzackBlizzard(struct Boss* p) {
@@ -218,13 +222,18 @@ void blizzackBlizzard(struct Boss* p) {
   }
 }
 
-NON_MATCH void blizzackEndBlizzard(struct Boss* p) {
-#if MODERN
+void blizzackEndBlizzard(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
     SetMotion(&p->s, MOTION(0xb4, 0x08));
     ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
-    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6408;
-    (p->s).mode[2] = 0;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x6408;
+    *t = v;
+    (p->s).mode[2] = z;
     (p->s).work[2] = 8;
     StopSound(*(s16*)((u8*)p + 0xc8));
     SetDDP(&p->body, sCollisions);
@@ -234,22 +243,24 @@ NON_MATCH void blizzackEndBlizzard(struct Boss* p) {
     (p->s).mode[1] = 3;
     (p->s).mode[2] = 1;
   }
-#else
-  INCCODE("asm/boss/blizzack_endbliz_body.inc");
-#endif
 }
 
 INCASM("asm/boss/blizzack_post_p2_a.inc");
 
 // Same regmove tie as blizzackMode0: the mode[2]=0 zero and the 0x64xx pool
 // load fight for the same slot, spilling the constant through r3.
-NON_MATCH void blizzackBombFall(struct Boss* p) {
-#if MODERN
+void blizzackBombFall(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
     SetMotion(&p->s, MOTION(0xb4, 0x03));
     ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
-    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6403;
-    (p->s).mode[2] = 0;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x6403;
+    *t = v;
+    (p->s).mode[2] = z;
   }
   UpdateMotionGraphic(&p->s);
   (p->s).coord.x += (p->s).d.x;
@@ -263,9 +274,6 @@ NON_MATCH void blizzackBombFall(struct Boss* p) {
     (p->s).mode[2] = 1;
     (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
   }
-#else
-  INCCODE("asm/boss/blizzack_bombfall_body.inc");
-#endif
 }
 
 INCASM("asm/boss/blizzack_post_p2_a2.inc");
