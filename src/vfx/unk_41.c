@@ -170,6 +170,55 @@ void FUN_080be020(struct VFX* p) {
 
 INCASM("asm/vfx/unk_41_post.inc");
 
+// 0x080be230
+void FUN_080be230(struct VFX* p) {
+  if (*((u8*)p + 0x7c) == 0) {
+    struct Entity* q = (p->s).unk_28;
+    if (q->mode[0] > 1) {
+      goto die;
+    }
+    if ((u8)(q->mode[1] - 0xA) <= 1) {
+      goto die;
+    }
+    switch ((p->s).mode[2]) {
+      case 0:
+        SetMotion(&p->s, MOTION(0xA9, 0x01));
+        SET_YFLIP(p, 1);
+        (p->s).mode[2]++;
+        /* fallthrough */
+      case 1: {
+        struct Entity* q2 = (p->s).unk_28;
+        (p->s).coord.x = (q2->coord).x - 0x100;
+        (p->s).coord.y = (q2->coord).y + 0x2E00;
+        UpdateMotionGraphic(&p->s);
+        if (((p->s).unk_28)->mode[2] > 9) {
+          SET_VFX_ROUTINE(p, ENTITY_DIE);
+        }
+        break;
+      }
+    }
+  }
+  if (*((u8*)p + 0x7c) == 1) {
+    switch ((p->s).mode[2]) {
+      case 0:
+        (p->s).work[2] = 1;
+        (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+        SetMotion(&p->s, MOTION(0xA9, 0x04));
+        (p->s).mode[2]++;
+        /* fallthrough */
+      case 1:
+        UpdateMotionGraphic(&p->s);
+        if ((u8)--(p->s).work[2] == 0) {
+        die:
+          SET_VFX_ROUTINE(p, ENTITY_DIE);
+        }
+        break;
+    }
+  }
+}
+
+INCASM("asm/vfx/unk_41_post_b.inc");
+
 void VFX41_Init(struct VFX* vfx);
 void VFX41_Update(struct VFX* vfx);
 void VFX41_Die(struct VFX* vfx);
