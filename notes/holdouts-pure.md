@@ -1,4 +1,4 @@
-# Holdouts that are pure INCCODE stubs (358)
+# Holdouts that are pure INCCODE stubs (356)
 
 No C body at all -- these need source reconstruction before any
 matching work can start. This is what the Ghidra harness is for; see
@@ -116,7 +116,6 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/solid/childre_ship.c | 1 |
 | src/solid/door_2d_blue.c | 1 |
 | src/solid/door_2d_gray_h.c | 1 |
-| src/solid/door_2d_gray_v.c | 1 |
 | src/solid/icebon.c | 1 |
 | src/solid/main_npc.c | 1 |
 | src/solid/plant.c | 1 |
@@ -163,7 +162,6 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/vfx/zero_death_effect.c | 1 |
 | src/weapon/reflect_laser.c | 1 |
 | src/weapon/shield.c | 1 |
-| src/weapon/shield_fly.c | 1 |
 | src/widget/disk_icon.c | 1 |
 | src/widget/elf_icon.c | 1 |
 | src/widget/elf_menu_item.c | 1 |
@@ -240,8 +238,8 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/enemy/gyro_cannon.c:456 | `NAKED static void FUN_0806ddfc(struct Enemy* p)` |
 | src/enemy/hammer.c:60 | `NAKED static void Enemy21_Init(struct Enemy* p)` |
 | src/enemy/lamplort.c:42 | `NAKED static void Lamplort_Init(struct Enemy* p)` |
-| src/enemy/pantheon_hunter.c:53 | `NAKED static void PantheonHunter_Init(struct Enemy* p)` |
-| src/enemy/pantheon_hunter.c:267 | `NAKED static void PantheonHunter_Update(struct Enemy* p)` |
+| src/enemy/pantheon_hunter.c:56 | `NAKED static void PantheonHunter_Init(struct Enemy* p)` |
+| src/enemy/pantheon_hunter.c:270 | `NAKED static void PantheonHunter_Update(struct Enemy* p)` |
 | src/enemy/shotcounter.c:41 | `NAKED static void Shotcounter_Init(struct Enemy* p)` |
 | src/enemy/shotcounter.c:283 | `NAKED static void Shotcounter_Die(struct Enemy* p)` |
 | src/enemy/shrimpolin.c:76 | `NAKED static bool8 shrimporin_080698dc(struct Enemy* p)` |
@@ -291,8 +289,8 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/game/menu/main.c:3505 | `NAKED u8 CheckUnlockedFoot(struct GameState* g, u8 r1)` |
 | src/game/minigame.c:181 | `NAKED static void MinigameLoop_Main(struct GameState* g)` |
 | src/game/minigame/copy_x.c:5 | `NAKED void initCopyXMinigame(struct GameState* g)` |
-| src/gfx.c:320 | `NAKED static void FadeWhite(u32* src, u32* dst, u32* fades, u32* mask)` |
-| src/gfx.c:325 | `NAKED static void FadeColor(u32* src, u32* dst, u32* fades, u32* mask)` |
+| src/gfx.c:324 | `NAKED static void FadeWhite(u32* src, u32* dst, u32* fades, u32* mask)` |
+| src/gfx.c:329 | `NAKED static void FadeColor(u32* src, u32* dst, u32* fades, u32* mask)` |
 | src/intro.c:496 | `NAKED static void InitTitleScreen(struct Intro* p)` |
 | src/intro.c:669 | `NAKED static void SelectOnTitle(struct Intro* p) { INCCODE("asm/todo/SelectOnTitle.inc"); }` |
 | src/intro.c:708 | `NAKED static u8 intro_080ecd28(struct Intro* p) { INCCODE("asm/todo/intro_080ecd28.inc"); }` |
@@ -407,13 +405,12 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/script_command.c:613 | `NAKED static bool32 Cmd_scroll(struct VM* vm)` |
 | src/script_command.c:1373 | `NAKED static void FUN_080237c4(u32 r0, s32 x, s32 y, u16 r3)` |
 | src/script_command.c:1484 | `NAKED static bool32 Cmd_cutscene(struct VM* vm)` |
-| src/solid/actor.c:890 | `NAKED static void initActor8(struct Solid* p)` |
+| src/solid/actor.c:891 | `NAKED static void initActor8(struct Solid* p)` |
 | src/solid/childre_ship.c:26 | `NAKED void ChildreShip_CreateBubbles(s32 x, s32 y)` |
 | src/solid/cyberspace_door.c:32 | `NAKED static void CyberSpaceDoor_Init(struct Solid* p)` |
 | src/solid/cyberspace_door.c:193 | `NAKED static void FUN_080dbbd4(struct Solid* p)` |
 | src/solid/door_2d_blue.c:150 | `NAKED static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED)` |
 | src/solid/door_2d_gray_h.c:66 | `NAKED void FUN_080d7e5c(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED)` |
-| src/solid/door_2d_gray_v.c:60 | `NAKED static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED)` |
 | src/solid/door_3d.c:57 | `NAKED static void Door3D_Init(struct Solid* p)` |
 | src/solid/door_3d.c:357 | `NAKED static void FUN_080cd354(struct Solid* p)` |
 | src/solid/icebon.c:66 | `NAKED static void Icebon_Init(struct Solid* p)` |
@@ -513,7 +510,7 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/vfx/unk_82.c:225 | `NAKED static void FUN_080c98e8(struct VFX* p)` |
 | src/vfx/unk_83.c:103 | `NAKED static void TaskCB_080c9b4c(struct Sprite* p, struct DrawPivot* _)` |
 | src/vfx/unk_84.c:94 | `NAKED static void FUN_080c9d20(struct Sprite* p, struct DrawPivot* _)` |
-| src/vfx/zero_death_effect.c:25 | `NAKED void CreateFirework(s32 x, s32 y, bool8 r2)` |
+| src/vfx/zero_death_effect.c:28 | `NAKED void CreateFirework(s32 x, s32 y, bool8 r2)` |
 | src/weapon/buster.c:24 | `NAKED void MenuExit_Buster(struct Weapon* w) { INCCODE("asm/todo/MenuExit_Buster.inc"); }` |
 | src/weapon/buster.c:283 | `NAKED static void initFullBullet(struct Weapon* w)` |
 | src/weapon/buster.c:442 | `NAKED static void initLaserShot(struct Weapon* w)` |
@@ -522,7 +519,6 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/weapon/buster.c:1502 | `NAKED static bool8 buster_08037f78(struct Weapon* w, const struct Rect* size)` |
 | src/weapon/reflect_laser.c:92 | `NAKED static struct Weapon* unused_CreateReflectLaser(struct Zero* z, struct Entity* p, void* r2, u8 r3, u8 r4) { INCCODE("asm/unused/unused_CreateReflectLaser.inc"); }` |
 | src/weapon/shield.c:97 | `NAKED static void ShieldGuard_Update(struct Weapon* w)` |
-| src/weapon/shield_fly.c:19 | `NAKED void MenuExit_ShieldFly(struct Weapon* w) { INCCODE("asm/todo/MenuExit_ShieldFly.inc"); }` |
 | src/widget/armor_icons.c:191 | `NAKED static void FUN_080e6c94(struct Widget* w)` |
 | src/widget/armor_icons.c:560 | `NAKED static void FUN_080e6f6c(struct Widget* w)` |
 | src/widget/disk_icon.c:46 | `NAKED static void DiskIcon_Update(struct Widget* w)` |

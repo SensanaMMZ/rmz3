@@ -102,6 +102,32 @@ NON_MATCH void FUN_08054b20(struct Boss* p) {
 
 INCASM("asm/boss/locomo_if_p2_post.inc");
 
+void FUN_08054e94(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = Sqrt(0xAA);
+      (p->s).d.x = -(Sqrt(0xAA) * 24);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      *(s32*)((u8*)p + 0xb8) += (p->s).d.x;
+      (p->s).d.x += 0x18;
+      if ((u8)--(p->s).work[2] == 0) {
+        *(s32*)((u8*)p + 0xb8) = 0x8000;
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+  if (*((u8*)p + 0xbc) != 0) {
+    (p->s).angle = -(*(u32*)((u8*)p + 0xb8) >> 8);
+  } else {
+    (p->s).angle = *(u32*)((u8*)p + 0xb8) >> 8;
+  }
+}
+
+INCASM("asm/boss/locomo_if_p2_post_b.inc");
+
 void LocomoIF_Init(struct Boss* p);
 void LocomoIF_Update(struct Boss* p);
 void LocomoIF_Die(struct Boss* p);

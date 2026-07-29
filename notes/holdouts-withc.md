@@ -1,4 +1,4 @@
-# Holdouts with a reconstructed C body (127)
+# Holdouts with a reconstructed C body (129)
 
 These have a `#if MODERN` body, so `tools/objdiff_rank.sh` gives a
 meaningful match%% for them and the permuter has something to chew on.
@@ -47,6 +47,7 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/enemy/unk_59.c | 1 |
 | src/game/menu.c | 1 |
 | src/game/menu/elf.c | 1 |
+| src/gfx.c | 1 |
 | src/intro.c | 1 |
 | src/main.c | 1 |
 | src/mission.c | 1 |
@@ -59,6 +60,7 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/result.c | 1 |
 | src/solid/actor.c | 1 |
 | src/solid/door_2d_blue.c | 1 |
+| src/solid/door_2d_gray_v.c | 1 |
 | src/solid/ice_block.c | 1 |
 | src/solid/unk_36.c | 1 |
 | src/stage/anatre_forest/landscape.c | 1 |
@@ -100,10 +102,10 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/collision.c:905 | `NON_MATCH static void tryOverlapCallback2(struct Hitbox* ah, struct Hitbox* dh)` |
 | src/cyberelf/bird.c:20 | `NON_MATCH void FUN_080e58bc(struct Elf* p)` |
 | src/cyberelf/sea_otter.c:21 | `NON_MATCH void MenuExit_SeaOtterElf(struct Elf* e)` |
-| src/enemy/beetank.c:45 | `NON_MATCH void Beetank_Update(struct Enemy* p)` |
+| src/enemy/beetank.c:47 | `NON_MATCH void Beetank_Update(struct Enemy* p)` |
 | src/enemy/grand_cannon.c:192 | `NON_MATCH static void GrandCannon_Update(struct Enemy* p)` |
 | src/enemy/minigame/ciel2.c:47 | `NON_MATCH static void CielMinigameEnemy2_Init(struct Enemy* p)` |
-| src/enemy/unk_59.c:104 | `NON_MATCH void FUN_080922e0(struct Enemy* p)` |
+| src/enemy/unk_59.c:121 | `NON_MATCH void FUN_080922e0(struct Enemy* p)` |
 | src/entity.c:90 | `NON_MATCH void RunDamageEffect(struct EntityHeader* h)` |
 | src/entity.c:116 | `NON_MATCH void DrawEntity(struct EntityHeader* h, struct Renderer* tm)` |
 | src/entity.c:159 | `NON_MATCH void DrawCollidableEntity(struct EntityHeader* h, struct Renderer* tm)` |
@@ -118,6 +120,7 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/game/menu/elf.c:266 | `NON_MATCH static void ElfMenuFocusLoop_TabSelect(struct GameState* g)` |
 | src/game/menu/main.c:1179 | `NON_MATCH static void MainMenuLoop_Update(struct GameState* m)` |
 | src/game/menu/main.c:3359 | `NON_MATCH u8 CheckUnlockedHead(struct GameState* g, u8 idx)` |
+| src/gfx.c:307 | `NON_MATCH static void FadeBlack(u32* src, u32* dst, u32 lv, u32* mask)` |
 | src/intro.c:405 | `NON_MATCH static void updateTitleAnimation(struct Intro* p)` |
 | src/main.c:23 | `NON_MATCH void AgbMain(void)` |
 | src/mission.c:54 | `NON_MATCH void calcStageScore(void)` |
@@ -160,8 +163,9 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/result.c:1521 | `NON_MATCH static bool32 CountUpResultScore(s32 score, s16 step, u8 se_interval, u8 x, u8 y)` |
 | src/script_command.c:269 | `NON_MATCH static bool32 Cmd_cmd06(struct VM* vm)` |
 | src/script_command.c:519 | `NON_MATCH static bool32 Cmd_flag(struct VM* vm)` |
-| src/solid/actor.c:437 | `NON_MATCH u16 FUN_080d0aa0(struct Entity* p, motion_t m, u8 r2)` |
+| src/solid/actor.c:438 | `NON_MATCH u16 FUN_080d0aa0(struct Entity* p, motion_t m, u8 r2)` |
 | src/solid/door_2d_blue.c:25 | `NON_MATCH static void Door2DBlue_Init(struct Solid* p)` |
+| src/solid/door_2d_gray_v.c:67 | `NON_MATCH static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED)` |
 | src/solid/ice_block.c:28 | `NON_MATCH static void IceBlock_Init(struct Solid* p)` |
 | src/solid/unk_36.c:40 | `NON_MATCH static void Solid36_Update(struct Solid* p)` |
 | src/sprite2.c:30 | `NON_MATCH void TaskCB_DrawNoAffineSprite(struct Sprite* s, struct DrawPivot* tc)` |
@@ -189,7 +193,7 @@ Regenerate with `python3 tools/classify_holdouts.py`.
 | src/terrain.c:637 | `NON_MATCH static void UpdateStageLayer(struct StageLayer* l, const struct Stage* s, struct Coord* c)` |
 | src/vfx/elf_particle.c:600 | `NON_MATCH void FUN_080c021c(struct VFX* vfx)` |
 | src/vfx/exlife_indicator.c:55 | `NON_MATCH static void ExlifeIndicator_Update(struct VFX* vfx)` |
-| src/vfx/unk_32.c:204 | `NON_MATCH void FUN_080bac5c(struct VFX* p)` |
+| src/vfx/unk_32.c:229 | `NON_MATCH void FUN_080bac5c(struct VFX* p)` |
 | src/weapon/buster.c:151 | `NON_MATCH static void initLemonBullet(struct Weapon* w)` |
 | src/weapon/minigame_rod.c:43 | `NON_MATCH static void Weapon16_Init(struct Weapon* w)` |
 | src/weapon/saber.c:33 | `NON_MATCH struct Weapon* CreateWeaponSaber(struct Zero* z, u8 r1)` |
