@@ -91,7 +91,98 @@ struct Weapon* CreateReflectLaser(struct Zero* z, struct Entity* p, u8 n) {
 
 NAKED static struct Weapon* unused_CreateReflectLaser(struct Zero* z, struct Entity* p, void* r2, u8 r3, u8 r4) { INCCODE("asm/unused/unused_CreateReflectLaser.inc"); }
 
-INCASM("asm/weapon/reflect_laser_p1.inc");
+void ReflectLaser_Init(struct Weapon* w) {
+  register struct Entity* pz asm("r8");
+  register struct Entity* zz asm("sl");
+  register s32 zb asm("r9");
+  struct ReflectLaser_b4* pr = &w->props.reflect;
+  pz = pr->q;
+  zz = (w->s).unk_28;
+  SET_WEAPON_ROUTINE(w, ENTITY_UPDATE);
+  InitNonAffineMotion(&w->s);
+  ResetDynamicMotion(&w->s);
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    register s32 z4 asm("r4");
+    f0 = (w->s).flags;
+    d0 = DISPLAY;
+    asm("" : "+r"(d0));
+    z4 = 0;
+    d0 |= f0;
+    {
+      register s32 c2 asm("r1");
+      c2 = FLIPABLE;
+      d0 |= c2;
+    }
+    (w->s).flags = d0;
+    asm volatile("" :: "r"(z4));
+  }
+  {
+    const motion_t* tbl = sMotions;
+    SetMotion(&w->s, tbl[(w->s).work[0]]);
+  }
+  {
+    register u8 f1 asm("r1");
+    register s32 m0 asm("r0");
+    f1 = (w->s).flags;
+    m0 = 0xEF;
+    m0 &= f1;
+    zb = 0;
+    (w->s).flags = m0;
+  }
+  {
+    register s32 v1 asm("r1");
+    u8* a = (u8*)w + 0x4c;
+    asm("" : "+r"(a));
+    asm("" : "+r"(zb));
+    v1 = zb;
+    *a = v1;
+  }
+  {
+    u8* a = (u8*)w + 0x4a;
+    register u8 b asm("r1");
+    s32 msk;
+    b = *a;
+    msk = -0x11;
+    msk &= b;
+    *a = msk;
+  }
+  if ((((u32)(w->s).work[0] % 3) << 24) == 0) {
+    (w->s).flags |= COLLIDABLE;
+    {
+      struct Body* body = &w->body;
+      const struct Collision* col = sCollisions;
+      InitBody(body, col, &(w->s).coord, 1);
+      body->parent = (struct CollidableEntity*)w;
+      body->fn = (BodyFunc)zb;
+      InitWeaponBody(body, col, (u8)(CalcBusterBonus((struct Zero*)zz) + 10), -1, -1, -1);
+    }
+  }
+  {
+    register struct Entity* e0 asm("r1");
+    e0 = pz;
+    pr->c_b8.x = e0->coord.x;
+    pr->c_b8.y = e0->coord.y;
+  }
+  (w->s).work[2] = 0;
+  {
+    u8 wk = (w->s).work[0];
+    if (wk <= 5) {
+      struct Entity* e1 = (w->s).unk_28;
+      register s32 m1 asm("r0");
+      m1 = 1;
+      m1 &= wk;
+      if (m1) {
+        CreateReflectLaser((struct Zero*)e1, (struct Entity*)w, (u8)(wk + 1));
+      } else {
+        CreateReflectLaser((struct Zero*)e1, pz, (u8)(wk + 1));
+      }
+    }
+  }
+  ReflectLaser_Update(w);
+}
+
 
 void ReflectLaser_Update(struct Weapon* w) {
   struct ReflectLaser_b4* b4 = &(w->props).reflect;
