@@ -98,6 +98,20 @@ void nop_0807a6f8(struct Enemy* p) {}
 
 INCASM("asm/enemy/deathtanz_rock_p3.inc");
 
+static const motion_t sMotions2[3];
+void FUN_080b7ffc(struct Entity* p, struct Coord* c, motion_t* m, s32 n);
+
+void FUN_0807aa34(struct Enemy* p) {
+  EXIT_BODY(p);
+  if ((p->s).work[0] == 1) {
+    struct Coord c;
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    FUN_080b7ffc(&p->s, &c, (motion_t*)sMotions2, 3);
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
 void DeathtanzRock_Init(struct Enemy* p);
 void DeathtanzRock_Update(struct Enemy* p);
 void DeathtanzRock_Die(struct Enemy* p);
