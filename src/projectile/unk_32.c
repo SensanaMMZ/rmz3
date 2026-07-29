@@ -252,6 +252,27 @@ void FUN_080abdc8(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_32_p4_p3_p2.inc");
 
+void FUN_080abe54(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 x = (pZero2->s).coord.x;
+    (p->s).coord.x = x;
+    if ((p->s).flags & 0x10) {
+      if (x < q->coord.x) {
+        (p->s).coord.x = q->coord.x;
+      }
+    } else {
+      if (x > q->coord.x) {
+        (p->s).coord.x = q->coord.x;
+      }
+    }
+  }
+  if (q->mode[0] > 1) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 void FUN_080abea8(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
