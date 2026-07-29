@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "mod.h"
 #include "enemy.h"
 #include "global.h"
 #include "trig.h"
@@ -71,7 +72,8 @@ void summonPurpleNerple(struct Entity* e, s32 x) {
   }
 }
 
-INCASM("asm/enemy/purple_nerple_d3c.inc");
+static void nop_08075d3c(struct Body* _a UNUSED, struct Coord* _b UNUSED, struct Coord* _c UNUSED) {}
+
 
 void PurpleNerple_Die(struct Enemy* p);
 
@@ -136,7 +138,87 @@ void FUN_08075e8c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/purple_nerple_p1_a_b.inc");
+static const u8 sInitModes[4];
+
+void PurpleNerple_Update(struct Enemy* p);
+
+void PurpleNerple_Init(struct Enemy* p) {
+  register s32 z5 asm("r5");
+  register struct Body* body asm("r4");
+  {
+    u8 w0 = (p->s).work[0];
+    if (w0 == 0) {
+      p->props[5] = w0;
+    }
+  }
+  if ((p->s).work[0] == 3) {
+    u8* t = &p->props[5];
+    u8 z1 = 0;
+    *t = 1;
+    (p->s).work[0] = z1;
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  {
+    u8 m1 = sInitModes[(p->s).work[0]];
+    z5 = 0;
+    (p->s).mode[1] = m1;
+  }
+  (p->s).flags |= FLIPABLE;
+  body = NULL;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  *(s32*)&p->props[0] = z5;
+  switch ((p->s).work[0]) {
+    case 0:
+      FUN_08075b74((struct Entity*)p, p->props[5]);
+      if (MOD_ENABLED(gSystemSavedataManager.mods, 99) && !FLAG(gCurStory.s.gameflags, DEMO_PLAY)) {
+        (p->s).flags |= COLLIDABLE;
+        body = &p->body;
+        InitBody(body, sCollisions, &(p->s).coord, 8);
+        body->parent = (void*)p;
+        body->fn = (BodyFunc)z5;
+      } else {
+        {
+          register u8 f1 asm("r1");
+          register s32 c4 asm("r0");
+          f1 = (p->s).flags;
+          c4 = 4;
+          z5 = 0;
+          asm("" : "+r"(z5));
+          c4 |= f1;
+          (p->s).flags = c4;
+        }
+        body = &p->body;
+        InitBody(body, sCollisions, &(p->s).coord, 4);
+        body->parent = (void*)p;
+        body->fn = (BodyFunc)z5;
+      }
+      p->props[4] = 0;
+      *(s32*)&p->props[12] = (p->s).coord.x;
+      break;
+    case 1:
+      goto c12;
+    case 2:
+    c12: {
+      {
+        register s32 v0 asm("r0");
+        register s32 c1 asm("r1");
+        v0 = (p->s).flags;
+        c1 = 4;
+        v0 |= c1;
+        (p->s).flags = v0;
+      }
+      body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 2);
+      body->parent = (void*)p;
+      body->fn = nop_08075d3c;
+      break;
+    }
+  }
+  PurpleNerple_Update(p);
+}
+
+
 
 extern const EnemyFunc PTR_ARRAY_083670d0[10];
 extern const EnemyFunc PTR_ARRAY_083670f8[10];
