@@ -323,7 +323,17 @@ void FUN_080af748(struct Projectile* p) {
   (PTR_ARRAY_0836d438[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/projectile/phantom_p1_p3.inc");
+void FUN_080af7b0(struct Projectile* p);
+
+void FUN_080af760(struct Projectile* p) {
+  EXIT_BODY(p);
+  SetMotion(&p->s, MOTION(0x86, 0x05));
+  (p->s).angle = (p->s).work[2] + 0x20;
+  (p->s).d.y -= 0x600;
+  (p->s).work[3] = 0x1C;
+  (p->s).mode[1] = 1;
+  FUN_080af7b0(p);
+}
 
 // 0x080af7b0 -- parked two insns from a match: retail materializes the
 // flicker mask 1 after the work[3] truncation and burns r6 for a sine
