@@ -3,6 +3,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "projectile.h"
 #include "sound.h"
 #include "mission.h"
 #include "story.h"
@@ -129,6 +130,62 @@ void FUN_08084974(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/eye_cannon_post_post_pre.inc");
+
+static const u8 u8_ARRAY_08368370[4];
+
+void FUN_08084b2c(struct Enemy* p) {
+  struct Coord c;
+  s32 x, x2;
+  u8 f;
+  s32 i;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      c.x = (p->s).coord.x - PIXEL(4);
+      x = c.x;
+      if ((p->s).flags & 0x10) {
+        x = (p->s).coord.x + PIXEL(4);
+      }
+      c.x = x;
+      c.y = (p->s).coord.y + 0x1500;
+      CreateLemon(&c, 0x300, u8_ARRAY_08368370[((p->s).flags >> 4) & 1]);
+      c.x = (p->s).coord.x - PIXEL(1);
+      x2 = c.x;
+      f = (p->s).flags & 0x10;
+      if (f) {
+        x2 = (p->s).coord.x;
+      }
+      c.x = x2;
+      c.y = (p->s).coord.y + 0x1B00;
+      i = 2;
+      if (f) {
+        i = 3;
+      }
+      CreateLemon(&c, 0x300, u8_ARRAY_08368370[i]);
+      PlaySound(0x2C);
+      SetMotion(&p->s, MOTION(0x66, 4));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/eye_cannon_post_post_pre_b.inc");
 
 void FUN_08084cbc(struct Enemy* p) {
   switch ((p->s).mode[2]) {
