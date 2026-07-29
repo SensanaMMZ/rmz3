@@ -3,6 +3,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "physics.h"
 #include "story.h"
 #include "metatile.h"
 #include "zero.h"
@@ -225,6 +226,38 @@ void FUN_08093e04(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
     (p->s).mode[1] = 7;
     (p->s).mode[2] = 0;
+  }
+}
+
+// 0x08093e60
+void FUN_08093e60(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x8E, 0x04));
+      *(u32*)&p->props[4] &= ~1;
+      SetDDP(&p->body, (const struct Collision*)0x08369E84);
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 f = IsFrozen(&p->s);
+      if (f == 0) {
+        s32 r;
+        (p->s).d.y += 0x40;
+        if ((p->s).d.y > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (r < 0) {
+          (p->s).coord.y += r;
+          (p->s).d.y = f;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
   }
 }
 
