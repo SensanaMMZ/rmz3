@@ -76,6 +76,38 @@ void hanu_0805bcfc(struct Boss* p) {
   }
 }
 
+void hanu_0805bd38(struct Boss* p) {
+  motion_t m;
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, MOTION(0xB5, 0x10));
+    PlaySound(0x50);
+    (p->s).work[2] = 0xA0;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).mode[2] == 1) {
+    if ((u8)--(p->s).work[2] == 0xFF) {
+      m = MOTION(0xB5, 0x16);
+      goto set;
+    }
+  } else if ((p->s).mode[2] == 2) {
+    if ((p->s).motion.state == 3) {
+      m = MOTION(0xB5, 0x00);
+    set:
+      SetMotion(&p->s, m);
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[2]++;
+    }
+  }
+  {
+    u32 t = gStageRun.vm.active & 1;
+    if (t == 0) {
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = t;
+    }
+  }
+}
+
 INCASM("asm/boss/hanumachine_p1_b_p2_p2.inc");
 
 void hanu_0805bf10(struct Boss* p) {
