@@ -91,7 +91,28 @@ NON_MATCH void FUN_080ddec0(struct Solid* p) {
 #endif
 }
 
-INCASM("asm/solid/ciel_mg_obj_post_b.inc");
+// 0x080ddef4
+void FUN_080ddef4(struct Solid* p) {
+  struct Entity* q = (p->s).unk_28;
+  u8* b = (u8*)q + 0xDCC;
+  u8 idx = *((u8*)q + 0xDEE);
+  (p->s).coord.x = s32_ARRAY_083716d0[idx];
+  (p->s).coord.y = s32_ARRAY_083716f8[idx];
+  if ((p->s).mode[1] == 0) {
+    u8 v = *(b + 5);
+    if (v == 1) {
+      SetMotion(&p->s, MOTION(0xE8, 0x0B));
+      (p->s).mode[1] = v;
+    }
+  } else {
+    u8 v = *(b + 5);
+    if (v == 0) {
+      SetMotion(&p->s, MOTION(0xE8, 0x0C));
+      (p->s).mode[1] = v;
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+}
 
 // シエルのミニゲームで使う様々なオブジェクト
 
