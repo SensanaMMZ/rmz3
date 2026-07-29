@@ -62,7 +62,18 @@ void FUN_080dddb0(struct Solid* p) {
   CielMinigameObj_Update(p);
 }
 
-INCASM("asm/solid/ciel_mg_obj_post_a.inc");
+// 0x080dde48
+void FUN_080dde48(struct Solid* p) {
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0xE8, 0x0C));
+  UpdateMotionGraphic(&p->s);
+  SET_XFLIP(p, 0);
+  ((p->s).spr).oam.priority = 1;
+  CielMinigameObj_Update(p);
+}
 
 // Same 24 instructions, one address-accumulation ordering tie: retail adds
 // 0xDF0 into q's register then the index; agbcc builds idx+q first.
