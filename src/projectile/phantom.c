@@ -222,7 +222,25 @@ static const ProjectileFunc PTR_ARRAY_0836d438[2];
 static const ProjectileFunc PTR_ARRAY_0836d440[3];
 static const ProjectileFunc PTR_ARRAY_0836d44c[2];
 
-INCASM("asm/projectile/phantom_p1_p1_p1.inc");
+// 0x080af368
+void FUN_080af368(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 x = (q->coord).x;
+  s32 y = (q->coord).y;
+  s32 t = (q->flags >> 4) & 1;
+  s32 d;
+  SET_XFLIP(p, t);
+  d = -1;
+  if (t == 0) {
+    d = 1;
+  }
+  (p->s).coord.x = x + d * PIXEL(16);
+  (p->s).coord.y = y - PIXEL(28);
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 1;
+    SetMotion(&p->s, MOTION(0x86, 0x01));
+  }
+}
 
 void FUN_080af46c(struct Projectile* p);
 
