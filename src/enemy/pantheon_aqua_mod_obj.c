@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
+#include "trig.h"
 #include "vfx.h"
 
 void createPAquaModRubble(s32 x) {
@@ -277,6 +279,73 @@ void PantheonAquaModObj_Die(struct Enemy* p) {
 void FUN_08080fe8(struct Enemy* p) {}
 
 INCASM("asm/enemy/pantheon_aqua_mod_obj_p3.inc");
+
+void FUN_080817a8(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  if (q->mode[0] == 4) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags &= ~DISPLAY;
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      struct Zero* z = pZero2;
+      s32 qx;
+      s32 qy2;
+      s32 dy;
+      u32 ang;
+      register s32 c asm("r8");
+      register s32 sn asm("r2");
+      register s32 tt asm("r0");
+      {
+        register s32 dx asm("r3");
+        register s32 zx asm("r0");
+        zx = (z->s).coord.x;
+        asm("" : "+r"(zx));
+        qx = q->coord.x;
+        dx = zx - qx;
+        qy2 = q->coord.y + 0x1800;
+        dy = (z->s).coord.y - qy2;
+        ang = *((u8*)q + 0xb4) + *((u8*)q + 0xb5);
+        ang >>= 1;
+        {
+          register s32 cl asm("r0");
+          cl = gSineTable[(u8)(ang + 0x40)];
+          c = cl;
+        }
+        sn = gSineTable[ang];
+        tt = c;
+        asm("" : "+r"(tt));
+        tt *= dx;
+      }
+      {
+        register s32 t asm("r3");
+        t = tt / 256;
+        t += (sn * dy) / 256;
+        if (t < 0) {
+          t = 0;
+        }
+        (p->s).coord.x = qx;
+        (p->s).coord.x = qx + (t * c) / 256;
+        {
+          s32 qy = q->coord.y;
+          (p->s).coord.y = qy;
+          (p->s).coord.y = qy + (sn * t) / 256;
+        }
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_aqua_mod_obj_p3_b.inc");
 
 void PantheonAquaModObj_Init(struct Enemy* p);
 void PantheonAquaModObj_Update(struct Enemy* p);
