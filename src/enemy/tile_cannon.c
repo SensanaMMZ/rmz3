@@ -5,6 +5,7 @@
 #include "mission.h"
 #include "vfx.h"
 #include "motion.h"
+#include "projectile.h"
 #include "story.h"
 #include "syssav.h"
 
@@ -235,6 +236,67 @@ void FUN_08078624(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/tile_cannon_p3_post_post.inc");
+
+// 0x0807874c -- parked (truncation-idiom basin): retail truncates the
+// work[2] decrement with lsls/lsrs #24 into r1; agbcc emits movs #0xFF +
+// ands in every spelling (u8 var, s32+(u8) cast, r1 pin), and keeps
+// case 2's mode[2]++ store separate where retail shares case 4's strb.
+NON_MATCH void FUN_0807874c(struct Enemy* p) {
+#if MODERN
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 2;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      struct Coord c;
+      u8 a = (p->s).angle;
+      c.x = (p->s).coord.x;
+      c.x = gSineTable[(u8)(a + 0x80)] * 14 + (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      c.y = gSineTable[(u8)(a + 0x40)] * 14 + (p->s).coord.y;
+      CreateLemon(&c, 0x200, a - 0x40);
+      PlaySound(0x2C);
+      SetMotion(&p->s, MOTION(0x2F, 0x08));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 3:
+      (p->s).work[3] = 4;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 4:
+      if (IsFrozen(q)) {
+        break;
+      }
+      {
+        u8 t;
+        if ((u8)--(p->s).work[3] != 0) {
+          break;
+        }
+        t = --(p->s).work[2];
+        if (t != 0) {
+          (p->s).mode[2] = 1;
+          break;
+        }
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = t;
+      }
+      break;
+  }
+#else
+  INCCODE("asm/enemy/tile_cannon_874c.inc");
+#endif
+}
+
+INCASM("asm/enemy/tile_cannon_p3_post_post_b.inc");
 
 static const u8 u8_ARRAY_08367550[6];
 
