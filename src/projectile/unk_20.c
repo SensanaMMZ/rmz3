@@ -44,6 +44,34 @@ void FUN_080a5144(struct Projectile* p) {}
 
 INCASM("asm/projectile/unk_20_post.inc");
 
+void FUN_080a4f3c(struct Projectile* p);
+
+void FUN_080a5ac0(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      FUN_080a4f3c(p);
+      (p->s).flags |= DISPLAY;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      u8 t;
+      (p->s).coord.y -= (p->s).d.y;
+      (p->s).d.y -= 0x40;
+      (p->s).work[3] -= (p->s).work[2];
+      t = --(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = t;
+      }
+      (p->s).angle = (p->s).work[3];
+      break;
+    }
+  }
+}
+
+INCASM("asm/projectile/unk_20_postb.inc");
+
 void Projectile20_Init(struct Projectile* p);
 void Projectile20_Update(struct Projectile* p);
 void Projectile20_Die(struct Projectile* p);
