@@ -1,7 +1,9 @@
+#include "anim_loader.h"
 #include "boss.h"
 #include "collision.h"
 #include "element.h"
 #include "global.h"
+#include "motion.h"
 #include "zero.h"
 #include "metatile.h"
 #include "physics.h"
@@ -10,7 +12,59 @@
 static const struct Collision sCollisions[];
 static const struct Coord sElementCoord;
 
-INCASM("asm/boss/hanumachine_p1_a.inc");
+void Hanumachine_Update(struct Boss* p);
+void FUN_0805d568(struct Body* body);
+
+void Hanumachine_Init(struct Boss* p) {
+  s32 z5;
+  s32 g;
+  LOAD_STATIC_GRAPHIC(0x6A);
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    f0 = (p->s).flags;
+    d0 = DISPLAY;
+    z5 = 0;
+    d0 |= f0;
+    d0 |= FLIPABLE;
+    (p->s).flags = d0;
+  }
+  SetMotion(&p->s, MOTION(0xB5, 0x00));
+  ((p->s).spr).xflip = z5;
+  {
+    u8* a = (u8*)p + 0x4a;
+    register u8 b asm("r1");
+    s32 msk;
+    b = *a;
+    msk = -0x11;
+    msk &= b;
+    *a = msk;
+  }
+  (p->s).flags &= 0xEF;
+  *((u8*)p + 0xbd) = z5;
+  *((u8*)p + 0xbe) = z5;
+  ResetBossBody(p, sCollisions, 0x40);
+  {
+    register void* fv asm("r1");
+    struct Body* body;
+    fv = (void*)FUN_0805d568;
+    body = &p->body;
+    body->fn = fv;
+  }
+  {
+    s32 y2 = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).coord.y = y2;
+    g = FUN_0800a134((p->s).coord.x, y2);
+  }
+  *(s32*)((u8*)p + 0xb4) = FUN_0800a31c((p->s).coord.x, g);
+  *(s32*)((u8*)p + 0xb8) = FUN_0800a22c((p->s).coord.x, g);
+  *(s32*)((u8*)p + 0xc4) = z5;
+  SET_BOSS_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = z5;
+  Hanumachine_Update(p);
+}
 
 static const BossFunc sUpdates1[30];
 static const BossFunc sUpdates2[30];
