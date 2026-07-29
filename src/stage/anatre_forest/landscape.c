@@ -345,6 +345,33 @@ static void LayerExit_AnatreForest_5(struct StageLayer* l, const struct Stage* _
 
 INCASM("asm/stage_gfx/anatre_forest.inc");
 
+struct MetatilePatch1x1 {
+  struct MetatilePatch size;
+  metatile_id_t data[1 * 1];
+};
+static const struct MetatilePatch1x1 MetatilePatch_08340270;
+
+// 0x08010cd0
+metatile_attr_t FUN_08010cd0(s32 x, s32 y) {
+  if (x <= 0xEFFFF) {
+    if ((u32)(y - 0x14000) <= 0x13FFF) {
+      return gOverworld.terrain.tilemap[(gOverworld.terrain.tilemap[0] * ((y + 0x1E000) >> 12)) + (x >> 12) + 2];
+    }
+  }
+  return 0;
+}
+
+void FUN_08010d20(s32 x, s32 y) {
+  if ((u32)(y - 0x14000) <= 0x13FFF) {
+    struct Overworld* ow = &gOverworld;
+    u8* q = &ow->work.anatreForest.unk_004;
+    bool16 z = 0;
+    *q = 1;
+    PatchMetatileMap(x >> 12, (y + 0x1E000) >> 12, (struct MetatilePatch*)&MetatilePatch_08340270);
+    ow->terrain.tilemap_duty = z;
+  }
+}
+
 s32 FUN_08010d70(s32 x, s32 y) {
   if (x > 0x1A3FFF && (u32)(y - 0xA000) <= 0x13FFF) {
     return gOverworld.terrain.tilemap[MAP_OFFSET(gOverworld.terrain.tilemap, x >> 12, y >> 12)] !=
@@ -436,11 +463,6 @@ static const struct Coord Coord_ARRAY_08340220[10] = {
     {PIXEL(6312), PIXEL(464)},
 };
 // clang-format on
-
-struct MetatilePatch1x1 {
-  struct MetatilePatch size;
-  metatile_id_t data[1 * 1];
-};
 
 static const struct MetatilePatch1x1 MetatilePatch_08340270 = {
     .size = {1, 1},
