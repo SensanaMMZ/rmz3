@@ -64,13 +64,18 @@ NON_MATCH void blizzackMode0(struct Boss* p) {
 #endif
 }
 
-NON_MATCH void blizzackMode1(struct Boss* p) {
-#if MODERN
+void blizzackMode1(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
     SetMotion(&p->s, MOTION(0xb4, 0x01));
     ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
-    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6401;
-    (p->s).mode[2] = 0;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x6401;
+    *t = v;
+    (p->s).mode[2] = z;
     PlaySound(0x42);
   }
   UpdateMotionGraphic(&p->s);
@@ -78,9 +83,6 @@ NON_MATCH void blizzackMode1(struct Boss* p) {
     (p->s).mode[1] = 2;
     (p->s).mode[2] = 1;
   }
-#else
-  INCCODE("asm/boss/blizzack_mode1_body.inc");
-#endif
 }
 
 INCASM("asm/boss/blizzack_rest_a.inc");
@@ -89,13 +91,18 @@ INCASM("asm/boss/blizzack_rest_a.inc");
 // agbcc schedules the mode[2]=0 zero early, forcing the 0x6402 constant into a
 // spare reg + copy the target avoids. Logic is faithful in the MODERN branch;
 // the INCCODE asm body matches the ROM byte-for-byte.
-NON_MATCH void blizzackNextMode(struct Boss* p) {
-#if MODERN
+void blizzackNextMode(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
     SetMotion(&p->s, MOTION(0xb4, 0x02));
     ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
-    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6402;
-    (p->s).mode[2] = 0;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x6402;
+    *t = v;
+    (p->s).mode[2] = z;
     PlaySound(0x42);
   }
   UpdateMotionGraphic(&p->s);
@@ -103,9 +110,6 @@ NON_MATCH void blizzackNextMode(struct Boss* p) {
     (p->s).mode[1] = *(u8*)((u8*)p + 0xf);
     (p->s).mode[2] = 1;
   }
-#else
-  INCCODE("asm/boss/blizzack_nextmode_body.inc");
-#endif
 }
 
 // 0x0805a230 -- parked: same 0x64xx basin as blizzackMode9/Start/End (the
