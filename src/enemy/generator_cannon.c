@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mission.h"
 #include "physics.h"
 #include "story.h"
 
@@ -244,6 +245,36 @@ void generatorcannon_0808c7e0(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/generator_cannon_post_p2_p2.inc");
+
+struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+static const motion_t sMotions[7];
+
+// 0x0808cefc
+void FUN_0808cefc(struct Enemy* p) {
+  struct Coord c;
+  (p->body).status = 0;
+  (p->body).prevStatus = 0;
+  (p->body).invincibleTime = 0;
+  {
+    u8 f = (p->s).flags & ~COLLIDABLE;
+    f &= ~DISPLAY;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - PIXEL(16);
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080b7f70(&p->s, &c, (motion_t*)&sMotions[3], 3);
+  TryDropItem(0, &(p->s).coord);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, &(p->s).coord);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/generator_cannon_post_p2_p2c.inc");
 
 void FUN_0808c760(struct Enemy* p);
 void FUN_0808c764(struct Enemy* p);
