@@ -2,6 +2,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
 #include "physics.h"
 #include "story.h"
 
@@ -481,6 +482,63 @@ NON_MATCH void shrimporin_08069c80(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/shrimpolin.inc");
+
+void createShrimporinIce(s32 x, s32 y, u8 n);
+
+void popoutShrimporin(struct Enemy* p) {
+  s32 md = (p->s).mode[2];
+  switch (md) {
+    case 0:
+      PlaySound(0x55);
+      (p->s).flags |= DISPLAY;
+      GotoMotion(&p->s, MOTION(0x0D, 0x01), 1, 1);
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2: {
+      s32 on;
+      SetDDP(&p->body, &sCollisions[1]);
+      createShrimporinIce((p->s).coord.x, (p->s).coord.y, (p->s).work[1]);
+      SetMotion(&p->s, MOTION(0x0D, 0x02));
+      on = 0;
+      if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+        on = 1;
+      }
+      SET_XFLIP(p, on);
+      {
+        register s32 w18 asm("r1");
+        w18 = 0x18;
+        asm("" : "+r"(w18));
+        (p->s).d.y = -0x5AA;
+        (p->s).coord.y += -0x800;
+        (p->s).work[2] = w18;
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 3: {
+      u8 t;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += 0x40;
+      t = --(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void shrimporinSpin(struct Enemy* p) {
   u8 md = (p->s).mode[2];
