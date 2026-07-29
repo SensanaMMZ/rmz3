@@ -482,6 +482,36 @@ NON_MATCH void shrimporin_08069c80(struct Enemy* p) {
 
 INCASM("asm/enemy/shrimpolin.inc");
 
+void shrimporinSpin(struct Enemy* p) {
+  u8 md = (p->s).mode[2];
+  switch (md) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x0D, 0x03));
+      (p->s).work[2] = md;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 6;
+        (p->s).mode[2] = 0;
+      }
+      if ((s8)(p->s).motion.cmdIdx == 5 && (p->s).work[2] == 0) {
+        s32 one = 1;
+        s32 x2;
+        (p->s).work[2] = one;
+        x2 = (p->s).coord.x - 0x700;
+        if ((p->s).flags & 0x10) {
+          x2 = (p->s).coord.x + 0x700;
+        }
+        CreateShrimporin(x2, (p->s).coord.y + 0xF00, ((p->s).flags >> 4) & one, (p->s).work[1]);
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/shrimpolin_c.inc");
+
 void shrimporinIceCrash(s32 x, s32 y, u8 frame);
 
 void shrimporin_0806a4ec(struct Enemy* p) {
