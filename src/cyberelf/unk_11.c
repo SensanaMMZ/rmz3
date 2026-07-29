@@ -1,5 +1,8 @@
 #include "collision.h"
+#include "camera.h"
 #include "cyberelf.h"
+#include "metatile.h"
+#include "stagerun.h"
 #include "global.h"
 
 // Bee?
@@ -159,6 +162,20 @@ void FUN_080e5798(struct Elf* p) {
 }
 
 INCASM("asm/cyberelf/unk_11_p2b.inc");
+
+bool8 FUN_080e586c(struct Elf* p) {
+  u16 a = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+  if ((u16)(a - 0x800E) <= 1) {
+    a = 0;
+  }
+  if (a & 0xF) {
+    return 1;
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x1000) {
+    return 2;
+  }
+  return 0;
+}
 
 static const ElfFunc sInitializers[4];
 static const ElfFunc sUpdates[4];
