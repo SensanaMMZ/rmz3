@@ -1,0 +1,135 @@
+	.include "asm/macros.inc"
+
+	.syntax unified
+
+	.text
+
+	thumb_func_start FUN_08060560
+FUN_08060560: @ 0x08060560
+	push {r4, lr}
+	adds r4, r0, #0
+	ldrb r1, [r4, #0xf]
+	cmp r1, #0
+	beq _08060570
+	cmp r1, #1
+	beq _08060638
+	b _08060648
+_08060570:
+	adds r0, r4, #0
+	adds r0, #0x74
+	ldr r1, _080605AC @ =sCollisions
+	bl SetDDP
+	ldrb r1, [r4, #0xa]
+	movs r0, #1
+	orrs r0, r1
+	strb r0, [r4, #0xa]
+	ldr r0, [r4, #0x58]
+	movs r1, #0xa0
+	lsls r1, r1, #7
+	adds r0, r0, r1
+	str r0, [r4, #0x58]
+	adds r0, r4, #0
+	adds r0, #0xe0
+	ldr r1, [r4, #0x54]
+	ldr r0, [r0]
+	cmp r1, r0
+	bge _080605B4
+	ldr r0, _080605B0 @ =0xFFFFC000
+	adds r2, r1, r0
+	adds r0, r4, #0
+	adds r0, #0xd4
+	ldr r0, [r0]
+	cmp r2, r0
+	bge _080605D0
+	movs r2, #0x80
+	lsls r2, r2, #7
+	b _080605C6
+	.align 2, 0
+_080605AC: .4byte sCollisions
+_080605B0: .4byte 0xFFFFC000
+_080605B4:
+	movs r0, #0x80
+	lsls r0, r0, #7
+	adds r2, r1, r0
+	adds r0, r4, #0
+	adds r0, #0xd8
+	ldr r0, [r0]
+	cmp r2, r0
+	ble _080605D0
+	ldr r2, _080605CC @ =0xFFFFC000
+_080605C6:
+	adds r0, r1, r2
+	str r0, [r4, #0x54]
+	b _080605D2
+	.align 2, 0
+_080605CC: .4byte 0xFFFFC000
+_080605D0:
+	str r2, [r4, #0x54]
+_080605D2:
+	movs r3, #0
+	ldr r0, _08060618 @ =pZero2
+	ldr r2, [r0]
+	ldr r1, [r4, #0x54]
+	ldr r0, [r2, #0x54]
+	cmp r1, r0
+	bge _080605E2
+	movs r3, #1
+_080605E2:
+	adds r0, r4, #0
+	adds r0, #0x4c
+	strb r3, [r0]
+	movs r3, #0
+	ldr r1, [r4, #0x54]
+	ldr r0, [r2, #0x54]
+	cmp r1, r0
+	bge _080605F4
+	movs r3, #1
+_080605F4:
+	movs r0, #0x4a
+	adds r0, r0, r4
+	mov ip, r0
+	lsls r2, r3, #4
+	ldrb r1, [r0]
+	movs r0, #0x11
+	rsbs r0, r0, #0
+	ands r0, r1
+	orrs r0, r2
+	mov r1, ip
+	strb r0, [r1]
+	cmp r3, #0
+	beq _0806061C
+	ldrb r0, [r4, #0xa]
+	movs r1, #0x10
+	orrs r0, r1
+	b _08060622
+	.align 2, 0
+_08060618: .4byte pZero2
+_0806061C:
+	ldrb r1, [r4, #0xa]
+	movs r0, #0xef
+	ands r0, r1
+_08060622:
+	strb r0, [r4, #0xa]
+	ldr r1, _08060634 @ =0x0000BC19
+	adds r0, r4, #0
+	bl SetMotion
+	ldrb r0, [r4, #0xf]
+	adds r0, #1
+	strb r0, [r4, #0xf]
+	b _08060648
+	.align 2, 0
+_08060634: .4byte 0x0000BC19
+_08060638:
+	adds r0, r4, #0
+	adds r0, #0x73
+	ldrb r0, [r0]
+	cmp r0, #3
+	bne _08060648
+	movs r0, #0
+	strb r1, [r4, #0xd]
+	strh r0, [r4, #0xe]
+_08060648:
+	pop {r4}
+	pop {r0}
+	bx r0
+	.align 2, 0

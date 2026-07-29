@@ -676,6 +676,34 @@ void FUN_080603d0(struct Boss* p) {
 
 INCASM("asm/boss/phantom_p2_pre_post_pre.inc");
 
+void FUN_080604e0(struct Boss* p) {
+  switch ((p->s).mode[3]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xbc, 0x18));
+      (p->s).mode[3]++;
+      break;
+    case 1:
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[3] = 2;
+      }
+      break;
+    case 2:
+      SetDDP(&p->body, &sCollisions[6]);
+      (p->s).flags &= ~DISPLAY;
+      (p->s).work[2] = 0x18;
+      (p->s).mode[3]++;
+      // fallthrough
+    case 3:
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[3] = 0;
+        (p->s).mode[2]++;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/phantom_p2_pre_post_preb.inc");
+
 void Phantom_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
