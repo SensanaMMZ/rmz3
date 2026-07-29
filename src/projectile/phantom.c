@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "physics.h"
 #include "entity/macros.h"
 #include "projectile.h"
 #include "vfx.h"
@@ -323,6 +324,62 @@ void FUN_080af748(struct Projectile* p) {
 }
 
 INCASM("asm/projectile/phantom_p1_p3.inc");
+
+// 0x080af7b0 -- parked two insns from a match: retail materializes the
+// flicker mask 1 after the work[3] truncation and burns r6 for a sine
+// ldrsh zero index; agbcc hoists the movs and packs the zero temps
+// (pins on t/one/r oscillate between the two shapes). Bounce damping
+// d.y = -(d.y*230)/256 and the vanish tail fully decoded and verified.
+NON_MATCH void FUN_080af7b0(struct Projectile* p) {
+#if MODERN
+  u8 t = (p->s).work[3] - 1;
+  (p->s).work[3] = t;
+  if ((t >> 1) & 1) {
+    (p->s).flags &= ~DISPLAY;
+  } else {
+    (p->s).flags |= DISPLAY;
+  }
+  if ((p->s).work[3] == 0) {
+    u8 f = ~DISPLAY & (p->s).flags;
+    f = f & ~FLIPABLE;
+    (p->s).flags = f;
+    (p->body).status = 0;
+    (p->body).prevStatus = 0;
+    (p->body).invincibleTime = 0;
+    (p->s).flags &= ~COLLIDABLE;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  {
+    s32 r;
+    r = PushoutToUp1((p->s).coord.x + gSineTable[(u8)((p->s).work[2] + 0x40)] * 8,
+                     (p->s).coord.y + gSineTable[(p->s).work[2]] * 8);
+    if (r < 0) {
+      PlaySound(0x100);
+      (p->s).coord.y += r;
+      (p->s).d.y = -((p->s).d.y * 230) / 256;
+    }
+  }
+  {
+    u8 a = (p->s).work[2];
+    if ((p->s).d.x > 0) {
+      a += 8;
+    } else {
+      a -= 8;
+    }
+    (p->s).work[2] = a;
+    (p->s).angle = a + 0x20;
+  }
+#else
+  INCCODE("asm/projectile/phantom_f7b0.inc");
+#endif
+}
 
 void FUN_080af8b0(struct Projectile* p) {
   (PTR_ARRAY_0836d440[(p->s).mode[1]])(p);
