@@ -294,6 +294,36 @@ void FUN_08093e60(struct Enemy* p) {
 
 INCASM("asm/enemy/shotloid_post_p2_p2.inc");
 
+void FUN_08094110(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 f = *(u32*)&p->props[4];
+      f |= 1;
+      f |= 2;
+      *(u32*)&p->props[4] = f;
+      SetMotion(&p->s, MOTION(0x8E, 0x02));
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      u8 r;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      r = FUN_08093a64(p, 1);
+      if (r == 0) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = r;
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/shotloid_post_p2_p2b.inc");
+
 void Shotloid_Init(struct Enemy* p);
 void Shotloid_Update(struct Enemy* p);
 void Shotloid_Die(struct Enemy* p);
