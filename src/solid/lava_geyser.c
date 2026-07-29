@@ -34,7 +34,7 @@ const SolidRoutine gLavaGeyserRoutine = {
 };
 // clang-format on
 
-void CreateLavaGeyser(struct Entity* e, s32 x, s32 y, s32 n) {
+void CreateLavaGeyser(struct Entity* e, s32 x, s32 y, s32 n, s32 n2 UNUSED) {
   s32 i;
   for (i = 0; i < 6; i++) {
     struct Entity* p = AllocEntityFirst(gSolidHeaderPtr);
@@ -188,6 +188,34 @@ void FUN_080ccae0(struct Solid* p) {
 }
 
 INCASM("asm/solid/lava_geyser_p4b.inc");
+
+// 0x080ccc1c
+void FUN_080ccc1c(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags2 |= 8;
+      (p->s).size = &sSize;
+      (p->s).hazardAttr = 0x801;
+      (p->s).coord.x = (p->s).unk_coord.x;
+      SetDDP(&p->body, &sCollisions[1]);
+      CreateLavaGeyser(&p->s, (p->s).coord.x, (p->s).coord.y, *(s32*)((u8*)p + 0xbc), *(s32*)((u8*)p + 0xb8));
+      SetMotion(&p->s, MOTION(0x39, 0x00));
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2] = 0xD8;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 t = (u8)--(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = t;
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/lava_geyser_p4c.inc");
 
 // --------------------------------------------
 
