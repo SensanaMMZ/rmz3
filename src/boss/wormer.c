@@ -48,7 +48,25 @@ void FUN_08042894(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/wormer_p2_p1_p2.inc");
+void FUN_080428c4(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, sCollisions);
+      (p->s).flags &= ~DISPLAY;
+      (p->s).work[2] = 0x80;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      u8 t = --(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_08042914(struct Boss* p) {
   switch ((p->s).mode[2]) {
