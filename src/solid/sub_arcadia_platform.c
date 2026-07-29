@@ -2,6 +2,8 @@
 #include "entity.h"
 #include "global.h"
 #include "solid.h"
+#include "metatile.h"
+#include "motion.h"
 #include "zero.h"
 
 // SubArcadia's platform
@@ -124,6 +126,93 @@ void FUN_080cf20c(struct Solid* p) {
     case 1:
       UpdateMotionGraphic(&p->s);
       break;
+  }
+}
+
+extern const struct Rect Rect_ARRAY_08370628[6];
+
+void FUN_080cf250(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      const s16* t;
+      {
+        const motion_t* tb0 = sSolid17Motions[1];
+        SetMotion(&p->s, tb0[(p->s).work[0]]);
+      }
+      t = (const s16*)Rect_ARRAY_08370628;
+      (p->s).d.x = t[(p->s).work[0] * 2];
+      {
+        u32 offd = (u32)((p->s).work[0] << 2);
+        asm("" : "+r"(offd));
+        t = (const s16*)((const u8*)t + 2);
+        offd += (u32)t;
+        (p->s).d.y = *(const s16*)offd;
+      }
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      u32 msk;
+      msk = 0xFFFF;
+      asm("" : "+r"(msk));
+      if (*(u16*)&(p->s).work[2] == 1) {
+        const motion_t* tb0 = sSolid17Motions[1];
+        u16 mo = tb0[(p->s).work[0]];
+        u16 m2 = *(s8*)((u8*)p + 0x71);
+        u16 m3 = *(s8*)((u8*)p + 0x72);
+        GotoMotion(&p->s, mo, m2, m3);
+      }
+      msk &= *(u16*)&(p->s).work[2];
+      if (msk == 0x100) {
+        const motion_t* tb1 = sSolid17Motions[2];
+        u16 mo;
+        u16 m2;
+        u16 m3;
+        asm("" : "+r"(tb1));
+        mo = tb1[(p->s).work[0]];
+        m2 = *(s8*)((u8*)p + 0x71);
+        m3 = *(s8*)((u8*)p + 0x72);
+        GotoMotion(&p->s, mo, m2, m3);
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      {
+        const u8* t2 = (const u8*)&Rect_ARRAY_08370628[2];
+        s32 y;
+        {
+          register u32 off asm("r2");
+          register s32 x0 asm("r0");
+          const u8* tb;
+          off = (p->s).work[0] << 3;
+          x0 = (p->s).coord.x + *(const s16*)(off + t2);
+          tb = t2 + 2;
+          off += (u32)tb;
+          y = (p->s).coord.y + *(const s16*)off;
+          if ((FUN_080098a4(x0, y) << 16) != 0) {
+            goto setm;
+          }
+        }
+        {
+          register u32 off2 asm("r2");
+          register s32 x0 asm("r0");
+          const u8* t4;
+          const u8* tb;
+          off2 = (p->s).work[0] << 3;
+          t4 = t2 + 4;
+          x0 = (p->s).coord.x + *(const s16*)(off2 + t4);
+          tb = t2 + 6;
+          off2 += (u32)tb;
+          y = (p->s).coord.y + *(const s16*)off2;
+          if ((FUN_080098a4(x0, y) << 16) != 0) {
+          setm:
+            (p->s).mode[1] = 2;
+            (p->s).mode[2] = 0;
+          }
+        }
+      }
+      break;
+    }
   }
 }
 
