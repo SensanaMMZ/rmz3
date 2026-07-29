@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "physics.h"
+#include "stagerun.h"
 #include "motion.h"
 #include "story.h"
 
@@ -343,7 +345,62 @@ void FUN_0807762c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/volcaire_p2_pre_p2.inc");
+void FUN_080776ac(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[0] == 1) {
+        SetDDP(&p->body, &sCollisions[2]);
+        SetMotion(&p->s, MOTION(0x2E, 0x00));
+      } else {
+        SetDDP(&p->body, &sCollisions[8]);
+        GotoMotion(&p->s, MOTION(0x2E, 0x05), 4, 1);
+      }
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 hit;
+      u8* flag9;
+      if (IsFrozen(&p->s)) {
+        goto update;
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      hit = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (hit >= 0) {
+        goto update;
+      }
+      {
+        u16 at = GetMetatileAttr((p->s).coord.x, (p->s).coord.y);
+        s32 masked = at & 0x10;
+        flag9 = (u8*)p + 0xb9;
+        if (masked == 0 && *flag9 == 0) {
+          (p->s).coord.y += hit;
+          goto update;
+        }
+      }
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+        if ((p->s).work[0] == 2) {
+          struct Entity* q = (p->s).unk_28;
+          if (q != NULL) {
+            *((u8*)q + 0xb8) -= 1;
+          }
+        }
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      *flag9 = 1;
+    update:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_080777cc(struct Enemy* p) {
   switch ((p->s).mode[2]) {
