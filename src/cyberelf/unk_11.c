@@ -43,7 +43,29 @@ void Elf11_Init(struct Elf* p) {
   Elf11_Update(p);
 }
 
-INCASM("asm/cyberelf/unk_11_p1_p2.inc");
+static const ElfFunc sUpdates[4];
+
+void Elf11_Update(struct Elf* p) {
+  struct Zero* z = *(struct Zero**)&p->buffer[0];
+  UpdateMotionGraphic(&p->s);
+  {
+    u8 v = gPause;
+    if (v == 0) {
+      if (*((u8*)z + 0x232) != 0) {
+        u8 f = ~DISPLAY & (p->s).flags;
+        f = f & ~FLIPABLE;
+        (p->s).flags = f;
+        (p->body).status = v;
+        (p->body).prevStatus = v;
+        (p->body).invincibleTime = v;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ELF_ROUTINE(p, ENTITY_DISAPPEAR);
+      } else {
+        (sUpdates[(p->s).work[0]])(p);
+      }
+    }
+  }
+}
 
 void Elf11_Die(struct Elf* p) {
   (p->body).status = 0;
