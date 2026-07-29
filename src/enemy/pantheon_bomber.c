@@ -2,6 +2,8 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "mod.h"
+#include "story.h"
 
 static const struct Collision sCollisions[5];
 static const struct Coord sElementCoord;
@@ -21,7 +23,65 @@ struct Enemy* CreatePantheonBomber(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/pantheon_bomber_p1_p2_a.inc");
+void PantheonBomber_Update(struct Enemy* p);
+void FUN_0808665c(struct Body* body, struct Coord* c);
+
+void PantheonBomber_Init(struct Enemy* p) {
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 f0 asm("r1") = (p->s).flags;
+    register u8 d asm("r0") = DISPLAY;
+    register s32 z asm("r3");
+    s32 f;
+    z = 0;
+    asm("" : "+r"(z));
+    f = d | f0;
+    f |= FLIPABLE;
+    f |= z;
+    (p->s).flags = f;
+  }
+  if (MOD_ENABLED(gSystemSavedataManager.mods, 91) && !FLAG(gCurStory.s.gameflags, DEMO_PLAY)) {
+    struct Body* body;
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 12);
+    body->parent = (void*)p;
+    body->fn = NULL;
+  } else {
+    struct Body* body;
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 8);
+    body->parent = (void*)p;
+    body->fn = NULL;
+  }
+  {
+    struct Body* body = &p->body;
+    body->fn = (void*)FUN_0808665c;
+  }
+  *(u32*)&p->props[0] = (p->s).coord.x;
+  {
+    s32 cx = (p->s).coord.x;
+    s32 cy = (p->s).coord.y;
+    (p->s).d.x = cx;
+    (p->s).d.y = cy;
+  }
+  p->props[4] = 0;
+  *(u32*)&p->props[8] = 0;
+  p->props[5] = 0;
+  (p->s).coord.x -= PIXEL(8);
+  (p->s).coord.y += PIXEL(8);
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 0;
+  (p->s).mode[2] = 0;
+  (p->s).mode[3] = 0;
+  if (IsFrozen(&p->s)) {
+    SetMotion(&p->s, MOTION(0x69, 0x03));
+    UpdateMotionGraphic(&p->s);
+  }
+  p->props[6] = 0;
+  PantheonBomber_Update(p);
+}
 
 extern const EnemyFunc sUpdates1[6];
 extern const EnemyFunc sUpdates2[6];
