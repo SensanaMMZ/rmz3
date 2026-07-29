@@ -305,7 +305,63 @@ static void Volteel_Die(struct Boss* p) {
   (seq[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/volteel_p1.inc");
+// 0x08043540 -- parked (allocation basin): retail homes the 1/0 multi-def
+// constant in r5 and gStageRun in r3 with copy-first ands; agbcc rotates
+// [r1/r2/r3] through ms/one/base in every arrangement tried. Full decode:
+// mission-fail latch, sprite unscale, sea/state reset by terrain id,
+// status clear, 1-frame delay then mode 1.
+NON_MATCH void volteelDeath0(struct Boss* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u16 ms = gStageRun.missionStatus;
+      s32 one = 1;
+      if ((one & ms) && !(one & gStageRun.vm.active)) {
+        gStageRun.missionStatus = (ms & 0xFFFE) | 0x10;
+      }
+      (p->s).angle = 0;
+      one = 0;
+      ((p->s).spr).mag.x = 0x100;
+      ((p->s).spr).mag.y = 0x100;
+      (p->s).spr.yflip = one;
+      ((p->s).spr).oam.yflip = 0;
+      (p->s).flags &= ~0x20;
+      if (_isSoundPlaying(0x7F)) {
+        StopSound(0x7F);
+      }
+      if ((gOverworld.terrain.id & 0x7F) == 0xD) {
+        gOverworld.state[0] = one;
+      } else {
+        gOverworld.state[2] = one;
+      }
+      (p->body).status = 0;
+      (p->body).prevStatus = 0;
+      (p->body).invincibleTime = 0;
+      (p->s).flags &= ~COLLIDABLE;
+      (p->s).d.y = 0;
+      (p->s).d.x = 0;
+      (p->s).work[2] = 1;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).mode[1] = 1, (p->s).mode[2] = 0;
+      break;
+  }
+#else
+  INCCODE("asm/boss/volteel_3540.inc");
+#endif
+}
+
+INCASM("asm/boss/volteel_p1b.inc");
 
 bool8 nop_080438a4(struct Boss* p) { return TRUE; }
 
