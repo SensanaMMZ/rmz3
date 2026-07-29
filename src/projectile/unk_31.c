@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "global.h"
+#include "motion.h"
 #include "projectile.h"
+#include "trig.h"
 
 void Projectile31_Init(struct Projectile* p);
 void Projectile31_Update(struct Projectile* p);
@@ -37,7 +39,87 @@ struct Projectile* FUN_080aa7a8(struct Entity* e, u8 a, u8 b) {
   return NULL;
 }
 
-INCASM("asm/projectile/unk_31_b.inc");
+static const struct Collision sCollisions[2];
+static const s32 s32_ARRAY_0836c35c[4];
+static const s32 s32_ARRAY_0836c36c[8];
+static const s32 s32_ARRAY_0836c38c[8];
+
+void Projectile31_Init(struct Projectile* p) {
+  register s32 z5 asm("r5");
+  struct Entity* e = (p->s).unk_28;
+  InitRotatableMotion(&p->s);
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    f0 = (p->s).flags;
+    d0 = DISPLAY;
+    asm("" : "+r"(d0));
+    z5 = 0;
+    d0 |= f0;
+    {
+      register s32 c2 asm("r1");
+      c2 = FLIPABLE;
+      d0 |= c2;
+    }
+    (p->s).flags = d0;
+  }
+  SetMotion(&p->s, 0x640F);
+  (p->s).flags |= COLLIDABLE;
+  {
+    struct Body* body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 0x40);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)z5;
+  }
+  {
+    register u8 f1 asm("r1");
+    register s32 m0 asm("r0");
+    f1 = (p->s).flags;
+    m0 = 0xEF;
+    m0 &= f1;
+    (p->s).flags = m0;
+  }
+  ((p->s).spr).xflip = z5;
+  {
+    u8* a = (u8*)p + 0x4a;
+    register u8 b asm("r1");
+    s32 msk;
+    b = *a;
+    msk = -0x11;
+    msk &= b;
+    *a = msk;
+  }
+  (p->s).coord = e->coord;
+  {
+    s32 dx;
+    if (e->flags & 0x10) {
+      (p->s).coord.x = e->coord.x + s32_ARRAY_0836c35c[(p->s).work[1] & 3];
+      dx = s32_ARRAY_0836c36c[(p->s).work[1]];
+    } else {
+      (p->s).coord.x = e->coord.x - s32_ARRAY_0836c35c[(p->s).work[1] & 3];
+      dx = -s32_ARRAY_0836c36c[(p->s).work[1]];
+    }
+    (p->s).d.x = dx;
+  }
+  {
+    register s32 wk asm("r2");
+    s32 dy;
+    wk = *(volatile u8*)&(p->s).work[1];
+    asm("" : "+r"(wk));
+    (p->s).coord.y = e->coord.y - 0x3000;
+    dy = s32_ARRAY_0836c38c[wk];
+    asm volatile("" :: "r"(wk));
+    (p->s).d.y = dy;
+    {
+      s32 an = ((u16)ArcTan2(*(volatile s32*)&(p->s).d.x, dy) + 0x4000) >> 8;
+      (p->s).work[3] = an;
+      (p->s).angle = an;
+    }
+  }
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  Projectile31_Update(p);
+}
+
 
 void CreateVFX57(struct Coord* c, u8 a1, u8 a2, s16 dx, s16 dy);
 
