@@ -178,7 +178,65 @@ void FUN_08089a00(struct Enemy* p) {
   }
 }
 
+void FUN_08089a34(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 z = 0;
+      (p->s).work[0] = z;
+      SetDDP(&p->body, &sCollisions[0]);
+      SetMotion(&p->s, MOTION(0xdd, 0x7));
+      (p->s).d.x = z;
+      (p->s).d.y = z;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1:
+      FUN_08088bc8(p, 0, (p->s).d.y);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      SetMotion(&p->s, MOTION(0xdd, 0x8));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      FUN_08088bc8(p, 0, (p->s).d.y);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if (FUN_08088ba8(p) != 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 4:
+      SetMotion(&p->s, MOTION(0xdd, 0xe));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      FUN_08088bc8(p, 0, (p->s).d.y);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p2.inc");
+
 
 void FUN_08089e60(struct Enemy* p) {
   switch ((p->s).mode[2]) {
