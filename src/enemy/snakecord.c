@@ -310,6 +310,58 @@ void FUN_08074d18(struct Enemy* p) {
   }
 }
 
+// 0x08074d90
+void FUN_08074d90(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.x = -0x200;
+      {
+        s32 v = -0x200;
+        if ((p->s).flags & X_FLIP) {
+          v = 0x200;
+        }
+        (p->s).d.x = v;
+      }
+      (p->s).d.y = -((u16)Sqrt(0x100) << 6);
+      SetMotion(&p->s, MOTION(0x28, 0x07));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      FUN_08073ea8(&p->s, (p->s).d.x);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      FUN_08073ef0(&p->s, (p->s).d.y);
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 4) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).work[3] = 0;
+      SetMotion(&p->s, MOTION(0x28, 0x08));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      if ((u8)++(p->s).work[3] == 8) {
+        SetDDP(&p->body, &sCollisions[6]);
+      }
+      FUN_08073ea8(&p->s, (p->s).d.x);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      FUN_08073ef0(&p->s, (p->s).d.y);
+      if ((p->s).d.y > 0) {
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 INCASM("asm/enemy/snakecord_p2_b.inc");
 
 struct Entity* FUN_080bb830(struct Entity* e);
