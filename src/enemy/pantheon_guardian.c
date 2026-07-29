@@ -175,6 +175,47 @@ void FUN_08063f28(struct Enemy* p) {
   }
 }
 
+// 0x08063f50
+void FUN_08063f50(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x14, 0x00));
+      SetDDP(&p->body, sCollisions);
+      (p->s).d.y = m;
+      (p->s).d.x = m;
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 f;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      {
+        register s32 one asm("r3");
+        f = (p->s).flags >> 4;
+        one = 1;
+        f &= one;
+        if (*(u32*)((u8*)p + 0xbc) <= 0x5FFF) {
+          if (f != one) goto walk;
+          goto faceaway;
+        } else {
+          if (f == 0) goto faceaway;
+        }
+      }
+    walk:
+      (p->s).mode[1] = 1, (p->s).mode[2] = 0;
+      break;
+    faceaway:
+      (p->s).mode[1] = 2, (p->s).mode[2] = 0;
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_guardian_pre_p2_p2.inc");
 
 void FUN_08064444(struct Enemy* p) {
