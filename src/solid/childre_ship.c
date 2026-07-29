@@ -1,5 +1,9 @@
 #include "collision.h"
+#include "anim_loader.h"
+#include "gfx.h"
 #include "global.h"
+#include "story.h"
+#include "zero.h"
 #include "solid.h"
 
 static const struct Collision sCollisions[2];
@@ -18,6 +22,76 @@ const SolidRoutine gChildreShipRoutine = {
     [ENTITY_EXIT] =      (SolidFunc)DeleteEntity,
 };
 // clang-format on
+
+// Ship intro: skipped once story flag 5 is set or Zero is already ahead;
+// otherwise body+graphic init and launch params by work[0]. Matches except
+// ONE instruction: retail folds the bool8 flag truncation straight into
+// callee-saved r5 (`lsrs r5, r0, #24`); agbcc always splits it into a
+// caller-saved lsrs plus a copy (or, pinned, in-places the whole chain and
+// bumps p off r6). 12 shapes tried.
+NON_MATCH void ChildreShip_Init(struct Solid* p) {
+#if MODERN
+  bool8 fl = FLAG(gCurStory.s.gameflags, 5);
+  if (fl != 0) {
+    return;
+  }
+  if ((p->s).work[0] != 0) {
+    if ((p->s).coord.x > (pZero2->s).coord.x) {
+      return;
+    }
+  }
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    f0 = (p->s).flags;
+    d0 = FLIPABLE;
+    d0 |= f0;
+    d0 |= DISPLAY;
+    (p->s).flags = d0;
+  }
+  InitNonAffineMotion(&p->s);
+  SetMotion(&p->s, MOTION(0xB4, 0x00));
+  (p->s).taskCol = fl;
+  (p->s).flags |= COLLIDABLE;
+  {
+    struct Body* body;
+    body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 0);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = NULL;
+  }
+  (p->s).flags2 &= ~0x10;
+  (p->s).invincibleID = (p->s).uniqueID;
+  LOAD_STATIC_GRAPHIC(0xB4);
+  {
+    u8 w0 = (p->s).work[0];
+    if (w0 == 0) {
+      (p->s).d.x = w0;
+      (p->s).unk_coord.y = 0x2000;
+      (p->s).unk_coord.x = w0;
+    } else {
+      (p->s).d.x = 0x80;
+      (p->s).unk_coord.y = 0x4000;
+      (p->s).unk_coord.x = 3;
+    }
+  }
+  {
+    s32 one;
+    (p->s).work[2] = 0;
+    one = 1;
+    (p->s).work[3] = one;
+    (p->s).d.y = 0x258;
+    {
+      u32 tb = (u32)gSolidFnTable;
+      const SolidRoutine** ta = (const SolidRoutine**)(tb + (p->s).id * 4);
+      *(u32*)&(p->s).mode[0] = one;
+      (p->s).onUpdate = (void*)(**ta)[ENTITY_UPDATE];
+    }
+  }
+#else
+  INCCODE("asm/solid/childre_ship_init.inc");
+#endif
+}
 
 INCASM("asm/solid/childre_ship.inc");
 
