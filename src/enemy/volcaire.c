@@ -315,6 +315,33 @@ void FUN_0807760c(struct Enemy* p) {
   }
 }
 
+static const struct Collision sCollisions[13];
+
+void FUN_0807762c(struct Enemy* p) {
+  struct Entity** slot = (struct Entity**)&p->props[0];
+  if (*slot == NULL || isKilled(*slot)) {
+    *slot = NULL;
+    if ((p->s).work[0] == 1) {
+      SetDDP(&p->body, &sCollisions[1]);
+    } else {
+      SetDDP(&p->body, &sCollisions[7]);
+    }
+    if (!IsFrozen(&p->s)) {
+      if ((p->s).work[0] == 1) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 2;
+      } else {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+  if (((p->body).status & 0x00020001) == 0x00020001) {
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
+
 INCASM("asm/enemy/volcaire_p2_pre_p2.inc");
 
 void FUN_080777cc(struct Enemy* p) {
