@@ -384,6 +384,38 @@ static void FUN_080d9734(struct MobObject* p) {
 
 INCASM("asm/solid/mob_npc_pre_p1_1_1.inc");
 
+// 0x080d9f88
+TextID alouette_080d9f88(struct Solid* p) {
+  if (FLAG(gCurStory.s.gameflags, 16)) {
+    if (gCurStory.s.counts[4] <= 3) {
+      gCurStory.s.counts[4] = 4;
+      return 0x249;
+    }
+    return 0x24A;
+  }
+  if (FLAG(gCurStory.s.gameflags, 11)) {
+    if (gCurStory.s.counts[4] <= 2) {
+      gCurStory.s.counts[4] = 3;
+      return 0x246;
+    }
+    if (((gStageDiskManager.disk[0x1C] & 0xF) >> 3) & 1) {
+      return 0x248;
+    }
+    return 0x247;
+  }
+  {
+    TextID ret;
+    if (gCurStory.s.counts[4] != 0) {
+      gCurStory.s.counts[4] = 2;
+      ret = 0x245;
+    } else {
+      gCurStory.s.counts[4] = 1;
+      ret = 0x244;
+    }
+    return ret;
+  }
+}
+
 // 0x080da01c
 void FUN_080da01c(struct Solid* p) {
   struct MobObject* m = (struct MobObject*)p;
