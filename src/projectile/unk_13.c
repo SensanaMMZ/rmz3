@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "stagerun.h"
 #include "trig.h"
 #include "vfx.h"
 
@@ -228,6 +229,99 @@ void FUN_0809fbdc(struct Projectile* p) {
 }
 
 INCASM("asm/projectile/unk_13_p3.inc");
+
+void FUN_080a03ac(struct Projectile* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).taskCol = 0x18;
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, 0x3403);
+      (p->s).d.x = ((p->s).work[2] * 7 << 8) - 0x380;
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        if (CalcFromCamera(cam, &(p->s).coord) > 0x2000) {
+          register u8 e1 asm("r1");
+          register s32 fp asm("r0");
+          register s32 z2 asm("r2");
+          e1 = (p->s).flags;
+          fp = 0xFE;
+          fp &= e1;
+          z2 = 0;
+          {
+            register s32 c2 asm("r1");
+            c2 = 0xFD;
+            fp &= c2;
+          }
+          (p->s).flags = fp;
+          (p->body).status = z2;
+          (p->body).prevStatus = z2;
+          (p->body).invincibleTime = z2;
+          (p->s).flags &= ~COLLIDABLE;
+          SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+  if (((p->s).unk_28)->mode[0] > 1) {
+    register s32 f asm("r0");
+    s32 t = (p->s).d.y + 1;
+    (p->s).d.y = t;
+    if (t > 0xf) {
+      if ((t & 2) != 0) {
+        goto fset;
+      }
+      goto fclear;
+    }
+    if ((t & 1) == 0) {
+      goto fclear;
+    }
+  fset:
+    {
+      u8 fl2 = (p->s).flags;
+      f = 1;
+      f |= fl2;
+      goto fst;
+    }
+  fclear:
+    {
+      u8 fl3 = (p->s).flags;
+      f = 0xFE;
+      f &= fl3;
+    }
+  fst:
+    (p->s).flags = f;
+    if ((p->s).d.y > 0x1e) {
+      register u8 e1 asm("r1");
+      register s32 fp asm("r0");
+      register s32 z2 asm("r2");
+      e1 = *(volatile u8*)&(p->s).flags;
+      fp = 0xFE;
+      fp &= e1;
+      z2 = 0;
+      {
+        register s32 c2 asm("r1");
+        c2 = 0xFD;
+        fp &= c2;
+      }
+      (p->s).flags = fp;
+      (p->body).status = z2;
+      (p->body).prevStatus = z2;
+      (p->body).invincibleTime = z2;
+      (p->s).flags &= ~COLLIDABLE;
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+    }
+  }
+}
+
+INCASM("asm/projectile/unk_13_p3_b.inc");
+
 
 void Projectile13_Init(struct Projectile* p);
 void Projectile13_Update(struct Projectile* p);
