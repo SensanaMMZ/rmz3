@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "pickup.h"
 #include "solid.h"
 #include "stagerun.h"
 #include "vfx.h"
@@ -88,6 +89,73 @@ void FUN_080dc8e8(struct Solid* p) {
 }
 
 INCASM("asm/solid/unk_37_post_p1.inc");
+
+void FUN_080dca60(struct Solid* p) {
+  u32* ps = (u32*)((u8*)p + 0x8c);
+  s32 st = *ps & 0x200;
+  if (st != 0) {
+    SET_SOLID_ROUTINE(p, ENTITY_DIE);
+    Solid37_Die(p);
+    return;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  {
+    s32 cy0 = (p->s).coord.y;
+    s32 ndy = (p->s).d.y;
+    s32 ny = cy0 + ndy;
+    (p->s).coord.y = ny;
+    ndy += 0x40;
+    (p->s).d.y = ndy;
+    switch ((p->s).mode[1]) {
+      case 0:
+        if (ndy > -0x40) {
+          SetMotion(&p->s, MOTION(0xE6, 0x01));
+          UpdateMotionGraphic(&p->s);
+          (p->s).mode[1]++;
+        }
+        break;
+      case 1:
+        if ((p->s).motion.state == 3) {
+          SetMotion(&p->s, MOTION(0xE6, 0x02));
+          UpdateMotionGraphic(&p->s);
+          if ((p->s).work[1] != 0) {
+            ((p->s).spr).oam.priority = 1;
+            CreatePickupItem(4, &(p->s).coord, 0);
+          }
+          (p->s).mode[1]++;
+        }
+        break;
+      case 2:
+        if (ny > *(s32*)((u8*)p + 0xb8)) {
+          PlaySound(0xF);
+          if ((p->s).work[1] == 0) {
+            struct Entity* q = (p->s).unk_28;
+            q->work[2] = st;
+          }
+          {
+            register u8 f1 asm("r1");
+            register s32 f2 asm("r0");
+            f1 = (p->s).flags;
+            f2 = 0xFE;
+            f2 &= f1;
+            {
+              register s32 c2 asm("r1");
+              c2 = 0xFD;
+              f2 &= c2;
+            }
+            (p->s).flags = f2;
+          }
+          *ps = st;
+          *(u32*)((u8*)p + 0x90) = st;
+          *((u8*)p + 0x94) = st;
+          (p->s).flags &= ~COLLIDABLE;
+          SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+        }
+        break;
+    }
+  }
+}
 
 void FUN_080dcb80(struct Solid* p) {
   struct Camera* cam;
