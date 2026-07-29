@@ -862,7 +862,35 @@ NON_MATCH struct Projectile* blazin_080402a4(struct Boss* p) {
 #endif
 }
 
-INCASM("asm/boss/blazin_p12_p2_p1b.inc");
+extern const u16 UnkBlaizinModes_080fed5a[5];
+
+s32 blazin_080402fc(s32 def0, s32 v0, s32 mode) {
+  register s32 def asm("r0") = def0;
+  register s32 v asm("r4") = v0;
+  s32 i;
+  register const u16* base asm("r5");
+  register const u16* t asm("r3");
+  if (mode == 1) {
+    i = 0;
+    base = UnkBlaizinModes_080fed5a;
+    t = base;
+    for (; i <= 4; t++, i++) {
+      if (*t == v) {
+        return base[(i + 1) % 5];
+      }
+    }
+  } else {
+    i = 0;
+    base = UnkBlaizinModes_080fed5a;
+    t = base;
+    for (; i <= 3; t++, i++) {
+      if (*t == v) {
+        return base[(i + 1) % 4];
+      }
+    }
+  }
+  return def;
+}
 
 s32 howFarBlazin(struct Boss* p) {
   s32 zx = (pZero2->s).coord.x;
