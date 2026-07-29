@@ -100,6 +100,61 @@ NON_MATCH void FUN_08054b20(struct Boss* p) {
 #endif
 }
 
+void FUN_08054b98(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      *(s32*)((u8*)p + 0xb8) = 0;
+      (p->s).d.x = 0;
+      (p->s).work[2] = Sqrt(0xAAA);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 t;
+      *(s32*)((u8*)p + 0xb8) += (p->s).d.x;
+      (p->s).d.x += 0x18;
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      (p->s).d.x = Sqrt(0xAAA) * 24;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      *(s32*)((u8*)p + 0xb8) += (p->s).d.x;
+      if (*(u32*)((u8*)p + 0xb8) > 0x307FF) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 4:
+      (p->s).work[2] = Sqrt(0xAAA);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 5: {
+      u8 t;
+      (p->s).d.x -= 0x18;
+      *(s32*)((u8*)p + 0xb8) += (p->s).d.x;
+      t = --(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+  if (*((u8*)p + 0xbc) != 0) {
+    (p->s).angle = -(*(u32*)((u8*)p + 0xb8) >> 8);
+  } else {
+    (p->s).angle = *(u32*)((u8*)p + 0xb8) >> 8;
+  }
+}
+
 INCASM("asm/boss/locomo_if_p2_post.inc");
 
 void FUN_08054e94(struct Boss* p) {
