@@ -3,6 +3,8 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "vfx.h"
+#include "mission.h"
 #include "physics.h"
 #include "stagerun.h"
 #include "story.h"
@@ -275,6 +277,36 @@ void FUN_0806ee0c(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/lemmingles_p2_p2_p2b.inc");
+
+struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+static const motion_t sMotions[13];
+
+// 0x0806f1dc
+void FUN_0806f1dc(struct Enemy* p) {
+  struct Coord c;
+  (p->body).status = 0;
+  (p->body).prevStatus = 0;
+  (p->body).invincibleTime = 0;
+  {
+    u8 f = (p->s).flags & ~COLLIDABLE;
+    f &= ~DISPLAY;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - PIXEL(16);
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080b7f70(&p->s, &c, (motion_t*)&sMotions[8], 3);
+  TryDropItem(3, &(p->s).coord);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, &(p->s).coord);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/lemmingles_p2_p2_p2c.inc");
 
 // --------------------------------------------
 
