@@ -1314,6 +1314,51 @@ void initActor28(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p2_b_a.inc");
 
+struct Entity* CreateVFX39(struct Coord* c, u8 r1, u8 r2);
+
+void Actor31_Update(struct Solid* p) {
+  s32 md = (p->s).mode[1];
+  if (md == 1) {
+    goto c1;
+  }
+  if (md > 1) {
+    return;
+  }
+  if (md != 0) {
+    return;
+  }
+  {
+      struct Entity* v;
+      (p->s).flags &= ~DISPLAY;
+      v = CreateVFX39(&(p->s).coord, 1, 0);
+      (p->s).unk_28 = v;
+      *((u8*)v + 0x7c) = md;
+      *((u8*)(p->s).unk_28 + 0x74) = 0x1F;
+      *((u8*)(p->s).unk_28 + 0x75) = 0x1F;
+      *((u8*)(p->s).unk_28 + 0x76) = 0x1F;
+      (p->s).work[2] = md;
+      (p->s).mode[1]++;
+  }
+c1:
+  {
+    struct Entity* q;
+    s16 sv;
+    (p->s).work[2]++;
+    q = (p->s).unk_28;
+    sv = gSineTable[((p->s).work[2] & 0xFE) >> 1];
+    *(s32*)((u8*)q + 0x78) = sv * 3 << 7;
+    asm volatile("" ::: "memory");
+    *(s32*)((u8*)(p->s).unk_28 + 0x78) += ((p->s).work[2] & 1) << 12;
+    asm volatile("" ::: "memory");
+    if ((p->s).work[2] == 0x81) {
+      register u8* q3 asm("r0");
+      q3 = (u8*)(p->s).unk_28;
+      q3[0x77] = 1;
+      (p->s).mode[1]++;
+    }
+  }
+}
+
 // 0x080d3de4
 void initActor32(struct Solid* p) {
   gWindowRegBuffer.dispcnt |= 0x4000;
