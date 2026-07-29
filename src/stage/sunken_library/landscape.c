@@ -210,6 +210,29 @@ NON_MATCH void FUN_08013a98(struct StageLayer* l, const struct Stage* stage) {
 
 INCASM("asm/stage_gfx/sunken_library_a2.inc");
 
+void sunkenlib_08013b6c(struct StageLayer* l0, const struct Stage* stage) {
+  register struct StageLayer* l asm("r5") = l0;
+  register s32 ph asm("r6");
+  register u16* vb asm("r4");
+  ph = l->phase;
+  if (ph == 0) {
+    register u32 n asm("r0");
+    register u16* pc asm("r3");
+    u32 c;
+    register u32 sh2 asm("r3");
+    n = (l->bgIdx << 16) >> 20;
+    sh2 = n << 1;
+    vb = (u16*)&gVideoRegBuffer.bgcnt[0];
+    pc = (u16*)(sh2 + (u32)vb);
+    c = l->prio | l->screenBase | 0x44;
+    *pc = c;
+    *(u32*)((n << 2) + (u32)(vb += 4)) = ph;
+    CpuFastSet((void*)(*(s32*)0x085223BC + 0x085223C4), (void*)(VRAM + ((c & 0x1F00) << 3)), 0x200);
+    l->phase++;
+  }
+  gWindowRegBuffer.winin[1] |= 8;
+}
+
 // 0x08013bdc
 void FUN_08013bdc(struct StageLayer* l, const struct Stage* _ UNUSED) {
   const u16 n = l->bgIdx;
