@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "vfx.h"
 #include "motion.h"
 #include "stagerun.h"
 #include "zero.h"
@@ -144,6 +145,29 @@ void FUN_0805f004(struct Boss* p) {
       (p->s).mode[1] = 3, *((u16*)&(p->s).mode[2]) = 0;
     } else {
       (p->s).mode[1] = 4, *((u16*)&(p->s).mode[2]) = 0;
+    }
+  }
+}
+
+static const BossFunc PTR_ARRAY_0836543c[4];
+
+void phantom_0805f0a0(struct Boss* p) {
+  if ((p->s).mode[2] != 3 && ((p->body).status & BODY_STATUS_WHITE)) {
+    *((u16*)&(p->s).mode[2]) = 3;
+  }
+  (PTR_ARRAY_0836543c[(p->s).mode[2]])(p);
+  {
+    s32 t = (p->s).work[3] - 1;
+    (p->s).work[3] = t;
+    if (t == 0) {
+      register struct Coord* cp asm("r0");
+      u32 f;
+      s32 one;
+      cp = &(p->s).coord;
+      f = (p->s).flags >> 4;
+      one = 1;
+      CreateParticle(cp, one, f & one);
+      (p->s).work[3] = 3;
     }
   }
 }

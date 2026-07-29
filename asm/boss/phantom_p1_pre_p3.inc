@@ -5,51 +5,6 @@
 	.text
 
 
-	thumb_func_start phantom_0805f0a0
-phantom_0805f0a0: @ 0x0805F0A0
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #3
-	beq _0805F0BC
-	adds r0, r4, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #1
-	ands r0, r1
-	cmp r0, #0
-	beq _0805F0BC
-	movs r0, #3
-	strh r0, [r4, #0xe]
-_0805F0BC:
-	ldr r1, _0805F0F0 @ =0x0836543C
-	ldrb r0, [r4, #0xe]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	ldr r1, [r0]
-	adds r0, r4, #0
-	bl _call_via_r1
-	ldrb r0, [r4, #0x13]
-	subs r0, #1
-	strb r0, [r4, #0x13]
-	cmp r0, #0
-	bne _0805F0EA
-	adds r0, r4, #0
-	adds r0, #0x54
-	ldrb r2, [r4, #0xa]
-	lsrs r2, r2, #4
-	movs r1, #1
-	ands r2, r1
-	bl CreateParticle
-	movs r0, #3
-	strb r0, [r4, #0x13]
-_0805F0EA:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0805F0F0: .4byte 0x0836543C
-
 	thumb_func_start FUN_0805f0f4
 FUN_0805f0f4: @ 0x0805F0F4
 	push {r4, r5, lr}
