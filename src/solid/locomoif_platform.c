@@ -125,7 +125,34 @@ void FUN_080ce760(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/locomoif_platform_part3_b.inc");
+void FUN_080ce7a4(struct Solid* p) {
+  u8 md = (p->s).mode[2];
+  switch (md) {
+    case 0:
+      PlaySound(0x10B);
+      SetMotion(&p->s, MOTION(0x55, 0x01));
+      (p->s).work[2] = 0x40;
+      (p->s).d.x = md;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      (p->s).d.x += 4;
+      *(u16*)&(p->props).raw[0] += (p->s).d.x;
+      FUN_080ce538(p);
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[2] - 1;
+        register s32 sh asm("r0");
+        (p->s).work[2] = t;
+        sh = t << 24;
+        if (sh == 0) {
+          (p->s).mode[1] = 2;
+          (p->s).mode[2] = 0;
+        }
+      }
+      break;
+  }
+}
 
 // One mechanism apart: agbcc fuses the branch-taught zero with a u8 copy of
 // the work[2] decrement (lsrs into r5) where retail materializes an
