@@ -583,7 +583,30 @@ void FUN_080da5e8(struct Solid* p) {
   (p->s).mode[1] = 0;
   MobNPC_Update(p);
 }
-INCASM("asm/solid/mob_npc_pre_p1_4.inc");
+TextID doigt_080da660(struct Solid* p) {
+  if (FLAG(gCurStory.s.gameflags, 16)) {
+    if (gCurStory.s.counts[10] <= 2) {
+      gCurStory.s.counts[10] = 3;
+      return 0x283;
+    }
+    if ((gStageDiskManager.disk[0x2b] & 0xF) >> 1 & 1) {
+      return 0x285;
+    }
+    return 0x284;
+  }
+  if (FLAG(gCurStory.s.gameflags, 11)) {
+    if (gCurStory.s.counts[10] <= 1) {
+      gCurStory.s.counts[10] = 2;
+      return 0x281;
+    }
+    return 0x282;
+  }
+  if (gCurStory.s.counts[10] == 0) {
+    gCurStory.s.counts[10] = 1;
+    return 0x27F;
+  }
+  return 0x280;
+}
 
 // 0x080da6f0
 void FUN_080da6f0(struct Solid* p) {
