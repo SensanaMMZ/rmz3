@@ -255,6 +255,43 @@ void FUN_08063fd8(struct Enemy* p) {
   }
 }
 
+// 0x080640dc
+void FUN_080640dc(struct Enemy* p) {
+  u8 m;
+  if (FUN_080098a4((p->s).coord.x + 0xA80, (p->s).coord.y - 0x600) != 0 ||
+      FUN_080098a4((p->s).coord.x + 0xA80, (p->s).coord.y + 0xA00) == 0 ||
+      FUN_0800a40c((p->s).coord.x + 0xA80, (p->s).coord.y + 0xA00) != 0) {
+    SET_XFLIP(p, 1);
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+    return;
+  }
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x14, 0x01));
+      SET_XFLIP(p, 1);
+      SetDDP(&p->body, sCollisions);
+      (p->s).d.x = 0x80;
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 x = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = x;
+      if (*(u32*)((u8*)p + 0xbc) > 0x5FFF) {
+        if (x - *(s32*)((u8*)p + 0xb4) > 0x2800) {
+          (p->s).mode[1] = 0;
+          (p->s).mode[2] = 0;
+        }
+      }
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_guardian_pre_p2_p2.inc");
 
 void FUN_08064444(struct Enemy* p) {
