@@ -4,6 +4,7 @@
 #include "global.h"
 #include "stagerun.h"
 #include "story.h"
+#include "zero.h"
 
 void LemminglesNest_Init(struct Enemy* p);
 void LemminglesNest_Update(struct Enemy* p);
@@ -139,6 +140,162 @@ dispatch:
 INCASM("asm/enemy/lemmingles_nest_p1_b.inc");
 
 void nop_0806e284(struct Enemy* p) {}
+
+static const struct Collision sCollisions[3];
+
+void FUN_0806e288(struct Enemy* p) {
+  s32 xf;
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[0] > 3) {
+        s32 v;
+        SetDDP(&p->body, &sCollisions[2]);
+        {
+          u8 fl3 = (p->s).flags;
+          register s32 m2 asm("r2");
+          m2 = 0xFE;
+          m2 &= fl3;
+          (p->s).flags = m2;
+          {
+            register s32 x3 asm("r3");
+            {
+              register s32 x1 asm("r1");
+              x1 = 0;
+              if ((p->s).work[0] == 5) {
+                x1 = 1;
+              }
+              x3 = x1;
+            }
+            if (x3) {
+              register s32 c1 asm("r1");
+              register s32 vv asm("r0");
+              c1 = 0x10;
+              vv = m2;
+              vv |= c1;
+              v = vv;
+            } else {
+              register s32 vv2 asm("r0");
+              vv2 = 0xEF;
+              vv2 &= m2;
+              v = vv2;
+            }
+            (p->s).flags = v;
+            xf = x3;
+          }
+        }
+      } else {
+        s32 v;
+        SetMotion(&p->s, 0x1E14);
+        {
+          register s32 x2 asm("r2");
+          {
+            register s32 x1b asm("r1");
+            x1b = 0;
+            if ((p->s).work[0] == 1) {
+              x1b = 1;
+            }
+            x2 = x1b;
+          }
+          if (x2) {
+            register u8 lf asm("r1");
+            register s32 vv asm("r0");
+            lf = (p->s).flags;
+            vv = 0x10;
+            vv |= lf;
+            v = vv;
+          } else {
+            register u8 lf2 asm("r1");
+            register s32 vv2 asm("r0");
+            lf2 = (p->s).flags;
+            vv2 = 0xEF;
+            vv2 &= lf2;
+            v = vv2;
+          }
+          (p->s).flags = v;
+          xf = x2;
+        }
+      }
+      {
+        register s32 xr asm("r1");
+        xr = xf;
+        ((p->s).spr).xflip = xr;
+        {
+          u8* a = (u8*)p + 0x4a;
+          s32 sh = xr << 4;
+          u8 b = *a;
+          s32 msk = -0x11;
+          msk &= b;
+          msk |= sh;
+          *a = msk;
+        }
+      }
+      (p->s).taskCol = 0x17;
+      (p->s).work[2] = 1;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+      } else {
+        u32 zf;
+        s32 fl;
+        {
+          register u32 one asm("r6");
+          register u8 flr asm("r1");
+          u32 zf0 = (pZero2->s).flags >> 4;
+          one = 1;
+          zf = zf0 & one;
+          flr = (p->s).flags;
+          {
+            register s32 t0 asm("r0");
+            t0 = 0x10;
+            t0 &= flr;
+            fl = flr;
+            if (t0 != 0) {
+              if (zf != one) {
+                goto chase;
+              }
+              goto upd;
+            }
+          }
+        }
+        if (zf == 0) {
+          goto upd;
+        }
+      chase:
+        {
+          s32 dx = (pZero2->s).coord.x - (p->s).coord.x;
+          u8 t2;
+          {
+            register s32 tc asm("r0");
+            tc = 0x10;
+            tc &= fl;
+            t2 = (u8)tc;
+          }
+          if (t2 == 0) {
+            if (dx >= 0) {
+              goto upd;
+            }
+            if (dx <= -0x7800) {
+              goto upd;
+            }
+            (p->s).mode[1] = 2;
+            (p->s).mode[2] = t2;
+          } else {
+            dx -= 1;
+            if ((u32)dx > 0x77FE) {
+              goto upd;
+            }
+            (p->s).mode[1] = 2;
+            (p->s).mode[2] = 0;
+          }
+        }
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 INCASM("asm/enemy/lemmingles_nest_p2.inc");
 
