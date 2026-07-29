@@ -649,7 +649,41 @@ void FUN_0805fb24(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p4_p2_p2.inc");
+void FUN_0809130c(struct Entity* e, u8 idx);
+
+void FUN_0805fb8c(struct Boss* p) {
+  s32 t = (p->s).work[2] - 1;
+  (p->s).work[2] = t;
+  if (t == 0) {
+    u32 r;
+    u8 i;
+    s32 x2;
+    s32 dir;
+    register s32 c8 asm("r1");
+    (p->s).mode[3] = 6;
+    r = RANDOM(RNG_0202f388) & 3;
+    x2 = (r - 2) * 3 << 12;
+    c8 = 0x1800;
+    x2 += c8;
+    {
+      s32 x3 = (p->s).coord.x + x2;
+      (p->s).unk_coord.x = x3;
+      dir = 0;
+      if (x3 - (p->s).coord.x > 0) {
+        dir = 1;
+      }
+    }
+    (p->s).d.x = (dir << 9) - 0x100;
+    (p->s).work[2] = t;
+    *(u32*)&p->props.raw[0x10] = t;
+    for (i = 0; i <= 3; i++) {
+      if (i != r) {
+        FUN_0809130c(&p->s, i);
+      }
+    }
+    FUN_0809130c(&p->s, 4);
+  }
+}
 
 void FUN_0805fc1c(struct Boss* p) {
   s32 t;
