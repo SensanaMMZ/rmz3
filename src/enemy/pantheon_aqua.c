@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "enemy.h"
+#include "camera.h"
 #include "global.h"
+#include "overworld.h"
+#include "stagerun.h"
 #include "zero.h"
 #include "overworld_terrain.h"
 
@@ -178,7 +181,27 @@ s32 FUN_080735ac(struct Enemy* p) {
   return 0;
 }
 
-INCASM("asm/enemy/pantheon_aqua_p10b.inc");
+// Sea-surface clamp for the aqua pantheon: rise with the water line while it
+// is on screen, sink slowly once it is not. Retail carries all three large
+// constants (0x4FFF/-0x2600/0x2600) through one callee-saved r4 temp and its
+// scratch assignment cascades (p=r3, sea=r2, y=r1); pins reproduce the roles
+// but not the head ordering (allocation-cascade basin).
+NON_MATCH void FUN_08073610(struct Enemy* p) {
+#if MODERN
+  struct Overworld* ow = &gOverworld;
+  struct Camera* cam = &gStageRun.vm.camera;
+  s32 sea = ow->sea;
+  if (sea < cam->viewport.y + 0x4FFF) {
+    if (sea > (p->s).coord.y - 0x2600) {
+      (p->s).coord.y = sea + 0x2600;
+    }
+  } else {
+    (p->s).coord.y += 0x200;
+  }
+#else
+  INCCODE("asm/enemy/pantheon_aqua_3610.inc");
+#endif
+}
 
 void PantheonAqua_Init(struct Enemy* p);
 void PantheonAqua_Update(struct Enemy* p);

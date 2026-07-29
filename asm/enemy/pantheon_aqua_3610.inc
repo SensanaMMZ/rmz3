@@ -4,8 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08073610
-FUN_08073610: @ 0x08073610
 	push {r4, lr}
 	adds r3, r0, #0
 	ldr r1, _0807363C @ =gOverworld
