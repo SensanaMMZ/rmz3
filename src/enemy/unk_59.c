@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "physics.h"
 #include "vfx.h"
 #include "zero.h"
 
@@ -176,6 +177,45 @@ NON_MATCH void FUN_080918ec(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/unk_59_post_a2.inc");
+
+// 0x08091d0c -- parked one insn from a match (was a raw .byte blob; fully
+// decoded): agbcc hoists the gSineTable pool load into the work[2]
+// ldrb stall slot, retail loads it after the shared angle sum. Byte count
+// identical, one ldr displaced two slots.
+NON_MATCH void FUN_08091d0c(struct Enemy* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 w;
+      SetDDP(&p->body, &sCollisions[6]);
+      InitNonAffineMotion(&p->s);
+      w = (p->s).work[2];
+      (p->s).d.x = gSineTable[(u8)(w * 2 + 0x3E) + 0x40] << 2;
+      (p->s).d.y = gSineTable[(u8)(w * 2 + 0x3E)] << 2;
+      SetMotion(&p->s, MOTION(0x88, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1: {
+      s32 r;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (r < 0) {
+        (p->s).coord.y += r;
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/unk_59_1d0c.inc");
+#endif
+}
+
+INCASM("asm/enemy/unk_59_post_a3.inc");
 
 struct VFX* CreateGhost18(struct Coord* c, u8 r1, bool8 isRight, u8 r3);
 
