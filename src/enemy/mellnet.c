@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "metatile.h"
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
@@ -10,7 +11,8 @@
 static const struct Collision sCollisions[4];
 static const motion_t sMotions[4];
 static const motion_t sDiveMotions[3][2];
-static const motion_t sMotions2[8];
+static const motion_t sMotions2[6];
+static const motion_t sMotions3[2];
 
 void FUN_0807d6c0(s32 x, s32 y, u8 a2) {
   struct Enemy* p = (struct Enemy*)AllocEntityLast(gEnemyHeaderPtr);
@@ -257,6 +259,52 @@ NON_MATCH void FUN_0807dd24(struct Enemy* p) {
 
 INCASM("asm/enemy/mellnet_post_post_post_b.inc");
 
+void FUN_0807dfa4(struct Enemy* p);
+
+void FUN_0807e178(struct Enemy* p0) {
+  register struct Enemy* p asm("r5") = p0;
+  register s32 dist asm("r6");
+  s32 dx, dy, q, y;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, sMotions3[((p->s).flags & 0x10) ? 1 : 0]);
+      UpdateMotionGraphic(&p->s);
+      dx = (p->s).coord.x - (pZero2->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y - PIXEL(24);
+      dy -= (pZero2->s).coord.y;
+      (p->s).d.y = dy;
+      dist = (dx >> 8) * (dx >> 8);
+      dist += (dy >> 8) * (dy >> 8);
+      dist = Sqrt(dist) << 8;
+      if (dist != 0) {
+        q = ((p->s).d.x << 8) / dist;
+        (p->s).d.x = q;
+        dy = ((p->s).d.y << 8) / dist;
+        (p->s).d.x = q * 6;
+        (p->s).d.y = dy * 6;
+      } else {
+        (p->s).d.x = 0x600;
+        (p->s).d.y = dist;
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      if (FUN_080098a4((p->s).coord.x, y) || ((p->body).status & 4)) {
+        FUN_0807dfa4(p);
+      }
+      break;
+  }
+}
+
 void Mellnet_Init(struct Enemy* p);
 void Mellnet_Update(struct Enemy* p);
 void Mellnet_Die(struct Enemy* p);
@@ -374,13 +422,16 @@ static const motion_t sDiveMotions[3][2] = {
     {MOTION(SM071_MELLNET, 0x03), MOTION(SM071_MELLNET, 0x0D)},
 };
 
-static const motion_t sMotions2[8] = {
+static const motion_t sMotions2[6] = {
     MOTION(SM071_MELLNET, 0x04),
     MOTION(SM071_MELLNET, 0x0E),
     MOTION(SM071_MELLNET, 0x07),
     MOTION(SM071_MELLNET, 0x08),
     MOTION(SM071_MELLNET, 0x09),
     MOTION(SM071_MELLNET, 0x06),
+};
+
+static const motion_t sMotions3[2] = {
     MOTION(SM071_MELLNET, 0x00),
     MOTION(SM071_MELLNET, 0x0A),
 };
