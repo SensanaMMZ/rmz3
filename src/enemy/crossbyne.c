@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mission.h"
 #include "motion.h"
 #include "story.h"
 #include "syssav.h"
@@ -289,6 +290,33 @@ void FUN_0807d0f0(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/crossbyne_p3_post_postb.inc");
+
+extern void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+void MaybeKillCrossbyne(struct Enemy* p) {
+  struct Coord c;
+  (p->body).status = 0;
+  (p->body).prevStatus = 0;
+  (p->body).invincibleTime = 0;
+  {
+    u8 f = (p->s).flags & ~COLLIDABLE;
+    f &= ~DISPLAY;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080b7ffc(&p->s, &c, (motion_t*)&sMotions[8], 3);
+  TryDropItem(0, &(p->s).coord);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, &(p->s).coord);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/crossbyne_p3_post_postc.inc");
 
 // --------------------------------------------
 
