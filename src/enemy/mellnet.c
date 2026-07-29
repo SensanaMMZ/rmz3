@@ -9,6 +9,7 @@
 #include "zero.h"
 
 static const struct Collision sCollisions[4];
+static const u8 sInitModes[2];
 static const motion_t sMotions[4];
 static const motion_t sDiveMotions[3][2];
 static const motion_t sMotions2[6];
@@ -99,7 +100,27 @@ void FUN_0807d810(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mellnet_pre_p2_a_b.inc");
+void Mellnet_Update(struct Enemy* p);
+
+void Mellnet_Init(struct Enemy* p) {
+  s32 z;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  {
+    u8 m = sInitModes[(p->s).work[0]];
+    z = 0;
+    (p->s).mode[1] = m;
+  }
+  {
+    u8 f = (p->s).flags;
+    f |= FLIPABLE;
+    f |= DISPLAY;
+    (p->s).flags = f;
+  }
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 4, (void*)FUN_0807d720);
+  *(u32*)&p->props[0] = z;
+  Mellnet_Update(p);
+}
 
 extern const EnemyFunc sUpdates1[7];
 extern const EnemyFunc sUpdates2[7];
