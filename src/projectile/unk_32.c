@@ -256,6 +256,40 @@ void FUN_080abea8(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
+// 0x080abec0 -- parked (dead-zero basin, blizzackJump family): retail
+// materializes an unused r4=0 before the flags orrs and a separate scratch
+// 1 for DISPLAY; agbcc unifies the SET_ROUTINE constant 1 with the orr
+// mask and deletes the dead zero in every variable arrangement tried.
+NON_MATCH void FUN_080abec0(struct Projectile* p) {
+#if MODERN
+  s32 one = 0;
+  s32 t;
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x62, 0x00));
+  UpdateMotionGraphic(&p->s);
+  t = ((pZero2->s).flags >> 4) & 1;
+  if (t != 0) {
+    (p->s).flags |= X_FLIP;
+  } else {
+    (p->s).flags &= ~X_FLIP;
+  }
+  one = 1;
+  {
+    s16 w = one & t;
+    s32 z = 0;
+    (p->s).spr.xflip = w;
+    ((p->s).spr).oam.xflip = w;
+    (p->s).work[1] = z;
+  }
+  SET_PROJECTILE_ROUTINE(p, one);
+  Projectile32_Update(p);
+#else
+  INCCODE("asm/projectile/unk_32_bec0.inc");
+#endif
+}
+
 INCASM("asm/projectile/unk_32_p4_p4.inc");
 
 // 0x080ac1a4
