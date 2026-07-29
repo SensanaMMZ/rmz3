@@ -24,6 +24,21 @@ void FUN_080935b4(struct Entity* e, u8 a1, u8 a2) {
 
 void nop_0809362c(struct Enemy* p) {}
 
+static const struct Collision sCollisions[7];
+static const u8 sInitModes[4];
+void Enemy61_Update(struct Enemy* p);
+
+void Enemy61_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  INIT_BODY(p, sCollisions, 1, (void*)nop_0809362c);
+  *(s32*)&p->props[0] = (p->s).work[2] * 0x21C0;
+  Enemy61_Update(p);
+}
+
 INCASM("asm/enemy/unk_61_p2_p1.inc");
 
 void Enemy61_Update(struct Enemy* p) {
