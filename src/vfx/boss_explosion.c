@@ -1,3 +1,4 @@
+#include "element.h"
 #include "global.h"
 #include "vfx.h"
 
@@ -104,6 +105,39 @@ static void BossExplosion_Die(struct Entity* p) {
 }
 
 // --------------------------------------------
+
+void FUN_080c7a28(struct VFX* p) {
+  register struct Entity* q asm("r3") = (p->s).unk_28;
+  register s32 m asm("r2");
+  register s32 x asm("r0");
+  s32 z;
+  z = 0;
+  m = 0x10;
+  (p->s).work[2] = m;
+  (p->s).work[3] = z;
+  (p->s).work[1] = z;
+  wElement.unk_2 = 4;
+  {
+    register s32 cx asm("r0");
+    register s32 cy asm("r1");
+    cx = q->coord.x;
+    cy = q->coord.y;
+    (p->s).coord.x = cx;
+    (p->s).coord.y = cy;
+  }
+  m &= q->flags;
+  if (m) {
+    x = (p->s).coord.x;
+    x -= (p->s).d.x;
+  } else {
+    x = (p->s).coord.x;
+    x += (p->s).d.x;
+  }
+  (p->s).coord.x = x;
+  (p->s).coord.y += (p->s).d.y;
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  BossExplosion_Update((void*)p);
+}
 
 INCASM("asm/vfx/boss_explosion.inc");
 

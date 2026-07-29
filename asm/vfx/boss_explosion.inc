@@ -4,59 +4,6 @@
 	
 	.text
 
-	thumb_func_start FUN_080c7a28
-FUN_080c7a28: @ 0x080C7A28
-	push {r4, lr}
-	adds r4, r0, #0
-	ldr r3, [r4, #0x28]
-	movs r0, #0
-	movs r2, #0x10
-	strb r2, [r4, #0x12]
-	strb r0, [r4, #0x13]
-	strb r0, [r4, #0x11]
-	ldr r1, _080C7A58 @ =wElement
-	movs r0, #4
-	strb r0, [r1, #2]
-	ldr r0, [r3, #0x54]
-	ldr r1, [r3, #0x58]
-	str r0, [r4, #0x54]
-	str r1, [r4, #0x58]
-	ldrb r0, [r3, #0xa]
-	ands r2, r0
-	cmp r2, #0
-	beq _080C7A5C
-	ldr r0, [r4, #0x54]
-	ldr r1, [r4, #0x5c]
-	subs r0, r0, r1
-	b _080C7A62
-	.align 2, 0
-_080C7A58: .4byte wElement
-_080C7A5C:
-	ldr r0, [r4, #0x54]
-	ldr r1, [r4, #0x5c]
-	adds r0, r0, r1
-_080C7A62:
-	str r0, [r4, #0x54]
-	ldr r0, [r4, #0x58]
-	ldr r1, [r4, #0x60]
-	adds r0, r0, r1
-	str r0, [r4, #0x58]
-	ldr r1, _080C7A8C @ =gVFXFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #1
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #4]
-	str r0, [r4, #0x14]
-	adds r0, r4, #0
-	bl BossExplosion_Update
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080C7A8C: .4byte gVFXFnTable
 
 	thumb_func_start FUN_080c7a90
 FUN_080c7a90: @ 0x080C7A90
