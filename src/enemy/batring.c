@@ -1105,7 +1105,87 @@ void FUN_08067f78(struct Enemy* p) {
 
 bool8 FUN_08068014(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/batring_p7.inc");
+void FUN_08068018(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[12]);
+      (p->s).work[2] = 0x1A;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      struct Entity** slot;
+      register s32 t asm("r3");
+      {
+        u16 at2 = FUN_080098a4((p->s).coord.x + (p->s).d.x, (p->s).coord.y + (p->s).d.y);
+        if ((at2 & 0xF) == 1) {
+          goto die;
+        }
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.x += ((p->s).d.x - ((p->s).d.x << 4)) >> 8;
+      (p->s).d.y += ((p->s).d.y - ((p->s).d.y << 4)) >> 8;
+      slot = (struct Entity**)((u8*)p + 0xbc);
+      if (isKilled(*slot)) {
+        register s32 zk asm("r0");
+        u8* a = (u8*)p + 0xc0;
+        zk = 0;
+        *a = zk;
+        *slot = (struct Entity*)zk;
+      }
+      {
+        register s32 raw asm("r0");
+        raw = (p->s).work[2] - 1;
+        (p->s).work[2] = raw;
+        t = (u8)raw;
+      }
+      if (t != 0) {
+        break;
+      }
+      {
+        register struct Entity* q asm("r1");
+        q = *slot;
+        if (q != NULL) {
+          u8 k = *((u8*)p + 0xc0);
+          if (k == 1) {
+            if ((p->body).hp > 1) {
+              (p->s).mode[1] = 5;
+              (p->s).mode[2] = t;
+            } else {
+              goto die;
+            }
+          } else if (k == 2) {
+            if ((p->body).hp <= 1) {
+              u32 tb = (u32)gEnemyFnTable;
+              const EnemyRoutine** ta = (const EnemyRoutine**)(tb + (p->s).id * 4);
+              *(u32*)&(p->s).mode[0] = k;
+              (p->s).onUpdate = (void*)(**ta)[ENTITY_DIE];
+            } else {
+              (p->s).mode[1] = 7;
+              (p->s).mode[2] = t;
+            }
+          } else {
+            if ((p->body).hp > 1) {
+              (p->s).mode[1] = 2;
+              (p->s).mode[2] = t;
+            } else {
+              goto die;
+            }
+          }
+        } else {
+          if ((p->body).hp <= 1) {
+          die:
+            SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+          } else {
+            (p->s).mode[1] = 2;
+            (p->s).mode[2] = (u8)(u32)q;
+          }
+        }
+      }
+      break;
+    }
+  }
+}
 
 #include "element.h"
 #include "vfx.h"
