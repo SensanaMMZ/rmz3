@@ -3,6 +3,7 @@
 #include "vfx.h"
 
 static const VFXFunc sUpdates[3];
+void VFX61_Update(struct VFX* vfx);
 void VFX61_Die(struct VFX* p);
 
 struct VFX* FUN_080c2e7c(struct Coord* c, u8 mode) {
@@ -60,7 +61,89 @@ struct VFX* FUN_080c2f3c(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/vfx/unk_61_pre_pre_p3.inc");
+void VFX61_Init(struct VFX* vfx) {
+  s32 f;
+  s32 z5;
+  InitNonAffineMotion(&vfx->s);
+  {
+    register u8 f0 asm("r1");
+    register s32 d asm("r0");
+    register s32 z asm("r3");
+    register s32 ft asm("r2");
+    f0 = (vfx->s).flags;
+    d = DISPLAY;
+    z = 0;
+    asm("" : "+r"(z));
+    ft = d | f0;
+    ft |= FLIPABLE;
+    ft |= z;
+    (vfx->s).flags = ft;
+    f = ft;
+  }
+  {
+    u8 xf = (vfx->s).work[0];
+    if (xf == 0) {
+      f &= 0xEF;
+      (vfx->s).flags = f;
+      asm volatile("" : "+r"(f));
+      ((vfx->s).spr).xflip = xf;
+      ((vfx->s).spr).oam.xflip = xf;
+    } else {
+      register s32 one1 asm("r1");
+      one1 = 1;
+      asm("" : "+r"(one1));
+      f |= X_FLIP;
+      (vfx->s).flags = f;
+      asm volatile("" : "+r"(f));
+      ((vfx->s).spr).xflip = one1;
+      {
+        u8* a = (u8*)&((vfx->s).spr).oam + 6;
+        register s32 m asm("r2");
+        s32 msk;
+        u8 b;
+        m = 0x10;
+        asm("" : "+r"(m));
+        b = *a;
+        msk = -0x11;
+        msk &= b;
+        msk |= m;
+        *a = msk;
+      }
+    }
+  }
+  if ((vfx->s).work[0] == 0) {
+    (vfx->s).d.x = -0xC0;
+  } else {
+    (vfx->s).d.x = 0xC0;
+  }
+  z5 = 0;
+  (vfx->s).d.y = z5;
+  {
+    register s32 k asm("r3");
+    k = (vfx->s).work[1];
+    if (k == 0) {
+      (vfx->s).work[2] = 0xFF;
+      SET_VFX_ROUTINE(vfx, ENTITY_UPDATE);
+      (vfx->s).mode[1] = 1;
+    } else if (k == 1) {
+      (vfx->s).work[2] = (RANDOM(RNG_0202f388) & 7) + 0x7F;
+      {
+        u32 tb = (u32)gVFXFnTable;
+        const VFXRoutine** ta = (const VFXRoutine**)(tb + (vfx->s).id * 4);
+        *(u32*)&(vfx->s).mode[0] = k;
+        (vfx->s).onUpdate = (void*)(**ta)[ENTITY_UPDATE];
+      }
+      (vfx->s).mode[1] = 2;
+    } else {
+      (vfx->s).work[2] = 0xFF;
+      SET_VFX_ROUTINE(vfx, ENTITY_UPDATE);
+      (vfx->s).mode[1] = z5;
+    }
+  }
+  (vfx->s).mode[2] = z5;
+  (vfx->s).mode[3] = z5;
+  VFX61_Update(vfx);
+}
 
 void VFX61_Update(struct VFX* vfx) {
   if (IS_METTAUR) {
