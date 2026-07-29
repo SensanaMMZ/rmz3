@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "metatile.h"
 #include "projectile.h"
 
 // Hanumachine
@@ -51,6 +52,19 @@ void Projectile36_Die(struct Projectile* p) {
 }
 
 INCASM("asm/projectile/unk_36_pre_post_p2_p1.inc");
+
+void FUN_080ad778(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    (p->body).status = 0;
+    (p->body).prevStatus = 0;
+    (p->body).invincibleTime = 0;
+    (p->s).flags &= ~COLLIDABLE;
+  }
+}
 
 void FUN_080ad7d0(struct Projectile* p) {
   struct Projectile* q = (struct Projectile*)(p->s).unk_28;
