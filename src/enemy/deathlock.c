@@ -132,7 +132,81 @@ bool8 FUN_0808d2f8(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/deathlock_pre_p2_pre_a.inc");
+u32 FUN_0800a40c(s32 x, s32 y);
+static const EnemyFunc sUpdates1[8];
+static const EnemyFunc sUpdates2[8];
+static const motion_t sMotions1[6];
+static const u8 sCollisionIdxs1[6];
+extern const struct Collision sCollisions[15];
+
+bool8 FUN_0808d370(struct Enemy* p) {
+  s32 m1;
+  u32 fz;
+  if ((p->s).mode[1] == 6) {
+    goto rf;
+  }
+  if ((p->s).work[0] == 9) {
+    goto rf;
+  }
+  if (*(s32*)&p->props[0] != 0) {
+    goto rf;
+  }
+  switch ((p->s).mode[3]) {
+    case 0:
+      if (!IsFrozen(&p->s)) {
+        goto rf;
+      }
+      (sUpdates1[(p->s).mode[1]])(p);
+      (sUpdates2[(p->s).mode[1]])(p);
+      if ((p->s).mode[1] == 3) {
+        SetDDP(&p->body, &sCollisions[sCollisionIdxs1[p->props[5]]]);
+        SetMotion(&p->s, sMotions1[p->props[5]]);
+      }
+      (p->s).mode[3]++;
+      UpdateMotionGraphic(&p->s);
+    rt:
+      return TRUE;
+    case 1:
+      fz = IsFrozen(&p->s);
+      if (fz == 0) {
+        goto storef;
+      }
+      {
+        s32 hit = FUN_0800a40c((p->s).coord.x - 0x1200, (p->s).coord.y + 0x400);
+        if (hit == 0) {
+          hit = FUN_0800a40c((p->s).coord.x + 0x1200, (p->s).coord.y + 0x400);
+          if (hit == 0) {
+            goto skip;
+          }
+        }
+        FUN_0808d160(p, hit);
+      }
+    skip:
+      m1 = (p->s).mode[1];
+      asm("" : "+r"(m1));
+      if (m1 == 3) {
+        (p->s).unk_coord.x = (p->s).coord.x;
+      }
+      if ((p->s).work[0] == 8) {
+        goto rt;
+      }
+      if (m1 == 3) {
+        goto rt;
+      }
+      if (((p->body).status & 0x20001) != 0x20001) {
+        goto rt;
+      }
+      (p->s).mode[3] = 0;
+      return FALSE;
+    default:
+      goto rf;
+  }
+storef:
+  (p->s).mode[3] = fz;
+rf:
+  return FALSE;
+}
+
 
 #include "element.h"
 #include "vfx.h"
