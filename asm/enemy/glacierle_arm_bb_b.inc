@@ -4,52 +4,6 @@
 	
 	.text
 
-	thumb_func_start FUN_0808242c
-FUN_0808242c: @ 0x0808242C
-	push {r4, r5, r6, r7, lr}
-	mov r7, sb
-	mov r6, r8
-	push {r6, r7}
-	mov sb, r1
-	mov r8, r2
-	adds r1, r0, #0
-	adds r1, #0xb4
-	ldrb r2, [r1]
-	ldr r4, [r0, #0x2c]
-	cmp r4, #0
-	beq _08082478
-	adds r7, r1, #0
-	mov r6, r8
-	muls r6, r2, r6
-	mov r5, sb
-	muls r5, r2, r5
-_0808244E:
-	ldrb r1, [r7]
-	adds r0, r5, #0
-	bl __divsi3
-	ldr r1, [r4, #0x5c]
-	adds r1, r1, r0
-	str r1, [r4, #0x5c]
-	ldrb r1, [r7]
-	adds r0, r6, #0
-	bl __divsi3
-	ldr r1, [r4, #0x60]
-	adds r1, r1, r0
-	str r1, [r4, #0x60]
-	mov r0, r8
-	subs r6, r6, r0
-	mov r0, sb
-	subs r5, r5, r0
-	ldr r4, [r4, #0x2c]
-	cmp r4, #0
-	bne _0808244E
-_08082478:
-	pop {r3, r4}
-	mov r8, r3
-	mov sb, r4
-	pop {r4, r5, r6, r7}
-	pop {r0}
-	bx r0
 
 	thumb_func_start FUN_08082484
 FUN_08082484: @ 0x08082484

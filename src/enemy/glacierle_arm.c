@@ -147,6 +147,24 @@ NON_MATCH u32 FUN_080823ec(struct Enemy* p) {
 #endif
 }
 
+void FUN_0808242c(struct Enemy* p, s32 dx, s32 dy) {
+  u8* a1 = &p->props[0];
+  u8 n0 = *a1;
+  struct Entity* q = (p->s).unk_2c;
+  if (q != NULL) {
+    u8* np = a1;
+    s32 ay = n0 * dy;
+    s32 ax = n0 * dx;
+    do {
+      q->d.x += ax / *np;
+      q->d.y += ay / *np;
+      ay -= dy;
+      ax -= dx;
+      q = q->unk_2c;
+    } while (q != NULL);
+  }
+}
+
 INCASM("asm/enemy/glacierle_arm_bb_b.inc");
 
 void FUN_0808288c(struct Enemy* p, u8 a) {
