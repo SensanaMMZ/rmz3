@@ -1326,6 +1326,28 @@ void initActor32(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p2_b_b.inc");
 
+void Actor36_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      s32 n;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      n = 0xc2;
+      wStaticGraphicTilenums[n] = 0x220;
+      wStaticMotionPalIDs[n] = 5;
+      LOAD_STATIC_GRAPHIC(n);
+      SetMotion(&p->s, MOTION(0xC2, 0x00));
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/actor_p1_p2_b_c.inc");
+
 void Actor48_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
     case 0:
