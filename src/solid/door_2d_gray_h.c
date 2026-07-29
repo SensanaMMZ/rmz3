@@ -71,6 +71,24 @@ NAKED void FUN_080d7e5c(struct Body* body, struct Coord* r1 UNUSED, struct Coord
 
 INCASM("asm/solid/unk_22.inc");
 
+void FUN_080d820c(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        SetMotion(&p->s, MOTION(0x78, 0x00));
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 // --------------------------------------------
 
 static const struct Collision sCollisions[2] = {
