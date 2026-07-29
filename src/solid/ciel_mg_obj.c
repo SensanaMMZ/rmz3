@@ -44,6 +44,24 @@ void CielMinigameObj_Die(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
 
+static const s32 s32_ARRAY_083716d0[10];
+static const s32 s32_ARRAY_083716f8[10];
+
+// 0x080dddb0
+void FUN_080dddb0(struct Solid* p) {
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0xE8, 0x0A));
+  UpdateMotionGraphic(&p->s);
+  SET_XFLIP(p, 0);
+  ((p->s).spr).oam.priority = 1;
+  (p->s).coord.x = s32_ARRAY_083716d0[(p->s).work[1]];
+  (p->s).coord.y = s32_ARRAY_083716f8[(p->s).work[1]];
+  CielMinigameObj_Update(p);
+}
+
 INCASM("asm/solid/ciel_mg_obj_post_a.inc");
 
 // Same 24 instructions, one address-accumulation ordering tie: retail adds
