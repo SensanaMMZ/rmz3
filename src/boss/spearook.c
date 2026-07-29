@@ -1,6 +1,8 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "zero.h"
+#include "vfx.h"
 #include "physics.h"
 #include "vfx.h"
 
@@ -45,6 +47,54 @@ void FUN_08061ccc(struct Entity* e, struct Entity* e2) {
     (p->s).flags2 |= WHITE_PAINTABLE;
     (p->s).invincibleID = e->uniqueID;
   }
+}
+
+// 0x08061d24 -- parked (address-derivation basin): retail keeps the boss
+// pointer live in r2 and derives +0xc0/+0xbc through a fresh temp with a
+// subs #4 chain; agbcc either parks the pointer in ip (+3) or ties the
+// derived address in place. Both RANDOM offsets and the hp doubling are
+// decoded and verified.
+NON_MATCH void FUN_08061d24(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+#if MODERN
+  struct Boss* q = (struct Boss*)body->parent;
+  u8 w0 = (q->s).work[0];
+  if (w0 == 1) {
+    if (body->hitboxFlags & 8) {
+      s32 f = 0;
+      u8* c0;
+      if ((q->s).coord.x < (pZero2->s).coord.x) {
+        f = 1;
+      }
+      c0 = (u8*)q + 0xc0;
+      *c0 = f;
+    }
+  } else if (w0 == 0) {
+    if (body->hitboxFlags & 1) {
+      s32 f = 0;
+      u16* hp;
+      u8* c1;
+      u8* c0;
+      if ((q->s).coord.x < (pZero2->s).coord.x) {
+        f = 1;
+      }
+      c0 = (u8*)q + 0xc0;
+      *c0 = f;
+      hp = (u16*)((u8*)q + 0xa4);
+      c1 = (u8*)q + 0xc1;
+      if (*(s32*)(c0 - 4) & 2) {
+        struct Coord c;
+        *hp = *hp * 2 - *c1;
+        c.x = (q->s).coord.x - 0x800 + (RANDOM(RNG_0202f388) & 0x7FF);
+        c.y = (q->s).coord.y - 0x1400 + (RANDOM(RNG_0202f388) & 0x7FF);
+        CreateSmoke(1, &c);
+        PlaySound(0x2A);
+      }
+      *c1 = *hp;
+    }
+  }
+#else
+  INCCODE("asm/boss/spearook_1d24.inc");
+#endif
 }
 
 INCASM("asm/boss/spearook_p1_pre_pre_bc_b.inc");
