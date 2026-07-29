@@ -43,6 +43,22 @@ void VFX57_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
+// 0x080c19b4
+void FUN_080c19b4(struct VFX* p) {
+  s32 xf;
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, (p->s).work[1] | MOTION(0x63, 0x00));
+  xf = 0;
+  if ((p->s).d.x > 0) {
+    xf = 1;
+  }
+  SET_XFLIP(p, xf);
+  VFX57_Update(p);
+}
+
 INCASM("asm/vfx/unk_57_post.inc");
 
 void FUN_080c1aec(struct VFX* p) {
