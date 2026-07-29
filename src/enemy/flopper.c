@@ -113,7 +113,69 @@ void FUN_0806c04c(struct FlopperObject* p) {
   }
 }
 
-INCASM("asm/enemy/flopper_p2_b_b.inc");
+// 0x0806c0bc
+void FUN_0806c0bc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      *(u32*)((u8*)p + 0xbc) = 0;
+      SetMotion(&p->s, MOTION(0x16, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      register const s16* tbl asm("r4");
+      register s32 t asm("r2");
+      u32* a;
+      s16 sv;
+      t = *(s32*)((u8*)p + 0xb4);
+      (p->s).coord.x = t;
+      tbl = gSineTable;
+      a = (u32*)((u8*)p + 0xbc);
+      sv = tbl[(u8)(*a >> 8)];
+      t += sv * 45;
+      (p->s).coord.x = t;
+      t = *(s32*)((u8*)p + 0xb8);
+      (p->s).coord.y = t;
+      sv = tbl[(u8)(*a >> 8)];
+      t += sv * 45;
+      (p->s).coord.y = t;
+      *a = (*a + 0x200) & 0xFFFF;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+// 0x0806c150
+void FUN_0806c150(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      *(u32*)((u8*)p + 0xbc) = 0;
+      SetMotion(&p->s, MOTION(0x16, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      register const s16* tbl asm("r4");
+      register s32 t asm("r2");
+      u32* a;
+      s16 sv;
+      t = *(s32*)((u8*)p + 0xb4);
+      (p->s).coord.x = t;
+      tbl = gSineTable;
+      a = (u32*)((u8*)p + 0xbc);
+      sv = tbl[(u8)(*a >> 8)];
+      t -= sv * 45;
+      (p->s).coord.x = t;
+      t = *(s32*)((u8*)p + 0xb8);
+      (p->s).coord.y = t;
+      sv = tbl[(u8)(*a >> 8)];
+      t += sv * 45;
+      (p->s).coord.y = t;
+      *a = (*a + 0x200) & 0xFFFF;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 static const struct Collision sCollisions[2] = {
     {
