@@ -328,7 +328,43 @@ void volteelMode0(struct Boss* p) {
 
 bool8 FUN_080438f0(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p3.inc");
+// 0x080438f4
+void volteelMode1(struct Boss* p) {
+  motion_t m;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x3C;
+      PlaySound(0x79);
+      m = MOTION(0xA5, 0x0E);
+      goto setmotion;
+    case 2:
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      goto advance;
+    case 3:
+      m = MOTION(0xA5, 0x10);
+    setmotion:
+      SetMotion(&p->s, m);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    advance:
+      (p->s).mode[2]++;
+      break;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] = 2, (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_08043988(struct Boss* p) { return TRUE; }
 
