@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "overworld.h"
 #include "solid.h"
 
 /*
@@ -52,6 +53,25 @@ void killIronStar(struct Solid* p) {
 void nop_080cbcc0(struct Solid* p) {}
 
 INCASM("asm/solid/iron_star_p2.inc");
+
+extern const struct Collision Collision_ARRAY_0836fe10[3];
+
+void FUN_080cbd6c(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &Collision_ARRAY_0836fe10[2]);
+      SetMotion(&p->s, MOTION(0x2D, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((p->s).work[0] != 2) {
+        struct Overworld* ow = &gOverworld;
+        (p->s).coord.y = ow->sea;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 // --------------------------------------------
 
