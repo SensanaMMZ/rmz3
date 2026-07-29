@@ -236,6 +236,28 @@ void FUN_08078624(struct Enemy* p) {
 
 INCASM("asm/enemy/tile_cannon_p3_post_post.inc");
 
+static const u8 u8_ARRAY_08367550[6];
+
+// 0x08078908
+void FUN_08078908(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SET_XFLIP(p, 1);
+      SetMotion(&p->s, MOTION(0x2F, 0x02) + (p->s).work[0]);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08367550[(s8)(p->s).motion.cmdIdx]]);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+        (p->s).work[2] = 0x3C;
+      }
+      break;
+  }
+}
+
 void TileCannon_Init(struct Enemy* p);
 void TileCannon_Update(struct Enemy* p);
 void TileCannon_Die(struct Enemy* p);
