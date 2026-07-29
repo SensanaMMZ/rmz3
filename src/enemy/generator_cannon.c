@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "physics.h"
 #include "story.h"
 
 static const struct Collision sCollisions[];
@@ -164,6 +165,42 @@ void FUN_0808c784(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
     (p->s).mode[1] = 7;
     (p->s).mode[2] = 0;
+  }
+}
+
+// 0x0808c7e0
+void generatorcannon_0808c7e0(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x72, 0x00));
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.y = m;
+      (p->s).work[2] = m;
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 r;
+      if (IsFrozen(&p->s)) {
+        break;
+      }
+      if ((p->s).work[2] == 0) {
+        (p->s).d.y += 0x40;
+        if ((p->s).d.y > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+      }
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (r < 0) {
+        (p->s).work[2] = 1;
+        if (r > -PIXEL(8)) {
+          (p->s).coord.y += r;
+        }
+      }
+      break;
+    }
   }
 }
 
