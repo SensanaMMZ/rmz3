@@ -1313,6 +1313,73 @@ void initActor28(struct Solid* p) {
   Actor_Update(p);
 }
 
+void Actor28_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      (p->s).coord.x = 0;
+      (p->s).coord.y = 0x9300;
+      PlaySound(0x12E);
+      (p->s).work[3] = 0;
+      (p->s).mode[1]++;
+      /* fallthrough */
+    case 1: {
+      const s16* tbl = gSineTable;
+      u8 w = (p->s).work[3];
+      s32 t;
+      (p->s).coord.x = tbl[(u8)(w * 4)] * 48;
+      t = w + 1;
+      (p->s).work[3] = t;
+      if ((u8)t > 0xF) {
+        (p->s).mode[1]++;
+        (p->s).work[3] = 0x20;
+      }
+      break;
+    }
+    case 2: {
+      s32 t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).work[3] = 0x20;
+      (p->s).mode[1]++;
+    }
+      /* fallthrough */
+    case 3: {
+      const s16* tbl = gSineTable;
+      u8 w = (p->s).work[3];
+      s32 t;
+      (p->s).coord.x = tbl[(u8)(w * 2)] * 48;
+      t = w - 1;
+      (p->s).work[3] = t;
+      if ((t << 24) == 0) {
+        gWindowRegBuffer.dispcnt &= 0xBFFF;
+        (p->s).mode[1]++;
+      }
+      break;
+    }
+    case 4:
+      break;
+  }
+  {
+    struct WramWindowRegister* wr;
+    s32 t12 = (p->s).work[2] + 1;
+    s32 odd;
+    s32 x;
+    s32 y;
+    (p->s).work[2] = t12;
+    wr = &gWindowRegBuffer;
+    x = (p->s).coord.x >> 8;
+    odd = t12 & 1;
+    x += odd << 3;
+    wr->winH.half[1] = ((x + 0xBC) & 0xFF) | ((0xBC - x) << 8);
+    y = (p->s).coord.y >> 8;
+    y += odd << 2;
+    wr->winV.half[1] = y & 0xFF;
+    PALETTE16(0) = 0x7FFF;
+  }
+}
+
 INCASM("asm/solid/actor_p1_p2_b_a.inc");
 
 struct Entity* CreateVFX39(struct Coord* c, u8 r1, u8 r2);
