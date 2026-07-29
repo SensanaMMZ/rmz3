@@ -205,6 +205,36 @@ void FUN_0805cdbc(struct Boss* p) {
 
 INCASM("asm/boss/hanumachine_p2_p1c.inc");
 
+void hanu_0805cf58(struct Boss* p) {
+  u8 md = (p->s).mode[2];
+  if (md == 0) {
+    SetMotion(&p->s, MOTION(0xB5, 0x14));
+    PlaySound(0x4E);
+    (p->s).d.y = 0x300;
+    (p->s).mode[3] = md;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).mode[3] == 0) {
+    if ((s8)(p->s).motion.cmdIdx > 2) {
+      (p->s).mode[3]++;
+    }
+  } else {
+    s32 st;
+    (p->s).coord.y += (p->s).d.y;
+    (p->s).d.y += 0x40;
+    st = (p->body).status & 4;
+    if (st != 0) {
+      (p->s).mode[1] = 0x18;
+      (p->s).mode[2] = 0;
+    } else if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      (p->s).mode[1] = 7;
+      (p->s).mode[2] = st;
+    }
+  }
+}
+
 void hanu_080ad598(struct Entity* e, u8 a1, u8 a2);
 
 // 0x0805cfe8
