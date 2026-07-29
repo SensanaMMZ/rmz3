@@ -77,6 +77,29 @@ void pBase_0808a438(struct Enemy* p) {
   }
 }
 
+static const u8 sCollisionIdxs[9];
+
+// 0x0808a47c
+void pBase_0808a47c(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x6D, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 t;
+      SetDDP(&p->body, &sCollisions[sCollisionIdxs[(s8)(p->s).motion.cmdIdx]]);
+      t = (q->flags >> 4) & 1;
+      SET_XFLIP(p, t);
+      (p->s).coord.x = (q->coord).x;
+      (p->s).coord.y = (q->coord).y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_base_p3_post.inc");
 
 void PantheonBase_Init(struct Enemy* p);
