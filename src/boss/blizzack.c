@@ -110,17 +110,18 @@ void blizzackNextMode(struct Boss* p) {
   }
 }
 
-// 0x0805a230 -- parked: same 0x64xx basin as blizzackMode9/Start/End (the
-// mode[2]=0 zero materializes two insns earlier than retail's slot between
-// the props address adds and the 0x6403 pool load; every z/v/a ordering
-// tried lands early).
-NON_MATCH void blizzackJump(struct Boss* p) {
-#if MODERN
+void blizzackJump(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
     SetMotion(&p->s, MOTION(0xB4, 0x03));
     ((p->s).unk_2c)->mode[2] = 1;
-    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6403;
-    (p->s).mode[2] = 0;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x6403;
+    *t = v;
+    (p->s).mode[2] = z;
     (p->s).d.x = ((pZero2->s).coord.x - (p->s).coord.x) / 52;
     (p->s).d.y = -0x9C0;
   }
@@ -136,9 +137,6 @@ NON_MATCH void blizzackJump(struct Boss* p) {
     (p->s).mode[1] = 6;
     (p->s).mode[2] = 1;
   }
-#else
-  INCCODE("asm/boss/blizzack_jump.inc");
-#endif
 }
 
 INCASM("asm/boss/blizzack_rest_b.inc");
