@@ -2,6 +2,8 @@
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
+#include "zero.h"
+#include "palette_animation.h"
 #include "overworld.h"
 
 static const BossFunc sDeinitializers[2];
@@ -47,6 +49,57 @@ void BabyElf_Die(struct Boss* p) {
 void nop_08046150(struct Boss* p) {}
 
 INCASM("asm/boss/baby_elf_p2_p1.inc");
+
+void FUN_0809fa44(struct Entity* parent, s32 x, s32 y, u8 n);
+
+// 0x080477b8
+void babyelf_080477b8(struct Boss* p) {
+  register s32 m asm("r3");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      u16 h = (p->body).hp;
+      s16* a = (s16*)((u8*)p + 0xca);
+      s32 z = 0;
+      *a = h;
+      *(s32*)((u8*)p + 0xbc) = (p->s).coord.x;
+      *(s32*)((u8*)p + 0xc0) = (p->s).coord.y;
+      *(u16*)((u8*)p + 0xc4) = m;
+      (p->s).work[2] = z;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      u16* ang = (u16*)((u8*)p + 0xc4);
+      s32 bx;
+      s32 by;
+      s32 diff;
+      (*ang)++;
+      bx = *(s32*)((u8*)p + 0xbc);
+      (p->s).coord.x = bx;
+      by = *(s32*)((u8*)p + 0xc0);
+      (p->s).coord.y = by;
+      (p->s).coord.x = bx + gSineTable[*(u8*)ang] * 80;
+      (p->s).coord.y = by - gSineTable[(u8)(*ang * 2)] * 16;
+      (p->s).work[2]++;
+      (p->s).work[2] = (p->s).work[2] % 0x60;
+      diff = *(s16*)((u8*)p + 0xca) - (p->body).hp;
+      if (diff > 0xF || ((pZero2->body).status & BODY_STATUS_DEAD) || (pZero2->body).hp == 0) {
+        (p->s).mode[1] = 0xA;
+        (p->s).mode[2] = 0;
+      }
+      if ((p->s).work[2] == 0) {
+        PlaySound(0x118);
+        FUN_0809fa44(&p->s, (p->s).coord.x, (p->s).coord.y, 0);
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/baby_elf_p2_p1b.inc");
 
 u16 FUN_080d08d0(struct Boss* p, motion_t m);
 
