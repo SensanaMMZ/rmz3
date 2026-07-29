@@ -149,6 +149,17 @@ NON_MATCH u32 FUN_080823ec(struct Enemy* p) {
 
 INCASM("asm/enemy/glacierle_arm_bb_b.inc");
 
+void FUN_0808288c(struct Enemy* p, u8 a) {
+  struct Entity* q = (p->s).unk_2c;
+  if (q != NULL) {
+    (p->s).angle = a - 0x40;
+    q->coord.x = (p->s).coord.x;
+    q->coord.x += gSineTable[(u8)(a + 0x40)] * 17;
+    q->coord.y = (p->s).coord.y;
+    q->coord.y += gSineTable[a] * 17;
+  }
+}
+
 void nop_080828dc(struct Enemy* p) {}
 
 void GlacierleAtkArm_Init(struct Enemy* p) {
