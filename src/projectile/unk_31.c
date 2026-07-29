@@ -39,6 +39,27 @@ struct Projectile* FUN_080aa7a8(struct Entity* e, u8 a, u8 b) {
 
 INCASM("asm/projectile/unk_31_b.inc");
 
+void CreateVFX57(struct Coord* c, u8 a1, u8 a2, s16 dx, s16 dy);
+
+void Projectile31_Update(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 an = ((u16)ArcTan2((p->s).d.x, (p->s).d.y) + 0x4000) >> 8;
+    (p->s).work[3] = an;
+    (p->s).angle = an;
+  }
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+    CreateVFX57(&(p->s).coord, 1, 1, (RANDOM(RNG_0202f388) & 0xFF) | 0x100,
+                -((RANDOM(RNG_0202f388) & 0x3FF) + 0x100));
+    CreateVFX57(&(p->s).coord, 1, 3, -((RANDOM(RNG_0202f388) & 0xFF) + 0x100),
+                -((RANDOM(RNG_0202f388) & 0x3FF) + 0x100));
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 static void Projectile31_Die(struct Projectile* p) {
   EXIT_BODY(p);
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
