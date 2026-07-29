@@ -159,6 +159,47 @@ NON_MATCH void FUN_0809aa10(struct Sprite* spr, struct DrawPivot* pivot) {
 
 INCASM("asm/enemy/minigame_leviathan_p3b.inc");
 
+extern const u8 StrCOMBO[];
+extern const u8 StrPlusSEC[];
+
+// 0x0809aa90 -- parked (same trunc-reg basin as FUN_0809aa10 above):
+// retail truncates the final row argument in place then copies to r2;
+// agbcc truncates into r2 directly in every spelling and pin tried.
+NON_MATCH void FUN_0809aa90(struct Sprite* spr, struct DrawPivot* pivot) {
+#if MODERN
+  struct Entity* e = (struct Entity*)spr->sprites;
+  s32 x = (e->coord.x - pivot->lefttop.x) >> 8;
+  s32 y = (e->coord.y - pivot->lefttop.y) >> 8;
+  x -= 0x10;
+  x /= 8;
+  {
+    u8 lim = e->work[3];
+    if (x - lim + 1 < 0) {
+      x = lim - 1;
+    } else if (x + 7 > 0x1E) {
+      x = 0x17;
+    }
+  }
+  y += 0x10;
+  y /= 8;
+  if (y <= 0) {
+    y = 1;
+  } else if (y > 0x11) {
+    y = 0x11;
+  }
+  if (e->unk_coord.y > 1) {
+    PrintMinigameNumber(e->unk_coord.y, (u16)x, (u16)y);
+    PrintUnicodeString((const char_t*)StrCOMBO, x + 2, y);
+  }
+  PrintUnicodeString((const char_t*)StrPlusSEC, x, ++y);
+  PrintMinigameNumber(e->d.x, (u16)(x + 1), (u16)y);
+#else
+  INCCODE("asm/enemy/leviathan_aa90.inc");
+#endif
+}
+
+INCASM("asm/enemy/minigame_leviathan_p3c.inc");
+
 void LeviathanMinigameEnemy_Init(struct Enemy* p);
 void LeviathanMinigameEnemy_Update(struct Enemy* p);
 void LeviathanMinigameEnemy_Die(struct Enemy* p);
