@@ -87,6 +87,61 @@ void FUN_0809142c(struct Entity* e, u8 a2) {
   }
 }
 
+static const u8 u8_ARRAY_08369a14[16];
+static const struct Collision sCollisions[14];
+void Enemy59_Update(struct Enemy* p);
+void Enemy59_Die(struct Enemy* p);
+void FUN_08091790(struct Body* body);
+
+// 0x08091498
+void Enemy59_Init(struct Enemy* p) {
+  if ((p->s).work[0] == 12) {
+    SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+    {
+      register u8 f0 asm("r1") = (p->s).flags;
+      u8 f = FLIPABLE | f0;
+      f |= DISPLAY;
+      f |= COLLIDABLE;
+      (p->s).flags = f;
+    }
+    {
+      struct Body* b = &p->body;
+      InitBody(b, &sCollisions[0], &(p->s).coord, 6);
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (void*)FUN_08091790;
+    }
+    (p->s).mode[1] = u8_ARRAY_08369a14[(p->s).work[0]];
+    Enemy59_Update(p);
+  } else if ((p->s).work[0] > 8) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    {
+      register u8 f0 asm("r1") = (p->s).flags;
+      u8 f = FLIPABLE | f0;
+      f |= DISPLAY;
+      (p->s).flags = f;
+    }
+    (p->s).mode[1] = u8_ARRAY_08369a14[(p->s).work[0]];
+    Enemy59_Die(p);
+  } else {
+    SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+    {
+      register u8 f0 asm("r1") = (p->s).flags;
+      u8 f = FLIPABLE | f0;
+      f |= DISPLAY;
+      f |= COLLIDABLE;
+      (p->s).flags = f;
+    }
+    {
+      struct Body* b = &p->body;
+      InitBody(b, &sCollisions[0], &(p->s).coord, 1);
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (void*)FUN_08091790;
+    }
+    (p->s).mode[1] = u8_ARRAY_08369a14[(p->s).work[0]];
+    Enemy59_Update(p);
+  }
+}
+
 INCASM("asm/enemy/unk_59_pre_pre_p2.inc");
 
 void Enemy59_Die(struct Enemy* p) {
