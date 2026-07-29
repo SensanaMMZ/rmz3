@@ -1,3 +1,4 @@
+#include "anim_loader.h"
 #include "collision.h"
 #include "entity.h"
 #include "global.h"
@@ -1458,6 +1459,47 @@ void Actor48_Update(struct Solid* p) {
 }
 
 INCASM("asm/solid/actor_p2.inc");
+
+void FUN_080d740c(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      LOAD_STATIC_GRAPHIC(0x8C);
+      SetMotion(&p->s, MOTION(0x8C, 0x07));
+      (p->s).unk_coord.x = (p->s).coord.x;
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        (p->s).coord.x = cam->viewport.x + 0x87FF;
+      }
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      (p->s).mode[1]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += -0x100;
+      if ((p->s).coord.x < (p->s).unk_coord.x) {
+        (p->s).coord.x = (p->s).unk_coord.x;
+        SetMotion(&p->s, MOTION(0x8C, 0x05));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      (p->s).mode[1]++;
+      /* fallthrough */
+    case 3:
+      if (FUN_080d0934(&p->s, MOTION(0x8C, 0x05), 0) != 0) {
+        (p->s).mode[1]++;
+      }
+      break;
+    case 4:
+      break;
+  }
+}
+
+INCASM("asm/solid/actor_p2_c.inc");
 
 // 0x080d7638
 void FUN_080d7638(struct Solid* p) {
