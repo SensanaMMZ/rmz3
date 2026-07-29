@@ -2,6 +2,7 @@
 #include "global.h"
 #include "overworld.h"
 #include "story.h"
+#include "system.h"
 
 #define HEIGHT 14
 #define WIDTH 32
@@ -333,6 +334,42 @@ void FUN_0800f54c(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED)
 }
 
 INCASM("asm/stage_gfx/missile_factory_p2_p1.inc");
+
+// 0x0800f604 -- HDMA BG3HOFS scanline-band table builder.
+// Blocker (giv/pool basin): agbcc hoists all four band shifts to the top,
+// derives the first band's end address from the 0xBE*2 IntrManager offset
+// (subs #0x40), and reverses/folds the last two bands' index loops; every
+// loop-shape variant tried keeps one of those transforms. Same basin as the
+// five NAKED landscape builders (resistance_base, area_x2, energy_facility,
+// old_residential, anatre).
+NON_MATCH void FUN_0800f604(struct StageLayer* l, const struct Stage* _ UNUSED) {
+#if MODERN
+  u16 v = l->unk_10;
+  u32* q = Malloc(0xA0 * 4);
+  if (q != NULL) {
+    s32 i;
+    gIntrManager.reservedDma0[0] = (u32)q;
+    gIntrManager.reservedDma0[1] = 0x0400001C;
+    gIntrManager.reservedDma0[2] = 0xA6600001;
+    for (i = 0x4F; i >= 0; i--) {
+      q[i] = v >> 6;
+    }
+    for (i = 0; i < 8; i++) {
+      q[0x50 + i] = v >> 5;
+    }
+    for (i = 0x58; i <= 0x6F; i++) {
+      q[i] = v >> 3;
+    }
+    for (; i <= 0x9F; i++) {
+      q[i] = v >> 2;
+    }
+  }
+#else
+  INCCODE("asm/stage_gfx/missile_factory_f604.inc");
+#endif
+}
+
+INCASM("asm/stage_gfx/missile_factory_p2_p1b.inc");
 
 // 0x0800f840
 void FUN_0800f840(struct StageLayer* l, const struct Stage* _ UNUSED) {
