@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "trig.h"
 #include "story.h"
 
 static const struct Collision sCollisions[];
@@ -244,6 +245,54 @@ void FUN_080761b8(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/purple_nerple_p2_p2_p4.inc");
+
+void FUN_080763f8(struct Enemy* p) {
+  register s32 m asm("r4");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 v;
+      s32 c;
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0x2A, 0x02));
+      c = -0x140;
+      (p->s).d.x = c;
+      v = c;
+      if (((p->s).flags & X_FLIP) != 0) {
+        v = 0x140;
+      }
+      (p->s).d.x = v;
+      (p->s).d.y = m;
+      *(s32*)((u8*)p + 0x64) = m;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1:
+      if ((u32)((p->s).coord.x - *(s32*)((u8*)p + 0xc0) + 0x16800) > 0x2D000) {
+        (p->s).d.y -= 0x40;
+        (p->s).coord.y += (p->s).d.y;
+      } else {
+        s32 t = *(s32*)((u8*)p + 0x64) + 1;
+        *(s32*)((u8*)p + 0x64) = t;
+        (p->s).coord.x += (p->s).d.x;
+        (p->s).coord.y = (p->s).unk_coord.y;
+        (p->s).coord.y = (p->s).unk_coord.y + SIN((t << 8) / 0x4C) * 24;
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0xb9) != 0) {
+        if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+          (p->s).flags &= ~DISPLAY;
+          (p->s).flags &= ~FLIPABLE;
+          EXIT_BODY(p);
+          SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+        }
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/purple_nerple_p2_p2_p4_b.inc");
 
 extern const motion_t sMotions[9];
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
