@@ -2,6 +2,8 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "camera.h"
+#include "stagerun.h"
 
 static const struct Coord sElementCoord;
 
@@ -289,7 +291,46 @@ INCASM("asm/enemy/lamplort_p4.inc");
 
 bool8 FUN_0806c9c0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p5.inc");
+// 0x0806c9c4
+void FUN_0806c9c4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x19, 0x06));
+      SetDDP(&p->body, &sCollisions[0]);
+      SET_XFLIP(p, *(u8*)((u8*)p + 0xbc));
+      (p->s).work[2] = 0xFF;
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+        (p->s).work[3] = 0;
+      } else {
+        (p->s).work[3] = 1;
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      u8 w2 = (p->s).work[2];
+      if ((w2 & 0xF) == 0) {
+        PlaySound(0x11F);
+      }
+    }
+      if ((p->s).work[3] == 0) {
+        if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0x4000) {
+          (p->s).work[3] = 1;
+        }
+      } else {
+        if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+          (p->s).work[3] = 0;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      (p->s).mode[1] = 4, (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 true_0806cac4(struct Enemy* p) { return TRUE; }
 
