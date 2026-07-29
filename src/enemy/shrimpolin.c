@@ -2,6 +2,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "physics.h"
 #include "story.h"
 
 struct ShrimporinObject {
@@ -439,6 +440,44 @@ static void shrimporin_08069c24(struct ShrimporinObject* p) {
     (p->s).mode[1] = 7;
     (p->s).mode[2] = 0;
   }
+}
+
+s32 FUN_0800a40c(s32 x, s32 y);
+
+// One copy from a match: retail relocates the wall-pushout call result to r1
+// before loading coord.x into r0; agbcc keeps the result in place in every
+// spelling tried (plain +=, s32 temp, s16 temp).
+NON_MATCH void shrimporin_08069c80(struct Enemy* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.y = 0;
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 f = IsFrozen(&p->s);
+      if (f == 0) {
+        (p->s).d.y += 0x40;
+        if ((p->s).d.y > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        {
+          s32 r = PushoutToUp2((p->s).coord.x, (p->s).coord.y + PIXEL(8));
+          if (r < 0) {
+            (p->s).d.y = f;
+            (p->s).coord.y += r;
+          }
+        }
+      }
+      (p->s).coord.x += FUN_0800a40c((p->s).coord.x, (p->s).coord.y + PIXEL(12));
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/shrimporin_9c80.inc");
+#endif
 }
 
 INCASM("asm/enemy/shrimpolin.inc");
