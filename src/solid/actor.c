@@ -1437,6 +1437,114 @@ void initActor32(struct Solid* p) {
   Actor_Update(p);
 }
 
+void Actor32_Update(struct Solid* p) {
+  register struct WramWindowRegister* wr asm("r5");
+  u8 md = (p->s).mode[1];
+  wr = &gWindowRegBuffer;
+  switch (md) {
+    case 0:
+      (p->s).coord.x = 0x400;
+      (p->s).coord.y = 0x9200;
+      (p->s).work[3] = 0;
+      (p->s).mode[1]++;
+      /* fallthrough */
+    case 1: {
+      s32 t;
+      (p->s).coord.y += -0x800;
+      t = (p->s).work[3] + 1;
+      (p->s).work[3] = t;
+      {
+        u8 t8 = t;
+        asm("" : "+r"(wr));
+        wr = &gWindowRegBuffer;
+        if (t8 <= 0x3F) {
+          break;
+        }
+      }
+      (p->s).work[3] = 0;
+      (p->s).mode[1]++;
+    }
+      /* fallthrough */
+    case 2: {
+      const s16* tbl = gSineTable;
+      s32 t;
+      (p->s).coord.x = tbl[(p->s).work[3]] * 0xB8;
+      t = (p->s).work[3] + 1;
+      (p->s).work[3] = t;
+      {
+        u8 t8 = t;
+        asm("" : "+r"(wr));
+        wr = &gWindowRegBuffer;
+        if (t8 <= 0x3F) {
+          break;
+        }
+      }
+      (p->s).work[3] = 0x10;
+      (p->s).mode[1]++;
+    }
+      /* fallthrough */
+    case 3: {
+      s32 t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      {
+        s32 t24 = t << 24;
+        asm("" : "+r"(wr));
+        wr = &gWindowRegBuffer;
+        if (t24 != 0) {
+          break;
+        }
+      }
+      wr->dispcnt &= 0xBFFF;
+      (p->s).mode[1]++;
+    }
+      /* fallthrough */
+    case 4:
+      break;
+  }
+  {
+    struct WramWindowRegister* w4;
+    s32 t12 = (p->s).work[2] + 1;
+    s32 x;
+    register s32 right asm("r1");
+    s32 left;
+    register u32 lo asm("r0");
+    s32 y;
+    s32 k;
+    u32 bot;
+    register s32 y2 asm("r1");
+    (p->s).work[2] = t12;
+    x = (p->s).coord.x >> 8;
+    x += (t12 & 1) << 3;
+    right = x + 0xC0;
+    w4 = wr;
+    left = (0xC0 - x) << 8;
+    right <<= 16;
+    right >>= 16;
+    if (right > 0xF0) {
+      goto clampF;
+    }
+    lo = right & 0xFF;
+    goto wjoin;
+  clampF:
+    lo = 0xF0;
+  wjoin:
+    lo |= left;
+    w4->winH.half[1] = lo;
+    y2 = (p->s).coord.y >> 8;
+    k = ((p->s).work[2] & 1) << 3;
+    y2 -= k;
+    bot = k;
+    bot += 0x93;
+    bot &= 0xFF;
+    y = (s16)y2;
+    if (y >= 0) {
+      bot |= y << 8;
+    }
+    wr->winV.half[1] = bot;
+    PALETTE16(0) = 0x7FFF;
+  }
+}
+
 INCASM("asm/solid/actor_p1_p2_b_b.inc");
 
 // Weil-throne idle actor: one-time graphic/palette load with the tilenum and
