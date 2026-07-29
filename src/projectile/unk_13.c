@@ -138,6 +138,95 @@ void Projectile13_Die(struct Projectile* p) {
 
 void nop_0809fbd8(struct Projectile* p) {}
 
+void FUN_0809fbdc(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, sCollisions);
+      (p->s).work[2] = 0x28;
+      SetMotion(&p->s, MOTION(0x33, 0x08));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      EXIT_BODY(p);
+      (p->s).work[2] = 0xA;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      u32 u;
+      register s32 f asm("r0");
+      register s32 tzp asm("r2");
+      {
+        register s32 w asm("r0");
+        w = (p->s).work[2];
+        asm("" : "+r"(w));
+        u = w;
+      }
+      if (u > 4) {
+        if (u & 1) {
+          u8 fl2 = (p->s).flags;
+          f = DISPLAY;
+          asm("" : "+r"(f));
+          f |= fl2;
+        } else {
+          goto off;
+        }
+        goto store;
+      }
+      if (u & 2) {
+        u8 fl2 = (p->s).flags;
+        f = DISPLAY;
+        f |= fl2;
+      } else {
+      off: {
+          u8 fl3 = (p->s).flags;
+          f = 0xFE;
+          f &= fl3;
+        }
+      }
+    store:
+      (p->s).flags = f;
+      {
+        register s32 t2p asm("r0");
+        t2p = u - 1;
+        (p->s).work[2] = t2p;
+        tzp = (u8)t2p;
+      }
+      if (tzp == 0) {
+        register u8 e1 asm("r1");
+        e1 = *(volatile u8*)&(p->s).flags;
+        f = 0xFE;
+        f &= e1;
+        {
+          register s32 c2 asm("r1");
+          c2 = 0xFD;
+          f &= c2;
+        }
+        (p->s).flags = f;
+        (p->body).status = tzp;
+        (p->body).prevStatus = tzp;
+        (p->body).invincibleTime = tzp;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/projectile/unk_13_p3.inc");
 
 void Projectile13_Init(struct Projectile* p);
