@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "palette_animation.h"
 #include "overworld.h"
 
 static const struct Collision sCollisions[8];
@@ -42,6 +43,45 @@ void BeeServer_Die(struct Boss* p) {
 void nop_0804d0a0(struct Boss* p) {}
 
 INCASM("asm/boss/bee_server_p2.inc");
+
+u8 GetEntityPalID(struct Entity* p);
+
+// 0x0804d1ac
+void FUN_0804d1ac(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x46, 0x00));
+      {
+        u32 g0 = GetEntityPalID(&p->s);
+        u32 g = (u8)g0 << 5;
+        StartPaletteAnimation(0x45, g | 0x200);
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      SetMotion(&p->s, MOTION(0x46, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      u32 v;
+      UpdateMotionGraphic(&p->s);
+      v = gStageRun.vm.active & 1;
+      if (v == 0) {
+        (p->s).mode[1] = v;
+        (p->s).mode[2] = v;
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/bee_server_p2b.inc");
 
 // --------------------------------------------
 
