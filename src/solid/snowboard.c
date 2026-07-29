@@ -416,6 +416,32 @@ _080CF748: .4byte sSolid18Collisions\n\
 
 INCASM("asm/solid/snowboard_pre.inc");
 
+extern const motion_t sSolid18Motions[3];
+struct Entity* CreateSmoke(u8 n, struct Coord* c);
+void FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+
+void Solid18_Die(struct Solid* p) {
+  struct Coord c;
+  {
+    u8 f2 = (p->s).flags2 & ~8;
+    s32 z = 0;
+    (p->s).flags2 = f2;
+    (p->body).status = z;
+    (p->body).prevStatus = z;
+    (p->body).invincibleTime = z;
+  }
+  (p->s).flags &= ~COLLIDABLE;
+  c.x = (p->s).coord.x - PIXEL(16);
+  c.y = (p->s).coord.y - PIXEL(8);
+  CreateSmoke(1, &c);
+  c.x = (p->s).coord.x + PIXEL(16);
+  c.y = (p->s).coord.y;
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080b7f70(&p->s, &c, (motion_t*)sSolid18Motions, 3);
+  SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+}
+
 void nop_080cf914(struct Solid* p) {}
 void nop_080cf918(struct Solid* p) {}
 
