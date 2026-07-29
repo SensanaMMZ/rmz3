@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "stagerun.h"
 #include "zero.h"
 #include "vfx.h"
 #include "physics.h"
@@ -259,6 +260,31 @@ void nop_0806316c(struct Boss* p) {}
 void nop_08063170(struct Boss* p) {}
 
 INCASM("asm/boss/spearook_p3.inc");
+
+void FUN_080632a0(struct Boss* p0) {
+  register struct Boss* p asm("r2") = p0;
+  if ((p->s).mode[2] == 0) {
+    register struct StageRun* sr asm("r4");
+    register u32 st asm("r3");
+    register s32 one asm("r5");
+    register u32 av asm("r1");
+    sr = &gStageRun;
+    st = sr->missionStatus;
+    one = 1;
+    if (one & st) {
+      register s32 chk asm("r0");
+      av = sr->vm.active;
+      chk = one & av;
+      if (chk == 0) {
+        sr->missionStatus = (st & 0xFFFE) | MISSION_SUCCESS;
+      }
+    }
+    EXIT_BODY(p);
+    (p->s).mode[2]++;
+  }
+}
+
+INCASM("asm/boss/spearook_p3b.inc");
 
 void nop_08063510(struct Boss* p) {}
 
