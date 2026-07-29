@@ -186,6 +186,81 @@ void FUN_080ab178(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_32_p4_p2_s1.inc");
 
+void FUN_080ac1e4(struct RenderNode* t);
+
+void FUN_080ab550(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  gVideoRegBuffer.dispcnt |= 0x2400;
+  SetTaskCallback((struct RenderNode*)&(p->s).spr, (void*)FUN_080ac1e4);
+  ((p->s).spr).sprites = (void*)p;
+  {
+    register u8 f0 asm("r0");
+    register s32 f2m asm("r2");
+    register s32 z3 asm("r3");
+    f0 = (p->s).flags;
+    f2m = 0xF7;
+    f2m &= f0;
+    {
+      register s32 d1 asm("r0");
+      d1 = DISPLAY;
+      asm("" : "+r"(d1));
+      z3 = 0;
+      asm("" : "+r"(z3));
+      f2m |= d1;
+    }
+    f2m |= FLIPABLE;
+    f2m |= z3;
+    (p->s).flags = f2m;
+    {
+      u8 on = (q->flags >> 4) & 1;
+      if (on) {
+        f2m |= X_FLIP;
+      } else {
+        f2m &= 0xEF;
+      }
+      (p->s).flags = f2m;
+      ((p->s).spr).xflip = on;
+      {
+        u8* a = (u8*)p + 0x4a;
+        register s32 sh asm("r1");
+        register u8 b2 asm("r2");
+        s32 msk2;
+        sh = on << 4;
+        b2 = *a;
+        msk2 = -0x11;
+        msk2 &= b2;
+        msk2 |= sh;
+        *a = msk2;
+      }
+    }
+  }
+  gBlendRegBuffer.bldclt = 0x3F44;
+  gBlendRegBuffer.bldalpha = 0x1008;
+  gWindowRegBuffer.dispcnt |= 0x4000;
+  gWindowRegBuffer.winin[1] = 0xFF;
+  gWindowRegBuffer.winin[2] &= 0xFB;
+  {
+    s32 v;
+    if ((p->s).flags & X_FLIP) {
+      (p->s).coord.x += 0x1E00;
+      v = -2;
+    } else {
+      (p->s).coord.x += -0x1E00;
+      v = 2;
+    }
+    (p->s).d.x = v;
+  }
+  (p->s).coord.y += -0x2600;
+  (p->s).work[2] = 0xB4;
+  (p->s).work[3] = 0;
+  *(u16*)((u8*)p + 0xc0) = PlaySound(0x44);
+  FUN_080aada0(&p->s, 0);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  Projectile32_Update(p);
+}
+
+INCASM("asm/projectile/unk_32_p4_p2_s1_b.inc");
+
 void FUN_080ab724(struct Projectile* p) {
   gVideoRegBuffer.dispcnt &= ~(DISPCNT_WIN0_ON | DISPCNT_BG2_ON);
   gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN1_ON;
