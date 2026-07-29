@@ -406,7 +406,76 @@ void FUN_0809eadc(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/blazin_pre_p3.inc");
+void FUN_0809eae8(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 dx0;
+      SetMotion(&p->s, 0xA302);
+      dx0 = (p->s).unk_coord.x;
+      (p->s).work[2] = 0x36;
+      (p->s).d.x = (dx0 - (p->s).coord.x) / 0x36;
+      {
+        s32 k = 0x16C80;
+        k -= (p->s).unk_coord.y - (p->s).coord.y;
+        (p->s).d.y = -(k / 0x36);
+      }
+      (p->s).work[2] = 0x35;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      (p->s).d.y += 0x40;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        goto incmode;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        s32 z3 = 0;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+        incmode:
+          (p->s).mode[2]++;
+          break;
+        }
+        if ((p->body).status & 4) {
+          (p->body).status = z3;
+          (p->body).prevStatus = z3;
+          (p->body).invincibleTime = z3;
+          (p->s).flags &= ~COLLIDABLE;
+          goto setdie;
+        }
+        {
+          u16 a = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+          if (a == 0) {
+            break;
+          }
+          if (a & 0x8000) {
+            break;
+          }
+          CreateSmoke(2, &(p->s).coord);
+          goto setdie;
+        }
+      }
+    case 2:
+      SetMotion(&p->s, 0xA303);
+      SetDDP(&p->body, &sCollisions[5]);
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    setdie:
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      break;
+  }
+}
+
 
 void FUN_0809ec18(struct Projectile* p) {
   (p->s).mode[1] = 1;
