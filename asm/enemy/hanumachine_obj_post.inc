@@ -4,51 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080869a0
-FUN_080869a0: @ 0x080869A0
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r1, [r4, #0xe]
-	cmp r1, #0
-	bne _080869B2
-	ldr r0, _080869F0 @ =0xFFFFFD00
-	str r0, [r4, #0x60]
-	adds r0, r1, #1
-	strb r0, [r4, #0xe]
-_080869B2:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-	ldr r0, [r4, #0x58]
-	ldr r1, [r4, #0x60]
-	adds r0, r0, r1
-	str r0, [r4, #0x58]
-	adds r1, #0x40
-	str r1, [r4, #0x60]
-	adds r1, r4, #0
-	adds r1, #0x50
-	ldrh r0, [r1]
-	cmp r0, #0xff
-	bhi _080869DA
-	adds r0, #0x10
-	strh r0, [r1]
-	adds r1, #2
-	ldrh r0, [r1]
-	adds r0, #0x10
-	strh r0, [r1]
-_080869DA:
-	ldr r0, [r4, #0x60]
-	cmp r0, #0
-	ble _080869E8
-	movs r1, #0
-	movs r0, #6
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_080869E8:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080869F0: .4byte 0xFFFFFD00
 
 	thumb_func_start FUN_080869f4
 FUN_080869f4: @ 0x080869F4
@@ -411,4 +366,3 @@ _08086DC6:
 	pop {r4}
 	pop {r0}
 	bx r0
-

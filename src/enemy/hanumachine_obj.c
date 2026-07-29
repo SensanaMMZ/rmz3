@@ -104,6 +104,24 @@ void FUN_0808693c(struct Enemy* p) {
   }
 }
 
+void FUN_080869a0(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    (p->s).d.y = -0x300;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if (((p->s).spr).mag.x <= 0xFF) {
+    ((p->s).spr).mag.x += 0x10;
+    ((p->s).spr).mag.y += 0x10;
+  }
+  if ((p->s).d.y > 0) {
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+  }
+}
+
 INCASM("asm/enemy/hanumachine_obj_post.inc");
 
 void FUN_08086dcc(struct Enemy* p) {
