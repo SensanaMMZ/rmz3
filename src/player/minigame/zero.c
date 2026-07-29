@@ -191,7 +191,47 @@ bool8 FUN_08036848(struct Zero* z) {
   return TRUE;
 }
 
-INCASM("asm/player/zero_minigame_p2_p1.inc");
+// 0x08036870
+void FUN_08036870(struct Zero* z) {
+  switch ((z->s).mode[2]) {
+    case 0:
+      SetMotion(&z->s, 0);
+      (z->s).work[2] = 10;
+      (z->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&z->s);
+      if ((z->s).motion.state == 3) {
+        goto reset;
+      }
+      if ((z->s).work[2] == 0) {
+        goto advance;
+      }
+      if ((u8)--(z->s).work[2] != 0) {
+        break;
+      }
+      goto advance;
+    case 2:
+      UpdateMotionGraphic(&z->s);
+      if ((z->s).motion.state != 3) {
+        break;
+      }
+    reset:
+      (z->s).work[2] = 10;
+    advance:
+      (z->s).mode[2]++;
+      break;
+    case 3:
+      UpdateMotionGraphic(&z->s);
+      if ((z->s).work[2] != 0) {
+        if ((u8)--(z->s).work[2] != 0) {
+          break;
+        }
+      }
+      (z->s).mode[1] = 1, (z->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_08036904(struct Zero* z) {
   if ((z->s).mode[2] == 1 && *(s8*)((u8*)z + 0x71) > 2 && (gJoypad[0].pressed & B_BUTTON) &&
