@@ -352,6 +352,56 @@ void deathtanzPreAI(struct Boss* p) {
 
 INCASM("asm/boss/deathtanz_c.inc");
 
+void FUN_080a08e0(struct Entity* e, s32 x, s32 y, u8 a3);
+
+void deathtanzMode7(struct Boss* p) {
+  s32 md = (p->s).mode[2];
+  switch (md) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[28]);
+      ((p->props).deathtanz).unk_be = md;
+      SetMotion(&p->s, MOTION(0xA7, 0x23));
+      (p->s).work[2] = md;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((s8)(p->s).motion.cmdIdx == 3 && (p->s).work[2] == 0) {
+        s32 cx;
+        register s32 off asm("r0");
+        (p->s).work[2] = 1;
+        ((p->props).deathtanz).unk_c1 &= ~1;
+        PlaySound(0x5D);
+        cx = (p->s).coord.x;
+        if ((p->s).flags & 0x10) {
+          off = 0x2400;
+        } else {
+          off = -0x2400;
+        }
+        FUN_080a08e0(&p->s, cx + off, (p->s).coord.y - 0x3700, ((p->s).flags >> 4) & 1);
+        SetDDP(&p->body, &sCollisions[32]);
+      }
+      if (((p->props).deathtanz).unk_be != 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      ((p->props).deathtanz).unk_c1 |= 1;
+      SetMotion(&p->s, MOTION(0xA7, 0x25));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/deathtanz_c2.inc");
+
 // --------------------------------------------
 
 // 0x083627dc
