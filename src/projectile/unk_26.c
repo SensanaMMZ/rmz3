@@ -84,7 +84,23 @@ void FUN_080a8fa8(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_26_post_b.inc");
+void FUN_080a8ff0(struct Projectile* p) {
+  s32 t;
+  s32 z;
+  t = (p->s).work[2] + 1;
+  z = 0;
+  (p->s).work[2] = t;
+  if ((u8)t == 0x24) {
+    (p->body).status = z;
+    (p->body).prevStatus = z;
+    (p->body).invincibleTime = z;
+    (p->s).flags &= ~COLLIDABLE;
+  }
+  if ((p->s).motion.state == 4) {
+    (p->s).flags &= ~DISPLAY;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void Projectile26_Init(struct Projectile* p);
 void Projectile26_Die(struct Projectile* p);
