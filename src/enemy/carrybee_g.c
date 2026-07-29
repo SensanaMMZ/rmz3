@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
 #include "overworld_terrain.h"
 
 void CarrybeeG_Init(struct Enemy* p);
@@ -161,7 +162,66 @@ INCASM("asm/enemy/carrybee_g_p3.inc");
 
 bool8 FUN_0808b418(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/carrybee_g_p4_p1.inc");
+static const struct Collision sCollisions[9];
+
+void FUN_0808b41c(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  if (q->mode[0] > 2) {
+    EXIT_BODY(p);
+    (p->s).flags &= ~DISPLAY;
+    goto tail;
+  } else if (FLAG(gCurStory.s.gameflags, 38)) {
+    (p->s).flags &= ~DISPLAY;
+    EXIT_BODY(p);
+  tail:
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    (p->s).work[1] = 1;
+    CarrybeeG_Die(p);
+  } else {
+    s32 md = (p->s).mode[2];
+    switch (md) {
+      case 0:
+        (p->s).flags2 |= 0x10;
+        (p->s).invincibleID = q->uniqueID;
+        SetMotion(&p->s, MOTION(0x6E, 0x06));
+        SetDDP(&p->body, sCollisions);
+        (p->s).work[2] = md;
+        (p->s).mode[2]++;
+        /* fallthrough */
+      case 1: {
+        struct Entity* q2 = (p->s).unk_28;
+        s32 qy = q2->coord.y;
+        (p->s).coord.x = q2->coord.x;
+        (p->s).coord.y = qy;
+      }
+        UpdateMotionGraphic(&p->s);
+        if ((p->s).unk_28->mode[0] > 1) {
+          (p->s).mode[2]++;
+        }
+        return;
+      case 2: {
+        s32 t;
+        s32 qx = q->coord.x;
+        s32 qy = q->coord.y;
+        (p->s).coord.x = qx;
+        (p->s).coord.y = qy;
+        t = (p->s).work[2] + 1;
+        (p->s).work[2] = t;
+        t &= 0xFF;
+        if (t & 1) {
+          (p->s).flags |= DISPLAY;
+        } else {
+          (p->s).flags &= ~DISPLAY;
+        }
+        (p->s).flags &= ~DISPLAY;
+        UpdateMotionGraphic(&p->s);
+        return;
+      }
+      default:
+        return;
+    }
+  }
+}
 
 void nop_0808b534(struct Enemy* p) {}
 
