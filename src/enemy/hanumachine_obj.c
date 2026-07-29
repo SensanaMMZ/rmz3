@@ -124,6 +124,50 @@ void FUN_080869a0(struct Enemy* p) {
 
 INCASM("asm/enemy/hanumachine_obj_post.inc");
 
+void FUN_08086cbc(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, MOTION(0x6a, 0x03));
+    ((p->s).spr).oam.priority = 2;
+    SetDDP(&p->body, &sCollisions[2]);
+    {
+      u8 sh = (p->s).flags >> 4;
+      u8 on = 1;
+      on &= ~sh;
+      SET_XFLIP(p, on);
+    }
+    {
+      register s32 v asm("r0");
+      if ((p->s).flags & X_FLIP) {
+        v = 0x180;
+      } else {
+        v = -0x180;
+      }
+      (p->s).d.x = v;
+    }
+    (p->s).d.y = -0x300;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (FUN_080098a4((p->s).coord.x + (p->s).d.x, (p->s).coord.y) != 0) {
+    (p->s).d.x = -(p->s).d.x;
+    {
+      u8 sh = (p->s).flags >> 4;
+      u8 on = 1;
+      on &= ~sh;
+      SET_XFLIP(p, on);
+    }
+  }
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
+
+
 void FUN_08086dcc(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
     InitNonAffineMotion(&p->s);
