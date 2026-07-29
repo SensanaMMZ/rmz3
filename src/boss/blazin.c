@@ -774,7 +774,33 @@ bool8 blazin_0803fed8(struct Boss* p) {
   return TRUE;
 }
 
-INCASM("asm/boss/blazin_p12_p1_b.inc");
+// 0x0803ff28
+void FUN_0803ff28(struct Body* body, struct Coord* c, struct Coord* c2 UNUSED) {
+  register const struct Collision* pr asm("r2") = (body->enemy)->processing;
+  u8 k = pr->atkType;
+  if (k == 3 || k == 0xE || k == 0xF) {
+    struct Boss* q = (struct Boss*)body->parent;
+    if (((q->body).status & BODY_STATUS_DEAD) || (q->body).hp == 0) {
+      if (!(gStageRun.missionStatus & MISSION_FAIL)) {
+        if ((q->s).coord.x < c->x) {
+          (q->s).work[1] = 0xFF;
+        } else {
+          (q->s).work[1] = 0xFE;
+        }
+      }
+    }
+  }
+  {
+    const struct Collision* pr2 = (body->enemy)->processing;
+    if ((body->processing)->kind != 2 && (body->processing)->layer != -1 &&
+        (*(u32*)&pr2->atkType & 0x200FF) == 0x20002) {
+      struct Boss* q = (struct Boss*)body->parent;
+      if ((q->s).mode[1] != 0xB && (q->s).mode[1] != 5) {
+        (q->s).mode[1] = 0xB, (q->s).mode[2] = 0;
+      }
+    }
+  }
+}
 
 struct Enemy* FUN_0809c430(struct Entity* e, struct Coord* c);
 
