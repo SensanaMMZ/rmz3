@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
+#include "syssav.h"
 
 static const struct Collision sCollisions[3];
 
@@ -35,7 +37,66 @@ struct Enemy* CreateMothjiro(struct Coord* c, u8 r1) {
   return p;
 }
 
-INCASM("asm/enemy/mothjiro_p1_a.inc");
+static const struct Collision sCollisions[3];
+void FUN_08088b0c(struct Body* body, struct Coord* c);
+
+// 0x08087bfc -- parked (dead-zero basin): retail ORs a zero register into
+// the init flags (orrs r2, r3 with r3=0) and copies the DISPLAY constant
+// before the first or; agbcc folds both in every arrangement (8 insns
+// short). Mod-flag easy-HP branch, waypoint seeds, and double body.fn
+// store fully decoded.
+NON_MATCH void Mothjiro_Init(struct Enemy* p) {
+#if MODERN
+  u8 z2;
+  u8 f;
+  s32 z = 0;
+  InitNonAffineMotion(&p->s);
+  f = (p->s).flags;
+  f = DISPLAY | f;
+  f |= FLIPABLE;
+  f |= z;
+  (p->s).flags = f;
+  if (gSystemSavedataManager.mods[14] & 0x10) {
+    z2 = gCurStory.s.gameflags[0] & 0x40;
+    if (z2 == 0) {
+      f |= COLLIDABLE;
+      (p->s).flags = f;
+      InitBody(&p->body, &sCollisions[1], &(p->s).coord, 10);
+      goto after;
+    }
+  }
+  z2 = 0;
+  (p->s).flags |= COLLIDABLE;
+  InitBody(&p->body, &sCollisions[1], &(p->s).coord, 6);
+after:
+  (p->body).parent = (struct CollidableEntity*)p;
+  (p->body).fn = (void*)(u32)z2;
+  (p->body).fn = (void*)FUN_08088b0c;
+  (p->s).unk_coord.x = (p->s).coord.x;
+  (p->s).unk_coord.y = (p->s).coord.y;
+  {
+    s32 x = (p->s).coord.x;
+    s32 y = (p->s).coord.y;
+    (p->s).d.x = x;
+    (p->s).d.y = y;
+  }
+  *(s32*)((u8*)p + 0xc0) = 0;
+  *(s32*)((u8*)p + 0xb8) = (p->s).coord.x - 0x4000;
+  *(s32*)((u8*)p + 0xbc) = (p->s).coord.y - 0x5000;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 0;
+  (p->s).mode[2] = 0;
+  (p->s).mode[3] = 0;
+  if (IsFrozen(&p->s)) {
+    SetMotion(&p->s, MOTION(0x6B, 0x00));
+    UpdateMotionGraphic(&p->s);
+  }
+  (p->s).work[1] = 0;
+  Mothjiro_Update(p);
+#else
+  INCCODE("asm/enemy/mothjiro_init.inc");
+#endif
+}
 
 extern const EnemyFunc sUpdates1[7];
 extern const EnemyFunc sUpdates2[7];

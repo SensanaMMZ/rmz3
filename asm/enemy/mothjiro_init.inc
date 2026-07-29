@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-	thumb_func_start Mothjiro_Init
-Mothjiro_Init: @ 0x08087BFC
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	bl InitNonAffineMotion
