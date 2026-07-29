@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "physics.h"
 #include "story.h"
 
 static const EnemyFunc sDeads[4];
@@ -32,6 +33,75 @@ void FUN_0808d10c(struct Entity* e) {
     (p->s).work[0] = 9;
     (p->s).unk_28 = e;
   }
+}
+
+// Wall probe: shifts by dx, takes three pushouts at y/-0xF00/-0x1E00,
+// sorts them (descending left-arm, ascending right-arm) and applies the
+// extreme. Retail keeps the sort index i in r0 (disjoint from the pj
+// walker) while agbcc coalesces i into the pi register (allocation tie;
+// pins/barriers shift but never split them).
+NON_MATCH s32 FUN_0808d160(struct Enemy* p, s32 dx) {
+#if MODERN
+  s32 r[3];
+  s32 i;
+  (p->s).coord.x += dx;
+  if (dx < 0) {
+    r[0] = PushoutToRight1((p->s).coord.x - 0x1200, (p->s).coord.y);
+    r[1] = PushoutToRight1((p->s).coord.x - 0x1200, (p->s).coord.y - 0xF00);
+    r[2] = PushoutToRight1((p->s).coord.x - 0x1200, (p->s).coord.y - 0x1E00);
+    i = 0;
+    while (i <= 1) {
+      s32 j0 = i + 1;
+      s32 j = j0;
+      if (j0 <= 2) {
+        s32* pi = &r[i];
+        s32* pj = &r[j0];
+        for (; j <= 2; j++, pj++) {
+          s32 a = *pi;
+          s32 b = *pj;
+          if (a < b) {
+            *pi = b;
+            *pj = a;
+          }
+        }
+      }
+      i = j0;
+    }
+    if (r[0] > 0) {
+      (p->s).coord.x += r[0];
+      return 1;
+    }
+  } else {
+    r[0] = PushoutToLeft1((p->s).coord.x + 0x1200, (p->s).coord.y);
+    r[1] = PushoutToLeft1((p->s).coord.x + 0x1200, (p->s).coord.y - 0xF00);
+    r[2] = PushoutToLeft1((p->s).coord.x + 0x1200, (p->s).coord.y - 0x1E00);
+    i = 0;
+    while (i <= 1) {
+      s32 j0 = i + 1;
+      s32 j = j0;
+      if (j0 <= 2) {
+        s32* pi = &r[i];
+        s32* pj = &r[j0];
+        for (; j <= 2; j++, pj++) {
+          s32 a = *pi;
+          s32 b = *pj;
+          if (a > b) {
+            *pi = b;
+            *pj = a;
+          }
+        }
+      }
+      i = j0;
+    }
+    if (r[0] < 0) {
+      (p->s).coord.x += r[0];
+      return 2;
+    }
+  }
+  return 0;
+#else
+  INCCODE("asm/enemy/deathlock_d160.inc");
+#endif
 }
 
 INCASM("asm/enemy/deathlock_pre_p1_p3.inc");
