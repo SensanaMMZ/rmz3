@@ -4,47 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0805f870
-FUN_0805f870: @ 0x0805F870
-	push {r4, r5, lr}
-	adds r5, r0, #0
-	ldr r1, _0805F89C @ =gStageRun+232
-	ldr r0, [r5, #0x58]
-	movs r2, #0xa0
-	lsls r2, r2, #7
-	adds r0, r0, r2
-	ldr r1, [r1, #0x3c]
-	subs r1, r1, r0
-	ldr r0, _0805F8A0 @ =0xFFFFD000
-	cmp r1, r0
-	bge _0805F8A4
-	movs r4, #0
-	movs r0, #3
-	strb r0, [r5, #0xf]
-	adds r0, r5, #0
-	movs r1, #0xa
-	bl FUN_080607a0
-	strb r4, [r5, #0x12]
-	b _0805F8B8
-	.align 2, 0
-_0805F89C: .4byte gStageRun+232
-_0805F8A0: .4byte 0xFFFFD000
-_0805F8A4:
-	ldr r0, _0805F8C0 @ =0xFFFFE000
-	cmp r1, r0
-	ble _0805F8B8
-	movs r0, #5
-	strh r0, [r5, #0xe]
-	movs r0, #0
-	str r0, [r5, #0x2c]
-	adds r0, r5, #0
-	bl FUN_0805f934
-_0805F8B8:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0805F8C0: .4byte 0xFFFFE000
 
 	thumb_func_start FUN_0805f8c4
 FUN_0805f8c4: @ 0x0805F8C4

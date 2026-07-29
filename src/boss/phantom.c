@@ -456,6 +456,24 @@ void FUN_0805f85c(struct Boss* p) {
   }
 }
 
+void FUN_0805f934(struct Boss* p);
+
+void FUN_0805f870(struct Boss* p) {
+  struct Camera* cam = &gStageRun.vm.camera;
+  s32 t = (p->s).coord.y + 0x5000;
+  s32 d = cam->viewport.y - t;
+  if (d < -0x3000) {
+    s32 z = 0;
+    (p->s).mode[3] = 3;
+    FUN_080607a0(p, 0xA);
+    (p->s).work[2] = z;
+  } else if (d > -0x2000) {
+    *((u16*)&(p->s).mode[2]) = 5;
+    (p->s).unk_2c = NULL;
+    FUN_0805f934(p);
+  }
+}
+
 INCASM("asm/boss/phantom_p1_post_p2_p2_p2.inc");
 
 void nop_0805f930(struct Boss* p) {}
