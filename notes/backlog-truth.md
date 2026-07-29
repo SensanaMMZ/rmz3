@@ -2271,3 +2271,10 @@ reg and compares reg-reg; agbcc folds to cmp #imm): house-precedented fix is
 childre.c/math.c already pin regs, so this is in-style. Init placement
 follows source order, so assign `one` exactly where retail materializes it.
 Candidate for the regmove/0x64xx blizzack-family parks.
+
+## register-pin cracks the reg-swap basin too (flopper pair)
+The r4/r5 and r2/r3 register-number swaps (shelluno, locomo-intro parks) are
+fixable the same way as the constant-reg ties: pin the minority variable
+(`register const s16* tbl asm("r4")`, `register s32 t asm("r2")`) and let
+the allocator place the rest. Flopper float pair matched with tbl+t pinned.
+RETRY: shelluno_a3ec, locomo intro r0/r1, leviathan_aa10 trunc reg.
