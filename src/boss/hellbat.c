@@ -881,7 +881,34 @@ bool8 hellbat_0804cbe4(struct Boss* p) {
   return TRUE;
 }
 
-INCASM("asm/boss/hellbat_p9_b.inc");
+// 0x0804cc38
+void hellbat_0804cc38(struct Body* body) {
+  register const struct Collision* pr asm("r2") = (body->enemy)->processing;
+  u8 k = pr->atkType;
+  if (k == 3 || k == 0xE || k == 0xF) {
+    struct Boss* q = (struct Boss*)body->parent;
+    struct Entity* w = (struct Entity*)(body->enemy)->parent;
+    if (((q->body).status & BODY_STATUS_DEAD) || (q->body).hp == 0) {
+      if (!(gStageRun.missionStatus & MISSION_FAIL)) {
+        if (w->d.x < 0) {
+          (q->s).work[1] = 0xFF;
+        } else {
+          (q->s).work[1] = 0xFE;
+        }
+      }
+    }
+  }
+  {
+    const struct Collision* pr2 = (body->enemy)->processing;
+    if ((body->processing)->kind != 2 && (body->processing)->layer != -1 &&
+        (*(u32*)&pr2->atkType & 0x200FF) == 0x20002) {
+      struct Boss* q = (struct Boss*)body->parent;
+      if ((q->s).mode[1] != 0xB) {
+        (q->s).mode[1] = 0xB, (q->s).mode[2] = 0;
+      }
+    }
+  }
+}
 
 extern const u16 u16_ARRAY_080feedc[6];
 
