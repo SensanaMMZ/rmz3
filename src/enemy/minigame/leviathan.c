@@ -44,7 +44,33 @@ void FUN_08099fb8(struct Entity* e, s32 y, u8 n, u8 w) {
   }
 }
 
-INCASM("asm/enemy/minigame_leviathan_p1_b_b.inc");
+// 0x0809a02c
+struct Enemy* FUN_0809a02c(void* parent, u8 n) {
+  struct Enemy* e = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  if (e != NULL) {
+    s32 x;
+    s32 y;
+    (e->s).taskCol = 24;
+    INIT_ENEMY_ROUTINE(e, 68);
+    (e->s).tileNum = 0;
+    (e->s).palID = 0;
+    (e->s).flags2 |= WHITE_PAINTABLE;
+    (e->s).invincibleID = (e->s).uniqueID;
+    (e->s).work[0] = 4;
+    x = 0x16800;
+    (e->s).coord.x = x;
+    y = 0x41000;
+    (e->s).coord.y = y;
+    (e->s).coord.y = FUN_08009f6c(x, y);
+    y = (e->s).coord.x;
+    y -= 0x9800;
+    y += n * 0x13000;
+    (e->s).coord.x = y;
+    (e->s).work[2] = n;
+    (e->s).unk_28 = parent;
+  }
+  return e;
+}
 
 void nop_0809a0b4(struct Enemy* p) {}
 
