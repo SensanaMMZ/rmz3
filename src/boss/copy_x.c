@@ -854,6 +854,68 @@ void copyx_08056bd0(struct Boss* p) {
 
 INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b.inc");
 
+void copyx_08057418(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xb3, 0x6));
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0;
+    {
+      s32* pb = (s32*)((u8*)p + 0xb4);
+      s32 t = (p->s).coord.x - 0xA800;
+      (p->s).d.x = (*pb - t) / 20;
+    }
+    (p->s).d.y = -0x500;
+    (p->s).work[2] = 0x14;
+  }
+  {
+    u8* xa = &((p->s).spr).xflip;
+    s32 z = 0;
+    *xa = z;
+    {
+      u8* a = (u8*)&((p->s).spr).oam + 6;
+      register u8 b asm("r1");
+      s32 msk;
+      b = *a;
+      msk = z - 0x11;
+      msk &= b;
+      *a = msk;
+    }
+  }
+  (p->s).flags &= ~X_FLIP;
+  switch ((p->s).mode[3]) {
+    case 0: {
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += 0x40;
+      if ((u8)--(p->s).work[2] == 0xFF) {
+        SetMotion(&p->s, MOTION(0xb3, 0x14));
+        (p->s).mode[3]++;
+        (p->s).work[2] = 0x14;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0xFF) {
+        (p->s).mode[3]++;
+        (p->s).work[2] = 0x30;
+      }
+      break;
+    case 2:
+      if ((u8)--(p->s).work[2] == 0xFF) {
+        (p->s).mode[3]++;
+      }
+      break;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 1;
+      }
+      break;
+  }
+}
+
 void copyx_08057520(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
     (p->s).mode[2] = 0;
