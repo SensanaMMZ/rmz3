@@ -195,6 +195,24 @@ void FUN_080113dc(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
+void FUN_08011414(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    l->scrollPower.x = 0x40;
+    l->scrollPower.y = 0x100;
+    l->unk_10 = 0;
+    l->phase++;
+  }
+  if ((l->viewportCenterPixel).x <= 0x1C1F) {
+    l->scroll.x = 0x12FC;
+  } else {
+    l->scroll.x = 0x15CC;
+  }
+  l->unk_10++;
+  if (l->unk_10 == 0x30) {
+    l->unk_10 = 0;
+  }
+}
+
 INCASM("asm/stage_gfx/frostline_ice_base_p2.inc");
 
 void icebase_080114d0(struct StageLayer* l, const struct Stage* stage) {
