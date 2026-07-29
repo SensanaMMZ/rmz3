@@ -4,59 +4,6 @@
 
 	.text
 
-	thumb_func_start blazin_0803ffdc
-blazin_0803ffdc: @ 0x0803FFDC
-	push {r4, lr}
-	sub sp, #0x10
-	adds r4, r0, #0
-	lsls r1, r1, #0x18
-	lsrs r2, r1, #0x18
-	ldr r0, [r4, #0x54]
-	str r0, [sp]
-	ldr r0, [r4, #0x58]
-	ldr r1, _08040008 @ =0xFFFFD800
-	adds r0, r0, r1
-	str r0, [sp, #4]
-	ldrb r1, [r4, #0xa]
-	movs r0, #0x10
-	ands r0, r1
-	cmp r0, #0
-	bne _08040010
-	ldr r0, _0804000C @ =0x080FEE20
-	lsls r1, r2, #2
-	adds r1, r1, r0
-	ldr r0, [r1]
-	rsbs r0, r0, #0
-	b _08040018
-	.align 2, 0
-_08040008: .4byte 0xFFFFD800
-_0804000C: .4byte 0x080FEE20
-_08040010:
-	ldr r0, _08040040 @ =0x080FEE20
-	lsls r1, r2, #2
-	adds r1, r1, r0
-	ldr r0, [r1]
-_08040018:
-	str r0, [sp, #8]
-	ldr r0, [r4, #0x54]
-	ldr r1, [r4, #0x58]
-	bl FUN_08009f6c
-	add r2, sp, #8
-	str r0, [r2, #4]
-	ldr r1, [sp]
-	ldr r0, [sp, #8]
-	adds r0, r0, r1
-	str r0, [sp, #8]
-	adds r0, r4, #0
-	mov r1, sp
-	bl FUN_0809e55c
-	movs r0, #1
-	add sp, #0x10
-	pop {r4}
-	pop {r1}
-	bx r1
-	.align 2, 0
-_08040040: .4byte 0x080FEE20
 
 	thumb_func_start blazin_08040044
 blazin_08040044: @ 0x08040044
@@ -368,4 +315,3 @@ _08040294: .4byte gSineTable
 _08040298: .4byte 0x080FEE2C
 _0804029C: .4byte 0xFFFFE400
 _080402A0: .4byte pZero2
-

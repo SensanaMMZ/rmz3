@@ -812,6 +812,31 @@ bool8 FUN_0803ffc0(struct Boss* p) {
   return TRUE;
 }
 
+extern const s32 s32_ARRAY_080fee20[3];
+struct Projectile* FUN_0809e55c(struct Entity* e, struct Coord* c, struct Coord* c2);
+
+bool8 blazin_0803ffdc(struct Boss* p, u8 i) {
+  struct Coord c[2];
+  c[0].x = (p->s).coord.x;
+  c[0].y = (p->s).coord.y - 0x2800;
+  if (((p->s).flags & 0x10) == 0) {
+    c[1].x = -s32_ARRAY_080fee20[i];
+  } else {
+    c[1].x = s32_ARRAY_080fee20[i];
+  }
+  {
+    s32 gy = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    struct Coord* c2 = &c[1];
+    c2->y = gy;
+    {
+      s32 t0 = c[0].x;
+      c[1].x += t0;
+    }
+    FUN_0809e55c(&p->s, &c[0], c2);
+  }
+  return 1;
+}
+
 INCASM("asm/boss/blazin_p12_p2_p1.inc");
 
 struct Projectile* blazin_0809e620(struct Entity* e, struct Coord* c, struct Coord* d);
