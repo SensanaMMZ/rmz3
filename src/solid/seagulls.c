@@ -1,3 +1,4 @@
+#include "stagerun.h"
 #include "entity.h"
 #include "global.h"
 #include "mod.h"
@@ -117,6 +118,69 @@ void FUN_080dcd20(struct Solid* p) {
   (p->s).unk_2c = (void*)CreateSeagulls(p, 1, 0);
   ((struct Seagulls*)p)->unk_b4_x = (p->s).coord.x;
   (p->s).work[2] = 0, (p->s).work[3] = 0;
+  Seagulls_Update(p);
+}
+
+void FUN_080dcdac(struct Solid* p) {
+  s32* pb4;
+  u8* a;
+  u8 fl;
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    f0 = (p->s).flags;
+    d0 = DISPLAY;
+    d0 |= f0;
+    {
+      register s32 c2 asm("r1");
+      c2 = FLIPABLE;
+      d0 |= c2;
+    }
+    (p->s).flags = d0;
+  }
+  SetMotion(&p->s, 0xDA00);
+  {
+    u8* pr = (u8*)p + 0x49;
+    *pr |= 0xC;
+  }
+  (p->s).taskCol = 0x1D;
+  pb4 = &((struct Seagulls*)p)->unk_b4_x;
+  *pb4 = (p->s).coord.x;
+  (p->s).flags |= X_FLIP;
+  ((p->s).spr).xflip = 1;
+  a = (u8*)p + 0x4a;
+  {
+    u32 ten = 0x10;
+    u8 b2 = *a;
+    s32 msk = -0x11;
+    msk &= b2;
+    msk |= ten;
+    *a = msk;
+    ten &= (p->s).flags;
+    fl = (u8)ten;
+  }
+  if (fl != 0) {
+    struct Camera* cam = &gStageRun.vm.camera;
+    s32* pb8;
+    s32 r;
+    (p->s).coord.x = cam->viewport.x - 0x8800;
+    pb8 = (s32*)(a + 0x6e);
+    r = ((RANDOM(RNG_0202f388) & 0x3F) << 8) + 0x2000;
+    *pb8 = *pb4 + r;
+    (p->s).d.x = 0;
+  } else {
+    struct Camera* cam = &gStageRun.vm.camera;
+    s32* pb8;
+    s32 r;
+    (p->s).coord.x = cam->viewport.x + 0x87FF;
+    pb8 = (s32*)((u8*)p + 0xb8);
+    r = ((RANDOM(RNG_0202f388) & 0x3F) << 8) + 0x2000;
+    *pb8 = *pb4 - r;
+    (p->s).d.x = fl;
+  }
+  (p->s).work[2] = 0;
   Seagulls_Update(p);
 }
 
