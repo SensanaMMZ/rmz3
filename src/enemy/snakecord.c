@@ -257,6 +257,48 @@ void FUN_0807472c(struct Enemy* p) {
 
 INCASM("asm/enemy/snakecord_p2_a.inc");
 
+static const u8 u8_ARRAY_08366fec[13];
+
+void FUN_08074bac(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      InitNonAffineMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x28, 0x0C));
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 v6;
+      u8 on;
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+      }
+      v6 = (p->s).coord.x - (pZero2->s).coord.x;
+      if ((u32)(v6 + 0x3000) <= 0x5FFF) {
+        if ((p->s).work[2] == 0) {
+          (p->s).mode[1] = 6;
+          (p->s).mode[2] = 0;
+        }
+      }
+      on = (u32)v6 >> 31;
+      SET_XFLIP(p, on);
+      if ((u32)(v6 + 0x1000) > 0x2000) {
+        FUN_08073ea8(&p->s, on * 3 * 128 - 0xC0);
+        v6 = FUN_0800a05c((p->s).coord.x, (p->s).coord.y);
+        if (v6 - (p->s).coord.y > 0x400) {
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = 0;
+        } else {
+          (p->s).coord.y = v6;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08366fec[(s8)(p->s).motion.cmdIdx]]);
+      break;
+    }
+  }
+}
+
 void FUN_08074cb4(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0:
