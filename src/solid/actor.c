@@ -1260,6 +1260,20 @@ void initActor23(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p2_a.inc");
 
+void Actor24_Update(struct Solid* p) {
+  if ((p->s).mode[1] == 0) {
+    struct Coord* c = (struct Coord*)(p->s).unk_28;
+    LOAD_STATIC_GRAPHIC(SM211_MENU_CURSOR_BORDER);
+    SetMotion(&p->s, MOTION(SM211_MENU_CURSOR_BORDER, 0x01));
+    (p->s).coord.x = c->x;
+    (p->s).coord.y = c->y;
+    (p->s).mode[1]++;
+  }
+  UpdateMotionGraphic(&p->s);
+}
+
+INCASM("asm/solid/actor_p1_p2_a2.inc");
+
 // 0x080d38a4
 void initActor28(struct Solid* p) {
   gWindowRegBuffer.dispcnt |= 0x4000;
