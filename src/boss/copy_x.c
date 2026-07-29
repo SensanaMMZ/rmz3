@@ -2,6 +2,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "mission.h"
 #include "motion.h"
 #include "overworld.h"
 #include "zero.h"
@@ -665,6 +666,33 @@ void copyxNovaStrike2(struct Boss* p) {
 INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a.inc");
 
 extern const u8 u8_ARRAY_080fefb0[4];
+
+// 0x08056338
+void copyxMode17(struct Boss* p) {
+  u8 arr[4];
+  memcpy(arr, u8_ARRAY_080fefb0, 4);
+  if ((p->s).mode[2] != 0) {
+    if (*((u8*)p + 0xc5) == 0 && (gMission.unk_00)->rank > 4 && *((u8*)p + 0xc6) != 0) {
+      (p->s).mode[1] = 0x25;
+      copyx_08057094(p);
+      return;
+    }
+    SetMotion(&p->s, MOTION(0xB3, 0x01));
+    (p->s).mode[2] = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 0x12;
+    (p->s).mode[2] = 1;
+    if (*((u8*)p + 0xc6) != 0) {
+      (p->s).work[3] = 1;
+    } else {
+      (p->s).work[3] = arr[*((u8*)p + 0xc5)];
+    }
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a2.inc");
 extern const u8 u8_ARRAY_080fefb4[4];
 
 void copyx_080566b0(struct Boss* p) {
