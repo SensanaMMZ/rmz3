@@ -1,4 +1,5 @@
 #include "global.h"
+#include "metatile.h"
 #include "story.h"
 #include "vfx.h"
 
@@ -102,6 +103,45 @@ void FUN_080bba18(struct VFX* p) {
 }
 
 INCASM("asm/vfx/unk_33_post_b.inc");
+
+void FUN_080bbbd4(struct VFX* vfx);
+static const motion_t sMotions[3];
+
+void FUN_080bbbd4(struct VFX* vfx) {
+  s32 md = (vfx->s).mode[2];
+  switch (md) {
+    case 0: {
+      s32 k4;
+      InitRotatableMotion(&vfx->s);
+      (vfx->s).angle = RANDOM(RNG_0202f388);
+      k4 = (vfx->s).work[1];
+      SetMotion(&vfx->s, sMotions[k4]);
+      (vfx->s).d.x = ((k4 - 1) << 8) + (RANDOM(RNG_0202f388) & 0x1FF) - 0x100;
+      (vfx->s).d.y = -0x200 - (RANDOM(RNG_0202f388) & 0x1FF);
+      (vfx->s).work[2] = md;
+      (vfx->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1: {
+      s32 t = (vfx->s).work[2] + 1;
+      (vfx->s).work[2] = t;
+      if (t & 1) {
+        (vfx->s).flags |= DISPLAY;
+      } else {
+        (vfx->s).flags &= ~DISPLAY;
+      }
+      (vfx->s).coord.x += (vfx->s).d.x;
+      (vfx->s).coord.y += (vfx->s).d.y;
+      (vfx->s).d.y += 0x40;
+      UpdateMotionGraphic(&vfx->s);
+      if (FUN_080098a4((vfx->s).coord.x, (vfx->s).coord.y) != 0 && (vfx->s).d.y > 0) {
+        CreateSmoke(3, &(vfx->s).coord);
+        SET_VFX_ROUTINE(vfx, ENTITY_DIE);
+      }
+      break;
+    }
+  }
+}
 
 void Ghost33_Init(struct VFX* p);
 void Ghost33_Update(struct VFX* p);
