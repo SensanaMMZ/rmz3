@@ -56,6 +56,42 @@ void Elf11_Die(struct Elf* p) {
 
 INCASM("asm/cyberelf/unk_11_p2.inc");
 
+bool8 FUN_080e586c(struct Elf* p);
+struct Elf* FUN_080e5048(s32 a0, s32 a1, u8 mode);
+
+void FUN_080e5718(struct Elf* p) {
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  if (FUN_080e586c(p) || ((p->body).status & 4)) {
+    SET_ELF_ROUTINE(p, ENTITY_DIE);
+    Elf11_Die(p);
+  } else if ((p->body).status & 0x1000) {
+    PlaySound(0x2B);
+    SET_ELF_ROUTINE(p, ENTITY_DIE);
+    Elf11_Die(p);
+  }
+}
+
+void FUN_080e5798(struct Elf* p) {
+  struct Entity* q = *(struct Entity**)&p->buffer[0];
+  u8 hit;
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  hit = FUN_080e586c(p);
+  (p->s).work[2]--;
+  if (hit == 1 || ((p->body).status & 0x1004) || (p->s).work[2] == 0) {
+    FUN_080e5048((s32)q, (s32)p, 3);
+    SET_ELF_ROUTINE(p, ENTITY_DIE);
+    Elf11_Die(p);
+  }
+}
+
+INCASM("asm/cyberelf/unk_11_p2b.inc");
+
 static const ElfFunc sInitializers[4];
 static const ElfFunc sUpdates[4];
 static const struct Collision sCollisions[15];
