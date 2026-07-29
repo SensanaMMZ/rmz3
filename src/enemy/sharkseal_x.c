@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
 #include "mod.h"
 #include "overworld_terrain.h"
 #include "story.h"
@@ -84,7 +85,49 @@ void nop_080707d4(struct Enemy* p) {}
 
 bool8 FUN_080707d8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/sharkseal_x_p3.inc");
+short forceWaterLanding(struct Entity* p);
+
+// 0x080707dc
+void sharksealxMode1(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 z;
+      SetMotion(&p->s, MOTION(0x18, 0x00));
+      if ((p->s).coord.x > (pZero2->s).coord.x) {
+        *((u8*)p + 0xbc) = m;
+      } else {
+        *((u8*)p + 0xbc) = 1;
+      }
+      SET_XFLIP(p, *((u8*)p + 0xbc));
+      z = 0;
+      SetDDP(&p->body, &sCollisions[0]);
+      *(s32*)((u8*)p + 0xb8) = z;
+      (p->s).work[2] = z;
+      (p->s).d.y = (p->s).coord.y;
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 diff;
+      (p->s).work[2] += 2;
+      (p->s).coord.y = (p->s).d.y + gSineTable[(p->s).work[2]] * 8;
+      forceWaterLanding(&p->s);
+      if (*((u8*)p + 0xbc) == 0) {
+        diff = (p->s).coord.x - (pZero2->s).coord.x;
+      } else {
+        diff = (pZero2->s).coord.x - (p->s).coord.x;
+      }
+      if (diff <= 0x7FFF) {
+        (p->s).d.y = 0;
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
 
 bool8 FUN_080708dc(struct Enemy* p) { return TRUE; }
 
