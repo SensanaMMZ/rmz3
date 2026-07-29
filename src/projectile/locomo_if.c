@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "zero.h"
 #include "projectile.h"
 #include "vfx.h"
 
@@ -74,6 +75,45 @@ void FUN_080a7dec(struct Projectile* p) {
 }
 
 INCASM("asm/projectile/locomo_if_post_p2.inc");
+
+// 0x080a8080 -- parked (allocation cascade): retail holds &pZero2 in r2
+// and reloads the 0x143 offset pool per RMW (its byte temp overwrites the
+// offset reg); agbcc caches the offset and parks &pZero2 in r5, pushing p
+// to r6. One insn shorter, several regs shuffled; pins cascade.
+NON_MATCH void FUN_080a8080(struct Projectile* p) {
+#if MODERN
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      PlaySound(0x40);
+      (p->s).work[2] = m;
+      SetDDP(&p->body, &sCollisions[2]);
+      SetMotion(&p->s, MOTION(0x58, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 one;
+      s32 t;
+      one = 1;
+      *((u8*)pZero2 + 0x143) = (*((u8*)pZero2 + 0x143) & ~0xF) | one;
+      *((u8*)pZero2 + 0x143) = *((u8*)pZero2 + 0x143) & 0xF;
+      t = (p->s).work[2] + 1;
+      (p->s).work[2] = t;
+      if (t & 1) {
+        (p->s).flags |= one;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      (p->s).coord.x = (pZero2->s).coord.x;
+      (p->s).coord.y = (pZero2->s).coord.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/projectile/locomo_8080.inc");
+#endif
+}
 
 void Projectile23_Init(struct Projectile* p);
 void Projectile23_Update(struct Projectile* p);
