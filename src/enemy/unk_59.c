@@ -115,6 +115,68 @@ void FUN_08091810(struct Enemy* p) {}
 
 INCASM("asm/enemy/unk_59_post_a.inc");
 
+static const struct Collision sCollisions[14];
+
+// 0x080918ec -- parked (copy-coalescing basin, same family as snakecord/
+// seimeran): retail loads work[2] into r0 then copies to r2 before the
+// zero test; agbcc loads r2 directly in every source form tried (u8/s32
+// temp, volatile, register pin, function scope).
+NON_MATCH void FUN_080918ec(struct Enemy* p) {
+#if MODERN
+  s32 m = (p->s).mode[2];
+  s32 t;
+  switch (m) {
+    case 0: {
+      s32 f = 0;
+      if ((p->s).unk_coord.x - (p->s).coord.x > 0) {
+        f = 1;
+      }
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).d.x = (f << 9) - 0x100;
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 x;
+      s32 tx;
+      s32 d;
+      t = (p->s).work[2];
+      if (t == 0) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+      (p->s).work[2] = t + 1;
+      if ((u8)(t + 1) == 4) {
+        (p->s).work[2] = 0;
+      }
+      x = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = x;
+      tx = (p->s).unk_coord.x;
+      d = tx - x;
+      if (d >= 0) {
+        if (d > 0xFF) {
+          break;
+        }
+      } else {
+        if (x - tx > 0xFF) {
+          break;
+        }
+      }
+      (p->s).coord.x = tx;
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/unk_59_18ec.inc");
+#endif
+}
+
+INCASM("asm/enemy/unk_59_post_a2.inc");
+
 struct VFX* CreateGhost18(struct Coord* c, u8 r1, bool8 isRight, u8 r3);
 
 // 0x080922e0
