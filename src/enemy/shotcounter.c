@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
 #include "vfx.h"
 
 bool8 shotcounter_08066da0(struct Enemy* p);
@@ -856,7 +857,84 @@ bool8 shotcounter_08066da0(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/shotcounter_p8_b.inc");
+void FUN_08066e34(struct Body* b0, struct Coord* c0) {
+  register struct Body* body asm("r2");
+  register struct Coord* c asm("r5");
+  register const struct Collision* pc asm("r3");
+  struct Body* eb;
+  body = b0;
+  c = c0;
+  eb = (struct Body*)body->enemy;
+  pc = eb->processing;
+  {
+  u8 at = pc->atkType;
+  if (at == 3 || at == 0xE || at == 0xF) {
+    register struct Enemy* p asm("r4");
+    p = (struct Enemy*)body->parent;
+    if ((p->body).status & 0x200) {
+      if ((p->s).coord.x < c->x) {
+        *((u8*)p + 0xbe) = 0xFF;
+      } else {
+        *((u8*)p + 0xbe) = 0xFE;
+      }
+      asm volatile("" :: "r"(p));
+    }
+  }
+  }
+  if ((*(u32*)&pc->atkType & 0x200FF) == 0x20002) {
+    register struct Enemy* p asm("r4");
+    p = (struct Enemy*)body->parent;
+    if ((p->s).mode[1] != 8) {
+      if (((p->body).status & 0x200) && !IsFrozen(&p->s)) {
+        (p->body).hp = 1;
+      }
+      {
+        register struct Zero* zd asm("r2");
+        register s32 dx asm("r0");
+        register s32 dy asm("r1");
+        u32 dist;
+        zd = pZero2;
+        dx = (p->s).coord.x;
+        asm("" : "+r"(dx));
+        dx -= (zd->s).coord.x;
+        (p->s).unk_coord.x = dx;
+        dy = (p->s).coord.y;
+        asm("" : "+r"(dy));
+        dy += 0x1000;
+        dy -= (zd->s).coord.y;
+        (p->s).unk_coord.y = dy;
+        dx >>= 2;
+        {
+          s32 t = dx;
+          t *= dx;
+          dx = t;
+        }
+        dy >>= 2;
+        {
+          s32 t = dy;
+          t *= dy;
+          dy = t;
+        }
+        dist = (u16)Sqrt(dx + dy) << 2;
+        if (dist != 0) {
+          (p->s).unk_coord.x = ((p->s).unk_coord.x << 8) / (s32)dist;
+          (p->s).unk_coord.y = ((p->s).unk_coord.y << 8) / (s32)dist;
+        } else {
+          if ((pZero2->s).coord.x > (p->s).coord.x) {
+            (p->s).unk_coord.x = -0x100;
+          } else {
+            (p->s).unk_coord.x = 0x100;
+          }
+          (p->s).unk_coord.y = dist;
+        }
+        (p->s).d.x = ((p->s).unk_coord.x * 7 << 8) >> 8;
+        (p->s).d.y = ((p->s).unk_coord.y * 7 << 8) >> 8;
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = 0;
+      }
+    }
+  }
+}
 
 // 0x08365D64
 static const struct Collision sCollisions[12] = {
