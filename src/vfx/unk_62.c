@@ -39,7 +39,26 @@ void VFX62_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_62_post.inc");
+void FUN_080c3574(struct VFX* p) {
+  u8 on;
+  s32 w;
+  on = (((p->s).unk_28)->flags >> 4) & 1;
+  w = (p->s).work[1];
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  SET_XFLIP(p, on);
+  if (w == 1) {
+    SET_XFLIP(p, w);
+  }
+  SetMotion(&p->s, sMotions[w]);
+  if (on != 0) {
+    w = 2 - w;
+  }
+  (p->s).d.x = ((w - 1) << 7) + (RANDOM(RNG_0202f388) & 0x1FF) - 0x100;
+  (p->s).d.y = -0x200 - (RANDOM(RNG_0202f388) & 0x1FF);
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  VFX62_Update(p);
+}
 
 // 0x080c3678
 void FUN_080c3678(struct VFX* p) {
