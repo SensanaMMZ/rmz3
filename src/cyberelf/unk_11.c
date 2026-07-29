@@ -125,7 +125,19 @@ NON_MATCH void FUN_080e5608(struct Elf* p) {
 #endif
 }
 
-INCASM("asm/cyberelf/unk_11_p2c.inc");
+bool8 FUN_080e586c(struct Elf* p);
+
+void FUN_080e56a0(struct Elf* p) {
+  (p->s).coord.x += (p->s).d.x;
+  if (FUN_080e586c(p) || ((p->body).status & BODY_STATUS_B2)) {
+    SET_ELF_ROUTINE(p, ENTITY_DIE);
+    Elf11_Die(p);
+  } else if ((p->body).status & BODY_STATUS_BLOCKED) {
+    PlaySound(0x2B);
+    SET_ELF_ROUTINE(p, ENTITY_DIE);
+    Elf11_Die(p);
+  }
+}
 
 bool8 FUN_080e586c(struct Elf* p);
 struct Elf* FUN_080e5048(s32 a0, s32 a1, u8 mode);
