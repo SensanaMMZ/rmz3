@@ -4,6 +4,9 @@
 #include "sound.h"
 #include "gpu_regs.h"
 #include "overworld.h"
+#include "system.h"
+#include "trig.h"
+#include "definition.h"
 
 #define STAGE (gOverworld.work.weilLabo)
 
@@ -267,7 +270,73 @@ static void FUN_080153cc(struct StageLayer* l, const struct Stage* _ UNUSED) {
   l->unk_10++;
 }
 
-INCASM("asm/stage_gfx/weil_labo_p1_p1.inc");
+/* Draws the layer, then builds a 0xA0-entry HDMA table at gIntrManager.reservedDma0
+   feeding BG3HOFS/BG3VOFS (0x0400001C): rows 0x00-0x0F copy the current bgofs pair,
+   rows 0x10-0x5F apply a two-sine horizontal wave + vertical offset, rows 0x60-0x9F
+   copy the pair again. Parked: register-orchestration tie - retail wants cur/n/tbl
+   spilled at sp0/sp4/sp8 with buf=r7, d2=sl, tbl=r2 reloaded around __divsi3; every
+   pin combination that fixes one home evicts another (the buf pin is silently
+   dropped once tbl/d2 are pinned). Logic verified against the asm; all remaining
+   diffs are allocation artifacts. */
+NON_MATCH void FUN_080153e8(struct StageLayer* l, const struct Stage* stage) {
+#if MODERN
+  u32 b = l->bgIdx << 16;
+  u32 cur;
+  u32 n;
+  s32 i;
+  u32* buf;
+  u32* hp;
+  u16 vofs;
+  DrawGeneralStageLayer(l, stage);
+  {
+    u32 n1 = (b >> 20) << 2;
+    hp = (u32*)((u8*)gVideoRegBuffer.bgofs + n1);
+    cur = *(u16*)hp;
+    vofs = *(u16*)((u8*)gVideoRegBuffer.bgofs + 2 + n1) + 2;
+  }
+  buf = Malloc(0xA0 * 4);
+  if (buf == NULL) {
+    return;
+  }
+  gIntrManager.reservedDma0[0] = (u32)buf;
+  gIntrManager.reservedDma0[1] = 0x0400001C;
+  gIntrManager.reservedDma0[2] = 0xA6600001;
+  n = b >> 20;
+  {
+    vu32* src = (vu32*)hp;
+    u32* d = buf;
+    for (i = 0xF; i >= 0; i--) {
+      *d++ = *src;
+    }
+  }
+  {
+    const s16* tbl = gSineTable;
+    u32 e = vofs + 0x80;
+    u32* d2 = buf + 0x10;
+    for (i = 0x10; i <= 0x5F; i++) {
+      u16 w = l->unk_10;
+      s32 acc = tbl[(u8)(w * 3)] * 3;
+      acc += tbl[(e + w * 4) & 0x7F] * 2;
+      acc >>= 8;
+      acc += 4;
+      acc += vofs;
+      acc <<= 16;
+      acc |= (cur + (s16)(tbl[(u8)(w + i * 2)] / 0x13)) & 0xFFFF;
+      *d2++ = acc;
+      e += 8;
+    }
+  }
+  {
+    vu32* src2 = (vu32*)((u8*)gVideoRegBuffer.bgofs + n * 4);
+    u32* d3 = (u32*)((u8*)buf + i * 4);
+    for (; i <= 0x9F; i++) {
+      *d3++ = *src2;
+    }
+  }
+#else
+  INCCODE("asm/stage_gfx/weil_labo_153e8.inc");
+#endif
+}
 
 void FUN_08015510(struct StageLayer* l, const struct Stage* stage) {
   if (l->phase == 0) {
