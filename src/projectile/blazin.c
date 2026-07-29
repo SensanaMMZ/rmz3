@@ -345,7 +345,61 @@ void FUN_0809e9b8(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/blazin_pre_p2.inc");
+void FUN_0809e9c4(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 z4;
+      InitScalerotMotion1(&p->s);
+      ResetDynamicMotion(&p->s);
+      *(s32*)((u8*)p + 0xbc) = 0x100;
+      ((p->s).spr).mag.x = 0x100;
+      ((p->s).spr).mag.y = *(s32*)((u8*)p + 0xbc);
+      z4 = 0;
+      SetMotion(&p->s, MOTION(0xA3, 0x01));
+      *(s32*)((u8*)p + 0xb8) = 0x400;
+      (p->s).unk_coord.x = ((p->s).d.x << 10) >> 8;
+      (p->s).unk_coord.y = ((p->s).d.y * *(s32*)((u8*)p + 0xb8)) >> 8;
+      (p->s).work[2] = 0x28;
+      (p->s).work[3] = z4;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1: {
+      s32* pb = (s32*)((u8*)p + 0xb8);
+      s32 v = *pb;
+      s32* pc2;
+      s32 w;
+      v += (-v * 10) >> 8;
+      *pb = v;
+      (p->s).unk_coord.x = ((p->s).d.x * v) >> 8;
+      (p->s).unk_coord.y = ((p->s).d.y * *pb) >> 8;
+      pc2 = (s32*)((u8*)p + 0xbc);
+      w = *pc2;
+      w += ((0x1C0 - w) * 20) >> 8;
+      *pc2 = w;
+      ((p->s).spr).mag.x = w;
+      ((p->s).spr).mag.y = *pc2;
+      if (*pc2 > 0x1A0) {
+        if ((p->s).work[3] == 0) {
+          (p->s).work[3]++;
+          SetDDP(&p->body, &sCollisions[9]);
+        }
+      }
+      (p->s).coord.x += (p->s).unk_coord.x;
+      (p->s).coord.y += (p->s).unk_coord.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      break;
+    }
+  }
+}
 
 void FUN_0809eadc(struct Projectile* p) {
   (p->s).mode[1] = 1;
