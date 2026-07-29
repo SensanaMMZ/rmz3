@@ -294,6 +294,123 @@ void FUN_08093e60(struct Enemy* p) {
 
 INCASM("asm/enemy/shotloid_post_p2_p2.inc");
 
+void FUN_08093fe0(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      *(u32*)&p->props[4] &= ~1;
+      SetMotion(&p->s, 0x8E06);
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.x = m;
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      u8 sv0;
+      u8 sv1;
+      register s32 k asm("r2");
+      register s32 tx asm("r5");
+      {
+        s32 t0 = (u8)FUN_08093a20(p);
+        asm("" : "+r"(t0));
+        k = t0;
+      }
+      tx = (pZero2->s).coord.x;
+      tx += -0x6000;
+      tx += (k * 3) << 14;
+      {
+        register s32 dt asm("r1");
+        register s32 cx asm("r0");
+        cx = (p->s).coord.x;
+        dt = tx - cx;
+        asm("" : "+r"(dt));
+        tx = dt / 32;
+      }
+      if (k != 2) {
+        if ((FUN_080939e8(p, tx) << 24) == 0) {
+          goto set1;
+        }
+      } else {
+      set1:
+        sv1 = 0;
+        sv0 = 1;
+        goto st106;
+      }
+      if ((FUN_08093a98(p, tx) << 24) != 0) {
+        goto setec;
+      }
+      {
+        s32 nd = (p->s).d.x + tx;
+        s32 fl3;
+        (p->s).d.x = nd;
+        fl3 = 0;
+        if (nd > 0x100) {
+          (p->s).d.x = nd + -0x100;
+        } else {
+          if (nd < -0x100) {
+            (p->s).d.x = nd + 0x100;
+            fl3 = 1;
+          }
+          if (fl3 == 0) {
+            goto checka64;
+          }
+        }
+      }
+      {
+        register s32 wv asm("r0");
+        register s32 c7 asm("r1");
+        wv = (p->s).work[2];
+        c7 = 7;
+        wv &= c7;
+        (p->s).work[2] = wv;
+      }
+      {
+        s32 pos = 0;
+        s32 w;
+        if (tx > 0) {
+          pos = 1;
+        }
+        if ((p->s).flags & 0x10) {
+          if (pos == 0) {
+            goto decw;
+          }
+          goto incw;
+        }
+        if (pos == 0) {
+          goto incw;
+        }
+      decw:
+        w = (p->s).work[2] - 1;
+        goto stw;
+      incw:
+        w = (p->s).work[2] + 1;
+      stw:
+        (p->s).work[2] = w;
+      }
+      GotoMotion(&p->s, 0x8E06, (p->s).work[2], 1);
+      UpdateMotionGraphic(&p->s);
+      goto checka64;
+    setec:
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+    checka64: {
+      register s32 r1v asm("r1");
+      r1v = (u8)FUN_08093a64(p, 1);
+      if (r1v != 0) {
+        break;
+      }
+      sv0 = 5;
+      sv1 = r1v;
+    }
+    st106:
+      *(volatile u8*)&(p->s).mode[1] = sv0;
+      *(volatile u8*)&(p->s).mode[2] = sv1;
+      break;
+    }
+  }
+}
+
+
 void FUN_08094110(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0: {
