@@ -4,12 +4,10 @@
 
 	.text
 
-	thumb_func_start FUN_080a9158
-FUN_080a9158: @ 0x080A9158
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	ldr r5, [r6, #0x28]
-	ldr r1, _080A91A0 @ =gProjectileFnTable
+	ldr r1, _080A9298 @ =gProjectileFnTable
 	ldrb r0, [r6, #9]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -35,18 +33,18 @@ FUN_080a9158: @ 0x080A9158
 	lsrs r2, r0, #4
 	ands r2, r4
 	cmp r2, #0
-	beq _080A91A4
+	beq _080A929C
 	ldrb r0, [r6, #0xa]
 	movs r1, #0x10
 	orrs r0, r1
-	b _080A91AA
+	b _080A92A2
 	.align 2, 0
-_080A91A0: .4byte gProjectileFnTable
-_080A91A4:
+_080A9298: .4byte gProjectileFnTable
+_080A929C:
 	ldrb r1, [r6, #0xa]
 	movs r0, #0xef
 	ands r0, r1
-_080A91AA:
+_080A92A2:
 	strb r0, [r6, #0xa]
 	adds r1, r2, #0
 	adds r0, r6, #0
@@ -65,7 +63,7 @@ _080A91AA:
 	movs r0, #0x10
 	ands r0, r1
 	cmp r0, #0
-	beq _080A91EC
+	beq _080A92E8
 	ldr r0, [r6, #0x54]
 	movs r1, #0x80
 	lsls r1, r1, #5
@@ -74,42 +72,44 @@ _080A91AA:
 	movs r0, #0xc0
 	lsls r0, r0, #2
 	str r0, [r6, #0x5c]
+	str r0, [r6, #0x60]
 	adds r1, r6, #0
 	adds r1, #0xbc
-	ldr r0, _080A91E8 @ =0x0000FFE0
-	b _080A91FE
+	ldr r0, _080A92E4 @ =0x0000FFE0
+	b _080A9300
 	.align 2, 0
-_080A91E8: .4byte 0x0000FFE0
-_080A91EC:
+_080A92E4: .4byte 0x0000FFE0
+_080A92E8:
 	ldr r0, [r6, #0x54]
-	ldr r1, _080A9240 @ =0xFFFFF000
+	ldr r1, _080A9344 @ =0xFFFFF000
 	adds r0, r0, r1
 	str r0, [r6, #0x54]
-	ldr r0, _080A9244 @ =0xFFFFFD00
+	ldr r0, _080A9348 @ =0xFFFFFD00
 	str r0, [r6, #0x5c]
+	movs r0, #0xc0
+	lsls r0, r0, #2
+	str r0, [r6, #0x60]
 	adds r1, r6, #0
 	adds r1, #0xbc
 	movs r0, #0x20
-_080A91FE:
+_080A9300:
 	strh r0, [r1]
-	adds r0, r6, #0
-	adds r0, #0xbe
-	movs r5, #0
-	strh r5, [r0]
 	ldr r0, [r6, #0x58]
-	ldr r1, _080A9248 @ =0xFFFFE800
+	ldr r1, _080A934C @ =0xFFFFEE00
 	adds r0, r0, r1
 	str r0, [r6, #0x58]
-	str r5, [r6, #0x60]
-	movs r0, #0xff
-	strb r0, [r6, #0x12]
+	adds r1, r6, #0
+	adds r1, #0xbe
+	movs r5, #0
+	ldr r0, _080A9350 @ =0x0000FFE0
+	strh r0, [r1]
 	ldrb r1, [r6, #0xa]
 	movs r0, #4
 	orrs r0, r1
 	strb r0, [r6, #0xa]
 	adds r4, r6, #0
 	adds r4, #0x74
-	ldr r1, _080A924C @ =0x0836C108
+	ldr r1, _080A9354 @ =0x0836C108
 	adds r2, r6, #0
 	adds r2, #0x54
 	adds r0, r4, #0
@@ -117,13 +117,16 @@ _080A91FE:
 	bl InitBody
 	str r6, [r4, #0x2c]
 	str r5, [r4, #0x24]
+	movs r0, #0xff
+	strb r0, [r6, #0x12]
 	adds r0, r6, #0
 	bl Projectile27_Update
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080A9240: .4byte 0xFFFFF000
-_080A9244: .4byte 0xFFFFFD00
-_080A9248: .4byte 0xFFFFE800
-_080A924C: .4byte 0x0836C108
+_080A9344: .4byte 0xFFFFF000
+_080A9348: .4byte 0xFFFFFD00
+_080A934C: .4byte 0xFFFFEE00
+_080A9350: .4byte 0x0000FFE0
+_080A9354: .4byte 0x0836C108

@@ -53,6 +53,57 @@ void Projectile27_Die(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1.inc");
 
+static const struct Collision sCollisions[10];
+
+// Spawn init for the crab mine: flip toward the parent, offset ±0x1000/-0x1200,
+// aim table halves at prevCoord.y, delayed body with NULL handler. Matches
+// except the xflip block: retail computes the flip flag into r2 then copies to
+// r1 for the store/insert; agbcc folds the copy or (with pins) adds
+// truncation - the oam-bitfield tie family (see rmz3-oam-bitfield-lever).
+NON_MATCH void FUN_080a9250(struct Projectile* p) {
+#if MODERN
+  struct Entity* q = (p->s).unk_28;
+  u8 fl;
+  s32 z;
+  s32 one = 1;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x5C, 0x00));
+  fl = (q->flags >> 4) & one;
+  SET_XFLIP(p, fl);
+  if ((p->s).flags & 0x10) {
+    (p->s).coord.x += 0x1000;
+    (p->s).d.x = 0x300;
+    (p->s).d.y = 0x300;
+    *(u16*)&(p->prevCoord).y = 0xFFE0;
+  } else {
+    (p->s).coord.x -= 0x1000;
+    (p->s).d.x = -0x300;
+    (p->s).d.y = 0x300;
+    *(u16*)&(p->prevCoord).y = 0x20;
+  }
+  (p->s).coord.y -= 0x1200;
+  z = 0;
+  *(u16*)((u8*)&(p->prevCoord).y + 2) = 0xFFE0;
+  {
+    struct Body* body;
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 0x40);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)z;
+  }
+  (p->s).work[2] = 0xFF;
+  Projectile27_Update(p);
+#else
+  INCCODE("asm/projectile/unk_27_9250.inc");
+#endif
+}
+
+INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1b.inc");
+
 void FUN_080a99d4(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
   (p->s).coord.x += (p->s).d.x;
