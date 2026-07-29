@@ -219,7 +219,32 @@ INCASM("asm/enemy/pantheon_aqua_mod_obj_p1_p5_x.inc");
 
 void nop_08080eb8(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_aqua_mod_obj_p2_a.inc");
+static const u8 sInitModes[10];
+static const struct Collision sCollisions[10];
+void nop_08080eb8(struct Enemy* p);
+void PantheonAquaModObj_Update(struct Enemy* p);
+
+void PantheonAquaModObj_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  {
+    register u8 f asm("r0");
+    register s32 v asm("r1");
+    register s32 z asm("r4");
+    f = (p->s).flags;
+    f |= FLIPABLE;
+    v = DISPLAY;
+    z = 0;
+    asm volatile("" : "+r"(z));
+    f |= v;
+    (p->s).flags = f;
+  }
+  if ((p->s).work[0] != 2) {
+    InitNonAffineMotion(&p->s);
+    INIT_BODY(p, sCollisions, 6, (void*)nop_08080eb8);
+  }
+  PantheonAquaModObj_Update(p);
+}
 
 extern const EnemyFunc sUpdates1[10];
 extern const EnemyFunc sUpdates2[10];
