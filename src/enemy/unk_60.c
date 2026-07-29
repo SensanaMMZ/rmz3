@@ -92,7 +92,48 @@ static void Enemy60_Init(struct Enemy60* p) {
 
 static const EnemyFunc sDeads[2];
 
-INCASM("asm/enemy/unk_60_pre.inc");
+static const EnemyFunc* const sUpdates[3];
+
+// 0x080925b4 -- parked (allocation-pressure basin): retail parks p in ip
+// and the 0xFE mask in r8 with hi-reg shuffles agbcc avoids (9 insns
+// shorter here); the duplicated flag/status clearing rounds match, the
+// register plumbing does not.
+NON_MATCH void Enemy60_Update(struct Enemy* p) {
+#if MODERN
+  if (((p->s).unk_28)->mode[0] == 4) {
+    u8 m1 = 0xFE;
+    u8 k2;
+    u8 f;
+    s32 z;
+    u32* st;
+    u32* pv;
+    u8* iv;
+    f = (p->s).flags & m1;
+    z = 0;
+    (p->s).flags = f;
+    st = &(p->body).status;
+    *st = z;
+    pv = &(p->body).prevStatus;
+    *pv = z;
+    iv = &(p->body).invincibleTime;
+    *iv = z;
+    k2 = 0xFB;
+    f = (p->s).flags & k2;
+    f &= m1;
+    f &= 0xFD;
+    (p->s).flags = f;
+    *st = z;
+    *pv = z;
+    *iv = z;
+    (p->s).flags &= k2;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  } else {
+    (sUpdates[(p->s).work[0]])[(p->s).mode[1]](p);
+  }
+#else
+  INCCODE("asm/enemy/unk_60_25b4.inc");
+#endif
+}
 
 void Enemy60_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
