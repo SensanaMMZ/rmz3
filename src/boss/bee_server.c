@@ -1,5 +1,6 @@
 #include "boss.h"
 #include "collision.h"
+#include "element.h"
 #include "global.h"
 #include "palette_animation.h"
 #include "overworld.h"
@@ -41,6 +42,20 @@ void BeeServer_Die(struct Boss* p) {
 }
 
 void nop_0804d0a0(struct Boss* p) {}
+
+extern const struct Coord Coord_0836331c;
+
+void FUN_0804d0a4(struct Boss* p) {
+  if (((p->body).status & BODY_STATUS_WHITE) && (p->body).elemented == 2) {
+    *(struct VFX**)&p->props.raw[0] = ApplyElementEffect(0x12, &p->s, &Coord_0836331c);
+  }
+  if (((p->body).status & 0x00020008) == 0x00020008) {
+    u16* q = (u16*)&p->props.raw[4];
+    register s32 v asm("r0");
+    v = 0xFC00;
+    *q = v;
+  }
+}
 
 INCASM("asm/boss/bee_server_p2.inc");
 

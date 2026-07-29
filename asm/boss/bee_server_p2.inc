@@ -4,50 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0804d0a4
-FUN_0804d0a4: @ 0x0804D0A4
-	push {r4, lr}
-	adds r4, r0, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #1
-	ands r0, r1
-	cmp r0, #0
-	beq _0804D0D2
-	adds r0, r4, #0
-	adds r0, #0x97
-	ldrb r1, [r0]
-	movs r0, #0xf0
-	ands r0, r1
-	cmp r0, #0x20
-	bne _0804D0D2
-	ldr r2, _0804D0F0 @ =0x0836331C
-	movs r0, #0x12
-	adds r1, r4, #0
-	bl ApplyElementEffect
-	adds r1, r4, #0
-	adds r1, #0xb4
-	str r0, [r1]
-_0804D0D2:
-	adds r0, r4, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	ldr r1, _0804D0F4 @ =0x00020008
-	ands r0, r1
-	cmp r0, r1
-	bne _0804D0EA
-	adds r1, r4, #0
-	adds r1, #0xb8
-	movs r0, #0xfc
-	lsls r0, r0, #8
-	strh r0, [r1]
-_0804D0EA:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0804D0F0: .4byte 0x0836331C
-_0804D0F4: .4byte 0x00020008
 
 	thumb_func_start FUN_0804d0f8
 FUN_0804d0f8: @ 0x0804D0F8
@@ -137,4 +93,3 @@ _0804D19C: .4byte RNG_0202f388
 _0804D1A0: .4byte 0x000343FD
 _0804D1A4: .4byte 0x00269EC3
 _0804D1A8: .4byte 0xFFFFE000
-
