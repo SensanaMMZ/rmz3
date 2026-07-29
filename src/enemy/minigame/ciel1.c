@@ -18,6 +18,27 @@ struct Enemy* FUN_0809bdd4(struct Entity* e, u8 a1, u8 a2) {
   return p;
 }
 
+void CielMinigameEnemy_Update(struct Enemy* p);
+
+// 0x0809be34
+void CielMinigameEnemy_Init(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0xE9, 0x00));
+  UpdateMotionGraphic(&p->s);
+  ForceEntityPalette(&p->s, (p->s).work[1] + 5);
+  SET_XFLIP(p, 0);
+  (p->s).coord.x = PIXEL((p->s).work[0] * 32 + 0x18);
+  (p->s).coord.y = 0;
+  (p->s).d.y = *(vu16*)((u8*)q + 0xE10);
+  (p->s).d.x = *(vu16*)((u8*)q + 0xE10);
+  (p->s).work[3] = 0;
+  CielMinigameEnemy_Update(p);
+}
+
 INCASM("asm/enemy/minigame_ciel1_pre_p2.inc");
 
 void CielMinigameEnemy_Die(struct Enemy* p) {
