@@ -1,4 +1,5 @@
 #include "global.h"
+#include "palette_animation.h"
 #include "vfx.h"
 
 static const VFXFunc sUpdates[4];
@@ -78,6 +79,111 @@ void VFX49_Die(struct VFX* vfx) {
 }
 
 INCASM("asm/vfx/unk_49_post.inc");
+
+u8 GetEntityPalID(struct Entity* p);
+
+void FUN_080c065c(struct VFX* p) {
+  struct Entity* e = (p->s).unk_28;
+  if (e->mode[0] == 4) {
+    RemovePaletteAnimation(0x57);
+    {
+      register u8 e1 asm("r1");
+      register s32 fp asm("r0");
+      e1 = (p->s).flags;
+      fp = 0xFE;
+      fp &= e1;
+      {
+        register s32 c2 asm("r1");
+        c2 = 0xFD;
+        fp &= c2;
+      }
+      (p->s).flags = fp;
+    }
+    SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x4E02);
+      {
+        u32 g0 = GetEntityPalID(&p->s);
+        u32 g = (u8)g0 << 5;
+        StartPaletteAnimation(0x57, g | 0x200);
+      }
+      StepPaletteAnimation(0x57);
+      (p->s).work[2] = 2;
+      (p->s).coord.x = e->coord.x;
+      (p->s).coord.y = e->coord.y;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((p->s).work[2] != 0) {
+        if ((p->s).work[2] == 1) {
+          RemovePaletteAnimation(0x57);
+        }
+        (p->s).work[2]--;
+      }
+      UpdateMotionGraphic(&p->s);
+      if (e->mode[0] > 1) {
+        RemovePaletteAnimation(0x57);
+        {
+          register u8 e1 asm("r1");
+          register s32 fp asm("r0");
+          e1 = (p->s).flags;
+          fp = 0xFE;
+          fp &= e1;
+          {
+            register s32 c2 asm("r1");
+            c2 = 0xFD;
+            fp &= c2;
+          }
+          (p->s).flags = fp;
+        }
+        SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+        break;
+      }
+      if ((*(u32*)((u8*)e + 0xb4) & 0x800) == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      SetMotion(&p->s, 0x4E03);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      {
+        u8 st = (p->s).motion.state;
+        if (st != 3) {
+          break;
+        }
+        {
+          register u8 e1 asm("r1");
+          register s32 fp asm("r0");
+          e1 = (p->s).flags;
+          fp = 0xFE;
+          fp &= e1;
+          {
+            register s32 c2 asm("r1");
+            c2 = 0xFD;
+            fp &= c2;
+          }
+          (p->s).flags = fp;
+        }
+        {
+          u32 tbl, id;
+          EntityFunc** routine_table;
+          tbl = (u32)gVFXFnTable;
+          id = ((p->s).id) << 2;
+          routine_table = (EntityFunc**)(tbl + id);
+          *(u32*)((p->s).mode) = st;
+          (p->s).onUpdate = (void*)(*routine_table)[3];
+        }
+      }
+      break;
+  }
+}
+
 
 void VFX49_Init(struct VFX* vfx);
 void VFX49_Update(struct VFX* vfx);
