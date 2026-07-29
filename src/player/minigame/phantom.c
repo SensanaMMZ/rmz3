@@ -158,6 +158,35 @@ void FUN_08034d40(struct Zero* z) {
   }
 }
 
+void phantom_08034dc0(struct Zero* z) {
+  struct MinigameState* s = (struct MinigameState*)(z->s).unk_28;
+  switch ((z->s).mode[2]) {
+    case 0:
+      PlaySound(0xFC);
+      GotoMotion(&z->s, MOTION(0xBC, 0x03), 2, 4);
+      (z->s).d.y = -0x700;
+      (z->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 dy = (z->s).d.y + 0x40;
+      (z->s).d.y = dy;
+      (z->s).coord.y += dy;
+      if (!(*(u16*)s->unk_10 & 1) || dy > 0) {
+        (z->s).mode[1] = 1;
+        (z->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&z->s);
+      if (*(u16*)s->unk_10 & 0x20) {
+        (z->s).coord.x -= 0x200;
+      }
+      if (*(u16*)s->unk_10 & 0x10) {
+        (z->s).coord.x += 0x200;
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/player/phantom_b.inc");
 
 // --------------------------------------------
