@@ -199,6 +199,54 @@ void FUN_08089e60(struct Enemy* p) {
 
 INCASM("asm/enemy/mettaur_swim_p2_post.inc");
 
+void FUN_08089eb0(struct Enemy* p);
+
+void FUN_08089f60(struct Enemy* p) {
+  s32 dx, dy, q2, dist;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[6]);
+      SetMotion(&p->s, MOTION(0xDD, 0x02));
+      dx = (p->s).coord.x - (pZero2->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y - PIXEL(24);
+      dy -= (pZero2->s).coord.y;
+      (p->s).d.y = dy;
+      dist = (dx >> 8) * (dx >> 8);
+      dist += (dy >> 8) * (dy >> 8);
+      dist = Sqrt(dist) << 8;
+      if (dist != 0) {
+        q2 = ((p->s).d.x << 8) / dist;
+        (p->s).d.x = q2;
+        dy = ((p->s).d.y << 8) / dist;
+        (p->s).d.x = q2 * 6;
+        (p->s).d.y = dy * 6;
+      } else {
+        (p->s).d.x = 0x600;
+        (p->s).d.y = dist;
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 y;
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      if (FUN_080098a4((p->s).coord.x, y) || ((p->body).status & 4)) {
+        (p->s).mode[2] = 0;
+        FUN_08089eb0(p);
+        SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      }
+      break;
+    }
+  }
+}
+
 void FUN_0808a068(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0: {
