@@ -62,7 +62,46 @@ bool8 FUN_0808c3ec(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/generator_cannon_pre_a.inc");
+// 0x0808c450
+bool8 FUN_0808c450(struct Enemy* p) {
+  s32 v;
+  if ((p->s).mode[1] == 7) {
+    return FALSE;
+  }
+  v = *(s32*)((u8*)p + 0xb4);
+  if (v != 0) {
+    return FALSE;
+  }
+  switch ((p->s).mode[3]) {
+    case 0:
+      if (!IsFrozen(&p->s)) {
+        return FALSE;
+      }
+      (sUpdates1[(p->s).mode[1]])(p);
+      (sUpdates2[(p->s).mode[1]])(p);
+      (p->s).mode[3]++;
+      UpdateMotionGraphic(&p->s);
+      return TRUE;
+    case 1: {
+      s32 f = IsFrozen(&p->s);
+      if (f == 0) {
+        goto clear;
+      }
+      if ((p->s).work[0] != 1) {
+        return TRUE;
+      }
+      if (((p->body).status & 0x20001) != 0x20001) {
+        return TRUE;
+      }
+      (p->s).mode[3] = v;
+      return FALSE;
+    clear:
+      (p->s).mode[3] = f;
+      return FALSE;
+    }
+  }
+  return FALSE;
+}
 
 #include "element.h"
 #include "vfx.h"
