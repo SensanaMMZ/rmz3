@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "trig.h"
 #include "vfx.h"
 
 const EnemyFunc PTR_ARRAY_08366b78[2];
@@ -104,6 +105,64 @@ void CarryArm_Die(struct Enemy* p) {
 void FUN_080716a8(struct Enemy* p) {}
 
 INCASM("asm/enemy/carry_arm_p3_p1.inc");
+
+void FUN_08071778(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_2c;
+  u8 m;
+  if (q != NULL && q->mode[0] > 1) {
+    q = NULL;
+    (p->s).unk_2c = q;
+  }
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).work[2] = m;
+      (p->s).work[3] = ((RANDOM(RNG_0202f388) & 3) << 6) + 0x20;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      register s32 w asm("r2");
+      const s16* tbl;
+      s32 v;
+      tbl = gSineTable;
+      w = (p->s).work[2];
+      v = tbl[(u8)(w * 2 + 64)] * 4;
+      (p->s).d.x = v;
+      if ((p->s).work[1] == 1) {
+        (p->s).d.x = -v;
+      }
+      (p->s).d.y = tbl[(u8)(w * 2)] >> 1;
+      asm volatile("" :: "r"(w));
+      {
+        bool8 on = 0;
+        if ((p->s).d.x > 0) {
+          on = 1;
+        }
+        SET_XFLIP(p, on);
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      {
+        s32 t = (p->s).work[2] + 1;
+        (p->s).work[2] = t;
+        if ((u8)t >= (p->s).work[3]) {
+          u8 bv = *((u8*)p + 0xb8);
+          if (bv != 0 || q == NULL) {
+            (p->s).mode[1] = 5;
+            (p->s).mode[2] = 0;
+          } else {
+            (p->s).mode[1] = 2;
+            (p->s).mode[2] = bv;
+          }
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/carry_arm_p3_p1_c.inc");
 
 void FUN_08071b88(struct Enemy* p) {
   (p->s).d.y -= 0x10;
