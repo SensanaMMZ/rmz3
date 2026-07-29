@@ -111,6 +111,33 @@ void FUN_0805c760(struct Boss* p) {
 
 INCASM("asm/boss/hanumachine_p2_p1b.inc");
 
+// 0x0805cdbc
+void FUN_0805cdbc(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, MOTION(0xB5, 0x13));
+    SetDDP(&p->body, &sCollisions[6]);
+    if ((p->s).flags & X_FLIP) {
+      (p->s).d.x = 0x200;
+    } else {
+      (p->s).d.x = -0x200;
+    }
+    (p->s).d.y = 0;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (FUN_0805d594(p, (p->s).unk_coord.x, 0) == 0) {
+    (p->s).coord.x += (p->s).d.x;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).mode[1] = 7, (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/boss/hanumachine_p2_p1c.inc");
+
 void FUN_0805d568(struct Body* body) {
   if (body->hitboxFlags & 1) {
     struct Boss* atk = (struct Boss*)((body->enemy)->parent);
