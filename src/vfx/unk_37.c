@@ -1,4 +1,5 @@
 #include "global.h"
+#include "stagerun.h"
 #include "vfx.h"
 #include "palette_animation.h"
 
@@ -154,6 +155,52 @@ void VFX37_Die(struct VFX* vfx) {
 }
 
 INCASM("asm/vfx/unk_37_post.inc");
+
+extern const s16 s16_ARRAY_0836edfe[6];
+
+// Baby elf orbit: converge toward screen center, flicker, despawn with the
+// parent. Logic verified; parked on an allocation-cascade tie: retail pools
+// the SetMotion const into r0 with an arg copy, keeps the camera ptr in ip,
+// and routes both /2 roundings through r0 with a copy-back - agbcc folds all
+// three in-place (pin/anchor either gets ignored or adds a u16 re-truncation).
+NON_MATCH void FUN_080bca5c(struct VFX* vfx) {
+#if MODERN
+  struct Entity* e = (vfx->s).unk_28;
+  switch ((vfx->s).mode[2]) {
+    case 0:
+      SetMotion(&vfx->s, MOTION(0x33, 0x02) + (vfx->s).work[2]);
+      (vfx->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      struct Camera* cam = &gStageRun.vm.camera;
+      s32 cx = ((cam->viewport.x - 1) + cam->viewport.x) / 2;
+      s32 cy = ((cam->viewport.y - 1) + cam->viewport.y) / 2;
+      s32 k = s16_ARRAY_0836edfe[(vfx->s).work[2]];
+      s32 dx = ((e->coord.x - cx) * k) / 256;
+      s32 dy = ((e->coord.y - cy) * k) / 256;
+      (vfx->s).coord.x = cx + dx;
+      (vfx->s).coord.y = cy + dy;
+      (vfx->s).work[3]++;
+      if (CalcFromCamera(cam, &e->coord) != 0 || ((vfx->s).work[3] & 1)) {
+        (vfx->s).flags &= ~DISPLAY;
+      } else {
+        (vfx->s).flags = ((vfx->s).flags & ~DISPLAY) | DISPLAY;
+      }
+      if (*((u8*)e + 0xc8) != 0 || e->mode[0] > 1 || e->mode[0] == 4) {
+        (vfx->s).flags &= ~DISPLAY;
+        (vfx->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(vfx, ENTITY_DISAPPEAR);
+      }
+      UpdateMotionGraphic(&vfx->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/vfx/unk_37_ca5c.inc");
+#endif
+}
+
+INCASM("asm/vfx/unk_37_post_c.inc");
 
 void FUN_080bcc94(struct VFX* vfx) {
   struct Entity* e = (vfx->s).unk_28;
