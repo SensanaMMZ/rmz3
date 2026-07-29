@@ -176,6 +176,22 @@ void FUN_0805f26c(struct Boss* p) {
 
 INCASM("asm/boss/phantom_p1_pre_p5.inc");
 
+void FUN_080607bc(struct Entity* p, s32 idx, s32 r2, s32 r3);
+
+void FUN_0805f2e0(struct Boss* p) {
+  if ((s8)(p->s).motion.cmdIdx == 0) {
+    s32 t = (p->s).motion.duration - 2;
+    if (t > 0) {
+      if (FUN_08060864(p, (p->s).d.x * (t << 5))) {
+        FUN_080607bc(&p->s, 2, 0, 1);
+      }
+    }
+  } else if ((p->s).motion.state == 2) {
+    (p->s).mode[1] = 0;
+    *((u16*)&(p->s).mode[2]) = 0;
+  }
+}
+
 void FUN_0805f338(struct Boss* p) {
   (PTR_ARRAY_0836545c[(p->s).mode[3]])(p);
 }
