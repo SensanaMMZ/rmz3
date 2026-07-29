@@ -227,6 +227,44 @@ void FUN_0805f488(struct Boss* p) {
   }
 }
 
+void FUN_080afcec(struct Coord* c, s32 speed, u32 angle);
+void FUN_080607bc(struct Entity* p, s32 idx, s32 r2, s32 r3);
+
+// 0x0805f4a4
+void FUN_0805f4a4(struct Boss* p) {
+  if ((u8)++(p->s).work[2] == 0x14) {
+    struct Coord c;
+    s32 x;
+    s32 y;
+    s32 dx;
+    s32 dy;
+    u8 a;
+    struct Zero* z;
+    c.x = x = (p->s).coord.x;
+    c.y = y = (p->s).coord.y;
+    z = pZero2;
+    dx = (z->s).coord.x;
+    dy = (z->s).coord.y;
+    dx -= x;
+    dy -= y;
+    dy -= PIXEL(24);
+    a = ArcTan2(dx >> 8, dy >> 8) >> 8;
+    if (a > 0x80) {
+      if (a > 0xC0) {
+        a = 0;
+      } else {
+        a = 0x80;
+      }
+    }
+    PlaySound(0xFC);
+    FUN_080afcec(&c, 0x300, a);
+  }
+  if ((p->s).motion.state == 3) {
+    FUN_080607bc(&p->s, 3, 2, 1);
+    *((u16*)&(p->s).mode[2]) = 5;
+  }
+}
+
 INCASM("asm/boss/phantom_p1_pre_p7_p2_p1.inc");
 
 void FUN_0805f52c(struct Boss* p) {
