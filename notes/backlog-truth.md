@@ -2254,3 +2254,12 @@ FUN_0807db9c: .byte blob (inline jumptable) in mellnet_post_post_post.inc - Ghid
     (p->body).status = z; prevStatus = z; invincibleTime = z;
   RETRY the energy-facility door twins with this exact shape - their ip-parking may have been downstream of the f/z structure, not a real basin.
 - MILESTONE 100/689 dispositioned (76 matches / 20 dual-forms / 2 triage / 2 blobs). New levers today: exit-shape (u8 f + interleaved z), phase/result-register equivalence, offset-struct row views for giv shapes, pointer-typed index for adds operand order. 58-68B bands drained.
+
+## ret-variable lever (2026-07-28, hirondelle/autruche)
+Final `if (x) return A; y; return B;` gets branch-INVERTED by agbcc (A's load
+sinks to the end pool, join reorders, pools compact = ROM shorter). Fix: wrap
+in a block with `TextID ret; if (x) { ret = A; } else { y; ret = B; } return
+ret;` — keeps then-arm inline with its mid-function pool. This unparked
+autruche_080da768 (the "r3 constant" park diagnosis was wrong — it was layout
+inversion all along). Candidate retry for any park whose diff shows a
+bne-vs-beq flip near the epilogue with a migrated pool word.
