@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
+#include "zero.h"
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -44,10 +45,49 @@ extern const SolidFunc sAnubisCoffinUpdates1[3];
 extern const SolidFunc sAnubisCoffinUpdates2[3];
 extern const struct Collision sAnubisCoffinCollisions[2];
 extern const u8 u8_ARRAY_08370240[4];
+extern const struct Rect Rect_08370238;
 
 void AnubisCoffin_Update(struct Solid* p);
 
-INCASM("asm/solid/anubis_coffin_pre.inc");
+void FUN_080cdd64(struct Solid* p) {
+  struct Solid* q = (struct Solid*)(p->s).unk_2c;
+  s32 dx;
+  s32 px;
+  if (((p->body).status & 0x24) || ((q->body).status & 0x24)) {
+    *((u8*)p + 0xbc) = 1;
+  }
+  dx = (p->s).coord.x;
+  dx -= (q->s).coord.x;
+  dx += -0x1800;
+  {
+    u8 lk = *((u8*)p + 0xbc);
+    px = *(volatile s32*)&(p->s).coord.x;
+    if (lk == 0) {
+    struct Zero* z;
+      if (dx > 0x1DFF) goto normal;
+      z = pZero2;
+      if ((z->s).coord.x < (q->s).coord.x + 0xC00) goto normal;
+      if ((z->s).coord.x > px - 0xC00) goto normal;
+      if ((z->s).coord.y <= (p->s).coord.y - 0x1E00) goto normal;
+    }
+  }
+  (pZero2->s).coord.x = *(s32*)((u8*)p + 0xb8);
+  SetDDP(&p->body, &sAnubisCoffinCollisions[1]);
+  (p->s).flags2 &= ~ENTITY_HAZARD;
+  SetDDP(&q->body, &sAnubisCoffinCollisions[1]);
+  (q->s).flags2 &= ~ENTITY_HAZARD;
+  return;
+
+normal:
+  SetDDP(&p->body, &sAnubisCoffinCollisions[0]);
+  (p->s).flags2 |= ENTITY_HAZARD;
+  (p->s).size = (struct Rect*)&Rect_08370238;
+  (p->s).hazardAttr = 1;
+  SetDDP(&q->body, &sAnubisCoffinCollisions[0]);
+  (q->s).flags2 |= ENTITY_HAZARD;
+  (q->s).size = (struct Rect*)&Rect_08370238;
+  (q->s).hazardAttr = 1;
+}
 
 void nop_080cde6c(struct Solid* p) {}
 
