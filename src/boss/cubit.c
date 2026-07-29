@@ -97,7 +97,43 @@ void cubitMode0(struct Boss* p) {
 
 bool8 FUN_08052b98(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/cubit_p3.inc");
+// 0x08052b9c
+void cubitMode1(struct Boss* p) {
+  motion_t m;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x3C;
+      PlaySound(0xC9);
+      m = MOTION(0xB0, 0x07);
+      goto setmotion;
+    case 2:
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      goto advance;
+    case 3:
+      m = MOTION(0xB0, 0x09);
+    setmotion:
+      SetMotion(&p->s, m);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    advance:
+      (p->s).mode[2]++;
+      break;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] = 2, (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_08052c30(struct Boss* p) { return TRUE; }
 
