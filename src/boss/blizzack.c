@@ -268,6 +268,52 @@ NON_MATCH void blizzackBombFall(struct Boss* p) {
 
 INCASM("asm/boss/blizzack_post_p2_a2.inc");
 
+void blizzackMode18(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
+    SetMotion(&p->s, MOTION(0xB4, 0x06));
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x6406;
+    *t = v;
+    (p->s).mode[2] = z;
+    (p->s).work[2] = 8;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (--(p->s).work[2] == 0xFF) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/boss/blizzack_post_p2_a2b.inc");
+
+void blizzackMode20(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
+    SetMotion(&p->s, MOTION(0xB4, 0x0E));
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x640D;
+    *t = v;
+    (p->s).mode[2] = z;
+    (p->s).work[2] = 8;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (--(p->s).work[2] == 0xFF) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/boss/blizzack_post_p2_a2c.inc");
+
 void FUN_0805af14(struct Boss* p) {
   if ((p->s).coord.x < *(s32*)((u8*)p + 0xb4) + 0x2000 ||
       (p->s).coord.x > *(s32*)((u8*)p + 0xd8) - 0x2000) {
