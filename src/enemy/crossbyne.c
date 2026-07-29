@@ -191,6 +191,33 @@ void FUN_0807cfac(struct Enemy* p) {
 
 INCASM("asm/enemy/crossbyne_p3_post_post.inc");
 
+void FUN_0807d000(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x20;
+      SetDDP(&p->body, &sCollisions[1]);
+      {
+        const motion_t* t = &sMotions[2];
+        SetMotion(&p->s, t[(p->s).work[0]]);
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.cmdIdx == 3) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 void crossbyne_0807d080(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0:
