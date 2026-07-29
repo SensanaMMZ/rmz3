@@ -127,7 +127,35 @@ INCASM("asm/enemy/shelluno_p6.inc");
 
 s32 FUN_0807a3e8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shelluno_p7.inc");
+// A pure r4/r5 swap from a match: retail gives the collision pointer the
+// lower callee-saved register and the coord parameter the higher; agbcc
+// assigns the opposite pair in every spelling tried.
+NON_MATCH void FUN_0807a3ec(struct Body* body, struct Coord* c) {
+#if MODERN
+  const struct Collision* col = (body->enemy)->processing;
+  u8 t = col->atkType;
+  if (t == 3 || t == 14 || t == 15) {
+    struct CollidableEntity* parent = body->parent;
+    if ((parent->body).status & BODY_STATUS_DEAD) {
+      if ((parent->s).coord.x < c->x) {
+        ((struct Enemy*)parent)->props[6] = 0xFF;
+      } else {
+        ((struct Enemy*)parent)->props[6] = 0xFE;
+      }
+    }
+  }
+  if ((*(u32*)((u8*)col + 4) & 0x200FF) == 0x20002) {
+    struct CollidableEntity* parent = body->parent;
+    if ((parent->s).mode[1] != 5 && ((struct Enemy*)parent)->props[5] != 0) {
+      SET_ENEMY_ROUTINE((struct Enemy*)parent, ENTITY_DIE);
+    }
+  }
+#else
+  INCCODE("asm/enemy/shelluno_a3ec.inc");
+#endif
+}
+
+INCASM("asm/enemy/shelluno_p7b.inc");
 
 void Shelluno_Init(struct Enemy* p);
 void Shelluno_Update(struct Enemy* p);
