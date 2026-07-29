@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "zero.h"
 #include "stagerun.h"
 
 void Blizzack_Init(struct Boss* p);
@@ -104,6 +105,37 @@ NON_MATCH void blizzackNextMode(struct Boss* p) {
   }
 #else
   INCCODE("asm/boss/blizzack_nextmode_body.inc");
+#endif
+}
+
+// 0x0805a230 -- parked: same 0x64xx basin as blizzackMode9/Start/End (the
+// mode[2]=0 zero materializes two insns earlier than retail's slot between
+// the props address adds and the 0x6403 pool load; every z/v/a ordering
+// tried lands early).
+NON_MATCH void blizzackJump(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xB4, 0x03));
+    ((p->s).unk_2c)->mode[2] = 1;
+    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6403;
+    (p->s).mode[2] = 0;
+    (p->s).d.x = ((pZero2->s).coord.x - (p->s).coord.x) / 52;
+    (p->s).d.y = -0x9C0;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x60;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  if (FUN_08009f6c((p->s).coord.x, (p->s).coord.y) < (p->s).coord.y) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 1;
+  }
+#else
+  INCCODE("asm/boss/blizzack_jump.inc");
 #endif
 }
 
