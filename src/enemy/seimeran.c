@@ -2,6 +2,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "physics.h"
 #include "story.h"
 #include "motion.h"
 
@@ -222,6 +223,69 @@ void FUN_0808fa24(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/seimeran_p2_p3.inc");
+
+// 0x0808fb10
+void FUN_0808fb10(struct Enemy* p) {
+  s32 x;
+  s32 r;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.x = ((p->s).work[2] << 9) - 0x100;
+      SetMotion(&p->s, MOTION(0x77, 0x08));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      SetMotion(&p->s, MOTION(0x77, 0x09));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+  x = (p->s).coord.x + (p->s).d.x;
+  (p->s).coord.x = x;
+  if ((p->s).d.x > 0) {
+    r = PushoutToLeft1(x + 0x600, (p->s).coord.y);
+    if (r < 0) {
+      (p->s).coord.x += r;
+    }
+  } else {
+    r = PushoutToRight1(x - 0x600, (p->s).coord.y);
+    if (r > 0) {
+      (p->s).coord.x += r;
+    }
+  }
+  (p->s).d.y += 0x15;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+  if (r < 0) {
+    (p->s).coord.y += r;
+    (p->s).mode[1] = 1, (p->s).mode[2] = 0;
+  }
+  {
+    s32 cx = (p->s).unk_coord.x;
+    s32 b = cx - 0x2C00;
+    if ((p->s).coord.x < b) {
+      (p->s).coord.x = b;
+    } else {
+      b = cx + 0x2C00;
+      if ((p->s).coord.x > b) {
+        (p->s).coord.x = b;
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/seimeran_p2_p3b.inc");
 
 void Seimeran_Init(struct Enemy* p);
 void Seimeran_Update(struct Enemy* p);
