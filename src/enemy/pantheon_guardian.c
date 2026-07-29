@@ -186,7 +186,26 @@ void FUN_08064444(struct Enemy* p) {
   UpdateMotionGraphic(&p->s);
 }
 
-INCASM("asm/enemy/pantheon_guardian_post_p1.inc");
+void FUN_0806447c(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, MOTION(0x14, 0x00));
+    (p->s).unk_coord.x = (p->s).d.x / 32;
+    (p->s).work[2] = 0x1F;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).d.x -= (p->s).unk_coord.x;
+  if ((u8)--(p->s).work[2] == 0xFF ||
+      !(FUN_080098a4((p->s).coord.x, (p->s).coord.y + PIXEL(8)) & 0x1000)) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  } else {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  }
+}
+
+INCASM("asm/enemy/pantheon_guardian_post_p1b.inc");
 
 void FUN_0806465c(struct Body* body, struct Coord* c1, struct Coord* c2) {
   if (body->hitboxFlags & 1) {
