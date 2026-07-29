@@ -30,6 +30,49 @@ u8 FUN_08088ba8(struct Enemy* p) {
   return FALSE;
 }
 
+// 0x08088bc8
+s32 FUN_08088bc8(struct Enemy* p, s32 dx, s32 dy) {
+  s32 y;
+  if (dy != 0) {
+    y = (p->s).coord.y + dy;
+    (p->s).coord.y = y;
+    if (dy < 0) {
+      dy = PushoutToDown1((p->s).coord.x, y - PIXEL(16));
+      if (dy > 0) {
+        y = (p->s).coord.y;
+        y += dy;
+        (p->s).coord.y = y;
+      }
+    } else {
+      dy = PushoutToUp1((p->s).coord.x, y);
+      if (dy < 0) {
+        y = (p->s).coord.y;
+        y += dy;
+        (p->s).coord.y = y;
+      }
+    }
+  }
+  if (dx != 0) {
+    s32 x = (p->s).coord.x + dx;
+    (p->s).coord.x = x;
+    if (dx < 0) {
+      dy = PushoutToRight1(x, (p->s).coord.y - PIXEL(8));
+      if (dy > 0) {
+        y = (p->s).coord.x;
+        y += dy;
+        (p->s).coord.x = y;
+      }
+    } else {
+      dy = PushoutToLeft1(x, (p->s).coord.y - PIXEL(8));
+      if (dy < 0) {
+        y = (p->s).coord.x;
+        y += dy;
+        (p->s).coord.x = y;
+      }
+    }
+  }
+}
+
 INCASM("asm/enemy/mettaur_swim_p1_pre_p1.inc");
 
 void CreateVFX62(struct Entity* e, struct Coord* c);
