@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "global.h"
 #include "overworld.h"
+#include "zero.h"
 
 static const u8 sDeathtanzModes[32];
 static const struct Collision sCollisions[];
@@ -308,6 +309,48 @@ static void tryMakeFlinch(struct Boss* p) {
 }
 
 INCASM("asm/boss/deathtanz.inc");
+
+// 0x080498a4
+void deathtanzPreAI(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8* c;
+      s32 f;
+      struct Zero* z;
+      s32 px;
+      s32 zx;
+      ((p->props).deathtanz).unk_bd = 0;
+      f = 0;
+      z = pZero2;
+      px = (p->s).coord.x;
+      zx = (z->s).coord.x;
+      c = &((p->props).deathtanz).unk_bd;
+      if (px > zx) {
+        f = 1;
+      }
+      if ((p->s).flags & X_FLIP) {
+        if (f == 0) goto advance;
+      } else {
+        if (f != 0) goto advance;
+      }
+      SetDDP(&p->body, &sCollisions[4]);
+      *c = 1;
+      SetMotion(&p->s, MOTION(0xA7, 0x07));
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+      advance:
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/deathtanz_c.inc");
 
 // --------------------------------------------
 
