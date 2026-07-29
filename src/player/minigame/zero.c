@@ -83,7 +83,7 @@ static void ZeroMini_Init(struct Zero* z) {
 // --------------------------------------------
 
 static bool32 nop_0803658c(struct Zero* z);
-void FUN_080365d8(struct Zero* z);
+bool8 FUN_080365d8(struct Zero* z);
 bool8 FUN_08036848(struct Zero* z);
 bool8 FUN_08036904(struct Zero* z);
 static bool32 FUN_08036b94(struct Zero* z);
@@ -100,7 +100,7 @@ static void ZeroMini_Update(struct Zero* z) {
   // clang-format off
   static const ZeroFunc sUpdates1[5] = {
       (ZeroFunc)nop_0803658c,
-      FUN_080365d8,
+      (ZeroFunc)FUN_080365d8,
       (ZeroFunc)FUN_08036848,
       (ZeroFunc)FUN_08036904,
       (ZeroFunc)FUN_08036b94,
@@ -180,6 +180,75 @@ static void zeroMini_08036590(struct Zero* z) {
 }
 
 // --------------------------------------------
+
+// Minigame-zero jump/attack chooser off the D-pad at bite windows. Logic
+// verified; parked on an arm-orchestration tie: retail keeps the pooled
+// 0x287/0x27D offsets alive in r4/r5 across all six arms and shares one strb
+// per trio - reproducing the arm stores shifts the offset registers or the
+// u16 truncation pairs (9 shapes tried).
+#if MODERN
+NON_MATCH bool8 FUN_080365d8(struct Zero* z) {
+  if (*(s16*)((u8*)(z->s).unk_28 + 4) == 1) {
+    if (gJoypad[0].pressed & B_BUTTON) {
+      u32 h = gJoypad[0].input;
+      if (h & DPAD_UP) {
+        *((u8*)z + 0x287) = 2;
+      } else if ((u16)(h & DPAD_DOWN)) {
+        *((u8*)z + 0x287) = 4;
+      } else {
+        *((u8*)z + 0x287) = 0;
+      }
+      (z->s).mode[1] = 3;
+      (z->s).mode[2] = 0;
+    }
+    {
+      u8* f7d = (u8*)z + 0x27D;
+      if (*f7d == 1) {
+        u32 h = gJoypad[0].input;
+        if ((u16)(h & B_BUTTON) != 0) {
+          goto ret;
+        }
+        *((u8*)z + 0x27C) = 0;
+        *f7d = 0;
+        if (h & DPAD_UP) {
+          *((u8*)z + 0x287) = 7;
+        } else if (h & DPAD_DOWN) {
+          *((u8*)z + 0x287) = 8;
+        } else {
+          *((u8*)z + 0x287) = 6;
+        }
+        goto setmode;
+      } else {
+        u8* f7c = (u8*)z + 0x27C;
+        if (*f7c > 0xA) {
+          u32 h = gJoypad[0].input;
+          if ((u16)(h & B_BUTTON) != 0) {
+            goto ret;
+          }
+          *f7c = 0;
+          *f7d = 0;
+          if (h & DPAD_UP) {
+            *((u8*)z + 0x287) = 2;
+          } else if ((u16)(h & DPAD_DOWN)) {
+            *((u8*)z + 0x287) = 4;
+          } else {
+            *((u8*)z + 0x287) = 0;
+          }
+        setmode:
+          (z->s).mode[1] = 3;
+          (z->s).mode[2] = 0;
+        }
+      }
+    }
+  }
+ret:
+  return TRUE;
+}
+#else
+NON_MATCH bool8 FUN_080365d8(struct Zero* z) {
+  INCCODE("asm/player/zero_minigame_65d8.inc");
+}
+#endif
 
 INCASM("asm/player/zero_minigame_p1.inc");
 
