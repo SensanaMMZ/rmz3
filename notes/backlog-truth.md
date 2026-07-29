@@ -2263,3 +2263,11 @@ ret;` — keeps then-arm inline with its mid-function pool. This unparked
 autruche_080da768 (the "r3 constant" park diagnosis was wrong — it was layout
 inversion all along). Candidate retry for any park whose diff shows a
 bne-vs-beq flip near the epilogue with a migrated pool word.
+
+## register-pin constant lever (2026-07-28, guardian f50)
+`cmp rX, rY`-with-constant ties (retail keeps a materialized constant in a
+reg and compares reg-reg; agbcc folds to cmp #imm): house-precedented fix is
+`register s32 one asm("r3"); ... one = 1; f &= one; if (f != one)` —
+childre.c/math.c already pin regs, so this is in-style. Init placement
+follows source order, so assign `one` exactly where retail materializes it.
+Candidate for the regmove/0x64xx blizzack-family parks.
