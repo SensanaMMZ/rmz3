@@ -198,6 +198,64 @@ NON_MATCH void FUN_0809aa90(struct Sprite* spr, struct DrawPivot* pivot) {
 #endif
 }
 
+void FUN_0809aa10(struct Sprite* spr, struct DrawPivot* pivot);
+
+// 0x0809ab28
+void FUN_0809ab28(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      if ((p->s).unk_coord.y == -1) {
+        SetTaskCallback((struct RenderNode*)&(p->s).spr, FUN_0809aa10);
+        (p->s).spr.sprites = (struct MetaspriteHeader*)p;
+        (p->s).flags &= ~8;
+      } else {
+        s32 v;
+        SetTaskCallback((struct RenderNode*)&(p->s).spr, FUN_0809aa90);
+        (p->s).spr.sprites = (struct MetaspriteHeader*)p;
+        (p->s).flags &= ~8;
+        (p->s).work[3] = m;
+        v = (p->s).unk_coord.y;
+        while (v != 0) {
+          v = v / 10;
+          (p->s).work[3]++;
+        }
+      }
+      (p->s).unk_coord.x = 0x1E;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if (--(p->s).unk_coord.x != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      (p->s).unk_coord.x = 0x18;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      s32 c = --(p->s).unk_coord.x;
+      if (c & 1) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+      if ((p->s).unk_coord.x == 0) {
+        u8 f = ~DISPLAY & (p->s).flags;
+        f = f & ~FLIPABLE;
+        (p->s).flags = f;
+        (p->body).status = 0;
+        (p->body).prevStatus = 0;
+        (p->body).invincibleTime = 0;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/minigame_leviathan_p3c.inc");
 
 void LeviathanMinigameEnemy_Init(struct Enemy* p);
