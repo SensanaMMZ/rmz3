@@ -1,5 +1,7 @@
 #include "collision.h"
 #include "global.h"
+#include "physics.h"
+#include "trig.h"
 #include "projectile.h"
 #include "vfx.h"
 
@@ -43,6 +45,59 @@ void Projectile20_Die(struct Projectile* p) {
 void FUN_080a5144(struct Projectile* p) {}
 
 INCASM("asm/projectile/unk_20_post.inc");
+
+void FUN_080a53e8(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 md = (p->s).mode[2];
+  switch (md) {
+    case 0: {
+      u8 a;
+      u8 b;
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0x49, 0x01));
+      a = (p->s).work[2];
+      if ((p->s).flags & X_FLIP) {
+        a = -a;
+      }
+      b = a - 0x40;
+      (p->s).d.x = (COS(b) * 0x2C0) / 256;
+      (p->s).d.y = (SIN(b) * 0x2C0) / 256;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      if (PushoutToUp1((p->s).coord.x, (p->s).coord.y + 0x1000) < 0) {
+        (p->s).mode[2]++;
+      }
+      {
+        s32 t = (p->s).work[2] + 0x10;
+        (p->s).work[2] = t;
+        (p->s).angle = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      (p->s).work[3] = 0x3C;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      {
+        s32 t = (p->s).work[2] + 0x10;
+        (p->s).work[2] = t;
+        (p->s).angle = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*(u32*)((u8*)q + 0xc0) & 4) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/projectile/unk_20_post_c.inc");
 
 void FUN_080a4f3c(struct Projectile* p);
 
