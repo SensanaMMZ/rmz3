@@ -2,6 +2,8 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "mission.h"
+#include "vfx.h"
 #include "motion.h"
 #include "story.h"
 #include "syssav.h"
@@ -124,7 +126,34 @@ void TileCannon_Update(struct Enemy* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/tile_cannon_p2_post_b.inc");
+static const motion_t sMotions[3];
+struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x080783e8
+void TileCannon_Die(struct Enemy* p) {
+  struct Coord c;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  {
+    u8 f = ~DISPLAY & (p->s).flags;
+    s32 z = 0;
+    (p->s).flags = f;
+    (p->body).status = z;
+    (p->body).prevStatus = z;
+    (p->body).invincibleTime = z;
+    (p->s).flags &= ~COLLIDABLE;
+  }
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080b7f70(&p->s, &c, (motion_t*)sMotions, 3);
+  TryDropItem(0, &(p->s).coord);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, &(p->s).coord);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
 
 void FUN_0807847c(struct Enemy* p) {}
 
