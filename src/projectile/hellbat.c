@@ -80,7 +80,114 @@ struct Projectile* FUN_080a1594(struct Entity* e, struct Coord* c, u8 a2) {
   return p;
 }
 
-INCASM("asm/projectile/hellbat_p1_pre_p3.inc");
+static const struct Collision sCollisions[9];
+void Projectile15_Update(struct Projectile* p);
+
+void Projectile15_Init(struct Projectile* p) {
+  s32 z4;
+  (p->s).work[2] = 0xFF;
+  {
+    register s32 w0 asm("r5");
+    w0 = (p->s).work[0];
+    if (w0 == 0) {
+      struct Body* body;
+      InitNonAffineMotion(&p->s);
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      InitBody(body, &sCollisions[0], &(p->s).coord, 4);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)(u32)w0;
+    } else if (w0 == 1) {
+      struct Body* body;
+      s32 z5;
+      InitNonAffineMotion(&p->s);
+      z5 = 0;
+      (p->s).work[2] = z5;
+      *(u32*)((u8*)p + 0xbc) = z5;
+      InitNonAffineMotion(&p->s);
+      (p->s).angle = z5;
+      ((p->s).spr).mag.x = 0x100;
+      ((p->s).spr).mag.y = 0x100;
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      InitBody(body, &sCollisions[5], &(p->s).coord, 1);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z5;
+    } else if (w0 == 2) {
+      struct Body* body;
+      s32 z5;
+      InitNonAffineMotion(&p->s);
+      {
+        register u8 f0 asm("r1");
+        register s32 d4 asm("r0");
+        f0 = (p->s).flags;
+        d4 = COLLIDABLE;
+        z5 = 0;
+        d4 |= f0;
+        (p->s).flags = d4;
+      }
+      body = &p->body;
+      InitBody(body, &sCollisions[2], &(p->s).coord, 1);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z5;
+    } else if (w0 == 3) {
+      struct Body* body;
+      s32 z5;
+      InitScalerotMotion1(&p->s);
+      {
+        u8* aa = (u8*)p + 0x24;
+        z5 = 0;
+        *aa = z5;
+      }
+      ((p->s).spr).mag.x = 0x100;
+      ((p->s).spr).mag.y = 0x100;
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      InitBody(body, &sCollisions[3], &(p->s).coord, 1);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z5;
+    } else if (w0 == 4) {
+      struct Body* body;
+      s32 z5;
+      InitNonAffineMotion(&p->s);
+      {
+        register u8 f0 asm("r1");
+        register s32 d4 asm("r0");
+        f0 = (p->s).flags;
+        d4 = COLLIDABLE;
+        z5 = 0;
+        d4 |= f0;
+        (p->s).flags = d4;
+      }
+      body = &p->body;
+      InitBody(body, &sCollisions[3], &(p->s).coord, 1);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z5;
+    }
+  }
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    f0 = (p->s).flags;
+    d0 = DISPLAY;
+    z4 = 0;
+    d0 |= f0;
+    d0 |= FLIPABLE;
+    (p->s).flags = d0;
+  }
+  ResetDynamicMotion(&p->s);
+  {
+    u32 tb = (u32)gProjectileFnTable;
+    const ProjectileRoutine** ta = (const ProjectileRoutine**)(tb + (p->s).id * 4);
+    s32 one = 1;
+    *(u32*)&(p->s).mode[0] = one;
+    (p->s).onUpdate = (void*)(**ta)[ENTITY_UPDATE];
+    (p->s).mode[1] = one;
+  }
+  (p->s).mode[2] = z4;
+  (p->s).mode[3] = z4;
+  Projectile15_Update(p);
+}
 
 void Projectile15_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]][(p->s).mode[1]])(p);
