@@ -224,6 +224,41 @@ static const ProjectileFunc PTR_ARRAY_0836d44c[2];
 
 INCASM("asm/projectile/phantom_p1_p1_p1.inc");
 
+void FUN_080af46c(struct Projectile* p);
+
+void FUN_080af3ec(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  if (q->mode[3] > 2) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+    FUN_080af46c(p);
+  } else {
+    s32 x = q->coord.x;
+    s32 y = q->coord.y;
+    s32 t = (q->flags >> 4) & 1;
+    s16 v = t;
+    s32 d;
+    if (v) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+    {
+      s16 w = v;
+      (p->s).spr.xflip = w;
+      (p->s).spr.oam.xflip = w;
+    }
+    d = -1;
+    if (t == 0) {
+      d = 1;
+    }
+    (p->s).coord.x = x + d * 0xE00;
+    (p->s).coord.y = y - 0x1700;
+  }
+}
+
+INCASM("asm/projectile/phantom_p1_p1_p1b.inc");
+
 bool8 FUN_080afdf0(struct Entity* e, struct Coord* a, struct Coord* b, struct Coord* c);
 
 void FUN_080af5cc(struct Projectile* p) {
