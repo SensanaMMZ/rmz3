@@ -274,6 +274,44 @@ void FUN_08015c40(struct StageLayer* l, const struct Stage* stage) {
   gWindowRegBuffer.winin[2] |= 0xe;
 }
 
+// 0x08015c5c -- parked (allocation tie): retail holds bgIdx<<16 in r4, the
+// 0x4046 pool constant in callee-saved r5, and pushes r4-r7; agbcc packs the
+// same values into r3/r5/r6 with one fewer callee-saved reg. Structure and
+// insn sequence otherwise identical (if-goto phase chain, in-place n>>=20).
+NON_MATCH void FUN_08015c5c(struct StageLayer* l, const struct Stage* _ UNUSED) {
+#if MODERN
+  u32 n;
+  u16 b;
+  s32 ph;
+  u32 k;
+  u32 zero;
+  u16 c;
+  n = l->bgIdx << 16;
+  b = n >> 16;
+  ph = l->phase;
+  if (ph == 1) goto show;
+  if (ph > 1) goto end;
+  if (ph != 0) goto end;
+  if (gOverworld.state[0] == 0) {
+    goto end;
+  }
+  l->phase = 1;
+show:
+  n >>= 20;
+  k = 0x4046;
+  c = l->screenBase | k;
+  BGCNT16(n) = c;
+  RESET_BGOFS(n);
+  zero = 0;
+  CpuFastSet(&zero, (void*)(VRAM + ((c & 0x1F00) << 3)), 0x01000400);
+  LoadBgMap(b, gBgMapOffsets, 0x4B, 0, 0);
+  l->phase++;
+end:;
+#else
+  INCCODE("asm/stage_gfx/weil_labo_5c5c.inc");
+#endif
+}
+
 INCASM("asm/stage_gfx/weil_labo_p1_p2_a.inc");
 
 void FUN_08016018(struct StageLayer* l, const struct Stage* stage) {
