@@ -1,4 +1,7 @@
 #include "global.h"
+#include "metatile.h"
+#include "overworld.h"
+#include "stagerun.h"
 #include "vfx.h"
 
 /*
@@ -140,3 +143,30 @@ void FUN_080b3024(struct VFX* p) {
 }
 
 INCASM("asm/vfx/bubble_b.inc");
+
+// 0x080b3144
+void FUN_080b3144(struct VFX* p) {
+  s32 amp;
+  s16 sv;
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[2]++;
+  amp = (p->s).d.x + 8;
+  (p->s).d.x = amp;
+  (p->s).coord.y -= (p->s).d.y;
+  sv = gSineTable[(p->s).work[2]];
+  (p->s).coord.x = (p->props).bubble.unk_0 + sv * (amp >> 8);
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) == 0) {
+    struct Overworld* ow = &gOverworld;
+    s32* seap = &ow->sea;
+    s32 y2 = (p->s).coord.y - (p->s).d.y * 2;
+    if (*seap < y2) {
+      return;
+    }
+    if ((u16)GetMetatileAttr((p->s).coord.x, (p->s).coord.y) == 0x8000) {
+      return;
+    }
+  }
+  SET_VFX_ROUTINE(p, ENTITY_DIE);
+}
+
+INCASM("asm/vfx/bubble_c.inc");
