@@ -78,7 +78,35 @@ void nop_08085a0c(struct Enemy* p) {}
 
 bool8 FUN_08085a10(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/capsule_cannon_pre_p1_p3.inc");
+// 0x08085a14
+void FUN_08085a14(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x68, 0x01));
+      (p->s).work[2] = 0x50;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      *((u8*)p + 0xb9) = 0;
+      SetDDP(&p->body, &sCollisions[0]);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      (p->s).mode[1] = 2, (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_08085a9c(struct Enemy* p) { return TRUE; }
 
