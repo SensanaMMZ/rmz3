@@ -78,6 +78,52 @@ void Elf11_Die(struct Elf* p) {
 
 INCASM("asm/cyberelf/unk_11_p2.inc");
 
+u8 GetArchimAtkBoost(void);
+static const struct Collision sCollisions[15];
+
+// 0x080e5608 -- parked (recompute basin): retail evaluates the parent
+// xflip bit twice with the mask register kept (SET_PLAYER_XFLIP's double
+// value eval, no cse across the spr store); agbcc either unifies the two
+// evals (19 short) or overshoots with a hand-expanded reload (+4).
+NON_MATCH void FUN_080e5608(struct Elf* p) {
+#if MODERN
+  struct Entity* q = *(struct Entity**)((u8*)p + 0xb8);
+  SetMotion(&p->s, 1);
+  {
+    s32 one = 1;
+    s32 v = (q->flags >> 4) & one;
+    (p->s).spr.xflip = v;
+    v = (q->flags >> 4) & one;
+    ((p->s).spr).oam.xflip = v;
+    if (v) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    u8 boost = GetArchimAtkBoost();
+    s32 z = 0;
+    (p->s).flags |= COLLIDABLE;
+    InitBody(&p->body, &(&sCollisions[10])[boost], &(p->s).coord, 1);
+    (p->body).parent = (struct CollidableEntity*)p;
+    (p->body).fn = (void*)z;
+    {
+      s32 x = (q->coord).x;
+      s32 y = (q->coord).y;
+      (p->s).coord.x = x;
+      (p->s).coord.y = y;
+    }
+    PlaySound(0x27);
+  }
+#else
+  INCCODE("asm/cyberelf/unk_11_5608.inc");
+#endif
+}
+
+INCASM("asm/cyberelf/unk_11_p2c.inc");
+
 bool8 FUN_080e586c(struct Elf* p);
 struct Elf* FUN_080e5048(s32 a0, s32 a1, u8 mode);
 
