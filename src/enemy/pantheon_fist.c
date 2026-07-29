@@ -248,6 +248,26 @@ void FUN_0809542c(struct Enemy* p) {
 
 INCASM("asm/enemy/pantheon_fist_post_p2_p2.inc");
 
+void FUN_08095914(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0xD4, 0x05));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      FUN_08094fe0(p, 1);
+      break;
+  }
+}
+
+INCASM("asm/enemy/pantheon_fist_post_p2_p2b.inc");
+
 void PantheonFist_Init(struct Enemy* p);
 void PantheonFist_Update(struct Enemy* p);
 void PantheonFist_Die(struct Enemy* p);
