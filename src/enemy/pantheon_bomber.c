@@ -144,7 +144,32 @@ void pantheon_bomber_0808633c(struct Enemy* p) {
 
 bool8 nop_080863a0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_bomber_p3.inc");
+void pantheon_bomber_080863a4(struct Enemy* p) {
+  u8 md = (p->s).mode[2];
+  switch (md) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x69, 0x04));
+      p->props[5] = md;
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((*(u32*)&(p->s).motion.step & 0x00FFFF00) == 0x10200) {
+        SetDDP(&p->body, sCollisions);
+      }
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 nop_08086414(struct Enemy* p) { return TRUE; }
 
