@@ -1,5 +1,6 @@
 #include "global.h"
 #include "vfx.h"
+#include "palette_animation.h"
 
 // ベビーエルフ関連
 
@@ -153,6 +154,103 @@ void VFX37_Die(struct VFX* vfx) {
 }
 
 INCASM("asm/vfx/unk_37_post.inc");
+
+void FUN_080bcc94(struct VFX* vfx) {
+  struct Entity* e = (vfx->s).unk_28;
+  s32 md = (vfx->s).mode[2];
+  switch (md) {
+    case 0:
+      (vfx->s).taskCol = 0x1A;
+      (vfx->s).work[2] = 0x12;
+      SetMotion(&vfx->s, MOTION(0x33, 0x0B));
+      (vfx->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 t = (vfx->s).work[2] - 1;
+      (vfx->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (vfx->s).mode[2]++;
+      }
+      (vfx->s).coord.x += (vfx->s).d.x;
+      (vfx->s).coord.y += (vfx->s).d.y;
+      if ((vfx->s).work[3] != 0) {
+        StepPaletteAnimation(0x19);
+      }
+      UpdateMotionGraphic(&vfx->s);
+      break;
+    }
+    case 2:
+      (vfx->s).work[2] = 0x10;
+      (vfx->s).mode[2]++;
+      // fallthrough
+    case 3: {
+      register s32 w asm("r0");
+      u32 u;
+      s32 f;
+      w = (vfx->s).work[2];
+      asm("" : "+r"(w));
+      u = w;
+      if (u > 8) {
+        if (u & 1) {
+          register u8 f1 asm("r1");
+          register s32 fr asm("r0");
+          f1 = (vfx->s).flags;
+          fr = DISPLAY;
+          fr |= f1;
+          asm("" : "+r"(fr));
+          f = fr;
+        } else {
+          goto off;
+        }
+      } else {
+        if (((*(volatile u8*)&(vfx->s).work[2] % 3) << 24) == 0) {
+          register u8 f1 asm("r1");
+          register s32 fr asm("r0");
+          f1 = (vfx->s).flags;
+          fr = DISPLAY;
+          fr |= f1;
+          f = fr;
+        } else {
+        off: {
+            register u8 f1 asm("r1");
+            register s32 fr asm("r0");
+            f1 = (vfx->s).flags;
+            fr = 0xFE;
+            fr &= f1;
+            f = fr;
+          }
+        }
+      }
+      (vfx->s).flags = f;
+      {
+        register s32 t2 asm("r0");
+        t2 = u - 1;
+        (vfx->s).work[2] = t2;
+        if ((t2 << 24) == 0) {
+          register u8 f1 asm("r1");
+          register s32 f2 asm("r0");
+          *((u8*)e + 0xCF) -= 1;
+          f1 = (vfx->s).flags;
+          f2 = 0xFE;
+          f2 &= f1;
+          {
+            register s32 c2 asm("r1");
+            c2 = 0xFD;
+            f2 &= c2;
+          }
+          (vfx->s).flags = f2;
+          SET_VFX_ROUTINE(vfx, ENTITY_DISAPPEAR);
+        }
+      }
+      (vfx->s).coord.x += (vfx->s).d.x;
+      (vfx->s).coord.y += (vfx->s).d.y;
+      UpdateMotionGraphic(&vfx->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/vfx/unk_37_post_b.inc");
 
 // --------------------------------------------
 
