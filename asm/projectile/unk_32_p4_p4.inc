@@ -4,58 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080abf54
-FUN_080abf54: @ 0x080ABF54
-	push {r4, lr}
-	adds r4, r0, #0
-	bl UpdateMotionGraphic
-	ldrb r1, [r4, #0x12]
-	adds r0, r1, #1
-	strb r0, [r4, #0x12]
-	movs r0, #1
-	ands r0, r1
-	cmp r0, #0
-	beq _080ABF72
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xfe
-	ands r0, r1
-	b _080ABF78
-_080ABF72:
-	ldrb r0, [r4, #0xa]
-	movs r1, #1
-	orrs r0, r1
-_080ABF78:
-	strb r0, [r4, #0xa]
-	ldr r0, _080ABFB0 @ =pZero2
-	ldr r1, [r0]
-	ldr r0, [r1, #0x54]
-	str r0, [r4, #0x54]
-	ldr r0, [r1, #0x58]
-	ldr r1, _080ABFB4 @ =0xFFFFF800
-	adds r0, r0, r1
-	str r0, [r4, #0x58]
-	ldrb r0, [r4, #0x11]
-	cmp r0, #0
-	beq _080ABFA8
-	movs r0, #0x3f
-	bl PlaySound
-	ldr r1, _080ABFB8 @ =gProjectileFnTable
-	ldrb r0, [r4, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r4, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r4, #0x14]
-_080ABFA8:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080ABFB0: .4byte pZero2
-_080ABFB4: .4byte 0xFFFFF800
-_080ABFB8: .4byte gProjectileFnTable
 
 	thumb_func_start FUN_080abfbc
 FUN_080abfbc: @ 0x080ABFBC
@@ -292,4 +240,3 @@ _080AC194: .4byte 0x000343FD
 _080AC198: .4byte 0x00269EC3
 _080AC19C: .4byte 0x000003FF
 _080AC1A0: .4byte gProjectileFnTable
-

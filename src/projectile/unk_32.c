@@ -311,6 +311,34 @@ NON_MATCH void FUN_080abec0(struct Projectile* p) {
 #endif
 }
 
+void FUN_080abf54(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  {
+    register u8 f asm("r0");
+    u8 odd;
+    {
+      register u8 t asm("r1") = (p->s).work[2];
+      (p->s).work[2] = t + 1;
+      odd = t & 1;
+    }
+    if (odd) {
+      register u8 f0 asm("r1");
+      f0 = (p->s).flags;
+      f = ~DISPLAY & f0;
+    } else {
+      f = (p->s).flags;
+      f = DISPLAY | f;
+    }
+    (p->s).flags = f;
+  }
+  (p->s).coord.x = (pZero2->s).coord.x;
+  (p->s).coord.y = (pZero2->s).coord.y - PIXEL(8);
+  if ((p->s).work[1] != 0) {
+    PlaySound(0x3F);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 INCASM("asm/projectile/unk_32_p4_p4.inc");
 
 // 0x080ac1a4
