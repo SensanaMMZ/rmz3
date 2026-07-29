@@ -967,6 +967,60 @@ void CopyX_OnDamage(struct Body* body) {
   }
 }
 
+void copyx_080577c8(struct Boss* p) {
+  if (*((u8*)p + 0xc6) != 0) {
+    s32 md = *((u8*)p + 0xc5);
+    switch (md) {
+      case 0: {
+        struct Zero* z = pZero2;
+        if (((z->s).coord.x >> 8) & 1) {
+          goto m11;
+        }
+        (p->s).mode[1] = 9;
+        (p->s).mode[3] = 0x15;
+        (p->s).d.x = ((z->s).coord.x - (p->s).coord.x) / 0x58;
+        (p->s).d.y = -0x580;
+        break;
+      }
+      case 1:
+        (p->s).mode[1] = 0x1C;
+        break;
+      case 2:
+        (p->s).mode[1] = 0x1A;
+        break;
+      case 3:
+        (p->s).mode[1] = 0x1E;
+        break;
+    }
+  } else {
+    if (*((u8*)p + 0xc5) == 0) {
+      if ((RANDOM(RNG_0202f388) & 0xF) > 9) {
+        goto tele;
+      }
+    } else {
+      if ((RANDOM(RNG_0202f388) & 0xF) > 5) {
+        goto tele;
+      }
+    }
+    (p->s).mode[1] = 4;
+    (p->s).mode[2] = 1;
+    return;
+  tele:
+    {
+      struct Zero* z2 = pZero2;
+      if (((z2->s).coord.x >> 9) & 1) {
+      m11:
+        (p->s).mode[1] = 0x11;
+      } else {
+        (p->s).mode[1] = 9;
+        (p->s).mode[3] = 0x15;
+        (p->s).d.x = ((z2->s).coord.x - (p->s).coord.x) / 0x50;
+        (p->s).d.y = -0x500;
+      }
+    }
+  }
+}
+
 INCASM("asm/boss/copy_x_p2_p3_p2.inc");
 
 // 0x08363c18
