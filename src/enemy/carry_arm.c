@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "vfx.h"
 
 const EnemyFunc PTR_ARRAY_08366b78[2];
 
@@ -120,6 +121,29 @@ void FUN_08071b88(struct Enemy* p) {
     SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
   }
   UpdateMotionGraphic(&p->s);
+}
+
+struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+static const motion_t sMotions[4];
+
+void FUN_08071bf0(struct Enemy* p) {
+  struct Coord c;
+  (p->body).status = 0;
+  (p->body).prevStatus = 0;
+  (p->body).invincibleTime = 0;
+  (p->s).flags &= ~COLLIDABLE;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - PIXEL(16);
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080b7f70(&p->s, &c, (motion_t*)sMotions, 4);
+  {
+    struct Entity* q = *(struct Entity**)&p->props[0];
+    if (*((u8*)q + 0x2f) == 0) {
+      *(s32*)((u8*)q + 0x20) += 5;
+    }
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
 INCASM("asm/enemy/carry_arm_p3_p1b.inc");
