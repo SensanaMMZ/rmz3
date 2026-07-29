@@ -2292,3 +2292,10 @@ Not a normal function: no prologue, reads p from r7 (caller's reg), pops the
 CALLER's frame (r8/sb restore) — a shared die-tail reached by `bl` from inside
 FUN_080a3c58 (lines 462/470 of tretista_post_p2_p1.inc). Cannot exist as
 standalone C; must be absorbed (or NAKED-paired) when FUN_080a3c58 is done.
+
+## Carve naming rule (2026-07-29, shrimpolin near-miss)
+Before writing a carve piece `<base>_b.inc`, CHECK the name is unused —
+`ls asm/.../<base>_*.inc` first. shrimporinSpin's carve overwrote a
+tracked pre-existing shrimpolin_b.inc (recovered from git; symptom was
+"symbol already defined" at assembly). Pieces now use the next free
+letter (_c here).
