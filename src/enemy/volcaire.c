@@ -219,6 +219,7 @@ bool8 FUN_080772f8(struct Enemy* p) {
 }
 
 #include "element.h"
+#include "mission.h"
 #include "vfx.h"
 
 static const struct Coord sElementCoord;
@@ -390,6 +391,36 @@ void FUN_08077af8(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/volcaire_p2_post.inc");
+
+struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+static const motion_t sMotions[4];
+
+// 0x08077f0c
+void MaybeKillVolcaire(struct Enemy* p) {
+  struct Coord c;
+  (p->body).status = 0;
+  (p->body).prevStatus = 0;
+  (p->body).invincibleTime = 0;
+  {
+    u8 f = (p->s).flags & ~COLLIDABLE;
+    f &= ~DISPLAY;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - PIXEL(16);
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080b7f70(&p->s, &c, (motion_t*)sMotions, 3);
+  TryDropItem(1, &(p->s).coord);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, &(p->s).coord);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/volcaire_p2_post_b.inc");
 
 // --------------------------------------------
 
