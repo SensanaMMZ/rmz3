@@ -4,8 +4,6 @@
 	
 	.text
 
-	thumb_func_start menart_080da18c
-menart_080da18c: @ 0x080DA18C
 	push {lr}
 	ldr r2, _080DA1AC @ =gCurStory
 	ldrb r1, [r2, #6]
@@ -80,4 +78,3 @@ _080DA214:
 _080DA218:
 	pop {r1}
 	bx r1
-

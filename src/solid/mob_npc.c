@@ -454,7 +454,38 @@ void FUN_080da114(struct Solid* p) {
   (p->s).mode[1] = 0;
   MobNPC_Update(p);
 }
-INCASM("asm/solid/mob_npc_pre_p1_1_3.inc");
+// Menart's dialog select (story flags 16/11, counts[6] progression, disk
+// bit 2). Retail spreads the TextID literals across per-arm pool islands;
+// agbcc consolidates them and the function lands 6 bytes short (same
+// pool-island basin as FUN_080df6d8).
+NON_MATCH TextID menart_080da18c(struct Solid* p) {
+#if MODERN
+  if (FLAG(gCurStory.s.gameflags, 16)) {
+    if (gCurStory.s.counts[6] <= 2) {
+      gCurStory.s.counts[6] = 3;
+      return 0x257;
+    }
+    return 0x258;
+  }
+  if (FLAG(gCurStory.s.gameflags, 11)) {
+    if (gCurStory.s.counts[6] <= 1) {
+      gCurStory.s.counts[6] = 2;
+      return 0x255;
+    }
+    return 0x256;
+  }
+  if (gCurStory.s.counts[6] == 0) {
+    gCurStory.s.counts[6] = 1;
+    return 0x252;
+  }
+  if (((gStageDiskManager.disk[0x2b] & 0xF) >> 2 & 1) == 0) {
+    return 0x253;
+  }
+  return 0x254;
+#else
+  INCCODE("asm/solid/mob_npc_a18c.inc");
+#endif
+}
 
 // 0x080da21c
 void FUN_080da21c(struct Solid* p) {
