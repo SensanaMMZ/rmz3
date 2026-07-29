@@ -4,8 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0808bbe8
-FUN_0808bbe8: @ 0x0808BBE8
 	push {r4, r5, r6, r7, lr}
 	mov r7, sb
 	mov r6, r8
@@ -137,4 +135,3 @@ _0808BCF0: .4byte 0x00269EC3
 _0808BCF4: .4byte 0x0000650E
 _0808BCF8: .4byte 0x0000650F
 _0808BCFC: .4byte 0x00006510
-

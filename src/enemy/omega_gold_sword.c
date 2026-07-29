@@ -91,7 +91,65 @@ void FUN_0808bb88(struct Enemy* p) {
 
 bool8 FUN_0808bbe4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/omega_gold_sword_p3_p1_a.inc");
+static const struct Coord Coord_ARRAY_08368ec4[6];
+void FUN_080c1c94(struct Coord* c, u32 k, u16 m);
+
+// Giant sword drop-in + 6x3 shard burst. Logic verified; matches except the
+// position of one reload-generated `mov r9, sp` (retail emits it right after
+// the RNG base staging, agbcc after the coord-table/counter inits) - pure
+// reload placement, not reachable from source (18 shapes tried).
+NON_MATCH void FUN_0808bbe8(struct Enemy* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags |= DISPLAY;
+      SetMotion(&p->s, MOTION(0x65, 0x00));
+      {
+        struct Entity* q = (p->s).unk_28;
+        (p->s).coord.y = q->coord.y - 0x4000;
+        (p->s).coord.x = q->coord.x;
+      }
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2: {
+      s32 i;
+      const struct Coord* co;
+      struct Coord c;
+      SetMotion(&p->s, MOTION(0x65, 0x01));
+      PlaySound(0x41);
+      co = Coord_ARRAY_08368ec4;
+      i = 5;
+      do {
+        u8 k = RANDOM(RNG_0202f388) & 3;
+        c.x = (p->s).coord.x + co->x;
+        c.y = (p->s).coord.y + co->y + 0x4000;
+        FUN_080c1c94(&c, k, MOTION(0x65, 0x0E));
+        FUN_080c1c94(&c, k, MOTION(0x65, 0x0F));
+        FUN_080c1c94(&c, k, MOTION(0x65, 0x10));
+        co += 1;
+        i -= 1;
+      } while (i >= 0);
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/omega_gold_sword_bbe8.inc");
+#endif
+}
 
 bool8 FUN_0808bd00(struct Enemy* p) {
   if (((p->s).unk_28)->mode[1] == 6) {
