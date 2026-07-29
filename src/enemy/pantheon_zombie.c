@@ -162,6 +162,20 @@ void FUN_08080610(struct Enemy* p) {
 
 INCASM("asm/enemy/pantheon_zombie_p2_post_post.inc");
 
+void FUN_080bf48c(s32 x, s32 y, u8 n);
+
+void FUN_080806e0(struct Enemy* p) {
+  (p->body).status = 0;
+  (p->body).prevStatus = 0;
+  (p->body).invincibleTime = 0;
+  (p->s).flags &= ~COLLIDABLE;
+  FUN_080bf48c((p->s).coord.x, (p->s).coord.y - PIXEL(16), 1);
+  *(u8*)((u8*)(p->s).unk_28 + 0xcb) -= 1;
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/pantheon_zombie_p2_post_postb.inc");
+
 void PantheonZombie_Init(struct Enemy* p);
 void PantheonZombie_Update(struct Enemy* p);
 void PantheonZombie_Die(struct Enemy* p);
