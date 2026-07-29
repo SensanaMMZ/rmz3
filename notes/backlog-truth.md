@@ -2286,3 +2286,9 @@ matched first try. The two remaining blobs (mellnet FUN_0807db9c,
 shotloid FUN_08094534) should get the same treatment before reaching for
 Ghidra — mdiff shows no target side for blobs, so the ROM gate is the
 only verification.
+
+## FUN_080a449c (tretista, 24B) — triage 2026-07-29
+Not a normal function: no prologue, reads p from r7 (caller's reg), pops the
+CALLER's frame (r8/sb restore) — a shared die-tail reached by `bl` from inside
+FUN_080a3c58 (lines 462/470 of tretista_post_p2_p1.inc). Cannot exist as
+standalone C; must be absorbed (or NAKED-paired) when FUN_080a3c58 is done.
