@@ -3,6 +3,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
 #include "physics.h"
 #include "story.h"
 #include "metatile.h"
@@ -247,6 +248,66 @@ void FUN_0809542c(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/pantheon_fist_post_p2_p2.inc");
+
+void FUN_08095664(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 on = 0;
+      u8 rv;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        on = 1;
+      }
+      rv = FUN_08094fa8(p, (on << 8) - 0x80);
+      if (rv == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = rv;
+        return;
+      }
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0xD4, 0x02));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1: {
+      s32 on3 = 0;
+      s32 on;
+      s32 d;
+      u8 rv2;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        on3 = 1;
+      }
+      on = on3;
+      {
+        bool8 xf2 = on;
+        if (on) {
+          (p->s).flags |= X_FLIP;
+        } else {
+          (p->s).flags &= ~X_FLIP;
+        }
+        ((p->s).spr).xflip = xf2 & 1;
+        ((p->s).spr).oam.xflip = xf2;
+      }
+      if ((u32)((pZero2->s).coord.x - (p->s).coord.x + 0x3200) <= 0x63FF) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+      }
+      d = (on << 8) - 0x80;
+      if (FUN_08094fa8(p, d) == 0 || (u8)FUN_08095014(p, d) != 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      rv2 = FUN_08094fe0(p, 1);
+      if (rv2 == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = rv2;
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_fist_post_p2_p2_c.inc");
 
 void FUN_08095914(struct Enemy* p) {
   switch ((p->s).mode[2]) {
