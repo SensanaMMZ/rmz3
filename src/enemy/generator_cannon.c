@@ -2,10 +2,13 @@
 #include "enemy.h"
 #include "global.h"
 #include "mission.h"
+#include "mod.h"
 #include "physics.h"
 #include "story.h"
 
 static const struct Collision sCollisions[];
+static const u8 sInitModes[4];
+static const struct Rect sSize;
 
 bool8 FUN_0808c3ec(struct Enemy* p);
 bool8 FUN_0808c450(struct Enemy* p);
@@ -131,7 +134,48 @@ void FUN_0808c4e8(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/generator_cannon_pre_a_b.inc");
+void GeneratorCannon_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  *(struct VFX**)&p->props[0] = NULL;
+  if ((p->s).work[0] == 0) {
+    (p->s).flags2 |= ENTITY_HAZARD;
+    (p->s).size = (struct Rect*)&sSize;
+    (p->s).hazardAttr = 0x801;
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    if (MOD_ENABLED(gSystemSavedataManager.mods, MOD_102) && !FLAG(gCurStory.s.gameflags, DEMO_PLAY)) {
+      struct Body* body;
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 0x18);
+      body->parent = (void*)p;
+      body->fn = NULL;
+    } else {
+      struct Body* body;
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 0x14);
+      body->parent = (void*)p;
+      body->fn = NULL;
+    }
+  } else {
+    struct Body* body;
+    p->props[4] = 0;
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 5);
+    body->parent = (void*)p;
+    body->fn = NULL;
+  }
+  {
+    struct Body* body = &p->body;
+    body->fn = onCollision;
+  }
+  GeneratorCannon_Update(p);
+}
 
 void GeneratorCannon_Update(struct Enemy* p) {
   u8 sf = (u8)(gCurStory.s.gameflags[4] & 2);
