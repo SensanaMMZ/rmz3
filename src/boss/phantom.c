@@ -838,7 +838,22 @@ void FUN_080600fc(struct Boss* p) {
   (PTR_ARRAY_08365544[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p7_p1_p1.inc");
+void FUN_0806016c(struct Boss* p);
+
+void FUN_08060114(struct Boss* p) {
+  struct Camera* cam;
+  (p->s).coord.x = (pZero2->s).coord.x;
+  cam = &gStageRun.vm.camera;
+  (p->s).coord.y = cam->viewport.y - 0x3000;
+  FUN_08060864(p, 0);
+  (p->s).d.y = 0;
+  FUN_080607a0(p, 0xC);
+  (p->s).mode[3] = 1;
+  PlaySound(0xFE);
+  FUN_0805ecc8(&p->s);
+  (p->s).work[2] = 0xC;
+  FUN_0806016c(p);
+}
 
 void FUN_0806016c(struct Boss* p) {
   if (--(p->s).work[2] == 0) {
