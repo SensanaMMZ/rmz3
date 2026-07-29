@@ -46,6 +46,32 @@ void Projectile26_Update(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_26_post_a.inc");
 
+// 0x080a8f14
+void FUN_080a8f14(struct Projectile* p) {
+  if ((p->s).mode[1] == 0) {
+    if ((u8)--(p->s).work[2] == 0xFF) {
+      register u8 n asm("r2") = (p->s).work[1];
+      if (n != 1) {
+        if ((p->s).work[0] & 1) {
+          n--;
+          FUN_080a88fc(&p->s, 3, n);
+        } else {
+          n--;
+          FUN_080a88fc(&p->s, 2, n);
+        }
+      }
+      (p->s).mode[1]++;
+    }
+  }
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += *(s16*)((u8*)p + 0xbc);
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    (p->s).work[2] = 0x10;
+  }
+}
+
 metatile_attr_t FUN_080098a4(s32 x, s32 y);
 
 void FUN_080a8fa8(struct Projectile* p) {
