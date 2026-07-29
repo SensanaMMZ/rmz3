@@ -733,7 +733,26 @@ void FUN_0805ffb4(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p6_p1_p2_p2.inc");
+void FUN_0805ffec(struct Boss* p) {
+  (p->s).work[2]++;
+  if ((p->s).work[2] & 3) {
+    (p->s).flags |= DISPLAY;
+  } else {
+    (p->s).flags &= ~DISPLAY;
+  }
+  FUN_08060924(p);
+  if ((p->s).d.y > 0) {
+    register u8 f0 asm("r1");
+    s32 z;
+    *(u32*)&p->props.raw[0x10] = 1;
+    f0 = (p->s).flags;
+    z = 0;
+    (p->s).flags = f0 | DISPLAY;
+    FUN_080607a0(p, 8);
+    (p->s).work[2] = z;
+    (p->s).mode[3] = 3;
+  }
+}
 
 // 0x08060040
 void FUN_08060040(struct Boss* p) {
