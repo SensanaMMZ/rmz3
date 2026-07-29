@@ -91,7 +91,23 @@ void FUN_0807cce0(s32 x, s32 y) {
 void nop_0807cd70(struct Enemy* p) {}
 
 
-INCASM("asm/enemy/crossbyne_p2_pre_a.inc");
+bool8 FUN_0807cd74(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    if ((p->s).work[0] <= 1) {
+      u32 t = (p->body).status & BODY_STATUS_SLASHED;
+      if (t != 0) {
+        (p->s).mode[1] = 1;
+      } else {
+        (p->s).mode[1] = t;
+      }
+    } else {
+      (p->s).mode[1] = 2;
+    }
+    return 1;
+  }
+  return 0;
+}
 
 #include "element.h"
 #include "vfx.h"
