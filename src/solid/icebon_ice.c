@@ -4,6 +4,7 @@
 #include "physics.h"
 #include "solid.h"
 #include "vfx.h"
+#include "zero.h"
 
 struct IcebonIceObject {
   OBJECT_HDR;
@@ -72,7 +73,7 @@ static void nop_080ca6fc(struct Solid* p);
 void FUN_080ca76c(struct Solid* p);
 
 void FUN_080ca7d8(struct IcebonIceObject* p);
-void FUN_080ca880(struct Solid* p);
+void FUN_080ca880(struct IcebonIceObject* p);
 void FUN_080ca988(struct Solid* p);
 void FUN_080caafc(struct Solid* p);
 void FUN_080cab58(struct Solid* p);
@@ -93,7 +94,7 @@ static void IcebonIce_Update(struct Solid* p) {
   // clang-format off
   static const SolidFunc sUpdates2[6] = {
       (SolidFunc)FUN_080ca7d8,
-      FUN_080ca880,
+      (SolidFunc)FUN_080ca880,
       FUN_080ca988,
       FUN_080caafc,
       FUN_080cab58,
@@ -198,6 +199,75 @@ void FUN_080ca7d8(struct IcebonIceObject* p) {
       (p->s).coord.y += y >> 3;
       if ((p->s).coord.y - (p->s).unk_coord.y <= -PIXEL(15)) (p->s).mode[1] = 1, (p->s).mode[2] = 0;
       break;
+    }
+  }
+}
+
+// 0x080ca880
+void FUN_080ca880(struct IcebonIceObject* p) {
+  if ((p->body).hp >= 5) {
+    SetMotion(&p->s, MOTION(SM017_ICEBON_ICE, 1));
+  } else {
+    SetMotion(&p->s, MOTION(SM017_ICEBON_ICE, 3));
+  }
+  UpdateMotionGraphic(&p->s);
+
+  {
+    s32 md = (p->s).mode[2];
+    switch (md) {
+      case 0: {
+        (p->s).flags2 |= ENTITY_HAZARD;
+        (p->s).size = (struct Rect*)&Rect_0836fd58;
+        (p->s).hazardAttr = 0x801;
+        SetDDP(&p->body, &sCollisions[1]);
+        (p->s).work[2] = 0x30;
+        (p->s).unk_coord.y = md;
+        (p->s).mode[2]++;
+        FALLTHROUGH;
+      }
+      case 1: {
+        s32 hit;
+        s32 grounded;
+        s32 cy;
+        register s32 vel asm("r0");
+        p->y -= 0x80;
+        grounded = 0;
+        {
+          struct Overworld* ow = &gOverworld;
+          if (p->y < ow->sea) {
+            p->y = ow->sea;
+            grounded = 1;
+          }
+        }
+        hit = PushoutToDown1((p->s).coord.x, p->y);
+        if (hit > 0) {
+          p->y += hit;
+          grounded = 1;
+        }
+        {
+          s32 st = (p->body).status & 4;
+          cy = (p->s).coord.y;
+          if (st && cy > (pZero2->s).coord.y) {
+          vel = 0x800;
+          } else {
+            vel = 0;
+          }
+        }
+        (p->s).unk_coord.y = vel;
+        if (grounded != 0) {
+          u8 t = --(p->s).work[2];
+          if (t == 0) {
+            (p->s).mode[1] = 2;
+            (p->s).mode[2] = t;
+          }
+        }
+        {
+          s32 dy = p->y + (p->s).unk_coord.y - cy;
+          if (dy < 0) dy += 7;
+          (p->s).coord.y = cy + (dy >> 3);
+        }
+        break;
+      }
     }
   }
 }
