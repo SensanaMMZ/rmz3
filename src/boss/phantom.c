@@ -293,7 +293,36 @@ void FUN_0805f57c(struct Boss* p) {
   (p->s).unk_2c = (struct Entity*)FUN_080afbb0(&p->s, 0);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p9_p1_p2_p1.inc");
+void FUN_0805f630(struct Boss* p);
+
+// 0x0805f5a8
+void FUN_0805f5a8(struct Boss* p) {
+  if (FUN_080608e0(p)) {
+    s32 t;
+    s32 x;
+    s32 zx;
+    (p->s).mode[3] = 2;
+    zx = (pZero2->s).coord.x;
+    if (zx == *(s32*)&(p->props).raw[0x2C]) {
+      x = (p->s).coord.x;
+      if (x > zx) {
+        t = *(s32*)&(p->props).raw[0x24] - PIXEL(24);
+      } else {
+        t = *(s32*)&(p->props).raw[0x20] + PIXEL(24);
+      }
+    } else {
+      if (zx < *(s32*)&(p->props).raw[0x2C]) {
+        t = *(s32*)&(p->props).raw[0x24] - PIXEL(24);
+      } else {
+        t = *(s32*)&(p->props).raw[0x20] + PIXEL(24);
+      }
+      x = (p->s).coord.x;
+    }
+    (p->s).d.x = (t - x) / 46;
+    (p->s).d.y = -0x5C0;
+    FUN_0805f630(p);
+  }
+}
 
 void FUN_0805f630(struct Boss* p) {
   SetDDP(&p->body, &sCollisions[12]);
