@@ -2,6 +2,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "overworld.h"
 #include "overworld_terrain.h"
 
 struct Enemy* CreatePuffy(struct Coord* c, u8 mode) {
@@ -19,7 +20,115 @@ struct Enemy* CreatePuffy(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/puffy_p1_p2_a.inc");
+static const struct Collision sCollisions[2];
+void Puffy_Update(struct Enemy* p);
+void FUN_0807cba4(struct Body* body);
+
+void Puffy_Init(struct Enemy* p) {
+  register s32 z6 asm("r6");
+  s32 z7;
+  register s32 one8 asm("r8");
+  s32 y2;
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    f0 = (p->s).flags;
+    d0 = DISPLAY;
+    d0 |= f0;
+    d0 |= FLIPABLE;
+    z6 = 0;
+    d0 &= 0xEF;
+    z7 = 0;
+    (p->s).flags = d0;
+  }
+  one8 = 1;
+  ((p->s).spr).xflip = z7;
+  {
+    u8* a = (u8*)p + 0x4a;
+    register u8 b asm("r1");
+    s32 msk;
+    b = *a;
+    msk = -0x11;
+    msk &= b;
+    *a = msk;
+  }
+  (p->s).flags |= COLLIDABLE;
+  {
+    struct Body* body;
+    body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 6);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)FUN_0807cba4;
+  }
+  {
+    struct Overworld* ow = &gOverworld;
+    register u32 so asm("r1");
+    s32 sea;
+    asm("" : "+r"(ow));
+    so = 0x2C00C;
+    asm("" : "+r"(so));
+    {
+      u8* a2 = (u8*)ow;
+      asm("" : "+r"(a2));
+      a2 += so;
+      sea = *(s32*)a2;
+    }
+    y2 = (p->s).coord.y;
+    if (sea <= y2) {
+      goto underwater;
+    }
+  }
+  {
+    register u8 f1 asm("r1");
+    register s32 f2 asm("r0");
+    f1 = (p->s).flags;
+    f2 = 0xFE;
+    f2 &= f1;
+    {
+      register s32 c2 asm("r1");
+      c2 = 0xFD;
+      f2 &= c2;
+    }
+    (p->s).flags = f2;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+underwater:
+  {
+    u8* q = (u8*)p + 0xb4;
+    (p->s).unk_coord.y = y2;
+    *(s32*)q = y2;
+    q -= 0x58;
+    *(s32*)(q + 4) = z6;
+    (p->s).d.x = z6;
+    q += 0x60;
+    *(s32*)q = z6;
+    q -= 4;
+    *q = z6;
+    q += 8;
+    *q = one8;
+  }
+  {
+    u32 tb = (u32)gEnemyFnTable;
+    const EnemyRoutine** ta = (const EnemyRoutine**)(tb + (p->s).id * 4);
+    {
+      register s32 mv asm("r1");
+      mv = one8;
+      *(u32*)&(p->s).mode[0] = mv;
+    }
+    (p->s).onUpdate = (void*)(**ta)[ENTITY_UPDATE];
+  }
+  (p->s).mode[1] = z6;
+  (p->s).mode[2] = z6;
+  (p->s).mode[3] = z6;
+  if (IsFrozen(&p->s)) {
+    SetMotion(&p->s, MOTION(0x41, 0x00));
+    UpdateMotionGraphic(&p->s);
+  }
+  Puffy_Update(p);
+}
 
 extern const EnemyFunc PTR_ARRAY_08367aec[4];
 extern const EnemyFunc PTR_ARRAY_08367afc[4];
