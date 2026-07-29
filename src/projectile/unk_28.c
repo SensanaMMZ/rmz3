@@ -79,6 +79,51 @@ static void Projectile28_Die(Object* p) {
 
 INCASM("asm/projectile/unk_28_p1.inc");
 
+void FUN_080a90a0(struct Entity* e, u8 a1, u8 a2);
+
+// 0x080a9c88
+void FUN_080a9c88(struct Projectile* p) {
+  register s32* bx asm("r5");
+  register u8 t asm("r1");
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).flags & X_FLIP) {
+    u8 a;
+    const s16* tbl;
+    bx = (s32*)((u8*)p + 0xb4);
+    tbl = gSineTable;
+    a = (p->s).work[2];
+    (p->s).coord.x = *bx + tbl[(u8)(a + 0x40)] * 11;
+    (p->s).coord.y = *(s32*)((u8*)p + 0xb8) + tbl[*(vu8*)&(p->s).work[2]] * 22;
+    (p->s).work[2] = a + 0x10;
+    (p->s).d.x += 8;
+    if ((p->s).d.x > 0x200) {
+      (p->s).d.x = 0x200;
+    }
+  } else {
+    u8 a;
+    const s16* tbl;
+    bx = (s32*)((u8*)p + 0xb4);
+    tbl = gSineTable;
+    a = (p->s).work[2];
+    (p->s).coord.x = *bx + tbl[(u8)(a + 0x40)] * 11;
+    (p->s).coord.y = *(s32*)((u8*)p + 0xb8) + tbl[*(vu8*)&(p->s).work[2]] * 22;
+    (p->s).work[2] = a - 0x10;
+    (p->s).d.x -= 8;
+    if ((p->s).d.x < -0x200) {
+      (p->s).d.x = -0x200;
+    }
+  }
+  t = (p->s).work[3];
+  (p->s).work[3] = t + 1;
+  if ((t & 3) == 0) {
+    FUN_080a90a0(&p->s, 6, 0);
+  }
+  *bx += (p->s).d.x;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 void FUN_080a9d88(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
   InitNonAffineMotion(&p->s);
