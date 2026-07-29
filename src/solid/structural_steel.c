@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "overworld.h"
 #include "solid.h"
 
 static const struct Collision sCollision;
@@ -104,6 +105,48 @@ static void Solid50_Disappear(struct Solid* p) {
 }
 
 // --------------------------------------------
+
+// Scrolls the steel beam along the giant-elevator track (work[3] picks the
+// up/down counter at gOverworld+0x2D02C/+0x2D030, work[0] the loop length).
+// Retail pools gOverworld in TWO literal islands (one mid-function after the
+// first arm's branch); agbcc dedupes it into the end pool and the function
+// lands 10 bytes short (pool-slot scheduling basin).
+NON_MATCH void FUN_080df6d8(struct Solid* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).taskCol = 0x1F;
+      SetMotion(&p->s, MOTION(0xDE, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 v;
+      s32 m;
+      if ((p->s).work[3] == 0) {
+        struct Overworld* ow = &gOverworld;
+        v = *(s32*)((u8*)ow + 0x2D02C) * 256;
+        v += (p->s).work[2] << 16;
+      } else {
+        struct Overworld* ow = &gOverworld;
+        v = *(s32*)((u8*)ow + 0x2D030) * 256;
+        v -= (p->s).work[2] << 15;
+      }
+      if ((p->s).work[0] != 0) {
+        m = 0x22000;
+      } else {
+        m = 0x61000;
+      }
+      v = v % m;
+      (p->s).coord.x = v + (p->s).unk_coord.x;
+      (p->s).coord.y = (p->s).unk_coord.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/solid/structural_steel_6d8.inc");
+#endif
+}
 
 INCASM("asm/solid/structural_steel.inc");
 
