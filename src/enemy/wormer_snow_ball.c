@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
 #include "vfx.h"
 #include "mission.h"
 #include "entity/macros.h"
@@ -118,6 +119,82 @@ void FUN_0807b30c(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/wormer_snow_ball_p3_p2_p1.inc");
+
+u8 makeZeroSlower(struct Zero* z, u8 val);
+void CreateIceballParticle2(s32 x, s32 y);
+
+void FUN_0807b494(struct Enemy* p) {
+  s32 md = (p->s).mode[2];
+  switch (md) {
+    case 0: {
+      CreateIceballParticle2((p->s).coord.x, (p->s).coord.y);
+      (p->s).taskCol = 0xF;
+      (p->body).status = md;
+      (p->body).prevStatus = md;
+      (p->body).invincibleTime = md;
+      (p->s).flags &= ~COLLIDABLE;
+      makeZeroSlower(pZero2, 0x18);
+      (p->s).work[2] = 0x80;
+      (p->s).d.x = 0x18;
+      {
+        s32 dx = (p->s).coord.x - (pZero2->s).coord.x;
+        (p->s).unk_coord.x = dx;
+        if (dx < -0xA00) {
+          (p->s).unk_coord.x = -0xA00;
+        } else if (dx > 0xA00) {
+          (p->s).unk_coord.x = 0xA00;
+        }
+      }
+      {
+        s32 dy = (p->s).coord.y - (pZero2->s).coord.y;
+        (p->s).unk_coord.y = dy;
+        if (dy < -0x1800) {
+          (p->s).unk_coord.y = -0x1800;
+        } else if (dy > 0) {
+          (p->s).unk_coord.y = 0;
+        }
+      }
+      SetMotion(&p->s, MOTION(0x40, 0x03));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1: {
+      struct Zero* z = pZero2;
+      s32 nd;
+      (p->s).coord.x = (z->s).coord.x + (p->s).unk_coord.x;
+      (p->s).coord.y = (z->s).coord.y + (p->s).unk_coord.y;
+      (p->s).work[2]--;
+      nd = (p->s).d.x - CountButtonMashing(z);
+      (p->s).d.x = nd;
+      if ((p->s).work[2] == 0) {
+        goto rel;
+      }
+      if (nd < 0) {
+        goto rel;
+      }
+      {
+        struct Zero* z2 = pZero2;
+        if ((*(u32*)((u8*)z2 + 0x8c) & 0x200) != 0) {
+          goto rel;
+        }
+        if (*(s16*)((u8*)z2 + 0xa4) != 0) {
+          goto upd;
+        }
+      }
+    rel:
+      makeZeroFaster(pZero2, 0x18);
+      SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      (p->s).mode[1] = (p->s).work[0];
+      WormerSnowBall_Die(p);
+      break;
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/wormer_snow_ball_p3_p2_p1_b.inc");
 
 void CreateIceballParticle2(s32 x, s32 y);
 
