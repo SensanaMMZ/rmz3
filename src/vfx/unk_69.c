@@ -149,6 +149,46 @@ void Ghost69_Die(struct VFX* p) {
 
 INCASM("asm/vfx/unk_69_p1_post_post.inc");
 
+void FUN_080c5328(struct VFX* p) {
+  u8 md;
+  if (((p->s).unk_28)->mode[0] > 1) {
+    goto die;
+  }
+  md = (p->s).mode[2];
+  switch (md) {
+    case 0:
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      {
+        u8 f = DISPLAY | (p->s).flags;
+        f |= FLIPABLE;
+        (p->s).flags = f;
+      }
+      (p->props).unk69.c.x = md;
+      (p->props).unk69.c.y = md;
+      SetMotion(&p->s, MOTION(0xB9, 0x03));
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      (p->s).coord.x = ((p->s).unk_28)->coord.x + (p->props).unk69.c.x;
+      (p->s).coord.y = ((p->s).unk_28)->coord.y + (p->props).unk69.c.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+    die:
+      SET_VFX_ROUTINE(p, ENTITY_DIE);
+      break;
+  }
+}
+
+INCASM("asm/vfx/unk_69_p1_post_post_b.inc");
+
 void nop_080c552c(struct VFX* p) {}
 
 INCASM("asm/vfx/unk_69_p2_a.inc");
