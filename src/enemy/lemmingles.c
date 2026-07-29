@@ -236,6 +236,46 @@ void FUN_0806e9fc(struct Enemy* p) {
 
 INCASM("asm/enemy/lemmingles_p2_p2_p2.inc");
 
+// 0x0806ee0c
+void FUN_0806ee0c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[0] == 1) {
+        SetMotion(&p->s, MOTION(0x1D, 0x04));
+      }
+      if ((p->s).work[0] == 3) {
+        SetMotion(&p->s, MOTION(0x1D, 0x0A));
+      }
+      (p->s).work[3] = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+      (p->s).work[2] = 0x12;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (u8)--(p->s).work[2];
+      if (t != 0) {
+        break;
+      }
+      if ((p->s).work[0] == 1 || (p->s).work[0] == 3) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = t;
+      } else {
+        u8 g;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 1;
+        g = (p->s).work[3];
+        if (g == 0) {
+          *((u8*)p + 0xbd) = g;
+        }
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/lemmingles_p2_p2_p2b.inc");
+
 // --------------------------------------------
 
 void FUN_0806e990(struct Enemy* p);
