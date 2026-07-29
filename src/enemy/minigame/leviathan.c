@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "trig.h"
 #include "text.h"
 #include "minigame.h"
 
@@ -123,6 +124,77 @@ void LeviathanMinigameEnemy_Die(struct Enemy* p) {
 void nop_0809a1ec(struct Enemy* p) {}
 
 INCASM("asm/enemy/minigame_leviathan_p3.inc");
+
+void FUN_0809a5e0(struct Enemy* p) {
+  if (*((u8*)(p->s).unk_28 + 0x31) != 0) {
+    SetDDP(&p->body, sCollisions);
+    return;
+  }
+  SetDDP(&p->body, &sCollisions[4]);
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 on2;
+      SetMotion(&p->s, MOTION(0xEF, 0x00));
+      on2 = (p->s).work[2] ^ 1;
+      if (on2) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        register s32 m1 asm("r1");
+        m1 = 1;
+        m1 &= on2;
+        ((p->s).spr).xflip = m1;
+        {
+          u8* a = (u8*)p + 0x4a;
+          register s32 sh asm("r1");
+          register u8 b2 asm("r2");
+          s32 msk;
+          sh = m1 << 4;
+          b2 = *a;
+          msk = -0x11;
+          msk &= b2;
+          msk |= sh;
+          *a = msk;
+        }
+      }
+      {
+        register s32 e0 asm("r2");
+        e0 = 0xE0;
+        asm("" : "+r"(e0));
+        e0 -= (p->s).work[2] * 448;
+        (p->s).d.x = e0;
+      }
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += gSineTable[(p->s).work[3]] / 4;
+      (p->s).work[3] += 3;
+      UpdateMotionGraphic(&p->s);
+      if ((u32)((p->s).coord.x - 0xD000) > 0x13000) {
+        register u8 f1 asm("r1");
+        register s32 f2 asm("r0");
+        f1 = (p->s).flags;
+        f2 = 0xFE;
+        f2 &= f1;
+        {
+          register s32 c2 asm("r1");
+          c2 = 0xFD;
+          f2 &= c2;
+        }
+        (p->s).flags = f2;
+        EXIT_BODY(p);
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/minigame_leviathan_p3_c.inc");
 
 void FUN_0809a90c(struct Enemy* p) {
   if (*(u8*)((u8*)(p->s).unk_28 + 0x31) == 0) {
