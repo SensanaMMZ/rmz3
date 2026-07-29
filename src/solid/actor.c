@@ -1230,6 +1230,34 @@ void ActorOperator_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_b_a.inc");
 
+void Actor20_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      wDynamicGraphicTilenums[0xb3] = 0x340;
+      wDynamicMotionPalIDs[0xb3] = 7;
+      (p->s).mode[1]++;
+      /* fallthrough */
+    case 1:
+      if (FUN_080d0aa0(&p->s, MOTION(0xB3, 0x19), 1) != 0) {
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[1]++;
+      }
+      break;
+    case 3:
+      if (FUN_080d0934(&p->s, MOTION(0xB3, 0x19), 1) != 0) {
+        (p->s).mode[1]++;
+      }
+      break;
+    case 4:
+      break;
+  }
+}
+
 // Identical instructions except the routine constant lands in r3 (retail)
 // vs r2 (agbcc) -- register-number tie.
 NON_MATCH void initActor21(struct Solid* p) {
