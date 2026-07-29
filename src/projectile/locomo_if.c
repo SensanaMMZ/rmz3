@@ -74,6 +74,34 @@ void FUN_080a7dec(struct Projectile* p) {
   }
 }
 
+static const motion_t sMotions[4];
+void FUN_080b7ffc(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+
+void FUN_080a7e0c(struct Projectile* p) {
+  struct Coord c;
+  u32* st = &(p->body).status;
+  if (*st & BODY_STATUS_BINDING) {
+    if (!((pZero2->body).status & BODY_STATUS_WHITE)) {
+      return;
+    }
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - PIXEL(16);
+  FUN_080b7ffc(&p->s, &c, (motion_t*)sMotions, 4);
+  PlaySound(0x3F);
+  {
+    u8 f = (p->s).flags & ~DISPLAY;
+    s32 z = 0;
+    f &= ~FLIPABLE;
+    (p->s).flags = f;
+    *st = z;
+    (p->body).prevStatus = z;
+    (p->body).invincibleTime = z;
+    (p->s).flags &= ~COLLIDABLE;
+  }
+  SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+}
+
 INCASM("asm/projectile/locomo_if_post_p2.inc");
 
 // 0x080a8080 -- parked (allocation cascade): retail holds &pZero2 in r2
