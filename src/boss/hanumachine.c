@@ -78,6 +78,22 @@ void hanu_0805bcfc(struct Boss* p) {
 
 INCASM("asm/boss/hanumachine_p1_b_p2_p2.inc");
 
+void hanu_0805bf10(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, MOTION(0xB5, 0x00));
+    SetDDP(&p->body, sCollisions);
+    (p->s).mode[2]++;
+    (p->s).work[2] = 0x20;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (--(p->s).work[2] == 0xFF) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/boss/hanumachine_p1_b_p2_p2b.inc");
+
 void FUN_0805c3cc(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
     SetMotion(&p->s, 0xB50B);
