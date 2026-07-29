@@ -137,6 +137,36 @@ INCASM("asm/enemy/seimeran_p2_p1.inc");
 
 static const u8 sCollisionIdxs[16];
 
+// Four instructions in the address-copy basin: retail computes the props[12]
+// address into a temp, copies it into the kept pointer, and derives &p->body
+// from it (subs 0x4C); agbcc coalesces the copy in every spelling tried.
+NON_MATCH void FUN_0808f72c(struct Enemy* p) {
+#if MODERN
+  struct Entity** slot = (struct Entity**)&p->props[0];
+  if (*slot == NULL || isKilled(*slot)) {
+    u8* c;
+    *slot = NULL;
+    c = (u8*)p + 0xc0;
+    if (*c == 0xC) {
+      SetDDP(&p->body, &sCollisions[11]);
+    } else {
+      SetDDP(&p->body, &sCollisions[sCollisionIdxs[*c]]);
+    }
+    if (!IsFrozen(&p->s)) {
+      if (*c == 0xC) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      } else {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 3;
+      }
+    }
+  }
+#else
+  INCCODE("asm/enemy/seimeran_f72c.inc");
+#endif
+}
+
 void FUN_0808f7ac(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
     u8* c = (u8*)p + 0xc0;
