@@ -70,6 +70,42 @@ void summonPurpleNerple(struct Entity* e, s32 x) {
   }
 }
 
+INCASM("asm/enemy/purple_nerple_d3c.inc");
+
+void PurpleNerple_Die(struct Enemy* p);
+
+// 0x08075d40
+bool8 FUN_08075d40(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    switch ((p->s).work[0]) {
+      case 0: {
+        u32 st = (p->body).status;
+        if (st & BODY_STATUS_SLASHED) {
+          (p->s).mode[1] = 1;
+        } else if (st & BODY_STATUS_RECOILED) {
+          (p->s).mode[1] = 5;
+        } else {
+          (p->s).mode[1] = 0;
+        }
+        break;
+      }
+      case 1:
+        if ((p->s).unk_28 != NULL) {
+          *((u8*)(p->s).unk_28 + 0xb8) = 1;
+        }
+        (p->s).mode[1] = 2;
+        break;
+      case 2:
+        (p->s).mode[1] = 4;
+        break;
+    }
+    PurpleNerple_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
 INCASM("asm/enemy/purple_nerple_p1_a_c_b.inc");
 
 #include "element.h"
