@@ -4,52 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0808a144
-FUN_0808a144: @ 0x0808A144
-	push {lr}
-	adds r2, r0, #0
-	adds r3, r2, #0
-	adds r3, #0x8c
-	ldr r0, [r3]
-	movs r1, #0x80
-	lsls r1, r1, #2
-	ands r0, r1
-	cmp r0, #0
-	beq _0808A18C
-	ldr r1, _0808A17C @ =gEnemyFnTable
-	ldrb r0, [r2, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r2, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r2, #0x14]
-	ldr r1, [r3]
-	movs r0, #0x80
-	lsls r0, r0, #9
-	ands r1, r0
-	cmp r1, #0
-	beq _0808A180
-	movs r0, #1
-	strb r0, [r2, #0xd]
-	b _0808A182
-	.align 2, 0
-_0808A17C: .4byte gEnemyFnTable
-_0808A180:
-	strb r1, [r2, #0xd]
-_0808A182:
-	adds r0, r2, #0
-	bl PantheonBase_Die
-	movs r0, #1
-	b _0808A18E
-_0808A18C:
-	movs r0, #0
-_0808A18E:
-	pop {r1}
-	bx r1
-	.align 2, 0
-
 	thumb_func_start pBase_0808a194
 pBase_0808a194: @ 0x0808A194
 	push {r4, lr}

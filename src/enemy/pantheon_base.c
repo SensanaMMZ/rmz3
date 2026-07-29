@@ -25,6 +25,25 @@ struct Enemy* FUN_0808a0ec(struct Entity* e) {
 
 void nop_0808a140(struct Enemy* p) {}
 
+void PantheonBase_Die(struct Enemy* p);
+
+bool8 FUN_0808a144(struct Enemy* p) {
+  if ((p->body).status & BODY_STATUS_DEAD) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    {
+      u32 t = (p->body).status & BODY_STATUS_SLASHED;
+      if (t != 0) {
+        (p->s).mode[1] = 1;
+      } else {
+        (p->s).mode[1] = t;
+      }
+    }
+    PantheonBase_Die(p);
+    return 1;
+  }
+  return 0;
+}
+
 INCASM("asm/enemy/pantheon_base_p2_pre_a.inc");
 
 static const struct Coord sElementCoord;
