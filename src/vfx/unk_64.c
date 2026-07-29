@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trig.h"
 #include "motion.h"
 #include "entity/macros.h"
 #include "vfx.h"
@@ -140,6 +141,73 @@ void Ghost64_Die(struct VFX* p) {
 }
 
 INCASM("asm/vfx/unk_64_p3_a.inc");
+
+void FUN_080c3d84(struct VFX* vfx) {
+  struct Sprite* spr = &((vfx->s).spr);
+  struct Entity* e = (vfx->s).unk_28;
+  register struct Sprite* espr asm("r9");
+  espr = (struct Sprite*)((u8*)e + 0x34);
+  switch ((vfx->s).mode[2]) {
+    case 0:
+      (vfx->s).work[2] = 0x3C;
+      (vfx->s).d.x = gSineTable[60] / 32 + 0x138;
+      (vfx->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 v = (vfx->s).d.x;
+      s32 d4 = (0x100 - v) / 16;
+      s32 nx;
+      s32 t;
+      nx = v + d4;
+      (vfx->s).d.x = nx;
+      (vfx->s).work[3]++;
+      (vfx->s).work[3] %= 3;
+      {
+        register s32 tt asm("r1");
+        register s32 kx asm("r0");
+        {
+          register s32 wv asm("r1");
+          wv = (vfx->s).work[3] * 16;
+          kx = 0x110 - wv;
+        }
+        tt = nx;
+        asm("" : "+r"(tt));
+        tt *= kx;
+        ((vfx->s).spr).mag.x = tt / 256;
+      }
+      {
+        s32 ty = ((0x100 - (vfx->s).work[3] * 16) * (vfx->s).d.x) / 256;
+        register u8* ay asm("r2");
+        ay = (u8*)vfx + 0x52;
+        *(u16*)ay = ty;
+      }
+      {
+        struct Sprite* es2 = espr;
+        spr->sprites = es2->sprites;
+        spr->spriteIdx = es2->spriteIdx;
+      }
+      spr->xflip = (e->flags >> 4) & 1;
+      spr->oam.xflip = (e->flags >> 4) & 1;
+      t = (vfx->s).work[2] - 1;
+      (vfx->s).work[2] = t;
+      if (((t << 24) == 0) || (vfx->s).d.x <= 0x10F) {
+        register u8 f1 asm("r1");
+        register s32 f2 asm("r0");
+        f1 = (vfx->s).flags;
+        f2 = 0xFE;
+        f2 &= f1;
+        {
+          register s32 c2 asm("r1");
+          c2 = 0xFD;
+          f2 &= c2;
+        }
+        (vfx->s).flags = f2;
+        SET_VFX_ROUTINE(vfx, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
 
 #include "motion.h"
 
