@@ -102,6 +102,86 @@ void FUN_080c5784(struct VFX* p) {
 
 INCASM("asm/vfx/unk_70_p3_p3.inc");
 
+void FUN_080c5c64(struct VFX* vfx) {
+  s32 md = (vfx->s).mode[1];
+  switch (md) {
+    case 0:
+      SetMotion(&vfx->s, (RANDOM(RNG_0202f388) & 3) | MOTION(0x51, 0x02));
+      (vfx->s).taskCol = 0x13;
+      {
+        s32 dx = (RANDOM(RNG_0202f388) % 0x1400) - 0xA00;
+        (vfx->s).coord.x += dx;
+      }
+      (vfx->s).d.y = md;
+      (vfx->s).work[2] = 0x50;
+      (vfx->s).mode[1]++;
+      // fallthrough
+    case 1: {
+      s32 t;
+      s32 f;
+      register s32 z asm("r2");
+      s32 v = (vfx->s).d.y + 4;
+      (vfx->s).d.y = v;
+      (vfx->s).coord.y += v;
+      t = (vfx->s).work[2] - 1;
+      z = 0;
+      (vfx->s).work[2] = t;
+      asm volatile("" : "+r"(z));
+      if ((u8)t <= 9) {
+        if (t & 1) {
+          register s32 fa asm("r0");
+          register s32 c1 asm("r1");
+          fa = (vfx->s).flags;
+          c1 = DISPLAY;
+          asm("" : "+r"(c1));
+          fa |= c1;
+          f = fa;
+        } else {
+          goto off;
+        }
+        goto store;
+      }
+      if ((u8)t <= 0x13) {
+        if (t & 2) {
+          register s32 fc asm("r0");
+          register s32 c2 asm("r1");
+          fc = (vfx->s).flags;
+          c2 = DISPLAY;
+          fc |= c2;
+          f = fc;
+        } else {
+        off: {
+            register u8 f1 asm("r1");
+            register s32 fr asm("r0");
+            f1 = (vfx->s).flags;
+            fr = 0xFE;
+            fr &= f1;
+            f = fr;
+          }
+        }
+      store:
+        (vfx->s).flags = f;
+      }
+      UpdateMotionGraphic(&vfx->s);
+      if ((vfx->s).work[2] == 0) {
+        register u8 f1 asm("r1");
+        register s32 f2 asm("r0");
+        f1 = (vfx->s).flags;
+        f2 = 0xFE;
+        f2 &= f1;
+        {
+          register s32 c2 asm("r1");
+          c2 = 0xFD;
+          f2 &= c2;
+        }
+        (vfx->s).flags = f2;
+        SET_VFX_ROUTINE(vfx, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
 // --------------------------------------------
 
 void FUN_080c5764(struct VFX* p);
