@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mission.h"
 #include "zero.h"
 #include "vfx.h"
 #include "entity.h"
@@ -412,6 +413,34 @@ NON_MATCH void FUN_08074f34(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/snakecord_p2_c.inc");
+
+void FUN_080bb908(s32 x, s32 y);
+extern void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+void MaybeKillSnakecord(struct Enemy* p) {
+  struct Coord c;
+  (p->body).status = 0;
+  (p->body).prevStatus = 0;
+  (p->body).invincibleTime = 0;
+  {
+    u8 f = (p->s).flags & ~COLLIDABLE;
+    f &= ~DISPLAY;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - PIXEL(16);
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080bb908((p->s).coord.x, (p->s).coord.y);
+  TryDropItem(3, &(p->s).coord);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, &(p->s).coord);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/snakecord_p2_d.inc");
 
 void Snakecord_Init(struct Enemy* p);
 void Snakecord_Update(struct Enemy* p);
