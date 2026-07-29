@@ -83,6 +83,43 @@ void nop_080503c8(struct Boss* p) {}
 
 INCASM("asm/boss/anubis_p2.inc");
 
+static const struct Collision sCollisions[3];
+
+void anubisMode5(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      if (((p->props).anubis).unk_cc[2] != 0) {
+        UpdateMotionGraphic(&p->s);
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 2;
+        (p->s).work[2] = 2;
+        break;
+      }
+      SetDDP(&p->body, sCollisions);
+      {
+        u32 v = ((p->props).anubis).unk_c0;
+        v |= 0x100;
+        asm("" : "+r"(v));
+        v |= 0x20;
+        v &= ~0x40;
+        ((p->props).anubis).unk_c0 = v;
+      }
+      SetMotion(&p->s, MOTION(0xAF, 0x08));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        ((p->props).anubis).unk_c0 &= ~0x100;
+        (p->s).mode[1] = 6;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/anubis_p2c.inc");
+
 // 0x08050c68
 void anubisMode7(struct Boss* p) {
   switch ((p->s).mode[2]) {
