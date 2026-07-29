@@ -1,3 +1,4 @@
+#include "stagerun.h"
 #include "collision.h"
 #include "global.h"
 #include "physics.h"
@@ -423,7 +424,97 @@ void FUN_080af9c8(struct Projectile* p) {
   FUN_080af9f4(p);
 }
 
-INCASM("asm/projectile/phantom_p2_p2_p2.inc");
+struct Projectile* FUN_080afbfc(struct Coord* c, s32 speed, u8 angle, u8 n);
+
+void FUN_080af9f4(struct Projectile* p) {
+  s32 i;
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  if ((((u32)(p->s).work[3] % 10) << 24) == 0) {
+    struct Coord c;
+    register struct Coord* cp asm("r6");
+    const s16* tbl;
+    {
+      register s32 i5 asm("r5");
+      i5 = 0;
+      asm volatile("" : "+r"(i5));
+      i = i5;
+    }
+    tbl = gSineTable;
+    cp = &c;
+    asm("" : "+r"(cp));
+    do {
+      u32 a3 = (u32)(((p->s).work[3] << 4) + (i << 6)) << 24;
+      u8 a2;
+      c = (p->s).coord;
+      a2 = a3 >> 24;
+      {
+        register s32 v0 asm("r0");
+        u32 off = (a3 + 0x40000000) >> 23;
+        off += (u32)tbl;
+        v0 = *(const s16*)off * 8;
+        v0 += c.x;
+        c.x = v0;
+      }
+      {
+        register s32 v1 asm("r0");
+        v1 = tbl[a2] * 8;
+        v1 += cp->y;
+        cp->y = v1;
+      }
+      FUN_080afbfc(&c, 0x3C0, a2, 0);
+      i++;
+    } while (i <= 3);
+  }
+  {
+    s32 t = (p->s).work[3] + 1;
+    i = 0;
+    (p->s).work[3] = t;
+  }
+  if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0x800) << 16) != 0) {
+    PlaySound(0x100);
+    {
+      register u8 e1 asm("r1");
+      register s32 fp asm("r0");
+      e1 = (p->s).flags;
+      fp = 0xFE;
+      fp &= e1;
+      {
+        register s32 c2 asm("r1");
+        c2 = 0xFD;
+        fp &= c2;
+      }
+      (p->s).flags = fp;
+      (p->body).status = i;
+      (p->body).prevStatus = i;
+      (p->body).invincibleTime = i;
+      (p->s).flags &= ~COLLIDABLE;
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+    }
+  }
+  {
+    struct Camera* cam = &gStageRun.vm.camera;
+    if (CalcFromCamera(cam, &(p->s).coord) > 0x6000) {
+      register u8 e1 asm("r1");
+      register s32 fp asm("r0");
+      e1 = (p->s).flags;
+      fp = 0xFE;
+      fp &= e1;
+      {
+        register s32 c2 asm("r1");
+        c2 = 0xFD;
+        fp &= c2;
+      }
+      (p->s).flags = fp;
+      (p->body).status = i;
+      (p->body).prevStatus = i;
+      (p->body).invincibleTime = i;
+      (p->s).flags &= ~COLLIDABLE;
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+    }
+  }
+}
+
 
 void FUN_080afb1c(struct Projectile* p) {
   if (((p->s).unk_28)->mode[0] > 1) {
