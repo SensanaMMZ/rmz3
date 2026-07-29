@@ -571,11 +571,7 @@ void FUN_080da6f0(struct Solid* p) {
   (p->s).mode[1] = 0;
   MobNPC_Update(p);
 }
-// Two bytes from a match: retail keeps the FLAG mask's constant 1 live in r3
-// for the whole function (re-copying it at the test and reusing it for the
-// final store) where agbcc rematerializes, which shifts every literal pool.
-NON_MATCH TextID autruche_080da768(struct Solid* p) {
-#if MODERN
+TextID autruche_080da768(struct Solid* p) {
   if (FLAG(gCurStory.s.gameflags, 16)) {
     if (gCurStory.s.counts[11] <= 2) {
       gCurStory.s.counts[11] = 3;
@@ -590,14 +586,16 @@ NON_MATCH TextID autruche_080da768(struct Solid* p) {
     }
     return 0x289;
   }
-  if (gCurStory.s.counts[11] != 0) {
-    return 0x287;
+  {
+    TextID ret;
+    if (gCurStory.s.counts[11] != 0) {
+      ret = 0x287;
+    } else {
+      gCurStory.s.counts[11] = 1;
+      ret = 0x286;
+    }
+    return ret;
   }
-  gCurStory.s.counts[11] = 1;
-  return 0x286;
-#else
-  INCCODE("asm/solid/mob_npc_da768.inc");
-#endif
 }
 
 INCASM("asm/solid/mob_npc_pre_p1_5.inc");
