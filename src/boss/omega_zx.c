@@ -520,7 +520,78 @@ void FUN_080613bc(struct Boss* p) {
 
 bool8 FUN_080614a4(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_zx_p9.inc");
+static const struct OmegaZXProjectileTemplate sOmegaZXProjectileTemplates[18];
+
+struct Projectile* FUN_080affe4(struct Entity* parent, struct Coord* c, u16 a2, u8 a3);
+
+void FUN_080614a8(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      RemovePaletteAnimation(0xA7);
+      RemovePaletteAnimation(0xA8);
+      RemovePaletteAnimation(0xA9);
+      RemovePaletteAnimation(0xAA);
+      StartPaletteAnimation(0xA9, 0x300);
+      (p->s).work[3] = 3;
+      ((struct OmegaZX*)p)->unk_c8[0] = (u32)RANDOM(RNG_0202f388) % 6;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      struct Coord c = (p->s).coord;
+      const u8* t3 = (const u8*)sOmegaZXProjectileTemplates;
+      s32 a = ((struct OmegaZX*)p)->unk_c8[0] * 3;
+      s32 off;
+      u16 mo;
+      u8 a3v;
+      a += 3;
+      a -= (p->s).work[3];
+      off = a * 6;
+      mo = *(const u16*)(off + t3);
+      t3 += 4;
+      a3v = *(t3 + off);
+      FUN_080affe4((struct Entity*)p, &c, mo, a3v);
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 2:
+      StepPaletteAnimation(0xA9);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+          s32 t3 = (p->s).work[3] - 1;
+          (p->s).work[3] = t3;
+          if ((t3 << 24) == 0) {
+            (p->s).mode[2]++;
+          } else {
+            (p->s).mode[2] = 1;
+          }
+        }
+      }
+      break;
+    case 3:
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 4:
+      StepPaletteAnimation(0xA9);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        u8 z5;
+        (p->s).work[2] = t;
+        z5 = (u8)t;
+        if (z5 == 0) {
+          RemovePaletteAnimation(0xA9);
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = z5;
+        }
+      }
+      break;
+  }
+}
+
+
 
 bool8 FUN_080615d8(struct Boss* p) { return TRUE; }
 
