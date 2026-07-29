@@ -1439,6 +1439,54 @@ void initActor32(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p2_b_b.inc");
 
+// Weil-throne idle actor: one-time graphic/palette load with the tilenum and
+// palid slots written first, then breathe/flicker. Logic verified; parked on
+// the loader staging tie (retail keeps idx=0xB8 live in r4 and reuses its <<1
+// across both slot addresses - pins either fold the constant, bump p off r6,
+// or spill).
+NON_MATCH void Actor34_Update(struct Solid* p) {
+#if MODERN
+  switch ((p->s).mode[1]) {
+    case 0: {
+      const struct Graphic* g;
+      const struct Palette* pal;
+      u32 ofs;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - 0x1800;
+      wStaticGraphicTilenums[0xB8] = 0x385;
+      wStaticMotionPalIDs[0xB8] = 5;
+      ofs = sizeof(struct ColorGraphic) * 0xB8;
+      g = gStaticGraphic(ofs);
+      LoadGraphic((void*)g, (void*)((wStaticGraphicTilenums[0xB8] - g->ofs) * 32 + 0x10000));
+      pal = gStaticPalette(ofs);
+      LoadPalette(pal, (wStaticMotionPalIDs[0xB8] - pal->dst) * 32 + PLTT_SIZE / 2);
+      SetMotion(&p->s, MOTION(0xB8, 0x02));
+      (p->s).mode[1]++;
+    }
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        SetMotion(&p->s, MOTION(0xB8, 0x02));
+      }
+      if ((RANDOM(RNG_0202f388) & 0x1F) == 0) {
+        SetMotion(&p->s, MOTION(0xB8, 0x03));
+      }
+      if ((p->s).work[1] != 0) {
+        if (RANDOM(RNG_0202f388) & 1) {
+          (p->s).flags |= DISPLAY;
+        } else {
+          (p->s).flags &= ~DISPLAY;
+        }
+      }
+      break;
+  }
+#else
+  INCCODE("asm/solid/actor_34upd.inc");
+#endif
+}
+
+INCASM("asm/solid/actor_p1_p2_b_b_c.inc");
+
 void Actor36_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
     case 0: {
