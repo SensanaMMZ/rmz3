@@ -58,7 +58,35 @@ static bool8 tilecannon_08078174(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/tile_cannon_p2_post_a_a.inc");
+extern const EnemyFunc sUpdates1[9];
+extern const EnemyFunc sUpdates2[9];
+
+bool8 tilecannon_08078198(struct Enemy* p) {
+  switch ((p->s).mode[3]) {
+    case 0:
+      if (IsFrozen(&p->s)) {
+        (sUpdates1[(p->s).mode[1]])(p);
+        (sUpdates2[(p->s).mode[1]])(p);
+        (p->s).mode[3]++;
+        UpdateMotionGraphic(&p->s);
+        return 1;
+      }
+      break;
+    case 1: {
+      s32 r;
+      if ((p->s).mode[1] == 3) {
+        FUN_080780c4(p);
+      }
+      r = IsFrozen(&p->s);
+      if (r) {
+        return 1;
+      }
+      (p->s).mode[3] = r;
+      break;
+    }
+  }
+  return 0;
+}
 
 static const struct Coord sElementCoord;
 
