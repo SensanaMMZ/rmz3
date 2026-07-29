@@ -81,6 +81,21 @@ struct Weapon* CreateSmashElec(struct Zero* z, struct Coord* c, u8 leftOrRight) 
 
 INCASM("asm/weapon/saber_smash_elec_p2.inc");
 
+void SmashElec_Die(struct Weapon* w) {
+  struct Zero* z = (struct Zero*)(w->s).unk_28;
+  if (z->unk_13a != 0) z->unk_13a--;
+  {
+    u8 f = ~DISPLAY & (w->s).flags;
+    s32 z0 = 0;
+    (w->s).flags = f;
+    (w->body).status = z0;
+    (w->body).prevStatus = z0;
+    (w->body).invincibleTime = z0;
+  }
+  (w->s).flags &= ~COLLIDABLE;
+  SET_WEAPON_ROUTINE(w, ENTITY_EXIT);
+}
+
 void SmashElec_Disappear(struct Weapon* w) {
   struct Zero* z = (struct Zero*)(w->s).unk_28;
   if (z->unk_13a != 0) z->unk_13a--;
