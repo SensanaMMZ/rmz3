@@ -2278,3 +2278,11 @@ fixable the same way as the constant-reg ties: pin the minority variable
 (`register const s16* tbl asm("r4")`, `register s32 t asm("r2")`) and let
 the allocator place the rest. Flopper float pair matched with tbl+t pinned.
 RETRY: shelluno_a3ec, locomo intro r0/r1, leviathan_aa10 trunc reg.
+
+## byte-blobs are hand-decodable (tile cannon 8908)
+FUN_08078908 was a raw .byte blob in the inc; hand-decoding the thumb
+opcodes (160 bytes) gave a normal SET_XFLIP+motion/DDP handler that
+matched first try. The two remaining blobs (mellnet FUN_0807db9c,
+shotloid FUN_08094534) should get the same treatment before reaching for
+Ghidra — mdiff shows no target side for blobs, so the ROM gate is the
+only verification.
