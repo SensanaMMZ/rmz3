@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "vfx.h"
 #include "motion.h"
 
 static const EnemyFunc sUpdates1[3];
@@ -166,7 +167,42 @@ void GlacierleAtkArm_Update(struct Enemy* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/glacierle_arm_p2_p2.inc");
+// 0x08082984
+void GlacierleAtkArm_Die(struct Enemy* p) {
+  switch ((p->s).work[0]) {
+    case 0:
+    case 1:
+      switch ((p->s).mode[1]) {
+        case 0:
+          (p->s).d.y = 0;
+          (p->s).mode[1]++;
+          /* fallthrough */
+        case 1:
+          (p->s).d.y += 0x40;
+          if ((p->s).d.y > 0x700) {
+            (p->s).d.y = 0x700;
+          }
+          (p->s).coord.y += (p->s).d.y;
+          if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+            if ((p->s).work[0] == 0) {
+              CreateSmoke(1, &(p->s).coord);
+              PlaySound(0x2A);
+              goto vanish;
+            }
+            if (*((u8*)p + 0xb6) & 1) {
+              CreateSmoke(2, &(p->s).coord);
+            }
+            goto vanish;
+          }
+          break;
+      }
+      break;
+    case 2:
+    vanish:
+      SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      break;
+  }
+}
 
 void nop_08082a1c(struct Enemy* p) {}
 
