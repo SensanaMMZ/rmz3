@@ -114,6 +114,40 @@ void FUN_08062304(struct Boss* p) {
   }
 }
 
+void FUN_08061bf8(struct Boss* p);
+
+// 0x08062338
+void FUN_08062338(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, (const struct Collision*)0x0836579C);
+      (p->s).work[2] = 0x18;
+      SetMotion(&p->s, MOTION(0xD6, 0x00));
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (u8)--(p->s).work[2];
+      if (t == 0) {
+        u8 v = *((u8*)p + 0xC4);
+        u8* c = (u8*)p + 0xC4;
+        if (v == 0) {
+          FUN_08061bf8(p);
+        } else {
+          (p->s).mode[1] = 4;
+          (p->s).mode[2] = t;
+        }
+        (*c)++;
+        if (*c > 1) {
+          *c = 0;
+        }
+      }
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      break;
+    }
+  }
+}
+
 INCASM("asm/boss/spearook_p1_post_p2_a.inc");
 
 // 0x08062b70
