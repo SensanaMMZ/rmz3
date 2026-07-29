@@ -30,7 +30,38 @@ struct Enemy* FUN_08093930(s32 x, s32 y, u8 n) {
   return e;
 }
 
-INCASM("asm/enemy/shotloid_pre_p1_p1_a_x.inc");
+struct Enemy* FUN_08093994(struct Enemy* p0) {
+  register struct Enemy* p asm("r5") = p0;
+  register struct Enemy* ret asm("r0");
+  register struct Enemy* q asm("r4");
+  ret = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+  q = ret;
+  if (q != NULL) {
+    register s32 i2 asm("r2");
+    register u32 fn asm("r1");
+    (q->s).taskCol = 0x18;
+    fn = (u32)gEnemyFnTable;
+    i2 = 0x3E;
+    (q->s).id = i2;
+    fn += 0xF8;
+    fn = *(u32*)fn;
+    fn = *(u32*)fn;
+    (q->s).onUpdate = (void*)fn;
+    {
+      register s32 v2 asm("r1");
+      register u8* t2 asm("r2");
+      v2 = 0;
+      (q->s).tileNum = 0;
+      t2 = &(q->s).palID;
+      *t2 = v2;
+    }
+    (q->s).flags2 |= WHITE_PAINTABLE;
+    (q->s).invincibleID = (q->s).uniqueID;
+    (q->s).work[0] = 1;
+    (q->s).unk_28 = (struct Entity*)p;
+  }
+  return ret;
+}
 
 bool8 FUN_080939e8(struct Enemy* p, s32 d) {
   s32 x = (p->s).coord.x;
