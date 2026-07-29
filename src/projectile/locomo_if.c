@@ -104,6 +104,66 @@ void FUN_080a7e0c(struct Projectile* p) {
 
 INCASM("asm/projectile/locomo_if_post_p2.inc");
 
+void FUN_080a7f70(struct Projectile* p) {
+  s32 md = (p->s).mode[2];
+  switch (md) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).d.x = (p->s).work[2] * 0x240 - 0x120;
+      (p->s).d.y = 0xE0;
+      (p->s).work[2] = 0x40;
+      SetMotion(&p->s, MOTION(0x56, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 t;
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 cy = (p->s).coord.y;
+        s32 v = (p->s).d.y;
+        (p->s).coord.y = cy + v;
+        (p->s).d.y = v - 2;
+      }
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 cy = (p->s).coord.y;
+        s32 v = (p->s).d.y;
+        (p->s).coord.y = cy + v;
+        (p->s).d.y = v - 2;
+      }
+      EXIT_BODY(p);
+      SetMotion(&p->s, MOTION(0x56, 0x01));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      u8 st;
+      UpdateMotionGraphic(&p->s);
+      st = (p->s).motion.state;
+      if (st == 3) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        {
+          u32 tb = (u32)gProjectileFnTable;
+          const ProjectileRoutine** ta = (const ProjectileRoutine**)(tb + (p->s).id * 4);
+          *(u32*)&(p->s).mode[0] = st;
+          (p->s).onUpdate = (void*)(**ta)[ENTITY_DISAPPEAR];
+        }
+      }
+      break;
+    }
+  }
+}
+
 // 0x080a8080 -- parked (allocation cascade): retail holds &pZero2 in r2
 // and reloads the 0x143 offset pool per RMW (its byte temp overwrites the
 // offset reg); agbcc caches the offset and parks &pZero2 in r5, pushing p
