@@ -692,6 +692,29 @@ void copyxMode17(struct Boss* p) {
   }
 }
 
+extern const u8 u8_ARRAY_080fefb4[4];
+
+void copyxMode18(struct Boss* p) {
+  u8 arr[4];
+  memcpy(arr, u8_ARRAY_080fefb4, 4);
+  if ((p->s).mode[2] != 0) {
+    u8 w;
+    SetMotion(&p->s, MOTION(0xB3, 0x02));
+    (p->s).mode[2] = 0;
+    if (((p->props).copyx).unk_c6[0] != 0) {
+      w = 4;
+    } else {
+      w = arr[((p->props).copyx).unk_c5];
+    }
+    (p->s).work[2] = w;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    (p->s).mode[1] = 0x13;
+    (p->s).mode[2] = 1;
+  }
+}
+
 INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a2.inc");
 extern const u8 u8_ARRAY_080fefb4[4];
 

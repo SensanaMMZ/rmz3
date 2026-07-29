@@ -4,60 +4,6 @@
 	
 	.text
 
-	thumb_func_start copyxMode18
-copyxMode18: @ 0x080563CC
-	push {r4, lr}
-	sub sp, #4
-	adds r4, r0, #0
-	ldr r1, _080563FC @ =0x080FEFB4
-	mov r0, sp
-	movs r2, #4
-	bl memcpy
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _08056410
-	ldr r1, _08056400 @ =0x0000B302
-	adds r0, r4, #0
-	bl SetMotion
-	movs r0, #0
-	strb r0, [r4, #0xe]
-	adds r0, r4, #0
-	adds r0, #0xc6
-	ldrb r0, [r0]
-	cmp r0, #0
-	beq _08056404
-	movs r0, #4
-	b _0805640E
-	.align 2, 0
-_080563FC: .4byte 0x080FEFB4
-_08056400: .4byte 0x0000B302
-_08056404:
-	adds r0, r4, #0
-	adds r0, #0xc5
-	ldrb r0, [r0]
-	add r0, sp
-	ldrb r0, [r0]
-_0805640E:
-	strb r0, [r4, #0x12]
-_08056410:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-	ldrb r0, [r4, #0x12]
-	subs r0, #1
-	strb r0, [r4, #0x12]
-	lsls r0, r0, #0x18
-	lsrs r0, r0, #0x18
-	cmp r0, #0xff
-	bne _0805642C
-	movs r0, #0x13
-	strb r0, [r4, #0xd]
-	movs r0, #1
-	strb r0, [r4, #0xe]
-_0805642C:
-	add sp, #4
-	pop {r4}
-	pop {r0}
-	bx r0
 
 	thumb_func_start copyxMode19
 copyxMode19: @ 0x08056434
@@ -381,4 +327,3 @@ _080566A8:
 	pop {r0}
 	bx r0
 	.align 2, 0
-
