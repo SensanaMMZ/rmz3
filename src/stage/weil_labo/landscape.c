@@ -269,6 +269,20 @@ static void FUN_080153cc(struct StageLayer* l, const struct Stage* _ UNUSED) {
 
 INCASM("asm/stage_gfx/weil_labo_p1_p1.inc");
 
+void FUN_08015510(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    const u16 n = (l->bgIdx << 16) >> 20;
+    BGCNT16(n) = (BGCNT16(n) & 0xFFFC) | 1;
+    l->scroll.y = -0x140;
+    l->phase++;
+  }
+  if (gOverworld.state[3] > 0x63) {
+    l->scroll.y = 0;
+  }
+}
+
+INCASM("asm/stage_gfx/weil_labo_p1_p1b.inc");
+
 void FUN_08015c40(struct StageLayer* l, const struct Stage* stage) {
   gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN1_ON;
   gWindowRegBuffer.winin[2] |= 0xe;
