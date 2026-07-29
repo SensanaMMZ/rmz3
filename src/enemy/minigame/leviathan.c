@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "text.h"
+#include "minigame.h"
 
 static const EnemyFunc sDeads[4];
 
@@ -95,6 +97,41 @@ void LeviathanMinigameEnemy_Die(struct Enemy* p) {
 void nop_0809a1ec(struct Enemy* p) {}
 
 INCASM("asm/enemy/minigame_leviathan_p3.inc");
+
+extern const u8 StrMISS[];
+extern const u8 StrSEC[];
+
+// One register from a match: retail truncates the row argument in place
+// (lsls/lsrs on the variable's register plus a copy to r2) where agbcc
+// shifts directly into the argument register in every spelling tried.
+NON_MATCH void FUN_0809aa10(struct Sprite* spr, struct DrawPivot* pivot) {
+#if MODERN
+  struct Entity* e = (struct Entity*)spr->sprites;
+  s32 x = (e->coord.x - pivot->lefttop.x) >> 8;
+  s32 y = (e->coord.y - pivot->lefttop.y) >> 8;
+  x -= 0x10;
+  x /= 8;
+  if (x < 0) {
+    x = 0;
+  } else if (x + 4 > 0x1E) {
+    x = 0x1A;
+  }
+  y += 0x10;
+  y /= 8;
+  if (y <= 0) {
+    y = 1;
+  } else if (y > 0x11) {
+    y = 0x11;
+  }
+  PrintUnicodeString((const char_t*)StrMISS, x, y);
+  PrintUnicodeString((const char_t*)StrSEC, x + 2, ++y);
+  PrintMinigameNumber(e->d.x, (u16)x, (u16)y);
+#else
+  INCCODE("asm/enemy/leviathan_aa10.inc");
+#endif
+}
+
+INCASM("asm/enemy/minigame_leviathan_p3b.inc");
 
 void LeviathanMinigameEnemy_Init(struct Enemy* p);
 void LeviathanMinigameEnemy_Update(struct Enemy* p);
