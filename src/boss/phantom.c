@@ -624,6 +624,70 @@ void FUN_0805fd74(struct Boss* p) {
 
 INCASM("asm/boss/phantom_p2_pre_pre_p5_p2.inc");
 
+void FUN_0809130c(struct Entity* e, u8 idx);
+
+// 0x0805fdac -- parked (cross-jump basin): retail keeps three identical
+// flags&=~DISPLAY arms (one per flicker range) plus a dead movs r2,#0;
+// agbcc cross-jumps the arms into one copy in every source duplication
+// tried (8 insns shorter). Semantics fully decoded incl. the utsusemi
+// clone spawn loop and RANDOM lane pick.
+NON_MATCH void FUN_0805fdac(struct Boss* p) {
+#if MODERN
+  s32 t = (p->s).work[2] + 1;
+  u8 f;
+  (p->s).work[2] = t;
+  if ((u8)t <= 0xF) {
+    if (t & 3) {
+      goto seton;
+    }
+    f = (p->s).flags & ~DISPLAY;
+    goto store;
+  } else if ((u8)t <= 0x2F) {
+    if (t & 2) {
+      goto seton;
+    }
+    f = (p->s).flags & ~DISPLAY;
+    goto store;
+  } else {
+    if ((t & 3) == 0) {
+      goto seton;
+    }
+    f = (p->s).flags & ~DISPLAY;
+    goto store;
+  }
+seton:
+  f = (p->s).flags | DISPLAY;
+store:
+  (p->s).flags = f;
+  ((p->s).spr).mag.y = gSineTable[(p->s).work[2]] + 0x100;
+  if ((p->s).work[2] == 0x40) {
+    u32 r = RANDOM(RNG_0202f388) & 3;
+    s32 x = *(s32*)((u8*)p + 0xE0);
+    u8* c9 = (u8*)p + 0xC9;
+    u8 b = *c9;
+    s32* c4;
+    u8 i;
+    x += (0x10 - (b << 5)) << 8;
+    *c9 = b ^ 1;
+    (p->s).coord.x = x;
+    i = 0;
+    c4 = (s32*)((u8*)p + 0xC4);
+    for (; i <= 3; i++) {
+      if (i != r) {
+        FUN_0809130c(&p->s, i + 5);
+      }
+    }
+    (p->s).coord.x = x + (r - 2) * 0x3000 + 0x1800;
+    (p->s).mode[3] = 2;
+    *c4 = 1;
+  }
+#else
+  INCCODE("asm/boss/phantom_fdac.inc");
+#endif
+}
+
+INCASM("asm/boss/phantom_p2_pre_pre_p5_p2b.inc");
+
 void FUN_0805ff64(struct Boss* p) {
   (PTR_ARRAY_0836552c[(p->s).mode[3]])(p);
 }
