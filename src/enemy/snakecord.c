@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
 #include "vfx.h"
 #include "entity.h"
 #include "entity/macros.h"
@@ -310,6 +311,55 @@ void FUN_08074d18(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/snakecord_p2_b.inc");
+
+struct Entity* FUN_080bb830(struct Entity* e);
+
+// 0x08074f34 -- parked (register-swap basin, same family as the element
+// check park): retail puts the flip-select temp in r1 and the 0x7F0
+// constant in r5; agbcc swaps them ([r5,r0]), and pinning either cascades
+// (zx r2->r5 or p r4->r6). Instruction stream otherwise identical.
+NON_MATCH void FUN_08074f34(struct Enemy* p) {
+#if MODERN
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).taskCol = 0xF;
+      SetDDP(&p->body, &sCollisions[8]);
+      SetMotion(&p->s, MOTION(0x28, 0x0B));
+      (p->s).unk_2c = FUN_080bb830(&p->s);
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      register struct Zero* z asm("r3");
+      s32 zx;
+      if ((p->s).work[2] == 0) {
+        (p->s).work[2] = 0x18;
+        PlaySound(0x3B);
+      }
+      (p->s).work[2]--;
+      z = pZero2;
+      zx = (z->s).coord.x;
+      (p->s).coord.x = zx + 0x800;
+      {
+        s32 t = zx + 0x7F0;
+        if ((p->s).flags & X_FLIP) {
+          t = zx - 0x800;
+        }
+        (p->s).coord.x = t;
+      }
+      (p->s).coord.y = (z->s).coord.y - 0x800;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/snakecord_4f34.inc");
+#endif
+}
+
+INCASM("asm/enemy/snakecord_p2_c.inc");
 
 void Snakecord_Init(struct Enemy* p);
 void Snakecord_Update(struct Enemy* p);
