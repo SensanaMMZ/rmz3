@@ -725,6 +725,44 @@ void glacierle_0805836c(struct Boss* p) {
 
 INCASM("asm/boss/glacierle_b.inc");
 
+// 0x080595ec
+void glacierle_080595ec(struct Boss* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      PlaySound(0x97);
+      SetDDP(&p->body, &sCollisions[131]);
+      SetMotion(&p->s, MOTION(0xB2, 0x04));
+      (p->s).d.y = m;
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 r;
+      u8 t;
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (r < 0) {
+        (p->s).coord.y += r;
+        (p->s).d.y = 0;
+      }
+      t = --(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = t;
+        (p->s).mode[2] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/glacierle_c.inc");
+
 // --------------------------------------------
 
 // 0x08363dcc
