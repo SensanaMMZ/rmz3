@@ -1393,6 +1393,56 @@ void Actor36_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p2_b_c.inc");
 
+static const struct Collision sCollisions_08370C68[16];
+
+void ActorLastFefnirFireball_Update(struct Solid* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 md = (p->s).mode[1];
+  s32 z;
+  switch (md) {
+    case 0:
+      InitScalerotMotion1(&p->s);
+      ((p->s).spr).mag.x = 0x180;
+      ((p->s).spr).mag.y = 0x180;
+      SetMotion(&p->s, MOTION(0x21, 0x00));
+      SET_XFLIP(p, 1);
+      (p->s).coord.x = q->coord.x + 0x1E00;
+      (p->s).coord.y = q->coord.y - 0x1E00;
+      (p->s).work[2] = md;
+      (p->s).mode[1]++;
+      /* fallthrough */
+    case 1: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += 0x400;
+      t = (p->s).work[2] + 1;
+      z = 0;
+      (p->s).work[2] = t;
+      if ((u8)t == 0x10) {
+        struct Body* body;
+        (p->s).flags |= COLLIDABLE;
+        body = &p->body;
+        InitBody(body, &sCollisions_08370C68[8 + (p->s).work[1]], &(p->s).coord, 1);
+        body->parent = (struct CollidableEntity*)p;
+        body->fn = (void*)z;
+      }
+      if ((p->body).status & 4) {
+        u8 f = (p->s).flags & ~DISPLAY;
+        f &= ~FLIPABLE;
+        (p->s).flags = f;
+        (p->body).status = z;
+        (p->body).prevStatus = z;
+        (p->body).invincibleTime = z;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/actor_p1_p2_b_d.inc");
+
 void Actor48_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
     case 0:
