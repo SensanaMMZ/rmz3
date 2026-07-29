@@ -93,6 +93,44 @@ void VFX38_Die(struct VFX* vfx) {
 
 void nop_080bd17c(struct VFX* vfx) {}
 
+void FUN_080bd180(struct VFX* vfx) {
+  s32 t = (vfx->s).work[2] - 1;
+  (vfx->s).work[2] = t;
+  if ((t << 24) == 0) {
+    struct Coord c;
+    s32 r;
+    CreateSmoke(2, &(vfx->s).coord);
+    r = RANDOM(RNG_0202f388) & 3;
+    c.x = (vfx->s).coord.x;
+    c.y = (vfx->s).coord.y;
+    FUN_080bcfbc(&c, (vfx->s).work[0], MOTION(0x35, 0x06), r);
+    FUN_080bcfbc(&c, (vfx->s).work[0], MOTION(0x35, 0x08), r);
+    PlaySound(0x31);
+    SET_VFX_ROUTINE(vfx, ENTITY_DIE);
+  } else {
+    s32 md = (vfx->s).mode[2];
+    switch (md) {
+      case 0:
+        (vfx->s).work[2] = 0x28;
+        (vfx->s).d.y = (RANDOM(RNG_0202f388) & 0x1F) - 0x180;
+        SetMotion(&vfx->s, MOTION(0x35, 0x05));
+        (vfx->s).mode[2]++;
+        // fallthrough
+      case 1: {
+        s32 v = (vfx->s).d.y + 0x10;
+        (vfx->s).d.y = v;
+        if (v > 0x700) {
+          (vfx->s).d.y = 0x700;
+        }
+        (vfx->s).coord.y += (vfx->s).d.y;
+        (vfx->s).coord.x += (vfx->s).d.x;
+        UpdateMotionGraphic(&vfx->s);
+        break;
+      }
+    }
+  }
+}
+
 INCASM("asm/vfx/unk_38_p2.inc");
 
 void VFX38_Init(struct VFX* vfx);
