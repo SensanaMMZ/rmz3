@@ -146,6 +146,46 @@ void OmegaZXProjectile_Die(struct Projectile* p) {
 
 INCASM("asm/projectile/omega_zx_post_p2.inc");
 
+// 0x080b02dc
+void FUN_080b02dc(struct Projectile* p) {
+  u8 m;
+  if (((p->s).unk_28)->mode[0] > 1) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      (p->s).flags |= FLIPABLE;
+      (p->s).flags |= DISPLAY;
+      (p->s).work[2] = m;
+      SetMotion(&p->s, MOTION(0xB9, 0x02));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      struct Entity* q;
+      register u8 t asm("r1") = (p->s).work[2];
+      (p->s).work[2] = t + 1;
+      if (t & 1) {
+        u8 f = DISPLAY | (p->s).flags;
+        (p->s).flags = f;
+      } else {
+        u8 f = ~DISPLAY & (p->s).flags;
+        (p->s).flags = f;
+      }
+      q = (p->s).unk_28;
+      (p->s).coord.x = (q->coord).x;
+      (p->s).coord.y = (q->coord).y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/projectile/omega_zx_post_p2b.inc");
+
 void FUN_080b0168(struct Projectile* p);
 void FUN_080b0214(struct Projectile* p);
 void FUN_080b02dc(struct Projectile* p);
