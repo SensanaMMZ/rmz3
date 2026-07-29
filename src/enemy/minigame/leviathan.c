@@ -124,6 +124,43 @@ void nop_0809a1ec(struct Enemy* p) {}
 
 INCASM("asm/enemy/minigame_leviathan_p3.inc");
 
+void FUN_0809a90c(struct Enemy* p) {
+  if (*(u8*)((u8*)(p->s).unk_28 + 0x31) == 0) {
+    switch ((p->s).mode[2]) {
+      case 0: {
+        s32 amp, on;
+        (p->s).taskCol = 0x19;
+        amp = -0x80;
+        amp -= RANDOM(RNG_0202f388) & 0x7F;
+        (p->s).d.x = amp * (1 - (((p->s).work[2] ^ 1) * 2));
+        on = 0;
+        if ((p->s).d.x > 0) {
+          on = 1;
+        }
+        SET_XFLIP(p, on);
+        SetMotion(&p->s, MOTION(0xF2, 0x00));
+        (p->s).mode[2]++;
+      }
+        /* fallthrough */
+      case 1:
+        (p->s).coord.x += (p->s).d.x;
+        if ((u32)((p->s).coord.x - PIXEL(0xD0)) > 0x13000) {
+          u8 f = ~DISPLAY & (p->s).flags;
+          s32 z = 0;
+          f &= ~FLIPABLE;
+          (p->s).flags = f;
+          (p->body).status = z;
+          (p->body).prevStatus = z;
+          (p->body).invincibleTime = z;
+          (p->s).flags &= ~COLLIDABLE;
+          SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+        }
+        UpdateMotionGraphic(&p->s);
+        break;
+    }
+  }
+}
+
 extern const u8 StrMISS[];
 extern const u8 StrSEC[];
 
