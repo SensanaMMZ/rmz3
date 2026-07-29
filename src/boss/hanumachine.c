@@ -94,6 +94,25 @@ void hanu_0805bf10(struct Boss* p) {
 
 INCASM("asm/boss/hanumachine_p1_b_p2_p2b.inc");
 
+void hanu_0805c2a4(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    if ((((p->s).motionID << 8) | (p->s).motion.step) == MOTION(0xB5, 0x14)) {
+      SetMotion(&p->s, MOTION(0xB5, 0x15));
+    } else {
+      SetMotion(&p->s, MOTION(0xB5, 0x07));
+    }
+    SetDDP(&p->body, &sCollisions[8]);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/boss/hanumachine_p1_b_p2_p2c.inc");
+
 void FUN_0805c3cc(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
     SetMotion(&p->s, 0xB50B);
