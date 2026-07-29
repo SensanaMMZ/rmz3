@@ -244,6 +244,34 @@ void crossbyne_0807d080(struct Enemy* p) {
   }
 }
 
+// 0x0807d0f0
+void FUN_0807d0f0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      const motion_t* t;
+      SetDDP(&p->body, sCollisions);
+      t = &sMotions[6];
+      SetMotion(&p->s, t[(p->s).work[0]]);
+    }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        u8 f = ~DISPLAY & (p->s).flags;
+        s32 z = 0;
+        f = f & ~FLIPABLE;
+        (p->s).flags = f;
+        (p->body).status = z;
+        (p->body).prevStatus = z;
+        (p->body).invincibleTime = z;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
 INCASM("asm/enemy/crossbyne_p3_post_postb.inc");
 
 // --------------------------------------------
