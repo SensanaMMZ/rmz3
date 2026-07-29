@@ -161,7 +161,16 @@ void FUN_080e5798(struct Elf* p) {
   }
 }
 
-INCASM("asm/cyberelf/unk_11_p2b.inc");
+void FUN_080e5818(struct Elf* p) {
+  if ((p->body).status & BODY_STATUS_B2) {
+    EXIT_BODY(p);
+  }
+  if ((p->s).motion.state == 3) {
+    SET_ELF_ROUTINE(p, ENTITY_DIE);
+    Elf11_Die(p);
+  }
+}
+
 
 bool8 FUN_080e586c(struct Elf* p) {
   u16 a = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
