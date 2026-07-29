@@ -238,6 +238,65 @@ void FUN_0806e9fc(struct Enemy* p) {
 
 INCASM("asm/enemy/lemmingles_p2_p2_p2.inc");
 
+// 0x0806ed08
+void FUN_0806ed08(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      if ((p->s).work[0] == 1) {
+        SetMotion(&p->s, MOTION(0x1D, 0x07));
+      }
+      if ((p->s).work[0] == 3) {
+        SetMotion(&p->s, MOTION(0x1D, 0x0D));
+      }
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 x;
+      s32 r;
+      if ((p->s).work[0] == 1 || (p->s).work[0] == 3) {
+        UpdateMotionGraphic(&p->s);
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      x = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = x;
+      if ((p->s).d.x > 0) {
+        r = PushoutToLeft1(x + 0x400, (p->s).coord.y);
+        if (r < 0) {
+          (p->s).coord.x += r;
+        }
+      } else {
+        r = PushoutToRight1(x - 0x400, (p->s).coord.y);
+        if (r > 0) {
+          (p->s).coord.x += r;
+        }
+      }
+      (p->s).coord.y += (p->s).d.y;
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (r < 0) {
+        u16 a = GetMetatileAttr((p->s).coord.x, (p->s).coord.y) & 0x10;
+        if (a != 0) {
+          struct Entity* q = (p->s).unk_28;
+          if (q != NULL) {
+            *(u32*)((u8*)q + 0xb4) &= ~(1 << (p->s).work[1]);
+          }
+          SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+          (p->s).mode[1] = 0;
+        } else {
+          (p->s).coord.y += r;
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = a;
+        }
+      }
+      break;
+    }
+  }
+}
+
 // 0x0806ee0c
 void FUN_0806ee0c(struct Enemy* p) {
   switch ((p->s).mode[2]) {
