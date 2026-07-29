@@ -83,6 +83,41 @@ void nop_080503c8(struct Boss* p) {}
 
 INCASM("asm/boss/anubis_p2.inc");
 
+// 0x08050c68
+void anubisMode7(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x60;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      ((p->props).anubis).unk_c0 = (((p->props).anubis).unk_c0 & ~0x20) | 0x40;
+      (p->s).flags |= DISPLAY;
+      SetMotion(&p->s, MOTION(0xAF, 0x0E));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        u16 h = (p->body).hp;
+        u8* a = &((p->props).anubis).unk_cc[1];
+        s32 z = 0;
+        *a = h;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/anubis_p2b.inc");
+
 void Anubis_Init(struct Boss* p);
 void Anubis_Update(struct Boss* p);
 void Anubis_Die(struct Boss* p);
