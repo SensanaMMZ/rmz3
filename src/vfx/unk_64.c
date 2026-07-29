@@ -283,7 +283,65 @@ void FUN_080c3f74(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_64_p3_b_b.inc");
+u8 GetEntityPalID(struct Entity* p);
+
+void FUN_080c3ffc(struct VFX* vfx) {
+  switch ((vfx->s).mode[2]) {
+    case 0:
+      SetMotion(&vfx->s, 8);
+      (vfx->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((vfx->s).motion.cmdIdx > 3) {
+        ForceEntityPalette(&vfx->s, GetEntityPalID(&vfx->s) + 1);
+      }
+      UpdateMotionGraphic(&vfx->s);
+      if ((vfx->s).motion.state == 4) {
+        register u8 f1 asm("r1");
+        register s32 f2 asm("r0");
+        f1 = (vfx->s).flags;
+        f2 = 0xFE;
+        f2 &= f1;
+        {
+          register s32 c2 asm("r1");
+          c2 = 0xFD;
+          f2 &= c2;
+        }
+        (vfx->s).flags = f2;
+        SET_VFX_ROUTINE(vfx, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
+void FUN_080c4074(struct VFX* vfx) {
+  switch ((vfx->s).mode[2]) {
+    case 0:
+      SetMotion(&vfx->s, 0x12);
+      (vfx->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((vfx->s).motion.cmdIdx > 3) {
+        ForceEntityPalette(&vfx->s, GetEntityPalID(&vfx->s) + 1);
+      }
+      UpdateMotionGraphic(&vfx->s);
+      if ((vfx->s).motion.state == 4) {
+        register u8 f1 asm("r1");
+        register s32 f2 asm("r0");
+        f1 = (vfx->s).flags;
+        f2 = 0xFE;
+        f2 &= f1;
+        {
+          register s32 c2 asm("r1");
+          c2 = 0xFD;
+          f2 &= c2;
+        }
+        (vfx->s).flags = f2;
+        SET_VFX_ROUTINE(vfx, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
 
 void FUN_080c40ec(struct VFX* v) {
   u8 state;
