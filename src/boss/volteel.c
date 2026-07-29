@@ -470,7 +470,72 @@ INCASM("asm/boss/volteel_p11.inc");
 
 bool8 FUN_08045464(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p12.inc");
+void FUN_080459e8(struct Boss* p);
+
+void volteelEX(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x30;
+      (p->s).work[3] = 4;
+      SetMotion(&p->s, MOTION(0xa5, 0xe));
+      SetDDP(&p->body, &sCollisions[8]);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      PlaySound(0x7F);
+      SetMotion(&p->s, MOTION(0xa5, 0xf));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2];
+      if (t != 0) {
+        t -= 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      t = (p->s).work[3];
+      if (t != 0) {
+        t -= 1;
+        (p->s).work[3] = t;
+        if ((t << 24) != 0) goto ex;
+      }
+      (p->s).mode[2]++;
+      break;
+    ex:
+      FUN_080459e8(p);
+      PlaySound(0x80);
+      (p->s).work[2] = 0x30;
+      break;
+    }
+    case 4:
+      StopSound(0x7F);
+      SetMotion(&p->s, MOTION(0xa5, 0xa));
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 5: {
+      u8 st;
+      UpdateMotionGraphic(&p->s);
+      st = (p->s).motion.state;
+      if (st == 3) {
+        (p->s).mode[1] = st;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
 
 bool8 FUN_08045570(struct Boss* p) { return TRUE; }
 
