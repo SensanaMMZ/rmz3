@@ -111,7 +111,65 @@ void FUN_080a1f10(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/hellbat_p2_p2.inc");
+void FUN_080a1f1c(struct Projectile* p) {
+  s32 v, a, hit;
+  if (((p->s).unk_28)->mode[0] <= 1) {
+    if (--(p->s).work[2] == 0) {
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      return;
+    }
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 t asm("r0");
+      (p->s).unk_coord.x = 0;
+      if ((((p->s).unk_28)->flags & 0x10) == 0) {
+        t = -0x12;
+      } else {
+        t = 0x12;
+      }
+      (p->s).d.x = t;
+    }
+      (p->s).work[2] = 0xC8;
+      SetMotion(&p->s, MOTION(0xA9, 0x00));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      v = (p->s).unk_coord.x + (p->s).d.x;
+      (p->s).unk_coord.x = v;
+      a = v;
+      if (v < 0) {
+        a = -v;
+      }
+      if (a > 0x300) {
+        (p->s).unk_coord.x = v - (p->s).d.x;
+      }
+      (p->s).coord.x += (p->s).unk_coord.x;
+      if (((p->s).unk_28)->mode[0] > 1) {
+        if ((p->s).unk_coord.x > 0) {
+          hit = PushoutToLeft1((p->s).coord.x, (p->s).coord.y);
+        } else {
+          hit = PushoutToRight1((p->s).coord.x, (p->s).coord.y);
+        }
+        if (hit != 0) {
+          SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+        }
+      } else {
+        if ((p->s).unk_coord.x > 0) {
+          hit = PushoutToLeft1((p->s).coord.x, (p->s).coord.y);
+        } else {
+          hit = PushoutToRight1((p->s).coord.x, (p->s).coord.y);
+        }
+        if (hit != 0) {
+          (p->s).coord.x += hit;
+          (p->s).unk_coord.x = -(p->s).unk_coord.x;
+          (p->s).d.x = -(p->s).d.x;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void FUN_080a2020(struct Projectile* p) {
   (p->s).mode[1] = 1;
