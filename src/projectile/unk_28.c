@@ -111,6 +111,47 @@ void FUN_080a9e74(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_28_p2_p1b.inc");
 
+void FUN_080aa15c(struct Sprite* spr, struct DrawPivot* dp);
+
+// 0x080aa08c
+void FUN_080aa08c(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  SetTaskCallback((struct RenderNode*)&(p->s).spr, FUN_080aa15c);
+  (p->s).spr.sprites = (struct MetaspriteHeader*)p;
+  {
+    u8 f = (p->s).flags & ~8;
+    f |= DISPLAY;
+    f |= FLIPABLE;
+    (p->s).flags = f;
+  }
+  {
+    s32 x = (q->coord).x;
+    s32 y = (q->coord).y;
+    (p->s).coord.x = x;
+    (p->s).coord.y = y;
+  }
+  {
+    register u16 d asm("r2") = gWindowRegBuffer.dispcnt;
+    register u16 r asm("r0");
+    register u16 k asm("r3");
+    register s32 v asm("r3");
+    k = 0x4000;
+    r = k;
+    v = 0;
+    r |= d;
+    gWindowRegBuffer.dispcnt = r;
+    gWindowRegBuffer.winin[1] = 0x31;
+    gWindowRegBuffer.winin[2] |= 0xE;
+    PALETTE16(0) = 0x7FFF;
+    *(s32*)((u8*)p + 0xb4) = *(vs32*)&(p->s).coord.x;
+    *(s32*)((u8*)p + 0xb8) = *(vs32*)&(p->s).coord.y;
+    (p->s).work[3] = v;
+    (p->s).work[2] = v;
+  }
+  Projectile28_Update(&p->s);
+}
+
 void FUN_080aa120(struct Projectile* p) {
   struct Entity* par = (p->s).unk_28;
   (p->s).coord = par->coord;
