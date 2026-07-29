@@ -4,67 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0809542c
-FUN_0809542c: @ 0x0809542C
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	ldrb r5, [r4, #0xe]
-	cmp r5, #0
-	beq _0809543C
-	cmp r5, #1
-	beq _08095456
-	b _08095494
-_0809543C:
-	ldr r1, _0809549C @ =0x0000D406
-	adds r0, r4, #0
-	bl SetMotion
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _080954A0 @ =0x0836A004
-	bl SetDDP
-	str r5, [r4, #0x60]
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_08095456:
-	adds r0, r4, #0
-	bl IsFrozen
-	adds r5, r0, #0
-	cmp r5, #0
-	bne _0809548E
-	ldr r0, [r4, #0x60]
-	adds r0, #0x40
-	str r0, [r4, #0x60]
-	movs r1, #0xe0
-	lsls r1, r1, #3
-	cmp r0, r1
-	ble _08095472
-	str r1, [r4, #0x60]
-_08095472:
-	ldr r1, [r4, #0x58]
-	ldr r0, [r4, #0x60]
-	adds r1, r1, r0
-	str r1, [r4, #0x58]
-	ldr r0, [r4, #0x54]
-	bl PushoutToUp1
-	adds r1, r0, #0
-	cmp r1, #0
-	bge _0809548E
-	ldr r0, [r4, #0x58]
-	adds r0, r0, r1
-	str r0, [r4, #0x58]
-	str r5, [r4, #0x60]
-_0809548E:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_08095494:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0809549C: .4byte 0x0000D406
-_080954A0: .4byte 0x0836A004
-
 	thumb_func_start FUN_080954a4
 FUN_080954a4: @ 0x080954A4
 	push {r4, r5, r6, lr}
