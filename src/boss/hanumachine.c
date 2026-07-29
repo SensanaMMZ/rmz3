@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "element.h"
 #include "global.h"
+#include "zero.h"
 #include "metatile.h"
 #include "physics.h"
 #include "stagerun.h"
@@ -203,7 +204,62 @@ void FUN_0805cdbc(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p2_p1c.inc");
+// Hop toward the pillar nearest Zero (props[0] anchor + n*0x3000 lanes),
+// with X/Y pushout probes via FUN_0805d594. Everything reproduces except a
+// register tie: retail keeps the xflip flag in r3 with the oam byte address
+// in callee-saved r4; agbcc swaps them (allocation-cascade basin) and every
+// pin either follows the swap or adds a &1 truncation at the bitfield insert.
+NON_MATCH void FUN_0805ce50(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] == 0) {
+    s32 on;
+    SetMotion(&p->s, MOTION(0xB5, 0x06));
+    on = 0;
+    if ((p->s).coord.x < (pZero2->s).coord.x) {
+      on = 1;
+    }
+    ((p->s).spr).xflip = on;
+    on = 0;
+    if ((p->s).coord.x < (pZero2->s).coord.x) {
+      on = 1;
+    }
+    ((p->s).spr).oam.xflip = on;
+    if (on != 0) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+    {
+      s32 base = *(s32*)&p->props.raw[0];
+      s32 t = ((pZero2->s).coord.x - base) / 0x3000;
+      base += (t * 3 << 12) + 0x1800;
+      (p->s).d.x = (base - (p->s).coord.x) / 0x18;
+    }
+    (p->s).d.y = -0x600;
+    if ((p->s).d.x > 0) {
+      (p->s).unk_coord.x = 0x1000;
+    } else {
+      (p->s).unk_coord.x = -0x1000;
+    }
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (FUN_0805d594(p, (p->s).unk_coord.x, 0) == 0) {
+    (p->s).coord.x += (p->s).d.x;
+  }
+  if (FUN_0805d594(p, 0, (p->s).d.y) == 0) {
+    (p->s).coord.y += (p->s).d.y;
+  }
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y >= 0) {
+    (p->s).mode[1] = 0x17;
+    (p->s).mode[2] = 0;
+  }
+#else
+  INCCODE("asm/boss/hanumachine_ce50.inc");
+#endif
+}
+
 
 void hanu_0805cf58(struct Boss* p) {
   u8 md = (p->s).mode[2];
