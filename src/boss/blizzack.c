@@ -41,27 +41,25 @@ void Blizzack_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-// blizzackMode0/Mode1 do not match: agbcc schedules the mode[2]=0 zero early,
-// forcing the 0x64xx constant into a spare reg + copy (regmove) the target
-// avoids. Logic is faithful in the MODERN branches; the INCCODE asm bodies
-// match the ROM byte-for-byte.
-NON_MATCH void blizzackMode0(struct Boss* p) {
-#if MODERN
+void blizzackMode0(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
+    u16* t;
+    register s32 z asm("r2");
+    register s32 v asm("r1");
     SetMotion(&p->s, MOTION(0xb4, 0));
     ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
-    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6400;
-    (p->s).mode[2] = 0;
-    (p->s).work[2] = 0;
+    t = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    v = 0x6400;
+    *t = v;
+    (p->s).mode[2] = z;
+    (p->s).work[2] = z;
   }
   UpdateMotionGraphic(&p->s);
   if (((struct Entity*)(p->s).scriptEntity)->id & 1) {
     (p->s).mode[1] = 1;
     (p->s).mode[2] = 1;
   }
-#else
-  INCCODE("asm/boss/blizzack_mode0_body.inc");
-#endif
 }
 
 void blizzackMode1(struct Boss* p) {
