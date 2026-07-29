@@ -10,6 +10,24 @@
 static const BossFunc sDeads[5];
 
 
+void FUN_08061b68(struct Boss* p, s32 dx, s32 dy) {
+  struct Coord c;
+  u32 a = *(u16*)&(p->props).raw[4] >> 8;
+  s32 sinv, cosv;
+  if ((p->s).flags & 0x10) {
+    dx = -dx;
+  }
+  cosv = gSineTable[(u8)(a + 0x40)];
+  c.x = dx * cosv / 256;
+  sinv = gSineTable[a];
+  c.x += -sinv * dy / 256;
+  c.y = dx * sinv / 256;
+  c.y += dy * cosv / 256;
+  c.x = (p->s).coord.x + c.x;
+  c.y = (p->s).coord.y + c.y;
+  CreateSmoke(3, &c);
+}
+
 INCASM("asm/boss/spearook_p1_pre_pre_a.inc");
 
 #include "entity/macros.h"
