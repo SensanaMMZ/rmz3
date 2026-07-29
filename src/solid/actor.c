@@ -1314,6 +1314,32 @@ void Actor48_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_p2.inc");
 
+// 0x080d7638
+void FUN_080d7638(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      wDynamicGraphicTilenums[DM190_HARPUIA] = 0x240;
+      wDynamicMotionPalIDs[DM190_HARPUIA] = 6;
+      SetMotion(&p->s, MOTION(DM190_HARPUIA, 0));
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2:
+      if (FUN_080d0934(&p->s, MOTION(DM190_HARPUIA, 0), 1) != 0) {
+        (p->s).mode[1]++;
+      }
+      break;
+  }
+}
+
+INCASM("asm/solid/actor_p2b.inc");
+
 // ------------------------------------------------------------------------------------------------------------------------------------
 
 const struct Collision Collision_08370ab8 = {
