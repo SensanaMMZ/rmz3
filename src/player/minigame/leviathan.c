@@ -138,6 +138,104 @@ void nop_08036044(struct Zero* z) {}
 
 INCASM("asm/player/leviathan_p2.inc");
 
+void leviathanMode1(struct Zero* p) {
+  struct Entity* e = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[0]);
+      SetMotion(&p->s, 0xBD02);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      register s32 mv asm("r5");
+      FUN_08035e6c(p);
+      (p->s).coord.y = (p->s).unk_coord.x;
+      mv = 0;
+      {
+      register u16 in asm("r1");
+      in = *(u16*)((u8*)e + 0x10);
+      if (in & 0x20) {
+        (p->s).d.x -= 0x10;
+        if ((p->s).d.x < -0x300) {
+          (p->s).d.x = -0x300;
+        }
+        {
+          u8* a;
+          u8 b;
+          u8* xa;
+          register s32 z asm("r0");
+          mv = 1;
+          xa = (u8*)p + 0x4c;
+          z = 0;
+          asm("" : "+r"(z));
+          *xa = z;
+          a = (u8*)p + 0x4a;
+          b = *a;
+          z -= 0x11;
+          z &= b;
+          *a = z;
+          (p->s).flags &= 0xEF;
+        }
+      } else if (in & 0x10) {
+        (p->s).d.x += 0x10;
+        if ((p->s).d.x > 0x300) {
+          (p->s).d.x = 0x300;
+        }
+        mv = 1;
+        ((p->s).spr).xflip = mv;
+        {
+          register s32 v0 asm("r0");
+          register u32 ten asm("r1");
+          u8* a = (u8*)p + 0x4a;
+          v0 = *a;
+          ten = 0x10;
+          v0 |= ten;
+          *a = v0;
+          {
+            register u8 fl asm("r0");
+            fl = (p->s).flags;
+            ten |= fl;
+            (p->s).flags = ten;
+          }
+        }
+      }
+      }
+      if (((FUN_08035e48(&p->s) << 24) != 0) && mv == 0) {
+        (p->s).d.x = mv;
+        (p->s).mode[2]++;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, 0xBD01);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      u32 m;
+      FUN_08035e6c(p);
+      (p->s).coord.y = (p->s).unk_coord.x;
+      UpdateMotionGraphic(&p->s);
+      {
+        u16 iv = *(u16*)((u8*)e + 0x10);
+        m = 0x30;
+        m &= iv;
+      }
+      if (m != 0) {
+        (p->s).mode[2] = 0;
+      } else if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = m;
+        (p->s).mode[2] = m;
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/player/leviathan_p2_b.inc");
+
+
 // --------------------------------------------
 
 void leviathanMode0Pre(struct Zero* z);
