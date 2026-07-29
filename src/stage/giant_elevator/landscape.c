@@ -1,6 +1,7 @@
 #include "palette_animation.h"
 #include "global.h"
 #include "overworld.h"
+#include "system.h"
 #include "story.h"
 
 void FUN_08014b04();
@@ -239,6 +240,66 @@ void FUN_08014258(struct StageLayer* l, const struct Stage* stage) {
 }
 
 INCASM("asm/stage_gfx/giant_elevator_p1_a.inc");
+
+// Builds the WIN0H HDMA table for the giant elevator shafts: two 0xA0-line
+// passes over a Malloc'd buffer keyed off the elevator car positions, hooked
+// into gIntrManager.reservedDma0. Logic verified against the asm; parked on
+// the loop-staging orchestration basin (bs spilled in-place on b's reg, the
+// 0x100 mask living in ip, and the c copy in r7 - a dozen pin/anchor rounds
+// each fixed one slot and displaced another).
+NON_MATCH void gelevator_08014678(struct StageLayer* l, const struct Stage* stage) {
+#if MODERN
+  u16 a = (u32)(gOverworld.work.giantElevator.unk_00c << 8) >> 16;
+  u16 b = (u32)(gOverworld.work.giantElevator.unk_010 << 8) >> 16;
+  u16 c = (u32)(gOverworld.work.giantElevator.unk_01c << 8) >> 16;
+  u32 d = (u32)(gOverworld.work.giantElevator.unk_020 << 15) >> 23;
+  u32* buf = Malloc(0x280);
+  if (buf == NULL) {
+    return;
+  }
+  gIntrManager.reservedDma0[0] = (u32)buf;
+  gIntrManager.reservedDma0[1] = 0x04000018;
+  gIntrManager.reservedDma0[2] = 0xA6600001;
+  {
+    s32 i;
+    u32 v1 = (d << 16) | c;
+    u32 v2 = ((d + 0x100) << 16) | c;
+    u32* q = buf;
+    for (i = 0; i <= 0x9F; i++) {
+      if ((i + d) & 0x100) {
+        *q = v1;
+      } else {
+        *q = v2;
+      }
+      q++;
+    }
+  }
+  {
+    s32 t = (s16)b;
+    if (t > 0xFF && l->phase <= 7) {
+      return;
+    }
+    {
+      s32 i;
+      u32 v3 = (t << 16) | a;
+      u32 v4 = ((t + 0x100) << 16) | a;
+      u32* q = buf;
+      for (i = 0; i <= 0x9F; i++) {
+        if (((i + t) & 0x100) == 0) {
+          *q = v3;
+        } else if (l->phase > 7 && t > 0) {
+          *q = v4;
+        }
+        q++;
+      }
+    }
+  }
+#else
+  INCCODE("asm/stage_gfx/gelevator_4678.inc");
+#endif
+}
+
+INCASM("asm/stage_gfx/giant_elevator_p1_a_b.inc");
 
 void giantElevator_08014880(struct StageLayer* p, const struct Stage* _) {
   if (gOverworld.state[0] <= 9) {

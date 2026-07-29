@@ -9,7 +9,13 @@ struct GiantElevatorState {
   u8 unk_000[4];
   u16 unk_004;
   u16 unk_006;
-  u8 unk_008[32];
+  u8 unk_008[4];
+  s32 unk_00c;
+  s32 unk_010;
+  u8 unk_014[8];
+  s32 unk_01c;
+  s32 unk_020;
+  u8 unk_024[4];
   s32 unk_028;
   s32 unk_02c;
   u8 unk_030[216];
