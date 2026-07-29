@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
+#include "stagerun.h"
 #include "story.h"
 
 // レジスタンスベースのモブキャラ
@@ -461,7 +462,36 @@ void FUN_080da320(struct Solid* p) {
   (p->s).mode[1] = 0;
   MobNPC_Update(p);
 }
-INCASM("asm/solid/mob_npc_pre_p1_3_1.inc");
+// 0x080da398
+TextID hirondelle_080da398(struct Solid* p) {
+  if (FLAG(gCurStory.s.gameflags, 16)) {
+    if (gStageDiskManager.disk[0x2B] & 1) {
+      return 0x272;
+    }
+    return 0x271;
+  }
+  if (FLAG(gCurStory.s.gameflags, 11)) {
+    if (gCurStory.s.counts[7] <= 1) {
+      gCurStory.s.counts[7] = 2;
+      return 0x26E;
+    }
+    if (gCurStory.s.counts[7] <= 2) {
+      gCurStory.s.counts[7] = 3;
+      return 0x26F;
+    }
+    return 0x270;
+  }
+  {
+    TextID ret;
+    if (gCurStory.s.counts[7] != 0) {
+      ret = 0x26D;
+    } else {
+      gCurStory.s.counts[7] = 1;
+      ret = 0x26C;
+    }
+    return ret;
+  }
+}
 
 // 0x080da41c
 void FUN_080da41c(struct Solid* p) {
