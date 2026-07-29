@@ -2,6 +2,7 @@
 #include "cyberelf.h"
 #include "entity.h"
 #include "global.h"
+#include "mission.h"
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -68,6 +69,34 @@ void Elf3_Update(struct Elf* p) {
 void Elf3_Die(struct Elf* p) {
   (p->s).flags &= ~DISPLAY;
   SET_ELF_ROUTINE(p, ENTITY_EXIT);
+}
+
+// 0x080e2af0
+void FUN_080e2af0(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+  struct Elf* p = (struct Elf*)body->parent;
+  struct Entity* atk = (struct Entity*)(body->enemy)->parent;
+  struct Entity* q = (p->s).unk_28;
+  struct Enemy* z = (struct Enemy*)(p->s).unk_2c;
+  if (!((z->body).status & BODY_STATUS_DEAD) && (z->body).hp != 0 &&
+      (body->hitboxFlags & 0x800000) && atk->kind == 4) {
+    u8 idx;
+    if (atk->id != 0) {
+      return;
+    }
+    if (q->work[2] == 0) {
+      u8* pr = (u8*)z + 0xb4;
+      idx = pr[0];
+    } else {
+      u8* pr = (u8*)z + 0xb4;
+      idx = pr[1];
+    }
+    if (ELF_AVABILITY(idx) & 4) {
+      (p->s).work[2] += 2;
+    } else {
+      (p->s).work[2] += 1;
+    }
+    AddMissionDamage(2);
+  }
 }
 
 INCASM("asm/cyberelf/unk_3_post.inc");
