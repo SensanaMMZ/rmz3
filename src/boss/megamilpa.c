@@ -660,6 +660,39 @@ void FUN_0803d7a0(struct Boss* p) {
 
 INCASM("asm/boss/megamilpa.inc");
 
+// 0x0803dba0
+void FUN_0803dba0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x10D);
+      (p->s).work[2] = 0x20;
+      p->props.raw[10] = RANDOM(RNG_0202f388) & 1;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      register u8 t asm("r3");
+      if (((p->s).work[2] & 3) == 0) {
+        FUN_0803d454(p, 0, 1);
+      }
+      AppendQuake(3, &(p->s).coord);
+      {
+        u8 v = (p->s).work[2];
+        t = v;
+        if (t != 0) {
+          (p->s).work[2] = v - 1;
+          break;
+        }
+      }
+      *(s32*)&p->props.raw[12] |= 2;
+      (p->s).mode[1] = 5;
+      (p->s).mode[2] = t;
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/megamilpa_b.inc");
+
 // --------------------------------------------
 
 const struct Collision Collision_ARRAY_ARRAY_083619c8[3][3] = {
