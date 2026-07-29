@@ -99,6 +99,72 @@ void FUN_080a53e8(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_20_post_c.inc");
 
+void FUN_080a569c(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 md = (p->s).mode[2];
+  switch (md) {
+    case 0: {
+      u8 on;
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).taskCol = 0x17;
+      InitRotatableMotion(&p->s);
+      on = (q->flags >> 4) & 1;
+      SET_XFLIP(p, on);
+      SetMotion(&p->s, MOTION(0x49, 0x01));
+      (p->s).work[2] = 0;
+      (p->s).work[3] = 0x10;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1: {
+      s32 t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      {
+        s32 dx;
+        s32 px;
+        s32 dy;
+        s32 py;
+        dx = q->coord.x;
+        px = (p->s).coord.x;
+        dx -= px;
+        dy = q->coord.y;
+        py = (p->s).coord.y;
+        dy -= py;
+        (p->s).coord.x = px + dx / 6;
+        (p->s).coord.y = py + dy / 6;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      (p->s).work[2] = 0;
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      s32 t = (p->s).work[3] + 1;
+      (p->s).work[3] = t;
+      if ((u8)t > 0x13) {
+        (p->s).mode[1] = 6;
+        (p->s).mode[2] = 0;
+      }
+      if ((p->s).work[3] > 0x10) {
+        (p->s).work[2] += 0x10;
+      } else {
+        (p->s).work[2] += (p->s).work[3];
+      }
+      (p->s).angle = (p->s).work[2];
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/projectile/unk_20_post_d.inc");
+
 void FUN_080a4f3c(struct Projectile* p);
 
 void FUN_080a5ac0(struct Projectile* p) {
