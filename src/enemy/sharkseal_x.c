@@ -149,6 +149,39 @@ void nop_08070f90(struct Enemy* p) {}
 
 bool8 FUN_08070f94(struct Enemy* p) { return TRUE; }
 
+// 0x08070f98
+void sharksealxMode7(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[4]);
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      (p->s).d.y += 0x10;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + (p->s).d.y + PIXEL(16)) != 0) {
+        (p->s).d.y = 0;
+        (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - PIXEL(16);
+      } else {
+        (p->s).coord.y += (p->s).d.y;
+      }
+      break;
+  }
+  {
+    struct Entity** slot = (struct Entity**)((u8*)p + 0xc0);
+    if (isKilled(*slot)) {
+      SetDDP(&p->body, &sCollisions[0]);
+      *slot = NULL;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
 INCASM("asm/enemy/sharkseal_x_p9.inc");
 
 bool8 nop_080711d4(struct Enemy* p) { return TRUE; }
