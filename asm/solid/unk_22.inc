@@ -4,49 +4,6 @@
 	
 	.text
 
-	thumb_func_start FUN_080d7eb8
-FUN_080d7eb8: @ 0x080D7EB8
-	push {r4, r5, lr}
-	adds r5, r0, #0
-	ldrb r0, [r5, #0xe]
-	cmp r0, #0
-	beq _080D7EC8
-	cmp r0, #1
-	beq _080D7EF8
-	b _080D7EFE
-_080D7EC8:
-	movs r1, #0xf0
-	lsls r1, r1, #7
-	adds r0, r5, #0
-	bl SetMotion
-	ldrb r1, [r5, #0xa]
-	movs r0, #4
-	orrs r0, r1
-	strb r0, [r5, #0xa]
-	adds r4, r5, #0
-	adds r4, #0x74
-	ldr r1, _080D7F04 @ =sCollisions
-	adds r2, r5, #0
-	adds r2, #0x54
-	adds r0, r4, #0
-	movs r3, #0
-	bl InitBody
-	str r5, [r4, #0x2c]
-	ldr r0, _080D7F08 @ =FUN_080d7e5c
-	str r0, [r4, #0x24]
-	ldrb r0, [r5, #0xe]
-	adds r0, #1
-	strb r0, [r5, #0xe]
-_080D7EF8:
-	adds r0, r5, #0
-	bl UpdateMotionGraphic
-_080D7EFE:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080D7F04: .4byte sCollisions
-_080D7F08: .4byte FUN_080d7e5c
 
 	thumb_func_start openStageDoor_080d7f0c
 openStageDoor_080d7f0c: @ 0x080D7F0C

@@ -69,6 +69,19 @@ NAKED void FUN_080d7e5c(struct Body* body, struct Coord* r1 UNUSED, struct Coord
 
 // --------------------------------------------
 
+void FUN_080d7eb8(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x78, 0x00));
+      INIT_BODY(p, sCollisions, 0, FUN_080d7e5c);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 INCASM("asm/solid/unk_22.inc");
 
 void FUN_080d820c(struct Solid* p) {
