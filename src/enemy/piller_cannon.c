@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
 #include "vfx.h"
 
 static const struct Collision sCollisions[14];
@@ -87,7 +88,53 @@ void FUN_08068610(struct Enemy* p) {}
 
 bool8 FUN_08068614(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/piller_cannon_p3.inc");
+// 0x08068618 -- parked (copy-coalescing basin): retail copies the 0xFE
+// mask into a fresh reg before each AND (adds r0,r1; ands r0,r2); agbcc
+// folds the copy and ANDs into the flags load in every form tried
+// (mask-first expr, two-step temp, in-place mk chain, r3/r4 pins).
+NON_MATCH void FUN_08068618(struct Enemy* p) {
+#if MODERN
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register struct Entity** slot asm("r4");
+      register struct Entity* v asm("r3");
+      SetMotion(&p->s, MOTION(0x08, 0x00));
+      *((u8*)p + 0xb9) = m;
+      SetDDP(&p->body, &sCollisions[0]);
+      slot = (struct Entity**)((u8*)p + 0xbc);
+      v = *slot;
+      if (v != NULL) {
+        struct Entity* w;
+        u8 mk = 0xFE;
+        {
+          u8 f = mk;
+          f &= v->flags;
+          v->flags = f;
+        }
+        w = *slot;
+        mk &= w->flags;
+        mk &= 0xFD;
+        w->flags = mk;
+        SET_VFX_ROUTINE(w, ENTITY_DISAPPEAR);
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    }
+    case 1: {
+      u32 d;
+      UpdateMotionGraphic(&p->s);
+      d = (pZero2->s).coord.x + PIXEL(96) - (p->s).coord.x;
+      if (d < 0xC000) {
+        (p->s).mode[1] = 3, (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/piller_cannon_8618.inc");
+#endif
+}
 
 bool8 FUN_080686b0(struct Enemy* p) { return TRUE; }
 
