@@ -1,5 +1,7 @@
 #include "collision.h"
 #include "global.h"
+#include "overworld.h"
+#include "physics.h"
 #include "solid.h"
 #include "vfx.h"
 
@@ -201,6 +203,46 @@ void FUN_080ca7d8(struct IcebonIceObject* p) {
 }
 
 INCASM("asm/solid/icebon_ice_p2.inc");
+
+void FUN_080cab58(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, MOTION(0x11, 0x05));
+      (p->s).work[2] = 0x30;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 hit;
+      s32 rise;
+      (p->s).coord.y -= 0x80;
+      rise = 0;
+      {
+        struct Overworld* ow = &gOverworld;
+        if ((p->s).coord.y < ow->sea) {
+          (p->s).coord.y = ow->sea;
+          rise = 1;
+        }
+      }
+      hit = PushoutToDown1((p->s).coord.x, (p->s).coord.y);
+      if (hit > 0) {
+        (p->s).coord.y += hit;
+        rise = 1;
+      }
+      if (rise != 0) {
+        u8 t = --(p->s).work[2];
+        if (t == 0) {
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = t;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/icebon_ice_p2b.inc");
 
 static const struct Collision sCollisions[5] = {
     {
