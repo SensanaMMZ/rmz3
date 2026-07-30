@@ -270,7 +270,105 @@ void FUN_080ab724(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_32_p4_p2_s2.inc");
+void FUN_080ac1e4();
+
+void FUN_080ab784(struct Projectile* p) {
+  struct Entity* par = (p->s).unk_28;
+  gVideoRegBuffer.dispcnt |= 0x2400;
+  SetTaskCallback((struct RenderNode*)((u8*)p + 0x34), FUN_080ac1e4);
+  *(void**)((u8*)p + 0x3c) = p;
+  {
+    register u32 f asm("r2");
+    register s32 z3 asm("r3");
+    {
+      register s32 fl0 asm("r0");
+      fl0 = (p->s).flags;
+      f = 0xF7;
+      asm("" : "+r"(f));
+      f &= fl0;
+    }
+    {
+      register u32 c1 asm("r0");
+      c1 = 1;
+      asm("" : "+r"(c1));
+      z3 = 0;
+      asm("" : "+r"(z3));
+      f |= c1;
+    }
+    f |= 2;
+    f |= z3;
+    (p->s).flags = f;
+    {
+      register u32 xf asm("r1");
+      {
+        register u32 pf asm("r0");
+        pf = par->flags;
+        xf = pf >> 4;
+      }
+      {
+        register u32 c1x asm("r0");
+        c1x = 1;
+        asm("" : "+r"(c1x));
+        xf &= c1x;
+      }
+      if (xf != 0) {
+        f |= 0x10;
+      } else {
+        f &= 0xEF;
+      }
+      (p->s).flags = f;
+      ((p->s).spr).xflip = xf;
+      {
+        register u8* oa3 asm("r3");
+        s32 ov2;
+        s32 m11b;
+        oa3 = (u8*)&((p->s).spr).oam + 6;
+        xf <<= 4;
+        ov2 = *oa3;
+        m11b = -0x11;
+        asm("" : "+r"(m11b));
+        *oa3 = (m11b & ov2) | xf;
+      }
+    }
+  }
+  gBlendRegBuffer.bldclt = 0x3F44;
+  gBlendRegBuffer.bldalpha = 0x1008;
+  gWindowRegBuffer.dispcnt |= 0x4000;
+  gWindowRegBuffer.winin[1] = 0xFF;
+  gWindowRegBuffer.winin[2] &= 0xFB;
+  if ((p->s).flags & 0x10) {
+    (p->s).coord.x += 0x1E00;
+    (p->s).d.x = -3;
+  } else {
+    (p->s).coord.x += -0x1E00;
+    (p->s).d.x = 3;
+  }
+  (p->s).coord.y += -0x1E00;
+  {
+    s32 z1 = 0;
+    (p->s).work[2] = 0xB4;
+    (p->s).work[3] = z1;
+  }
+  {
+    u16* sh = (u16*)((u8*)p + 0xc0);
+    {
+      register u32 hv asm("r0");
+      hv = 0xFFFF;
+      asm("" : "+r"(hv));
+      *sh = hv;
+    }
+    *sh = PlaySound(0x44);
+  }
+  {
+    u32 rr = RANDOM(RNG_0202f388) % 3;
+    *((u8*)p + 0xc2) = rr;
+  }
+  FUN_080aada0(&p->s, 1);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  Projectile32_Update(p);
+}
+
+INCASM("asm/projectile/unk_32_p4_p2_s2b.inc");
 
 void FUN_080ab990(struct Projectile* p) {
   gVideoRegBuffer.dispcnt &= ~(DISPCNT_WIN0_ON | DISPCNT_BG2_ON);
