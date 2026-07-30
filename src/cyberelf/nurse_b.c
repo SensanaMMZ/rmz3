@@ -29,11 +29,57 @@ struct Elf* CreateNurseBElf(struct Zero* z, u8 breed, u8 availability, u8 sateli
   return (struct Elf*)p;
 }
 
-INCASM("asm/cyberelf/nurse_b_p1a.inc");
-
 struct Entity* FUN_080bfc94(struct Coord* c, u8 r1);
 extern const s16 gSineTable[256];
 extern const ElfFunc sNurseBUpdates[4];
+
+void NurseB_Update(struct Elf* p);
+
+void NurseB_Init(struct Elf* p) {
+  struct Zero* z = ((struct CyberElfNurseB*)p)->player;
+  struct Rect rr = gZeroRanges[*((u8*)z + 0x147)];
+  s32 z8;
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  {
+    register s32 c1 asm("r0");
+    register s32 f1 asm("r1");
+    f1 = (p->s).flags;
+    c1 = 1;
+    asm("" : "+r"(c1));
+    z8 = 0;
+    c1 = c1 | f1;
+    c1 |= 2;
+    (p->s).flags = c1;
+  }
+  SetMotion(&p->s, GetElfMotion(0));
+  UpdateMotionGraphic(&p->s);
+  ((p->s).spr).xflip = z8;
+  {
+    u8* oa = (u8*)&((p->s).spr).oam + 6;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    asm("" : "+r"(m11));
+    *oa = m11 & ov;
+    (p->s).flags &= 0xEF;
+  }
+  (p->s).coord.x = (z->s).coord.x + rr.x;
+  (p->s).coord.y = (z->s).coord.y + rr.y;
+  {
+    s32* b = (s32*)&((struct CyberElfNurseB*)p)->unk_b8[4];
+    b[0] = z8;
+    b[1] = z8;
+  }
+  if ((p->s).work[2] != 0) {
+    ((struct CyberElfNurseB*)p)->unk_b8[0] = z8;
+  } else {
+    ((struct CyberElfNurseB*)p)->unk_b8[0] = 8;
+  }
+  ((struct CyberElfNurseB*)p)->unk_b8[1] = 0x20;
+  CreateElf3(&p->s, z);
+  SET_ELF_ROUTINE(p, ENTITY_UPDATE);
+  NurseB_Update(p);
+}
 
 void NurseB_Update(struct Elf* p) {
   struct CyberElfNurseB* q = (struct CyberElfNurseB*)p;
