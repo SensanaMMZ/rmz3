@@ -1,3 +1,4 @@
+#include "stagerun.h"
 #include "entity.h"
 #include "global.h"
 #include "vfx.h"
@@ -101,6 +102,101 @@ void FUN_080c5784(struct VFX* p) {
 }
 
 INCASM("asm/vfx/unk_70_p3_p3.inc");
+
+void FUN_080c5b30(struct VFX* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      {
+        u32 g0 = (u32)RANDOM(RNG_0202f388) % 5;
+        SetMotion(&p->s, g0 | 0xB900);
+      }
+      *((u8*)p + 0x49) |= 0xC;
+      {
+        u32 xf = RANDOM(RNG_0202f388) & 1;
+        s32 v;
+        if (xf != 0) {
+          register u8 lf asm("r1");
+          register s32 vv asm("r0");
+          lf = (p->s).flags;
+          vv = 0x10;
+          vv |= lf;
+          v = vv;
+        } else {
+          register u8 lf2 asm("r1");
+          register s32 vv2 asm("r0");
+          lf2 = (p->s).flags;
+          vv2 = 0xEF;
+          vv2 &= lf2;
+          v = vv2;
+        }
+        (p->s).flags = v;
+        {
+          register s32 x1 asm("r1");
+          u8* a;
+          u8 b;
+          s32 msk;
+          s32 sh;
+          x1 = xf;
+          asm("" : "+r"(x1));
+          ((p->s).spr).xflip = x1;
+          a = (u8*)p + 0x4a;
+          sh = x1 << 4;
+          b = *a;
+          msk = -0x11;
+          msk &= b;
+          msk |= sh;
+          *a = msk;
+        }
+      }
+      {
+        register struct Camera* cam asm("r3");
+        register u32* rp asm("r6");
+        register u32 A3 asm("r4");
+        register u32 C3 asm("r2");
+        register u32 seed2 asm("r5");
+        u32 sd;
+        register u32 r0v asm("r0");
+        u32 r2v;
+        s32 t;
+        cam = &gStageRun.vm.camera;
+        rp = &RNG_0202f388;
+        sd = *rp;
+        A3 = 0x343FD;
+        asm("" : "+r"(A3));
+        r0v = sd * A3;
+        C3 = 0x269EC3;
+        asm("" : "+r"(C3));
+        r0v += C3;
+        r0v <<= 1;
+        seed2 = r0v >> 1;
+        t = ((r0v >> 0x11) & 0xFF) << 8;
+        t += -0x7800;
+        (p->s).coord.x = cam->viewport.x + t;
+        (p->s).coord.y = cam->viewport.y + 0x4FFF;
+        r2v = seed2 * A3;
+        r2v += C3;
+        r2v <<= 1;
+        *rp = r2v >> 1;
+        *(s32*)((u8*)p + 0x60) = (((r2v >> 0x11) & 3) + 5) << 8;
+      }
+      (p->s).mode[1]++;
+    }
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 y = (p->s).coord.y - *(s32*)((u8*)p + 0x60);
+        struct Camera* cam2;
+        (p->s).coord.y = y;
+        cam2 = &gStageRun.vm.camera;
+        if (y < cam2->viewport.y + -0x6000) {
+          SET_VFX_ROUTINE(p, ENTITY_DIE);
+        }
+      }
+      break;
+  }
+}
+
 
 void FUN_080c5c64(struct VFX* vfx) {
   s32 md = (vfx->s).mode[1];
