@@ -418,7 +418,88 @@ void FUN_08061068(struct Boss* p) {
 
 bool8 FUN_080610a8(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_zx_p5.inc");
+extern const u8 gOmegaZXMode1[];
+extern const u8 gOmegaZXMode2[];
+u32 FUN_08061648(struct Boss* p, u32 m);
+void FUN_080616fc(struct Boss* p);
+
+// 0x080610ac -- neutral stance: pick the next attack from the hp-gated mode
+// tables, avoiding the last-used one. Blocker (allocation transposition):
+// the countdown byte and the p+0xb5 pointer swap homes (mine t6=r7/pa5=r6,
+// retail t6=r6/pa5=r7); boosts, pins (ghost-save), kc-copies and transfer
+// asms all scramble the interleaved addr/load block instead of flipping the
+// pair -- same basin as Projectile29_Init.
+NON_MATCH void Boss22Neutral(struct Boss* p) {
+#if MODERN
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      if ((p->s).mode[3] == 0xFF) {
+        (p->s).work[3] = 1;
+        (p->s).mode[3] = m;
+      } else {
+        (p->s).work[3] = 0x78;
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      u32 t6;
+      FUN_080616fc(p);
+      if ((p->s).work[3] == 0) {
+        break;
+      }
+      {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        t6 = (u8)t;
+        if (t6 != 0) {
+          break;
+        }
+      }
+      {
+        s32 a = *(s8*)((u8*)p + 0xb5);
+        s32 b = *(s8*)((u8*)p + 0xb6);
+        s8* pa5 = (s8*)((u8*)p + 0xb5);
+        s8* pa6 = (s8*)((u8*)p + 0xb6);
+        u32 nv;
+        if (a == b) {
+          if (*(s16*)((u8*)p + 0xa4) <= 0x20) {
+            u32 r = RANDOM(RNG_0202f388) % gOmegaZXMode2[0];
+            nv = gOmegaZXMode2[r + 1];
+            if ((s32)nv == *pa5) {
+              nv = (u16)FUN_08061648(p, nv);
+            }
+            asm volatile("");
+          } else {
+            u32 r = RANDOM(RNG_0202f388) % gOmegaZXMode1[0];
+            nv = gOmegaZXMode1[r + 1];
+            if ((s32)nv == *pa5) {
+              nv = (u16)FUN_08061648(p, nv);
+            }
+            asm volatile("");
+          }
+        } else {
+          if (*(s16*)((u8*)p + 0xa4) <= 0x20) {
+            u32 rr = RANDOM(RNG_0202f388);
+            nv = gOmegaZXMode2[(rr % gOmegaZXMode2[0]) + 1];
+          } else {
+            u32 rr = RANDOM(RNG_0202f388);
+            nv = gOmegaZXMode1[(rr % gOmegaZXMode1[0]) + 1];
+          }
+        }
+        (p->s).mode[1] = nv;
+        (p->s).mode[2] = t6;
+        *pa6 = *pa5;
+        *pa5 = nv;
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/boss/omega_zx_neutral.inc");
+#endif
+}
 
 bool8 FUN_08061230(struct Boss* p) { return TRUE; }
 
