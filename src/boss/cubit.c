@@ -1,6 +1,8 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "zero.h"
+#include "physics.h"
 #include "motion.h"
 #include "physics.h"
 #include "script.h"
@@ -363,7 +365,144 @@ void cubitMode10(struct Boss* p) {
 
 bool8 FUN_0805433c(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/cubit_p13_p1.inc");
+void cubitKnockBackDamage(struct Boss* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u32 fl asm("r0");
+      s32 z2;
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      {
+        u8* w = (u8*)p + 0x24;
+        u32 kk;
+        *w = m;
+        asm("" : "+r"(w));
+        w += 0x2c;
+        kk = 0x100;
+        *(u16*)w = kk;
+        asm("" : "+r"(w));
+        w += 2;
+        asm("" : "+r"(w));
+        *(u16*)w = kk;
+      }
+      PlaySound(0xD1);
+      SetMotion(&p->s, 0xB01E);
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        u32 k10;
+        (p->s).d.x = -0x200;
+        ((p->s).spr).xflip = 1;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          u32 ov = *oa;
+          k10 = 0x10;
+          ov |= k10;
+          *oa = ov;
+        }
+        fl = (p->s).flags;
+        fl |= k10;
+      } else {
+        u8* xa;
+        u8 zv;
+        (p->s).d.x = 0x200;
+        xa = (u8*)p + 0x4c;
+        zv = 0;
+        asm("" : "+r"(zv));
+        *xa = zv;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+        {
+          u32 flv = (p->s).flags;
+          register u32 t asm("r0");
+          t = 0xEF;
+          asm("" : "+r"(t));
+          t &= flv;
+          fl = t;
+        }
+      }
+      (p->s).flags = fl;
+      {
+        u32 fl2 = (p->s).flags;
+        u32 t = 1;
+        register s32 zp asm("r2");
+        zp = 0;
+        asm volatile("" :: "r"(zp));
+        z2 = zp;
+        t |= fl2;
+        (p->s).flags = t;
+      }
+      *(u32*)((u8*)p + 0xc0) = z2;
+      (p->s).work[2] = 0x28;
+      (p->s).work[3] = z2;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      s32 k;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 dx = (p->s).d.x;
+        (p->s).d.x = dx + ((-dx << 3) >> 8);
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      {
+        s32 ny = (p->s).coord.y + (p->s).d.y;
+        s32 nx;
+        s32 dx2;
+        (p->s).coord.y = ny;
+        nx = (p->s).coord.x + (p->s).d.x;
+        (p->s).coord.x = nx;
+        if ((p->s).d.x > 0) {
+          s32 push = PushoutToLeft1(nx + 0x1C00, ny + -0xC00);
+          if (push != 0) {
+            (p->s).coord.x += push;
+          }
+        }
+      }
+      if ((p->s).d.x < 0) {
+        s32 push2 = PushoutToRight1((p->s).coord.x + -0x1C00, (p->s).coord.y + -0xC00);
+        if (push2 != 0) {
+          (p->s).coord.x += push2;
+        }
+      }
+      {
+        s32 cx = (p->s).coord.x;
+        s32 cy = (p->s).coord.y;
+        s32 push3;
+        k = -0x400;
+        push3 = PushoutToUp1(cx, cy + k);
+        if (push3 != 0) {
+          (p->s).work[3] = 1;
+          (p->s).coord.y += push3;
+        }
+      }
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2] = (p->s).work[2] - 1;
+      }
+      if (*(u16*)((u8*)p + 0x12) == 0x100) {
+        (p->s).coord.y += k;
+        {
+          u8* ac = (u8*)p + 0xc8;
+          s32 z = 0;
+          *ac = z;
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = z;
+        }
+        (p->s).mode[3] = 0xFF;
+      }
+      break;
+    }
+  }
+}
+
 
 #include "element.h"
 #include "vfx.h"
