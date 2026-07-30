@@ -592,7 +592,125 @@ void FUN_080abb44(struct Projectile* p) {
   Projectile32_Update(p);
 }
 
-INCASM("asm/projectile/unk_32_p4_p3_p1.inc");
+u8 makeZeroSlower(struct Zero* z, u8 val);
+
+void FUN_080abbb8(struct Projectile* p) {
+  struct Entity* e = (p->s).unk_28;
+  u8 m1;
+  UpdateMotionGraphic(&p->s);
+  m1 = (p->s).mode[1];
+  switch (m1) {
+    case 0:
+      (p->s).d.x += 0x10;
+      if ((p->s).d.x > 0x280) {
+        (p->s).d.x = 0x280;
+      }
+      if (e->mode[0] > 1) {
+        (p->body).status = m1;
+        (p->body).prevStatus = m1;
+        (p->body).invincibleTime = m1;
+        (p->s).flags &= ~COLLIDABLE;
+        (p->s).mode[1] = 1;
+      } else {
+        u32* st = (u32*)((u8*)p + 0x8c);
+        if ((*st & 4) == 0) {
+          break;
+        }
+        {
+          u32 a = RNG_0202f388;
+          u32 r1v = (a * 0x343FD + 0x269EC3) << 1;
+          u32 s1 = r1v >> 1;
+          u32 r2v;
+          RNG_0202f388 = s1;
+          (p->s).unk_coord.x = ((s32)((r1v >> 0x11) % 0xE) - 7) << 8;
+          r2v = (s1 * 0x343FD + 0x269EC3) << 1;
+          RNG_0202f388 = r2v >> 1;
+          (p->s).unk_coord.y = (((r2v >> 0x11) % 0x14) + 4) << 8;
+        }
+        if (pZero2 != NULL) {
+          makeZeroSlower(pZero2, 8);
+        }
+        *st = m1;
+        (p->body).prevStatus = m1;
+        (p->body).invincibleTime = m1;
+        (p->s).flags &= ~COLLIDABLE;
+        (p->s).mode[1] = 2;
+      }
+      break;
+    case 1: {
+      register u8 w1l asm("r1");
+      s32 w1;
+      u32 t3;
+      w1l = (p->s).work[2];
+      t3 = w1l & 3;
+      w1 = w1l;
+      if (t3 > 1) {
+        (p->s).flags &= ~DISPLAY;
+      } else {
+        (p->s).flags |= DISPLAY;
+      }
+      (p->s).work[2] = w1 + 1;
+      asm("" : "+r"(w1));
+      if ((u8)w1 > 0x10) {
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+    }
+    case 2: {
+      struct Zero* z = pZero2;
+      if (z == NULL) {
+        (p->s).d.x = (s32)z;
+        (p->s).d.y = 0x200;
+        goto set3;
+      }
+      {
+        u32 sv = *(u32*)((u8*)z + 0x8c);
+        u32 k2h = 0x200;
+        if ((sv & k2h) != 0 || *(s16*)((u8*)z + 0xa4) == 0) {
+          (p->s).d.x = 0;
+          (p->s).d.y = k2h;
+          goto set3;
+        }
+      }
+      if (z->s.flags & X_FLIP) {
+        (p->s).coord.x = z->s.coord.x + (p->s).unk_coord.x;
+      } else {
+        (p->s).coord.x = z->s.coord.x - (p->s).unk_coord.x;
+      }
+      {
+        struct Zero* z3 = pZero2;
+        s32 mash;
+        (p->s).coord.y = z3->s.coord.y - (p->s).unk_coord.y;
+        mash = ((s32 (*)(struct Zero*))CountButtonMashing)(z3) + (p->s).work[2];
+        (p->s).work[2] = mash;
+        asm("" : "+r"(mash));
+        if ((u8)mash <= 0x10) {
+          s32 w3 = (p->s).work[3];
+          (p->s).work[3] = w3 + 1;
+          asm("" : "+r"(w3));
+          if ((u8)w3 <= 0xF0) {
+            break;
+          }
+        }
+        (p->s).d.x = 0;
+        (p->s).d.y = 0x200;
+        makeZeroFaster(pZero2, 8);
+      }
+    set3:
+      (p->s).mode[1] = 3;
+      break;
+    }
+  }
+  if ((p->s).flags & X_FLIP) {
+    (p->s).coord.x += (p->s).d.x;
+  } else {
+    (p->s).coord.x -= (p->s).d.x;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  if ((u32)(FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void FUN_080abdc8(struct Projectile* p) {
   *(u32*)((u8*)p + 0x8c) = 0;
