@@ -6,6 +6,8 @@
 #include "physics.h"
 #include "stagerun.h"
 #include "motion.h"
+#include "boss.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[8];
 
@@ -141,6 +143,108 @@ void FUN_0807ffb0(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/pantheon_zombie_p2_post_pre.inc");
+
+void FUN_08080054(struct Enemy* p) {
+  struct Boss* anubis = (struct Boss*)(p->s).unk_28;
+  u8* pb;
+  s32 dx;
+  s32 wv;
+  u8 m2;
+  if ((anubis->props).anubis.unk_c4[6] != 0) {
+    SetDDP(&p->body, &sCollisions[1]);
+  } else {
+    SetDDP(&p->body, &sCollisions[3]);
+  }
+  {
+    u8 first = *((u8*)p + 0xb8);
+    pb = (u8*)p + 0xb8;
+    if (first == 0) {
+      u32 attr = ((u32(*)(s32, s32))GetMetatileAttr)((p->s).coord.x, (p->s).coord.y + 0x800);
+      u8 v = 0;
+      if ((0xFFF0 & attr) == 0x400) {
+        v = 1;
+      }
+      *pb = v;
+    }
+  }
+  m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0:
+      (p->s).taskCol = 0x18;
+      (p->s).flags |= DISPLAY;
+      SetMotion(&p->s, 0x4C00);
+      (p->s).work[2] = m2;
+      (p->s).work[3] = m2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      if (*pb != 0) {
+        (p->s).work[3] = 1;
+      }
+      dx = (pZero2->s).coord.x - (p->s).coord.x;
+      if (dx < 0) {
+        (p->s).flags &= ~X_FLIP;
+        {
+          bool8 zf = 0;
+          ((p->s).spr).xflip = zf & 1;
+          ((p->s).spr).oam.xflip = zf;
+        }
+        if ((FUN_080098a4((p->s).coord.x + -0x800, (p->s).coord.y + -0x1000) << 0x10) != 0 && *pb == 0) {
+          goto walk;
+        }
+        (p->s).coord.x -= 0x40;
+        wv = 0;
+        asm volatile("");
+        goto store;
+      } else {
+        SET_XFLIP(p, 1);
+        if ((FUN_080098a4((p->s).coord.x + 0x800, (p->s).coord.y + -0x1000) << 0x10) != 0 && *pb == 0) {
+          goto walk;
+        }
+        (p->s).coord.x += 0x40;
+        wv = 0;
+        goto store;
+      walk:
+        wv = (p->s).work[2] + 1;
+      store:
+        (p->s).work[2] = wv;
+      }
+      if ((u32)(dx + 0xA00) <= 0x13FF) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      dx = (pZero2->s).coord.x - (p->s).coord.x;
+      if ((u32)(dx + 0xA00) > 0x1400) {
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+  dx = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  {
+    s32 oy = (p->s).coord.y;
+    if (dx - oy > 0xDFF) {
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+    } else if (*pb != 0) {
+      s32 ny2 = oy + 0x20;
+      (p->s).coord.y = ny2;
+      if (dx - ny2 < -0x6000) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+        (anubis->props).anubis.pzombieCount--;
+      }
+    } else {
+      (p->s).coord.y = dx;
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_zombie_p2_mid.inc");
 
 void FUN_080804a8(struct Enemy* p) {
   s32 m = (p->s).mode[2];
