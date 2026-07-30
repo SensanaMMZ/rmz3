@@ -350,7 +350,75 @@ void childreEndEarShot(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/childre_post.inc");
+INCASM("asm/boss/childre_post_a.inc");
+
+void childreMode18(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x6d);
+      (p->s).flags |= DISPLAY;
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      SetMotion(&p->s, 0xA41F);
+      {
+        s32 y, dx, dy, dist, nx, ny;
+        y = (p->s).coord.y;
+        (p->s).coord.y = y + 0x800;
+        dx = (p->s).coord.x - *(s32*)((u8*)p + 0xc8);
+        (p->s).d.x = dx;
+        dy = y - 0x2800;
+        dy -= *(s32*)((u8*)p + 0xcc);
+        (p->s).d.y = dy;
+        dist = (dx >> 8) * (dx >> 8);
+        dist += (dy >> 8) * (dy >> 8);
+        dist = Sqrt(dist) << 8;
+        nx = ((p->s).d.x << 8) / dist;
+        (p->s).d.x = nx;
+        ny = ((p->s).d.y << 8) / dist;
+        (p->s).d.y = ny;
+        (p->s).d.x = nx * 1408 / 256;
+        (p->s).d.y = ny * 1408 / 256;
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      register s32 rem asm("r6");
+      s32 x, bx;
+      x = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = x;
+      bx = *(s32*)((u8*)p + 0xbc);
+      if (x > bx + 0x6000) {
+        (p->s).coord.x = bx + 0x6000;
+      } else if (x < bx - 0x6000) {
+        (p->s).coord.x = bx - 0x6000;
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      {
+        s32 ny = (p->s).coord.y + (p->s).d.y;
+        (p->s).coord.y = ny;
+        {
+          register s32 tmp asm("r0");
+          tmp = *(s32*)((u8*)p + 0xc0) + 0x800;
+          rem = tmp - ny;
+        }
+        if (rem < 0 && (p->s).d.y > 0) {
+          (p->s).coord.y = ny + rem;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (rem < 0 && (p->s).d.y > 0) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/childre_post_b.inc");
 
 // --------------------------------------------
 
