@@ -778,7 +778,151 @@ INCASM("asm/enemy/shotcounter_p2.inc");
 
 bool8 nop_08066978(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shotcounter_p3.inc");
+void shotcounter_0806697c(struct Enemy* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      SetMotion(&p->s, 0x0404);
+      {
+        register s32 fb asm("r2");
+        fb = *((u8*)p + 0xbc);
+        asm("" : "+r"(fb));
+        if (fb == 0) {
+          (p->s).flags &= 0xEF;
+          (p->s).spr.xflip = fb;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            s32 ov = *oa;
+            s32 m11 = -0x11;
+            m11 &= ov;
+            *oa = m11;
+          }
+          (p->s).d.x = fb;
+        } else {
+          s32 o = 1;
+          u32 f2 = (p->s).flags;
+          s32 t16 = 0x10;
+          t16 |= f2;
+          (p->s).flags = t16;
+          (p->s).spr.xflip = o;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            s32 c16 = 0x10;
+            s32 ov, m11;
+            asm("" : "+r"(c16));
+            ov = *oa;
+            m11 = -0x11;
+            m11 &= ov;
+            *oa = m11 | c16;
+          }
+          (p->s).d.x = m;
+        }
+      }
+      {
+        s32 z = 0;
+        u8* a;
+        (p->s).d.y = z;
+        a = (u8*)p + 0xb8;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        SetDDP((struct Body*)(a - 0x44), &sCollisions[5]);
+      }
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      SetMotion(&p->s, 0x0405);
+      {
+        u8* fb;
+        register s32 v asm("r2");
+        register s32 v0 asm("r0");
+        register s32 one1 asm("r1");
+        fb = (u8*)p + 0xbc;
+        asm("" : "+r"(fb));
+        v0 = *fb;
+        one1 = 1;
+        v0 ^= one1;
+        *fb = v0;
+        v = v0;
+        asm("" : "+r"(v0));
+        if (v == 0) {
+          (p->s).flags &= 0xEF;
+          (p->s).spr.xflip = v;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            s32 ov = *oa;
+            s32 m11 = -0x11;
+            m11 &= ov;
+            *oa = m11;
+          }
+          (p->s).d.x = v;
+        } else {
+          s32 o;
+          register u8* t0 asm("r0");
+          register u8* oa2 asm("ip");
+          register u8* fa asm("r1");
+          register u8* xa asm("r0");
+          register s32 z3 asm("r3");
+          u32 off;
+          o = 1;
+          asm("" : "+r"(o));
+          {
+            register s32 cf asm("r1");
+            u32 fl2 = (p->s).flags;
+            cf = 0x10;
+            fl2 |= cf;
+            (p->s).flags = fl2;
+          }
+          xa = (u8*)p + 0x4c;
+          z3 = 0;
+          asm("" : "+r"(z3) : "r"(xa));
+          *xa = o;
+          asm("" : "+r"(z3));
+          off = 0x4a;
+          asm("" : "+r"(off));
+          off += (u32)p;
+          t0 = (u8*)off;
+          oa2 = t0;
+          asm("" : "+r"(oa2));
+          {
+            s32 c16 = 0x10;
+            s32 ov, m11;
+            u32 vv;
+            asm("" : "+r"(c16));
+            ov = *t0;
+            m11 = -0x11;
+            m11 &= ov;
+            vv = m11 | c16;
+            fa = oa2;
+            asm("" : "+r"(fa));
+            *fa = vv;
+          }
+          (p->s).d.x = z3;
+        }
+      }
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 3:
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        s32 z = 0;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+}
 
 bool8 FUN_08066ad0(struct Enemy* p) { return TRUE; }
 
