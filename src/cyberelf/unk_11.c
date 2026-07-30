@@ -79,10 +79,138 @@ void Elf11_Die(struct Elf* p) {
   SET_ELF_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/cyberelf/unk_11_p2.inc");
+u8 GetBeeAtkBoost(void);
+static const struct Collision sCollisions[15];
+
+void FUN_080e51b0(struct Elf* p) {
+  register struct Entity* q asm("r4");
+  struct Entity* z;
+  q = *(struct Entity**)((u8*)p + 0xb4);
+  z = *(struct Entity**)((u8*)p + 0xb8);
+  SetMotion(&p->s, 0x200);
+  {
+    register s32 v asm("r1");
+    register s32 one asm("r2");
+    s32 v0 = q->flags >> 4;
+    register u8* oa asm("r5");
+    s32 sh4, ov, m11;
+    one = 1;
+    v0 &= one;
+    (p->s).spr.xflip = v0;
+    v = (q->flags >> 4) & one;
+    oa = (u8*)&((p->s).spr).oam + 6;
+    sh4 = v << 4;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    *oa = m11 | sh4;
+    if (v) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+  }
+  if (q->mode[1] == 2) {
+    register s32 mid asm("r1");
+    register s32 mst asm("r0");
+    mid = q->motionID << 8;
+    mst = (q->motion).step;
+    if ((mst | mid) == 0x500) {
+      register u8* cp asm("r0");
+      u8 ci;
+      cp = (u8*)q + 0x71;
+      asm("" : "+r"(cp));
+      ci = *cp;
+      asm("" : "+r"(ci));
+      if ((s8)ci > 2) {
+        register s32 v asm("r1");
+        register s32 one asm("r2");
+        s32 v0 = (p->s).flags >> 4;
+        register u8* oa asm("r4");
+        s32 sh4, ov, m11;
+        one = 1;
+        v0 ^= one;
+        asm("" : "+r"(v0));
+        v0 &= one;
+        (p->s).spr.xflip = v0;
+        v = (p->s).flags >> 4;
+        v ^= one;
+        asm("" : "+r"(v));
+        v &= one;
+        oa = (u8*)&((p->s).spr).oam + 6;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+        if (v) {
+          (p->s).flags |= X_FLIP;
+        } else {
+          (p->s).flags &= ~X_FLIP;
+        }
+      }
+    } else {
+      register s32 v asm("r1");
+      register s32 one asm("r2");
+      s32 v0 = q->flags >> 4;
+      register u8* oa asm("r4");
+      s32 sh4, ov, m11;
+      one = 1;
+      v0 ^= one;
+      asm("" : "+r"(v0));
+      v0 &= one;
+      (p->s).spr.xflip = v0;
+      v = q->flags >> 4;
+      v ^= one;
+      asm("" : "+r"(v));
+      v &= one;
+      oa = (u8*)&((p->s).spr).oam + 6;
+      sh4 = v << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      *oa = m11 | sh4;
+      if (v) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    u8 boost = GetBeeAtkBoost();
+    s32 z5;
+    struct Body* bd;
+    {
+      register u32 fl asm("r2");
+      register s32 c4 asm("r1");
+      fl = (p->s).flags;
+      c4 = 4;
+      z5 = 0;
+      (p->s).flags = c4 | fl;
+    }
+    bd = &p->body;
+    InitBody(bd, &sCollisions[boost * 2], &(p->s).coord, 1);
+    bd->parent = (struct CollidableEntity*)p;
+    bd->fn = (void*)z5;
+    {
+      s32 x = (z->coord).x;
+      s32 y = (z->coord).y;
+      (p->s).coord.x = x;
+      (p->s).coord.y = y;
+    }
+    if ((p->s).flags & 0x10) {
+      (p->s).d.x = 0x600;
+    } else {
+      (p->s).d.x = -0x600;
+    }
+  }
+}
+
+INCASM("asm/cyberelf/unk_11_p2a.inc");
 
 u8 GetArchimAtkBoost(void);
-static const struct Collision sCollisions[15];
 
 // 0x080e5608 -- parked (recompute basin): retail evaluates the parent
 // xflip bit twice with the mask register kept (SET_PLAYER_XFLIP's double
