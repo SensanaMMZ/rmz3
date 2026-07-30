@@ -110,7 +110,102 @@ void FUN_08085a14(struct Enemy* p) {
 
 bool8 FUN_08085a9c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/capsule_cannon_pre_p2.inc");
+struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+
+void FUN_08085aa0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x6800);
+      PlaySound(0x103);
+      *((u8*)p + 0xb9) = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      *((u8*)p + 0xb9) = 1;
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).work[2] = 8;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    case 4: {
+      struct Coord c;
+      register s32 k asm("r1");
+      s32 x, y, a;
+      register struct Coord* c0 asm("r0");
+      register s32 s2 asm("r1");
+      register s32 a2 asm("r2");
+      x = (p->s).coord.x;
+      c.x = x;
+      y = (p->s).coord.y;
+      c.y = y;
+      if (!((p->s).flags & 0x10)) {
+        a = 0x15;
+        k = -0x1200;
+      } else {
+        a = 0x6B;
+        k = 0x1200;
+      }
+      c.x = x + k;
+      asm volatile("" :: "r"(k));
+      c.y = y + -0xA00;
+      s2 = 0x200;
+      c0 = &c;
+      a2 = a;
+      CreateLemon(c0, s2, a2);
+      CreateSmoke(3, &c);
+      x = (p->s).coord.x;
+      c.x = x;
+      y = (p->s).coord.y;
+      c.y = y;
+      if (!((p->s).flags & 0x10)) {
+        a = 0xEB;
+        k = -0x1200;
+      } else {
+        a = 0x95;
+        k = 0x1200;
+      }
+      c.x = x + k;
+      asm volatile("" :: "r"(k));
+      c.y = y + 0xA00;
+      s2 = 0x200;
+      c0 = &c;
+      a2 = a;
+      CreateLemon(c0, s2, a2);
+      CreateSmoke(3, &c);
+      PlaySound(0x2C);
+      SetMotion(&p->s, 0x6802);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        s32 z;
+        PlaySound(0x103);
+        z = 0;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+}
 
 bool8 FUN_08085c14(struct Enemy* p) { return TRUE; }
 
