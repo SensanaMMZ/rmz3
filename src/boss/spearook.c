@@ -5,6 +5,8 @@
 #include "zero.h"
 #include "vfx.h"
 #include "physics.h"
+#include "gfx.h"
+#include "constants/motion/static.h"
 #include "vfx.h"
 
 static const BossFunc sDeads[5];
@@ -134,6 +136,84 @@ void FUN_08061ef0(struct Boss* p) {
       (p->s).mode[2] = 0;
     }
   }
+}
+
+static const u8 sInitModes[4];
+static const struct Collision sCollisions[17];
+
+void Spearook_Update(struct Boss* p);
+struct Boss* FUN_08061c74(struct Entity* e);
+void FUN_08061ccc(struct Entity* e, struct Entity* e2);
+void FUN_08061d24(struct Body* body, struct Coord* r1, struct Coord* r2);
+
+void Spearook_Init(struct Boss* p) {
+  s32 z4;
+  {
+    u32 tbl = (u32)gBossFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    register u32 one asm("r1");
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  {
+    u8 m = sInitModes[(p->s).work[0]];
+    z4 = 0;
+    (p->s).mode[1] = m;
+  }
+  {
+    u32 fl = (p->s).flags;
+    fl |= 2;
+    asm("" : "+r"(fl));
+    fl |= 1;
+    (p->s).flags = fl;
+  }
+  if ((p->s).work[0] == 1) {
+    InitRotatableMotion(&p->s);
+    {
+      u16* w = (u16*)((u8*)p + 0xb8);
+      *w = z4;
+      asm("" : "+r"(w));
+      w += 1;
+      asm("" : "+r"(w));
+      *w = z4;
+    }
+  } else if ((p->s).work[0] == 3) {
+    InitRotatableMotion(&p->s);
+  } else {
+    InitNonAffineMotion(&p->s);
+  }
+  ResetBossBody(p, sCollisions, 0x60);
+  {
+    void* f = (void*)FUN_08061d24;
+    u8* b = (u8*)p + 0x74;
+    *(void**)(b + 0x24) = f;
+    asm("" : "+r"(b));
+    b += 0x40;
+    asm("" : "+r"(b));
+    *(u32*)b = 0;
+  }
+  if ((p->s).work[0] == 0) {
+    struct Boss* q = FUN_08061c74(&p->s);
+    FUN_08061ccc(&p->s, (struct Entity*)q);
+    LOAD_STATIC_GRAPHIC(SM214_SPEAROOK);
+    LOAD_STATIC_GRAPHIC(SM215_UNK);
+    *(u32*)((u8*)p + 0xbc) = 0;
+    *((u8*)p + 0xc1) = 0x60;
+  }
+  *((u8*)p + 0xc0) = 0;
+  *((u8*)p + 0xc2) = 0xFF;
+  {
+    u8* w = (u8*)p + 0xc3;
+    s32 z2 = 0;
+    *w = z2;
+    asm("" : "+r"(w));
+    w += 1;
+    asm("" : "+r"(w));
+    *w = z2;
+  }
+  Spearook_Update(p);
 }
 
 INCASM("asm/boss/spearook_p1_pre_pre_b.inc");
