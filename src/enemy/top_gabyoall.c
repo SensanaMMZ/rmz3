@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "enemy.h"
+#include "element.h"
 #include "global.h"
+#include "motion.h"
+#include "story.h"
 #include "physics.h"
 #include "zero.h"
 #include "sound.h"
@@ -71,7 +74,68 @@ static const EnemyFunc PTR_ARRAY_08366960[4] = {
 
 // --------------------------------------------
 
-INCASM("asm/enemy/top_gabyoall_p1.inc");
+static const struct Collision sCollisions[];
+static const struct Coord sElementCoords[4];
+
+void Enemy14_Update(struct Enemy* p) {
+  if ((p->s).work[1] != 2) {
+    if (gCurStory.s.gameflags[4] & 0x40) {
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      return;
+    }
+  } else {
+    if (pZero2 != NULL) {
+      if (*(u16*)((u8*)pZero2 + 0x216) & 0x8000) {
+        goto end;
+      }
+    }
+  }
+  if (*((u8*)p + 0xc2) != 0) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  {
+    register struct VFX** slot asm("r6");
+    register u32 mv asm("r1");
+    mv = (u16)((p->s).motionID) << 8;
+    {
+      register u32 st asm("r0");
+      st = (p->s).motion.step;
+      mv |= st;
+      st = 0x1503;
+      slot = (struct VFX**)((u8*)p + 0xbc);
+      if (mv != st && ((p->body).status & 1)) {
+      if (*slot == NULL) {
+        *slot = ApplyElementEffect(0, &p->s, &sElementCoords[(p->s).work[0]]);
+        if (*slot == NULL) {
+          goto frozen;
+        }
+        SetDDP(&p->body, &sCollisions[1 + (u8)((p->s).work[0] & 2)]);
+      } else {
+        goto setm;
+      }
+    }
+    if (*slot == NULL) {
+      goto frozen;
+    }
+    }
+  setm:
+    SetMotion(&p->s, 0x1500);
+    UpdateMotionGraphic(&p->s);
+    if (isKilled((struct Entity*)*slot)) {
+      *slot = NULL;
+      SetDDP(&p->body, &sCollisions[(u8)((p->s).work[0] & 2)]);
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+    return;
+  frozen:
+    if (!IsFrozen(&p->s)) {
+      (PTR_ARRAY_08366960[(p->s).work[0]])(p);
+    }
+  }
+end:;
+}
 
 void Enemy14_Die(struct Enemy* p) {
   CreateSmoke(1, &(p->s).coord);
