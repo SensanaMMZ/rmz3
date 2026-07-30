@@ -2,6 +2,7 @@
 #include "global.h"
 #include "overworld.h"
 #include "solid.h"
+#include "zero.h"
 
 static const struct Collision sCollision;
 static const u8 sInitModes[4];
@@ -148,7 +149,105 @@ NON_MATCH void FUN_080df6d8(struct Solid* p) {
 #endif
 }
 
-INCASM("asm/solid/structural_steel.inc");
+// Parity basin: the b4-target math, div-by-16 smoothing copy, and sine-lookup
+// chains each want load-dest/copy parities the allocator will not hold at once
+// (subs dest, adj copy vs cmp, q-copy after __divsi3); ~67 bytes of reg-number
+// diffs plus a 4-byte shortfall remain after the structural match.
+NON_MATCH void FUN_080df768(struct Solid* p) {
+#if MODERN
+  struct Entity* e = (p->s).unk_28;
+  if (e->mode[0] > 1) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      *(u16*)((u8*)p + 0xb4) = 0;
+      *(u16*)((u8*)p + 0xb6) = 0;
+      InitRotatableMotion(&p->s);
+      SetMotion(&p->s, 0xDE01);
+      *(u32*)((u8*)p + 0x40) = (u32)&(p->s).d;
+      (p->s).coord.x = e->coord.x;
+      (p->s).coord.y = e->coord.y;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s16* pb4;
+      s16* pb6;
+      (p->s).d.x = e->coord.x;
+      (p->s).d.y = e->coord.y;
+      {
+        u32 st = (p->body).status & 4;
+        if (st != 0) {
+          struct Zero* z = pZero2;
+          if (z->s.coord.y < (p->s).coord.y && *((u8*)z + 0x18D) != 0) {
+            register s32 zx1 asm("r1");
+            s32 v;
+            zx1 = z->s.coord.x;
+            v = (((zx1 - e->coord.x) * 3) << 6) / 256;
+            *(s16*)((u8*)p + 0xb4) = v;
+            pb4 = (s16*)((u8*)p + 0xb4);
+            goto joined;
+          }
+        }
+        pb4 = (s16*)((u8*)p + 0xb4);
+        *pb4 = ((*pb4 * 7) << 5) / 256;
+      }
+    joined:
+      {
+        register s32 v4 asm("r1");
+        s32 diff;
+        v4 = *pb4;
+        pb6 = (s16*)((u8*)p + 0xb6);
+        diff = v4 - *pb6;
+        {
+          s32 adj = diff;
+          if (diff < 0) {
+            adj += 0xF;
+            asm volatile("" :: "r"(diff));
+          }
+          *(u16*)pb6 += adj >> 4;
+        }
+      }
+      if ((u32)(*pb6 + 0xF) <= 0x1F) {
+        *pb6 = 0;
+      }
+      (p->s).angle = *(u16*)pb6 >> 8;
+      (p->s).coord.x = e->coord.x;
+      {
+        struct Zero* z2 = pZero2;
+        s32 ex = e->coord.x;
+        s32 lim = ex + -0x2800;
+        s32 zx = z2->s.coord.x;
+        if (zx >= lim && zx <= ex + 0x2800) {
+          s32 num;
+          const s16* stb;
+          s32 hb;
+          s32 q;
+          s32 ey;
+          zx -= ex;
+          num = zx << 8;
+          stb = gSineTable;
+          hb = ((s32)(*(u16*)pb6 << 16)) >> 24;
+          q = num / stb[(u8)(hb + 0x40)];
+          ey = e->coord.y;
+          (p->s).coord.y = ey;
+          (p->s).coord.y = ey + (q * stb[*(volatile u16*)pb6 >> 8]) / 256;
+        } else {
+          (p->s).coord.y = e->coord.y;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/solid/steel_df768.inc");
+#endif
+}
 
 static const struct Collision sCollision = {
   kind : DDP,
