@@ -452,7 +452,145 @@ void FUN_0806db58(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gyro_cannon_p3b.inc");
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+extern const struct SlashedEnemy sSlashedEnemies[4];
+
+void gyroCannon_0806db8c(struct Enemy* p) {
+  register u32 a3 asm("r3");
+  register struct Coord* c5 asm("r5");
+  register u8* pr8 asm("r8");
+  c5 = &(p->s).coord;
+  {
+    register const struct SlashedEnemy* s6 asm("r6");
+    register s32 pv asm("r2");
+    s6 = &sSlashedEnemies[2];
+    {
+      register u8* pt asm("r0");
+      pt = (u8*)p + 0xb4;
+      pv = pt[8];
+    }
+    {
+      register u8 fl asm("r1");
+      register u32 t0 asm("r0");
+      fl = (p->s).flags;
+      a3 = 0x10;
+      t0 = a3;
+      t0 &= fl;
+      if (t0 != 0) {
+        a3 |= pv;
+      } else {
+        a3 = pv;
+      }
+    }
+    ((struct VFX* (*)())CreateSlashedEnemy)(c5, s6, 0, a3);
+  }
+  {
+    struct Coord* c7;
+    register const struct SlashedEnemy* sip asm("ip");
+    register u8* pr2 asm("r2");
+    register s32 pv6 asm("r6");
+    c7 = &(p->s).coord;
+    asm("" : "+r"(c7));
+    sip = &sSlashedEnemies[2];
+    pr2 = (u8*)p + 0xb4;
+    pv6 = pr2[8];
+    {
+      register u8 fl asm("r1");
+      register u32 t0 asm("r0");
+      fl = (p->s).flags;
+      a3 = 0x10;
+      t0 = a3;
+      t0 &= fl;
+      c5 = c7;
+      pr8 = pr2;
+      if (t0 != 0) {
+        a3 |= pv6;
+      } else {
+        a3 = pv6;
+      }
+    }
+    ((struct VFX* (*)())CreateSlashedEnemy)(c7, sip, 0, a3);
+  }
+  {
+    register struct Coord* c6 asm("r6");
+    const struct SlashedEnemy* s7;
+    u8 p2;
+    c6 = c5;
+    s7 = &sSlashedEnemies[3];
+    {
+      register u8* pl asm("r0");
+      pl = pr8;
+      p2 = pl[8];
+    }
+    {
+      register u8 fl asm("r1");
+      register u32 t0 asm("r0");
+      fl = (p->s).flags;
+      a3 = 0x10;
+      t0 = a3;
+      t0 &= fl;
+      if (t0 != 0) {
+        a3 |= p2;
+      } else {
+        a3 = p2;
+      }
+    }
+    ((struct VFX* (*)())CreateSlashedEnemy)(c6, s7, 0, a3);
+  }
+  {
+    register struct Coord* c6 asm("r6");
+    const struct SlashedEnemy* s7;
+    u8 p2;
+    c6 = c5;
+    s7 = &sSlashedEnemies[3];
+    {
+      register u8* pl asm("r0");
+      pl = pr8;
+      p2 = pl[8];
+    }
+    {
+      register u8 fl asm("r1");
+      register u32 t0 asm("r0");
+      fl = (p->s).flags;
+      a3 = 0x10;
+      t0 = a3;
+      t0 &= fl;
+      if (t0 != 0) {
+        a3 |= p2;
+      } else {
+        a3 = p2;
+      }
+    }
+    ((struct VFX* (*)())CreateSlashedEnemy)(c6, s7, 0, a3);
+  }
+  CreateSmoke(1, c5);
+  if ((p->s).flags & 0x10) {
+    CreateSmoke(2, c5);
+    CreateSmoke(2, c5);
+  } else {
+    CreateSmoke(2, c5);
+    CreateSmoke(2, c5);
+  }
+  {
+    register s32 cf asm("r0");
+    register s32 flv asm("r1");
+    flv = (p->s).flags;
+    cf = 0xFE;
+    asm("" : "+r"(cf));
+    (p->s).flags = cf & flv;
+  }
+  PlaySound(0x2A);
+  {
+    register struct Coord* c1 asm("r1");
+    c1 = c5;
+    TryDropItem(4, c1);
+  }
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, c5);
+  SET_ENEMY_ROUTINE(p, 4);
+}
 
 void CreateGhost27(struct Coord* c, u8 r1, u8 r2);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
