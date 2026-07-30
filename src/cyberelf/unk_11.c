@@ -212,20 +212,25 @@ INCASM("asm/cyberelf/unk_11_p2a.inc");
 
 u8 GetArchimAtkBoost(void);
 
-// 0x080e5608 -- parked (recompute basin): retail evaluates the parent
-// xflip bit twice with the mask register kept (SET_PLAYER_XFLIP's double
-// value eval, no cse across the spr store); agbcc either unifies the two
-// evals (19 short) or overshoots with a hand-expanded reload (+4).
-NON_MATCH void FUN_080e5608(struct Elf* p) {
-#if MODERN
+void FUN_080e5608(struct Elf* p) {
   struct Entity* q = *(struct Entity**)((u8*)p + 0xb8);
   SetMotion(&p->s, 1);
   {
-    s32 one = 1;
-    s32 v = (q->flags >> 4) & one;
-    (p->s).spr.xflip = v;
+    register s32 v asm("r1");
+    register s32 one asm("r2");
+    s32 v0 = q->flags >> 4;
+    register u8* oa asm("r4");
+    s32 sh4, ov, m11;
+    one = 1;
+    v0 &= one;
+    (p->s).spr.xflip = v0;
     v = (q->flags >> 4) & one;
-    ((p->s).spr).oam.xflip = v;
+    oa = (u8*)&((p->s).spr).oam + 6;
+    sh4 = v << 4;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    *oa = m11 | sh4;
     if (v) {
       (p->s).flags |= X_FLIP;
     } else {
@@ -235,11 +240,20 @@ NON_MATCH void FUN_080e5608(struct Elf* p) {
   UpdateMotionGraphic(&p->s);
   {
     u8 boost = GetArchimAtkBoost();
-    s32 z = 0;
-    (p->s).flags |= COLLIDABLE;
-    InitBody(&p->body, &(&sCollisions[10])[boost], &(p->s).coord, 1);
-    (p->body).parent = (struct CollidableEntity*)p;
-    (p->body).fn = (void*)z;
+    s32 z5;
+    struct Body* bd;
+    {
+      register u32 fl asm("r2");
+      register s32 c4 asm("r1");
+      fl = (p->s).flags;
+      c4 = 4;
+      z5 = 0;
+      (p->s).flags = c4 | fl;
+    }
+    bd = &p->body;
+    InitBody(bd, &(&sCollisions[10])[boost], &(p->s).coord, 1);
+    bd->parent = (struct CollidableEntity*)p;
+    bd->fn = (void*)z5;
     {
       s32 x = (q->coord).x;
       s32 y = (q->coord).y;
@@ -248,9 +262,6 @@ NON_MATCH void FUN_080e5608(struct Elf* p) {
     }
     PlaySound(0x27);
   }
-#else
-  INCCODE("asm/cyberelf/unk_11_5608.inc");
-#endif
 }
 
 bool8 FUN_080e586c(struct Elf* p);
