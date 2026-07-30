@@ -184,7 +184,94 @@ void FUN_080dcdac(struct Solid* p) {
   Seagulls_Update(p);
 }
 
-INCASM("asm/solid/seagulls_p1.inc");
+void FUN_080dced4(struct Solid* p) {
+  register s32 z6 asm("r6");
+  s32 one;
+  {
+    u32 tbl = (u32)(gSolidFnTable);
+    u32 id;
+    EntityFunc** rt;
+    register s32 mo asm("r1");
+    id = ((p->s).id) << 2;
+    rt = (EntityFunc**)(tbl + id);
+    mo = 1;
+    *(u32*)((p->s).mode) = mo;
+    (p->s).onUpdate = (void*)(*rt)[1];
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    u32 fl = (p->s).flags;
+    one = 1;
+    asm("" : "+r"(one) : "r"(fl));
+    z6 = 0;
+    asm volatile("" : "+r"(z6) : "r"(one));
+    fl |= one;
+    fl |= 2;
+    (p->s).flags = fl;
+  }
+  SetMotion(&p->s, 0xDA02);
+  {
+    u8* pr = (u8*)p + 0x49;
+    *pr |= 0xC;
+  }
+  {
+    u8* a2 = (u8*)p + 0x25;
+    *a2 = 0x1E;
+    a2 += 0x8F;
+    *(s32*)a2 = (p->s).coord.x;
+  }
+  {
+    s32 r = RANDOM(RNG_0202f388) & one;
+    s32 sh;
+    if (r != 0) {
+      (p->s).flags |= 0x10;
+    } else {
+      (p->s).flags &= 0xEF;
+    }
+    sh = r;
+    asm("" : "+r"(r));
+    (p->s).spr.xflip = sh;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      s32 ov, m11;
+      sh <<= 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      *oa = m11 | sh;
+    }
+  }
+  if ((p->s).flags & 0x10) {
+    struct Camera* cam = &gStageRun.vm.camera;
+    (p->s).coord.x = cam->viewport.x - 0x8800;
+    (p->s).d.x = (RANDOM(RNG_0202f388) & 0x7F) + 0x80;
+  } else {
+    struct Camera* cam = &gStageRun.vm.camera;
+    register u32 sd asm("r1");
+    register u32 ac asm("r0");
+    s32 mk;
+    (p->s).coord.x = cam->viewport.x + 0x87FF;
+    sd = RNG_0202f388;
+    ac = 0x343FD;
+    sd = sd * ac;
+    ac = 0x269EC3;
+    sd = sd + ac;
+    sd <<= 1;
+    RNG_0202f388 = sd >> 1;
+    sd >>= 0x11;
+    mk = 0x7F;
+    sd &= mk;
+    mk -= 0xFF;
+    (p->s).d.x = mk - sd;
+  }
+  {
+    s32 r3 = RANDOM(RNG_0202f388) & 0x3F;
+    (p->s).coord.y += (0x20 - r3) << 8;
+  }
+  Seagulls_Update(p);
+}
+
+INCASM("asm/solid/seagulls_p1b.inc");
 
 void FUN_080dd400(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
