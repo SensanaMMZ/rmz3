@@ -219,7 +219,112 @@ INCASM("asm/enemy/cattatank_p5.inc");
 
 bool8 nop_0809973c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/cattatank_p6.inc");
+// Motion-index probe basin: retail loads motion.cmdIdx into the zero-index
+// register with the address copy saved after the load (ldrsb r1,[r0,r1];
+// adds r5,r0) and cross-merges the third SetDDP bl into case-5's; the
+// cv/ci and transfer spellings land the copy before the load or duplicate it.
+NON_MATCH void FUN_08099740(struct Enemy* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0xD507);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      goto tick;
+    case 2:
+      SetMotion(&p->s, 0xD508);
+      SetDDP(&p->body, &sCollisions[4]);
+      (p->s).work[2] = 0x32;
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      if (((p->body).status & 4) && !((p->body).prevStatus & 4)) {
+        PlaySound(0x52);
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        s8 cv = *(s8*)((u8*)p + 0x71);
+        s8* ci = (s8*)((u8*)p + 0x71);
+        if (cv == 4 && (p->s).work[3] == 0) {
+          (p->s).work[3]++;
+          SetDDP(&p->body, &sCollisions[7]);
+        }
+        if (*ci == 5 && (p->s).work[3] == 1) {
+          (p->s).work[3]++;
+          SetDDP(&p->body, &sCollisions[10]);
+        }
+        if (*ci == 6 && (p->s).work[3] == 2) {
+          (p->s).work[3]++;
+          SetDDP(&p->body, &sCollisions[13]);
+        }
+      }
+      goto mchk;
+    case 4:
+      SetMotion(&p->s, 0xD509);
+      SetDDP(&p->body, &sCollisions[10]);
+      (p->s).work[2] = 8;
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 5:
+      if (((p->body).status & 4) && !((p->body).prevStatus & 4)) {
+        PlaySound(0x52);
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        s8 cv = *(s8*)((u8*)p + 0x71);
+        s8* ci = (s8*)((u8*)p + 0x71);
+        if (cv == 1 && (p->s).work[3] == 0) {
+          (p->s).work[3]++;
+          SetDDP(&p->body, &sCollisions[7]);
+        }
+        if (*ci == 2 && (p->s).work[3] == 1) {
+          (p->s).work[3]++;
+          SetDDP(&p->body, &sCollisions[4]);
+        }
+      }
+    mchk:
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    tick:
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((u32)(t << 24) == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    case 6: {
+      s32 zx = pZero2->s.coord.x;
+      s32 px = (p->s).coord.x;
+      s32 d = zx - px;
+      if (d > 0) {
+        if (d > 0x39FF) {
+          goto far;
+        }
+      } else if (px - zx > 0x39FF) {
+        goto far;
+      }
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+      break;
+    far:
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/cattatank_99740.inc");
+#endif
+}
 
 bool8 nop_08099950(struct Enemy* p) { return TRUE; }
 
