@@ -284,7 +284,115 @@ static void grandCannon_080693b4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/grand_cannon_pre.inc");
+#include "camera.h"
+#include "zero.h"
+#include "trig.h"
+#include "stagerun.h"
+
+void grandcannonMoveTurret(struct Enemy* p) {
+  register struct Entity* q asm("r4");
+  q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 qx;
+      InitRotatableMotion(&p->s);
+      SetMotion(&p->s, 0x0703);
+      (p->s).work[2] = 0x78;
+      qx = (q->coord).x;
+      (p->s).coord.x = qx;
+      (p->s).coord.y = (q->coord).y - 0x600;
+      (p->s).unk_coord.x = (pZero2->s).coord.x - qx;
+      (p->s).angle = 0x40;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      if (*(s32*)((u8*)q + 0xb4) != 0) {
+        break;
+      }
+      if (IsFrozen(q)) {
+        break;
+      }
+      {
+        register s32 qx asm("r1");
+        register s32 d2 asm("r2");
+        register s32 acc asm("r1");
+        register u8* cb asm("r4");
+        register s32 ang asm("r2");
+        register s32 zx asm("r0");
+        s32 v;
+        qx = (q->coord).x;
+        (p->s).coord.x = qx;
+        (p->s).coord.y = (q->coord).y - 0x600;
+        zx = (pZero2->s).coord.x;
+        d2 = zx - qx;
+        acc = (p->s).unk_coord.x;
+        d2 = d2 - acc;
+        {
+          s32 t = d2;
+          asm("" : "+r"(t));
+          if (d2 < 0) {
+            t += 15;
+          }
+          d2 = t >> 4;
+        }
+        d2 = acc + d2;
+        (p->s).unk_coord.x = d2;
+        {
+          const s16* st = gSineTable;
+          u8 i;
+          cb = (u8*)p + 0xb8;
+          i = *cb;
+          v = d2 + (st[i] << 3);
+          *cb = i + 4;
+        }
+        if (v > 0) {
+          register s32 c40 asm("r1");
+          if (v <= 0xFFF) {
+            v = 0x1000;
+          } else if (v > 0x7800) {
+            v = 0x7800;
+          }
+          v -= 0x1000;
+          {
+            s32 dq = (v * 40) / 0x6800;
+            c40 = 0x40;
+            ang = c40 - dq;
+          }
+        } else {
+          if (v > -0x1000) {
+            v = -0x1000;
+          } else if (v < -0x7800) {
+            v = -0x7800;
+          }
+          v += 0x1000;
+          ang = (v * 40) / -0x6800 + 0x40;
+        }
+        {
+          register s32 na asm("r0");
+          u8* aa;
+          na = -ang;
+          na -= 0x80;
+          aa = (u8*)p + 0x24;
+          *aa = na;
+          {
+            s32 t2 = (u8)--(p->s).work[2];
+            if (t2 == 0) {
+              if (CalcFromCamera(&gStageRun.vm.camera, (struct Coord*)(aa + 0x30)) <= 0xFFF) {
+                (p->s).mode[1] = 2;
+                (p->s).mode[2] = t2;
+              }
+            }
+          }
+        }
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/grand_cannon_pre_b.inc");
 
 void grandcannon_08069608(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
