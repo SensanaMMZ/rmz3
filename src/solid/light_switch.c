@@ -1,5 +1,6 @@
 #include "palette_animation.h"
 #include "collision.h"
+#include "element.h"
 #include "global.h"
 #include "solid.h"
 #include "story.h"
@@ -7,6 +8,7 @@
 static const struct Collision sCollision;
 static const struct Rect sSize;
 
+u8 GetEntityPalID(struct Entity* p);
 static void Solid32_Init(struct Solid* p);
 void Solid32_Update(struct Solid* p);
 void Solid32_Die(struct Solid* p);
@@ -42,7 +44,72 @@ static void Solid32_Init(struct Solid* p) {
   Solid32_Update(p);
 }
 
-INCASM("asm/solid/light_switch_pre.inc");
+extern const struct Coord Coord_083714bc;
+
+void Solid32_Update(struct Solid* p) {
+  s32 m = (p->s).mode[3];
+  switch (m) {
+    case 0:
+      SetMotion(&p->s, MOTION(SM223_LIGHT_SWITCH, 0));
+      (p->s).flags |= COLLIDABLE;
+      {
+        struct Body* b = &p->body;
+        InitBody(b, &sCollision, &(p->s).coord, 0);
+        b->parent = (struct CollidableEntity*)p;
+        b->fn = (void*)m;
+      }
+      RemovePaletteAnimation(0xbd);
+      {
+        u32 g0 = GetEntityPalID(&p->s);
+        u32 g = (u8)g0 << 5;
+        StartPaletteAnimation(0xbe, g | 0x200);
+      }
+      (p->s).mode[3]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->body).status & 1) {
+        PlaySound(0x3c);
+        ApplyElementEffect(0, &p->s, &Coord_083714bc);
+        gCurStory.unk_54 |= 1 << (p->s).work[0];
+        (p->s).mode[3]++;
+      }
+      break;
+    case 2:
+      SetMotion(&p->s, MOTION(SM223_LIGHT_SWITCH, 1));
+      {
+        u32* sp0 = &(p->body).status;
+        s32 z = 0;
+        asm("" : "+r"(z));
+        *sp0 = z;
+        (p->body).prevStatus = z;
+        (p->body).invincibleTime = z;
+      }
+      (p->s).flags &= ~COLLIDABLE;
+      RemovePaletteAnimation(0xbe);
+      {
+        u32 g0 = GetEntityPalID(&p->s);
+        u32 g = (u8)g0 << 5;
+        StartPaletteAnimation(0xbd, g | 0x200);
+      }
+      (p->s).mode[3]++;
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      {
+        u8 sv = gCurStory.unk_54;
+        u8 w = (p->s).work[0];
+        u32 b = (sv >> w) & 1;
+        if (b == 0) {
+          gCurStory.unk_54 = sv ^ (1 << w);
+          (p->s).mode[3] = b;
+        }
+      }
+      break;
+  }
+  StepPaletteAnimation(0xbd);
+  StepPaletteAnimation(0xbe);
+}
 
 void Solid32_Die(struct Solid* p) {}
 
