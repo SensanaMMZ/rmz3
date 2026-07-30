@@ -102,7 +102,68 @@ void Ghost20_Die(struct VFX* p) {
 
 void FUN_080b73d0(struct VFX* p) {}
 
-INCASM("asm/vfx/unk_20_p2.inc");
+void FUN_080b73d4(struct VFX* p) {
+  s32 t = (p->s).work[2] - 1;
+  (p->s).work[2] = t;
+  if ((t << 24) == 0) {
+    struct Coord c;
+    u32 r;
+    CreateSmoke(2, &(p->s).coord);
+    PlaySound(0x2A);
+    r = RANDOM(RNG_0202f388) & 3;
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    FUN_080b721c(&c, (p->s).work[0], 0x409, r);
+    FUN_080b721c(&c, (p->s).work[0], 0x40A, r);
+    FUN_080b721c(&c, (p->s).work[0], 0x40B, r);
+    {
+      u32 tbl = (u32)gVFXFnTable;
+      u32 id = ((p->s).id) << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = 2;
+      (p->s).onUpdate = (void*)((*rt)[2]);
+    }
+  } else {
+    u32 at = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+    if (at != 0 && !(at & 0x8000)) {
+      struct Coord c2;
+      u32 r;
+      CreateSmoke(2, &(p->s).coord);
+      PlaySound(0x2A);
+      r = RANDOM(RNG_0202f388) & 3;
+      c2.x = (p->s).coord.x;
+      c2.y = (p->s).coord.y;
+      FUN_080b721c(&c2, (p->s).work[0], 0x409, r);
+      FUN_080b721c(&c2, (p->s).work[0], 0x40A, r);
+      FUN_080b721c(&c2, (p->s).work[0], 0x40B, r);
+      {
+        u32 tbl = (u32)gVFXFnTable;
+        u32 id = ((p->s).id) << 2;
+        EntityFunc** rt = (EntityFunc**)(tbl + id);
+        *(u32*)((p->s).mode) = 2;
+        (p->s).onUpdate = (void*)((*rt)[2]);
+      }
+    } else {
+      switch ((p->s).mode[2]) {
+        case 0:
+          (p->s).work[2] = 0x3C;
+          (p->s).d.y = -0x100;
+          SetMotion(&p->s, 0x407);
+          (p->s).mode[2]++;
+          // fallthrough
+        case 1:
+          (p->s).d.y += 0x20;
+          if ((p->s).d.y > 0x700) {
+            (p->s).d.y = 0x700;
+          }
+          (p->s).coord.y += (p->s).d.y;
+          (p->s).coord.x += (p->s).d.x;
+          UpdateMotionGraphic(&p->s);
+          break;
+      }
+    }
+  }
+}
 
 extern const s32* const PTR_s32_ARRAY_0836e938[3];
 
