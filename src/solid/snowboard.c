@@ -1,7 +1,10 @@
 #include "collision.h"
 #include "global.h"
 #include "overworld.h"
+#include "overworld_terrain.h"
 #include "solid.h"
+#include "stagerun.h"
+#include "zero.h"
 
 // PantheonBase's snowboard
 
@@ -414,7 +417,60 @@ _080CF748: .4byte sSolid18Collisions\n\
  .syntax divided\n");
 }
 
-INCASM("asm/solid/snowboard_pre.inc");
+extern const struct Rect sSolid18Size;
+extern const SolidFunc sSolid18Updates1[5];
+extern const SolidFunc sSolid18Updates2[5];
+
+void Solid18_Update(struct Solid* p) {
+  s32 d = CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord);
+  if (IsVoidSpace((p->s).coord.x, (p->s).coord.y)) {
+    if (d > 0x4000) goto die;
+  }
+  if (d <= 0x8000) goto alive;
+
+die:
+  {
+    u8 f2 = (p->s).flags2 & ~ENTITY_HAZARD;
+    s32 z = 0;
+    (p->s).flags2 = f2;
+    {
+      u32 f = (p->s).flags & 0xFE;
+      asm("" : "+r"(f));
+      (p->s).flags = f & 0xFD;
+    }
+    (p->body).status = z;
+    (p->body).prevStatus = z;
+    (p->body).invincibleTime = z;
+  }
+  (p->s).flags &= ~COLLIDABLE;
+  SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+  return;
+
+alive:
+  if ((pZero2->s).coord.y < (p->s).coord.y + -0x100) {
+    (p->s).flags2 |= ENTITY_HAZARD;
+    (p->s).size = &sSolid18Size;
+    (p->s).hazardAttr = 0x8801;
+  } else {
+    (p->s).flags2 &= ~ENTITY_HAZARD;
+  }
+  {
+    s16* t = (s16*)&(p->props).raw[2];
+    *t = *t + 1;
+    if ((*t = *t % 15) == 0) {
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0x3FFF) {
+        u8 m = (p->s).mode[1];
+        if (m == 1 || m == 4) {
+          PlaySound(0x127);
+        } else {
+          PlaySound(0x126);
+        }
+      }
+    }
+  }
+  (sSolid18Updates1[(p->s).mode[1]])(p);
+  (sSolid18Updates2[(p->s).mode[1]])(p);
+}
 
 extern const motion_t sSolid18Motions[3];
 struct Entity* CreateSmoke(u8 n, struct Coord* c);
