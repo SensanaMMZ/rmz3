@@ -188,9 +188,98 @@ static void FUN_08013908(struct StageLayer* l UNUSED, const struct Stage* _ UNUS
   gWindowRegBuffer.winin[2] |= 0xE;
 }
 
-#undef STAGE
+struct Entity* FUN_080d8f2c(void);
+void FUN_080d8fd4(struct Entity* p);
+void FUN_080d8fe4(struct Entity* p);
 
-INCASM("asm/stage_gfx/sunken_library_a.inc");
+void sunkenlib_08013930(struct StageLayer* l, const struct Stage* stage) {
+  struct Overworld* ow;
+  s32 sea;
+  u32 ph = l->phase;
+  if (ph == 0) {
+    u32 n = (u16)l->bgIdx >> 4;
+    u16* bg = &BGCNT16(n);
+    u32 sz;
+    u32 v;
+    {
+      u32 sb = l->screenBase;
+      register u32 k asm("r4");
+      register u32 kc asm("r2");
+      k = 0x8045;
+      asm("" : "+r"(k));
+      kc = k;
+      asm("" : "+r"(kc));
+      v = sb | kc;
+    }
+    *bg = v;
+    *((u32*)&gVideoRegBuffer.bgofs[n]) = ph;
+    CpuFastSet((void*)(*(s32*)0x085223B4 + 0x085223BC), (void*)(((v & 0x1F00) << 3) + VRAM), sz = 0x200);
+    CpuFastSet((void*)(*(s32*)0x085223B8 + 0x085223C0), (void*)(VRAM + 0x800 + (((u32)*bg & 0x1F00) << 3)), sz);
+    *(struct Entity**)((u8*)l + 0x68) = (void*)ph;
+    l->unk_10 = ph;
+    l->phase++;
+  }
+  gWindowRegBuffer.winin[1] &= 0xF7;
+  if (*(struct Entity**)((u8*)l + 0x68) == NULL) {
+    *(struct Entity**)((u8*)l + 0x68) = FUN_080d8f2c();
+  }
+  ow = &gOverworld;
+  {
+    register u32 so asm("r4");
+    so = 0x2C00C;
+    sea = ow->sea;
+    asm volatile("" :: "r"(so));
+  }
+  if (sea <= 0x227FF) {
+    s32 t = l->unk_10 + 1;
+    u32 one;
+    l->unk_10 = t;
+    if ((u16)t > 0x13) {
+      l->unk_10 = 4;
+    }
+    FUN_080d8fd4(*(struct Entity**)((u8*)l + 0x68));
+    {
+      s32 sid = 0x124;
+      if (!isSoundPlaying(sid)) {
+        PlaySound(sid);
+      }
+    }
+    {
+      u32 w = l->unk_10;
+      register u32 res asm("r0");
+      one = 1;
+      asm("" : "+r"(one));
+      res = one;
+      asm volatile("" : "+r"(res));
+      res &= w;
+      if (res == 0) {
+        goto tail;
+      }
+    }
+    {
+      u32* rp = (u32*)((u8*)ow + 0x2D02C);
+      u32 r = *rp * 0x343FD + 0x269EC3;
+      u32 sl = r << 1;
+      *rp = sl >> 1;
+      if ((sl >> 0x11) & one) {
+        gBlendRegBuffer.bldalpha = 0xC0A;
+        return;
+      }
+    }
+  tail:;
+  } else {
+    s32 sid;
+    l->unk_10 = 3;
+    FUN_080d8fe4(*(struct Entity**)((u8*)l + 0x68));
+    sid = 0x124;
+    if (isSoundPlaying(sid)) {
+      StopSound(sid);
+    }
+  }
+  gBlendRegBuffer.bldalpha = 0xC04;
+}
+
+#undef STAGE
 
 // One pool apart: retail keeps &gStageTilesetOffsets[18] twice — once as the
 // relocated symbol for the deref, once as the raw address for the
