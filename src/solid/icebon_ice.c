@@ -272,6 +272,75 @@ void FUN_080ca880(struct IcebonIceObject* p) {
   }
 }
 
+void FUN_080b98ac(s32 x, s32 y);
+
+// 0x080ca988 -- melting ice block: shrink, dust, sea-clamped float, fade out.
+// Blocker (formation-home basin): retail forms the p+0xb4 pointer in r2 and
+// copies to its r4 home after the sea loads; every source shape tried either
+// forms r4-directly (no copy), loads in the wrong order, or collapses the
+// gOverworld.sea address insns; two pool-scratch picks (r1 vs r3) ride on it.
+NON_MATCH void FUN_080ca988(struct Solid* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      InitScalerotMotion1(&p->s);
+      if ((p->body).hp > 4) {
+        SetMotion(&p->s, 0x1101);
+      } else {
+        SetMotion(&p->s, 0x1103);
+      }
+      (p->s).work[2] = 0xFF;
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32* py;
+      u32 st;
+      s32 y;
+      s32 lift;
+      s32 t = (p->s).work[3] + 1;
+      (p->s).work[3] = t;
+      if ((t & 3) == 0) {
+        FUN_080b98ac((p->s).coord.x + ((s32)(RANDOM(RNG_0202f388) % 0x1800) - 0xE00),
+                     (p->s).coord.y + (RANDOM(RNG_0202f388) & 0xFFF));
+      }
+      UpdateMotionGraphic(&p->s);
+      ((p->s).spr).mag.y = (p->s).work[2];
+      (p->s).work[2] -= 8;
+      py = (s32*)((u8*)p + 0xb4);
+      if (*py < gOverworld.sea) {
+        *py = gOverworld.sea;
+      }
+      st = *(u32*)((u8*)p + 0x8c) & 4;
+      y = (p->s).coord.y;
+      if (st && y > ((pZero2->s).coord.y)) {
+        lift = 0x800;
+      } else {
+        lift = 0;
+      }
+      (p->s).unk_coord.y = lift;
+      (p->s).coord.y = y + ((*py + (p->s).unk_coord.y - y) / 8);
+      {
+        u32 w2 = (p->s).work[2];
+        if (w2 <= 0x9F) {
+          (p->s).flags2 &= 0xF7;
+        }
+        if (w2 <= 8) {
+          (p->s).flags &= 0xFC;
+          (p->body).status = 0;
+          (p->body).prevStatus = 0;
+          (p->body).invincibleTime = 0;
+          (p->s).flags &= 0xFB;
+          SET_SOLID_ROUTINE(p, ENTITY_DIE);
+        }
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/solid/icebon_ca988.inc");
+#endif
+}
 INCASM("asm/solid/icebon_ice_p2.inc");
 
 void FUN_080cab58(struct Solid* p) {
