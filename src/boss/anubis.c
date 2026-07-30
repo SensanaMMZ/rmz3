@@ -83,6 +83,115 @@ void nop_080503c8(struct Boss* p) {}
 
 INCASM("asm/boss/anubis_p2.inc");
 
+void FUN_08050090(struct Boss* p);
+
+void anubisMode3(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x3C;
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2: {
+      u32 sv;
+      u32 xf;
+      u32 xf2;
+      s32 k16;
+      {
+        u32* st = (u32*)((u8*)p + 0xc0);
+        *st |= 4;
+      }
+      sv = (u16)Sqrt(0x680);
+      (p->s).work[2] = sv;
+      (p->s).d.x = sv << 4;
+      xf = (((p->s).flags >> 4) ^ 1) & 1;
+      ((p->s).spr).xflip = xf;
+      xf2 = (((p->s).flags >> 4) ^ 1) & 1;
+      {
+        register u8* oa asm("r5");
+        u32 sh4;
+        s32 ov, m11;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf2 << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      if (xf2 != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        u32 fl2 = (p->s).flags;
+        register u32 res asm("r0");
+        k16 = 0x10;
+        asm("" : "+r"(k16));
+        res = k16;
+        asm volatile("" : "+r"(res));
+        res &= fl2;
+        if (res == 0) {
+          goto arm2;
+        }
+      }
+      if (1) {
+        (p->s).coord.x = *(s32*)((u8*)p + 0xb8) - 0x9800;
+        (p->s).unk_coord.x = -0x10;
+      } else {
+      arm2:
+        (p->s).coord.x = *(s32*)((u8*)p + 0xb8) + 0x9800;
+        (p->s).d.x = -(p->s).d.x;
+        (p->s).unk_coord.x = k16;
+      }
+      SetMotion(&p->s, 0xAF01);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 3: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.x += (p->s).unk_coord.x;
+      FUN_08050090(p);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 4:
+      FUN_08050090(p);
+      UpdateMotionGraphic(&p->s);
+      if ((*(u32*)((u8*)p + 0xc0) & 4) == 0) {
+        s16* snd = (s16*)((u8*)p + 0xd0);
+        register s32 v asm("r1");
+        v = *snd;
+        if (v != -1) {
+          u32 mv;
+          StopSound(v);
+          mv = 0xFFFF;
+          asm("" : "+r"(mv));
+          *snd = mv;
+        }
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 1;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/anubis_p2_m4.inc");
+
 static const struct Collision sCollisions[3];
 
 void anubisMode5(struct Boss* p) {
