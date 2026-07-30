@@ -113,7 +113,74 @@ void FUN_08042d4c(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/wormer_p2_p2.inc");
+INCASM("asm/boss/wormer_p2_p2a.inc");
+
+extern const u8 u8_ARRAY_08362290[];
+void CreateGhost35(s32 x, s32 y, u8 r2);
+
+void FUN_08042e54(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x2B02);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08362290[(p->s).motion.cmdIdx] + (p->s).work[0] * 7]);
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      if ((p->s).work[0] == 1) {
+        PlaySound(0x55);
+      } else {
+        PlaySound(0x55);
+      }
+      SetDDP(&p->body, &sCollisions[1] + (p->s).work[0] * 7);
+      (p->s).d.y = 0x2A0;
+      SetMotion(&p->s, 0x2B00);
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      s32 z6;
+      s32* pb;
+      {
+        s32 raw = (p->s).work[2] + 1;
+        z6 = 0;
+        (p->s).work[2] = raw;
+      }
+      {
+        register u32 wv asm("r0");
+        register u32 c1w asm("r1");
+        u32 tv;
+        wv = *(volatile u8*)&(p->s).work[2];
+        c1w = 1;
+        asm("" : "+r"(c1w));
+        tv = wv & c1w;
+        pb = (s32*)((u8*)p + 0xb4);
+        if (tv == 0) {
+        s32 t = (RANDOM(RNG_0202f388) % 0x1800) + -0xC00;
+        s32 xx = (p->s).coord.x + t;
+        CreateGhost35(xx, *pb, (p->s).palID);
+        }
+      }
+      {
+        s32 ny = (p->s).coord.y + (p->s).d.y;
+        (p->s).coord.y = ny;
+        if (ny > *pb + 0x5400) {
+          *((u8*)p + 0xba) = z6;
+          (p->s).coord.y = *pb + 0x5400;
+          (p->s).mode[1] = z6;
+          (p->s).mode[2] = z6;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_08042f9c(struct Boss* p) {
   switch ((p->s).mode[2]) {
