@@ -1,3 +1,4 @@
+#include "palette_animation.h"
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
@@ -116,6 +117,90 @@ void AnubisCoffin_Die(struct Solid* p) {
 void FUN_080cdf34(struct Solid* p) {}
 
 INCASM("asm/solid/anubis_coffin_post_p2.inc");
+
+void FUN_080bf390(struct Entity* e);
+u8 GetEntityPalID(struct Entity* p);
+void FUN_080cdd64(struct Solid* p);
+
+void coffin_080ce0d4(struct Solid* p) {
+  struct Entity* a = (p->s).unk_2c;
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x80);
+      RemovePaletteAnimation(0x46);
+      {
+        u32 g0 = GetEntityPalID(&p->s);
+        u32 g = (u8)g0 << 5;
+        StartPaletteAnimation(0x47, g | 0x200);
+      }
+      (p->s).work[3] = 0x10;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((p->s).work[2] == 1) {
+        if ((((u32)(p->s).work[3] % 3) << 24) == 0) {
+          FUN_080bf390(&p->s);
+        }
+      }
+      {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      StepPaletteAnimation(0x47);
+      break;
+    case 2:
+      (p->s).work[3] = 0;
+      {
+        s32 c = 0x3C0;
+        c -= ((p->s).work[2] * 15) << 7;
+        (p->s).d.x = c;
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      (p->s).work[3]++;
+      if ((p->s).work[2] == 1) {
+        if ((((u32)(p->s).work[3] % 3) << 24) == 0) {
+          if ((p->s).coord.x - a->coord.x > 0x2000) {
+            FUN_080bf390(&p->s);
+          }
+        }
+      }
+      {
+        s32 x = (p->s).coord.x + (p->s).d.x;
+        u8 w2;
+        (p->s).coord.x = x;
+        w2 = (p->s).work[2];
+        if (w2 == 0) {
+          s32 lim = *(s32*)((u8*)p + 0xb8) + -0x300;
+          if (x > lim) {
+            (p->s).coord.x = lim;
+            (p->s).mode[1] = 2;
+            (p->s).mode[2] = w2;
+          }
+        } else {
+          s32 lim = *(s32*)((u8*)p + 0xb8) + 0x300;
+          if (x < lim) {
+            (p->s).coord.x = lim;
+            (p->s).mode[1] = 2;
+            (p->s).mode[2] = 0;
+          }
+        }
+      }
+      StepPaletteAnimation(0x47);
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+  if ((p->s).work[2] == 1) {
+    FUN_080cdd64(p);
+  }
+}
+
+INCASM("asm/solid/anubis_coffin_post_p2_b.inc");
+
 
 // --------------------------------------------
 
