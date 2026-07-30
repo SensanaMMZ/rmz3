@@ -181,6 +181,174 @@ void FUN_08096ffc(struct Enemy* p, s32 a, s32 b) {
   }
 }
 
+u32 FUN_08097224(struct Enemy* p, s32 a, s32 b) {
+  s32 hit = 0;
+  if (b != 0) {
+    s32 uy = (p->s).coord.y + b;
+    s32 x3, y2, m;
+    register s32 f asm("r5");
+    register s32 r asm("r2");
+    u32 fl;
+    (p->s).coord.y = uy;
+    {
+      s32 t2_ = 0;
+      if ((p->s).d.y > 0) {
+        t2_ = 1;
+      }
+      asm("" : "=r"(f) : "0"(t2_));
+    }
+    x3 = (p->s).coord.x + -0x700;
+    y2 = uy;
+    {
+      u32 fv;
+      u32 k20 = 0x20;
+      asm("" : "=r"(fv) : "0"((p->s).flags));
+      asm("" : "+r"(k20));
+      fl = (u8)(k20 & fv);
+    }
+    m = -0x2F00;
+    if (!fl) goto melse1;
+    m = 0x2F00;
+    asm("" : "+r"(fl));
+    if (fl) {
+      s32 acc = m;
+      asm("" : "+r"(acc));
+      acc *= f;
+      y2 += acc;
+    } else {
+    melse1:
+      y2 += (1 ^ f) * m;
+    }
+    if (f != 0) {
+      r = PushoutToUp1(x3, y2 + -0x100);
+      if (r < 0) {
+        s32 t2 = (p->s).coord.y + 0x100;
+        (p->s).coord.y = t2 + r;
+        hit |= 1;
+      }
+    } else {
+      r = PushoutToDown1(x3, y2 + 0x100);
+      if (r > 0) {
+        s32 t2 = (p->s).coord.y + -0x100;
+        (p->s).coord.y = t2 + r;
+        hit |= 1;
+      }
+    }
+    {
+      s32 t2_ = 0;
+      if ((p->s).d.y > 0) {
+        t2_ = 1;
+      }
+      asm("" : "=r"(f) : "0"(t2_));
+    }
+    x3 = (p->s).coord.x + 0x700;
+    y2 = (p->s).coord.y;
+    {
+      u32 fv;
+      u32 k20 = 0x20;
+      asm("" : "=r"(fv) : "0"((p->s).flags));
+      asm("" : "+r"(k20));
+      fl = (u8)(k20 & fv);
+    }
+    m = -0x2F00;
+    if (!fl) goto melse2;
+    m = 0x2F00;
+    asm("" : "+r"(fl));
+    if (fl) {
+      s32 acc = m;
+      asm("" : "+r"(acc));
+      acc *= f;
+      y2 += acc;
+    } else {
+    melse2:
+      y2 += (1 ^ f) * m;
+    }
+    if (f != 0) {
+      r = PushoutToUp1(x3, y2 + -0x100);
+      if (r < 0) {
+        s32 t2 = (p->s).coord.y + 0x100;
+        (p->s).coord.y = t2 + r;
+        hit |= 1;
+      }
+    } else {
+      r = PushoutToDown1(x3, y2 + 0x100);
+      if (r > 0) {
+        s32 t2 = (p->s).coord.y + -0x100;
+        (p->s).coord.y = t2 + r;
+        hit |= 1;
+      }
+    }
+  }
+  if (a != 0) {
+    s32 ux = (p->s).coord.x + a;
+    s32 x3, y2;
+    register s32 f asm("r5");
+    register s32 r asm("r3");
+    s32 fl2;
+    s32 cy;
+    (p->s).coord.x = ux;
+    {
+      s32 t2_ = 0;
+      if ((p->s).d.x > 0) {
+        t2_ = 1;
+      }
+      asm("" : "=r"(f) : "0"(t2_));
+    }
+    x3 = ux + -0x700;
+    x3 += f * 0xE00;
+    cy = (p->s).coord.y;
+    y2 = cy + -0x200;
+    fl2 = (p->s).flags & 0x20;
+    if (fl2 != 0) {
+      y2 = cy + 0x200;
+    }
+    if (f != 0) {
+      r = PushoutToLeft1(x3, y2);
+      if (r < 0) {
+        (p->s).coord.x += r;
+        hit = (u8)(hit | 2);
+      }
+    } else {
+      r = PushoutToRight1(x3, y2);
+      if (r > 0) {
+        (p->s).coord.x += r;
+        hit = (u8)(hit | 2);
+      }
+    }
+    {
+      s32 t2_ = 0;
+      if ((p->s).d.x > 0) {
+        t2_ = 1;
+      }
+      asm("" : "=r"(f) : "0"(t2_));
+    }
+    x3 = (p->s).coord.x;
+    x3 += -0x700;
+    x3 += f * 0xE00;
+    y2 = (p->s).coord.y;
+    fl2 = (p->s).flags & 0x20;
+    if (fl2 != 0) {
+      y2 += 0x2D00;
+    } else {
+      y2 += -0x2D00;
+    }
+    if (f != 0) {
+      r = PushoutToLeft1(x3, y2);
+      if (r < 0) {
+        (p->s).coord.x += r;
+        hit = (u8)(hit | 2);
+      }
+    } else {
+      r = PushoutToRight1(x3, y2);
+      if (r > 0) {
+        (p->s).coord.x += r;
+        hit = (u8)(hit | 2);
+      }
+    }
+  }
+  return hit;
+}
+
 INCASM("asm/enemy/cannon_hopper_pre_p1b.inc");
 
 void CannonHopper_Die(struct Enemy* p) {
