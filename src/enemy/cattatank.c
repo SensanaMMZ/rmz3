@@ -96,7 +96,118 @@ void cattatank_08099094(struct Enemy* p) {
 
 bool8 nop_080990d4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/cattatank_p3.inc");
+static const struct Collision sCollisions[18];
+
+void FUN_080990d8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      {
+        u32 fl = (p->s).flags;
+        register u32 t asm("r0");
+        register s32 z5 asm("r5");
+        t = 1;
+        asm volatile("" : "+r"(t));
+        z5 = 0;
+        asm volatile("" :: "r"(z5));
+        t |= fl;
+        (p->s).flags = t;
+      }
+      SetMotion(&p->s, 0xD503);
+      SetDDP(&p->body, &sCollisions[1]);
+      if ((pZero2->s).coord.x < (p->s).coord.x) {
+        s32 z2 = 0;
+        asm("" : "+r"(z2));
+        (p->s).flags &= 0xEF;
+        ((p->s).spr).xflip = z2;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+        *((u8*)p + 0xb8) = z2;
+      } else {
+        s32 o3 = 1;
+        (p->s).flags |= 0x10;
+        ((p->s).spr).xflip = o3;
+        {
+          register u8* oa asm("ip");
+          u32 sh4;
+          s32 ov, m11;
+          oa = (u8*)p + 0x4a;
+          sh4 = 0x10;
+          asm("" : "+r"(sh4));
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          m11 |= sh4;
+          *oa = m11;
+        }
+        *((u8*)p + 0xb8) = o3;
+      }
+      (p->s).d.x >>= 1;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      s32 ny, nx, off, push;
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      nx = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = nx;
+      if ((p->s).d.x > 0) {
+        off = -0x800;
+        asm volatile("");
+      } else {
+        off = 0x800;
+        asm volatile("");
+      }
+      push = PushoutToUp1(nx + off, ny);
+      if (push != 0) {
+        (p->s).d.y = 0;
+        (p->s).coord.y += push;
+        goto inc34;
+      }
+      break;
+    }
+    case 2:
+      (*((u8*)p + 0xbb))++;
+      SetMotion(&p->s, 0xD504);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+      inc34:
+        (p->s).mode[2]++;
+      }
+      break;
+    case 4:
+      SetMotion(&p->s, 0xD500);
+      (p->s).work[2] = 0x14;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 5: {
+      s32 t;
+      u32 t8;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t8 = (u8)t;
+      if (t8 == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = t8;
+      }
+      break;
+    }
+  }
+}
 
 bool8 nop_0809925c(struct Enemy* p) { return TRUE; }
 
