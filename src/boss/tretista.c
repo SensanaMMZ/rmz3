@@ -338,7 +338,122 @@ INCASM("asm/boss/tretista_p5.inc");
 
 bool8 FUN_0804e3f0(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/tretista_p6.inc");
+void tretista_0804e3f4(struct Boss* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      SetMotion(&p->s, 0xAB0A);
+      SetDDP(&p->body, &sCollisions[1]);
+      {
+        register struct Zero** zp asm("r6");
+        u32 fl = (p->s).flags;
+        s32 c16 = 0x10;
+        s32 t;
+        asm("" : "+r"(c16));
+        t = 0x10;
+        t &= fl;
+        if (t == 0) {
+          register struct Zero** zp1 asm("r1");
+          s32 zx, px;
+          zp1 = &pZero2;
+          zx = ((*zp1)->s).coord.x;
+          px = (p->s).coord.x;
+          zp = zp1;
+          asm("" : "+r"(zp1));
+          if (zx > px) {
+            u8* a = (u8*)p + 0x4c;
+            s32 ov2;
+            u32 f2;
+            *a = 1;
+            a -= 2;
+            ov2 = *a;
+            ov2 |= c16;
+            *a = ov2;
+            f2 = (p->s).flags;
+            f2 |= c16;
+            (p->s).flags = f2;
+          }
+        } else {
+          register struct Zero** zp1 asm("r1");
+          s32 zx, px;
+          zp1 = &pZero2;
+          zx = ((*zp1)->s).coord.x;
+          px = (p->s).coord.x;
+          zp = zp1;
+          asm("" : "+r"(zp1));
+          if (zx >= px) {
+            goto dx_pos;
+          }
+          {
+            (p->s).spr.xflip = m;
+            {
+              u8* a2 = (u8*)p + 0x4a;
+              s32 ov = *a2;
+              s32 m11 = -0x11;
+              m11 &= ov;
+              *a2 = m11;
+            }
+            (p->s).flags &= 0xEF;
+          }
+        }
+        if (((*zp)->s).coord.x < (p->s).coord.x) {
+          (p->s).d.x = -0x160;
+        } else {
+        dx_pos:
+          (p->s).d.x = 0x160;
+        }
+      }
+      (p->s).work[2] = 0x60;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      if ((*(u32*)((u8*)p + 0x70) & 0xFFFF00) == 0x10200 || (*(u32*)((u8*)p + 0x70) & 0xFFFF00) == 0x10900) {
+        PlaySound(0xDE);
+      }
+      {
+        register s32 x asm("r0");
+        register s32 d asm("r1");
+        s32 push;
+        x = (p->s).coord.x;
+        d = (p->s).d.x;
+        x += d;
+        (p->s).coord.x = x;
+        if (d > 0) {
+          push = PushoutToLeft1(x + 0x6C00, (p->s).coord.y);
+        } else {
+          push = PushoutToRight1(x - 0x6C00, (p->s).coord.y);
+        }
+        if (push != 0) {
+          (p->s).coord.x += push;
+          (p->s).work[2] = 1;
+        }
+      }
+      {
+        s32 t = (p->s).work[2];
+        if (t != 0) {
+          t -= 1;
+          (p->s).work[2] = t;
+          if ((t << 24) != 0) {
+            break;
+          }
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2:
+      (p->s).mode[2] = 3;
+      // fallthrough
+    case 3: {
+      s32 z = 0;
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
 
 bool8 FUN_0804e544(struct Boss* p) { return TRUE; }
 
