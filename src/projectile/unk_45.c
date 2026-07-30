@@ -1,3 +1,4 @@
+#include "stagerun.h"
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
@@ -84,6 +85,82 @@ void FUN_080b1b40(struct Projectile* p) {
 }
 
 INCASM("asm/projectile/unk_45_p2_p1.inc");
+
+void FUN_080b2204(struct Body* body);
+extern const struct Collision Collision_ARRAY_0836d7dc[];
+
+void FUN_080b2044(struct Projectile* p) {
+  register s32 z6 asm("r6");
+  if (*(s16*)((u8*)(p->s).unk_28 + 4) == 2) {
+    (p->s).work[2] = 0xFF;
+  }
+  {
+    s32 t = (p->s).work[2] - 1;
+    z6 = 0;
+    (p->s).work[2] = t;
+    if ((t << 24) == 0) {
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      return;
+    }
+  }
+  if (*((u8*)p + 0xbc) == 1 && (p->s).mode[2] != 2) {
+    register s32 z4 asm("r4");
+    struct Entity* e = (p->s).unk_28;
+    u16* cnt = (u16*)((u8*)e + 0xe);
+    s32 c1 = *cnt + 1;
+    z4 = 0;
+    *cnt = c1;
+    PlaySound(0x137);
+    (p->s).flags &= 0xFE;
+    (p->body).status = z6;
+    (p->body).prevStatus = z6;
+    (p->body).invincibleTime = z4;
+    (p->s).flags &= ~COLLIDABLE;
+    (p->s).work[2] = 0x10;
+    (p->s).mode[2] = 2;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      struct Body* body;
+      InitNonAffineMotion(&p->s);
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      InitBody(body, &Collision_ARRAY_0836d7dc[7], &(p->s).coord, 1);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (BodyFunc)FUN_080b2204;
+      SetMotion(&p->s, 0xAA04);
+      (p->s).work[2] = 0xB4;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      if (((p->s).unk_28)->mode[1] == 1) {
+        (p->s).coord.x += -0x3C000;
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        CalcFromCamera(cam, &(p->s).coord);
+      }
+      break;
+    case 2:
+      {
+        register s32 wv asm("r0");
+        register s32 c3 asm("r1");
+        wv = (p->s).work[2];
+        c3 = 3;
+        wv &= c3;
+        if (wv == 0) {
+          PlaySound(0x22);
+        }
+      }
+      if (((p->s).unk_28)->mode[1] == 1) {
+        (p->s).coord.x += -0x3C000;
+      }
+      break;
+  }
+}
+
 
 // 1 insn from matching: retail keeps the work[1] load in r0 and copies it
 // into the a register; agbcc coalesces the copy away (allocation tie).
