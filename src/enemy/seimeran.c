@@ -3,6 +3,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "physics.h"
+#include "stagerun.h"
 #include "story.h"
 #include "motion.h"
 
@@ -117,7 +118,151 @@ static void FUN_0808f424(Seimeran* p) {
   }
 }
 
-INCASM("asm/enemy/seimeran_p1b.inc");
+static const u8 sInitModes[4];
+void Seimeran_Update(struct Enemy* p);
+
+void Seimeran_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  if ((p->s).work[0] == 2) {
+    INIT_BODY(p, sCollisions, 4, NULL);
+  } else {
+    INIT_BODY(p, sCollisions, 6, NULL);
+  }
+  SET_BODY_INTERSECT_HANDLER(p, (void*)0x0808F345);
+  ((Seimeran*)p)->props.elfx = NULL;
+  if ((p->s).work[0] == 0) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    ((Seimeran*)p)->props.c_b8.x = 0;
+    ((Seimeran*)p)->props.c_b8.y = 0;
+  }
+  ((Seimeran*)p)->props.unk_c0 = 0;
+  Seimeran_Update(p);
+}
+
+void Seimeran_Update(struct Enemy* p) {
+  s32 rz;
+  register u32 gf asm("r3");
+  u32 k2;
+  u32 fl2;
+  u32 w0;
+  gf = gCurStory.s.gameflags[4];
+  k2 = 2;
+  asm("" : "+r"(k2));
+  k2 &= gf;
+  asm("" : "+r"(k2));
+  fl2 = (k2 << 24) >> 24;
+  if (fl2 != 0) {
+    u32 fa = (p->s).flags;
+    u32 ka = 0xFE;
+    s32 z2a;
+    asm volatile("" : "+r"(ka));
+    ka &= fa;
+    z2a = 0;
+    asm("" : "+r"(z2a));
+    ka &= 0xFD;
+    (p->s).flags = ka;
+    *(u32*)((u8*)p + 0x8c) = z2a;
+    *(u32*)((u8*)p + 0x90) = z2a;
+    *((u8*)p + 0x94) = z2a;
+    asm volatile("");
+    goto disap;
+  }
+  w0 = (p->s).work[0];
+  if (w0 == 0) {
+    struct Entity** pb8 = (struct Entity**)((u8*)p + 0xb8);
+    struct Entity* e = *pb8;
+    if (e != NULL && e->mode[0] > 1) {
+      *pb8 = (struct Entity*)w0;
+    }
+    {
+      struct Entity** pbc = (struct Entity**)((u8*)p + 0xbc);
+      e = *pbc;
+      if (e != NULL && e->mode[0] > 1) {
+        *pbc = NULL;
+      }
+    }
+    if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x6000) {
+      u32 fb = (p->s).flags;
+      u32 kb = 0xFE;
+      s32 z2b;
+      asm volatile("" : "+r"(kb));
+      kb &= fb;
+      z2b = 0;
+      asm("" : "+r"(z2b));
+      kb &= 0xFD;
+      (p->s).flags = kb;
+      *(u32*)((u8*)p + 0x8c) = z2b;
+      *(u32*)((u8*)p + 0x90) = z2b;
+      *((u8*)p + 0x94) = z2b;
+      asm volatile("");
+      goto disap;
+    }
+  } else {
+    u8 gf40;
+    u32 k40 = 0x40;
+    asm("" : "+r"(k40));
+    gf40 = k40 & gf;
+    if (gf40 != 0) {
+      u32 fc = (p->s).flags;
+      u32 kc = 0xFE;
+      asm volatile("" : "+r"(kc));
+      kc &= fc;
+      kc &= 0xFD;
+      (p->s).flags = kc;
+      *(u32*)((u8*)p + 0x8c) = fl2;
+      *(u32*)((u8*)p + 0x90) = fl2;
+      *((u8*)p + 0x94) = fl2;
+      goto disap;
+    }
+    if (w0 == 1) {
+      rz = (s32)(p->s).unk_28;
+      if (rz == 0) {
+        if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0x1000) {
+          goto common;
+        }
+        goto killD;
+      } else {
+        if (((struct Entity*)rz)->mode[0] > 1) {
+          (p->s).unk_28 = (struct Entity*)(u32)gf40;
+        }
+      }
+    }
+  }
+common:
+  if ((u32)(FUN_0808f348((Seimeran*)p) << 24) != 0) {
+    return;
+  }
+  FUN_0808f424((Seimeran*)p);
+  rz = FUN_0808f3a8((Seimeran*)p);
+  if (rz != 0) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+  if ((p->s).work[0] == 1) {
+    if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x6000) {
+      u32 fd;
+      u32 kd;
+    killD:
+      fd = (p->s).flags;
+      kd = 0xFE;
+      asm volatile("" : "+r"(kd));
+      kd &= fd;
+      kd &= 0xFD;
+      (p->s).flags = kd;
+      *(u32*)((u8*)p + 0x8c) = rz;
+      *(u32*)((u8*)p + 0x90) = rz;
+      *((u8*)p + 0x94) = rz;
+    disap:
+      (p->s).flags &= 0xFB;
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    }
+  }
+}
 
 static const EnemyFunc PTR_ARRAY_08369414[2];
 
