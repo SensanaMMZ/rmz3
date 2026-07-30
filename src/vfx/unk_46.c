@@ -166,6 +166,84 @@ void VFX46_Die(struct VFX* vfx) {
 
 INCASM("asm/vfx/unk_46_post.inc");
 
+static const s32* const PTR_ARRAY_0836f0cc[5];
+
+void FUN_080bf17c(struct VFX* p) {
+  s32 t = (p->s).work[2] - 1;
+  (p->s).work[2] = t;
+  if ((t << 24) != 0) {
+    u32 at = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+    if (at == 0) {
+      goto sw;
+    }
+    if (at & 0x8000) {
+      goto sw;
+    }
+    if ((p->s).d.y <= 0) {
+      goto sw;
+    }
+  }
+  CreateSmoke(2, &(p->s).coord);
+  {
+    u32 tbl = (u32)gVFXFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    *(u32*)((p->s).mode) = 2;
+    (p->s).onUpdate = (void*)((*rt)[2]);
+  }
+  return;
+sw:
+  {
+    s32 m2 = (p->s).mode[2];
+    switch (m2) {
+      case 0: {
+        const s32* const* tb = PTR_ARRAY_0836f0cc;
+        u16* mp = &((struct VFX46*)p)->unk_74;
+        u32 sel = *mp % 5;
+        const s32* arr = tb[(u16)sel];
+        const s32* ent = (const s32*)((((struct VFX46*)p)->unk_78 << 3) + (u32)arr);
+        s32 ny, cx;
+        ny = ent[1] - (RANDOM(RNG_0202f388) % 0xC0);
+        (p->s).d.y = ny;
+        cx = ent[0] - 0x80;
+        cx += RANDOM(RNG_0202f388) & 0xFF;
+        (p->s).d.y = ((ny * 3) << 6) >> 8;
+        (p->s).d.x = ((cx * 3) << 6) >> 8;
+        SetMotion(&p->s, *mp);
+        (p->s).work[2] = 0x5A;
+        (p->s).work[3] = m2;
+        (p->s).unk_coord.x = (RANDOM(RNG_0202f388) & 7) + 0x1E;
+        (p->s).mode[2]++;
+      }
+        // fallthrough
+      case 1: {
+        s32 t3 = (p->s).work[3] + 1;
+        (p->s).work[3] = t3;
+        {
+          u32 w3 = (p->s).work[3];
+          if ((s32)w3 > (p->s).unk_coord.x) {
+            if (w3 & 1) {
+              (p->s).flags |= DISPLAY;
+            } else {
+              (p->s).flags &= ~DISPLAY;
+            }
+          }
+        }
+        (p->s).d.y += 0x20;
+        if ((p->s).d.y > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        (p->s).coord.x += (p->s).d.x;
+        UpdateMotionGraphic(&p->s);
+        break;
+      }
+    }
+  }
+}
+
+INCASM("asm/vfx/unk_46_post2.inc");
+
 void FUN_080bef44(struct VFX* vfx);
 void FUN_080bf0a0(struct VFX* vfx);
 void FUN_080bf17c(struct VFX* vfx);
