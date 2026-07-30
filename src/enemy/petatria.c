@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "physics.h"
 #include "enemy.h"
 #include "global.h"
 #include "mission.h"
@@ -309,7 +310,96 @@ void FUN_08090da8(struct Enemy* p) {
 
 bool8 FUN_08090edc(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/petatria_p1_pre_p3_p5.inc");
+void FUN_08090ee0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[11]);
+      (p->s).work[2] = 4;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      s32 v;
+      SetDDP(&p->body, &sCollisions[10]);
+      SetMotion(&p->s, 0x7E17);
+      (p->s).work[2] = 0x60;
+      if (*((u8*)p + 0xb8) == 1) {
+        s32 c = 0xCC;
+        asm("" : "+r"(c));
+        v = -c;
+        goto vs;
+      }
+      v = 0xCC;
+    vs:
+      (p->s).d.x = v;
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 3: {
+      s32 push;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (push == 0) {
+        break;
+      }
+      (p->s).coord.y += push;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4:
+      (p->s).work[2]--;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      if ((p->s).work[2] != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 5:
+      SetMotion(&p->s, 0x7E18);
+      (p->s).work[2] = (RANDOM(RNG_0202f388) % 0x14) + 0xA;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 6: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 7:
+      SetMotion(&p->s, 0x7E19);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_08091068(struct Enemy* p) { return TRUE; }
 
