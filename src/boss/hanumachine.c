@@ -109,7 +109,137 @@ alive:
   (sUpdates1[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/hanumachine_p1_b_p1.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+struct Enemy* CreateEnemy50(struct Boss* p);
+struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
+
+void Hanumachine_Die(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    u32* ps;
+    {
+      u32* ps0 = (u32*)((u8*)p + 0x8c);
+      u32 st = *ps0 & 0x10000;
+      asm("" : "=r"(ps) : "0"(ps0));
+      if (st != 0) {
+        struct Coord c;
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y + -0x1000;
+        FUN_080b2b40(0, &c, 0x200, *((u8*)p + 0xbc));
+        SetMotion(&p->s, 0xB503);
+        if ((p->s).flags & 0x10) {
+          s32 v = 0x40;
+          (p->s).d.x = v;
+          v -= 0x41;
+          (p->s).unk_coord.x = v;
+        } else {
+          (p->s).d.x = -0x40;
+          (p->s).unk_coord.x = 1;
+        }
+        PlaySound(0x2F);
+        CreateEnemy50(p);
+        (p->s).mode[1] = 0;
+        (p->s).mode[3] = 0;
+      } else {
+        SetMotion(&p->s, 0xB50F);
+        (p->s).mode[1] = 1;
+        (p->s).mode[3] = 1;
+        (p->s).work[2] = 0x40;
+      }
+    }
+    PlaySound(0x4E);
+    {
+      s32 z = 0;
+      *ps = z;
+      *(u32*)((u8*)p + 0x90) = z;
+      *((u8*)p + 0x94) = z;
+    }
+    (p->s).flags &= 0xFB;
+    {
+      u32 v = gStageRun.missionStatus;
+      register s32 one asm("r5");
+      s32 t;
+      one = 1;
+      t = one;
+      asm("" : "+r"(t));
+      t &= v;
+      asm volatile("" :: "r"(v));
+      if (t != 0) {
+        u32 a = gStageRun.vm.active;
+        s32 t2 = one;
+        asm volatile("" : "+r"(t2));
+        t2 &= a;
+        if (t2 == 0) {
+          u32 m;
+          asm volatile("" :: "r"(a));
+          asm volatile("" :: "r"(a));
+          m = 0xFFFE;
+          m &= v;
+          m |= 0x10;
+          gStageRun.missionStatus = m;
+        }
+      }
+      asm volatile("" :: "r"(one));
+    }
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  switch ((p->s).mode[1]) {
+    case 0: {
+      s32 dx;
+      (p->s).coord.x += (p->s).d.x;
+      dx = (p->s).d.x + (p->s).unk_coord.x;
+      (p->s).d.x = dx;
+      if (dx != 0) {
+        break;
+      }
+      goto inc01;
+    }
+    case 1:
+      if (((u8*)(p->s).scriptEntity)[9] & 0x80) {
+        struct Coord c2;
+        register struct Coord* pc asm("r0");
+        if ((p->s).mode[3] != 0) {
+          c2.x = 0xC00;
+        } else {
+          c2.x = 0x1500;
+        }
+        {
+          register s32 yv asm("r1");
+          struct Coord* pc2;
+          yv = -0x1200;
+          pc = &c2;
+          pc->y = yv;
+          asm("" : "=r"(pc2) : "0"(pc));
+          (p->s).unk_2c = CreateBossExplosion(&p->s, pc2);
+        }
+      inc01:
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2:
+      if (((struct Entity*)(p->s).unk_2c)->mode[0] > 1) {
+        gStageRun.vm.active |= 2;
+        (p->s).work[2] = 0x20;
+        goto inc3;
+      }
+      break;
+    case 3: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0xFF) {
+        u32 fl = (p->s).flags;
+        register u32 kfe asm("r1");
+        kfe = 0xFE;
+        asm volatile("" : "+r"(kfe));
+        kfe &= fl;
+        (p->s).flags = kfe;
+      inc3:
+        (p->s).mode[3]++;
+      }
+      break;
+    }
+  }
+}
 
 void FUN_0805bcdc(struct Boss* p) {
   s32 push = PushoutToUp1((p->s).coord.x, (p->s).coord.y + 1);
