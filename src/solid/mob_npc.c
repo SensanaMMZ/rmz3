@@ -1,3 +1,5 @@
+#include "zero.h"
+#include "text_window.h"
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
@@ -380,6 +382,109 @@ static void FUN_080d9734(struct MobObject* p) {
     (p->s).mode[1] = 1;
     (p->s).mode[2] = 0;
   }
+}
+
+extern const TalkFunc sMobNPCTalks[27];
+
+/* Mob NPC chat driver. Parked: the message-advance arms - retail derives
+   msgid+1 from the comparison constant still sitting in r0 (cse
+   jump-equivalence) and cross-jumps the identical adds/strh/bl tails;
+   agbcc keeps the loaded msgid in a callee-saved copy instead under every
+   tried shape (|| arms, duplicated arms, pinned consts). Logic verified. */
+NON_MATCH void mob_chat_080d97b4(struct Solid* p) {
+#if MODERN
+  if ((p->s).mode[2] == 0) {
+    u16 msg = (sMobNPCTalks[(p->s).work[0]])(p);
+    *(u16*)((u8*)p + 0xba) = msg;
+    PrintNormalMessage(*(volatile u16*)((u8*)p + 0xba));
+    SetMotion(&p->s, *(u16*)((u8*)p + 0xc2));
+    if (*((u8*)p + 0xb9) != 0) {
+      s32 xf = 0;
+      s32 v;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        xf = 1;
+      }
+      if (xf != 0) {
+        register u8 lf asm("r1");
+        register s32 vv asm("r0");
+        lf = (p->s).flags;
+        vv = 0x10;
+        vv |= lf;
+        v = vv;
+      } else {
+        register u8 lf2 asm("r1");
+        register s32 vv2 asm("r0");
+        lf2 = (p->s).flags;
+        vv2 = 0xEF;
+        vv2 &= lf2;
+        v = vv2;
+      }
+      (p->s).flags = v;
+      {
+        register s32 x1 asm("r1");
+        u8* a;
+        u8 b;
+        s32 msk;
+        s32 sh;
+        x1 = xf;
+        asm("" : "+r"(x1));
+        ((p->s).spr).xflip = x1;
+        a = (u8*)p + 0x4a;
+        sh = x1 << 4;
+        b = *a;
+        msk = -0x11;
+        msk &= b;
+        msk |= sh;
+        *a = msk;
+      }
+    }
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    u8* tw = (u8*)&gTextWindow + 8;
+    if (*(u16*)(tw + 2) != 0) {
+      return;
+    }
+  }
+  {
+  register u8* mg asm("r2");
+  mg = (u8*)&gSystemSavedataManager;
+  if (mg[0xF] & 0x10) {
+    u16* mp = (u16*)((u8*)p + 0xba);
+    u16 v = *mp;
+    if (v == 0x29E) {
+      *mp = v + 1;
+      PrintNormalMessage(*(volatile u16*)mp);
+      return;
+    }
+    if (v == 0x2A0 || v == 0x2A2) {
+      u16 nv = v + 1;
+      *mp = nv;
+      PrintNormalMessage(nv);
+      return;
+    }
+  }
+  if (mg[0xE] & 8) {
+    u16* mp2 = (u16*)((u8*)p + 0xba);
+    u16 v2 = *mp2;
+    if (v2 == 0x2A7 || v2 == 0x2A9 || v2 == 0x2AB) {
+      u16 nv2 = v2 + 1;
+      *mp2 = nv2;
+      PrintNormalMessage(nv2);
+      return;
+    }
+  }
+  }
+  gInChat = 0;
+  {
+    u8 z = 0;
+    (p->s).mode[1] = 4;
+    (p->s).mode[2] = z;
+  }
+#else
+  INCCODE("asm/solid/mob_npc_97b4.inc");
+#endif
 }
 
 INCASM("asm/solid/mob_npc_pre_p1_1_1.inc");
