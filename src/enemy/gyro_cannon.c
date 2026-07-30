@@ -709,142 +709,102 @@ void gyroCannon_0806dccc(struct Enemy* p) {
 
 
 
-NAKED static void FUN_0806ddfc(struct Enemy* p) {
-  asm(".syntax unified\n\
-	push {r4, r5, r6, r7, lr}\n\
-	mov r7, r8\n\
-	push {r7}\n\
-	adds r4, r0, #0\n\
-	ldrb r0, [r4, #0xf]\n\
-	cmp r0, #0\n\
-	bne _0806DE2E\n\
-	ldr r1, _0806DE64 @ =0x00001708\n\
-	adds r0, r4, #0\n\
-	bl SetMotion\n\
-	adds r0, r4, #0\n\
-	adds r0, #0x54\n\
-	ldrb r1, [r4, #0xa]\n\
-	lsrs r1, r1, #4\n\
-	movs r2, #1\n\
-	ands r1, r2\n\
-	movs r2, #0\n\
-	bl CreateGhost27\n\
-	movs r0, #0x30\n\
-	strb r0, [r4, #0x12]\n\
-	ldrb r0, [r4, #0xf]\n\
-	adds r0, #1\n\
-	strb r0, [r4, #0xf]\n\
-_0806DE2E:\n\
-	adds r0, r4, #0\n\
-	bl UpdateMotionGraphic\n\
-	ldrb r0, [r4, #0x12]\n\
-	subs r0, #1\n\
-	strb r0, [r4, #0x12]\n\
-	lsls r0, r0, #0x18\n\
-	lsrs r0, r0, #0x18\n\
-	cmp r0, #0xff\n\
-	bne _0806DEFA\n\
-	adds r7, r4, #0\n\
-	adds r7, #0x54\n\
-	ldr r0, _0806DE68 @ =0x08366758\n\
-	mov ip, r0\n\
-	adds r2, r4, #0\n\
-	adds r2, #0xb4\n\
-	ldrb r5, [r2, #8]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r3, #0x10\n\
-	adds r0, r3, #0\n\
-	ands r0, r1\n\
-	adds r6, r7, #0\n\
-	mov r8, r2\n\
-	cmp r0, #0\n\
-	beq _0806DE6C\n\
-	orrs r3, r5\n\
-	b _0806DE6E\n\
-	.align 2, 0\n\
-_0806DE64: .4byte 0x00001708\n\
-_0806DE68: .4byte sSlashedEnemies +(28*2)\n\
-_0806DE6C:\n\
-	adds r3, r5, #0\n\
-_0806DE6E:\n\
-	adds r0, r7, #0\n\
-	mov r1, ip\n\
-	movs r2, #0\n\
-	bl CreateSlashedEnemy\n\
-	adds r5, r6, #0\n\
-	ldr r7, _0806DE90 @ =0x08366774\n\
-	mov r0, r8\n\
-	ldrb r2, [r0, #8]\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r3, #0x10\n\
-	adds r0, r3, #0\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0806DE94\n\
-	orrs r3, r2\n\
-	b _0806DE96\n\
-	.align 2, 0\n\
-_0806DE90: .4byte sSlashedEnemies +(28*3)\n\
-_0806DE94:\n\
-	adds r3, r2, #0\n\
-_0806DE96:\n\
-	adds r0, r5, #0\n\
-	adds r1, r7, #0\n\
-	movs r2, #0\n\
-	bl CreateSlashedEnemy\n\
-	movs r0, #1\n\
-	adds r1, r6, #0\n\
-	bl CreateSmoke\n\
-	ldrb r1, [r4, #0xa]\n\
-	movs r0, #0x10\n\
-	ands r0, r1\n\
-	cmp r0, #0\n\
-	beq _0806DEBC\n\
-	movs r0, #2\n\
-	adds r1, r6, #0\n\
-	bl CreateSmoke\n\
-	b _0806DEC4\n\
-_0806DEBC:\n\
-	movs r0, #2\n\
-	adds r1, r6, #0\n\
-	bl CreateSmoke\n\
-_0806DEC4:\n\
-	adds r1, r6, #0\n\
-	movs r0, #4\n\
-	bl TryDropItem\n\
-	movs r0, #0x2a\n\
-	bl PlaySound\n\
-	ldr r2, _0806DF04 @ =gMission\n\
-	ldrh r1, [r2, #0xc]\n\
-	ldr r0, _0806DF08 @ =0x0000270E\n\
-	cmp r1, r0\n\
-	bhi _0806DEE0\n\
-	adds r0, r1, #1\n\
-	strh r0, [r2, #0xc]\n\
-_0806DEE0:\n\
-	adds r0, r4, #0\n\
-	adds r1, r6, #0\n\
-	bl TryDropZakoDisk\n\
-	ldr r1, _0806DF0C @ =gEnemyFnTable\n\
-	ldrb r0, [r4, #9]\n\
-	lsls r0, r0, #2\n\
-	adds r0, r0, r1\n\
-	movs r1, #4\n\
-	str r1, [r4, #0xc]\n\
-	ldr r0, [r0]\n\
-	ldr r0, [r0, #0x10]\n\
-	str r0, [r4, #0x14]\n\
-_0806DEFA:\n\
-	pop {r3}\n\
-	mov r8, r3\n\
-	pop {r4, r5, r6, r7}\n\
-	pop {r0}\n\
-	bx r0\n\
-	.align 2, 0\n\
-_0806DF04: .4byte gMission\n\
-_0806DF08: .4byte 0x0000270E\n\
-_0806DF0C: .4byte gEnemyFnTable\n\
- .syntax divided\n");
+static void FUN_0806ddfc(struct Enemy* p) {
+  register u32 a3 asm("r3");
+  register struct Coord* c6 asm("r6");
+  register u8* pr8 asm("r8");
+  if ((p->s).mode[3] == 0) {
+    SetMotion(&p->s, 0x1708);
+    {
+      struct Coord* ca;
+      u32 xf;
+      u32 one;
+      ca = &(p->s).coord;
+      xf = (p->s).flags >> 4;
+      one = 1;
+      xf &= one;
+      CreateGhost27(ca, xf, 0);
+    }
+    (p->s).work[2] = 0x30;
+    (p->s).mode[3]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 raw = (p->s).work[2] - 1;
+    (p->s).work[2] = raw;
+    if ((u8)raw == 0xFF) {
+      {
+        struct Coord* c7;
+        register const struct SlashedEnemy* sip asm("ip");
+        register u8* pr2 asm("r2");
+        register s32 pv5 asm("r5");
+        c7 = &(p->s).coord;
+        asm("" : "+r"(c7));
+        sip = &sSlashedEnemies[2];
+        pr2 = (u8*)p + 0xb4;
+        pv5 = pr2[8];
+        {
+          register u8 fl asm("r1");
+          register u32 t0 asm("r0");
+          fl = (p->s).flags;
+          a3 = 0x10;
+          t0 = a3;
+          t0 &= fl;
+          c6 = c7;
+          pr8 = pr2;
+          if (t0 != 0) {
+            a3 |= pv5;
+          } else {
+            a3 = pv5;
+          }
+        }
+        ((struct VFX* (*)())CreateSlashedEnemy)(c7, sip, 0, a3);
+      }
+      {
+        register struct Coord* c5 asm("r5");
+        const struct SlashedEnemy* s7;
+        u8 p2;
+        c5 = c6;
+        s7 = &sSlashedEnemies[3];
+        {
+          register u8* pl asm("r0");
+          pl = pr8;
+          p2 = pl[8];
+        }
+        {
+          register u8 fl asm("r1");
+          register u32 t0 asm("r0");
+          fl = (p->s).flags;
+          a3 = 0x10;
+          t0 = a3;
+          t0 &= fl;
+          if (t0 != 0) {
+            a3 |= p2;
+          } else {
+            a3 = p2;
+          }
+        }
+        ((struct VFX* (*)())CreateSlashedEnemy)(c5, s7, 0, a3);
+      }
+      CreateSmoke(1, c6);
+      if ((p->s).flags & 0x10) {
+        CreateSmoke(2, c6);
+      } else {
+        CreateSmoke(2, c6);
+      }
+      {
+        register struct Coord* c1 asm("r1");
+        c1 = c6;
+        TryDropItem(4, c1);
+      }
+      PlaySound(0x2A);
+      if (gMission.enemyCount <= 0x270E) {
+        gMission.enemyCount++;
+      }
+      TryDropZakoDisk(p, c6);
+      SET_ENEMY_ROUTINE(p, 4);
+    }
+  }
 }
 
 // 0x0806df10
