@@ -1,4 +1,7 @@
 #include "collision.h"
+#include "metatile.h"
+#include "physics.h"
+#include "stagerun.h"
 #include "gfx.h"
 #include "global.h"
 #include "overworld.h"
@@ -165,6 +168,116 @@ static void FUN_080caf7c(struct Solid* p) {
       break;
     }
   }
+}
+
+// 0x080cafd0 -- blue 2D door: open, pan the camera to the door target, walk
+// the captured entity through, then hand the camera back. Blocker (home
+// transposition): p lands r5 vs retail r4 with the case-4 countdown temp and
+// door-entity pointer riding r6/r7 (extra saves); the t8-trash and scratch-
+// deref levers reduce but do not flip the assignment.
+NON_MATCH void FUN_080cafd0(struct Solid* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      (p->body).status = 0;
+      (p->body).prevStatus = 0;
+      (p->body).invincibleTime = 0;
+      (p->s).flags &= 0xFB;
+      (p->s).flags2 &= 0xF7;
+      SetMotion(&p->s, 0x1202);
+      PlaySound(0x9E);
+      {
+        s32* tp = (s32*)((u8*)p + 0xbc);
+        struct Entity** pb = (struct Entity**)((u8*)p + 0xb4);
+        tp[0] = (*pb)->coord.x + 0x3800;
+        tp[1] = (*pb)->coord.y;
+      }
+      (p->s).work[2] = 0x40;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 1: {
+      u32 g = (u8)((p->s).work[0] & 2);
+      if (g == 0) {
+        gCollisionManager.sweep = g;
+      }
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 2: {
+      struct Entity** pb = (struct Entity**)((u8*)p + 0xb4);
+      (*pb)->spr.xflip = 1;
+      *((u8*)(*pb) + 0x4a) |= 0x10;
+      (*pb)->flags |= 0x10;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).work[2] = 0x38;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 3: {
+      UpdateMotionGraphic(&p->s);
+      (*(struct Entity**)((u8*)p + 0xb4))->coord.x += 0x100;
+      if ((p->s).work[2] == 0x1C) {
+        u8* cam = (u8*)&gStageRun + 0xE8;
+        *(s32**)(cam + 0x48) = (s32*)((u8*)p + 0xbc);
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      PlaySound(0x9F);
+      SetMotion(&p->s, 0x1203);
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4: {
+      struct Entity** pb;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      pb = (struct Entity**)((u8*)p + 0xb4);
+      {
+        struct Entity* e = *pb;
+        if (GetGroundMetatileAttr(e->coord.x, e->coord.y)) {
+          struct Entity* e2 = *pb;
+          e2->coord.y = FUN_0800a05c(e2->coord.x, e2->coord.y);
+        }
+      }
+      {
+        u8* g = (u8*)&gStageRun;
+        struct Entity* z3;
+        *(u16*)(g + 0x14) &= 0xFFFE;
+        {
+          u8* cam = g + 0xE8;
+          z3 = *pb;
+          *(s32**)(cam + 0x48) = (s32*)&z3->coord;
+        }
+        *((u8*)z3 + 0x119) = 0;
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/solid/door_blue_afd0.inc");
+#endif
 }
 
 INCASM("asm/solid/unk_02_a.inc");
