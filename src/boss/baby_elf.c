@@ -120,7 +120,86 @@ void FUN_0804874c(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/baby_elf_p2_p2.inc");
+u8 GetEntityPalID(struct Entity* p);
+
+void FUN_08048788(struct Boss* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->body).status = m;
+      (p->body).prevStatus = m;
+      (p->body).invincibleTime = m;
+      {
+        u32 f = (p->s).flags & 0xFB;
+        asm("" : "+r"(f));
+        (p->s).flags = f | 1;
+      }
+      if ((p->s).work[0] == 1) {
+        struct Entity* e = (p->s).unk_28;
+        (p->s).coord.x = e->coord.x;
+        (p->s).coord.y = e->coord.y;
+      }
+      (p->s).palID = m;
+      SetMotion(&p->s, 0x330A);
+      {
+        u8* c6 = (u8*)p + 0xc6;
+        if (*c6 != 0) {
+          RemovePaletteAnimation(*c6);
+          *c6 = m;
+        }
+        {
+          u32 g0 = GetEntityPalID(&p->s);
+          u32 g = (u8)g0 << 5;
+          StartPaletteAnimation(0x1C, g | 0x200);
+        }
+        *c6 = 0x1C;
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((u8)StepPaletteAnimation(*((u8*)p + 0xc6)) == 3) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2: {
+      u8* c6;
+      (p->s).palID = (p->s).work[0];
+      SetMotion(&p->s, 0x3100);
+      c6 = (u8*)p + 0xc6;
+      if (*c6 != 0) {
+        RemovePaletteAnimation(*c6);
+        *c6 = 0;
+      }
+      if ((p->s).work[0] == 0) {
+        {
+          u32 g0 = GetEntityPalID(&p->s);
+          u32 g = (u8)g0 << 5;
+          StartPaletteAnimation(0x16, g | 0x200);
+        }
+        *c6 = 0x16;
+      } else {
+        {
+          u32 g0 = GetEntityPalID(&p->s);
+          u32 g = (u8)g0 << 5;
+          StartPaletteAnimation(0x11, g | 0x200);
+        }
+        *c6 = 0x11;
+      }
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 3:
+      if ((u8)StepPaletteAnimation(*((u8*)p + 0xc6)) == 3) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/boss/baby_elf_p2_p2b.inc");
 
 void BabyElf_Init(struct Boss* p);
 void BabyElf_Update(struct Boss* p);
