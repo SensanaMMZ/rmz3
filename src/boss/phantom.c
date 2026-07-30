@@ -1014,7 +1014,69 @@ void Phantom_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/boss/phantom_p2_pre_post_post_p1.inc");
+s32 PushoutToUp1(s32 x, s32 y);
+
+void phantom_08060668(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags |= DISPLAY;
+      if ((gStageRun.missionStatus & MISSION_STAY) && !(gStageRun.vm.active & 1)) {
+        gStageRun.missionStatus &= ~MISSION_STAY;
+        gStageRun.missionStatus |= MISSION_SUCCESS;
+      }
+      EXIT_BODY(p);
+      SetMotion(&p->s, 0xBC0E);
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 vy = (p->s).d.y + 0x40;
+      (p->s).d.y = vy;
+      (p->s).coord.y += vy;
+      if (vy > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      {
+        s32 po = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (po < 0) {
+          (p->s).coord.y += po;
+          goto adv;
+        }
+      }
+      goto umg;
+    }
+    case 2:
+      SetMotion(&p->s, 0xBC13);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      if ((p->s).scriptEntity->flags & 0x80) {
+      adv:
+        (p->s).mode[2]++;
+      }
+    umg:
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 4:
+      (p->s).work[2] = 10;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 5: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).flags &= ~DISPLAY;
+        gStageRun.vm.active |= 2;
+        PlaySound(0x110);
+        FUN_0805ecc8(&p->s);
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 6:
+      break;
+  }
+}
 
 void FUN_080607a0(struct Boss* p, s32 idx) {
   *((u8*)p + 0xb4) = idx;
