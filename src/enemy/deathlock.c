@@ -3,6 +3,8 @@
 #include "global.h"
 #include "physics.h"
 #include "story.h"
+#include "mod.h"
+#include "syssav.h"
 
 static const EnemyFunc sDeads[4];
 
@@ -235,7 +237,99 @@ void FUN_0808d4a0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/deathlock_pre_p2_pre_a_b.inc");
+void nop_0808d2f4(struct Enemy* p);
+void Deathlock_Update(struct Enemy* p);
+extern const struct Collision sCollisions[15];
+
+void Deathlock_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).work[1] = 1;
+  if ((p->s).work[0] == 8) {
+    (p->s).mode[1] = 7;
+    (p->s).coord.y += -0x800;
+  } else if ((p->s).work[0] == 9) {
+    (p->s).mode[1] = 5;
+  } else {
+    (p->s).mode[1] = 1;
+  }
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  {
+    if ((p->s).work[0] <= 7) {
+      s32 sf;
+      s32 c40;
+      if (!MOD_ENABLED(gSystemSavedataManager.mods, MOD_119)) goto arm2;
+      sf = gCurStory.s.gameflags[0];
+      c40 = 0x40;
+      asm("" : "+r"(c40));
+      if (c40 & sf) goto arm2;
+      {
+        struct Body* body;
+        (p->s).flags |= COLLIDABLE;
+        body = &p->body;
+        InitBody(body, sCollisions, &(p->s).coord, 0xE);
+        body->parent = (void*)p;
+        {
+          register s32 z0 asm("r0");
+          z0 = 0;
+          asm("" : "+r"(z0));
+          body->fn = (void*)z0;
+        }
+      }
+      goto setnop;
+    arm2:
+      {
+        struct Body* body;
+        s32 z;
+        register s32 c4 asm("r0");
+        register s32 f asm("r1");
+        f = (p->s).flags;
+        c4 = 4;
+        asm("" : "+r"(c4));
+        z = 0;
+        (p->s).flags = c4 | f;
+        body = &p->body;
+        InitBody(body, sCollisions, &(p->s).coord, 0xA);
+        body->parent = (void*)p;
+        body->fn = (void*)z;
+      }
+    setnop:
+      {
+        struct Body* body = &p->body;
+        body->fn = (void*)nop_0808d2f4;
+      }
+    } else if ((p->s).work[0] == 9) {
+      struct Body* body;
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 4);
+      body->parent = (void*)p;
+      body->fn = (void*)nop_0808d2f4;
+    }
+  }
+  *(s32*)&p->props[0] = 0;
+  {
+    u8 w = (p->s).work[0];
+    if (w <= 3) {
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      goto pw;
+    }
+    {
+      u32 w2 = w - 4;
+      if ((u8)w2 <= 3) {
+        (p->s).work[0] = w2;
+        (p->s).work[1] = 1;
+      }
+    }
+  }
+pw:
+  p->props[4] = 0;
+  p->props[5] = 0;
+  p->props[6] = 0;
+  p->props[8] = 0;
+  Deathlock_Update(p);
+}
 
 static const EnemyFunc sUpdates1[8];
 static const EnemyFunc sUpdates2[8];
