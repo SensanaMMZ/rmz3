@@ -1,6 +1,7 @@
 #include "palette_animation.h"
 #include "global.h"
 #include "overworld.h"
+#include "system.h"
 
 static void initIceBase(struct Coord* _ UNUSED);
 static void FUN_08010eb8(struct Coord* _ UNUSED);
@@ -180,7 +181,127 @@ void icebase_080111dc(struct StageLayer* l, const struct Stage* stage UNUSED) {
   }
 }
 
-INCASM("asm/stage_gfx/frostline_ice_base_p1_b.inc");
+void FUN_0801126c(struct StageLayer* l, const struct Stage* stage) {
+  u32* q = Malloc(0xA0 * 4);
+  if (q != NULL) {
+    register s32 i asm("r2");
+    u32 sh;
+    u32 mfff;
+    s32 base;
+    u32 hi;
+    gIntrManager.reservedDma0[0] = (u32)q;
+    gIntrManager.reservedDma0[1] = 0x0400001C;
+    gIntrManager.reservedDma0[2] = 0xA6600001;
+
+    hi = (u16)(l->viewportCenterPixel.x / 3);
+    {
+      s32 c0 = (l->viewportCenterPixel.y - 0xe0) / 3 + 1;
+      s32 c;
+      i = 0;
+      c = (s16)c0;
+      if (c <= 0x8b) {
+        u32* p = q;
+        u32 val;
+        base = c;
+        val = ((u32)base << 16) | hi;
+        do {
+          *p++ = val;
+          i++;
+          if (i > 0x9f) {
+            break;
+          }
+        } while (base + i <= 0x8b);
+      }
+    }
+
+    hi = (u16)((u32)(l->viewportCenterPixel.x << 0xf) >> 0x10);
+    {
+      u32 cu = (u16)(((l->viewportCenterPixel.y - 0x160) >> 1) + 3);
+      u32 t;
+      s32 sum;
+      if (i > 0x9f) {
+        goto band3;
+      }
+      t = cu << 16;
+      base = (s32)t >> 16;
+      sum = base + i;
+      asm("" : "=r"(sh) : "0"(t));
+      if (sum <= 0x8f) {
+        s32 bc = base;
+        u32 val = (0x90 << 16) - ((u32)i << 16);
+        u32* p = (u32*)((i << 2) + (u32)q);
+        mfff = 0xFFFF0000;
+        do {
+          *p++ = val;
+          val += mfff;
+          i++;
+          if (i > 0x9f) {
+            goto band3;
+          }
+        } while (bc + i <= 0x8f);
+        asm volatile("" :: "r"(mfff));
+      }
+      if (i > 0x9f) {
+        goto band3;
+      }
+      if (((s32)sh >> 16) + i <= 0xe0) {
+        u32* p = (u32*)((i << 2) + (u32)q);
+        u32 val;
+        base = (s32)sh >> 16;
+        val = ((u32)base << 16) | hi;
+        do {
+          *p++ = val;
+          i++;
+          if (i > 0x9f) {
+            goto band3;
+          }
+        } while (base + i <= 0xe0);
+      }
+    }
+
+  band3:
+    hi = (u16)((u32)((l->viewportCenterPixel.x * 3) << 0xe) >> 0x10);
+    {
+      u32 cu = (u16)((((l->viewportCenterPixel.y - 0x1e0) * 3) >> 2) + 5);
+      u32 t;
+      s32 sum;
+      if (i > 0x9f) {
+        goto done;
+      }
+      t = cu << 16;
+      base = (s32)t >> 16;
+      sum = base + i;
+      asm("" : "=r"(sh) : "0"(t));
+      if (sum <= 0xdf) {
+        s32 bc = base;
+        u32 val = (0xf0 << 16) - ((u32)i << 16);
+        u32* p = (u32*)((i << 2) + (u32)q);
+        mfff = 0xFFFF0000;
+        do {
+          *p++ = val;
+          val += mfff;
+          i++;
+          if (i > 0x9f) {
+            goto done;
+          }
+        } while (bc + i <= 0xdf);
+      }
+      if (i > 0x9f) {
+        goto done;
+      }
+      {
+        u32 val = hi | sh;
+        u32* p = (u32*)((i << 2) + (u32)q);
+        do {
+          *p++ = val;
+          i++;
+        } while (i <= 0x9f);
+      }
+    }
+  done:
+    asm volatile("" :: "r"(hi));
+  }
+}
 
 void FUN_080113dc(struct StageLayer* l, const struct Stage* stage) {
   if (l->phase == 0) {
