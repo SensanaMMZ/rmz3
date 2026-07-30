@@ -106,7 +106,69 @@ void Ghost66_Die(struct VFX* p) {
 
 void nop_080c4668(struct VFX* p) {}
 
-INCASM("asm/vfx/unk_66_p2.inc");
+void FUN_080c466c(struct VFX* p) {
+  s32 t = (p->s).work[2] - 1;
+  (p->s).work[2] = t;
+  if ((t << 24) == 0) {
+    struct Coord c;
+    u32 r;
+    CreateSmoke(2, &(p->s).coord);
+    PlaySound(0x2A);
+    r = RANDOM(RNG_0202f388) & 3;
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    FUN_080c44a8(&c, (p->s).work[0], 0x7507, r);
+    FUN_080c44a8(&c, (p->s).work[0], 0x7508, r);
+    FUN_080c44a8(&c, (p->s).work[0], 0x7509, r);
+    {
+      u32 tbl = (u32)gVFXFnTable;
+      u32 id = ((p->s).id) << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = 2;
+      (p->s).onUpdate = (void*)((*rt)[2]);
+    }
+  } else {
+    u32 at = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+    if (at != 0 && !(at & 0x8000)) {
+      struct Coord c2;
+      u32 r;
+      CreateSmoke(2, &(p->s).coord);
+      PlaySound(0x2A);
+      r = RANDOM(RNG_0202f388) & 3;
+      c2.x = (p->s).coord.x;
+      c2.y = (p->s).coord.y;
+      FUN_080c44a8(&c2, (p->s).work[0], 0x7507, r);
+      FUN_080c44a8(&c2, (p->s).work[0], 0x7508, r);
+      FUN_080c44a8(&c2, (p->s).work[0], 0x7509, r);
+      {
+        u32 tbl = (u32)gVFXFnTable;
+        u32 id = ((p->s).id) << 2;
+        EntityFunc** rt = (EntityFunc**)(tbl + id);
+        *(u32*)((p->s).mode) = 2;
+        (p->s).onUpdate = (void*)((*rt)[2]);
+      }
+    } else {
+      s32 m2 = (p->s).mode[2];
+      switch (m2) {
+        case 0:
+          (p->s).work[2] = 0x3C;
+          (p->s).d.y = m2;
+          SetMotion(&p->s, 0x7506);
+          (p->s).mode[2]++;
+          // fallthrough
+        case 1:
+          (p->s).d.y += 0x20;
+          if ((p->s).d.y > 0x700) {
+            (p->s).d.y = 0x700;
+          }
+          (p->s).coord.y += (p->s).d.y;
+          (p->s).coord.x += (p->s).d.x;
+          UpdateMotionGraphic(&p->s);
+          break;
+      }
+    }
+  }
+}
 
 extern const s32* const PTR_ARRAY_0836f62c[3];
 
