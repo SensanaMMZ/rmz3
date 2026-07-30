@@ -2,6 +2,7 @@
 #include "gfx.h"
 #include "global.h"
 #include "solid.h"
+#include "stagerun.h"
 
 // Gray horizontal door
 
@@ -83,6 +84,149 @@ void FUN_080d7eb8(struct Solid* p) {
 }
 
 INCASM("asm/solid/unk_22.inc");
+
+void FUN_080d8088(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      {
+        u8* w = (u8*)p + 0x8c;
+        s32 z = 0;
+        *(u32*)w = z;
+        asm("" : "+r"(w));
+        w += 4;
+        *(u32*)w = z;
+        asm("" : "+r"(w));
+        w += 4;
+        asm("" : "+r"(w));
+        *w = z;
+      }
+      (p->s).flags &= 0xFB;
+      (p->s).flags2 &= 0xF7;
+      SetMotion(&p->s, 0x7802);
+      {
+        s32* tp = (s32*)((u8*)p + 0xbc);
+        tp[0] = (p->s).coord.x + 0x2000;
+        tp[1] = (*(struct Entity**)((u8*)p + 0xb4))->coord.y + -0x4000;
+      }
+      {
+        u32 v = gCollisionManager.sweep;
+        u32 t = 2;
+        t |= v;
+        gCollisionManager.sweep = t;
+      }
+      (p->s).work[2] = 0x40;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 1:
+      gCollisionManager.sweep = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0x1C) {
+        PlaySound(0x9C);
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).work[2] = 0x40;
+      (p->s).mode[2]++;
+      break;
+    case 3: {
+      struct Entity** pb;
+      register s32* tp asm("r1");
+      register s32 k1 asm("r6");
+      UpdateMotionGraphic(&p->s);
+      pb = (struct Entity**)((u8*)p + 0xb4);
+      {
+        struct Entity* z1 = *pb;
+        s32 cy = z1->coord.y;
+        k1 = -0x100;
+        z1->coord.y = cy + k1;
+        asm("" : "+r"(pb));
+      }
+      tp = (s32*)((u8*)p + 0xbc);
+      {
+        struct Entity* z2 = *pb;
+        s32 tx = tp[0];
+        s32 zx = z2->coord.x;
+        s32 d = tx - zx;
+        {
+          s32 nx2;
+          if (d > 0x100) {
+            nx2 = zx + 0x100;
+            goto st;
+          }
+          if (d < k1) {
+            register s32 k2 asm("r5");
+            k2 = -0x100;
+            asm volatile("" : "+r"(k2));
+            nx2 = zx + k2;
+          st:
+            z2->coord.x = nx2;
+          }
+        }
+      }
+      {
+        u32 w2 = (p->s).work[2];
+        if (w2 == 0x20) {
+          u8* cam = (u8*)&gStageRun + 0xE8;
+          *(s32**)(cam + 0x48) = tp;
+        }
+        {
+          s32 t = w2 - 1;
+          (p->s).work[2] = t;
+          if ((t << 24) != 0) {
+            break;
+          }
+        }
+      }
+      PlaySound(0x9D);
+      SetMotion(&p->s, 0x7803);
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4: {
+      s32 z2;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[2] - 1;
+        s32 t8;
+        (p->s).work[2] = t;
+        t8 = t << 24;
+        if (t8 != 0) {
+          break;
+        }
+        asm volatile("" : "+r"(t8));
+      }
+      {
+        u8* g = (u8*)&gStageRun;
+        struct Entity* z3;
+        u32 v = *(u16*)(g + 0x14);
+        u32 t = 0xFFFE;
+        t &= v;
+        z2 = 0;
+        asm volatile("" : "+r"(z2));
+        *(u16*)(g + 0x14) = t;
+        {
+          u8* cam = g + 0xE8;
+          z3 = *(struct Entity**)((u8*)p + 0xb4);
+          *(s32**)(cam + 0x48) = (s32*)&z3->coord;
+        }
+        *((u8*)z3 + 0x119) = z2;
+      }
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = z2;
+      break;
+    }
+  }
+}
 
 void FUN_080d820c(struct Solid* p) {
   switch ((p->s).mode[2]) {
