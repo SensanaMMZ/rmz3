@@ -6,6 +6,7 @@
 #include "physics.h"
 #include "vfx.h"
 #include "zero.h"
+#include "overworld.h"
 
 static const struct Collision sCollisions[8];
 
@@ -121,6 +122,94 @@ void FUN_08088d54(struct Enemy* p) {
   c.y = (p->s).coord.y - PIXEL(20);
   CreateSmoke(2, &c);
   CreateVFX62(&p->s, &c);
+}
+
+static const u8 sInitModes[6];
+static const motion_t sMotions[4];
+static const EnemyFunc sInitializers[13];
+static const EnemyFunc sUpdates[13];
+void MettaurSwim_Update(struct Enemy* p);
+void FUN_08089218(struct Body* body);
+
+// Alloc-copy basin: retail keeps s2 in r2 with an adds-copy into r1 feeding
+// the xflip store and the oam insert's shift; every pin/transfer/manual-insert
+// spelling either loses the copy, blocks the &1 fold, or shifts the k1 web.
+NON_MATCH void MettaurSwim_Init(struct Enemy* p) {
+#if MODERN
+  s32 one;
+  if ((p->s).work[0] == 2 && (p->s).coord.y < gOverworld.sea + 0x1000) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  {
+    u32 tbl = (u32)gEnemyFnTable;
+    u32 id = (p->s).id << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(*rt)[ENTITY_UPDATE];
+  }
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= COLLIDABLE;
+  {
+    struct Body* body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 2);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)FUN_08089218;
+  }
+  *(s32*)((u8*)p + 0xb8) = (p->s).coord.x;
+  *(s32*)((u8*)p + 0xbc) = (p->s).coord.y;
+  {
+    u16 w = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+    if (w != 0) {
+      *((u8*)p + 0xc2) = one;
+    } else {
+      *((u8*)p + 0xc2) = w;
+    }
+  }
+  if ((p->s).work[0] != 4) {
+    InitNonAffineMotion(&p->s);
+    {
+      u32 s2 = 0;
+      if (pZero2->s.coord.x - (p->s).coord.x > 0) {
+        s2 = 1;
+      }
+      SET_XFLIP(p, s2);
+      (p->s).flags |= DISPLAY;
+    }
+    SetMotion(&p->s, sMotions[(p->s).work[0]]);
+  }
+  if ((p->s).work[0] == 1) {
+    struct Enemy* c = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
+    if (c != NULL) {
+      (c->s).taskCol = 0x18;
+      INIT_ENEMY_ROUTINE(c, 0x30);
+      (c->s).tileNum = 0;
+      (c->s).palID = 0;
+      (c->s).flags2 |= WHITE_PAINTABLE;
+      (c->s).invincibleID = (c->s).uniqueID;
+      (c->s).work[0] = 4;
+      (c->s).unk_28 = &p->s;
+    }
+  }
+  if ((p->s).work[0] == 0 || (p->s).work[0] == 3) {
+    (p->s).coord.y += 0x7FF;
+    if ((u32)(FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    }
+  }
+  if (IsFrozen(&p->s)) {
+    (sInitializers[(p->s).mode[1]])(p);
+    (sUpdates[(p->s).mode[1]])(p);
+  }
+  MettaurSwim_Update(p);
+#else
+  INCCODE("asm/enemy/mettaur_swim_init.inc");
+#endif
 }
 
 INCASM("asm/enemy/mettaur_swim_p1_pre_p2.inc");
