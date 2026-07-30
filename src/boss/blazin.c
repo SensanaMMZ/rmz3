@@ -718,7 +718,102 @@ INCASM("asm/boss/blazin_p4.inc");
 
 bool8 nop_0803f280(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p5.inc");
+extern const struct Collision gBlazinCollisions[];
+struct Entity* blazin_080403a0(struct Boss* p, u32 n);
+static void setBlazinDirection(struct Entity* p);
+
+void blazinMode4(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 r = RANDOM(RNG_0202f388) & 3;
+      u8* tp = (u8*)p + 0xca;
+      s32 tx;
+      if (r == *tp) {
+        r = (r + 1) & 3;
+      }
+      *tp = r;
+      tx = (s32)blazin_080403a0(p, r);
+      (p->s).work[2] = 0x30;
+      (p->s).d.x = (tx - (p->s).coord.x) / (p->s).work[2];
+      (p->s).d.y = -(0x12000 / (p->s).work[2]);
+      (p->s).work[2] = 0x2F;
+      (p->s).work[3] = 1;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1:
+      setBlazinDirection(&p->s);
+      if ((p->s).work[3] != 0) {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      {
+        u32 raw = *(u16*)((u8*)p + 0xc8) + 1;
+        register u32 k asm("r2");
+        register u32 kc asm("r0");
+        u32 mm;
+        k = 0xFFFFA200;
+        asm("" : "+r"(k));
+        kc = k;
+        asm("" : "+r"(kc));
+        mm = raw | kc;
+        SetMotion(&p->s, (u16)mm);
+      }
+      SetDDP(&p->body, &gBlazinCollisions[3]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3: {
+      s32 dy = (p->s).d.y + 0x40;
+      (p->s).d.y = dy;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += dy;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4:
+      {
+        u32 raw = *(u16*)((u8*)p + 0xc8) + 2;
+        register u32 k asm("r3");
+        register u32 kc asm("r0");
+        u32 mm;
+        k = 0xFFFFA200;
+        asm("" : "+r"(k));
+        kc = k;
+        asm("" : "+r"(kc));
+        mm = raw | kc;
+        SetMotion(&p->s, (u16)mm);
+      }
+      SetDDP(&p->body, &gBlazinCollisions[1]);
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y + -0x1000);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      {
+        u32 st = (p->s).motion.state;
+        if (st == 3) {
+          s32 z = 0;
+          (p->s).mode[1] = st;
+          (p->s).mode[2] = z;
+        }
+      }
+      break;
+  }
+}
 
 bool8 FUN_0803f3fc(struct Boss* _) { return TRUE; }
 
