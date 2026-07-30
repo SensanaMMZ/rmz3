@@ -145,6 +145,107 @@ static void VFX47_Die(struct Entity* p) { SET_VFX_ROUTINE(p, ENTITY_EXIT); }
 
 INCASM("asm/vfx/unk_47_a.inc");
 
+void FUN_080bf890(struct VFX* p) {
+  struct Entity* e1 = (struct Entity*)(p->s).unk_28;
+  struct Entity* e2 = (struct Entity*)(p->s).unk_2c;
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      (p->s).unk_coord.x = m;
+      {
+        s32 k = -0x1800;
+        (p->s).unk_coord.y = k;
+        (p->s).unk_coord.y = (s32)(RANDOM(RNG_0202f388) % 0x3000) + k;
+      }
+      if (RANDOM(RNG_0202f388) & 1) {
+        *((u8*)p + 0x25) = 0x17;
+      } else {
+        *((u8*)p + 0x25) = 0x19;
+      }
+      {
+        u32 w3 = RANDOM(RNG_0202f388) & 1;
+        (p->s).work[3] = w3;
+        {
+          s32 k2 = -0x200;
+          s32 d = k2 - (s32)(RANDOM(RNG_0202f388) & 0x1FF);
+          (p->s).d.x = d;
+          if (w3 != 0) {
+            (p->s).d.x = -d;
+          }
+        }
+      }
+      (p->s).work[2] = 0;
+      SetMotion(&p->s, 0x4B04);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      {
+        s32 t = (p->s).work[2] + 1;
+        (p->s).work[2] = t;
+        if (t & 1) {
+          (p->s).flags |= 1;
+        } else {
+          (p->s).flags &= 0xFE;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[3] == 0) {
+        s32 ux = (p->s).unk_coord.x + (p->s).d.x;
+        s32 nx;
+        (p->s).unk_coord.x = ux;
+        nx = (e1->coord).x + ux;
+        (p->s).coord.x = nx;
+        (p->s).coord.y = (e1->coord).y + (p->s).unk_coord.y;
+        {
+          s32 bx = (e2->coord).x;
+          if (nx < bx) {
+            (p->s).coord.x = bx;
+            {
+              u32 fl = (p->s).flags & 0xFE;
+              fl &= 0xFD;
+              (p->s).flags = fl;
+            }
+            {
+              u32 tbl = (u32)gVFXFnTable;
+              u32 id = ((p->s).id) << 2;
+              EntityFunc** rt = (EntityFunc**)(tbl + id);
+              *(u32*)((p->s).mode) = 3;
+              (p->s).onUpdate = (void*)((*rt)[3]);
+            }
+          }
+        }
+      } else {
+        s32 ux = (p->s).unk_coord.x + (p->s).d.x;
+        s32 nx;
+        (p->s).unk_coord.x = ux;
+        nx = (e2->coord).x + ux;
+        (p->s).coord.x = nx;
+        (p->s).coord.y = (e2->coord).y + (p->s).unk_coord.y;
+        {
+          s32 bx = (e1->coord).x;
+          if (nx > bx) {
+            (p->s).coord.x = bx;
+            {
+              u32 fl = (p->s).flags & 0xFE;
+              fl &= 0xFD;
+              (p->s).flags = fl;
+            }
+            {
+              u32 tbl = (u32)gVFXFnTable;
+              u32 id = ((p->s).id) << 2;
+              EntityFunc** rt = (EntityFunc**)(tbl + id);
+              *(u32*)((p->s).mode) = 3;
+              (p->s).onUpdate = (void*)((*rt)[3]);
+            }
+          }
+        }
+      }
+      break;
+    }
+  }
+}
+
 #include "motion.h"
 
 void FUN_080bfa10(struct VFX* p) {
