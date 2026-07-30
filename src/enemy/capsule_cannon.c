@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "story.h"
+#include "mission.h"
 
 void CapsuleCannon_Init(struct Enemy* p);
 void CapsuleCannon_Update(struct Enemy* p);
@@ -69,7 +71,74 @@ dispatch2:
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/capsule_cannon_pre_p1_p1_b.inc");
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+struct VFX* CreateVFX60(struct Coord* c, u8 a1, u16 a2, s32 a3);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+void CapsuleCannon_Die(struct Enemy* p) {
+  struct Coord c;
+  struct Coord c2;
+  if (gCurStory.s.gameflags[4] & 0x40) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  {
+    u8 m2 = (p->s).mode[2];
+    switch (m2) {
+      case 0:
+        (p->s).mode[2] = 1;
+        (p->body).status = m2;
+        (p->body).prevStatus = m2;
+        (p->body).invincibleTime = m2;
+        (p->s).flags &= ~COLLIDABLE;
+        // fallthrough
+      case 1:
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y;
+        (p->s).mode[2]++;
+        break;
+      case 2: {
+        s32 x;
+        u32 r;
+        struct Coord* pc;
+        u8* pb8;
+        if (((p->s).flags & X_FLIP) == 0) {
+          x = (p->s).d.x + -0x800;
+        } else {
+          x = (p->s).d.x + 0x800;
+        }
+        c.x = x;
+        c.y = (p->s).d.y;
+        CreateSmoke(1, &c);
+        r = RANDOM(RNG_0202f388) & 3;
+        c2.x = (p->s).coord.x;
+        c2.y = (p->s).coord.y;
+        pb8 = (u8*)p + 0xb8;
+        CreateVFX60(&c2, *pb8, 0x6803, r);
+        CreateVFX60(&c2, *pb8, 0x6804, r);
+        CreateVFX60(&c2, *pb8, 0x6805, r);
+        PlaySound(0x2A);
+        if (((p->s).flags & X_FLIP) == 0) {
+          (p->s).coord.x += -0xC00;
+        } else {
+          (p->s).coord.x += 0xC00;
+        }
+        pc = &(p->s).coord;
+        TryDropItem(3, pc);
+        if (gMission.enemyCount <= 0x270E) {
+          gMission.enemyCount++;
+        }
+        TryDropZakoDisk(p, pc);
+        (p->s).flags &= ~DISPLAY;
+        SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+        break;
+      }
+    }
+  }
+}
 
 bool8 FUN_08085a08(struct Enemy* p) { return TRUE; }
 
