@@ -162,6 +162,69 @@ void VFX61_Die(struct VFX* vfx) {
 
 INCASM("asm/vfx/unk_61_post.inc");
 
+void FUN_080c3214(struct VFX* p) {
+  s32 t = (p->s).work[2] - 1;
+  (p->s).work[2] = t;
+  if ((t << 24) == 0) {
+    struct Coord c;
+    u32 r;
+    CreateSmoke(2, &(p->s).coord);
+    PlaySound(0x2A);
+    r = RANDOM(RNG_0202f388) & 3;
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    FUN_080c2ed0(&c, (p->s).work[0], 0x6B04, r);
+    FUN_080c2ed0(&c, (p->s).work[0], 0x6B05, r);
+    FUN_080c2ed0(&c, (p->s).work[0], 0x6B06, r);
+    {
+      u32 tbl = (u32)gVFXFnTable;
+      u32 id = ((p->s).id) << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = 2;
+      (p->s).onUpdate = (void*)((*rt)[2]);
+    }
+  } else {
+    u32 at = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+    if (at != 0 && !(at & 0x8000)) {
+      struct Coord c2;
+      u32 r;
+      CreateSmoke(2, &(p->s).coord);
+      PlaySound(0x2A);
+      r = RANDOM(RNG_0202f388) & 3;
+      c2.x = (p->s).coord.x;
+      c2.y = (p->s).coord.y;
+      FUN_080c2ed0(&c2, (p->s).work[0], 0x6B04, r);
+      FUN_080c2ed0(&c2, (p->s).work[0], 0x6B05, r);
+      FUN_080c2ed0(&c2, (p->s).work[0], 0x6B06, r);
+      {
+        u32 tbl = (u32)gVFXFnTable;
+        u32 id = ((p->s).id) << 2;
+        EntityFunc** rt = (EntityFunc**)(tbl + id);
+        *(u32*)((p->s).mode) = 2;
+        (p->s).onUpdate = (void*)((*rt)[2]);
+      }
+    } else {
+      switch ((p->s).mode[2]) {
+        case 0:
+          (p->s).work[2] = 0x3C;
+          (p->s).d.y = -0x100;
+          SetMotion(&p->s, 0x6B02);
+          (p->s).mode[2]++;
+          // fallthrough
+        case 1:
+          (p->s).d.y += 0x20;
+          if ((p->s).d.y > 0x700) {
+            (p->s).d.y = 0x700;
+          }
+          (p->s).coord.y += (p->s).d.y;
+          (p->s).coord.x += (p->s).d.x;
+          UpdateMotionGraphic(&p->s);
+          break;
+      }
+    }
+  }
+}
+
 static const s32* const PTR_s32_ARRAY_0836f490[3];
 
 void FUN_080c338c(struct VFX* p) {
