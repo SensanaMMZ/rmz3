@@ -228,7 +228,117 @@ struct Weapon* CreateSaberWave(struct Zero* z, struct Weapon* saber, bool8 isPro
   return (struct Weapon*)w;
 }
 
-INCASM("asm/weapon/saber_wave_p1_p1.inc");
+INCASM("asm/weapon/saber_wave_p1_p1a.inc");
+
+void Weapon5_Update(struct Weapon* w) {
+  u8* pp = (u8*)w + 0xb4;
+  struct Entity* sb = *(struct Entity**)pp;
+  register struct Zero* z asm("r8");
+  z = *(struct Zero**)(pp + 4);
+  if (sb->mode[0] > 1) {
+    u8 f = ~1 & (w->s).flags;
+    s32 z2;
+    z2 = 0;
+    f = f & ~2;
+    (w->s).flags = f;
+    {
+      u8* a = (u8*)w + 0x8c;
+      *(u32*)a = z2;
+      asm("" : "+r"(a));
+      a += 4;
+      *(u32*)a = z2;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = z2;
+    }
+    (w->s).flags &= 0xFB;
+    SET_WEAPON_ROUTINE(w, ENTITY_DISAPPEAR);
+    return;
+  }
+  UpdateMotionGraphic(&w->s);
+  if ((w->s).work[0] == 0) {
+    if ((w->body).status & 0x1000) {
+      PlaySound(0x2B);
+    }
+    {
+      u32 t = (u8)--(w->s).work[2];
+      if (t == 0) {
+        goto die;
+      }
+      (w->s).coord.x += (w->s).d.x;
+      {
+        s32 mg1;
+        register s32 mg2 asm("r4");
+        if (t <= 0xB) {
+          register s32 h asm("r5");
+          s32 q;
+          (w->s).d.x += (w->s).unk_coord.x;
+          q = 0xC - (w->s).work[2];
+          mg1 = q << 8;
+          asm("" : "+r"(mg1));
+          mg2 = mg1;
+          mg1 = mg2 / 12;
+          h = 0x100;
+          mg1 += h;
+          mg2 = -mg2;
+          mg2 = mg2 / 12;
+          asm("" : "+r"(mg2));
+          mg2 += h;
+        } else {
+          mg2 = 0x100;
+          mg1 = mg2;
+        }
+        {
+          register u8* mp asm("r0");
+          mp = (u8*)w + 0x50;
+          *(u16*)mp = mg1;
+          asm("" : "+r"(mp));
+          mp += 2;
+          asm("" : "+r"(mp));
+          *(u16*)mp = mg2;
+        }
+        mg2 += 0x10;
+        asm("" : "+r"(mg2));
+        {
+          register s32 tc asm("r0");
+          tc = mg2;
+          asm("" : "+r"(tc));
+          if (mg2 < 0) {
+            tc += 0x1F;
+          }
+          {
+          s32 v = tc >> 5;
+          if (v != 0) {
+            u8 dmg = CalcSaberBonus(z) + 8;
+            if (v > 7) {
+              v = 7;
+            }
+            InitWeaponBody(&w->body, &sCollisions[v * 2], dmg, -1, -1, -1);
+          }
+          }
+        }
+      }
+    }
+  } else {
+    if (sb->mode[0] <= 1) {
+      (w->s).coord.x = (sb->coord).x;
+      (w->s).coord.y = (sb->coord).y;
+      {
+        u16 m1 = *(u16*)((u8*)sb + 0x50);
+        *(u16*)((u8*)w + 0x50) = m1;
+      }
+      {
+        u16 m2 = *(u16*)((u8*)sb + 0x52);
+        *(u16*)((u8*)w + 0x52) = m2;
+      }
+    } else {
+    die:
+      SET_WEAPON_ROUTINE(w, ENTITY_DIE);
+      Weapon5_Die(w);
+    }
+  }
+}
 
 void Weapon5_Die(struct Weapon* w) {
   EXIT_BODY(w);
