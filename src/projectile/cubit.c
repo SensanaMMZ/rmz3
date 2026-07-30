@@ -298,6 +298,156 @@ void CubitProjectile_Die(struct Projectile* p) {
 
 INCASM("asm/projectile/cubit_pre_post_p2.inc");
 
+static const struct Coord sCoords[30];
+
+// Multi-basin park: retail duplicates the sCoords[10] table arms with
+// reg-alternated homes and pool reloads, keeps e2 as r1+r7 copy pair, and
+// shares only the _E8A store tail via a 3-address subs; the arm-merge,
+// e2-home, and countdown-tail shapes could not all be held simultaneously.
+NON_MATCH void FUN_080a6d3c(struct Projectile* p) {
+#if MODERN
+  struct Entity* e = (p->s).unk_28;
+  if (e->mode[0] > 1) {
+    goto die;
+  }
+  if (*(u32*)((u8*)e + 0xc0) != 0) {
+    goto die;
+  }
+  if (e->mode[1] == 0xB) {
+    goto die;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags &= ~DISPLAY;
+      (p->s).work[2] = 9;
+      (p->s).work[3] = 1;
+      *((u8*)p + 0xb5) = 0xFF;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).work[3] != 0) {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((u32)(t << 24) != 0) {
+          break;
+        }
+      }
+      {
+        s32 idx = 9 - (p->s).work[2];
+        struct Entity* e2 = (p->s).unk_28;
+        struct Coord c;
+        s32 cx;
+        s32 cy;
+        u32 one;
+        u32 xf;
+        u32 f2;
+        struct Entity* e2k;
+        u32 tst;
+        cx = e2->coord.x;
+        c.x = cx;
+        cy = e2->coord.y;
+        c.y = cy;
+        tst = (e2->flags) & X_FLIP;
+        asm("" : "=r"(e2k) : "0"(e2));
+        if (tst == 0) {
+          const struct Coord* tba = &sCoords[10];
+          u32 off = idx << 3;
+          asm("" : "+r"(tba));
+          c.x = *(s32*)(off + (u32)tba) + cx;
+          tba = (const struct Coord*)((u8*)tba + 4);
+          c.y = *(s32*)(off + (u32)tba) + cy;
+          asm volatile("");
+        } else {
+          const struct Coord* tbb = &sCoords[10];
+          u32 off = (8 - idx) << 3;
+          asm("" : "+r"(tbb));
+          c.x = *(s32*)(off + (u32)tbb) + cx;
+          tbb = (const struct Coord*)((u8*)tbb + 4);
+          c.y = *(s32*)(off + (u32)tbb) + cy;
+        }
+        f2 = e2k->flags;
+        one = 1;
+        xf = (f2 >> 4) & one;
+        FUN_080a6014(&p->s, &c, xf, (u8)idx);
+        (p->s).work[3] = one;
+        if ((p->s).work[2] != 0) {
+          s32 t2 = (p->s).work[2] - 1;
+          (p->s).work[2] = t2;
+          if ((u32)(t2 << 24) != 0) {
+            break;
+          }
+        }
+        (p->s).mode[2]++;
+        break;
+      }
+    case 2:
+      (p->s).work[2] = 0xC;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      if ((p->s).work[2] != 0) {
+        s32 t3 = (p->s).work[2] - 1;
+        (p->s).work[2] = t3;
+        if ((u32)(t3 << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      (p->s).work[2] = 0x20;
+      (p->s).work[3] = 0x20;
+      *((u8*)p + 0xb5) = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 5:
+      if ((p->s).work[3] != 0) {
+        s32 t4 = (p->s).work[3] - 1;
+        (p->s).work[3] = t4;
+        if ((u32)(t4 << 24) != 0) {
+          break;
+        }
+      }
+      (*((u8*)p + 0xb5))++;
+      {
+        u8 w2 = (p->s).work[2];
+        u32 w2v;
+        (p->s).work[3] = w2;
+        asm("" : "=r"(w2v) : "0"(w2));
+        if ((u32)(w2v << 24) != 0) {
+          s32 t5 = w2v - 1;
+          (p->s).work[2] = t5;
+          asm volatile("" :: "r"(w2v));
+          if ((u32)(t5 << 24) != 0) {
+            break;
+          }
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    case 6:
+      (p->s).work[2] = 0x78;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 7:
+      if ((p->s).work[2] != 0) {
+        s32 t6 = (p->s).work[2] - 1;
+        (p->s).work[2] = t6;
+        if ((u32)(t6 << 24) != 0) {
+          break;
+        }
+      }
+    die:
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      break;
+  }
+#else
+  INCCODE("asm/projectile/cubit_6d3c.inc");
+#endif
+}
+
+INCASM("asm/projectile/cubit_post_6ed4.inc");
+
 void FUN_080a7a70(struct Projectile* p) {
   (p->s).mode[1] = 1;
   (p->s).mode[2] = 0;
