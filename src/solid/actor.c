@@ -1181,6 +1181,111 @@ _080D1744: .4byte gSolidFnTable\n\
 
 INCASM("asm/solid/actor_p1_p1_a.inc");
 
+extern const struct Collision Collision_08370ad0;
+extern const struct SlashedEnemy sProloguePantheons[4];
+
+// 0x080d1cf4
+void ActorCrashedPantheon_Update(struct Solid* p) {
+  struct Coord c;
+  u8 m1 = (p->s).mode[1];
+  switch (m1) {
+    case 0:
+      wStaticGraphicTilenums[SM019_PANTHEON_HUNTER] = 0x284;
+      wStaticMotionPalIDs[SM019_PANTHEON_HUNTER] = 5;
+      if ((p->s).work[1] == 0) {
+        LOAD_STATIC_GRAPHIC(SM019_PANTHEON_HUNTER);
+      }
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      SetMotion(&p->s, MOTION(SM019_PANTHEON_HUNTER, 1));
+      (p->s).flags |= 4;
+      {
+        struct Body* b = &p->body;
+        InitBody(b, &Collision_08370ad0, &(p->s).coord, 0);
+        b->parent = (struct CollidableEntity*)p;
+        b->fn = (BodyFunc)(u32)m1;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->body).status & 0x200) {
+        SetMotion(&p->s, MOTION(SM019_PANTHEON_HUNTER, 3));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        register s32 s10 asm("r5");
+        u32* rng;
+        register const struct SlashedEnemy* d asm("r4");
+        u32 v1, s1, v2, v3, s3, v4;
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y + -0x1800;
+        d = ({ const struct SlashedEnemy* d_ = sProloguePantheons; asm("" : "+r"(d_)); d_; });
+        CreateSlashedEnemy(&c, d, 0, ({
+                             u32 f_ = (p->s).flags;
+                             u32 xf = ({ s10 = 0x10; s10; });
+                             asm("" : "+r"(xf));
+                             xf &= f_;
+                             asm("" : "+r"(xf));
+                             xf;
+                           }));
+        CreateSlashedEnemy(&c, &d[1], 0, ({
+                             u32 f_ = (p->s).flags;
+                             u32 xf = s10;
+                             asm("" : "+r"(xf));
+                             xf &= f_;
+                             asm("" : "+r"(xf));
+                             xf;
+                           }));
+        d += 2;
+        CreateSlashedEnemy(&c, d, 0, ({
+                             u32 f_ = (p->s).flags;
+                             u32 xf = s10;
+                             asm("" : "+r"(xf));
+                             xf &= f_;
+                             asm("" : "+r"(xf));
+                             xf;
+                           }));
+        c.y = (p->s).coord.y + -0x1000;
+        CreateSmoke(1, &c);
+        rng = ({ u32* r_ = &RNG_0202f388; asm("" : "+r"(r_)); r_; });
+        v1 = (*rng * 0x343FD + 0x269EC3) << 1;
+        s1 = v1 >> 1;
+        {
+          u32 r = (v1 >> 0x11) & 0x1f;
+          r = s10 - r;
+          c.x = (p->s).coord.x + (r << 8);
+        }
+        v2 = (s1 * 0x343FD + 0x269EC3) << 1;
+        *rng = v2 >> 1;
+        c.y = (p->s).coord.y - (((v2 >> 0x11) & 0x1f) << 8);
+        CreateSmoke(2, &c);
+        v3 = (*rng * 0x343FD + 0x269EC3) << 1;
+        s3 = v3 >> 1;
+        c.x = (p->s).coord.x + ((s10 - ((v3 >> 0x11) & 0x1f)) << 8);
+        v4 = (s3 * 0x343FD + 0x269EC3) << 1;
+        *rng = v4 >> 1;
+        c.y = (p->s).coord.y - (((v4 >> 0x11) & 0x1f) << 8);
+        CreateSmoke(2, &c);
+        PlaySound(0x2a);
+        (p->s).flags &= ~DISPLAY;
+        {
+          s32 z = 0;
+          (p->body).status = z;
+          (p->body).prevStatus = z;
+          (p->body).invincibleTime = z;
+        }
+        (p->s).flags &= ~4;
+        (p->s).mode[1]++;
+      }
+      break;
+  }
+}
+
+INCASM("asm/solid/actor_p1_p1_a_post.inc");
+
 // 0x080d28b4
 void ActorSaveSelectCiel_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
