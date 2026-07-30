@@ -75,6 +75,161 @@ void Ghost73_Die(struct VFX* p) {
 
 INCASM("asm/vfx/unk_73_post_post.inc");
 
+extern const motion_t motion_t_ARRAY_0836f884[3];
+
+void FUN_080c7120(struct VFX* p) {
+  struct Entity* e = (p->s).unk_28;
+  u32 xf = e->flags >> 4;
+  s32 w1;
+  {
+    u32 one = 1;
+    xf &= one;
+    w1 = (p->s).work[1];
+    one |= (p->s).flags;
+    (p->s).flags = one;
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u32 t2 asm("r2");
+    s32 v;
+    if (w1 == 1) {
+      register u32 ta asm("r1");
+      ta = xf;
+      asm("" : "+r"(ta));
+      ta ^= w1;
+      asm("" : "+r"(ta));
+      t2 = ta;
+    } else {
+      register u32 tb asm("r1");
+      tb = xf;
+      asm("" : "+r"(tb));
+      t2 = tb;
+    }
+    if (t2 != 0) {
+      register u8 lf asm("r1");
+      register s32 vv asm("r0");
+      lf = (p->s).flags;
+      vv = 0x10;
+      vv |= lf;
+      v = vv;
+    } else {
+      register u8 lf2 asm("r1");
+      register s32 vv2 asm("r0");
+      lf2 = (p->s).flags;
+      vv2 = 0xEF;
+      vv2 &= lf2;
+      v = vv2;
+    }
+    (p->s).flags = v;
+    {
+      register u32 one2 asm("r4");
+      register s32 one8 asm("r8");
+      u8* a3;
+      u32 y2;
+      s32 v2;
+      one2 = 1;
+      {
+        u32 x1 = one2;
+        x1 &= t2;
+        ((p->s).spr).xflip = x1;
+        a3 = (u8*)p + 0x4a;
+        {
+          s32 sh = x1 << 4;
+          u8 b = *a3;
+          s32 msk = -0x11;
+          msk &= b;
+          msk |= sh;
+          *a3 = msk;
+        }
+      }
+      y2 = e->flags >> 5;
+      y2 &= one2;
+      if (y2 != 0) {
+        register s32 vf2 asm("r0");
+        register u32 c20 asm("r1");
+        vf2 = (p->s).flags;
+        c20 = 0x20;
+        vf2 |= c20;
+        v2 = vf2;
+      } else {
+        register u8 lf4 asm("r1");
+        register s32 vv4 asm("r0");
+        lf4 = (p->s).flags;
+        vv4 = 0xDF;
+        vv4 &= lf4;
+        v2 = vv4;
+      }
+      (p->s).flags = v2;
+      one8 = 1;
+      {
+        register u32 y1 asm("r1");
+        y1 = one8;
+        y1 &= y2;
+        *((u8*)p + 0x4d) = y1;
+        {
+          s32 sh2 = y1 << 5;
+          u8 b2 = *a3;
+          s32 msk2 = -0x21;
+          msk2 &= b2;
+          msk2 |= sh2;
+          *a3 = msk2;
+        }
+      }
+      SetMotion(&p->s, motion_t_ARRAY_0836f884[w1]);
+      if (xf != 0) {
+        w1 = 2 - w1;
+      }
+      {
+        register s32 dx0 asm("r1");
+        register u32* rp asm("r6");
+        register u32 m9 asm("r4");
+        register u32 A3 asm("r5");
+        dx0 = (w1 - 1) << 8;
+        rp = &RNG_0202f388;
+        {
+          u32 sd = *rp;
+          u32 r0v;
+          u32 seed2;
+          u32 r2v;
+          register u32 C3 asm("r3");
+          asm("" : "+r"(sd));
+          A3 = 0x343FD;
+          asm("" : "+r"(A3));
+          r0v = sd * A3;
+          C3 = 0x269EC3;
+          asm("" : "+r"(C3));
+          r0v += C3;
+          r0v <<= 1;
+          seed2 = r0v >> 1;
+          {
+            u32 sh1 = r0v >> 0x11;
+            m9 = 0x1FF;
+            asm("" : "+r"(m9));
+            (p->s).d.x = dx0 + (sh1 & m9) + -0x100;
+          }
+          r2v = seed2 * A3;
+          r2v += C3;
+          r2v <<= 1;
+          *rp = r2v >> 1;
+          (p->s).d.y = -0x200 - ((r2v >> 0x11) & m9);
+        }
+      }
+      (p->s).work[2] = 0;
+      {
+        u32 tbl, id;
+        EntityFunc** routine_table;
+        tbl = (u32)gVFXFnTable;
+        id = ((p->s).id) << 2;
+        routine_table = (EntityFunc**)(tbl + id);
+        *(u32*)((p->s).mode) = one8;
+        (p->s).onUpdate = (void*)(*routine_table)[1];
+      }
+      Ghost73_Update(p);
+    }
+  }
+}
+
+
 // 0x080c7250
 void FUN_080c7250(struct VFX* p) {
   (p->s).coord.x += (p->s).d.x;
