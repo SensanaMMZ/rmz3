@@ -89,6 +89,124 @@ void FUN_080a3090(struct Projectile* p) {}
 
 INCASM("asm/projectile/unk_18_p2_p2_p2_p3_a.inc");
 
+void FUN_080a3298(struct Projectile* p) {
+  u32* ps;
+  switch ((p->s).mode[2]) {
+    default:
+      ps = (u32*)((u8*)p + 0x8c);
+      goto tail;
+    case 0:
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, 0x4606);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      {
+        u32 st = (p->s).motion.state;
+        ps = (u32*)((u8*)p + 0x8c);
+        if (st == 3) {
+          (p->s).mode[2]++;
+        }
+      }
+      goto tail;
+    case 2:
+      SetDDP(&p->body, sCollisions);
+      (p->s).work[2] = 0xFF;
+      (p->s).work[3] = 0;
+      InitScalerotMotion1(&p->s);
+      GotoMotion(&p->s, 0x4606, 3, 1);
+      (p->s).d.x = 0x20;
+      {
+        s32 v = 0x20;
+        asm("" : "+r"(v));
+        if ((p->s).flags & 0x10) {
+          v -= 0x40;
+        }
+        (p->s).d.x = v;
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3: {
+      s32 z2;
+      {
+        s32 t = (p->s).work[3] + 1;
+        (p->s).work[3] = t;
+        if (t & 2) {
+          (p->s).flags |= 1;
+        } else {
+          (p->s).flags &= 0xFE;
+        }
+      }
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 t2 = (p->s).work[2] - 4;
+        z2 = 0;
+        (p->s).work[2] = t2;
+      }
+      ((p->s).spr).mag.x = (p->s).work[2];
+      ((p->s).spr).mag.y = (p->s).work[2];
+      {
+        u32 w2 = (p->s).work[2];
+        ps = (u32*)((u8*)p + 0x8c);
+        if (w2 <= 7) {
+          {
+            u32 fl = (p->s).flags & 0xFE;
+            fl &= 0xFD;
+            (p->s).flags = fl;
+          }
+          *ps = z2;
+          *(u32*)((u8*)p + 0x90) = z2;
+          {
+            u8* a94 = (u8*)p + 0x94;
+            s32 z0 = 0;
+            *a94 = z0;
+          }
+          (p->s).flags &= 0xFB;
+          {
+            u32 tbl = (u32)gProjectileFnTable;
+            u32 id = ((p->s).id) << 2;
+            EntityFunc** rt = (EntityFunc**)(tbl + id);
+            *(u32*)((p->s).mode) = 3;
+            (p->s).onUpdate = (void*)((*rt)[3]);
+          }
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      goto tail;
+    }
+  }
+tail:
+  if (*ps & 4) {
+    s32 z2b;
+    FUN_080a2ea0();
+    FUN_080a2ee8((p->s).coord.x, (p->s).coord.y);
+    {
+      u32 fl = (p->s).flags & 0xFE;
+      z2b = 0;
+      fl &= 0xFD;
+      (p->s).flags = fl;
+    }
+    *ps = z2b;
+    {
+      u8* w = (u8*)p + 0x90;
+      *(u32*)w = z2b;
+      asm("" : "+r"(w));
+      w += 4;
+      asm("" : "+r"(w));
+      *(u8*)w = z2b;
+    }
+    (p->s).flags &= 0xFB;
+    {
+      u32 tbl = (u32)gProjectileFnTable;
+      u32 id = ((p->s).id) << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = 3;
+      (p->s).onUpdate = (void*)((*rt)[3]);
+    }
+  }
+}
+
 #include "motion.h"
 #include "zero.h"
 
