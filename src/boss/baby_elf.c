@@ -50,6 +50,98 @@ void nop_08046150(struct Boss* p) {}
 
 INCASM("asm/boss/baby_elf_p2_p1.inc");
 
+static const struct Collision sCollisions[5];
+u8 GetEntityPalID(struct Entity* p);
+void babyelf_08045bc4(struct Boss* p);
+void babyelf_08045c84(struct Boss* p);
+void FUN_080bc594(s32 x1, s32 y1, s32 x2, s32 y2, u8 n);
+
+// Same palette-anim basin as FUN_08046ccc below: the retail
+// (palID<<5)|0x200 argument keeps its 0x200 web with an adds-copy feeding the
+// or (two per-arm copies, 4 bytes) that no kc/barrier/k+0 spelling reproduces
+// without also emitting a u16 truncation pair.
+NON_MATCH void babyelf_0804662c(struct Boss* p) {
+#if MODERN
+  u8 m2 = (p->s).mode[2];
+  u32 k2h;
+  if (m2 == 0) {
+    goto c0;
+  }
+  if (m2 == 1) {
+    goto c1;
+  }
+  return;
+c0:
+  {
+    SetMotion(&p->s, 0x3100);
+    *(s32*)((u8*)p + 0xbc) = (p->s).coord.x;
+    *(s32*)((u8*)p + 0xc0) = (p->s).coord.y;
+    (p->s).work[2] = m2;
+    *(u16*)((u8*)p + 0xc4) = m2;
+    if ((p->s).work[0] == 0) {
+      u32 k = 0x200;
+      StartPaletteAnimation(0x14, ((u32)GetEntityPalID(&p->s) << 5) | (k + 0));
+      *((u8*)p + 0xc6) = 0x14;
+    } else {
+      u32 k = 0x200;
+      StartPaletteAnimation(0xF, ((u32)GetEntityPalID(&p->s) << 5) | (k + 0));
+      *((u8*)p + 0xc6) = 0xF;
+    }
+    {
+      u32 s2 = 0;
+      if ((p->s).coord.x > *(s32*)((u8*)p + 0xb4)) {
+        s2 = 1;
+      }
+      *((u8*)p + 0xc7) = s2;
+    }
+    (p->s).mode[2]++;
+  }
+c1:
+  k2h = 0x200;
+  asm("" : "+r"(k2h));
+  SetDDP(&p->body, &sCollisions[1]);
+  {
+    u16* pc4 = (u16*)((u8*)p + 0xc4);
+    u8* pc7 = (u8*)p + 0xc7;
+    s32 d4 = (*pc7 * 6) + 0xFFFD + *pc4;
+    *pc4 = d4;
+    if ((p->s).work[0] == 0) {
+      struct Zero* z = pZero2;
+      if ((*(u32*)((u8*)z + 0x8c) & k2h) == 0 && *(s16*)((u8*)z + 0xa4) != 0) {
+        u16 dd = (u16)d4;
+        if ((dd <= 0xFDFF && *pc7 == 0) || (dd > k2h && *pc7 == 1)) {
+          babyelf_08045bc4(p);
+        }
+      }
+    }
+  }
+  babyelf_08045c84(p);
+  (p->s).work[2]++;
+  if ((u8)((p->s).work[2] % 7) == 0) {
+    u32 a = RNG_0202f388;
+    u32 r1v = (a * 0x343FD + 0x269EC3) << 1;
+    u32 s1;
+    s32 x;
+    s32 y;
+    u32 r2v;
+    asm("" : "+r"(r1v));
+    s1 = r1v >> 1;
+    x = (p->s).coord.x + (s32)((r1v << 4) >> 21) + -0x400;
+    r2v = (s1 * 0x343FD + 0x269EC3) << 1;
+    asm("" : "+r"(r2v));
+    RNG_0202f388 = r2v >> 1;
+    y = (p->s).coord.y + (s32)((r2v << 5) >> 22) + 0x800;
+    FUN_080bc594(x, y, 0, 0, (p->s).work[0]);
+  }
+  StepPaletteAnimation(*((u8*)p + 0xc6));
+  UpdateMotionGraphic(&p->s);
+#else
+  INCCODE("asm/boss/baby_elf_662c.inc");
+#endif
+}
+
+INCASM("asm/boss/baby_elf_67c4.inc");
+
 u8 GetEntityPalID(struct Entity* p);
 
 // 0x08046ccc -- baby elf: fly to the anchor point, then glow (palette anim
