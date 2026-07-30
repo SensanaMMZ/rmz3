@@ -1,3 +1,4 @@
+#include "zero.h"
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
@@ -289,6 +290,132 @@ void generatorcannon_0808c7e0(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/generator_cannon_post_p2_p2.inc");
+
+void generatorcannon_0808cad8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).taskCol = 0x19;
+      (p->s).work[3] = ((2 - (p->s).work[2]) << 3) + 0x10;
+      SetMotion(&p->s, 0x7200);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 xf = 0;
+      s32 v;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        xf = 1;
+      }
+      if (xf != 0) {
+        register u8 lf asm("r1");
+        register s32 vv asm("r0");
+        lf = (p->s).flags;
+        vv = 0x10;
+        vv |= lf;
+        v = vv;
+      } else {
+        register u8 lf2 asm("r1");
+        register s32 vv2 asm("r0");
+        lf2 = (p->s).flags;
+        vv2 = 0xEF;
+        vv2 &= lf2;
+        v = vv2;
+      }
+      (p->s).flags = v;
+      {
+        register s32 x1 asm("r1");
+        u8* a;
+        u8 b;
+        s32 msk;
+        s32 sh;
+        x1 = xf;
+        asm("" : "+r"(x1));
+        ((p->s).spr).xflip = x1;
+        a = (u8*)p + 0x4a;
+        sh = x1 << 4;
+        b = *a;
+        msk = -0x11;
+        msk &= b;
+        msk |= sh;
+        *a = msk;
+      }
+      (p->s).coord.y += -0x300;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    }
+    case 2:
+      (p->s).work[3] = (p->s).work[2] * 12 + 0x18;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      s32 xf;
+      s32 v;
+      {
+        register s32 t asm("r0");
+        register u8 t8 asm("r1");
+        u32 sh24;
+        t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        sh24 = t << 24;
+        asm("" : "+r"(sh24));
+        t8 = sh24 >> 24;
+        if (t8 == 0) {
+          (p->s).mode[1] = 6;
+          (p->s).mode[2] = t8;
+        }
+      }
+      xf = 0;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        xf = 1;
+      }
+      if (xf != 0) {
+        register s32 vf asm("r0");
+        register u32 c10 asm("r1");
+        vf = (p->s).flags;
+        c10 = 0x10;
+        vf |= c10;
+        v = vf;
+      } else {
+        register u8 lf2 asm("r1");
+        register s32 vv2 asm("r0");
+        lf2 = (p->s).flags;
+        vv2 = 0xEF;
+        vv2 &= lf2;
+        v = vv2;
+      }
+      (p->s).flags = v;
+      {
+        register s32 x1 asm("r1");
+        u8* a;
+        u8 b;
+        s32 msk;
+        s32 sh;
+        x1 = xf;
+        asm("" : "+r"(x1));
+        ((p->s).spr).xflip = x1;
+        a = (u8*)p + 0x4a;
+        sh = x1 << 4;
+        b = *a;
+        msk = -0x11;
+        msk &= b;
+        msk |= sh;
+        *a = msk;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/generator_cannon_post_p2_p2_b.inc");
+
 
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
