@@ -175,7 +175,132 @@ static void OmegaWhiteHand_Die(struct Entity* p) {
 
 // --------------------------------------------
 
-INCASM("asm/enemy/omega_white_hand_p1_a.inc");
+void FUN_0806a8fc(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      if ((p->s).work[0] == 1) {
+        u32 fl = (p->s).flags;
+        register s32 t asm("r0");
+        t = 1;
+        asm("" : "+r"(t));
+        t |= fl;
+        t &= 0xEF;
+        (p->s).flags = t;
+        (p->s).spr.xflip = m;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+          (p->s).flags &= 0xDF;
+          *((u8*)p + 0x4d) = m;
+          {
+            s32 ov2 = *oa;
+            s32 m21 = -0x21;
+            m21 &= ov2;
+            *oa = m21;
+          }
+        }
+        (p->s).angle = m;
+        SetMotion(&p->s, 0x0901);
+      } else {
+        u32 fl = (p->s).flags;
+        s32 t = 1;
+        t |= fl;
+        t &= 0xEF;
+        (p->s).flags = t;
+        (p->s).spr.xflip = m;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+          (p->s).flags &= 0xDF;
+          *((u8*)p + 0x4d) = m;
+          {
+            s32 ov2 = *oa;
+            s32 m21 = -0x21;
+            m21 &= ov2;
+            *oa = m21;
+          }
+        }
+        (p->s).angle = m;
+        SetMotion(&p->s, 0x0900);
+      }
+      {
+        u8* a = (u8*)p + 0x8c;
+        register s32 z asm("r1");
+        z = 0;
+        asm("" : "+r"(z) : "r"(a));
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+        (p->s).flags &= 0xFB;
+        (p->s).d.x = z;
+        (p->s).d.y = z;
+      }
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      if ((p->s).work[0] == 1) {
+        struct Entity* q = (p->s).unk_28;
+        s32 y = (p->s).coord.y;
+        s32 t2 = y + 0x3800;
+        s32 d = (q->coord).y;
+        d -= t2;
+        y += (d * 24) >> 8;
+        (p->s).coord.y = y;
+      } else {
+        struct Entity* q = (p->s).unk_28;
+        s32 x = (p->s).coord.x;
+        s32 t3 = x + 0x1300;
+        s32 dx = (q->coord).x;
+        s32 y, dy, t4;
+        dx -= t3;
+        x += (dx * 24) >> 8;
+        (p->s).coord.x = x;
+        y = (p->s).coord.y;
+        t4 = y + 0x3A00;
+        dy = (q->coord).y;
+        dy -= t4;
+        y += (dy * 24) >> 8;
+        (p->s).coord.y = y;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      s32 t;
+      if ((p->s).work[2] == 0) {
+        break;
+      }
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 3: {
+      s32 z = 0;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
+
 
 void FUN_0806aa54(struct Enemy* p) {
   struct Coord c;
