@@ -674,7 +674,91 @@ _08057F34: .4byte gStageRun\n\
  .syntax divided\n");
 }
 
-INCASM("asm/boss/glacierle.inc");
+INCASM("asm/boss/glacierle_a.inc");
+
+static const u8 u8_ARRAY_08364ab1[8];
+
+void glacierle_08058018(struct Boss* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 x = (p->s).coord.x;
+      s32 gx = x - 0x3200;
+      u32 fl = (p->s).flags;
+      s32 c10 = 0x10;
+      s32 t = c10;
+      asm("" : "+r"(t));
+      t &= fl;
+      if (t != 0) {
+        gx = x + 0x3200;
+      }
+      if (FUN_080098a4(gx, (p->s).coord.y - 0x1000) != 0) {
+        UpdateMotionGraphic(&p->s);
+        (p->s).mode[1] = m;
+        (p->s).mode[2] = m;
+        (p->props.glacierle).unk_c1 = 0xA;
+        return;
+      }
+      (p->s).work[2] = 0x80;
+      {
+        s32 nc0 = -0xC0;
+        s32 v;
+        (p->s).d.x = nc0;
+        v = nc0;
+        {
+          u32 fl2 = (p->s).flags;
+          s32 t2 = c10;
+          asm("" : "+r"(t2));
+          t2 &= fl2;
+          if (t2 != 0) {
+            v = 0xC0;
+          }
+        }
+        (p->s).d.x = v;
+        asm("" : "+r"(nc0));
+      }
+      SetMotion(&p->s, MOTION(0xb2, 0x05));
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      s32 grounded = 0;
+      s32 x = (p->s).coord.x;
+      s32 gx = x - 0x3200;
+      if ((p->s).flags & 0x10) {
+        gx = x + 0x3200;
+      }
+      if (FUN_080098a4(gx, (p->s).coord.y - 0x1000) != 0) {
+        grounded = 1;
+      }
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        s8 c = (p->s).motion.cmdIdx;
+        if (c != 1 && c != 5 && grounded == 0) {
+          (p->s).coord.x += (p->s).d.x;
+        }
+      }
+      if ((*(u32*)((u8*)p + 0x70) & 0xFFFF00) == 0x10000 || (*(u32*)((u8*)p + 0x70) & 0xFFFF00) == 0x10400) {
+        PlaySound(0x8C);
+      }
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364ab1[(p->s).motion.cmdIdx]]);
+      if (grounded != 0) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      } else {
+        u8 w = (p->s).work[2];
+        if (w == 0 && (p->s).motion.cmdIdx == 2) {
+          (p->s).mode[1] = w;
+          (p->s).mode[2] = w;
+        }
+      }
+      break;
+    }
+  }
+}
 
 static const u8 u8_ARRAY_08364ab9[3];
 
