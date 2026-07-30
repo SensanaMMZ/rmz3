@@ -856,7 +856,101 @@ void hellbatDamage(struct Boss* p) {
 
 bool8 FUN_0804caa0(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/hellbat_p9.inc");
+void hellbatKnockBackDamage(struct Boss* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u8* oa asm("r2");
+      s32 z3;
+      PlaySound(0x8a);
+      SetMotion(&p->s, 0xA80B);
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        (p->s).d.x = -0x200;
+        ((p->s).spr).xflip = 1;
+        oa = (u8*)&((p->s).spr).oam + 6;
+        *oa |= 0x10;
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).d.x = 0x200;
+        ((p->s).spr).xflip = m;
+        oa = (u8*)&((p->s).spr).oam + 6;
+        {
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          asm("" : "+r"(m11));
+          *oa = m11 & ov;
+        }
+        (p->s).flags &= 0xEF;
+      }
+      {
+        register u32 f asm("r1");
+        {
+          register s32 fl0 asm("r0");
+          register s32 c1 asm("r1");
+          fl0 = (p->s).flags;
+          c1 = 1;
+          asm("" : "+r"(c1));
+          z3 = 0;
+          f = c1 | fl0;
+        }
+        (p->s).flags = f;
+        f &= 0x20;
+        if (f != 0) {
+          ((p->s).spr).yflip = z3;
+          {
+            s32 ov2 = *oa;
+            s32 m21 = -0x21;
+            asm("" : "+r"(m21));
+            *oa = m21 & ov2;
+          }
+          (p->s).flags &= 0xDF;
+          (p->s).coord.y += 0x3900;
+        }
+      }
+      *(s32*)((u8*)p + 0xc0) = z3;
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 v = (p->s).d.x;
+        s32 nx;
+        v += (-v << 3) >> 8;
+        (p->s).d.x = v;
+        nx = (p->s).coord.x + v;
+        (p->s).coord.x = nx;
+        if (v > 0) {
+          s32 po = PushoutToLeft1(nx + 0x1800, (p->s).coord.y - 0x800);
+          if (po != 0) {
+            (p->s).coord.x += po;
+          }
+        }
+      }
+      if ((p->s).d.x < 0) {
+        s32 po2 = PushoutToRight1((p->s).coord.x - 0x1800, (p->s).coord.y - 0x800);
+        if (po2 != 0) {
+          (p->s).coord.x += po2;
+        }
+      }
+      {
+        u8 w = (p->s).work[2];
+        if (w != 0) {
+          s32 t = w - 1;
+          (p->s).work[2] = t;
+          if ((t << 24) != 0) {
+            break;
+          }
+        }
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
 
 #include "element.h"
 #include "vfx.h"
