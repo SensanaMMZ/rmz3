@@ -403,7 +403,112 @@ bool8 isTretistaFarAway(struct Boss* p) {
   return FALSE;
 }
 
-INCASM("asm/boss/tretista_p13_p2.inc");
+/* Tretista walk-facing/motion refresher. Parked: entity-home register tie -
+   retail keeps p in r2 for the whole fn (it never crosses a call); agbcc
+   picks r3/r5/ip under every tried combination (natural, pinned q copy =
+   double-copy, const pins r3/r4, ip-blocker). Rest of the logic verified
+   against the asm. */
+NON_MATCH void FUN_0804ff5c(struct Boss* p) {
+#if MODERN
+  u32 m;
+  u32 kb;
+  u8 fv;
+  m = ((p->s).motionID << 8) | *((u8*)p + 0x70);
+  kb = 0xAB0B;
+  if (m == kb) {
+    if ((*(u32*)((u8*)p + 0x70) & 0xFFFF00) == 0x10300) {
+      u32 ten;
+      u8* xa;
+      ten = 0x10;
+      asm("" : "+r"(ten));
+      if (((p->s).flags & 0x10) != 0) {
+        goto unflip;
+      }
+      xa = (u8*)p + 0x4c;
+      *xa = 1;
+      xa -= 2;
+      *xa |= ten;
+      fv = (p->s).flags | ten;
+      goto st06;
+    }
+    goto state;
+  } else {
+    u32 k5 = 0xAB05;
+    if (m == k5) {
+      if ((*(u32*)((u8*)p + 0x70) & 0xFFFF00) == 0x10200) {
+        u32 ten2;
+        u8* xa2;
+        ten2 = 0x10;
+        asm("" : "+r"(ten2));
+        if (((p->s).flags & 0x10) != 0) {
+          goto unflip;
+        }
+        xa2 = (u8*)p + 0x4c;
+        *xa2 = 1;
+        xa2 -= 2;
+        *xa2 |= ten2;
+        asm("" : "+r"(ten2));
+        fv = (p->s).flags | ten2;
+        goto st06;
+      }
+      goto state;
+    }
+    if ((pZero2->s).coord.x > (p->s).coord.x) {
+      if (((p->s).flags & 0x10) != 0) {
+        return;
+      }
+      if (*((u8*)p + 0xd8) != 0) {
+        goto s78;
+      }
+      SetMotion(&p->s, k5);
+      return;
+    }
+    if (((p->s).flags & 0x10) == 0) {
+      return;
+    }
+    if (*((u8*)p + 0xd8) == 0) {
+      goto s82;
+    }
+  s78:
+    SetMotion(&p->s, kb);
+    return;
+  s82:
+    SetMotion(&p->s, k5);
+    return;
+  }
+unflip:
+  {
+    s32 z = 0;
+    u8* xa3;
+    s32 msk;
+    u8 b3;
+    asm("" : "+r"(z));
+    xa3 = (u8*)p + 0x4c;
+    *xa3 = z;
+    xa3 -= 2;
+    b3 = *xa3;
+    msk = z - 0x11;
+    msk &= b3;
+    *xa3 = msk;
+  }
+  fv = 0xEF & (p->s).flags;
+st06:
+  (p->s).flags = fv;
+state:
+  if ((p->s).motion.state == 3) {
+    motion_t mo;
+    if (*((u8*)p + 0xd8) != 0) {
+      mo = 0xAB09;
+    } else {
+      mo = 0xAB03;
+    }
+    SetMotion(&p->s, mo);
+  }
+#else
+  INCCODE("asm/boss/tretista_ff5c.inc");
+#endif
+}
+
 
 // 0x083633b0
 static const struct Collision sCollisions[13] = {
