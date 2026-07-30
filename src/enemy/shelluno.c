@@ -4,6 +4,7 @@
 #include "mod.h"
 #include "physics.h"
 #include "story.h"
+#include "zero.h"
 #include "syssav.h"
 #include "overworld_terrain.h"
 
@@ -267,7 +268,95 @@ INCASM("asm/enemy/shelluno_p5.inc");
 
 bool8 FUN_0807a0fc(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shelluno_p6.inc");
+INCASM("asm/enemy/shelluno_p6a.inc");
+
+void FUN_0807a46c(struct Enemy* p);
+
+void shelluno_0807a100(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8* a9 = (u8*)p + 0xb9;
+      u32 c1r = 1;
+      asm("" : "+r"(c1r));
+      *a9 = 1;
+      (p->s).work[2] = 0x20;
+      SetMotion(&p->s, 0x3509);
+      SetDDP(&p->body, &sCollisions[4]);
+      {
+        u32 xf = ((pZero2->s).flags >> 4) & c1r;
+        (p->s).mode[3] = xf;
+        if (xf == 0) {
+          (p->s).d.x = -0x280;
+          (p->s).unk_coord.x = 0x100;
+        } else {
+          (p->s).d.x = 0x280;
+          (p->s).unk_coord.x = -0x100;
+        }
+      }
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      u16 a = GetGroundMetatileAttr((p->s).coord.x + (p->s).d.x, (p->s).coord.y + (p->s).d.y);
+      if (a != 0) {
+        if (!(a & 0x8000)) {
+          SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+          break;
+        }
+      }
+      {
+        s32 cx = (p->s).coord.x;
+        s32 dx = (p->s).d.x;
+        s32 ny;
+        (p->s).coord.x = cx + dx;
+        ny = (p->s).coord.y + (p->s).d.y;
+        (p->s).coord.y = ny;
+        dx += (((p->s).unk_coord.x - dx) << 3) >> 8;
+        (p->s).d.x = dx;
+        {
+          s32 g = FUN_0800a05c((p->s).coord.x, ny + -0x2000);
+          if (g - (p->s).coord.y <= 0x40) {
+            (p->s).coord.y = g;
+          }
+        }
+      }
+      FUN_0807a46c(p);
+      {
+        u8 m3 = (p->s).mode[3];
+        if (m3 == 0) {
+          if ((p->s).d.x >= 0) {
+            (p->s).mode[1] = m3;
+            (p->s).mode[2] = m3;
+          }
+        } else {
+          if ((p->s).d.x <= 0) {
+            (p->s).mode[1] = 0;
+            (p->s).mode[2] = 0;
+          }
+        }
+      }
+      {
+        u8 w2 = (p->s).work[2];
+        if (w2 != 0) {
+          s32 raw2 = w2 - 1;
+          u8 t;
+          (p->s).work[2] = raw2;
+          t = raw2;
+          if (t == 0) {
+            *((u8*)p + 0xb9) = t;
+            SetMotion(&p->s, 0x3500);
+            SetDDP(&p->body, sCollisions);
+          }
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/shelluno_p6b.inc");
 
 s32 FUN_0807a3e8(struct Enemy* p) { return TRUE; }
 
