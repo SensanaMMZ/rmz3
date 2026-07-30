@@ -34,7 +34,7 @@ struct Enemy* FUN_0808a854(struct Coord* c) {
   return p;
 }
 
-struct Enemy* FUN_0808a8b0(struct Entity* e) {
+struct Enemy* FUN_0808a8b0(struct Entity* e, s32 n) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
   if (p != NULL) {
     (p->s).taskCol = 24;
@@ -49,7 +49,112 @@ struct Enemy* FUN_0808a8b0(struct Entity* e) {
   return p;
 }
 
-INCASM("asm/enemy/carrybee_g_p1_p1_a.inc");
+static const struct Collision sCollisions[9];
+void nop_0808b534(struct Enemy* p);
+void CarrybeeG_Update(struct Enemy* p);
+
+void CarrybeeG_Init(struct Enemy* p) {
+  u8 g40;
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  {
+    EnemyFunc h = nop_0808b534;
+    struct Body* body = &p->body;
+    body->fn = (void*)h;
+  }
+  if ((p->s).work[0] != 0) {
+    goto alt;
+  }
+  FUN_0808a8b0(&p->s, 0);
+  if ((p->s).work[0] != 0) {
+    goto alt;
+  }
+  {
+    u8* qa = (u8*)p + 0xc3;
+    u8 k1 = 1;
+    asm("" : "+r"(k1));
+    *qa = k1;
+  }
+  {
+    u8 mv = gSystemSavedataManager.mods[14];
+    u32 k40 = 0x40;
+    u32 t0 = k40;
+    asm("" : "+r"(t0));
+    t0 &= mv;
+    if (t0 != 0 && (g40 = gCurStory.s.gameflags[0] & k40) == 0) {
+      INIT_BODY(p, &sCollisions[1], 0x40, NULL);
+    } else {
+      INIT_BODY(p, &sCollisions[1], 0x30, NULL);
+    }
+  }
+  {
+    u8* q = (u8*)p + 0xbc;
+    *(u32*)q = 0;
+    (p->s).unk_2c = NULL;
+    (p->s).unk_28 = NULL;
+    {
+      u8* qq = q + 4;
+      *qq = 0;
+      qq += 1;
+      *qq = 0;
+      qq += 1;
+      *qq = 0;
+    }
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 0;
+  (p->s).mode[2] = 0;
+  (p->s).mode[3] = 0;
+  (p->s).taskCol = 0x14;
+  if (IsFrozen(&p->s)) {
+    SetMotion(&p->s, 0x6E00);
+    UpdateMotionGraphic(&p->s);
+  }
+  goto join;
+alt:
+  SetDDP(&p->body, sCollisions);
+  {
+    u32 tbl = (u32)gEnemyFnTable;
+    u32 id = (p->s).id << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    EntityFunc* t1;
+    u8 m4;
+    *(u32*)((p->s).mode) = ENTITY_UPDATE;
+    t1 = *rt;
+    m4 = 4;
+    (p->s).onUpdate = (void*)t1[ENTITY_UPDATE];
+    (p->s).mode[1] = m4;
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0;
+  }
+  (p->s).taskCol = 0x16;
+  if (IsFrozen(&p->s)) {
+    (p->s).flags2 |= 0x10;
+    {
+      register struct Entity* e asm("r1");
+      e = (p->s).unk_28;
+      *((u8*)p + 0x1d) = *((u8*)e + 0x1c);
+      {
+        s32 x0 = e->coord.x;
+        s32 y0 = e->coord.y;
+        (p->s).coord.x = x0;
+        (p->s).coord.y = y0;
+      }
+    }
+    SetMotion(&p->s, 0x6E06);
+    UpdateMotionGraphic(&p->s);
+  }
+join:
+  *((u8*)p + 0x11) = 0;
+  if ((p->s).work[0] == 0) {
+    u8* gb = (u8*)&gOverworld;
+    asm("" : "+r"(gb));
+    (*(gb + 0x2D02C))++;
+  }
+  *(u32*)((u8*)p + 0xb4) = (p->s).coord.y;
+  CarrybeeG_Update(p);
+}
 
 extern const EnemyFunc sUpdates1[5];
 extern const EnemyFunc sUpdates2[5];
