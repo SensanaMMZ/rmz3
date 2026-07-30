@@ -60,7 +60,116 @@ void PantheonAquaMod_Die(struct Boss* p) {
 
 void nop_08051620(struct Boss* p) {}
 
-INCASM("asm/boss/pantheon_aqua_mod_p2.inc");
+INCASM("asm/boss/pantheon_aqua_mod_p2a.inc");
+
+#include "palette_animation.h"
+
+u8 GetEntityPalID(struct Entity* p);
+void createLaserSign(struct Entity* e, s32 x, s32 y);
+void createLaserSign2(struct Entity* e);
+
+void paquam_08051b8c(struct Boss* p) {
+  register s32 m asm("r6");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      PlaySound(0xE4);
+      {
+        s32* w = (s32*)((u8*)p + 0xb4);
+        register s32 v asm("r0");
+        register s32 msk asm("r1");
+        v = *w;
+        msk = -5;
+        v &= msk;
+        msk -= 4;
+        v &= msk;
+        *w = v;
+      }
+      createLaserSign(&p->s, (p->s).coord.x, (p->s).coord.y);
+      {
+        register u8* pb asm("r5");
+        pb = (u8*)p + 0xb8;
+        if (*pb != 0) {
+          RemovePaletteAnimation(*pb);
+          *pb = m;
+        }
+        {
+          u32 g0 = GetEntityPalID(&p->s);
+          u32 g = (u8)g0 << 5;
+          StartPaletteAnimation(0x58, g | 0x200);
+        }
+        *pb = 0x58;
+      }
+      SetMotion(&p->s, 0x4D01);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      register s32* w1 asm("r2");
+      register s32* w asm("r6");
+      register u8* pb asm("r5");
+      s32 v;
+      w1 = (s32*)((u8*)p + 0xb4);
+      v = *w1;
+      v &= 4;
+      w = w1;
+      asm("" : "+r"(w1));
+      pb = (u8*)p + 0xb8;
+      if (v != 0) {
+        if (*pb != 0) {
+          RemovePaletteAnimation(*pb);
+          *pb = 0;
+        }
+        {
+          u32 g0 = GetEntityPalID(&p->s);
+          u32 g = (u8)g0 << 5;
+          StartPaletteAnimation(0x59, g | 0x200);
+        }
+        *pb = 0x59;
+      }
+      if (*w & 8) {
+        (p->s).mode[2]++;
+      }
+      StepPaletteAnimation(*pb);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      PlaySound(0xE6);
+      createLaserSign2(&p->s);
+      (p->s).work[2] = 0x3C;
+      {
+        u8* pb = (u8*)p + 0xb8;
+        if (*pb != 0) {
+          RemovePaletteAnimation(*pb);
+          *pb = 0;
+        }
+        {
+          u32 g0 = GetEntityPalID(&p->s);
+          u32 g = (u8)g0 << 5;
+          StartPaletteAnimation(0x54, g | 0x200);
+        }
+        *pb = 0x54;
+      }
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 3: {
+      s32 t = (p->s).work[2];
+      t -= 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 1;
+      }
+      StepPaletteAnimation(*((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/pantheon_aqua_mod_p2b.inc");
 
 void nop_08051620(struct Boss* p);
 
