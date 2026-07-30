@@ -24,7 +24,67 @@ struct Enemy* CreatePantheonAqua(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/pantheon_aqua_p1_p2_a.inc");
+void PantheonAqua_Update(struct Enemy* p);
+void FUN_0807336c(struct Body* body, struct Coord* c);
+
+void PantheonAqua_Init(struct Enemy* p) {
+  u8 g40;
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  if ((gSystemSavedataManager.mods[10] & 1) && (g40 = gCurStory.s.gameflags[0] & 0x40) == 0) {
+    INIT_BODY(p, sCollisions, 0x10, NULL);
+  } else {
+    INIT_BODY(p, sCollisions, 0xC, NULL);
+  }
+  if (gOverworld.sea > (p->s).coord.y) {
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  {
+    u8 w0 = (p->s).work[0];
+    if (w0 == 0) {
+      (p->s).flags &= ~X_FLIP;
+      (p->s).spr.xflip = w0;
+      (p->s).spr.oam.xflip = w0;
+    } else {
+      SET_XFLIP(p, 1);
+    }
+  }
+  SET_BODY_INTERSECT_HANDLER(p, FUN_0807336c);
+  (p->s).d.y = 0;
+  (p->s).d.x = 0;
+  {
+    u32* q = (u32*)&(p->s).unk_coord;
+    *(u32*)((u8*)q + 4) = 0;
+    (p->s).unk_coord.x = 0;
+    {
+      u8* qq = (u8*)q + 0x58;
+      *(u32*)qq = 0;
+      qq -= 3;
+      *qq = 0;
+      qq += 1;
+      *qq = 0;
+      qq -= 2;
+      *qq = 0;
+    }
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = 0;
+  (p->s).mode[2] = 0;
+  (p->s).mode[3] = 0;
+  *(u32*)((u8*)p + 0xb4) = (p->s).coord.x;
+  *(u32*)((u8*)p + 0xc0) = (p->s).coord.y;
+  if (IsFrozen(&p->s)) {
+    SetMotion(&p->s, 0x2700);
+    UpdateMotionGraphic(&p->s);
+  }
+  *((u8*)p + 0xbb) = 0;
+  PantheonAqua_Update(p);
+}
 
 extern const EnemyFunc PTR_ARRAY_08366bd0[8];
 extern const EnemyFunc PTR_ARRAY_08366bf0[8];
