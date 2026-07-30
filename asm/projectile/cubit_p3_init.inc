@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-	thumb_func_start CubitProjectile_Init
-CubitProjectile_Init: @ 0x080A61FC
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	bl InitNonAffineMotion

@@ -135,7 +135,156 @@ struct Projectile* createFlameRain2(struct Entity* e, struct Coord* c, s32 n) {
   return p;
 }
 
-INCASM("asm/projectile/cubit_pre_pre_p3_b_b_b.inc");
+void CubitProjectile_Update(struct Projectile* p);
+static const struct Collision sCollisions[16];
+
+// 0x080a61fc -- parked (block-merge basin): retail keeps three
+// byte-identical SET_PROJECTILE_ROUTINE blocks (cases 0/1/2) duplicated
+// inline, while agbcc cross-jumps them into one copy under every tried
+// shape (goto-chain, per-block opaque tbl, volatile-asm uniquifiers);
+// the 5/6/3 InitBody tail-sharing does reproduce.
+NON_MATCH void CubitProjectile_Init(struct Projectile* p) {
+#if MODERN
+  struct Body* bd;
+  s32 z7;
+  InitNonAffineMotion(&p->s);
+  {
+    register u32 fl asm("r0");
+    register s32 c asm("r1");
+    fl = (p->s).flags;
+    c = 1;
+    bd = NULL;
+    z7 = 0;
+    c |= fl;
+    {
+      register s32 two asm("r0");
+      two = 2;
+      c |= two;
+    }
+    (p->s).flags = c;
+  }
+  ResetDynamicMotion(&p->s);
+  {
+    u8 w = (p->s).work[0];
+    register const struct Collision* col asm("r1");
+    register struct Coord* cp asm("r2");
+    register s32 cnt asm("r3");
+    register struct Body* bda asm("r0");
+    if (w != 0) goto t5;
+    asm volatile("");
+    {
+      u32 tbl = (u32)(gProjectileFnTable);
+      u32 id;
+      EntityFunc** rt;
+      id = ((p->s).id) << 2;
+      rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = 1;
+      (p->s).onUpdate = (void*)(*rt)[1];
+      (p->s).mode[1] = z7;
+    }
+    goto zeros;
+  t5:
+    if (w != 5) goto t1;
+    (p->s).work[0] = z7;
+    (p->s).flags |= COLLIDABLE;
+    bd = &p->body;
+    col = &sCollisions[11];
+    cp = &(p->s).coord;
+    bda = bd;
+    cnt = 0x40;
+    goto docall;
+  t1:
+    if (w != 1) goto t4;
+    asm volatile("" ::: "memory");
+    {
+      u32 tbl = (u32)(gProjectileFnTable);
+      u32 id;
+      EntityFunc** rt;
+      id = ((p->s).id) << 2;
+      rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = w;
+      (p->s).onUpdate = (void*)(*rt)[1];
+      (p->s).mode[1] = z7;
+    }
+    goto zeros;
+  t4:
+    if (w != 4) goto t2;
+    {
+      s32 o = 1;
+      (p->s).work[0] = o;
+      (p->s).flags |= COLLIDABLE;
+      bd = &p->body;
+      InitBody(bd, &sCollisions[0], &(p->s).coord, 6);
+      bd->parent = (struct CollidableEntity*)p;
+      bd->fn = (void*)z7;
+      {
+        u32 tbl = (u32)(gProjectileFnTable);
+        u32 id;
+        EntityFunc** rt;
+        id = ((p->s).id) << 2;
+        rt = (EntityFunc**)(tbl + id);
+        *(u32*)((p->s).mode) = o;
+        (p->s).onUpdate = (void*)(*rt)[1];
+        (p->s).mode[1] = o;
+      }
+    }
+    goto zeros;
+  t2:
+    if (w != 2) goto t6;
+    {
+      u32 tbl = (u32)(gProjectileFnTable);
+      u32 id;
+      EntityFunc** rt;
+      id = ((p->s).id) << 2;
+      rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = 1;
+      (p->s).onUpdate = (void*)(*rt)[1];
+      (p->s).mode[1] = z7;
+    }
+    goto zeros;
+  t6:
+    if (w != 6) goto t3;
+    (p->s).work[0] = 2;
+    (p->s).flags |= COLLIDABLE;
+    bd = &p->body;
+    col = &sCollisions[14];
+    goto pre;
+  t3:
+    if (w != 3) goto skip;
+    (p->s).flags |= COLLIDABLE;
+    bd = &p->body;
+    col = &sCollisions[12];
+  pre:
+    cp = &(p->s).coord;
+    bda = bd;
+    cnt = 1;
+  docall:
+    InitBody(bda, col, cp, cnt);
+    bd->parent = (struct CollidableEntity*)p;
+    bd->fn = (void*)z7;
+    {
+      u32 tbl = (u32)(gProjectileFnTable);
+      u32 id;
+      EntityFunc** rt;
+      s32 o1;
+      id = ((p->s).id) << 2;
+      rt = (EntityFunc**)(tbl + id);
+      o1 = 1;
+      *(u32*)((p->s).mode) = o1;
+      (p->s).onUpdate = (void*)(*rt)[1];
+      (p->s).mode[1] = o1;
+    }
+  zeros:
+    (p->s).mode[2] = z7;
+    (p->s).mode[3] = z7;
+  }
+skip:
+  (p->s).work[2] = 0xFF;
+  CubitProjectile_Update(p);
+#else
+  INCCODE("asm/projectile/cubit_p3_init.inc");
+#endif
+}
 
 void CubitProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).work[0]][(p->s).mode[1]])(p);
