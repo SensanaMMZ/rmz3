@@ -852,7 +852,107 @@ void copyx_08056bd0(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b.inc");
+INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b1.inc");
+
+struct Entity* CreateVFX52(struct Entity* e);
+
+void copyxRaisingExcharge(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    GotoMotion(&p->s, 0xB31A, 10, 0);
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0;
+    {
+      s32 onR = 0;
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        onR = 1;
+      }
+      ((p->s).spr).xflip = onR;
+    }
+    {
+      s32 onR2 = 0;
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        onR2 = 1;
+      }
+      {
+        register u8* t0 asm("r0");
+        register u8* oa asm("ip");
+        register u32 sh asm("r2");
+        u32 off = 0x4a;
+        asm("" : "+r"(off));
+        off += (u32)p;
+        t0 = (u8*)off;
+        oa = t0;
+        asm("" : "+r"(oa));
+        sh = onR2 << 4;
+        {
+          s32 ov = *t0;
+          s32 m11 = -0x11;
+          u32 vv;
+          register u8* fa asm("r1");
+          asm("" : "+r"(m11));
+          vv = (m11 & ov) | sh;
+          fa = oa;
+          asm("" : "+r"(fa));
+          *fa = vv;
+        }
+      }
+      if (onR2 != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+    }
+    (p->s).work[2] = 0xC;
+    PlaySound(0x4A);
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 m3 asm("r1");
+    m3 = (p->s).mode[3];
+    if (m3 == 0) {
+      s32 raw = (p->s).work[2] - 1;
+      (p->s).work[2] = raw;
+      if ((u8)raw == 0xFF) {
+        SetDDP(&p->body, &sCollisions[4]);
+        (p->s).unk_2c = CreateVFX52(&p->s);
+        (p->s).work[2] = 0x20;
+        goto adv;
+      }
+    } else if (m3 == 1) {
+      s32 raw2 = (p->s).work[2] - 1;
+      s32 z = 0;
+      (p->s).work[2] = raw2;
+      if ((u8)raw2 == 0xFF) {
+        (p->s).unk_2c->work[1] = m3;
+        (p->s).unk_2c = (struct Entity*)z;
+        (p->s).work[2] = z;
+        FUN_080a9aa0(&p->s, 2, z);
+      adv:
+        (p->s).mode[3]++;
+      }
+    } else {
+      if (((p->s).work[2] & 3) == 0) {
+        (*(u16*)((u8*)p + 0xa4))++;
+        (*(u16*)((u8*)p + 0xd8))++;
+        PlaySound(0x4B);
+      }
+      {
+        u8 w = (p->s).work[2];
+        if (w == 0x7F || (gStageRun.missionStatus & 8)) {
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = 1;
+          (p->s).mode[3] = 2;
+          SetDDP(&p->body, &sCollisions[0]);
+          (p->s).work[2] = 4;
+        } else {
+          (p->s).work[2] = w + 1;
+        }
+      }
+    }
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b2.inc");
 
 void copyx_08057418(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
