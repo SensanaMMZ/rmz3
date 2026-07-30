@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-
-	.text
-
-	thumb_func_start FUN_080dc900
-FUN_080dc900: @ 0x080DC900
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	ldr r1, _080DC978 @ =gSolidFnTable
