@@ -104,7 +104,120 @@ INCASM("asm/enemy/pantheon_aqua_p1_p2_b.inc");
 
 bool8 nop_080726a8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_aqua_p2.inc");
+void FUN_08073610(struct Enemy* p);
+void FUN_080733b4(struct Enemy* p, s32 r1);
+s32 FUN_080735ac(struct Enemy* p);
+u8 FUN_08073500(struct Enemy* p);
+
+void FUN_080726ac(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      SetMotion(&p->s, 0x2700);
+      (p->s).work[3] = 0;
+      SetDDP(&p->body, sCollisions);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 2: {
+      s32 dx = (p->s).d.x;
+      s32 nd = -dx;
+      s32 k11 = 0xB;
+      s32 dy, nd2;
+      nd = nd * k11;
+      dx += nd >> 8;
+      (p->s).d.x = dx;
+      dy = (p->s).d.y;
+      nd2 = -dy;
+      nd2 = nd2 * k11;
+      dy += nd2 >> 8;
+      (p->s).d.y = dy;
+      (p->s).coord.x += dx;
+      (p->s).coord.y += dy;
+      FUN_08073610(p);
+      if ((p->s).coord.x > (pZero2->s).coord.x) {
+        s32 z = 0;
+        (p->s).flags &= 0xEF;
+        (p->s).spr.xflip = z;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+      } else {
+        s32 o = 1;
+        (p->s).flags |= 0x10;
+        (p->s).spr.xflip = o;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 c16 = 0x10;
+          s32 ov, m11;
+          asm("" : "+r"(c16));
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          *oa = m11 | c16;
+        }
+      }
+      {
+        s32 t = (p->s).work[3];
+        s32 n = t + 1;
+        u32 t2;
+        (p->s).work[3] = n;
+        t2 = (u32)t << 24;
+        asm("" : "+r"(t2));
+        t2 >>= 24;
+        if ((s32)((t2 % 0x1C) << 24) == 0) {
+          FUN_080733b4(p, 0);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 r;
+        u8* cb = (u8*)p + 0xba;
+        if (*cb == 0) {
+          r = FUN_080735ac(p);
+        } else {
+          *cb = *cb - 1;
+          r = 0;
+        }
+        if (r == 2) {
+          (p->s).mode[1] = r;
+          (p->s).mode[2] = 0;
+        } else if (r == 1) {
+          u8 v = FUN_08073500(p);
+          u8* a = (u8*)p + 0xb9;
+          s32 z1 = 0;
+          *a = v;
+          (p->s).mode[1] = r;
+          (p->s).mode[2] = z1;
+        } else {
+          if ((p->s).work[2] == 0) {
+            goto go1;
+          }
+          (p->s).work[2]--;
+        }
+        if ((p->s).work[2] != 0) {
+          break;
+        }
+      go1:
+        {
+          u8 v = FUN_08073500(p);
+          u8* a = (u8*)p + 0xb9;
+          s32 z1 = 0;
+          *a = v;
+          (p->s).mode[1] = 1;
+          (p->s).mode[2] = z1;
+        }
+      }
+      break;
+    }
+  }
+}
 
 bool8 FUN_08072800(struct Enemy* p) { return TRUE; }
 
