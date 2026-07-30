@@ -158,7 +158,90 @@ INCASM("asm/enemy/carrybee_g_p2.inc");
 
 bool8 FUN_0808b2b0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/carrybee_g_p3.inc");
+#include "stagerun.h"
+#include "camera.h"
+#include "trig.h"
+
+struct Projectile* FUN_080adad0(struct Coord* c, u8 a1);
+
+void FUN_0808b2b4(struct Enemy* p) {
+  {
+    s32* pb4 = (s32*)((u8*)p + 0xb4);
+    struct Camera* cam = &gStageRun.vm.camera;
+    *pb4 = cam->viewport.y - 0x4000;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x6E04);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      s32 t = *(s32*)((u8*)p + 0xb4);
+      s32 acc = (p->s).unk_coord.y;
+      acc += ((t - acc) << 3) >> 8;
+      (p->s).unk_coord.y = acc;
+      (p->s).coord.y = acc + gSineTable[(p->s).work[2]] * 15;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2:
+      (p->s).work[3] = 0xA;
+      goto inc2;
+    case 4: {
+      struct Coord c;
+      (p->s).work[3] = 0xA;
+      {
+        s32 xv = (p->s).coord.x;
+        s32 yv = (p->s).coord.y;
+        *(volatile s32*)&c.x = xv;
+        *(volatile s32*)&c.y = yv;
+      }
+      *(volatile s32*)&c.x = *(volatile s32*)&c.x + 0x2B00;
+      *(volatile s32*)&c.y = *(volatile s32*)&c.y + 0x300;
+      FUN_080adad0(&c, 0);
+      SetMotion(&p->s, 0x6E05);
+    }
+    inc2:
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+    case 5: {
+      s32 t = *(s32*)((u8*)p + 0xb4);
+      s32 acc = (p->s).unk_coord.y;
+      s32 w3;
+      acc += ((t - acc) << 3) >> 8;
+      (p->s).unk_coord.y = acc;
+      (p->s).coord.y = acc + gSineTable[(p->s).work[2]] * 15;
+      UpdateMotionGraphic(&p->s);
+      w3 = (p->s).work[3];
+      if (w3 != 0) {
+        w3 -= 1;
+        (p->s).work[3] = w3;
+        if ((w3 << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 6: {
+      s32 t = *(s32*)((u8*)p + 0xb4);
+      s32 acc = (p->s).unk_coord.y;
+      s32 z;
+      acc += ((t - acc) << 3) >> 8;
+      (p->s).unk_coord.y = acc;
+      (p->s).coord.y = acc + gSineTable[(p->s).work[2]] * 15;
+      z = 0;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
 
 bool8 FUN_0808b418(struct Enemy* p) { return TRUE; }
 
