@@ -1,6 +1,8 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "gfx.h"
+#include "constants/motion/static.h"
 #include "vfx.h"
 #include "motion.h"
 #include "stagerun.h"
@@ -958,7 +960,62 @@ void FUN_08060208(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p7_p2_p2.inc");
+void phantom_08060244(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      FUN_080607a0(p, 0);
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[2] = 0x14;
+      break;
+    case 20:
+      FUN_080607a0(p, 0);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 21:
+      if (((u8*)(p->s).scriptEntity)[9] & 1) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 22:
+      PlaySound(0xFA);
+      LOAD_STATIC_GRAPHIC(SM019_PANTHEON_HUNTER);
+      FUN_080607a0(p, 0xE);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 23:
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 24:
+      FUN_080607a0(p, 0xF);
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 25: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 26:
+      FUN_080607a0(p, 0);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 27: {
+      u32 v = gStageRun.vm.active;
+      u32 a = 1;
+      a &= v;
+      if (a == 0) {
+        (p->s).mode[1] = a;
+        *(u16*)((p->s).mode + 2) = a;
+      }
+      break;
+    }
+  }
+}
 
 void FUN_080603b8(struct Boss* p) {
   (PTR_ARRAY_08365558[(p->s).mode[2]])(p);
