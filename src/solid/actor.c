@@ -1382,6 +1382,263 @@ void Actor28_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p2_b_a.inc");
 
+NAKED void Actor30_Update(struct Solid* p) {
+  asm(".syntax unified
+\n	push {r4, r5, r6, r7, lr}
+\n	mov r7, sl
+\n	mov r6, sb
+\n	mov r5, r8
+\n	push {r5, r6, r7}
+\n	sub sp, #8
+\n	adds r7, r0, #0
+\n	ldrb r0, [r7, #0xd]
+\n	cmp r0, #1
+\n	beq _080D3C16
+\n	cmp r0, #1
+\n	bgt _080D3B56
+\n	cmp r0, #0
+\n	beq _080D3B64
+\n	b _080D3D10
+\n_080D3B56:
+\n	cmp r0, #2
+\n	bne _080D3B5C
+\n	b _080D3C8C
+\n_080D3B5C:
+\n	cmp r0, #3
+\n	bne _080D3B62
+\n	b _080D3D08
+\n_080D3B62:
+\n	b _080D3D10
+\n_080D3B64:
+\n	ldr r0, [r7, #0x54]
+\n	ldr r1, _080D3CD4 @ =0xFFFF6000
+\n	adds r0, r0, r1
+\n	ldr r1, [r7, #0x58]
+\n	bl FUN_08009f6c
+\n	ldr r2, _080D3CD8 @ =0x00000101
+\n	adds r0, r0, r2
+\n	str r0, [r7, #0x58]
+\n	ldr r1, _080D3CDC @ =wStaticGraphicTilenums
+\n	ldr r0, _080D3CE0 @ =0x000003CE
+\n	strh r0, [r1, #2]
+\n	ldr r6, _080D3CE4 @ =wStaticMotionPalIDs
+\n	movs r0, #9
+\n	strh r0, [r6, #2]
+\n	movs r4, #0xb9
+\n	lsls r0, r4, #1
+\n	mov r8, r0
+\n	adds r2, r1, #0
+\n	add r2, r8
+\n	mov sl, r2
+\n	ldr r0, _080D3CE8 @ =0x000003AF
+\n	strh r0, [r2]
+\n	add r8, r6
+\n	movs r0, #0xa
+\n	mov r2, r8
+\n	strh r0, [r2]
+\n	ldr r5, _080D3CEC @ =gStaticMotionGraphics
+\n	adds r0, r5, #0
+\n	adds r0, #0x14
+\n	ldrh r1, [r1, #2]
+\n	ldrh r2, [r0, #6]
+\n	lsrs r2, r2, #6
+\n	subs r1, r1, r2
+\n	lsls r1, r1, #5
+\n	movs r2, #0x80
+\n	lsls r2, r2, #9
+\n	adds r1, r1, r2
+\n	bl LoadGraphic
+\n	ldr r0, _080D3CF0 @ =gStaticMotionGraphics+12
+\n	mov sb, r0
+\n	adds r0, #0x14
+\n	ldrh r1, [r6, #2]
+\n	ldrb r2, [r0, #7]
+\n	subs r1, r1, r2
+\n	lsls r1, r1, #5
+\n	movs r6, #0x80
+\n	lsls r6, r6, #2
+\n	adds r1, r1, r6
+\n	bl LoadPalette
+\n	lsls r4, r4, #4
+\n	movs r1, #0xb9
+\n	lsls r1, r1, #2
+\n	adds r4, r4, r1
+\n	adds r5, r4, r5
+\n	mov r2, sl
+\n	ldrh r1, [r2]
+\n	ldrh r0, [r5, #6]
+\n	lsrs r0, r0, #6
+\n	subs r1, r1, r0
+\n	lsls r1, r1, #5
+\n	movs r0, #0x80
+\n	lsls r0, r0, #9
+\n	adds r1, r1, r0
+\n	adds r0, r5, #0
+\n	bl LoadGraphic
+\n	add r4, sb
+\n	mov r2, r8
+\n	ldrh r1, [r2]
+\n	ldrb r0, [r4, #7]
+\n	subs r1, r1, r0
+\n	lsls r1, r1, #5
+\n	adds r1, r1, r6
+\n	adds r0, r4, #0
+\n	bl LoadPalette
+\n	movs r1, #0x80
+\n	lsls r1, r1, #1
+\n	adds r0, r7, #0
+\n	bl SetMotion
+\n	movs r0, #0
+\n	strb r0, [r7, #0x12]
+\n	ldrb r0, [r7, #0xd]
+\n	adds r0, #1
+\n	strb r0, [r7, #0xd]
+\n_080D3C16:
+\n	adds r0, r7, #0
+\n	bl UpdateMotionGraphic
+\n	ldr r0, [r7, #0x18]
+\n	ldrb r1, [r0, #9]
+\n	movs r0, #1
+\n	ands r0, r1
+\n	cmp r0, #0
+\n	beq _080D3D10
+\n	adds r1, r7, #0
+\n	adds r1, #0x54
+\n	movs r0, #0x10
+\n	bl AppendQuake
+\n	ldr r5, _080D3CF4 @ =RNG_0202f388
+\n	mov r6, sp
+\n	movs r4, #3
+\n_080D3C38:
+\n	ldr r0, [r7, #0x54]
+\n	ldr r1, _080D3CF8 @ =0xFFFFC000
+\n	adds r0, r0, r1
+\n	str r0, [sp]
+\n	ldr r1, [r5]
+\n	ldr r0, _080D3CFC @ =0x000343FD
+\n	muls r1, r0, r1
+\n	ldr r2, _080D3D00 @ =0x00269EC3
+\n	adds r1, r1, r2
+\n	lsls r1, r1, #1
+\n	lsrs r0, r1, #1
+\n	str r0, [r5]
+\n	lsls r1, r1, #3
+\n	lsrs r1, r1, #0x14
+\n	ldr r0, [r7, #0x58]
+\n	adds r0, r0, r1
+\n	str r0, [r6, #4]
+\n	movs r0, #3
+\n	mov r1, sp
+\n	bl CreateSmoke
+\n	subs r4, #1
+\n	cmp r4, #0
+\n	bge _080D3C38
+\n	ldr r0, _080D3D04 @ =pZero2
+\n	ldr r0, [r0]
+\n	ldr r0, [r0, #0x58]
+\n	str r0, [r7, #0x64]
+\n	adds r0, r7, #0
+\n	bl InitRotatableMotion
+\n	movs r1, #0x80
+\n	lsls r1, r1, #1
+\n	adds r0, r7, #0
+\n	bl SetMotion
+\n	movs r0, #0
+\n	str r0, [r7, #0x60]
+\n	str r0, [r7, #0x68]
+\n	ldrb r0, [r7, #0xd]
+\n	adds r0, #1
+\n	strb r0, [r7, #0xd]
+\n_080D3C8C:
+\n	adds r0, r7, #0
+\n	bl UpdateMotionGraphic
+\n	ldr r1, [r7, #0x60]
+\n	adds r1, #1
+\n	str r1, [r7, #0x60]
+\n	ldr r0, [r7, #0x68]
+\n	adds r0, r0, r1
+\n	str r0, [r7, #0x68]
+\n	asrs r0, r0, #0xb
+\n	adds r1, r7, #0
+\n	adds r1, #0x24
+\n	strb r0, [r1]
+\n	ldr r1, [r7, #0x60]
+\n	asrs r2, r1, #2
+\n	ldr r0, [r7, #0x58]
+\n	subs r0, r0, r2
+\n	str r0, [r7, #0x58]
+\n	asrs r1, r1, #1
+\n	ldr r0, [r7, #0x64]
+\n	subs r0, r0, r1
+\n	str r0, [r7, #0x64]
+\n	ldr r1, _080D3D04 @ =pZero2
+\n	ldr r1, [r1]
+\n	str r0, [r1, #0x58]
+\n	ldr r0, [r7, #0x18]
+\n	ldrb r1, [r0, #9]
+\n	movs r0, #2
+\n	ands r0, r1
+\n	cmp r0, #0
+\n	beq _080D3D10
+\n	ldrb r0, [r7, #0xd]
+\n	adds r0, #1
+\n	strb r0, [r7, #0xd]
+\n	b _080D3D10
+\n	.align 2, 0
+\n_080D3CD4: .4byte 0xFFFF6000
+\n_080D3CD8: .4byte 0x00000101
+\n_080D3CDC: .4byte wStaticGraphicTilenums
+\n_080D3CE0: .4byte 0x000003CE
+\n_080D3CE4: .4byte wStaticMotionPalIDs
+\n_080D3CE8: .4byte 0x000003AF
+\n_080D3CEC: .4byte gStaticMotionGraphics
+\n_080D3CF0: .4byte gStaticMotionGraphics+12
+\n_080D3CF4: .4byte RNG_0202f388
+\n_080D3CF8: .4byte 0xFFFFC000
+\n_080D3CFC: .4byte 0x000343FD
+\n_080D3D00: .4byte 0x00269EC3
+\n_080D3D04: .4byte pZero2
+\n_080D3D08:
+\n	ldr r0, _080D3D4C @ =pZero2
+\n	ldr r1, [r0]
+\n	ldr r0, [r7, #0x64]
+\n	str r0, [r1, #0x58]
+\n_080D3D10:
+\n	ldrb r0, [r7, #0xd]
+\n	cmp r0, #2
+\n	bhi _080D3D3A
+\n	ldrb r0, [r7, #0x12]
+\n	adds r0, #1
+\n	strb r0, [r7, #0x12]
+\n	movs r1, #1
+\n	ands r0, r1
+\n	cmp r0, #0
+\n	bne _080D3D30
+\n	movs r0, #4
+\n	movs r1, #0
+\n	movs r2, #0
+\n	movs r3, #0
+\n	bl FUN_080c5628
+\n_080D3D30:
+\n	adds r1, r7, #0
+\n	adds r1, #0x54
+\n	movs r0, #2
+\n	bl AppendQuake
+\n_080D3D3A:
+\n	add sp, #8
+\n	pop {r3, r4, r5}
+\n	mov r8, r3
+\n	mov sb, r4
+\n	mov sl, r5
+\n	pop {r4, r5, r6, r7}
+\n	pop {r0}
+\n	bx r0
+\n	.align 2, 0
+\n_080D3D4C: .4byte pZero2
+\n .syntax divided
+");
+}
+
 struct Entity* CreateVFX39(struct Coord* c, u8 r1, u8 r2);
 
 void Actor31_Update(struct Solid* p) {
