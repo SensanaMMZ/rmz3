@@ -6,6 +6,8 @@
 #include "motion.h"
 #include "zero.h"
 #include "metatile.h"
+#include "mission.h"
+#include "story.h"
 #include "physics.h"
 #include "stagerun.h"
 
@@ -163,7 +165,106 @@ void hanu_0805bd38(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p1_b_p2_p2.inc");
+void hanu_0805bdc0(struct Boss* p) {
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32* w asm("r4");
+    w = (s32*)((u8*)p + 0xb4);
+    if (*w == FUN_0800a31c((p->s).coord.x, (p->s).coord.y)) {
+      w += 1;
+      if (*w == FUN_0800a22c((p->s).coord.x, (p->s).coord.y)) {
+        goto ok;
+      }
+    }
+    {
+      s32 z = 0;
+      (p->s).mode[1] = 0xD;
+      (p->s).mode[3] = z;
+      (p->s).mode[2] = z;
+      return;
+    }
+  ok:;
+  }
+  {
+    register u8* fb1 asm("r1");
+    register u8* fb asm("r4");
+    s32 f, t;
+    s32 sel;
+    struct Mission* ms;
+    fb1 = (u8*)p + 0xbd;
+    f = *fb1;
+    t = 1;
+    t &= f;
+    fb = fb1;
+    asm("" : "+r"(fb1));
+    if (t != 0) {
+      u32 rk = gMission.unk_00->rank;
+      ms = &gMission;
+      if (rk > 4) {
+        sel = RANDOM(RNG_0202f388) & 7;
+      } else {
+        sel = (u8)(RANDOM(RNG_0202f388) % 7);
+      }
+    } else {
+      u32 fv = (u32)f << 24;
+      asm("" : "+r"(fv));
+      sel = fv >> 25;
+      ms = &gMission;
+    }
+    switch (sel) {
+      case 0:
+        (p->s).mode[1] = 0xD;
+        (p->s).mode[3] = 1;
+        break;
+      case 1:
+        (p->s).mode[1] = 8;
+        break;
+      case 2:
+        (p->s).mode[1] = 0xA;
+        break;
+      case 3:
+        if (*((u8*)p + 0xbe) != 0) {
+          (p->s).mode[1] = 0x16;
+        } else {
+          (p->s).mode[1] = 4;
+        }
+        break;
+      case 4: {
+        s32 z = 0;
+        (p->s).mode[1] = 0xD;
+        (p->s).mode[3] = z;
+        break;
+      }
+      case 5:
+        (p->s).mode[1] = 0x16;
+        break;
+      case 6:
+        (p->s).mode[1] = 0x19;
+        break;
+      case 7:
+        (p->s).mode[1] = 0x13;
+        break;
+    }
+    {
+      u8* c = fb;
+      s32 n = *c + 1;
+      s32 z3 = 0;
+      u32 rk2;
+      *c = n;
+      rk2 = ms->unk_00->rank;
+      if (rk2 > 4) {
+        if ((u8)n > 0xF) {
+          *c = z3;
+        }
+      } else {
+        if ((u8)n > 0xD) {
+          *fb = z3;
+        }
+      }
+    }
+  }
+  (p->s).mode[2] = 0;
+}
 
 void hanu_0805bf10(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
