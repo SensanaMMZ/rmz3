@@ -489,7 +489,135 @@ void FUN_0809edfc(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/blazin_post.inc");
+void FUN_0809ee08(struct Projectile* p) {
+  s32 po[4];
+  if ((*(struct Entity* volatile*)&(p->s).unk_28)->mode[0] > 1) {
+    CreateSmoke(1, &(p->s).coord);
+    goto die;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      SetMotion(&p->s, 0xA305);
+      {
+        s32* spd = (s32*)((u8*)p + 0xb8);
+        s32 k5 = 0x500;
+        *spd = k5;
+        (p->s).unk_coord.x = ((p->s).d.x * k5) >> 8;
+        (p->s).unk_coord.y = ((p->s).d.y * *spd) >> 8;
+      }
+      (p->s).work[2] = 4;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      s32 r6f;
+      s32 po3v;
+      (p->s).coord.x += (p->s).unk_coord.x;
+      (p->s).coord.y += (p->s).unk_coord.y;
+      UpdateMotionGraphic(&p->s);
+      r6f = 0;
+      po[0] = PushoutToUp1((p->s).coord.x, (p->s).coord.y + 0x800);
+      po[1] = PushoutToDown1((p->s).coord.x, (p->s).coord.y + -0x800);
+      po[2] = PushoutToLeft1((p->s).coord.x + 0x800, (p->s).coord.y);
+      po3v = PushoutToRight1((p->s).coord.x + -0x800, (p->s).coord.y);
+      po[3] = po3v;
+      if (po[0] != 0) {
+        (p->s).unk_coord.y = -(p->s).unk_coord.y;
+        (p->s).coord.y += po[0];
+        if (po[2] != 0) {
+          (p->s).coord.x += po[2];
+          (p->s).unk_coord.x = -(p->s).unk_coord.x;
+        } else if (po3v != 0) {
+          (p->s).coord.x += po3v;
+          (p->s).unk_coord.x = -(p->s).unk_coord.x;
+        }
+        r6f = 1;
+      } else if (po[1] != 0) {
+        (p->s).unk_coord.y = -(p->s).unk_coord.y;
+        (p->s).coord.y += po[1];
+        if (po[2] != 0) {
+          (p->s).coord.x += po[2];
+          (p->s).unk_coord.x = -(p->s).unk_coord.x;
+        } else if (po3v != 0) {
+          (p->s).coord.x += po3v;
+          (p->s).unk_coord.x = -(p->s).unk_coord.x;
+        }
+        r6f = 1;
+      } else if (po[2] != 0) {
+        (p->s).coord.x += po[2];
+        (p->s).unk_coord.x = -(p->s).unk_coord.x;
+        r6f = 1;
+      } else if (po3v != 0) {
+        (p->s).coord.x += po3v;
+        (p->s).unk_coord.x = -(p->s).unk_coord.x;
+        r6f = 1;
+      }
+      if (r6f == 1) {
+        PlaySound(0);
+        {
+          s32 t = (p->s).work[2] - 1;
+          (p->s).work[2] = t;
+          if ((u32)(t << 24) != 0) {
+            break;
+          }
+        }
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2: {
+      s32* spd6 = (s32*)((u8*)p + 0xb8);
+      struct Entity* e;
+      s32 dx;
+      s32 dy;
+      s32 a;
+      s32 b;
+      s32 mag;
+      *spd6 = 0x500;
+      e = (struct Entity*)(p->s).unk_28;
+      dx = e->coord.x - (p->s).coord.x;
+      (p->s).d.x = dx;
+      {
+        s32 t2 = (p->s).coord.y + 0x1000;
+        dy = e->coord.y - t2;
+      }
+      (p->s).d.y = dy;
+      {
+        s32 aa;
+        s32 bb;
+        a = dx >> 2;
+        aa = a * a;
+        b = dy >> 2;
+        bb = b * b;
+        mag = (u32)(Sqrt(aa + bb) << 16) >> 14;
+      }
+      if (mag != 0) {
+        (p->s).d.x = ((p->s).d.x << 8) / mag;
+        (p->s).d.y = ((p->s).d.y << 8) / mag;
+      }
+      (p->s).unk_coord.x = ((p->s).d.x * *spd6) >> 8;
+      (p->s).unk_coord.y = ((p->s).d.y * *spd6) >> 8;
+      *(s32*)((u8*)p + 0xbc) = mag;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 3: {
+      s32* t;
+      s32 v;
+      (p->s).coord.x += (p->s).unk_coord.x;
+      (p->s).coord.y += (p->s).unk_coord.y;
+      UpdateMotionGraphic(&p->s);
+      t = (s32*)((u8*)p + 0xbc);
+      v = *t - *(s32*)((u8*)p + 0xb8);
+      *t = v;
+      if (v <= 0) {
+      die:
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+    }
+  }
+}
 
 // --------------------------------------------
 
