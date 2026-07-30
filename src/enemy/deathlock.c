@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "physics.h"
+#include "stagerun.h"
 #include "story.h"
 #include "mod.h"
 #include "syssav.h"
@@ -389,7 +390,68 @@ void FUN_0808d76c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/deathlock_post_p2.inc");
+INCASM("asm/enemy/deathlock_post_p2a.inc");
+
+bool8 FUN_0808d268(struct Enemy* p, s32 dy);
+
+void FUN_0808da24(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[sCollisionIdxs1[*(u8*)((u8*)p + 0xb9)]]);
+      (p->s).d.y = 0;
+      if (*(u8*)((u8*)p + 0xb9) != 0) {
+        SetMotion(&p->s, sMotions1[*(u8*)((u8*)p + 0xb9)]);
+      } else {
+        SetMotion(&p->s, MOTION(SM116_DEATHLOCK, 0));
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if (FUN_0808d268(p, (p->s).d.y)) {
+        (*(u8*)((u8*)p + 0xb8))++;
+        if (FUN_0800a40c((p->s).coord.x - 0x1200, (p->s).coord.y + 0x400) != 0 ||
+            FUN_0800a40c((p->s).coord.x + 0x1200, (p->s).coord.y + 0x400) != 0) {
+          (p->s).mode[1] = 1;
+          {
+            u32 zz = 0;
+            asm("" : "+r"(zz));
+            (p->s).mode[2] = zz;
+          }
+        } else {
+          u8* q;
+          *(u8*)((u8*)p + 0xbb) = 0;
+          q = (u8*)p + 0xbc;
+          asm("" : "+r"(q));
+          {
+            register s32 one asm("r2");
+            one = 1;
+            asm("" : "+r"(one));
+            *q = one;
+            SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+            (p->s).mode[1] = one;
+          }
+        }
+      }
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x6000) {
+        u32 f = (p->s).flags & 0xFE;
+        s32 z = 0;
+        asm("" : "+r"(f));
+        (p->s).flags = f & 0xFD;
+        (p->body).status = z;
+        (p->body).prevStatus = z;
+        (p->body).invincibleTime = z;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/deathlock_post_p2b.inc");
 
 void Deathlock_Init(struct Enemy* p);
 void Deathlock_Update(struct Enemy* p);
