@@ -29,7 +29,78 @@ struct Elf* CreateNurseBElf(struct Zero* z, u8 breed, u8 availability, u8 sateli
   return (struct Elf*)p;
 }
 
-INCASM("asm/cyberelf/nurse_b_p1.inc");
+INCASM("asm/cyberelf/nurse_b_p1a.inc");
+
+struct Entity* FUN_080bfc94(struct Coord* c, u8 r1);
+extern const s16 gSineTable[256];
+extern const ElfFunc sNurseBUpdates[4];
+
+void NurseB_Update(struct Elf* p) {
+  struct CyberElfNurseB* q = (struct CyberElfNurseB*)p;
+  struct Zero* z = q->player;
+  struct Rect rr = gZeroRanges[*((u8*)z + 0x147)];
+  UpdateMotionGraphic(&p->s);
+  {
+    u8 v = gPause;
+    if (v == 0) {
+      if (*((u8*)z + 0x232) != 0) {
+        u8 f = ~DISPLAY & (p->s).flags;
+        f = f & ~FLIPABLE;
+        (p->s).flags = f;
+        (p->body).status = v;
+        (p->body).prevStatus = v;
+        (p->body).invincibleTime = v;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ELF_ROUTINE(p, ENTITY_DISAPPEAR);
+      } else if (((z->body).status & 0x200) || ((z->body).hp == 0)) {
+        SET_ELF_ROUTINE(p, ENTITY_DIE);
+      } else {
+        (p->s).unk_coord.x = (z->s).coord.x + rr.x;
+        (p->s).unk_coord.y = (z->s).coord.y + rr.y;
+        (sNurseBUpdates[(p->s).mode[1]])(p);
+        {
+          u8* a8 = &q->unk_b8[0];
+          s32* b;
+          register s32 t asm("r3");
+          s32 d, idx, s;
+          t = *a8 + 1;
+          d = t;
+          asm("" : "+r"(d));
+          d >>= 4;
+          d <<= 4;
+          t -= d;
+          idx = t;
+          *a8 = t;
+          t <<= 4;
+          s = gSineTable[(u8)(idx << 4)] << 4;
+          b = (s32*)&q->unk_b8[4];
+          (p->s).coord.x = (b[0] + s) + (p->s).unk_coord.x;
+          (p->s).coord.y = b[1] + (p->s).unk_coord.y;
+          {
+            register s32 u asm("r0");
+            s32 k;
+            u = t + 0x40;
+            u &= 0xFF;
+            k = 0x10;
+            if (u > 0x7F) {
+              k = 0x11;
+            }
+            (p->s).taskCol = k;
+          }
+          {
+            u8* a9 = &q->unk_b8[1];
+            s32 raw = *a9 - 1;
+            *a9 = raw;
+            if ((u8)raw == 0xFF) {
+              FUN_080bfc94(&(p->s).coord, 2);
+              *a9 = 0x20;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 void NurseB_Die(struct Elf* p) {
   FUN_080bfce8(&(p->s).coord, 0);
