@@ -217,7 +217,108 @@ void FUN_08062338(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/spearook_p1_post_p2_a.inc");
+INCASM("asm/boss/spearook_p1_post_p2_a1.inc");
+
+void FUN_0806293c(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32* w = (u32*)((u8*)p + 0xbc);
+      u32 v = *w;
+      v |= 4;
+      v |= 0x10;
+      *w = v;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1:
+      if ((*(u32*)((u8*)p + 0xbc) & 0x12) != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      if (*(u32*)((u8*)p + 0xbc) & 8) {
+        (p->s).unk_coord.x = 0x20;
+      } else {
+        (p->s).unk_coord.x = -0x20;
+      }
+      (p->s).d.x = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3: {
+      s32 done = 0;
+      s32 d = (p->s).d.x;
+      if ((u32)(d + 0x300) < 0x600) {
+        (p->s).d.x = d + (p->s).unk_coord.x;
+      }
+      if ((p->s).d.x < 0) {
+        if (FUN_080098a4((p->s).coord.x - 0x1600, (p->s).coord.y + 0x400) == 0) {
+          goto inc;
+        }
+        goto move;
+      }
+      if (FUN_080098a4((p->s).coord.x + 0x1600, (p->s).coord.y + 0x400) != 0) {
+      move:
+        (p->s).coord.x += (p->s).d.x;
+      } else {
+        done = 1;
+      }
+      if (done != 0) {
+      inc:
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 4: {
+      register s32 dv asm("r0");
+      register s32 nd asm("r1");
+      s32 nv;
+      dv = (p->s).d.x;
+      nd = -dv;
+      (p->s).d.x = nd;
+      nv = -0xC;
+      (p->s).unk_coord.x = nv;
+      if (nd < 0) {
+        nv = 0xC;
+      }
+      (p->s).unk_coord.x = nv;
+      {
+        register u32 sg asm("r0");
+        sg = (u32)nd >> 31;
+        (p->s).work[2] = sg;
+      }
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 5: {
+      s32 d2;
+      u8 w2;
+      (p->s).coord.x += (p->s).d.x;
+      d2 = (p->s).d.x + (p->s).unk_coord.x;
+      (p->s).d.x = d2;
+      w2 = (p->s).work[2];
+      if (d2 < 0) {
+        if (w2 != 1) {
+          goto clear;
+        }
+        break;
+      } else {
+        if (w2 == 0) {
+          break;
+        }
+      }
+    clear:
+      *(u32*)((u8*)p + 0xbc) &= ~4;
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+      break;
+    }
+  }
+  (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+}
+
+INCASM("asm/boss/spearook_p1_post_p2_a2.inc");
 
 // 0x08062b70
 void FUN_08062b70(struct Boss* p) {
