@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "global.h"
+#include "physics.h"
 #include "solid.h"
+#include "stagerun.h"
+#include "vfx.h"
 
 struct Solid8Object {
   OBJECT_HDR;
@@ -87,7 +90,77 @@ static void LavaRiverPlatform_Die(struct Solid* p) {
 
 static void nop_080ccef8(struct Solid* p) { return; }
 
-INCASM("asm/solid/lava_river_platform.inc");
+s32 FUN_0800a40c(s32 x, s32 y);
+
+void FUN_080ccefc(struct Solid* p) {
+  register s32 m asm("r4");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      PlaySound(0x77);
+      (p->s).d.y = m;
+      (p->s).work[2] = m;
+      (p->s).unk_coord.x = m;
+      SetMotion(&p->s, 0x3B00);
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 fl;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      {
+        s32 ny = (p->s).coord.y + (p->s).d.y;
+        s32 po;
+        (p->s).coord.y = ny;
+        po = PushoutToUp2((p->s).coord.x, ny + ((struct Solid8Object*)p)->y);
+        if (po < 0) {
+          (p->s).coord.y += po;
+        }
+      }
+      fl = (p->s).coord.y;
+      fl += ((struct Solid8Object*)p)->y;
+      {
+        s32 lim = (p->s).coord.y + 0x1000;
+        if (fl < lim) {
+          fl = lim;
+        }
+      }
+      {
+        s32 po2 = FUN_0800a40c((p->s).coord.x, fl + 0x800);
+        if (po2 != 0) {
+          (p->s).coord.x += po2;
+        }
+      }
+      (p->s).unk_coord.x += 1;
+      {
+        s32 w = (p->s).work[2] + 1;
+        (p->s).work[2] = w;
+        if ((w & 3) == 0) {
+          if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0x7FF) {
+            if ((p->s).unk_coord.x <= 0x77) {
+              struct Coord c;
+              s32 bx = (p->s).coord.x - 0x2800;
+              c.x = bx;
+              c.x = (RANDOM(RNG_0202f388) % 0x2800) + bx;
+              c.y = fl - 0x400;
+              CreateParticle(&c, 1, 0);
+            }
+          }
+        }
+      }
+      ((struct Solid8Object*)p)->y -= 0x60;
+      if (((struct Solid8Object*)p)->y < -0x1000) {
+        SET_SOLID_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/lava_river_platform_b.inc");
 
 // --------------------------------------------
 
