@@ -50,6 +50,99 @@ void nop_08046150(struct Boss* p) {}
 
 INCASM("asm/boss/baby_elf_p2_p1.inc");
 
+u8 GetEntityPalID(struct Entity* p);
+
+// 0x08046ccc -- baby elf: fly to the anchor point, then glow (palette anim
+// 0x16/0x11 by variant) and hand off. Blocker (reassociation/materialization
+// basin): the -0x5800 approach constant lands r1 vs r3, and the coord.y+0x5000
+// sum keeps reassociating into a pooled -0x5000 with an early dereference;
+// barriers and pins shuffle neighbors without converging.
+NON_MATCH void FUN_08046ccc(struct Boss* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 s4 = 0;
+      s32* pb = (s32*)((u8*)p + 0xb4);
+      u8* ps;
+      if ((p->s).coord.x > *pb) {
+        s4 = 1;
+      }
+      ps = (u8*)p + 0xc7;
+      *ps = s4;
+      {
+        s32 v = *pb + -0xB000;
+        (p->s).coord.x = v;
+        v += *ps * 0x16000;
+        (p->s).coord.x = v;
+      }
+      {
+        s32 w = *(s32*)((u8*)p + 0xb8) + 0x3000;
+        (p->s).coord.y = w;
+        w -= *ps << 16;
+        (p->s).coord.y = w;
+      }
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      s32 cx, cy, t, u;
+      (p->s).flags |= 1;
+      t = *(s32*)((u8*)p + 0xb4);
+      cx = (p->s).coord.x;
+      t -= cx;
+      t += -0x5800;
+      t += *((u8*)p + 0xc7) * 0xB000;
+      cy = (p->s).coord.y;
+      u = *(s32*)((u8*)p + 0xb8) - (cy + 0x5000);
+      (p->s).coord.x = cx + t / 12;
+      (p->s).coord.y = cy + u / 12;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t2 = (p->s).work[2] - 1;
+        (p->s).work[2] = t2;
+        if ((t2 << 24) == 0) {
+          *((u8*)p + 0xc8) = 1;
+          (p->s).mode[2]++;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      (p->s).palID = (p->s).work[0];
+      SetMotion(&p->s, 0x3100);
+      if ((p->s).work[0] == 0) {
+        StartPaletteAnimation(0x16, ((u32)GetEntityPalID(&p->s) << 5) | 0x200);
+        *((u8*)p + 0xc6) = 0x16;
+      } else {
+        StartPaletteAnimation(0x11, ((u32)GetEntityPalID(&p->s) << 5) | 0x200);
+        *((u8*)p + 0xc6) = 0x11;
+      }
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3: {
+      u8* pc6 = (u8*)p + 0xc6;
+      if ((u8)StepPaletteAnimation(*pc6) == 3) {
+        u32 v = *pc6;
+        if (v != 0) {
+          RemovePaletteAnimation(v);
+          *pc6 = 0;
+        }
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/boss/baby_elf_6ccc.inc");
+#endif
+}
+
+INCASM("asm/boss/baby_elf_p2_p1_post.inc");
+
 void FUN_0809fa44(struct Entity* parent, s32 x, s32 y, u8 n);
 
 // 0x080477b8
@@ -119,8 +212,6 @@ void FUN_0804874c(struct Boss* p) {
     (p->s).mode[2]++;
   }
 }
-
-u8 GetEntityPalID(struct Entity* p);
 
 void FUN_08048788(struct Boss* p) {
   s32 m = (p->s).mode[2];
