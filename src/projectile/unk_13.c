@@ -228,7 +228,80 @@ void FUN_0809fbdc(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_13_p3.inc");
+INCASM("asm/projectile/unk_13_p3a.inc");
+
+s32 PushoutToUp1(s32 x, s32 y);
+void FUN_080bc6ac(struct Entity* e, s32 x, s32 y, s32 speed, u8 angle);
+void FUN_080bc758(s32 x, s32 y);
+
+void FUN_080a025c(struct Projectile* p) {
+  struct Entity* par = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).taskCol = 0x18;
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, 0x3401);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).work[3] = 1;
+      SetMotion(&p->s, 0x3402);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3: {
+      u8 w2 = (p->s).work[2];
+      if (w2 <= 1) {
+        u8 w3 = (p->s).work[3];
+        if (w3 != 0) {
+          s32 t = w3 - 1;
+          (p->s).work[3] = t;
+          if ((t << 24) == 0) {
+            FUN_0809fa44(par, (p->s).unk_coord.x, (p->s).unk_coord.y, (u8)(w2 + 1));
+          }
+        }
+      }
+      (p->s).coord.y += 0x280;
+      {
+        s32 po = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (po < 0) {
+          (p->s).coord.y += po;
+          {
+            u32 f = (p->s).flags & 0xFE;
+            s32 z2 = 0;
+            asm("" : "+r"(f));
+            f &= 0xFD;
+            (p->s).flags = f;
+            (p->body).status = z2;
+            (p->body).prevStatus = z2;
+            (p->body).invincibleTime = z2;
+          }
+          (p->s).flags &= 0xFB;
+          SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+          if ((p->s).work[2] == 0) {
+            u32 ang = 0x20000000;
+            s32 i = 2;
+            do {
+              FUN_080bc6ac(par, (p->s).coord.x, (p->s).coord.y, 0x100, ang >> 0x18);
+              ang += 0x20000000;
+              i--;
+            } while (i >= 0);
+            FUN_080bc758((p->s).coord.x, (p->s).coord.y);
+          }
+          FUN_0809fa9c(par, (p->s).coord.x, (p->s).coord.y, 0);
+          FUN_0809fa9c(par, (p->s).coord.x, (p->s).coord.y, 1);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_080a03ac(struct Projectile* p) {
   s32 m = (p->s).mode[2];
