@@ -1,6 +1,10 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mod.h"
+#include "physics.h"
+#include "story.h"
+#include "syssav.h"
 #include "overworld_terrain.h"
 
 extern const struct Collision sCollisions[6];
@@ -20,7 +24,147 @@ struct Enemy* CreateShelluno(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/shelluno_p1_p2_a.inc");
+static const struct Collision sCollisions[];
+void FUN_0807a3ec(struct Body* body, struct Coord* c);
+void Shelluno_Update(struct Enemy* p);
+
+void Shelluno_Init(struct Enemy* p) {
+  register struct Body* b asm("r4");
+  InitNonAffineMotion(&p->s);
+  {
+    register s32 fl0 asm("r1");
+    register u32 c1 asm("r0");
+    register s32 z3 asm("r3");
+    register u32 f asm("r2");
+    fl0 = (p->s).flags;
+    c1 = 1;
+    asm("" : "+r"(c1));
+    z3 = 0;
+    asm("" : "+r"(z3));
+    f = c1;
+    f |= fl0;
+    f |= 2;
+    f |= z3;
+    (p->s).flags = f;
+    {
+      u8 mv = gSystemSavedataManager.mods[14];
+      u32 c4t = 4;
+      asm("" : "+r"(c4t));
+      if (c4t & mv) {
+      register u32 sf asm("r5");
+      {
+        register s32 fb asm("r1");
+        register u32 c40s asm("r0");
+        fb = gCurStory.s.gameflags[0];
+        c40s = 0x40;
+        asm("" : "+r"(c40s));
+        c40s &= fb;
+        asm("" : "+r"(c40s));
+        sf = (u8)c40s;
+      }
+      if (sf == 0) {
+        f |= 4;
+        (p->s).flags = f;
+        b = &p->body;
+        InitBody(b, sCollisions, &(p->s).coord, 9);
+        b->parent = (void*)p;
+        b->fn = (void*)sf;
+        goto after;
+      }
+      }
+    }
+    {
+      register s32 z5 asm("r5");
+      register s32 fl2 asm("r1");
+      register s32 c4b asm("r0");
+      fl2 = (p->s).flags;
+      c4b = 4;
+      asm("" : "+r"(c4b));
+      z5 = 0;
+      (p->s).flags = c4b | fl2;
+      b = &p->body;
+      InitBody(b, sCollisions, &(p->s).coord, 5);
+      b->parent = (void*)p;
+      b->fn = (void*)z5;
+    }
+  after:;
+  }
+  {
+    u8 w0 = (p->s).work[0];
+    if (w0 == 0) {
+      (p->s).flags &= 0xEF;
+      ((p->s).spr).xflip = w0;
+      {
+        u8* oa = (u8*)&((p->s).spr).oam + 6;
+        s32 ov = *oa;
+        s32 m11 = -0x11;
+        asm("" : "+r"(m11));
+        *oa = m11 & ov;
+      }
+    } else {
+      register s32 one asm("r2");
+      register s32 fl3 asm("r1");
+      register s32 c10b asm("r0");
+      one = 1;
+      fl3 = (p->s).flags;
+      c10b = 0x10;
+      asm("" : "+r"(c10b));
+      (p->s).flags = c10b | fl3;
+      ((p->s).spr).xflip = one;
+      {
+        register u8* oa asm("r3");
+        register s32 c10c asm("r2");
+        s32 ov;
+        s32 m11;
+        oa = (u8*)&((p->s).spr).oam + 6;
+        c10c = 0x10;
+        asm("" : "+r"(c10c));
+        ov = *oa;
+        m11 = -0x11;
+        asm("" : "+r"(m11));
+        *oa = (m11 & ov) | c10c;
+      }
+    }
+  }
+  (p->s).coord.y = FUN_0800a05c((p->s).coord.x, (p->s).coord.y);
+  {
+    u8* a9 = (u8*)p + 0xb9;
+    s32 z5b = 0;
+    *a9 = z5b;
+    b->fn = (void*)FUN_0807a3ec;
+    {
+      u8* w = (u8*)p + 0x5c;
+      *(s32*)(w + 4) = z5b;
+      (p->s).d.x = z5b;
+      asm("" : "+r"(w));
+      w += 8;
+      *(s32*)(w + 4) = z5b;
+      (p->s).unk_coord.x = z5b;
+      asm("" : "+r"(w));
+      w += 0x58;
+      *(s32*)w = z5b;
+      asm("" : "+r"(w));
+      w += 4;
+      *w = z5b;
+      asm("" : "+r"(w));
+      w += 1;
+      *w = z5b;
+      asm("" : "+r"(w));
+      w += 1;
+      *w = z5b;
+    }
+    SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = z5b;
+    (p->s).mode[2] = z5b;
+    (p->s).mode[3] = z5b;
+    if (IsFrozen(&p->s)) {
+      SetMotion(&p->s, 0x3500);
+      UpdateMotionGraphic(&p->s);
+    }
+    *((u8*)p + 0xba) = z5b;
+  }
+  Shelluno_Update(p);
+}
 
 extern const EnemyFunc sUpdates1[6];
 extern const EnemyFunc sUpdates2[6];
