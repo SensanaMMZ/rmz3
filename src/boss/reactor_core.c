@@ -11,6 +11,120 @@ static const BossFunc sDeads[1];
 
 INCASM("asm/boss/reactor_core_p1_pre.inc");
 
+static const BossFunc sUpdates1[2];
+static const BossFunc sUpdates2[2];
+struct Entity* FUN_0807cbf4(s32 x, s32 y, u8 n);
+void ReactorCore_Die(struct Boss* p);
+
+void ReactorCore_Update(struct Boss* p) {
+  StepPaletteAnimation(0xCB);
+  StepPaletteAnimation(0xCC);
+  {
+  register u8* sr asm("r2");
+  sr = (u8*)&gStageRun;
+  if (!(sr[0x12] & 1)) {
+    u32 w0 = (p->s).work[0];
+    if (w0 == 1) {
+      s32* timer = (s32*)((u8*)p + 0xbc);
+      if (*timer == 0) {
+        register struct Camera* cam asm("r8");
+        register u32 A asm("sl");
+        register u32 s2 asm("r9");
+        register s32 x5 asm("r5");
+        u32 C4;
+        u32 raw1;
+        u32 raw2;
+        u32 raw3;
+        u32 seed3;
+        s32 y;
+        u32 r2a;
+        u32 sd;
+        *timer = 0x5A;
+        sr += 0xE8;
+        cam = (struct Camera*)sr;
+        x5 = ((struct Camera*)sr)->viewport.x + -0x6000;
+        sd = RNG_0202f388;
+        {
+          register u32 a3s asm("r3");
+          a3s = 0x343FD;
+          A = a3s;
+        }
+        {
+          register u32 t1 asm("r1");
+          t1 = A;
+          t1 *= sd;
+          raw1 = t1;
+        }
+        C4 = 0x269EC3;
+        asm("" : "+r"(C4));
+        raw1 += C4;
+        raw1 <<= 1;
+        s2 = raw1 >> 1;
+        RNG_0202f388 = s2;
+        x5 += (raw1 >> 0x11) % 0xC000;
+        {
+          s32 vy = cam->viewport.y;
+          register u32 ck asm("r2");
+          ck = (u32)-0x3000;
+          asm("" : "+r"(ck));
+          y = vy + ck;
+        }
+        {
+          register u32 t3 asm("r3");
+          register u32 t0 asm("r0");
+          t3 = A;
+          asm("" : "+r"(t3));
+          t0 = s2;
+          t0 *= t3;
+          raw2 = t0;
+        }
+        raw2 += C4;
+        raw2 <<= 1;
+        seed3 = raw2 >> 1;
+        y += (raw2 << 1) >> 0x12;
+        {
+          register u32 t0b asm("r0");
+          t0b = A;
+          asm("" : "+r"(t0b));
+          t0b *= seed3;
+          asm("" : "+r"(t0b));
+          raw3 = t0b;
+        }
+        {
+          register u32 t2 asm("r2");
+          t2 = raw3;
+          asm("" : "+r"(t2));
+          t2 += C4;
+          t2 <<= 1;
+          RNG_0202f388 = t2 >> 1;
+          r2a = (t2 >> 0x11) & w0;
+        }
+        FUN_0807cbf4(x5, y, r2a);
+      }
+      (*timer)--;
+    }
+  }
+  }
+  {
+    s32 sum = 0;
+    s32 i = 0;
+    u8* pr = (u8*)p + 0xb4;
+    do {
+      sum += pr[i];
+      i++;
+    } while (i <= 5);
+    if (sum == 0) {
+      SET_BOSS_ROUTINE(p, ENTITY_DIE);
+      (p->s).mode[1] = sum;
+      ReactorCore_Die(p);
+    } else {
+      (sUpdates1[(p->s).mode[1]])(p);
+      (sUpdates2[(p->s).mode[1]])(p);
+    }
+  }
+}
+
+
 void ReactorCore_Die(struct Boss* p) {
   StepPaletteAnimation(0xcb);
   StepPaletteAnimation(0xcc);
