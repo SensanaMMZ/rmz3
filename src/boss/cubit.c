@@ -39,7 +39,129 @@ struct Boss* CreateCubit(struct Coord* c, u8 n) {
 
 static const BossFunc sDeads[2];
 
-INCASM("asm/boss/cubit_p1_pre_a.inc");
+void FUN_08054530(struct Body* body, struct Coord* c1, struct Coord* c2);
+
+void Cubit_Init(struct Boss* p) {
+  s32 z7;
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  {
+    register u8 f1 asm("r1");
+    register s32 fp asm("r0");
+    f1 = (p->s).flags;
+    fp = 0xFE;
+    fp &= f1;
+    z7 = 0;
+    {
+      register s32 c2v asm("r1");
+      c2v = 2;
+      fp |= c2v;
+    }
+    (p->s).flags = fp;
+  }
+  ((p->s).spr).xflip = z7;
+  {
+    u8* a = (u8*)p + 0x4a;
+    register u8 b asm("r1");
+    s32 msk;
+    b = *a;
+    msk = -0x11;
+    msk &= b;
+    *a = msk;
+  }
+  (p->s).flags &= 0xEF;
+  ResetBossBody(p, sCollisions, 0x40);
+  {
+    register void* fv asm("r1");
+    register u8* bb asm("r0");
+    fv = (void*)FUN_08054530;
+    bb = (u8*)p + 0x74;
+    *(void**)(bb + 0x24) = fv;
+    bb += 0x40;
+    *bb = z7;
+  }
+  {
+    u8* b5 = (u8*)p + 0xb5;
+    *b5 = 0xFF;
+    b5 += 1;
+    *b5 = 0xFF;
+  }
+  {
+    u8* c0 = (u8*)p + 0xc0;
+    *(s32*)c0 = z7;
+    c0 -= 9;
+    *c0 = z7;
+    c0 += 0x11;
+    *c0 = z7;
+    c0 += 4;
+    *(s32*)c0 = z7;
+  }
+  {
+    s32 g;
+    {
+      register u32 kc asm("r0");
+      s32 cy;
+      s32 ya;
+      cy = (p->s).coord.y;
+      kc = (u32)-0x4000;
+      asm("" : "+r"(kc));
+      ya = cy + kc;
+      g = FUN_08009f6c((p->s).coord.x, ya);
+    }
+    (p->s).coord.y = g;
+    *(s32*)((u8*)p + 0xb8) = g + -0x7C00;
+    {
+      s32 L;
+      s32 R;
+      s32 w;
+      {
+        register s32 x0 asm("r0");
+        register u32 kc2 asm("r1");
+        x0 = (p->s).coord.x;
+        kc2 = (u32)-0x7400;
+        asm("" : "+r"(kc2));
+        g += kc2;
+        L = FUN_0800a22c(x0, g);
+      }
+      R = FUN_0800a31c((p->s).coord.x, g);
+      *(s32*)((u8*)p + 0xbc) = R;
+      w = (L - R) / 3;
+      {
+        register volatile s32* dp asm("r2");
+        s32 t2;
+        dp = (volatile s32*)((u8*)p + 0xd4);
+        R += w >> 1;
+        *dp = R;
+        asm("" : "+r"(dp));
+        dp += 1;
+        t2 = R + w;
+        *dp = t2;
+        asm("" : "+r"(dp));
+        dp += 1;
+        R += w << 1;
+        *dp = R;
+      }
+      *(s32*)((u8*)p + 0xe0) = w;
+    }
+  }
+  *((u8*)p + 0xca) = z7;
+  if ((p->s).work[0] == 0) {
+    SET_BOSS_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = z7;
+  } else {
+    SET_BOSS_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = 3;
+  }
+  (p->s).mode[2] = z7;
+  (p->s).mode[3] = z7;
+  {
+    u32 zz = 0;
+    asm("" : "+r"(zz));
+    (p->s).work[1] = zz;
+  }
+  Cubit_Update(p);
+}
+
 
 static const BossFunc sUpdates1[12];
 static const BossFunc sUpdates2[12];
