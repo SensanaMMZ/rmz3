@@ -139,7 +139,155 @@ void FUN_080c7a28(struct VFX* p) {
   BossExplosion_Update((void*)p);
 }
 
-INCASM("asm/vfx/boss_explosion.inc");
+void FUN_080c7a90(struct VFX* p) {
+  register u32 one4 asm("r4");
+  register s32 z5 asm("r5");
+  InitScalerotMotion1(&p->s);
+  {
+    register u8 f0 asm("r0");
+    u8 fv0 = (p->s).flags;
+    f0 = fv0;
+    one4 = 1;
+    asm("" : "+r"(one4));
+    z5 = 0;
+    f0 |= one4;
+    {
+      register s32 c2 asm("r1");
+      c2 = 2;
+      f0 |= c2;
+    }
+    (p->s).flags = f0;
+  }
+  asm volatile("" :: "r"(z5));
+  SetMotion(&p->s, 0xEE00);
+  UpdateMotionGraphic(&p->s);
+  {
+    register u32 one9 asm("r9");
+    u32 xf = RANDOM(RNG_0202f388) & one4;
+    s32 v;
+    if (xf != 0) {
+      register s32 vf asm("r0");
+      register u32 c10 asm("r1");
+      vf = (p->s).flags;
+      c10 = 0x10;
+      vf |= c10;
+      v = vf;
+    } else {
+      register u8 lf2 asm("r1");
+      register s32 vv2 asm("r0");
+      lf2 = (p->s).flags;
+      vv2 = 0xEF;
+      vv2 &= lf2;
+      v = vv2;
+    }
+    (p->s).flags = v;
+    {
+      register u32 t4 asm("r4");
+      t4 = 1;
+      one9 = t4;
+    }
+    {
+      register u32 x1 asm("r1");
+      x1 = one9;
+      x1 &= xf;
+      ((p->s).spr).xflip = x1;
+      {
+        u8* a = (u8*)p + 0x4a;
+        s32 sh = x1 << 4;
+        u8 b = *a;
+        s32 msk = -0x11;
+        msk &= b;
+        msk |= sh;
+        *a = msk;
+      }
+    }
+    {
+      u8* pr = (u8*)p + 0x49;
+      u8 b2 = *pr;
+      s32 m2 = -0xD;
+      m2 &= b2;
+      *pr = m2;
+    }
+    {
+      register u32* rp8 asm("r8");
+      register u32 A3 asm("r5");
+      register u32 C3 asm("r3");
+      u32 sd;
+      register u32 raw1 asm("r1");
+      u32 raw2;
+      u32 raw3;
+      register u32 seed2 asm("r2");
+      register u32 seed3 asm("r6");
+      u32 r1a;
+      u32 w1;
+      u32 ang;
+      rp8 = &RNG_0202f388;
+      sd = *rp8;
+      asm("" : "+r"(sd));
+      A3 = 0x343FD;
+      asm("" : "+r"(A3));
+      raw1 = sd * A3;
+      C3 = 0x269EC3;
+      asm("" : "+r"(C3));
+      raw1 += C3;
+      raw1 <<= 1;
+      seed2 = raw1 >> 1;
+      r1a = (raw1 >> 0x11) & 0x7F;
+      one4 += 0xFF;
+      asm("" : "+r"(one4));
+      {
+        register u32 cc0 asm("r0");
+        cc0 = one4;
+        asm("" : "+r"(cc0));
+        r1a += cc0;
+      }
+      w1 = (p->s).work[1] << 6;
+      raw2 = seed2 * A3;
+      raw2 += C3;
+      raw2 <<= 1;
+      seed3 = raw2 >> 1;
+      ang = (u8)(w1 + ((raw2 >> 0x11) & 0x3F));
+      {
+        u8* w = (u8*)p + 0x50;
+        *(u16*)w = r1a;
+        r1a >>= 1;
+        w += 2;
+        *(u16*)w = r1a;
+        w -= 0x2E;
+        *w = ang;
+      }
+      raw3 = seed3 * A3;
+      raw3 += C3;
+      raw3 <<= 1;
+      {
+        u32 s3v = raw3 >> 1;
+        register u32* rl asm("r2");
+        rl = rp8;
+        *rl = s3v;
+      }
+      (p->s).work[2] = (raw3 >> 0x11) % 0x14;
+      (p->s).work[3] = ang;
+      *(s32*)((u8*)p + 0x64) = 0x80;
+      *(s32*)((u8*)p + 0x68) = 0x10;
+    }
+    {
+      u32 tbl, id;
+      EntityFunc** routine_table;
+      tbl = (u32)gVFXFnTable;
+      id = ((p->s).id) << 2;
+      routine_table = (EntityFunc**)(tbl + id);
+      {
+        register u32 m4 asm("r4");
+        m4 = one9;
+        asm("" : "+r"(m4));
+        *(u32*)((p->s).mode) = m4;
+      }
+      (p->s).onUpdate = (void*)(*routine_table)[1];
+    }
+  }
+  BossExplosion_Update(&p->s);
+}
+
 
 void FUN_080c7bc4(struct VFX* p) {
   InitNonAffineMotion(&p->s);
