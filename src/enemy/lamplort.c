@@ -379,7 +379,131 @@ void FUN_0806cb5c(struct Enemy* p) {
 
 bool8 FUN_0806cc00(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p8.inc");
+extern const motion_t Action_ARRAY_080ff004[4];
+
+void lamplort_0806cc04(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      u8 fv;
+      u32 x1;
+      s32 z3;
+      SetMotion(&p->s, 0x1902);
+      SetDDP(&p->body, &sCollisions[5]);
+      fv = *((u8*)p + 0xbc);
+      if (fv != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      x1 = 1 & fv;
+      {
+        bool8* xa = &((p->s).spr).xflip;
+        z3 = 0;
+        *xa = x1;
+      }
+      {
+        register u8* t0 asm("r0");
+        register u8* oa asm("ip");
+        u32 off = 0x4a;
+        asm("" : "+r"(off));
+        off += (u32)p;
+        t0 = (u8*)off;
+        oa = t0;
+        asm("" : "+r"(oa));
+        x1 <<= 4;
+        {
+          s32 ov = *t0;
+          s32 m11 = -0x11;
+          u32 vv;
+          register u8* fa asm("r1");
+          asm("" : "+r"(m11));
+          vv = (m11 & ov) | x1;
+          fa = oa;
+          asm("" : "+r"(fa));
+          *fa = vv;
+        }
+      }
+      (p->s).work[3] = z3;
+      (p->s).work[2] = 8;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      u8 w2 = (p->s).work[2];
+      if (w2 != 0) {
+        s32 t = w2 - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          goto umg;
+        }
+      }
+      {
+        s32 raw = (p->s).work[3] + 1;
+        u8 t3;
+        (p->s).work[3] = raw;
+        t3 = raw;
+        if (t3 > 2) {
+          (p->s).mode[2]++;
+        } else {
+          (p->s).work[2] = 8;
+          if (t3 == 2) {
+            SetMotion(&p->s, Action_ARRAY_080ff004[(p->s).work[3]]);
+          }
+          if ((p->s).work[3] == 1) {
+            SetDDP(&p->body, &sCollisions[5]);
+          } else {
+            SetDDP(&p->body, &sCollisions[0]);
+          }
+        }
+      }
+      if ((p->s).work[3] == 1) {
+        u8* bc = (u8*)p + 0xbc;
+        register u32 nv asm("r1");
+        register u32 one2 asm("r2");
+        u8 rv;
+        u32 x2;
+        nv = *bc;
+        one2 = 1;
+        asm("" : "+r"(one2));
+        nv ^= one2;
+        *bc = nv;
+        rv = *bc;
+        if (rv != 0) {
+          register s32 flA asm("r0");
+          register s32 cA asm("r1");
+          flA = (p->s).flags;
+          cA = 0x10;
+          asm("" : "+r"(cA));
+          flA |= cA;
+          (p->s).flags = flA;
+        } else {
+          (p->s).flags &= 0xEF;
+        }
+        x2 = 1 & rv;
+        ((p->s).spr).xflip = x2;
+        {
+          register u8* oa3 asm("r3");
+          s32 ov2;
+          s32 m11b;
+          oa3 = (u8*)&((p->s).spr).oam + 6;
+          x2 <<= 4;
+          ov2 = *oa3;
+          m11b = -0x11;
+          asm("" : "+r"(m11b));
+          *oa3 = (m11b & ov2) | x2;
+        }
+      }
+    umg:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 true_0806cd48(struct Enemy* p) { return TRUE; }
 
