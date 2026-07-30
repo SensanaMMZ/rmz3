@@ -169,7 +169,83 @@ void FUN_080acbe0(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_34_post_p2.inc");
+INCASM("asm/projectile/unk_34_post_p2a.inc");
+
+void FUN_080acea0(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8* a = (u8*)p + 0x8c;
+      s32 z = 0;
+      *(u32*)a = z;
+      asm("" : "+r"(a));
+      a += 4;
+      *(u32*)a = z;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = z;
+      (p->s).flags &= 0xFB;
+      if ((p->s).work[0] == 0) {
+        SetMotion(&p->s, 0xA00);
+      } else {
+        SetMotion(&p->s, 0xA03);
+      }
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      {
+        s32* w = (s32*)((u8*)p + 0xbc);
+        s32 v = *w;
+        if (v != 0) {
+          v -= 1;
+          *w = v;
+          if (v != 0) {
+            break;
+          }
+        }
+      }
+      (p->s).work[2] = 0x7F;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      u8 w0 = (p->s).work[0];
+      if (w0 == 0) {
+        SetMotion(&p->s, 0xA01);
+        SetDDP(&p->body, &sCollisions[1]);
+        (p->s).d.y = *(s32*)((u8*)p + 0xb8);
+        (p->s).d.x = w0;
+      } else {
+        SetMotion(&p->s, 0xA04);
+        SetDDP(&p->body, &sCollisions[2]);
+        (p->s).d.x = -*(s32*)((u8*)p + 0xb8);
+        (p->s).d.y = 0;
+      }
+      (p->s).work[3] = RANDOM(RNG_0202f388) & 1;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      (p->s).flags |= 1;
+      (p->s).work[2] = 0xFF;
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
 
 void Projectile34_Init(struct Projectile* p);
 void Projectile34_Update(struct Projectile* p);
