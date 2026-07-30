@@ -140,7 +140,100 @@ INCASM("asm/enemy/mothjiro_p2.inc");
 
 bool8 nop_080884a0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/mothjiro_p3.inc");
+struct VFX* FUN_080c2f3c(struct Coord* c, u8 mode);
+s32 FUN_08088ae0(struct Enemy* p);
+
+void mothjiro_080884a4(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      SetMotion(&p->s, 0x6B00);
+      {
+        s32 dx = *(s32*)((u8*)p + 0xb8) - (p->s).coord.x;
+        s32 dy, q1, q2, sq1, sq2, dist;
+        (p->s).d.x = dx;
+        dy = *(s32*)((u8*)p + 0xbc) - (p->s).coord.y;
+        (p->s).d.y = dy;
+        q1 = dx >> 2;
+        sq1 = q1;
+        sq1 = sq1 * q1;
+        q2 = dy >> 2;
+        sq2 = q2;
+        sq2 = sq2 * q2;
+        dist = (u16)Sqrt(sq1 + sq2) << 2;
+        if (dist != 0) {
+          (p->s).d.x = ((p->s).d.x << 8) / dist;
+          (p->s).d.y = ((p->s).d.y << 8) / dist;
+        }
+        (p->s).d.x = ((p->s).d.x << 9) >> 8;
+        (p->s).d.y = ((p->s).d.y << 9) >> 8;
+        if ((p->s).d.x > 0) {
+          s32 o = 1;
+          (p->s).flags |= 0x10;
+          (p->s).spr.xflip = o;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            s32 c16 = 0x10;
+            s32 ov, m11;
+            asm("" : "+r"(c16));
+            ov = *oa;
+            m11 = -0x11;
+            m11 &= ov;
+            *oa = m11 | c16;
+          }
+        } else {
+          (p->s).flags &= 0xEF;
+          (p->s).spr.xflip = m;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            s32 ov = *oa;
+            s32 m11 = -0x11;
+            m11 &= ov;
+            *oa = m11;
+          }
+        }
+      }
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((u8)(++(p->s).mode[3]) % 0xC == 0) {
+        FUN_080c2f3c(&(p->s).coord, ((p->s).flags >> 4) & 1);
+      }
+      {
+        s32 t = *(s32*)((u8*)p + 0xb8);
+        s32 cx = (p->s).coord.x;
+        s32 d = t - cx;
+        if (d <= 0) {
+          d = cx - t;
+        }
+        if (d <= 0x4FFF) {
+          s32 t2 = *(s32*)((u8*)p + 0xbc);
+          s32 cy = (p->s).coord.y;
+          s32 d2 = t2 - cy;
+          if (d2 <= 0) {
+            d2 = cy - t2;
+          }
+          if (d2 <= 0x17FF) {
+            (p->s).mode[1] = 2;
+            (p->s).mode[2] = 0;
+          }
+        }
+      }
+      {
+        s32 r = FUN_08088ae0(p);
+        if (r == 0) {
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = r;
+        }
+      }
+      break;
+    }
+  }
+}
 
 bool8 nop_080885f8(struct Enemy* p) { return TRUE; }
 
@@ -198,7 +291,7 @@ bool8 mothjiro_08088a74(struct Enemy* p) {
 
 struct Coord* FUN_08012a64(struct Coord* c);
 
-bool8 FUN_08088ae0(struct Enemy* p) {
+s32 FUN_08088ae0(struct Enemy* p) {
   struct Coord* r = FUN_08012a64(&(p->s).coord);
   if (r != NULL) {
     *(s32*)((u8*)p + 0xb8) = r->x;
