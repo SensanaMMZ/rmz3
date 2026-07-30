@@ -1,6 +1,10 @@
 #include "collision.h"
 #include "global.h"
 #include "overworld.h"
+#include "overworld_terrain.h"
+#include "sound.h"
+#include "stagerun.h"
+#include "zero.h"
 #include "solid.h"
 
 enum ElevatorSkin {
@@ -169,7 +173,100 @@ void FUN_080d0008(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/base_elevator_p2.inc");
+INCASM("asm/solid/base_elevator_p2a.inc");
+
+extern const motion_t sBaseElevatorMotions[6];
+void rBaseElevatorScript(struct Solid* p);
+
+void rBaseElevatorScript(struct Solid* p) {
+  if ((p->s).mode[2] == 0) {
+    if (*((u8*)p + 0xbd) == 0) {
+      if ((p->s).work[1] <= 5) {
+        SetMotion(&p->s, sBaseElevatorMotions[(p->s).work[1]]);
+      } else {
+        SetMotion(&p->s, sBaseElevatorMotions[0]);
+      }
+    } else if (*((u8*)p + 0xbd) == 1) {
+      SetMotion(&p->s, 0x8901);
+    } else {
+      SetMotion(&p->s, 0x8A01);
+    }
+    UpdateMotionGraphic(&p->s);
+    {
+      s32 z2 = 0;
+      register u8* ob asm("r1");
+      register u32 o3 asm("r3");
+      (p->s).d.y = z2;
+      ob = (u8*)&gOverworld;
+      asm("" : "+r"(ob));
+      o3 = 0x2C014;
+      asm("" : "+r"(o3));
+      *(s32*)(ob + o3) = z2;
+      o3 += 4;
+      *(s32*)(ob + o3) = z2;
+      {
+        u32 o2 = 0x2C01C;
+        asm("" : "+r"(o2));
+        *(s32*)(ob + o2) = 0x3C0000;
+      }
+      o3 += 8;
+      *(s32*)(ob + o3) = 0x280000;
+    }
+    (p->s).mode[2]++;
+  }
+  if (((p->body).status & 4) != 0) {
+    u32 mz = *(u32*)(pZero2->s).mode & 0x00FFFF00;
+    if (mz == 0) {
+      register u8* ca asm("r1");
+      register u32 w1raw asm("r0");
+      register u32 w1 asm("r3");
+      u32 lim;
+      ca = (u8*)p + 0xc0;
+      w1raw = (p->s).work[1];
+      asm("" : "+r"(w1raw));
+      w1 = w1raw;
+      asm("" : "+r"(w1));
+      lim = *ca;
+      if (w1 > lim && (gStageRun.input & 0x40)) {
+        (p->s).d.y = -0x200;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = mz;
+        goto upd;
+      }
+      {
+        register u8* cb asm("r1");
+        register u32 t8 asm("r0");
+        cb = (u8*)p + 0xc1;
+        t8 = (u8)w1;
+        if (t8 < *cb) {
+          if (gStageRun.input & 0x80) {
+            register s32 zz asm("r1");
+            (p->s).d.y = 0x200;
+            zz = 0;
+            asm("" : "+r"(zz));
+            (p->s).mode[1] = 1;
+            (p->s).mode[2] = zz;
+          upd:
+            BaseElevator_Update(p);
+            return;
+          }
+        }
+      }
+    }
+  }
+  {
+    s16* sp0 = (s16*)((u8*)p + 0xbe);
+    if (*sp0 != -1) {
+      u32 fv;
+      StopSound(*sp0);
+      fv = 0xFFFF;
+      asm("" : "+r"(fv));
+      *sp0 = fv;
+    }
+  }
+}
+
+INCASM("asm/solid/base_elevator_p2b.inc");
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
