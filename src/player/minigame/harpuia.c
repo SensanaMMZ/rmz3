@@ -254,7 +254,123 @@ void FUN_080355c4(struct Zero* z) {
   }
 }
 
-INCASM("asm/player/harpuia_p3_b.inc");
+// Scratch-parity cascade: retail rotates its temp chain (r0-temp/r3-dest addr
+// forms, r2-kept 1-const, r5 probe results) one register off from every
+// allocation reached here; pins on r, f284, and opaque bases shift the sites
+// without converging. Structure and all probe/flag semantics stream-match.
+NON_MATCH void harpuia_08035684(struct Zero* p) {
+#if MODERN
+  {
+    s32 y = (p->s).coord.y;
+    register s32 r asm("r5");
+    if (y > 0x12C00) {
+      r = PushoutToLeft2((p->s).coord.x + 0x1A00, 0x12C00);
+    } else {
+      r = PushoutToLeft2((p->s).coord.x + 0x1A00, y);
+    }
+    if (r != 0) {
+      (p->s).coord.x += r;
+    }
+  }
+  {
+    register u8* f284 asm("r3");
+    f284 = (u8*)p + 0x284;
+    if (*f284 == 0 && *(s16*)((u8*)(p->s).unk_28 + 4) == 1 && (gJoypad[0].pressed & 1)) {
+      u8* pb = (u8*)p;
+      asm("" : "+r"(pb));
+      *f284 = 1;
+      *(pb + 0x285) = 1;
+      (p->s).d.y = -0x540;
+    }
+  }
+  {
+    u8* f284b = (u8*)p + 0x284;
+    if (*f284b == 1) {
+      {
+        u32 h = gJoypad[0].input & 1;
+        if (h == 0 && (p->s).d.y < 0) {
+          u8* pb2 = (u8*)p;
+          asm("" : "+r"(pb2));
+          (p->s).d.y = h;
+          *(pb2 + 0x285) = h;
+        }
+      }
+      {
+        u8* f285;
+        u8* pb3 = (u8*)p;
+        asm("" : "+r"(pb3));
+        f285 = pb3 + 0x285;
+        if (*f285 == 1 && (p->s).d.y > 0) {
+          s32 z = 0;
+          (p->s).d.y = z;
+          *f285 = z;
+        }
+      }
+      (p->s).d.y += 0x2C;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      {
+        s32 ny = (p->s).coord.y + (p->s).d.y;
+        s32* cap;
+        (p->s).coord.y = ny;
+        cap = (s32*)((u8*)p + 0x288);
+        if (*cap != 0x7FFFFFFF && ny <= *cap) {
+          s32 r2;
+          s32 g;
+          s32 x;
+          u8* pb4;
+          r2 = PushoutToUp2((p->s).coord.x + -0x1A00, (p->s).coord.y + (p->s).d.y);
+          g = FUN_0800a05c((p->s).coord.x + -0x1A00, (p->s).coord.y);
+          if (r2 != 0 && g <= *cap) {
+            x = (p->s).coord.x + -0x1A00;
+            goto snap;
+          }
+          r2 = PushoutToUp2((p->s).coord.x + 0x1A00, (p->s).coord.y + (p->s).d.y);
+          g = FUN_0800a05c((p->s).coord.x + 0x1A00, (p->s).coord.y);
+          if (r2 != 0 && g <= *(volatile s32*)((u8*)p + 0x288)) {
+            x = (p->s).coord.x + 0x1A00;
+            goto snap;
+          }
+          r2 = PushoutToUp2((p->s).coord.x, (p->s).coord.y + (p->s).d.y);
+          g = FUN_0800a05c((p->s).coord.x, (p->s).coord.y);
+          if (r2 != 0 && g <= *(volatile s32*)((u8*)p + 0x288)) {
+            x = (p->s).coord.x;
+          snap:
+            (p->s).coord.y = FUN_0800a05c(x, (p->s).coord.y + -0x1000);
+            pb4 = (u8*)p;
+            asm("" : "+r"(pb4));
+            *((u8*)p + 0x284) = 0;
+            *(pb4 + 0x285) = 0;
+          }
+        }
+      }
+    } else {
+      s32 g1 = FUN_0800a05c((p->s).coord.x + 0x1A00, (p->s).coord.y);
+      if (g1 != (p->s).coord.y) {
+        g1 = FUN_0800a05c((p->s).coord.x + -0x1A00, (p->s).coord.y);
+        if (g1 != (p->s).coord.y) {
+          g1 = FUN_0800a05c((p->s).coord.x, (p->s).coord.y);
+          if (g1 != (p->s).coord.y) {
+            s32 z2 = 0;
+            u8* pb5 = (u8*)p;
+            asm("" : "+r"(pb5));
+            *f284b = 1;
+            *(pb5 + 0x285) = 1;
+            (p->s).d.y = z2;
+            if (g1 > *(s32*)((u8*)p + 0x288)) {
+              *(s32*)((u8*)p + 0x288) = 0x7FFFFFFF;
+              *((u8*)p + 0x286) = 0x78;
+            }
+          }
+        }
+      }
+    }
+  }
+#else
+  INCCODE("asm/player/harpuia_35684.inc");
+#endif
+}
 
 // --------------------------------------------
 

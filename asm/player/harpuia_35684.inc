@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-
-	.text
-
-	thumb_func_start harpuia_08035684
-harpuia_08035684: @ 0x08035684
 	push {r4, r5, r6, r7, lr}
 	adds r4, r0, #0
 	ldr r1, [r4, #0x58]
