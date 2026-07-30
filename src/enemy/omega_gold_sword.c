@@ -59,7 +59,120 @@ void OmegaGoldSword_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/omega_gold_sword_p1_post_a.inc");
+static const struct Coord Coord_ARRAY_08368e54[4];
+static const motion_t motion_t_ARRAY_08368e74[12];
+static const struct Coord Coord_ARRAY_08368e8c[4];
+static const motion_t motion_t_ARRAY_08368eac[12];
+
+struct VFX* FUN_080c1cf4(struct Coord* c, u8 a1, u16 a2, u16 a3);
+
+// Scratch-parity basin: retail schedules the spilled &c init between the rng
+// pointer and the loop counters, rotating every later scratch pick one register
+// forward (movs r1/#0, movs r2/#3, ldr r1 pool). Structure, homes, spill slot,
+// and both spawn loops stream-match at 22 bytes of register parity.
+NON_MATCH void FUN_0808b938(struct Enemy* p) {
+#if MODERN
+  struct Coord c;
+  struct Coord c2;
+  u8 m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0: {
+      (p->body).status = m2;
+      (p->body).prevStatus = m2;
+      (p->body).invincibleTime = m2;
+      (p->s).flags &= ~4;
+      (p->s).d.x = m2;
+      (p->s).d.y = m2;
+      (p->s).work[2] = 0x78;
+      if ((u32)(MOTION_VALUE(p) - MOTION(0x65, 6)) < 2) {
+        register u32* rng asm("r10") = ({ u32* r_ = &RNG_0202f388; asm volatile("" : "+r"(r_) : "r"(&c)); r_; });
+        register u32 j asm("r9") = 0;
+        const struct Coord* cp = Coord_ARRAY_08368e54;
+        register s32 i asm("r8") = 3;
+        const motion_t* t = motion_t_ARRAY_08368e74;
+        do {
+          u32 a = *rng;
+          u32 v = (a * 0x343FD + 0x269EC3) << 1;
+          u32 k;
+          const u8* mb;
+          *rng = v >> 1;
+          k = (v >> 0x11) & 3;
+          asm volatile("" :: "r"(k));
+          c.x = (p->s).coord.x + cp->x;
+          c.y = (p->s).coord.y + cp->y + 0x4000;
+          FUN_080c1cf4(&c, k, 0, t[0]);
+          asm volatile("add %0, #2" : "=r"(mb) : "0"((const u8*)motion_t_ARRAY_08368e74));
+          FUN_080c1cf4(&c, k, 0, *(const motion_t*)(mb + j));
+          FUN_080c1cf4(&c, k, 0, t[2]);
+          t += 3;
+          j += 6;
+          cp++;
+          i--;
+        } while (i >= 0);
+      } else {
+        struct Coord* pc = &c2;
+        u32 j = 0;
+        const struct Coord* cp = Coord_ARRAY_08368e8c;
+        s32 i = 3;
+        const motion_t* t = motion_t_ARRAY_08368eac;
+        for (; i >= 0; i--) {
+          u32 a = RNG_0202f388;
+          u32 v = (a * 0x343FD + 0x269EC3) << 1;
+          u32 k;
+          const u8* mb;
+          RNG_0202f388 = v >> 1;
+          k = (v >> 0x11) & 3;
+          asm volatile("" :: "r"(k));
+          c2.x = (p->s).coord.x + cp->x;
+          pc->y = (p->s).coord.y + cp->y + 0x4000;
+          FUN_080c1cf4(pc, k, 1, t[0]);
+          asm volatile("add %0, #2" : "=r"(mb) : "0"((const u8*)motion_t_ARRAY_08368eac));
+          FUN_080c1cf4(pc, k, 1, *(const motion_t*)(mb + j));
+          FUN_080c1cf4(pc, k, 1, t[2]);
+          t += 3;
+          j += 6;
+          cp++;
+        }
+      }
+      if (MOTION_VALUE(p) == MOTION(0x65, 1)) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).mode[2] = 2;
+      } else {
+        SetMotion(&p->s, MOTION(0x65, 5));
+        UpdateMotionGraphic(&p->s);
+        (p->s).flags &= ~DISPLAY;
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      s32 t = (p->s).work[2];
+      if (t != 0) {
+        t--;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    }
+    case 3: {
+      s32 z = 0;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/omega_gold_sword_93a8.inc");
+#endif
+}
 
 void FUN_0808bb58(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {

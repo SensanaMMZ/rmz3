@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-
-	.text
-
-	thumb_func_start FUN_0808b938
-FUN_0808b938: @ 0x0808B938
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, sb
@@ -272,4 +264,3 @@ _0808BB46:
 	pop {r0}
 	bx r0
 	.align 2, 0
-
