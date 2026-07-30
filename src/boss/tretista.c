@@ -475,7 +475,116 @@ INCASM("asm/boss/tretista_p10.inc");
 
 bool8 FUN_0804f5c0(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/tretista_p11.inc");
+struct Projectile* createTretistaBreathGas(struct Entity* e, struct Coord* c, u8 a2);
+
+void tretistaBreathGas(struct Boss* p) {
+  struct Coord c;
+  struct Coord c2;
+  switch ((p->s).mode[2]) {
+    case 0:
+      StartPaletteAnimation(0x4C, 0x2E0);
+      SetMotion(&p->s, 0xAB1C);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0xA;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      if ((p->s).work[2] == 0) {
+        goto minc;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((u32)(t << 24) != 0) {
+          break;
+        }
+      }
+      asm volatile("");
+      goto minc;
+    case 2:
+      SetMotion(&p->s, 0xAB1E);
+      SetDDP(&p->body, &sCollisions[7]);
+      PlaySound(0xD9);
+      (p->s).work[2] = 2;
+      (p->s).work[3] = 3;
+      (p->s).mode[3] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      StepPaletteAnimation(0x4C);
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[3]++;
+      if ((p->s).work[2] != 0 && ((p->s).mode[3] - 1) % 0x50 == 0) {
+        c.x = (p->s).coord.x + -0x3000;
+        c.y = (p->s).coord.y + -0x4000;
+        createTretistaBreathGas(&p->s, &c, 0);
+        c.x = (p->s).coord.x + 0x3000;
+        createTretistaBreathGas(&p->s, &c, 1);
+        PlaySound(0xDA);
+        (p->s).work[2]--;
+      }
+      if ((p->s).work[3] != 0 && ((p->s).mode[3] - 1) % 0x3C == 0) {
+        c2.x = (p->s).coord.x;
+        c2.y = (p->s).coord.y + -0x2A00;
+        createTretistaBreathGas(&p->s, &c2, 2);
+        createTretistaBreathGas(&p->s, &c2, 3);
+        PlaySound(0xDA);
+        (p->s).work[3]--;
+      }
+      if (*(u16*)((u8*)p + 0x12) == 0) {
+        (p->s).work[2] = 0x14;
+        goto minc;
+      }
+      break;
+    case 4:
+      StepPaletteAnimation(0x4C);
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        goto minc;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((u32)(t << 24) != 0) {
+          break;
+        }
+      }
+      goto minc;
+    case 5:
+      SetMotion(&p->s, 0xAB1F);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 6:
+      StepPaletteAnimation(0x4C);
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      (p->s).work[2] = 0x32;
+    minc:
+      (p->s).mode[2]++;
+      break;
+    case 7:
+      StepPaletteAnimation(0x4C);
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((u32)(t << 24) != 0) {
+          break;
+        }
+      }
+      RemovePaletteAnimation(0x4C);
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_0804f7d8(struct Boss* p) { return TRUE; }
 
