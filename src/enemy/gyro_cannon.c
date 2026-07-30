@@ -596,13 +596,7 @@ void CreateGhost27(struct Coord* c, u8 r1, u8 r2);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 extern const struct SlashedEnemy sSlashedEnemies[4];
 
-/* Gyro cannon propeller-death handler. Parked: call-argument emission-order
-   tie - retail emits movs-first arg setup for the two identical CreateSmoke
-   calls but adds-first for TryDropItem; pins/anchors on the arg registers
-   flip neither (same blocker that left the twin FUN_0806ddfc as NAKED asm).
-   Everything else byte-matches. */
-NON_MATCH void gyroCannon_0806dccc(struct Enemy* p) {
-#if MODERN
+void gyroCannon_0806dccc(struct Enemy* p) {
   if ((p->s).mode[3] == 0) {
     SetMotion(&p->s, 0x1707);
     {
@@ -694,18 +688,9 @@ NON_MATCH void gyroCannon_0806dccc(struct Enemy* p) {
     }
     CreateSmoke(1, c6);
     if ((p->s).flags & 0x10) {
-      register u32 k0 asm("r0");
-      register struct Coord* cc asm("r1");
-      k0 = 2;
-      asm("" : "+r"(k0));
-      cc = c6;
-      CreateSmoke(k0, cc);
+      CreateSmoke(2, c6);
     } else {
-      register u32 k2 asm("r0");
-      register struct Coord* c1b asm("r1");
-      k2 = 2;
-      c1b = c6;
-      CreateSmoke(k2, c1b);
+      CreateSmoke(2, c6);
     }
     {
       register struct Coord* c1 asm("r1");
@@ -719,9 +704,7 @@ NON_MATCH void gyroCannon_0806dccc(struct Enemy* p) {
     TryDropZakoDisk(p, c6);
     SET_ENEMY_ROUTINE(p, 4);
   }
-#else
-  INCCODE("asm/enemy/gyro_cannon_dccc.inc");
-#endif
+
 }
 
 
