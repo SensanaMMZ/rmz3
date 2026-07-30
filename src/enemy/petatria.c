@@ -78,7 +78,75 @@ INCASM("asm/enemy/petatria_p1_pre_p3_p3.inc");
 
 bool8 FUN_08090da4(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/petatria_p1_pre_p3_p4.inc");
+static const struct Collision sCollisions[12];
+
+void FUN_08090da8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[11]);
+      (p->s).work[2] = 4;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2:
+      SetDDP(&p->body, &sCollisions[10]);
+      SetMotion(&p->s, 0x7E16);
+      (p->s).work[2] = 0x60;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      (p->s).work[2]--;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      if ((p->s).work[2] != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      SetMotion(&p->s, 0x7E18);
+      (p->s).work[2] = (u32)RANDOM(RNG_0202f388) % 0x14 + 0xA;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 5: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 6:
+      SetMotion(&p->s, 0x7E19);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 7: {
+      u8 z;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      z = 0;
+      (p->s).mode[1] = z;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
+
 
 bool8 FUN_08090edc(struct Enemy* p) { return TRUE; }
 
