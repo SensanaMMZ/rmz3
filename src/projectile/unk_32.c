@@ -180,6 +180,83 @@ void nop_080aaed4(struct Projectile* p) {}
 
 INCASM("asm/projectile/unk_32_p4_p1.inc");
 
+void CreateVFX57(struct Coord* c, u8 a1, u8 a2, s16 dx, s16 dy);
+
+void FUN_080ab004(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 m = (p->s).mode[1];
+    if (m == 0) {
+      s32 nx, ny;
+      nx = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = nx;
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      if (FUN_080098a4(nx, ny) == 0) {
+        return;
+      }
+      {
+        u8* w = (u8*)p + 0x8c;
+        *(u32*)w = m;
+        asm("" : "+r"(w));
+        w += 4;
+        *(u32*)w = m;
+        asm("" : "+r"(w));
+        w += 4;
+        asm("" : "+r"(w));
+        *(u8*)w = m;
+      }
+      {
+        u32 fl = (p->s).flags;
+        u32 t = 0xFB;
+        t &= fl;
+        t &= 0xFE;
+        (p->s).flags = t;
+      }
+      (p->s).work[2] = 0x20;
+      if ((p->s).coord.y < *(s32*)((u8*)p + 0xb8)) {
+        u32 tbl = (u32)gProjectileFnTable;
+        u32 id = ((p->s).id) << 2;
+        EntityFunc** rt = (EntityFunc**)(tbl + id);
+        *(u32*)((p->s).mode) = 2;
+        (p->s).onUpdate = (void*)((*rt)[2]);
+        UpdateMotionGraphic(&p->s);
+      } else {
+        (p->s).mode[1]++;
+      }
+    } else {
+      u32 w2 = (p->s).work[2];
+      s32 t7 = 7;
+      t7 &= w2;
+      if (t7 == 0) {
+        struct Coord c;
+        s32 x = (p->s).coord.x;
+        c.x = x;
+        c.y = FUN_08009f6c(x, (p->s).coord.y);
+        CreateVFX57(&c, 0, 0, 0x100, t7);
+        CreateVFX57(&c, 0, 0, -0x100, t7);
+        CreateVFX57(&c, 0, 1, RANDOM(RNG_0202f388) & 0x3F, -(RANDOM(RNG_0202f388) & 0x7F));
+        CreateVFX57(&c, 0, 1, -(RANDOM(RNG_0202f388) & 0x3F), -(RANDOM(RNG_0202f388) & 0x7F));
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((u8)t == 0xFF) {
+          u32 tbl;
+          u32 id;
+          EntityFunc** rt;
+          FUN_080aab38((struct Enemy*)p, (struct Entity*)(p->s).unk_28);
+          tbl = (u32)gProjectileFnTable;
+          id = ((p->s).id) << 2;
+          rt = (EntityFunc**)(tbl + id);
+          *(u32*)((p->s).mode) = 2;
+          (p->s).onUpdate = (void*)((*rt)[2]);
+        }
+      }
+    }
+  }
+}
+
 void FUN_080ab178(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
