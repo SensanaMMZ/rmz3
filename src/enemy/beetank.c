@@ -37,7 +37,99 @@ struct Enemy* CreateBeetank(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/beetank_Init.inc");
+static const struct Collision sCollisions[2];
+void nop_0807bea4(struct Enemy* p);
+
+void Beetank_Init(struct Enemy* p) {
+  s32 v[2];
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    register s32 z2 asm("r2");
+    f0 = (p->s).flags;
+    d0 = 1;
+    d0 |= f0;
+    {
+      register s32 c2 asm("r1");
+      c2 = 2;
+      d0 |= c2;
+    }
+    z2 = 0;
+    {
+      register s32 c3 asm("r1");
+      c3 = 0xEF;
+      d0 &= c3;
+    }
+    (p->s).flags = d0;
+    ((p->s).spr).xflip = z2;
+  }
+  {
+    u8* a = (u8*)p + 0x4a;
+    register u8 b asm("r1");
+    s32 msk;
+    b = *a;
+    msk = -0x11;
+    msk &= b;
+    *a = msk;
+  }
+  v[0] = PushoutToLeft1((p->s).coord.x + 0x1000, (p->s).coord.y + -0xC00);
+  v[1] = PushoutToRight1((p->s).coord.x + -0x1000, (p->s).coord.y + -0xC00);
+  if (v[0] != 0) {
+    if (v[1] != 0) {
+      goto skipx;
+    }
+    (p->s).coord.x += v[0];
+  } else {
+    if (v[1] == 0) {
+      goto skipx;
+    }
+    (p->s).coord.x += v[1];
+  }
+skipx:
+  v[0] = FUN_08009f6c((p->s).coord.x + -0x1000, (p->s).coord.y + -0x600);
+  v[1] = FUN_08009f6c((p->s).coord.x + 0x1000, (p->s).coord.y + -0x600);
+  if (v[0] < v[1]) {
+    (p->s).coord.y = v[0];
+  } else {
+    (p->s).coord.y = v[1];
+  }
+  {
+    register u8 f1 asm("r1");
+    register s32 c4 asm("r0");
+    register s32 z5 asm("r5");
+    f1 = (p->s).flags;
+    c4 = 4;
+    z5 = 0;
+    c4 |= f1;
+    (p->s).flags = c4;
+    {
+      struct Body* body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 6);
+      body->parent = (void*)p;
+      body->fn = (BodyFunc)nop_0807bea4;
+    }
+    {
+      u8* w = (u8*)p + 0x5c;
+      *(s32*)(w + 4) = z5;
+      (p->s).d.x = z5;
+      w += 0x60;
+      *(s32*)w = z5;
+      w -= 4;
+      *w = z5;
+    }
+    SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = z5;
+    (p->s).mode[2] = z5;
+    (p->s).mode[3] = z5;
+  }
+  if (IsFrozen(&p->s)) {
+    SetMotion(&p->s, 0x3E00);
+    UpdateMotionGraphic(&p->s);
+  }
+  Beetank_Update(p);
+}
+
 
 // Does not match: agbcc cannot reproduce the target's register allocation in
 // the ground-snap min() block (the constant is cached in r8 forcing a push/pop,
