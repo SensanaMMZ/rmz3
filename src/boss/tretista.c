@@ -1,5 +1,7 @@
 #include "boss.h"
 #include "collision.h"
+#include "palette_animation.h"
+#include "physics.h"
 #include "global.h"
 #include "overworld.h"
 #include "zero.h"
@@ -480,6 +482,133 @@ bool8 FUN_0804f7d8(struct Boss* p) { return TRUE; }
 INCASM("asm/boss/tretista_p12.inc");
 
 bool8 FUN_0804fc6c(struct Boss* p) { return TRUE; }
+
+void tretista_0804fc70(struct Boss* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      PlaySound(0xDC);
+      if (*((u8*)p + 0xe1) != 7) {
+        SetMotion(&p->s, 0xAB24);
+      }
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        u32 k10;
+        (p->s).d.x = -0x200;
+        ((p->s).spr).xflip = 1;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          u32 ov = *oa;
+          k10 = 0x10;
+          ov |= k10;
+          *oa = ov;
+        }
+        k10 |= (p->s).flags;
+        (p->s).flags = k10;
+      } else {
+        (p->s).d.x = 0x200;
+        ((p->s).spr).xflip = m;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+        {
+          u32 flv = (p->s).flags;
+          register u32 t asm("r0");
+          t = 0xEF;
+          asm("" : "+r"(t));
+          t &= flv;
+          (p->s).flags = t;
+        }
+      }
+      {
+        u32 fl2 = (p->s).flags;
+        register u32 t2 asm("r0");
+        t2 = 1;
+        asm volatile("" : "+r"(t2));
+        t2 |= fl2;
+        (p->s).flags = t2;
+      }
+      RemovePaletteAnimation(0x49);
+      RemovePaletteAnimation(0x4A);
+      RemovePaletteAnimation(0x4B);
+      RemovePaletteAnimation(0x4C);
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 dx = (p->s).d.x;
+        (p->s).d.x = dx + ((-dx << 3) >> 8);
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      {
+        s32 ny = (p->s).coord.y + (p->s).d.y;
+        s32 nx;
+        (p->s).coord.y = ny;
+        nx = (p->s).coord.x + (p->s).d.x;
+        (p->s).coord.x = nx;
+        if ((p->s).d.x > 0) {
+          s32 push = PushoutToLeft1(nx + 0x2E00, ny + -0x800);
+          if (push != 0) {
+            (p->s).coord.x += push;
+          }
+        }
+      }
+      if ((p->s).d.x < 0) {
+        s32 push2 = PushoutToRight1((p->s).coord.x + -0x2E00, (p->s).coord.y + -0x800);
+        if (push2 != 0) {
+          (p->s).coord.x += push2;
+        }
+      }
+      {
+        s32 push3 = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (push3 != 0) {
+          (p->s).coord.y += push3;
+        }
+      }
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      {
+        u32 e1 = *((u8*)p + 0xe1);
+        if (e1 == 7) {
+          u32 e2 = *((u8*)p + 0xe2);
+          if (e2 > 4) {
+            if (e2 <= 7) {
+              (p->s).mode[1] = e1;
+              (p->s).mode[2] = 6;
+              break;
+            }
+            if (e2 <= 9) {
+              (p->s).mode[1] = e1;
+              (p->s).mode[2] = 8;
+              break;
+            }
+          }
+        }
+      }
+      {
+        s32 z = 0;
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = z;
+        (p->s).mode[3] = 0xFF;
+      }
+      break;
+    }
+  }
+}
 
 INCASM("asm/boss/tretista_p13_p1.inc");
 
