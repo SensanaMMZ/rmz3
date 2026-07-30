@@ -3,6 +3,7 @@
 #include "global.h"
 #include "overworld.h"
 #include "story.h"
+#include "system.h"
 
 static void initTwilightDesert(struct Coord* _ UNUSED);
 static void FUN_0800f8dc(struct Coord* c);
@@ -67,6 +68,123 @@ static void LayerUpdate_TwilightDesert_2(struct StageLayer* l, const struct Stag
     *(u32*)gVideoRegBuffer.bgofs[n >> 4] = 0;
     CpuFastCopy(BGMAP(61), (void*)(VRAM + SCREEN_BASE_16(n >> 4)), 2048);
     l->phase++;
+  }
+}
+
+void FUN_0800fa34(struct StageLayer* l, const struct Stage* stage) {
+  u32* q = Malloc(0xA0 * 4);
+  if (q != NULL) {
+    register s32 i asm("r2");
+    u32 sh;
+    s32 base;
+    register u32 hi asm("ip");
+    gIntrManager.reservedDma0[0] = (u32)q;
+    gIntrManager.reservedDma0[1] = 0x0400001C;
+    gIntrManager.reservedDma0[2] = 0xA6600001;
+
+    hi = (u16)((u32)(l->viewportCenterPixel.x << 0xc) >> 0x10);
+    {
+      s32 c0 = ((l->viewportCenterPixel.y + 0xa0) >> 4) + 0x10;
+      s32 c;
+      i = 0;
+      c = (s8)c0;
+      if (c <= 0x88) {
+        u32* p = q;
+        u32 val;
+        base = c;
+        val = ((u32)base << 16) | hi;
+        do {
+          *p++ = val;
+          i++;
+          if (i > 0x9f) {
+            break;
+          }
+        } while (base + i <= 0x88);
+      }
+    }
+
+    hi = (u16)((u32)(l->viewportCenterPixel.x << 0xd) >> 0x10);
+    {
+      u32 cu = (u8)(((l->viewportCenterPixel.y - 0xa0) >> 3) + 0x10);
+      u32 t;
+      s32 sum;
+      if (i > 0x9f) {
+        goto band3;
+      }
+      t = cu << 24;
+      base = (s32)t >> 24;
+      sum = base + i;
+      asm("" : "=r"(sh) : "0"(t));
+      if (sum <= 0x88) {
+        s32 bc = base;
+        u32 val = (0x89 << 16) - ((u32)i << 16);
+        u32* p = (u32*)((i << 2) + (u32)q);
+        do {
+          *p++ = val;
+          val += 0xFFFF0000;
+          i++;
+          if (i > 0x9f) {
+            goto band3;
+          }
+        } while (bc + i <= 0x88);
+      }
+      if (i > 0x9f) {
+        goto band3;
+      }
+      if (((s32)sh >> 24) + i <= 0x99) {
+        u32* p = (u32*)((i << 2) + (u32)q);
+        u32 val;
+        base = (s32)sh >> 24;
+        val = ((u32)base << 16) | hi;
+        do {
+          *p++ = val;
+          i++;
+          if (i > 0x9f) {
+            goto band3;
+          }
+        } while (base + i <= 0x99);
+      }
+    }
+
+  band3:
+    hi = (u16)((u32)(l->viewportCenterPixel.x << 0xe) >> 0x10);
+    {
+      u32 cu = (u8)(((l->viewportCenterPixel.y - 0x140) >> 2) + 0x10);
+      u32 t;
+      s32 sum;
+      if (i > 0x9f) {
+        goto done;
+      }
+      t = cu << 24;
+      base = (s32)t >> 24;
+      sum = base + i;
+      asm("" : "=r"(sh) : "0"(t));
+      if (sum <= 0x98) {
+        s32 bc = base;
+        u32 val = (0x99 << 16) - ((u32)i << 16);
+        u32* p = (u32*)((i << 2) + (u32)q);
+        do {
+          *p++ = val;
+          val += 0xFFFF0000;
+          i++;
+          if (i > 0x9f) {
+            goto done;
+          }
+        } while (bc + i <= 0x98);
+      }
+      if (i > 0x9f) {
+        goto done;
+      }
+      {
+        u32 val = (((s32)sh >> 8) | hi);
+        u32* p = (u32*)((i << 2) + (u32)q);
+        do {
+          *p++ = val;
+          i++;
+        } while (i <= 0x9f);
+      }
+    }
+  done:;
   }
 }
 
