@@ -395,7 +395,96 @@ end:;
 #endif
 }
 
-INCASM("asm/stage_gfx/weil_labo_p1_p2_a.inc");
+INCASM("asm/stage_gfx/weil_labo_p1_p2_a1.inc");
+
+/* 0x08015cf0 -- parked (scheduling ties): structure and register homes match
+   retail (l5=r5, n16=r6, ov=r7-region, b=r8, _CpuFastFill frame) but three
+   sites resist: the 0x2C002 pool-offset scratch reg (r1 vs r3), the guarded
+   n16>>20 either hoists above the beq or materializes an extra copy, and the
+   vu32 spill store schedules early. */
+NON_MATCH void FUN_08015cf0(struct StageLayer* l, const struct Stage* stage) {
+#if MODERN
+
+  register struct StageLayer* l5 asm("r5");
+  register u32 n16 asm("r6");
+  register u32 b asm("r8");
+  u8* ov;
+  l5 = l;
+  {
+    register u32 raw asm("r0");
+    raw = l5->bgIdx;
+    n16 = raw << 16;
+  }
+  b = n16 >> 16;
+  ov = (u8*)&gOverworld;
+  if (*(ov + 0x2D024) == 0) {
+    DrawGeneralStageLayer(l5, stage);
+    return;
+  }
+  if (*(u16*)(ov + 0x2C002) != 0) {
+    {
+      u32 nn = n16;
+      asm("" : "+r"(nn));
+      _CpuFastFill(0, (void*)(((BGCNT16(nn >> 20) & 0x1F00) << 3) + VRAM), 0x1000);
+    }
+    LoadBgMap(b, gBgMapOffsets, 0x4B, 0, 0);
+  }
+  {
+    register u8* ov3 asm("r3");
+    register u32 o2 asm("r2");
+    ov3 = ov;
+    o2 = 0x2D040;
+    asm("" : "+r"(o2));
+    if (*(s32*)(ov3 + o2) != 0) {
+      s32* q;
+      {
+        u32 o54 = 0x2D054;
+        s32* d1;
+        asm("" : "+r"(o54));
+        d1 = (s32*)(ov3 + o54);
+        o2 += 8;
+        q = *(s32**)(ov3 + o2);
+        *d1 = q[0];
+      }
+      {
+        u32 o58 = 0x2D058;
+        s32* d2;
+        asm("" : "+r"(o58));
+        d2 = (s32*)(ov3 + o58);
+        *d2 = q[1];
+      }
+    }
+  }
+  {
+    u32 n = n16 >> 20;
+    u16 v3;
+    {
+      u32 o54b = 0x2D054;
+      asm("" : "+r"(o54b));
+      BGnHOFS(n) = (l5->viewportCenterPixel.x - (*(s32*)(ov + o54b) >> 8)) + 0xE0 + (l5->drawPivotOffset.x >> 8);
+    }
+    {
+      u32 o58b = 0x2D058;
+      s32 v2;
+      asm("" : "+r"(o58b));
+      v2 = l5->viewportCenterPixel.y - (((*(s32*)(ov + o58b) + -0x50000) >> 8) + 0x500);
+      v2 += (l5->drawPivotOffset.y >> 8) + 0x70;
+      BGnVOFS(n) = v2;
+      v3 = v2;
+    }
+    if (*(ov + 0x2D025) != 0 && (s16)v3 > -0xA0) {
+      gVideoRegBuffer.dispcnt |= b << 8;
+    } else {
+      gVideoRegBuffer.dispcnt &= ~(b << 8);
+    }
+  }
+}
+#else
+  INCCODE("asm/stage_gfx/weil_labo_5cf0.inc");
+#endif
+}
+
+INCASM("asm/stage_gfx/weil_labo_p1_p2_a2.inc");
 
 void FUN_08016018(struct StageLayer* l, const struct Stage* stage) {
   s32 i;
