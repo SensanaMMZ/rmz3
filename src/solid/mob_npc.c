@@ -789,7 +789,132 @@ TextID autruche_080da768(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/mob_npc_pre_p1_5.inc");
+void extraNPC_080da7d8(struct Solid* p) {
+  register s32 v asm("r1");
+  register s32 msk asm("r0");
+  switch ((p->s).work[0]) {
+    case 0xC:
+      v = gSystemSavedataManager.mods[11];
+      msk = 0x10;
+      break;
+    case 0xD:
+      v = gSystemSavedataManager.mods[7];
+      msk = 0x80;
+      break;
+    case 0xE:
+      v = gSystemSavedataManager.mods[10];
+      msk = 0x40;
+      break;
+    case 0xF:
+      v = gSystemSavedataManager.mods[10];
+      msk = 0x80;
+      break;
+    case 0x10:
+      v = gSystemSavedataManager.mods[11];
+      msk = 4;
+      break;
+    case 0x11:
+      v = gSystemSavedataManager.mods[7];
+      msk = 0x10;
+      break;
+    case 0x12:
+      v = gSystemSavedataManager.mods[7];
+      msk = 0x40;
+      break;
+    case 0x13:
+      v = gSystemSavedataManager.mods[6];
+      msk = 0x40;
+      break;
+    case 0x14: {
+      struct SystemSavedataManager* sm = &gSystemSavedataManager;
+      asm("" : "+r"(sm));
+      v = sm->mods[11];
+      msk = 0x20;
+      break;
+    }
+    default:
+      goto alive;
+  }
+  {
+    u32 t = (u8)(msk & v);
+    if (t == 0) {
+      u8 f = ~1 & (p->s).flags;
+      f = f & ~2;
+      (p->s).flags = f;
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = t;
+        asm("" : "+r"(a));
+        a += 4;
+        *(u32*)a = t;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = t;
+      }
+      (p->s).flags &= 0xFB;
+      SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+      return;
+    }
+  }
+alive:
+  {
+    s32 z5;
+    struct Body* bd;
+    {
+      register u32 fl asm("r1");
+      register s32 c4 asm("r0");
+      fl = (p->s).flags;
+      c4 = 4;
+      z5 = 0;
+      asm("" : "+r"(z5) : "r"(c4));
+      (p->s).flags = c4 | fl;
+    }
+    bd = &p->body;
+    InitBody(bd, sCollisions, &(p->s).coord, 1);
+    bd->parent = (struct CollidableEntity*)p;
+    bd->fn = (void*)z5;
+    {
+      register const motion_t* mt asm("r2");
+      s32 z3;
+      mt = sMotions;
+      {
+        u16 mv = mt[(p->s).work[0]];
+        u16* b1 = (u16*)((u8*)p + 0xbe);
+        z3 = 0;
+        asm("" : "+r"(z3) : "r"(b1));
+        *b1 = mv;
+      }
+      {
+        u16 mv2 = mt[(p->s).work[0]];
+        u16* b2 = (u16*)((u8*)p + 0xc0);
+        asm("" : "+r"(b2));
+        *b2 = mv2;
+      }
+      {
+        u16 mv3 = mt[(p->s).work[0]];
+        u8* a2 = (u8*)p + 0xc2;
+        asm("" : "+r"(a2));
+        *(u16*)a2 = mv3;
+        asm("" : "+r"(a2));
+        a2 -= 9;
+        *a2 = 1;
+      }
+      {
+        u8* a3 = (u8*)p + 0xb8;
+        *a3 = z3;
+        asm("" : "+r"(a3));
+        a3 += 4;
+        asm("" : "+r"(a3));
+        *(u16*)a3 = z5;
+      }
+      (p->s).mode[1] = z3;
+    }
+    MobNPC_Update(p);
+  }
+}
+
+INCASM("asm/solid/mob_npc_pre_p1_5b.inc");
 
 TextID kiss_080dac04(struct Solid* p) {
   if (gCurStory.s.counts[24] == 0) {
