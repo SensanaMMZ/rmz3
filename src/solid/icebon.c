@@ -264,7 +264,88 @@ static void icebon_080ca104(Object* p) {
   }
 }
 
-INCASM("asm/solid/icebon.inc");
+void createIcebonIce(s32 x, s32 y);
+void icebon_080ca550(struct Entity* e, u8 n);
+
+// 0x080ca154 -- parked (ghost-save): byte-exact except the push/pop
+// list - retail saves r7 without ever using it (dead allocation
+// artifact); no zero-emission C shape (clobber asm, pinned dead var,
+// live-span dummy) forces the save. All levers verified: volatile
+// stack-slot pair, pinned xv/nc/rl LCG roles, m r5 pin.
+NON_MATCH void icebon_080ca154(struct Solid* p) {
+#if MODERN
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      PlaySound(0x106);
+      SetMotion(&p->s, 0x1000);
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1: {
+      (p->s).work[2]++;
+      if ((s32)((p->s).work[2] % 0xC << 24) == 0) {
+        s32 spbuf[2];
+        register s32 xv asm("r0");
+        register s32 nc asm("r1");
+        register s32 rl asm("r2");
+        s32 xv2;
+        xv = (p->s).coord.x;
+        *(volatile s32*)&spbuf[0] = xv;
+        nc = -0x400;
+        asm("" : "+r"(nc));
+        xv2 = xv + nc;
+        asm volatile("" : "+r"(xv));
+        *(volatile s32*)&spbuf[0] = xv2;
+        {
+          s32 rv = RANDOM(RNG_0202f388) & 0x7FF;
+          rl = *(volatile s32*)&spbuf[0];
+          createIcebonIce(rv + rl, (p->s).coord.y - 0x1500);
+        }
+      }
+      if ((p->s).work[2] > 0x2B) {
+        if ((p->s).coord.y - 0x3400 > gOverworld.sea) {
+          s32 f = 0;
+          if ((p->s).work[3] == 2) {
+            f = 1;
+          }
+          icebon_080ca550(&p->s, f);
+          (p->s).work[3]++;
+          (p->s).work[3] = (u8)(p->s).work[3] % 3;
+        }
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3: {
+      if ((s32)((p->s).work[2] % 0xC << 24) == 0) {
+        register s32 tx asm("r6");
+        tx = (p->s).coord.x - 0x400;
+        createIcebonIce((RANDOM(RNG_0202f388) & 0x7FF) + tx, (p->s).coord.y - 0x1500);
+      }
+      {
+        s32 t = (u8)--(p->s).work[2];
+        if (t == 0) {
+          (p->s).work[2] = 0xE1;
+          (p->s).mode[1] = 1;
+          (p->s).mode[2] = t;
+        }
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/solid/icebon_a154.inc");
+#endif
+}
+
+INCASM("asm/solid/icebon_b.inc");
 
 // 0x0836fc38
 const struct Collision sIcebonCollisions[3] = {
