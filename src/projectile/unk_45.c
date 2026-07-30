@@ -84,7 +84,84 @@ void FUN_080b1b40(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_45_p2_p1.inc");
+INCASM("asm/projectile/unk_45_p2_p1a.inc");
+
+extern const struct Collision Collision_ARRAY_0836d7dc[];
+void FUN_080b2178(struct Body* body);
+
+void FUN_080b1b7c(struct Projectile* p) {
+  if (*(u8*)((u8*)p + 0xbc) != 0) {
+    (p->body).status = 0;
+    (p->body).prevStatus = 0;
+    (p->body).invincibleTime = 0;
+    (p->s).flags &= ~COLLIDABLE;
+    goto die;
+  }
+  if (!((p->body).status & 4)) {
+    s32 t = (p->s).work[2] - 1;
+    (p->s).work[2] = t;
+    if ((t << 24) == 0) {
+    die:
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      return;
+    }
+  }
+  {
+  register s32 m asm("r6");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register struct Body* b asm("r4");
+      b = NULL;
+      (p->s).work[2] = 0x3C;
+      InitNonAffineMotion(&p->s);
+      (p->s).angle = m;
+      ((p->s).spr).mag.x = 0x100;
+      ((p->s).spr).mag.y = 0x100;
+      if ((p->s).work[1] == 0) {
+        (p->s).flags |= COLLIDABLE;
+        b = &p->body;
+        InitBody(b, &Collision_ARRAY_0836d7dc[0], &(p->s).coord, 1);
+        b->parent = (void*)p;
+        b->fn = (void*)m;
+        SetMotion(&p->s, 0x5B00);
+      } else if ((p->s).work[1] == 1) {
+        (p->s).flags |= COLLIDABLE;
+        b = &p->body;
+        InitBody(b, &Collision_ARRAY_0836d7dc[1], &(p->s).coord, 1);
+        b->parent = (void*)p;
+        b->fn = (void*)m;
+        SetMotion(&p->s, 0x5C00);
+      } else {
+        b = &p->body;
+        if ((p->s).work[1] == 2) {
+          (p->s).flags |= COLLIDABLE;
+          InitBody(b, &Collision_ARRAY_0836d7dc[2], &(p->s).coord, 1);
+          b->parent = (void*)p;
+          b->fn = (void*)m;
+          SetMotion(&p->s, 0x5F00);
+        }
+      }
+      b->fn = (void*)FUN_080b2178;
+      {
+        register s32 dz asm("r0");
+        dz = 0;
+        asm("" : "+r"(dz));
+        (p->s).d.y = dz;
+      }
+      (p->s).d.x = 0x500;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+  }
+}
+
+INCASM("asm/projectile/unk_45_p2_p1b.inc");
 
 void FUN_080b2204(struct Body* body);
 extern const struct Collision Collision_ARRAY_0836d7dc[];
