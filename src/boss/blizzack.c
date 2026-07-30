@@ -35,6 +35,252 @@ void CreateBlizzack(struct Coord* c) {
 
 static const BossFunc sDeads[3];
 
+NAKED void Blizzack_Init(struct Boss* p) {
+  asm(".syntax unified
+\n	push {r4, r5, r6, r7, lr}
+\n	mov r7, sl
+\n	mov r6, sb
+\n	mov r5, r8
+\n	push {r5, r6, r7}
+\n	adds r7, r0, #0
+\n	ldr r1, _08059C94 @ =gBossFnTable
+\n	ldrb r0, [r7, #9]
+\n	lsls r0, r0, #2
+\n	adds r0, r0, r1
+\n	movs r1, #1
+\n	str r1, [r7, #0xc]
+\n	ldr r0, [r0]
+\n	ldr r0, [r0, #4]
+\n	str r0, [r7, #0x14]
+\n	movs r4, #0xfa
+\n	lsls r4, r4, #3
+\n	ldr r5, _08059C98 @ =gStaticMotionGraphics
+\n	adds r0, r4, r5
+\n	ldr r2, _08059C9C @ =wStaticGraphicTilenums
+\n	mov sb, r2
+\n	mov r1, sb
+\n	adds r1, #0xc8
+\n	ldrh r1, [r1]
+\n	ldrh r2, [r0, #6]
+\n	lsrs r2, r2, #6
+\n	subs r1, r1, r2
+\n	lsls r1, r1, #5
+\n	movs r6, #0x80
+\n	lsls r6, r6, #9
+\n	adds r1, r1, r6
+\n	bl LoadGraphic
+\n	ldr r0, _08059CA0 @ =gStaticMotionGraphics+12
+\n	mov r8, r0
+\n	add r4, r8
+\n	ldr r1, _08059CA4 @ =wStaticMotionPalIDs
+\n	mov sl, r1
+\n	mov r0, sl
+\n	adds r0, #0xc8
+\n	ldrh r1, [r0]
+\n	ldrb r0, [r4, #7]
+\n	subs r1, r1, r0
+\n	lsls r1, r1, #5
+\n	movs r2, #0x80
+\n	lsls r2, r2, #2
+\n	adds r1, r1, r2
+\n	adds r0, r4, #0
+\n	bl LoadPalette
+\n	movs r4, #0xf5
+\n	lsls r4, r4, #3
+\n	adds r0, r4, r5
+\n	mov r1, sb
+\n	adds r1, #0xc4
+\n	ldrh r1, [r1]
+\n	ldrh r2, [r0, #6]
+\n	lsrs r2, r2, #6
+\n	subs r1, r1, r2
+\n	lsls r1, r1, #5
+\n	adds r1, r1, r6
+\n	bl LoadGraphic
+\n	add r4, r8
+\n	mov r0, sl
+\n	adds r0, #0xc4
+\n	ldrh r1, [r0]
+\n	ldrb r0, [r4, #7]
+\n	subs r1, r1, r0
+\n	lsls r1, r1, #5
+\n	movs r0, #0x80
+\n	lsls r0, r0, #2
+\n	adds r1, r1, r0
+\n	adds r0, r4, #0
+\n	bl LoadPalette
+\n	ldr r4, _08059CA8 @ =0x000007BC
+\n	adds r5, r4, r5
+\n	mov r0, sb
+\n	adds r0, #0xc6
+\n	ldrh r1, [r0]
+\n	ldrh r0, [r5, #6]
+\n	lsrs r0, r0, #6
+\n	subs r1, r1, r0
+\n	lsls r1, r1, #5
+\n	adds r1, r1, r6
+\n	adds r0, r5, #0
+\n	bl LoadGraphic
+\n	add r4, r8
+\n	mov r0, sl
+\n	adds r0, #0xc6
+\n	ldrh r1, [r0]
+\n	ldrb r0, [r4, #7]
+\n	subs r1, r1, r0
+\n	lsls r1, r1, #5
+\n	movs r2, #0x80
+\n	lsls r2, r2, #2
+\n	adds r1, r1, r2
+\n	adds r0, r4, #0
+\n	bl LoadPalette
+\n	adds r0, r7, #0
+\n	bl InitNonAffineMotion
+\n	adds r0, r7, #0
+\n	bl ResetDynamicMotion
+\n	ldrb r1, [r7, #0xa]
+\n	movs r0, #1
+\n	movs r2, #0
+\n	mov r8, r2
+\n	orrs r0, r1
+\n	movs r1, #2
+\n	orrs r0, r1
+\n	strb r0, [r7, #0xa]
+\n	movs r1, #0xb4
+\n	lsls r1, r1, #8
+\n	adds r0, r7, #0
+\n	bl SetMotion
+\n	adds r0, r7, #0
+\n	adds r0, #0x4c
+\n	mov r1, r8
+\n	strb r1, [r0]
+\n	adds r2, r7, #0
+\n	adds r2, #0x4a
+\n	ldrb r1, [r2]
+\n	movs r0, #0x11
+\n	rsbs r0, r0, #0
+\n	ands r0, r1
+\n	strb r0, [r2]
+\n	ldrb r1, [r7, #0xa]
+\n	movs r0, #0xef
+\n	ands r0, r1
+\n	strb r0, [r7, #0xa]
+\n	adds r1, r7, #0
+\n	adds r1, #0xd0
+\n	movs r0, #0x40
+\n	strb r0, [r1]
+\n	ldr r1, _08059CAC @ =sCollisions
+\n	adds r0, r7, #0
+\n	movs r2, #0x40
+\n	bl ResetBossBody
+\n	adds r2, r7, #0
+\n	adds r2, #0x49
+\n	ldrb r1, [r2]
+\n	movs r0, #0xd
+\n	rsbs r0, r0, #0
+\n	ands r0, r1
+\n	movs r1, #8
+\n	orrs r0, r1
+\n	strb r0, [r2]
+\n	ldr r0, [r7, #0x54]
+\n	ldr r1, [r7, #0x58]
+\n	bl FUN_0800a134
+\n	adds r1, r0, #0
+\n	adds r4, r7, #0
+\n	adds r4, #0xb8
+\n	str r1, [r4]
+\n	ldr r0, [r7, #0x54]
+\n	bl FUN_0800a31c
+\n	adds r5, r7, #0
+\n	adds r5, #0xb4
+\n	str r0, [r5]
+\n	ldr r0, [r7, #0x54]
+\n	ldr r1, [r4]
+\n	bl FUN_0800a22c
+\n	adds r1, r7, #0
+\n	adds r1, #0xd8
+\n	str r0, [r1]
+\n	adds r3, r7, #0
+\n	adds r3, #0xdc
+\n	ldr r2, [r5]
+\n	subs r0, r0, r2
+\n	lsrs r1, r0, #0x1f
+\n	adds r0, r0, r1
+\n	asrs r0, r0, #1
+\n	adds r2, r2, r0
+\n	str r2, [r3]
+\n	ldr r0, [r7, #0x54]
+\n	ldr r1, [r7, #0x58]
+\n	bl FUN_08009f6c
+\n	adds r1, r7, #0
+\n	adds r1, #0xbc
+\n	str r0, [r1]
+\n	str r0, [r7, #0x58]
+\n	adds r1, #4
+\n	ldr r0, [r7, #0x54]
+\n	str r0, [r1]
+\n	adds r0, r7, #0
+\n	adds r0, #0xc5
+\n	mov r2, r8
+\n	strb r2, [r0]
+\n	adds r0, #1
+\n	strb r2, [r0]
+\n	adds r0, #1
+\n	strb r2, [r0]
+\n	adds r1, #8
+\n	ldr r0, _08059CB0 @ =0x0000FFFF
+\n	strh r0, [r1]
+\n	adds r0, r7, #0
+\n	movs r1, #0
+\n	movs r2, #0
+\n	bl CreateEnemy42
+\n	str r0, [r7, #0x2c]
+\n	movs r1, #1
+\n	strb r1, [r0, #0xe]
+\n	ldr r0, [r7, #0x2c]
+\n	adds r0, #0xbc
+\n	movs r2, #0
+\n	movs r1, #0xc8
+\n	lsls r1, r1, #7
+\n	strh r1, [r0]
+\n	adds r1, r7, #0
+\n	adds r1, #0xcc
+\n	movs r0, #3
+\n	strb r0, [r1]
+\n	adds r1, #1
+\n	strb r0, [r1]
+\n	adds r1, #1
+\n	strb r0, [r1]
+\n	adds r0, r7, #0
+\n	adds r0, #0xd4
+\n	mov r1, r8
+\n	str r1, [r0]
+\n	adds r0, #0xc
+\n	strb r2, [r0]
+\n	strb r2, [r7, #0xd]
+\n	movs r2, #1
+\n	strb r2, [r7, #0xe]
+\n	adds r0, r7, #0
+\n	bl Blizzack_Update
+\n	pop {r3, r4, r5}
+\n	mov r8, r3
+\n	mov sb, r4
+\n	mov sl, r5
+\n	pop {r4, r5, r6, r7}
+\n	pop {r0}
+\n	bx r0
+\n	.align 2, 0
+\n_08059C94: .4byte gBossFnTable
+\n_08059C98: .4byte gStaticMotionGraphics
+\n_08059C9C: .4byte wStaticGraphicTilenums
+\n_08059CA0: .4byte gStaticMotionGraphics+12
+\n_08059CA4: .4byte wStaticMotionPalIDs
+\n_08059CA8: .4byte 0x000007BC
+\n_08059CAC: .4byte sCollisions
+\n_08059CB0: .4byte 0x0000FFFF
+\n .syntax divided
+");
+}
+
 INCASM("asm/boss/blizzack_pre.inc");
 
 void Blizzack_Die(struct Boss* p) {
