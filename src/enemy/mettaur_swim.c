@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "metatile.h"
 #include "physics.h"
 #include "vfx.h"
 #include "zero.h"
@@ -162,7 +163,86 @@ void FUN_080892a4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1.inc");
+INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1a.inc");
+
+void FUN_080892c4(struct Enemy* p);
+s32 FUN_0800a40c(s32 x, s32 y);
+
+void FUN_08089364(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 onRight = 0;
+      s32 v;
+      s32 z6;
+      if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+        onRight = 1;
+      }
+      v = onRight;
+      if (v != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        s32 sv = onRight;
+        bool8* xa;
+        asm("" : "+r"(onRight));
+        xa = &((p->s).spr).xflip;
+        z6 = 0;
+        *xa = sv;
+        ((p->s).spr).oam.xflip = sv;
+      }
+      {
+        s32 off = (v * 5 << 10) - 0xA00;
+        if (FUN_080098a4((p->s).coord.x + off, (p->s).coord.y - 0x800) != 0) {
+          (p->s).mode[1] = z6;
+          (p->s).mode[2] = z6;
+          FUN_080892c4(p);
+          break;
+        }
+      }
+      SetMotion(&p->s, 0xDD03);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        s32 d = (p->s).coord.x - *(s32*)((u8*)p + 0xb8);
+        u32 neg = (u32)d >> 31;
+        if ((p->s).flags & X_FLIP) {
+          if (neg == 0) goto chk;
+          goto rng;
+        } else {
+          if (neg == 0) goto rng;
+        }
+      chk:
+        {
+          s32 a = d;
+          if (a < 0) {
+            a = -a;
+          }
+          if (a > 0x7000) {
+            (p->s).mode[1] = 4;
+            (p->s).mode[2] = 0;
+            break;
+          }
+        }
+      rng:
+        if ((RANDOM(RNG_0202f388) & 0xF) <= 9) {
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = 0;
+        } else {
+          (p->s).mode[1] = 4;
+          (p->s).mode[2] = 0;
+        }
+      }
+      FUN_08088bc8(p, FUN_0800a40c((p->s).coord.x, (p->s).coord.y + 0x400), 0x800);
+      break;
+  }
+}
+
+INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1b.inc");
 
 void FUN_08089a00(struct Enemy* p) {
   struct Entity* par = (p->s).unk_28;
