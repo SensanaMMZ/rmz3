@@ -101,7 +101,97 @@ INCASM("asm/enemy/claveker_p3.inc");
 
 bool8 FUN_0808effc(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/claveker_p4.inc");
+struct Projectile* FUN_080aed8c(struct Entity* boss, struct Coord* c1, struct Coord* c2, u8 n);
+
+void FUN_0808f000(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x7500);
+      (p->s).work[2] = 0x14;
+      (p->s).mode[2]++;
+      goto tick;
+    case 2:
+      SetMotion(&p->s, 0x7502);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 4: {
+      s32 z = 0;
+      (p->s).work[2] = 8;
+      *((u8*)p + 0xb9) = z;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 5: {
+      struct Coord c;
+      SetMotion(&p->s, 0x7503);
+      (p->s).work[3] = 6;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y + 0x1A00;
+      FUN_080aed8c(&p->s, &c, &c, 0);
+      PlaySound(0x145);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 6: {
+      s32 t3, mk, t4;
+      UpdateMotionGraphic(&p->s);
+      t3 = (p->s).work[3] - 1;
+      (p->s).work[3] = t3;
+      mk = 0xFF;
+      asm("" : "+r"(mk) : "r"(t3) : "memory");
+      if ((t3 << 24) != 0) {
+        break;
+      }
+      t4 = (p->s).work[2] - 1;
+      (p->s).work[2] = t4;
+      if ((t4 & mk) == 0) {
+        (p->s).mode[2]++;
+        break;
+      }
+      (p->s).mode[2] = 5;
+      break;
+    }
+    case 7:
+      SetMotion(&p->s, 0x7504);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 9:
+      SetMotion(&p->s, 0x7500);
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+    case 10:
+    tick: {
+      s32 t2;
+      UpdateMotionGraphic(&p->s);
+      t2 = (p->s).work[2] - 1;
+      (p->s).work[2] = t2;
+      if ((t2 << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 11: {
+      s32 z = 0;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
 
 bool8 FUN_0808f158(struct Enemy* p) { return TRUE; }
 
