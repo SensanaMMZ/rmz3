@@ -5,6 +5,7 @@
 #include "mission.h"
 #include "physics.h"
 #include "stagerun.h"
+#include "zero.h"
 
 struct Enemy* FUN_08098838(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -111,7 +112,114 @@ INCASM("asm/enemy/cattatank_p6.inc");
 
 bool8 nop_08099950(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/cattatank_p7.inc");
+static const struct Collision sCollisions[18];
+
+void FUN_08099954(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0xD50C);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0x18;
+      if ((pZero2->s).coord.x < (p->s).coord.x) {
+        (p->s).d.x = 0x60;
+      } else {
+        (p->s).d.x = -0x60;
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 ny;
+      s32 v = (p->s).d.x;
+      v += (-v << 4) >> 8;
+      (p->s).d.x = v;
+      (p->s).coord.x += v;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      {
+        s32 po;
+        if ((p->s).d.x > 0) {
+          po = PushoutToUp1((p->s).coord.x - 0xA00, ny);
+        } else {
+          po = PushoutToUp1((p->s).coord.x + 0xA00, ny);
+        }
+        if (po != 0) {
+          u8* bb = (u8*)p + 0xbb;
+          u8 nv = *bb + 1;
+          s32 z = 0;
+          *bb = nv;
+          (p->s).coord.y += po;
+          (p->s).d.y = z;
+        }
+      }
+      {
+        register s32 fl asm("r3");
+        s32 c10;
+        fl = (p->s).flags;
+        c10 = 0x10;
+        asm("" : "+r"(c10));
+        if (!(c10 & fl)) {
+          if ((pZero2->s).coord.x > (p->s).coord.x) {
+            s32 one = 1;
+            u8* oa;
+            s32 ov;
+            {
+              s32 cc = 0x10;
+              asm("" : "+r"(cc));
+              (p->s).flags = cc | fl;
+              asm("" : "+r"(fl));
+            }
+            ((p->s).spr).xflip = one;
+            oa = (u8*)&((p->s).spr).oam + 6;
+            ov = *oa;
+            {
+              s32 m11 = -0x11;
+              asm("" : "+r"(m11));
+              *oa = (m11 & ov) | c10;
+            }
+            *(u8*)((u8*)p + 0xb8) = one;
+          }
+        } else {
+          if ((pZero2->s).coord.x < (p->s).coord.x) {
+            s32 zz = 0;
+            u8* oa;
+            s32 ov;
+            {
+              s32 cc = 0xEF;
+              asm("" : "+r"(cc));
+              (p->s).flags = cc & fl;
+              asm("" : "+r"(fl));
+            }
+            ((p->s).spr).xflip = zz;
+            oa = (u8*)&((p->s).spr).oam + 6;
+            ov = *oa;
+            {
+              s32 m11 = -0x11;
+              asm("" : "+r"(m11));
+              *oa = m11 & ov;
+            }
+            *(u8*)((u8*)p + 0xb8) = zz;
+          }
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 raw = (p->s).work[2] - 1;
+        u8 t;
+        (p->s).work[2] = raw;
+        t = raw;
+        if (t == 0) {
+          (p->s).mode[1] = 1;
+          (p->s).mode[2] = t;
+        }
+      }
+      break;
+    }
+  }
+}
 
 bool8 nop_08099a94(struct Enemy* p) { return TRUE; }
 
