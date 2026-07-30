@@ -168,7 +168,144 @@ void FUN_080bfa10(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_47_b.inc");
+INCASM("asm/vfx/unk_47_b1.inc");
+
+#ifdef NON_MATCHING
+// close but for a SetMotion-arg scratch-register tie: agbcc loads work[2]
+// into r0 (dead const home) where retail uses r2; two bytes differ.
+NON_MATCH void FUN_080bfb54(struct VFX* p) {
+  register s32 m asm("r6");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      InitRotatableMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x4c, 0x05) + (p->s).work[2]);
+      {
+        register s32 b1 asm("r1");
+        register u32* rp asm("ip");
+        register u32 A3 asm("r3");
+        register u32 C3 asm("r2");
+        register u32 seed asm("r4");
+        register u32 mff asm("r5");
+        register u32 r0v asm("r0");
+        b1 = ((p->s).work[2] << 7) + -0x200;
+        {
+          register u32* rt asm("r2");
+          rt = &RNG_0202f388;
+          rp = rt;
+          asm("" : "+r"(rp));
+          r0v = *rt;
+          asm("" : "+r"(r0v));
+        }
+        A3 = 0x343FD;
+        asm("" : "+r"(A3));
+        r0v *= A3;
+        C3 = 0x269EC3;
+        asm("" : "+r"(C3));
+        r0v += C3;
+        r0v <<= 1;
+        seed = r0v >> 1;
+        asm("" : "+r"(seed));
+        {
+          u32 rr = r0v >> 0x11;
+          mff = 0xFF;
+          asm("" : "+r"(mff));
+          rr &= mff;
+          (p->s).d.x = b1 + rr;
+        }
+        b1 = -0x380;
+        asm("" : "+r"(b1));
+        r0v = seed;
+        r0v *= A3;
+        r0v += C3;
+        r0v <<= 1;
+        seed = r0v >> 1;
+        asm("" : "+r"(seed));
+        {
+          u32 rr2 = r0v >> 0x11;
+          rr2 &= mff;
+          (p->s).d.y = b1 - rr2;
+        }
+        (p->s).work[3] = m;
+        r0v = seed;
+        r0v *= A3;
+        r0v += C3;
+        r0v <<= 1;
+        {
+          u32 s3 = r0v >> 1;
+          register u32* rt2 asm("r2");
+          rt2 = rp;
+          *rt2 = s3;
+        }
+        {
+          u32 sp3 = ((r0v >> 0x11) % 3) + 1;
+          *(s32*)((u8*)p + 0x64) = sp3;
+          {
+            u32 q = (p->s).work[2] / 3;
+            {
+              register u32 one1 asm("r1");
+              one1 = 1;
+              asm("" : "+r"(one1));
+              q ^= one1;
+            }
+            {
+              u32 sh24 = q << 24;
+              asm("" : "+r"(sh24));
+              q = sh24 >> 23;
+            }
+            q *= sp3;
+            sp3 -= q;
+            *(s32*)((u8*)p + 0x64) = sp3;
+          }
+        }
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 w = (p->s).work[2] + 1;
+      (p->s).work[2] = w;
+      if (w & 1) {
+        (p->s).flags |= 1;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      {
+        s32 ny = (p->s).coord.y + (p->s).d.y;
+        (p->s).coord.y = ny;
+        if (FUN_080098a4((p->s).coord.x, ny) != 0) {
+          FUN_080bf438((p->s).coord.x, (p->s).coord.y, 1);
+          {
+            u32 f = (p->s).flags & 0xFE;
+            asm("" : "+r"(f));
+            (p->s).flags = f & 0xFD;
+          }
+          SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+        }
+      }
+      {
+        register s32 xv asm("r0");
+        register s32 nw asm("r1");
+        xv = *(s32*)((u8*)p + 0x64);
+        nw = (p->s).work[3];
+        nw += xv;
+        (p->s).work[3] = nw;
+        (p->s).angle = nw;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+#else
+NAKED void FUN_080bfb54(struct VFX* p) {
+  INCCODE("asm/vfx/unk_47_fb54.inc");
+}
+#endif
 
 // --------------------------------------------
 
