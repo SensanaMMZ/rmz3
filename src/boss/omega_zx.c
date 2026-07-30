@@ -347,7 +347,84 @@ static void FUN_08060d60(Object* p) {
   }
 }
 
-INCASM("asm/boss/omega_zx_p1.inc");
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+
+// 0x08060e14 -- death rise: palette strobe, smoke bursts at random offsets,
+// then hand control back to the script. Blocker (anchor cascade): the LCG
+// M/A anchors and the +0x3200 intermediate shift one register (M->sl adds an
+// extra hi-reg save); the coord.y sum also cse-reuses into c.y where retail
+// reloads; volatile loads and pins shuffle without converging.
+NON_MATCH void FUN_08060e14(struct Boss* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[3] = 0;
+      (p->s).work[2] = 0xB6;
+      (p->s).unk_coord.y = 0;
+      (p->s).mode[3] = 0xC;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      StepPaletteAnimation(0xA7);
+      StepPaletteAnimation(0xA8);
+      StepPaletteAnimation(0xA9);
+      StepPaletteAnimation(0xAA);
+      {
+        s32 v = (p->s).unk_coord.y + 8;
+        (p->s).unk_coord.y = v;
+        if (v > 0x140) {
+          (p->s).unk_coord.y = 0x140;
+        }
+      }
+      (p->s).coord.y += (p->s).unk_coord.y;
+      (p->s).d.y += (p->s).unk_coord.y;
+      if (!((p->s).work[3] & 1)) {
+        struct Coord c;
+        s32 cy;
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y;
+        cy = c.y + 0x3200;
+        c.y = cy;
+        c.x += ((s32)(RANDOM(RNG_0202f388) % 0xAA) - 0x55) << 8;
+        c.y = (((s32)(RANDOM(RNG_0202f388) % 0x96) - 0x5F) << 8) + cy;
+        CreateSmoke(1, &c);
+      }
+      if ((s32)(((p->s).work[3] % (p->s).mode[3]) << 24) == 0) {
+        (p->s).mode[3] = (RANDOM(RNG_0202f388) % 6) + 8;
+        PlaySound(0x2A);
+      }
+      (p->s).work[3]++;
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2: {
+      s32 z3;
+      RemovePaletteAnimation(0xA7);
+      RemovePaletteAnimation(0xA8);
+      RemovePaletteAnimation(0xA9);
+      RemovePaletteAnimation(0xAA);
+      {
+        u32 v = gStageRun.vm.active;
+        u32 t = 2;
+        z3 = 0;
+        t |= v;
+        gStageRun.vm.active = t;
+      }
+      (p->s).flags &= 0xFE;
+      *((u8*)&gOverworld + 0x2D025) = z3;
+      break;
+    }
+  }
+#else
+  INCCODE("asm/boss/omega_zx_e14.inc");
+#endif
+}
 
 bool8 FUN_08060f98(struct Boss* p) { return TRUE; }
 
