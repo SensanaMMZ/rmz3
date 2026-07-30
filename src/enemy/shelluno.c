@@ -224,7 +224,146 @@ INCASM("asm/enemy/shelluno_p1_p2_b.inc");
 
 bool8 nop_0807939c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shelluno_p2_p1.inc");
+void FUN_0807a46c(struct Enemy* p);
+
+// Home/parity basin: retail keeps p in r5 with the pushout probes and RNG
+// draws rotating their temps one register lower; structure, physics, and both
+// RNG cadence gates stream-match at a 4-byte deficit.
+NON_MATCH void shelluno_080793a0(struct Enemy* p) {
+#if MODERN
+  s32 po[3];
+  u8 m2 = (p->s).mode[2];
+  if (m2 == 0) {
+    goto c0;
+  }
+  if (m2 == 1) {
+    goto c1;
+  }
+  return;
+c0:
+  *((u8*)p + 0xc0) = m2;
+  *((u8*)p + 0xb9) = m2;
+  SetMotion(&p->s, 0x3500);
+  SetDDP(&p->body, sCollisions);
+  (p->s).work[2] = m2;
+  (p->s).mode[2]++;
+c1:
+  (p->s).d.x += (-(p->s).d.x << 4) >> 8;
+  (p->s).d.y += 0x10;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  {
+    s32 nx = (p->s).coord.x;
+    s32 wy = (p->s).coord.y + -0xC00;
+    s32 r;
+    if ((p->s).d.x < 0) {
+      nx += -0xC00;
+      r = PushoutToRight2(nx, wy);
+    } else {
+      nx += 0xC00;
+      r = PushoutToLeft2(nx, wy);
+    }
+    (p->s).coord.x += r;
+  }
+  {
+    s32 cx = (p->s).coord.x;
+    s32 cy = (p->s).coord.y;
+    po[0] = PushoutToUp2(cx, cy);
+    po[1] = PushoutToUp2(cx + 0xC00, cy);
+    po[2] = PushoutToUp2(cx + -0xC00, cy);
+    if (po[0] != 0 || po[1] != 0 || po[2] != 0) {
+      s32 m = po[2];
+      if (po[0] < po[1]) {
+        if (po[0] < po[2]) {
+          m = po[0];
+        }
+      } else if (po[1] < po[2]) {
+        m = po[1];
+      }
+      (p->s).d.x = 0;
+      (p->s).d.y = 0;
+      (p->s).coord.y += m;
+    }
+  }
+  FUN_0807a46c(p);
+  UpdateMotionGraphic(&p->s);
+  {
+    u8* tc = (u8*)p + 0xc1;
+    u8 t = *tc;
+    if (t != 0) {
+      s32 t2 = t - 1;
+      *tc = t2;
+      if ((u32)(t2 << 24) != 0) {
+        return;
+      }
+    }
+    if (gOverworld.sea >= (p->s).coord.y + -0xC00) {
+      goto seatail;
+    }
+  }
+  {
+    struct Zero* z = pZero2;
+    s32 zx = z->s.coord.x;
+    s32 px = (p->s).coord.x;
+    if (px < zx) {
+      if ((z->s.flags & 0x10) != 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+    } else if (px > zx) {
+      u8 xf = z->s.flags & 0x10;
+      if (xf == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = xf;
+      }
+    }
+    if ((p->s).d.x != 0) {
+      return;
+    }
+    {
+      s32 d = pZero2->s.coord.x - px;
+      u32 a2;
+      u32 r1v;
+      u32 md;
+      if (d > 0) {
+        if (d > 0x4FFF) {
+          goto far;
+        }
+      } else if (px - pZero2->s.coord.x > 0x4FFF) {
+        goto far;
+      }
+      a2 = RNG_0202f388;
+      r1v = (a2 * 0x343FD + 0x269EC3) << 1;
+      RNG_0202f388 = r1v >> 1;
+      md = (r1v >> 0x11) % 0x64;
+      if (md == 0) {
+        *((u8*)p + 0xc0) = 0x3C;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = md;
+      }
+      return;
+    far:
+      a2 = RNG_0202f388;
+      r1v = (a2 * 0x343FD + 0x269EC3) << 1;
+      RNG_0202f388 = r1v >> 1;
+      md = (r1v >> 0x11) % 0xC8;
+      if (md == 0) {
+        *((u8*)p + 0xc0) = 0x32;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = md;
+      }
+      return;
+    }
+  }
+seatail:
+  *((u8*)p + 0xc1) = 0x3C;
+#else
+  INCCODE("asm/enemy/shelluno_93a0.inc");
+#endif
+}
 
 bool8 FUN_080795b8(struct Enemy* p) {
   if (gOverworld.sea > (p->s).coord.y - 0xc00) {

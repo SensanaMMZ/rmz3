@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-
-	.text
-
-	thumb_func_start shelluno_080793a0
-shelluno_080793a0: @ 0x080793A0
 	push {r4, r5, r6, lr}
 	sub sp, #0xc
 	adds r5, r0, #0
