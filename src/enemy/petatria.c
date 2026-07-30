@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mission.h"
+#include "story.h"
+#include "vfx.h"
 
 struct Enemy* CreatePetatria(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -46,7 +49,98 @@ void Petatria_Update(struct Enemy* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/petatria_p1_pre_p1_p2_b.inc");
+struct VFX* FUN_080c4914(struct Coord* c, u8 a1, u16 a2, s32 a3);
+u32 TryDropItem(u32 table, struct Coord* c);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+void Petatria_Die(struct Enemy* p) {
+  if (gCurStory.s.gameflags[4] & 0x40) {
+    u32 z2;
+    {
+      u32 fl = (p->s).flags & 0xFE;
+      z2 = 0;
+      fl &= 0xFD;
+      (p->s).flags = fl;
+    }
+    {
+      u8* w = (u8*)p + 0x8c;
+      *(u32*)w = z2;
+      asm("" : "+r"(w));
+      w += 4;
+      *(u32*)w = z2;
+      asm("" : "+r"(w));
+      w += 4;
+      asm("" : "+r"(w));
+      *(u8*)w = z2;
+    }
+    (p->s).flags &= 0xFB;
+    {
+      u32 tbl = (u32)gEnemyFnTable;
+      u32 id = ((p->s).id) << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = 3;
+      (p->s).onUpdate = (void*)((*rt)[3]);
+    }
+    return;
+  }
+  {
+    s32 m = (p->s).mode[2];
+    switch (m) {
+      case 0:
+        (p->s).mode[2] = 0xA;
+        {
+          u8* w = (u8*)p + 0x8c;
+          *(u32*)w = m;
+          asm("" : "+r"(w));
+          w += 4;
+          *(u32*)w = m;
+          asm("" : "+r"(w));
+          w += 4;
+          asm("" : "+r"(w));
+          *(u8*)w = m;
+        }
+        (p->s).flags &= 0xFB;
+        (p->s).d.y = m;
+        (p->s).d.x = m;
+        // fallthrough
+      case 1:
+      case 10:
+        (p->s).mode[2]++;
+        break;
+      case 11: {
+        struct Coord c;
+        struct Coord c2;
+        struct Coord* cp;
+        u32 r;
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y;
+        CreateSmoke(1, &c);
+        PlaySound(0x2A);
+        cp = &(p->s).coord;
+        TryDropItem(4, cp);
+        r = RANDOM(RNG_0202f388) & 3;
+        c2.x = (p->s).coord.x;
+        c2.y = (p->s).coord.y + -0xC00;
+        FUN_080c4914(&c2, ((p->s).flags >> 4) & 1, 0x7E1A, r);
+        FUN_080c4914(&c2, ((p->s).flags >> 4) & 1, 0x7E1B, r);
+        FUN_080c4914(&c2, ((p->s).flags >> 4) & 1, 0x7E1C, r);
+        if (gMission.enemyCount <= 0x270E) {
+          gMission.enemyCount++;
+        }
+        TryDropZakoDisk(p, cp);
+        (p->s).flags &= 0xFE;
+        {
+          u32 tbl = (u32)gEnemyFnTable;
+          u32 id = ((p->s).id) << 2;
+          EntityFunc** rt = (EntityFunc**)(tbl + id);
+          *(u32*)((p->s).mode) = 4;
+          (p->s).onUpdate = (void*)((*rt)[4]);
+        }
+        break;
+      }
+    }
+  }
+}
 
 bool8 FUN_080902a8(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_B3) {
