@@ -75,7 +75,186 @@ struct Enemy* FUN_0809b064(struct Entity* e, struct Coord* c, u8 a2, u8 a3) {
   return p;
 }
 
-INCASM("asm/enemy/minigame_harpuia_p1_p1_p1_p5.inc");
+static const struct Collision sCollisions[5];
+void FUN_0809bd2c(struct Body* body);
+void HarpuiaMinigameEnemy_Update(struct Enemy* p);
+
+// Cross-arm register-economy basin: retail recycles the work[0] load (r7) as
+// per-arm zero/one/two sources while keeping per-arm 0x10/one webs in r4/r5
+// and fresh or-consts; every pin/barrier/literal-asm combination taken either
+// spills a web to r8, folds the oam insert mask, or duplicates the consts.
+NON_MATCH void HarpuiaMinigameEnemy_Init(struct Enemy* p) {
+#if MODERN
+  u8 w0 = (p->s).work[0];
+  if (w0 == 0) {
+    s32 one;
+    u32 k10;
+    InitNonAffineMotion(&p->s);
+    (p->s).flags |= DISPLAY;
+    (p->s).flags |= FLIPABLE;
+    ResetDynamicMotion(&p->s);
+    (p->s).taskCol = 0x11;
+    one = 1;
+    k10 = 0x10;
+    (p->s).flags |= k10;
+    (p->s).spr.xflip = one;
+    {
+      u8* q = (u8*)p + 0x4a;
+      s32 m11 = -0x11;
+      asm("" : "+r"(m11));
+      *q = (*q & m11) | 0x10;
+    }
+    {
+      struct Coord c;
+      s32 cx = (p->s).coord.x;
+      s32 cy = (p->s).coord.y;
+      c.x = cx;
+      c.y = cy;
+      (p->s).unk_2c = (struct Entity*)FUN_0809af88(&p->s, &c, 0);
+    }
+    k10 |= (p->s).flags2;
+    (p->s).flags2 = k10;
+    (p->s).invincibleID = ((struct Entity*)(p->s).unk_28)->uniqueID;
+    {
+      u32 tbl = (u32)gEnemyFnTable;
+      u32 id = (p->s).id << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = one;
+      (p->s).onUpdate = (void*)(*rt)[ENTITY_UPDATE];
+    }
+    (p->s).mode[1] = w0;
+    (p->s).mode[2] = w0;
+    (p->s).mode[3] = w0;
+  } else if (w0 == 1) {
+    u32 k10b;
+    u32 z4;
+    InitNonAffineMotion(&p->s);
+    (p->s).flags |= DISPLAY;
+    (p->s).flags |= FLIPABLE;
+    ResetDynamicMotion(&p->s);
+    (p->s).taskCol = 0xF;
+    k10b = 0x10;
+    (p->s).flags |= k10b;
+    z4 = 0;
+    (p->s).spr.xflip = w0;
+    {
+      u8* q = (u8*)p + 0x4a;
+      s32 m11b = -0x11;
+      asm("" : "+r"(m11b));
+      *q = (*q & m11b) | 0x10;
+    }
+    k10b |= (p->s).flags2;
+    (p->s).flags2 = k10b;
+    (p->s).invincibleID = ((struct Entity*)((struct Entity*)(p->s).unk_28)->unk_28)->uniqueID;
+    {
+      u32 tbl = (u32)gEnemyFnTable;
+      u32 id = (p->s).id << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = w0;
+      (p->s).onUpdate = (void*)(*rt)[ENTITY_UPDATE];
+    }
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = z4;
+    (p->s).mode[3] = z4;
+  } else if (w0 == 2) {
+    u32 f;
+    u32 z2;
+    register s32 z5 asm("r5");
+    struct Body* body;
+    InitNonAffineMotion(&p->s);
+    f = (p->s).flags;
+    {
+      u32 c1 = 1;
+      asm("" : "+r"(c1));
+      z2 = 0;
+      asm("" : "+r"(z2));
+      z5 = 0;
+      f |= c1;
+    }
+    {
+      u32 c2t;
+      asm volatile("movs %0, #2" : "=r"(c2t));
+      f |= c2t;
+    }
+    f |= z2;
+    (p->s).flags = f;
+    if (*((u8*)p + 0xb4) == 1) {
+      f |= COLLIDABLE;
+      (p->s).flags = f;
+      body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 0x18);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z5;
+      (p->s).palID = w0;
+    } else {
+      f |= COLLIDABLE;
+      (p->s).flags = f;
+      body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 8);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z5;
+      (p->s).palID = 1;
+    }
+    body->fn = (void*)FUN_0809bd2c;
+    {
+      u32 tbl = (u32)gEnemyFnTable;
+      u32 id = (p->s).id << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      EntityFunc* t1;
+      u8 m4;
+      *(u32*)((p->s).mode) = 1;
+      t1 = *rt;
+      m4 = 4;
+      (p->s).onUpdate = (void*)t1[ENTITY_UPDATE];
+      (p->s).mode[1] = m4;
+    }
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0;
+  } else {
+    s32 z5b;
+    u32 fb;
+    InitNonAffineMotion(&p->s);
+    fb = (p->s).flags;
+    {
+      u32 c1b = 1;
+      asm("" : "+r"(c1b));
+      z5b = 0;
+      fb |= c1b;
+    }
+    {
+      u32 c2b = 2;
+      asm("" : "+r"(c2b));
+      fb |= c2b;
+    }
+    {
+      u32 c4b = 4;
+      asm("" : "+r"(c4b));
+      fb |= c4b;
+    }
+    (p->s).flags = fb;
+    {
+      struct Body* body = &p->body;
+      InitBody(body, &sCollisions[3], &(p->s).coord, 4);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z5b;
+    }
+    (p->s).palID = z5b;
+    {
+      u32 tbl = (u32)gEnemyFnTable;
+      u32 id = (p->s).id << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = 1;
+      (p->s).onUpdate = (void*)(*rt)[ENTITY_UPDATE];
+    }
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = z5b;
+    (p->s).mode[3] = z5b;
+  }
+  HarpuiaMinigameEnemy_Update(p);
+#else
+  INCCODE("asm/enemy/minigame_harpuia_init.inc");
+#endif
+}
 
 void HarpuiaMinigameEnemy_Update(struct Enemy* p) {
   (sUpdates1[(p->s).mode[1]])(p);
