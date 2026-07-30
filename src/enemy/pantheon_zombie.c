@@ -2,6 +2,9 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "metatile.h"
+#include "physics.h"
+#include "stagerun.h"
 #include "motion.h"
 
 static const struct Collision sCollisions[8];
@@ -138,6 +141,98 @@ void FUN_0807ffb0(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/pantheon_zombie_p2_post_pre.inc");
+
+void FUN_080804a8(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 v;
+      SetDDP(&p->body, &sCollisions[1]);
+      *((u8*)p + 0x25) = 0x18;
+      (p->s).work[3] = m;
+      if (*((u8*)p + 0xb8) != 0) {
+        (p->s).work[3] = 1;
+        (p->s).mode[2] = 2;
+        break;
+      }
+      (p->s).d.y = -0x180;
+      {
+        s32 t = 0x280;
+        (p->s).d.x = t;
+        v = t;
+        asm("" : "+r"(t));
+      }
+      if ((p->s).flags & 0x10) {
+        v = -0x280;
+      }
+      (p->s).d.x = v;
+      SetMotion(&p->s, MOTION(0x4c, 1));
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      s32 x = (p->s).coord.x;
+      s32 tx = x + 0x800;
+      s32 ny;
+      s32 push;
+      if ((p->s).flags & 0x10) {
+        tx = x + -0x800;
+      }
+      if (FUN_080098a4(tx, (p->s).coord.y + -0x1000) == 0) {
+        (p->s).coord.x += (p->s).d.x;
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        s32 lim = cam->viewport.x + 0x77FF;
+        if ((p->s).coord.x > lim) {
+          (p->s).coord.x = lim;
+        }
+        lim = cam->viewport.x + -0x7800;
+        if ((p->s).coord.x < lim) {
+          (p->s).coord.x = lim;
+        }
+      }
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      push = PushoutToUp1((p->s).coord.x, ny);
+      if (push < 0) {
+        (p->s).coord.y += push;
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, MOTION(0x4c, 4));
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3: {
+      s32 t = (p->s).work[2] - 1;
+      u32 u;
+      (p->s).work[2] = t;
+      u = (u8)t;
+      if (u == 0) {
+        s32 one = 1;
+        u8 b;
+        (p->s).mode[1] = one;
+        b = *((u8*)p + 0xb8);
+        if (b != 0) {
+          (p->s).work[2] = u;
+          (p->s).mode[2] = one;
+        } else {
+          (p->s).mode[2] = b;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_08080610(struct Enemy* p) {
   switch ((p->s).mode[2]) {
