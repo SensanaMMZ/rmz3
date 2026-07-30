@@ -203,7 +203,122 @@ void FUN_080874ac(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p2_post_a.inc");
+INCASM("asm/enemy/gallisni_p2_post_a1.inc");
+
+void FUN_080875c8(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      (p->s).unk_coord.x = (p->s).coord.x;
+      {
+        s32 y = (p->s).coord.y + 0xC00;
+        s32 h = (p->s).work[2] >> 1;
+        s32 c1 = 1;
+        s32 f4;
+        h &= c1;
+        y -= (h * 3) << 11;
+        (p->s).unk_coord.y = y;
+        (p->s).d.x = m;
+        f4 = (p->s).flags >> 4;
+        f4 ^= c1;
+        asm("" : "+r"(f4));
+        f4 &= c1;
+        (p->s).work[3] = f4;
+      }
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      register s32 cx asm("r5");
+      register s32 ang asm("r3");
+      register const s16* st asm("r2");
+      register s32 w2a asm("r1");
+      register s32 w2v asm("r6");
+      s32 t1, cy;
+      cx = (p->s).unk_coord.x;
+      (p->s).coord.x = cx;
+      w2a = (p->s).work[2];
+      t1 = 1;
+      t1 &= w2a;
+      w2v = w2a;
+      asm("" : "+r"(w2a));
+      if (t1 == 0) {
+        register s32 rx asm("r0");
+        st = gSineTable;
+        ang = *(volatile s32*)((u8*)p + 0x5c);
+        rx = cx - st[(u8)(ang >> 8)] * 12;
+        (p->s).coord.x = rx;
+      } else {
+        register s32 rx asm("r0");
+        st = gSineTable;
+        ang = (p->s).d.x;
+        rx = cx + st[(u8)(ang >> 8)] * 12;
+        (p->s).coord.x = rx;
+      }
+      cy = (p->s).unk_coord.y;
+      (p->s).coord.y = cy;
+      {
+        register u32 t2 asm("r0");
+        s32 c1b;
+        t2 = (u32)w2v << 24;
+        asm("" : "+r"(t2));
+        t2 >>= 25;
+        c1b = 1;
+        t2 &= c1b;
+        if (t2 == 0) {
+          register s32 t3 asm("r0");
+          t3 = ang >> 8;
+          asm("" : "+r"(t3));
+          t3 += 0x40;
+          (p->s).coord.y = cy - st[(u8)t3] * 12;
+        } else {
+          register s32 t3 asm("r0");
+          t3 = ang >> 8;
+          asm("" : "+r"(t3));
+          t3 += 0x40;
+          (p->s).coord.y = cy + st[(u8)t3] * 12;
+        }
+      }
+      {
+        s32 a2 = (p->s).d.x + 0xC00;
+        (p->s).d.x = a2;
+        if (a2 > 0x7FFF) {
+          s32 z = 0;
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = z;
+        }
+      }
+      if ((p->s).d.x <= 0x29FF) {
+        SetMotion(&p->s, 0x6704);
+      } else if ((p->s).d.x <= 0x53FF) {
+        SetMotion(&p->s, 0x6705);
+      } else {
+        u8 w3 = (p->s).work[3];
+        if (w3 != 0) {
+          (p->s).flags |= 0x10;
+        } else {
+          (p->s).flags &= 0xEF;
+        }
+        {
+          s32 v = 1;
+          u8* oa;
+          s32 sh4, ov, m11;
+          v &= w3;
+          (p->s).spr.xflip = v;
+          oa = (u8*)p + 0x4a;
+          sh4 = v << 4;
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          *oa = m11 | sh4;
+        }
+        SetMotion(&p->s, 0x6704);
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_0808772c(struct Enemy* p) {
   switch ((p->s).mode[2]) {
