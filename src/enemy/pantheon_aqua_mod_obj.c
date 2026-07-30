@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "zero.h"
+#include "stagerun.h"
 #include "trig.h"
 #include "vfx.h"
 
@@ -279,6 +280,107 @@ void PantheonAquaModObj_Die(struct Enemy* p) {
 void FUN_08080fe8(struct Enemy* p) {}
 
 INCASM("asm/enemy/pantheon_aqua_mod_obj_p3.inc");
+
+void FUN_080c025c(s32 x, s32 y);
+
+void FUN_08081208(struct Enemy* p) {
+  struct Enemy* q = (struct Enemy*)(p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x20;
+      SetMotion(&p->s, 0x5100);
+      (p->s).coord.x >>= 8;
+      (p->s).coord.x = ((p->s).coord.x / 0xF0) * 0xF000 + 0xB600;
+      (p->s).coord.y >>= 8;
+      (p->s).coord.y = ((p->s).coord.y / 0xA0) * 0xA000 + 0x3800;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).work[2] += 2;
+      (p->s).coord.y = (p->s).unk_coord.y;
+      (p->s).coord.y = (p->s).unk_coord.y + gSineTable[(p->s).work[2]] * 4;
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)(q->s).scriptEntity + 9) & 4) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).unk_coord.x = (p->s).coord.x + -0x5400;
+      (p->s).unk_coord.y = (p->s).coord.y + -0x3000;
+      (p->s).work[2] = 0x64;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 t = (p->s).work[2] - 1;
+      s32 dx, dy;
+      (p->s).work[2] = t;
+      dx = (p->s).unk_coord.x - (p->s).coord.x;
+      dy = (p->s).unk_coord.y - (p->s).coord.y;
+      (p->s).coord.x += (dx * 3) / 256;
+      (p->s).coord.y += dy / 16;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 4:
+      *(u32*)((u8*)q + 0xb4) |= 1;
+      (p->s).work[2] = 0xA0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      (p->s).work[2]--;
+      {
+        register u32 w asm("r0") = *(volatile u8*)((u8*)p + 0x12);
+        w &= 3;
+        if (w == 0) {
+        u32 v = (RNG_0202f388 * 0x343FD + 0x269EC3) << 1;
+        s32 off;
+        RNG_0202f388 = v >> 1;
+        off = (v >> 0x11) % 0x1400u + -0xA00;
+        FUN_080c025c((p->s).coord.x + off, (p->s).coord.y);
+        }
+      }
+      if ((p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 6:
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 8:
+      (p->s).d.y = -0x80;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 9:
+      (p->s).coord.x += 0x200;
+      (p->s).d.y += 4;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/pantheon_aqua_mod_obj_p3_mid.inc");
 
 void FUN_080817a8(struct Enemy* p) {
   struct Entity* q = (p->s).unk_28;
