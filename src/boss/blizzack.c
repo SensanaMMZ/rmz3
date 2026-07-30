@@ -243,6 +243,76 @@ void blizzackEndBlizzard(struct Boss* p) {
   }
 }
 
+// 0x0805a5cc -- bomb-throw jump: aims at the stored target or Zero, random
+// overshoot, then ballistic hop. Blocker (const-cluster placement): the r8
+// zero's movs/mov pair clusters right after the r7 one-init in every source
+// shape tried, while retail materializes it mid-statement after the unk_2c
+// +0xbc address form; the 0x6403 pool load rides on it (r1 vs r2 + copy).
+NON_MATCH void blizzackBombJump(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, 0xB403);
+    ((struct Entity*)(p->s).unk_2c)->mode[2] = 1;
+    *(u16*)((u8*)(p->s).unk_2c + 0xbc) = 0x6403;
+    (p->s).mode[2] = 0;
+    {
+      s32 tx = *(s32*)((u8*)p + 0xdc);
+      s32 x = (p->s).coord.x;
+      s32 d2 = tx - x;
+      if (d2 > 0x7800) {
+        (p->s).d.x = ((pZero2->s).coord.x - x) / 0x1A;
+        (p->s).work[3] = 2;
+      } else {
+        s32 zx = (pZero2->s).coord.x;
+        s32 d3 = zx - x;
+        if (d3 > 0x5000) {
+          (p->s).d.x = d3 / 0x34;
+          (p->s).work[3] = 0;
+        } else if (d2 <= 0xA000 && (RANDOM(RNG_0202f388) & 1)) {
+          (p->s).d.x = d3 / 0x1A;
+          (p->s).work[3] = 2;
+        } else {
+          (p->s).d.x = (x - zx) / 0x1A;
+          (p->s).work[3] = 1;
+        }
+      }
+    }
+    (p->s).d.y = -0x9C0;
+    (p->s).work[2] = 0x10;
+    {
+      u32 xf = 0;
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        xf = 1;
+      }
+      ((p->s).spr).xflip = xf;
+      *((u8*)p + 0x4a) = (*((u8*)p + 0x4a) & ~0x11) | (xf << 4);
+      if (xf != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x60;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  {
+    s32 t = (p->s).work[2] - 1;
+    (p->s).work[2] = t;
+    if ((u8)t == 0xFF) {
+      (p->s).mode[1] = 0xE;
+      (p->s).mode[2] = 1;
+    }
+  }
+#else
+  INCCODE("asm/boss/blizzack_bombjump.inc");
+#endif
+}
+
 INCASM("asm/boss/blizzack_post_p2_a.inc");
 
 // Same regmove tie as blizzackMode0: the mode[2]=0 zero and the 0x64xx pool
