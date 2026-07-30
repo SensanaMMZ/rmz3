@@ -54,7 +54,151 @@ struct Enemy* FUN_08082bbc(struct Entity* e, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/omega_gold_hand_p1_pre_p2.inc");
+void nop_08083eac(struct Enemy* p);
+
+// 0x08082c18 -- parked (dual-zero basin): retail keeps TWO independent
+// zero registers in one extended basic block (r6: angle + else-arm body
+// zeros, r7: xflip + d pair + if-arm mode zeros) with two separate
+// movs #0; every C shape (two vars, barriers, pins, staged inits)
+// either unifies them into one register or materializes the second as
+// a copy of the first. Logic fully decoded and verified.
+NON_MATCH void OmegaGoldHand_Init(struct Enemy* p) {
+#if MODERN
+  s32 z6, z7;
+  register s32 one8 asm("r8");
+  struct Body* bd;
+  InitScalerotMotion1(&p->s);
+  z6 = 0;
+  (p->s).angle = z6;
+  {
+    register u32 f1 asm("r1");
+    register s32 t0 asm("r0");
+    f1 = (p->s).flags;
+    t0 = 0xEF;
+    t0 &= f1;
+    z7 = 0;
+    asm("" : "+r"(z7) : "r"(t0));
+    (p->s).flags = t0;
+  }
+  {
+    register s32 c2 asm("r2");
+    c2 = 1;
+    asm("" : "+r"(c2));
+    one8 = 1;
+    (p->s).spr.xflip = z7;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      *oa = m11;
+    }
+    {
+      u32 fl2 = (p->s).flags;
+      fl2 |= c2;
+      fl2 |= 2;
+      fl2 |= 4;
+      (p->s).flags = fl2;
+    }
+  }
+  bd = &p->body;
+  InitBody(bd, &sCollisions[0], &(p->s).coord, 1);
+  bd->parent = (struct CollidableEntity*)p;
+  bd->fn = (void*)nop_08083eac;
+  {
+    u8* a = (u8*)p + 0x5c;
+    *(s32*)(a + 4) = z7;
+    (p->s).d.x = z7;
+  }
+  if ((p->s).work[1] == 0) {
+    u32 tbl = (u32)(gEnemyFnTable);
+    u32 id;
+    EntityFunc** rt;
+    id = ((p->s).id) << 2;
+    rt = (EntityFunc**)(tbl + id);
+    *(u32*)((p->s).mode) = one8;
+    (p->s).onUpdate = (void*)(*rt)[1];
+    (p->s).mode[1] = z7;
+    (p->s).mode[2] = z7;
+    (p->s).mode[3] = z7;
+  } else {
+    u32 tbl;
+    u32 id;
+    EntityFunc** rt;
+    {
+      u8* a2 = (u8*)p + 0x8c;
+      *(u32*)a2 = z6;
+      asm("" : "+r"(a2));
+      a2 += 4;
+      *(u32*)a2 = z6;
+      asm("" : "+r"(a2));
+      a2 += 4;
+      asm("" : "+r"(a2));
+      *a2 = z6;
+    }
+    (p->s).flags &= 0xFB;
+    *((u8*)p + 0xc1) = z6;
+    tbl = (u32)(gEnemyFnTable);
+    id = ((p->s).id) << 2;
+    rt = (EntityFunc**)(tbl + id);
+    *(u32*)((p->s).mode) = one8;
+    (p->s).onUpdate = (void*)(*rt)[1];
+    {
+      s32 m2 = 2;
+      asm("" : "+r"(m2));
+      (p->s).mode[1] = m2;
+    }
+    (p->s).mode[2] = z6;
+    (p->s).mode[3] = z6;
+  }
+  if ((p->s).work[0] == 0) {
+    {
+      u8* pr = (u8*)p + 0x49;
+      *pr |= 0xC;
+    }
+    {
+      u8* a1 = (u8*)p + 0xb4;
+      *(s32*)a1 = -0x1300;
+      asm("" : "+r"(a1));
+      a1 += 4;
+      *(s32*)a1 = -0x3A00;
+      asm("" : "+r"(a1));
+      a1 += 8;
+      asm("" : "+r"(a1));
+      *a1 = 1;
+    }
+  } else {
+    u8* a2 = (u8*)p + 0x25;
+    *a2 = 0x17;
+    asm("" : "+r"(a2));
+    a2 += 0x8F;
+    *(s32*)a2 = 0x1500;
+    asm("" : "+r"(a2));
+    a2 += 4;
+    asm("" : "+r"(a2));
+    *(s32*)a2 = -0x3800;
+    {
+      s32 z2 = 0;
+      (p->s).flags &= 0xDF;
+      *((u8*)p + 0x4d) = z2;
+      {
+        u8* oa = (u8*)p + 0x4a;
+        s32 ov = *oa;
+        s32 m21 = -0x21;
+        m21 &= ov;
+        *oa = m21;
+      }
+    }
+  }
+  (p->s).flags2 |= 0x10;
+  (p->s).invincibleID = ((p->s).unk_28)->uniqueID;
+  OmegaGoldHand_Update(p);
+#else
+  INCCODE("asm/enemy/omega_gold_hand_init.inc");
+#endif
+}
+
+INCASM("asm/enemy/omega_gold_hand_p1_pre_p2b.inc");
 
 void OmegaGoldHand_Die(struct Enemy* p) {
   (PTR_ARRAY_08368218[(p->s).mode[1]])(p);
