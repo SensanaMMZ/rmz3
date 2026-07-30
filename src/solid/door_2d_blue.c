@@ -280,7 +280,127 @@ NON_MATCH void FUN_080cafd0(struct Solid* p) {
 #endif
 }
 
-INCASM("asm/solid/unk_02_a.inc");
+void FUN_080cb160(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      {
+        u8* w = (u8*)p + 0x8c;
+        s32 z = 0;
+        *(u32*)w = z;
+        asm("" : "+r"(w));
+        w += 4;
+        *(u32*)w = z;
+        asm("" : "+r"(w));
+        w += 4;
+        asm("" : "+r"(w));
+        *w = z;
+      }
+      (p->s).flags &= 0xFB;
+      (p->s).flags2 &= 0xF7;
+      SetMotion(&p->s, 0x1202);
+      PlaySound(0x9E);
+      {
+        s32* tp = (s32*)((u8*)p + 0xbc);
+        struct Entity** pb = (struct Entity**)((u8*)p + 0xb4);
+        tp[0] = (*pb)->coord.x + -0x3800;
+        asm("" : "+r"(pb));
+        tp[1] = (*pb)->coord.y;
+      }
+      (p->s).work[2] = 0x40;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 1: {
+      u8 t = (p->s).work[0] & 2;
+      if (t == 0) {
+        gCollisionManager.sweep = t;
+      }
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 2: {
+      struct Entity** pb = (struct Entity**)((u8*)p + 0xb4);
+      (*pb)->spr.xflip = 0;
+      (*pb)->spr.oam.xflip = 0;
+      (*pb)->flags &= ~X_FLIP;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).work[2] = 0x38;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 3: {
+      UpdateMotionGraphic(&p->s);
+      {
+        struct Entity** pb = (struct Entity**)((u8*)p + 0xb4);
+        struct Entity* z = *pb;
+        z->coord.x = z->coord.x + -0x100;
+      }
+      if ((p->s).work[2] == 0x1C) {
+        u8* cam2 = (u8*)&gStageRun.vm.camera;
+        *(s32**)(cam2 + 0x48) = (s32*)((u8*)p + 0xbc);
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      PlaySound(0x9F);
+      SetMotion(&p->s, 0x1203);
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4: {
+      s32 z2;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      {
+        u8* pb = (u8*)p + 0xb4;
+        {
+          struct Entity* z1 = *(struct Entity**)pb;
+          if ((u32)(GetGroundMetatileAttr(z1->coord.x, z1->coord.y) << 16) != 0) {
+            struct Entity* za = *(struct Entity**)pb;
+            s32 ny = FUN_0800a05c(za->coord.x, za->coord.y);
+            (*(struct Entity**)pb)->coord.y = ny;
+          }
+        }
+        {
+          u8* g = (u8*)&gStageRun;
+          struct Entity* z3;
+          u32 v = *(u16*)(g + 0x14);
+          u32 t = 0xFFFE;
+          t &= v;
+          asm volatile("movs %0, #0" : "=r"(z2));
+          *(u16*)(g + 0x14) = t;
+          {
+            u8* cam = g + 0xE8;
+            z3 = *(struct Entity**)pb;
+            *(s32**)(cam + 0x48) = (s32*)&z3->coord;
+          }
+          *((u8*)z3 + 0x119) = z2;
+        }
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = z2;
+      }
+      break;
+    }
+  }
+}
 
 #include "motion.h"
 #include "story.h"
