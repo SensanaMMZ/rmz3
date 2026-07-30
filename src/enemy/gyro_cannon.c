@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "metatile.h"
+#include "overworld_terrain.h"
 #include "story.h"
 #include "mission.h"
 #include "vfx.h"
@@ -395,7 +397,85 @@ _0806D328: .4byte PTR_ARRAY_0836666c\n\
  .syntax divided\n");
 }
 
-INCASM("asm/enemy/gyro_cannon_p1.inc");
+void GyroCannon_Die(struct Enemy* p);
+
+void gyrocannon_0806d32c(struct Enemy* p) {
+  struct Entity* par = (p->s).unk_28;
+  if ((p->body).status & 0x200) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    GyroCannon_Die(p);
+    return;
+  }
+  if ((p->s).mode[1] == 0) {
+    register u32 f asm("r0");
+    s32 zv;
+    if (par->mode[1] != 8) {
+      SetDDP(&p->body, &sCollisions[2]);
+      if (!IsFrozen(par)) {
+        UpdateMotionGraphic(&p->s);
+      }
+    } else {
+      SetDDP(&p->body, &sCollisions[3]);
+    }
+    (p->s).coord.x = par->coord.x;
+    (p->s).coord.y = par->coord.y;
+    if (par->mode[0] > 1) {
+      u8* pb = (u8*)par + 0xb4;
+      s32 p9 = pb[9];
+      if (p9 == 0) {
+        register s32 flg asm("r1");
+        register s32 cfe asm("r0");
+        asm("" : "+r"(p9));
+        flg = (p->s).flags;
+        cfe = 0xFE;
+        asm("" : "+r"(cfe));
+        f = cfe & flg;
+        zv = p9;
+        goto ta;
+      }
+      (p->s).work[2] = 0x40;
+      (p->s).mode[1]++;
+    }
+    if (IsVoidSpace(par->coord.x, par->coord.y + -0x1800)) {
+      register s32 flg2 asm("r1");
+      register s32 cfe2 asm("r0");
+      flg2 = (p->s).flags;
+      cfe2 = 0xFE;
+      asm("" : "+r"(cfe2));
+      f = cfe2 & flg2;
+      zv = 0;
+      asm("" : "+r"(zv));
+    ta:
+      asm("" : "+r"(f));
+      f &= 0xFD;
+      (p->s).flags = f;
+      (p->body).status = zv;
+      (p->body).prevStatus = zv;
+      (p->body).invincibleTime = zv;
+      (p->s).flags &= 0xFB;
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    }
+  } else {
+    s32 oy;
+    UpdateMotionGraphic(&p->s);
+    oy = (p->s).coord.y;
+    (p->s).coord.y = oy + -0x200;
+    {
+      s32 raw = (p->s).work[2] - 1;
+      (p->s).work[2] = raw;
+      if ((u8)raw == 0xFF) {
+        goto die2;
+      }
+    }
+    if (FUN_080098a4((p->s).coord.x, oy + -0xE00) != 0) {
+    die2:
+      SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      GyroCannon_Die(p);
+    }
+  }
+}
+
+INCASM("asm/enemy/gyro_cannon_p1b.inc");
 
 void FUN_0806d998(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
