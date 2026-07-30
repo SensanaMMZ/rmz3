@@ -630,7 +630,102 @@ void FUN_08064c38(struct Enemy* p) {
 
 void nop_08064ca8(struct Enemy* p) {}
 
-INCASM("asm/enemy/pantheon_hunter_p2_pre.inc");
+#include "zero.h"
+#include "metatile.h"
+
+void phunter_08064cac(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, 0x1303);
+    {
+      register struct Zero** zp asm("r4");
+      register s32 dx asm("r1");
+      register s32 dy asm("r0");
+      register s32 s1 asm("r6");
+      struct Zero* z;
+      s32 s2, dist;
+      zp = &pZero2;
+      z = *zp;
+      dx = (p->s).coord.x;
+      dx -= (z->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y - (z->s).coord.y + -0x1800;
+      (p->s).d.y = dy;
+      dx >>= 8;
+      s1 = dx;
+      s1 = s1 * dx;
+      dy >>= 8;
+      s2 = dy;
+      s2 = s2 * dy;
+      s1 += s2;
+      dist = (u16)Sqrt(s1);
+      if (dist != 0) {
+        s32 nx = (p->s).d.x / dist;
+        s32 ny;
+        (p->s).d.x = nx;
+        ny = (p->s).d.y / dist;
+        (p->s).d.x = (nx * 3) << 1;
+        (p->s).d.y = (ny * 3) << 1;
+      } else {
+        if (((*zp)->s).flags & 0x10) {
+          (p->s).d.x = 0x600;
+        } else {
+          (p->s).d.x = -0x600;
+        }
+        (p->s).d.y = 0;
+      }
+    }
+    if ((p->s).d.x > 0) {
+      s32 z2 = 0;
+      (p->s).flags &= 0xEF;
+      (p->s).spr.xflip = z2;
+      {
+        u8* oa = (u8*)p + 0x4a;
+        s32 ov = *oa;
+        s32 m11 = -0x11;
+        m11 &= ov;
+        *oa = m11;
+      }
+    } else {
+      s32 o = 1;
+      (p->s).flags |= 0x10;
+      (p->s).spr.xflip = o;
+      {
+        u8* oa = (u8*)p + 0x4a;
+        s32 c16 = 0x10;
+        s32 ov, m11;
+        asm("" : "+r"(c16));
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | c16;
+      }
+    }
+    *((u8*)p + 0xbe) = 1;
+    SetDDP(&p->body, &sCollisions[2]);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 x = (p->s).coord.x;
+    s32 dx = (p->s).d.x;
+    s32 y, dy;
+    x += dx;
+    (p->s).coord.x = x;
+    y = (p->s).coord.y;
+    dy = (p->s).d.y;
+    y += dy;
+    (p->s).coord.y = y;
+    (p->s).d.y = dy + 0x40;
+    if (FUN_080098a4(x + dx, y) != 0) {
+      goto die2;
+    }
+    if (FUN_080098a4((p->s).coord.x + (p->s).d.x, (p->s).coord.y - 0x1800) != 0) {
+    die2:
+      SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      PantheonHunter_Die(p);
+    }
+  }
+}
 
 void FUN_08064e0c(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
