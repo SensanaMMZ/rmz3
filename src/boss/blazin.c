@@ -722,7 +722,60 @@ INCASM("asm/boss/blazin_p5.inc");
 
 bool8 FUN_0803f3fc(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p6.inc");
+extern const struct Collision gBlazinCollisions[];
+struct Projectile* blazin_080402a4(struct Boss* p);
+
+void blazinMode5(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, (motion_t)((*(u16*)((u8*)p + 0xc8) + 6) | 0xA200));
+      SetDDP(&p->body, &gBlazinCollisions[1]);
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      SetDDP(&p->body, &gBlazinCollisions[5]);
+      *(struct Projectile**)((u8*)p + 0xcc) = blazin_080402a4(p);
+      PlaySound(0x70);
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      if ((p->s).work[3] == 0 && *(s32*)((u8*)p + 0xc4) == 0) {
+        GotoMotion(&p->s, (motion_t)((*(u16*)((u8*)p + 0xc8) + 6) | 0xA200), 4, 0);
+        (p->s).work[3] = 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        struct Projectile** ep = (struct Projectile**)((u8*)p + 0xcc);
+        if ((*ep)->s.mode[0] > 1) {
+          *ep = NULL;
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    case 4:
+      SetMotion(&p->s, (motion_t)((*(u16*)((u8*)p + 0xc8) + 7) | 0xA200));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      {
+        u8 st = (p->s).motion.state;
+        if (st == 3) {
+          (p->s).mode[1] = st;
+          (p->s).mode[2] = 0;
+        }
+      }
+      break;
+  }
+}
 
 bool8 nop_0803f538(struct Boss* _) { return TRUE; }
 
