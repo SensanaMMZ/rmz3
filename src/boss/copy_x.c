@@ -663,6 +663,131 @@ void copyxNovaStrike2(struct Boss* p) {
   }
 }
 
+void createCopyXSonicBoom(struct Entity* e, u8 w0, u8 w1);
+
+// r3/r5 keep transposition: retail saves the pZero2 pool address in r3 across
+// both derefs and stages s5 in r5 (mine swap them), and the xflip-arm's 0xFFF8
+// pool value takes r0 directly into the merged strh (mine r2+copy); the
+// remaining ~55 bytes are these register-number diffs.
+NON_MATCH void copyxNovaStrike3(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    u8* pde;
+    SetMotion(&p->s, 0xB30A);
+    (p->s).mode[2] = 0;
+    if ((p->s).flags & X_FLIP) {
+      (p->s).d.x = 0x380;
+      *(u16*)((u8*)p + 0xc8) = 0xFFF8;
+    } else {
+      (p->s).d.x = -0x380;
+      *(u16*)((u8*)p + 0xc8) = 8;
+    }
+    (p->s).d.y = 0;
+    (p->s).work[2] = 0;
+    {
+      register u8* pt asm("r0");
+      u8 fv;
+      pt = (u8*)p + 0xde;
+      fv = *pt;
+      asm("" : "=r"(pde) : "0"(pt));
+      if (fv != 0) {
+        SetDDP((struct Body*)(pt - 0x6a), &sCollisions[6]);
+        PlaySound(0x46);
+      } else {
+        SetDDP(&p->body, &sCollisions[2]);
+        PlaySound(0x46);
+      }
+    }
+    createCopyXSonicBoom(&p->s, 1, 0);
+    *pde = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 dx = (p->s).d.x;
+    s32 w1b;
+    (p->s).coord.x += dx;
+    w1b = (p->s).work[2] + 1;
+    (p->s).work[2] = w1b;
+    if ((p->s).coord.y < *(s32*)((u8*)p + 0xb8) + 0xF000) {
+      (p->s).work[2] = w1b + 1;
+      {
+        struct Zero* z = pZero2;
+        if ((p->s).coord.y > z->s.coord.y) {
+          (p->s).coord.y += -0x200;
+        }
+      }
+      {
+        s32 ax = *(s32*)((u8*)p + 0xb4);
+        s32 cx = (p->s).coord.x;
+        if (cx < ax + 0x1000 || cx > ax + 0x14000) {
+          (p->s).mode[1] = 0xB;
+          (p->s).mode[2] = 1;
+        }
+        {
+          u32 sh = *(volatile u8*)((u8*)p + 0xa) >> 4;
+          u32 nf = 1;
+          u32 s5 = 0;
+          s32 zx;
+          nf &= ~sh;
+          zx = pZero2->s.coord.x;
+          if (zx < cx) {
+            s5 = 1;
+          }
+          if (nf != s5) {
+            s32 d2 = zx - cx;
+            if (d2 >= 0) {
+              if (d2 > 0x4000) {
+                goto far2;
+              }
+            } else if (cx - zx > 0x4000) {
+              goto far2;
+            }
+          }
+          goto out;
+        far2:
+          if ((p->s).work[2] > 0x28) {
+            u8* pc6 = (u8*)p + 0xc6;
+            u8 c6 = *pc6;
+            if (c6 == 0) {
+              (p->s).mode[1] = 0xA;
+              (p->s).mode[3] = 0x15;
+              (p->s).d.x = c6;
+              (p->s).d.y = c6;
+              goto setm2;
+            }
+            goto set0b;
+          }
+        out:;
+        }
+      }
+    } else {
+      s32 nd = dx + *(s16*)((u8*)p + 0xc8);
+      s32 a;
+      (p->s).d.x = nd;
+      a = nd;
+      if (a < 0) {
+        a = -a;
+      }
+      if (a <= 0x3FF) {
+        if (*(volatile u8*)((u8*)p + 0xa) & X_FLIP) {
+          (p->s).d.x = 0x400;
+        } else {
+          (p->s).d.x = -0x400;
+        }
+      }
+      if ((p->s).work[2] > 0x28) {
+      set0b:
+        (p->s).mode[1] = 0xB;
+      setm2:
+        (p->s).mode[2] = 1;
+      }
+    }
+  }
+#else
+  INCCODE("asm/boss/copy_x_nova3.inc");
+#endif
+}
+
 INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a.inc");
 
 extern const u8 u8_ARRAY_080fefb0[4];
