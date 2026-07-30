@@ -2,6 +2,8 @@
 #include "collision.h"
 #include "element.h"
 #include "global.h"
+#include "gfx.h"
+#include "constants/motion/static.h"
 #include "zero.h"
 
 static const BossFunc sDeads[2];
@@ -34,6 +36,100 @@ void FUN_080500c8(struct Body* body) {
 }
 
 INCASM("asm/boss/anubis_p1_pre_p2_a.inc");
+
+static const u8 sInitModes[4];
+static const struct Collision sCollisions[3];
+void Anubis_Update(struct Boss* p);
+
+void Anubis_Init(struct Boss* p) {
+  s32 z5;
+  {
+    u32 tbl = (u32)gBossFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    register u32 one asm("r1");
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  {
+    u8 m = sInitModes[(p->s).work[0]];
+    z5 = 0;
+    (p->s).mode[1] = m;
+  }
+  {
+    u32 fl = (p->s).flags;
+    fl |= 2;
+    asm("" : "+r"(fl));
+    fl |= 1;
+    (p->s).flags = fl;
+  }
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  ResetBossBody(p, sCollisions, 0x40);
+  {
+    void* f = (void*)FUN_080500c8;
+    u8* b = (u8*)p + 0x74;
+    *(void**)(b + 0x24) = f;
+    asm("" : "+r"(b));
+    b += 0x40;
+    asm("" : "+r"(b));
+    *(u32*)b = z5;
+  }
+  if ((p->s).work[0] != 1) {
+    {
+      s32* pb = (s32*)((u8*)p + 0xb8);
+      s32 cx = (p->s).coord.x >> 8;
+      s32 q;
+      *pb = cx;
+      q = cx / 0xF0;
+      *pb = (((q << 4) - q) << 12) + 0x7800;
+      asm("" : "+r"(pb));
+      pb += 1;
+      {
+        s32 cy = (p->s).coord.y >> 8;
+        s32 q2;
+        *pb = cy;
+        q2 = cy / 0xA0;
+        q2 += 1;
+        *pb = ((q2 << 2) + q2) << 13;
+      }
+    }
+    {
+      u8* w = (u8*)p + 0xc0;
+      s32 z1;
+      *(u32*)w = z5;
+      asm("" : "+r"(w));
+      w += 8;
+      z1 = 0;
+      *(u16*)w = z5;
+      asm("" : "+r"(w));
+      w += 2;
+      *w = z1;
+      asm("" : "+r"(w));
+      w += 1;
+      *w = z1;
+      *((u8*)p + 0xcd) = 0x40;
+      {
+        u8* w2 = (u8*)p + 0xce;
+        *w2 = z1;
+        asm("" : "+r"(w2));
+        w2 += 1;
+        *w2 = z1;
+      }
+    }
+    LOAD_STATIC_GRAPHIC(SM073_ANUBIS_ROD);
+    LOAD_STATIC_GRAPHIC(SM074_ANUBIS_SAND);
+    {
+      u16* a2 = (u16*)((u8*)p + 0xd0);
+      register u32 v asm("r0");
+      v = 0xFFFF;
+      *a2 = v;
+    }
+    *((u8*)p + 0xd2) = 1;
+  }
+  Anubis_Update(p);
+}
 
 static const BossFunc sUpdates1[11];
 static const BossFunc sUpdates2[11];
