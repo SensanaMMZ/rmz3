@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
+#include "stagerun.h"
+#include "zero.h"
 
 void GlacierleArm_Init(struct Solid* p);
 void GlacierleArm_Update(struct Solid* p);
@@ -80,7 +82,82 @@ INCASM("asm/solid/glacierle_arm_pre_b.inc");
 
 void nop_080ceb28(struct Solid* p) {}
 
-INCASM("asm/solid/glacierle_arm_post.inc");
+INCASM("asm/solid/glacierle_arm_post_a.inc");
+
+extern const struct Collision sGlacierleArmCollisions[];
+extern const u8 sGlacierleArmCollisionIdx[];
+extern const motion_t sGlacierleArmMotions[];
+
+void FUN_080ceb2c(struct Solid* p) {
+  struct Entity* par = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[2] == 0) {
+        (p->s).flags &= 0xFE;
+        (p->s).work[3] = 0x78;
+      } else {
+        (p->s).flags |= 1;
+        SetMotion(&p->s, sGlacierleArmMotions[(p->s).work[2]]);
+        (p->s).work[3] = 0x1E;
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      SetDDP(&p->body, &sGlacierleArmCollisions[sGlacierleArmCollisionIdx[(p->s).work[2]]]);
+      if ((p->s).work[2] != 0) {
+        UpdateMotionGraphic(&p->s);
+      }
+      {
+        u8 w0 = (p->s).work[0];
+        if (w0 == 0) {
+          if (!(gStageRun.vm.active & 1)) {
+            (p->s).work[3]--;
+          }
+          if ((p->s).work[2] == 9) {
+            if (*(s32*)((u8*)par + 0xb4) & 2) {
+              *((u8*)p + 0xbd) = 1;
+              (p->s).mode[1] = 1;
+              (p->s).mode[2] = w0;
+            }
+            if ((u32)(((pZero2->s).coord.x - (p->s).coord.x) + 0x1800) <= 0x2FFF) {
+              *((u8*)p + 0xbd) = w0;
+              (p->s).mode[1] = 1;
+              (p->s).mode[2] = w0;
+            }
+          }
+        } else {
+          s32 z3;
+          {
+            s32 raw3 = (p->s).work[3] - 1;
+            z3 = 0;
+            (p->s).work[3] = raw3;
+          }
+          if ((p->s).work[2] == 9) {
+            if ((u32)(((pZero2->s).coord.x - (p->s).coord.x) + 0x1800) <= 0x2FFF) {
+              if ((u32)((pZero2->s).coord.y - (p->s).coord.y) <= 0x7FFF) {
+                *((u8*)p + 0xbd) = z3;
+                (p->s).mode[1] = 1;
+                (p->s).mode[2] = z3;
+              }
+            }
+          }
+        }
+      }
+      if ((p->s).mode[1] == 0) {
+        u8 w3v = (p->s).work[3];
+        if (w3v == 0) {
+          if ((p->s).work[2] != 9) {
+            (p->s).work[2]++;
+            (p->s).mode[2] = w3v;
+          }
+        }
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/glacierle_arm_post_b.inc");
 
 // --------------------------------------------
 void FUN_080ceb2c(struct Solid* p);
