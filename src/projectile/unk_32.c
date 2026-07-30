@@ -263,6 +263,108 @@ void FUN_080ab178(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_32_p4_p2_s1.inc");
 
+static const struct Collision sCollisions[14];
+void FUN_080ab3ac(struct Projectile* p);
+
+void FUN_080ab21c(struct Projectile* p) {
+  struct Entity* pa = (struct Entity*)(p->s).unk_28;
+  u32* ps = (u32*)((u8*)p + 0x8c);
+  u32 st = *ps;
+  u32 k2 = 0x200;
+  s32 m1;
+  st &= k2;
+  if (st != 0) {
+    goto boom;
+  }
+  {
+    UpdateMotionGraphic(&p->s);
+    m1 = (p->s).mode[1];
+    switch (m1) {
+      case 0:
+        if (*ps & 0x800) {
+          struct Entity* t4 = *(struct Entity**)((u8*)(*(void**)((u8*)p + 0x84)) + 0x2c);
+          (p->s).unk_2c = (struct Entity*)FUN_080aae34(&p->s);
+          *((u8*)pa + 0xc5) = 1;
+          (p->s).mode[1] = 2;
+          (p->s).flags &= 0xFE;
+          (p->s).coord.x = t4->coord.x;
+          (p->s).coord.y = t4->coord.y;
+          PlaySound(0x40);
+        } else {
+          s32 t = (p->s).work[2] - 1;
+          (p->s).work[2] = t;
+          if ((u8)t == 0xFF) {
+            (p->s).mode[1] = 1;
+            SetDDP(&p->body, &sCollisions[4]);
+            *(u16*)((u8*)p + 0xbc) = k2;
+          }
+        }
+        break;
+      case 1: {
+        u16* pc = (u16*)((u8*)p + 0xbc);
+        s32 t = *pc - 1;
+        *pc = t;
+        if ((s16)t != -1) {
+          break;
+        }
+      boom:
+        PlaySound(0x3F);
+        {
+          u32 tbl = (u32)gProjectileFnTable;
+          u32 id = ((p->s).id) << 2;
+          EntityFunc** rt = (EntityFunc**)(tbl + id);
+          *(u32*)((p->s).mode) = 2;
+          (p->s).onUpdate = (void*)((*rt)[2]);
+        }
+        FUN_080ab3ac(p);
+        break;
+      }
+      case 2: {
+        u32 st2 = *ps & 0x800;
+        if (st2 != 0) {
+          struct Entity* t4 = *(struct Entity**)((u8*)(*(void**)((u8*)p + 0x84)) + 0x2c);
+          if (*(s8*)((u8*)t4 + 8) == 0) {
+            *((u8*)t4 + 0x143) = 1;
+            t4->coord.y += k2;
+            if (FUN_08009f6c(t4->coord.x, t4->coord.y) < t4->coord.y) {
+              t4->coord.y = FUN_08009f6c(t4->coord.x, t4->coord.y);
+            }
+            {
+              s32 x0 = t4->coord.x;
+              s32 y0 = t4->coord.y;
+              (p->s).coord.x = x0;
+              (p->s).coord.y = y0;
+            }
+            if (!(*(u32*)((u8*)t4 + 0x8c) & 1)) {
+              break;
+            }
+          }
+          *ps = st;
+          *(u32*)((u8*)p + 0x90) = st;
+          *((u8*)p + 0x94) = st;
+          (p->s).flags &= 0xFB;
+        } else {
+          (p->s).work[1] = 1;
+          ((struct Entity*)(p->s).unk_2c)->work[1] = 1;
+          *((u8*)pa + 0xc5) = st2;
+          PlaySound(0x3F);
+          {
+            u32 tbl = (u32)gProjectileFnTable;
+            u32 id = ((p->s).id) << 2;
+            EntityFunc** rt = (EntityFunc**)(tbl + id);
+            *(u32*)((p->s).mode) = m1;
+            (p->s).onUpdate = (void*)((*rt)[2]);
+          }
+          FUN_080ab3ac(p);
+        }
+        break;
+      }
+    }
+  }
+}
+
+INCASM("asm/projectile/unk_32_p4_p2_s1_post.inc");
+
 void FUN_080ac1e4(struct RenderNode* t);
 
 void FUN_080ab550(struct Projectile* p) {
