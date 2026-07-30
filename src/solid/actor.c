@@ -1683,6 +1683,85 @@ void Actor48_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_p2.inc");
 
+struct VFX* FUN_080c5628(u8 r0, u8 r1, s32 x, s32 y);
+
+// 0x080d6afc -- Dark Elf cutscene actor: loads SM081, bobs on a sine track,
+// swells (mag ramp) and fades. Blocker (const-cluster placement): the dead-
+// kept r6 zero must materialize between the tilenum address form and the
+// 0x2BE pool load, and the sine/limit temps ride a 3-reg permutation on it;
+// every anchor shape tried either hoists the zero or re-forms the address.
+NON_MATCH void FUN_080d6afc(struct Solid* p) {
+#if MODERN
+  switch ((p->s).mode[1]) {
+    case 0:
+      (p->s).d.x = (p->s).coord.x;
+      (p->s).d.y = (p->s).coord.y;
+      wStaticGraphicTilenums[0x51] = 0x2BE;
+      wStaticMotionPalIDs[0x51] = 6;
+      LOAD_STATIC_GRAPHIC(SM081_DARK_ELF);
+      InitScalerotMotion1(&p->s);
+      SetMotion(&p->s, 0x5100);
+      (p->s).work[2] = 0;
+      (p->s).work[3] = 1;
+      (p->s).mode[1]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[3] + 1;
+        (p->s).work[3] = t;
+        if ((t & 0xF) == 0) {
+          FUN_080c5628(3, 0, (p->s).coord.x, (p->s).coord.y);
+        }
+      }
+      {
+        struct ScriptEntity* se = (p->s).scriptEntity;
+        if (((u8*)se)[9] & 1) {
+          (p->s).d.x += 0x60;
+        }
+        if (((u8*)se)[9] & 2) {
+          (p->s).work[3] = 0;
+          goto inc;
+        }
+      }
+      break;
+    case 2: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.x += 0x80;
+      t = (p->s).work[3];
+      (p->s).work[3] = t + 1;
+      {
+        u32 mt = (u16)(0x200 - ((s16)gSineTable[(u8)(t + 0x41)] >> 8));
+        u32 m = mt;
+        if (mt > 0x120) {
+          m = 0x120;
+        }
+        ((p->s).spr).mag.x = m;
+      }
+      ((p->s).spr).mag.y = ((s32)gSineTable[(u8)((p->s).work[3] + 0x40)] + 0x100) >> 1;
+      if ((p->s).work[3] > 0x50) {
+        (p->s).flags &= 0xFE;
+      inc:
+        (p->s).mode[1]++;
+      }
+      break;
+    }
+  }
+  {
+    s32 t = (p->s).work[2];
+    s32 t1 = t + 1;
+    (p->s).work[2] = t1;
+    (p->s).coord.x = (p->s).d.x + ((s32)gSineTable[(u8)(t + 0x41)] << 1);
+    (p->s).coord.y = (p->s).d.y + ((s32)gSineTable[(u8)((p->s).work[2] * 2)] << 2);
+  }
+#else
+  INCCODE("asm/solid/actor_6afc.inc");
+#endif
+}
+
+INCASM("asm/solid/actor_p2_post6afc.inc");
+
 void FUN_080d740c(struct Solid* p) {
   switch ((p->s).mode[1]) {
     case 0:
