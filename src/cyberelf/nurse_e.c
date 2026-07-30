@@ -33,6 +33,122 @@ struct Elf* CreateNurseEElf(struct Zero* z, u8 breed, u8 availability, u8 sateli
 
 INCASM("asm/cyberelf/nurse_e_p1_b.inc");
 
+void NurseE_Update(struct Elf* p);
+
+void NurseE_Init(struct Elf* p) {
+  register struct Zero* par asm("r8");
+  register u8* pb asm("r9");
+  struct Rect rr;
+  s32 z6;
+  par = ((struct CyberElfNurseE*)p)->player;
+  asm("" : "+r"(par));
+  {
+    register const struct Rect* zr asm("r1");
+    zr = gZeroRanges;
+    asm("" : "+r"(zr));
+    pb = (u8*)par + 0xb4;
+    asm("" : "+r"(pb));
+    rr = zr[*((u8*)par + 0x147)];
+  }
+  SET_ELF_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  {
+    register s32 c1 asm("r0");
+    register s32 f1 asm("r1");
+    f1 = (p->s).flags;
+    c1 = 1;
+    asm("" : "+r"(c1));
+    z6 = 0;
+    c1 = c1 | f1;
+    c1 |= 2;
+    (p->s).flags = c1;
+  }
+  SetMotion(&p->s, GetElfMotion(0));
+  UpdateMotionGraphic(&p->s);
+  ((p->s).spr).xflip = z6;
+  {
+    u8* oa = (u8*)&((p->s).spr).oam + 6;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    asm("" : "+r"(m11));
+    *oa = m11 & ov;
+    (p->s).flags &= 0xEF;
+    oa -= 1;
+    {
+      s32 ov9 = *oa;
+      s32 m13 = -0xD;
+      asm("" : "+r"(m13));
+      *oa = (m13 & ov9) | 4;
+    }
+  }
+  {
+    register struct Zero* pl asm("r2");
+    s32 rx = rr.x;
+    pl = par;
+    (p->s).coord.x = (pl->s).coord.x + rx;
+    (p->s).coord.y = (pl->s).coord.y + rr.y;
+  }
+  (p->s).unk_coord.x = z6;
+  (p->s).unk_coord.y = z6;
+  {
+    s32* dst;
+    s32 cx, cy;
+    asm volatile("" ::: "memory");
+    dst = (s32*)((u8*)p + 0xbc);
+    cx = (p->s).coord.x;
+    cy = (p->s).coord.y;
+    dst[0] = cx;
+    dst[1] = cy;
+  }
+  (p->s).d.x = z6;
+  *((u8*)p + 0xb9) = z6;
+  (p->s).d.y = 0x20;
+  {
+    u8 sel;
+    if ((p->s).work[2] == 0) {
+      register u8* t0 asm("r0");
+      t0 = pb;
+      sel = t0[0];
+    } else {
+      register u8* t2 asm("r2");
+      t2 = pb;
+      sel = t2[1];
+    }
+    if (ELF_AVABILITY(sel) & 4) {
+      u16* ha = (u16*)((u8*)p + 0xba);
+      register u32 hv asm("r0");
+      hv = 0x258;
+      *ha = hv;
+    } else {
+      u16* ha = (u16*)((u8*)p + 0xba);
+      register u32 hv asm("r0");
+      hv = 0x384;
+      *ha = hv;
+    }
+  }
+  {
+    u32 v;
+    register u32 one asm("r1");
+    if ((p->s).work[2] != 0) {
+      register struct Zero* b1 asm("r1");
+      b1 = par;
+      v = (b1->s).flags >> 4;
+      one = 1;
+      v ^= one;
+    } else {
+      register struct Zero* b2 asm("r2");
+      b2 = par;
+      v = (b2->s).flags >> 4;
+      one = 1;
+    }
+    (p->s).mode[1] = v & one;
+  }
+  NurseE_Update(p);
+}
+
+INCASM("asm/cyberelf/nurse_e_p1_b2.inc");
+
 void NurseE_Die(struct Elf* p) {
   FUN_080bfce8(&(p->s).coord, 0);
   (p->s).flags &= ~DISPLAY;
