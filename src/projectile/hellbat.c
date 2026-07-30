@@ -290,7 +290,83 @@ void FUN_080a22ec(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/hellbat_p3_p2.inc");
+void FUN_080a22f8(struct Projectile* p) {
+  if (((p->s).unk_28)->mode[0] > 1) {
+    (p->body).status = 0;
+    (p->body).prevStatus = 0;
+    (p->body).invincibleTime = 0;
+    (p->s).flags &= ~COLLIDABLE;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  {
+    s32 m = (p->s).mode[2];
+    switch (m) {
+      case 0:
+        (p->s).flags |= 1;
+        SetMotion(&p->s, 0xA905);
+        SetDDP(&p->body, &sCollisions[4]);
+        (p->s).flags &= 0xDF;
+        *((u8*)p + 0x4d) = m;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m21 = -0x21;
+          m21 &= ov;
+          *oa = m21;
+        }
+        if ((p->s).d.x > 0) {
+          (p->s).coord.x += -0x1400;
+        } else {
+          (p->s).coord.x += 0x1400;
+        }
+        (p->s).unk_coord.x = 0;
+        (p->s).work[3] = 0;
+        (p->s).mode[2]++;
+        // fallthrough
+      case 1: {
+        (p->s).coord.x += (p->s).d.x;
+        {
+          s32 acc = (p->s).unk_coord.x + (p->s).d.x;
+          (p->s).unk_coord.x = acc;
+          if (*((u8*)p + 0xb5) == 0) {
+            s32 a = acc;
+            if (a < 0) {
+              a = -a;
+            }
+            if (a > 0x1400) {
+              if ((p->s).work[3] == 0) {
+                struct Projectile* q;
+                (p->s).work[3] = 1;
+                q = FUN_080a1594(&p->s, &(p->s).coord, 1);
+                (q->s).d.x = (p->s).d.x;
+              }
+            }
+          }
+        }
+        UpdateMotionGraphic(&p->s);
+        {
+          s32 push;
+          if ((p->s).d.x > 0) {
+            push = PushoutToLeft1((p->s).coord.x + 0x400, (p->s).coord.y);
+          } else {
+            push = PushoutToRight1((p->s).coord.x - 0x400, (p->s).coord.y);
+          }
+          if (push != 0) {
+            (p->s).coord.x += push;
+            (p->s).d.y = -0x300;
+            (p->s).mode[2]++;
+          }
+        }
+        break;
+      }
+      case 2:
+        (p->s).coord.y += (p->s).d.y;
+        UpdateMotionGraphic(&p->s);
+        break;
+    }
+  }
+}
 
 void Projectile15_Init(struct Projectile* p);
 void Projectile15_Update(struct Projectile* p);
