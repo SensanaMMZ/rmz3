@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "story.h"
+#include "mission.h"
 #include "vfx.h"
 
 struct GyroCannon {
@@ -452,6 +453,140 @@ void FUN_0806db58(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/gyro_cannon_p3b.inc");
+
+void CreateGhost27(struct Coord* c, u8 r1, u8 r2);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+extern const struct SlashedEnemy sSlashedEnemies[4];
+
+/* Gyro cannon propeller-death handler. Parked: call-argument emission-order
+   tie - retail emits movs-first arg setup for the two identical CreateSmoke
+   calls but adds-first for TryDropItem; pins/anchors on the arg registers
+   flip neither (same blocker that left the twin FUN_0806ddfc as NAKED asm).
+   Everything else byte-matches. */
+NON_MATCH void gyroCannon_0806dccc(struct Enemy* p) {
+#if MODERN
+  if ((p->s).mode[3] == 0) {
+    SetMotion(&p->s, 0x1707);
+    {
+      struct Coord* ca;
+      u32 xf;
+      u32 one;
+      ca = &(p->s).coord;
+      xf = (p->s).flags >> 4;
+      one = 1;
+      xf &= one;
+      CreateGhost27(ca, xf, one);
+    }
+    {
+      struct Entity* e = (p->s).unk_2c;
+      s32 y = e->coord.y;
+      s32 x = e->coord.x;
+      (p->s).coord.x = x;
+      (p->s).coord.y = y;
+    }
+    (p->s).mode[3]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    struct Entity* e = (p->s).unk_2c;
+    if (e != NULL) {
+      if (e->mode[0] > 1) {
+        (p->s).unk_2c = NULL;
+      } else {
+        (p->s).coord.y = e->coord.y + -0x200;
+      }
+      if ((p->s).unk_2c != NULL) {
+        return;
+      }
+    }
+  }
+  {
+    struct Coord* c7;
+    register const struct SlashedEnemy* sip asm("ip");
+    register u8* pr2 asm("r2");
+    register u8* pr8 asm("r8");
+    u8 p5;
+    register struct Coord* c6 asm("r6");
+    register u32 a3 asm("r3");
+    c7 = &(p->s).coord;
+    sip = &sSlashedEnemies[2];
+    pr2 = (u8*)p + 0xb4;
+    p5 = pr2[8];
+    {
+      register u8 fl asm("r1");
+      register u32 t0 asm("r0");
+      fl = (p->s).flags;
+      a3 = 0x10;
+      t0 = a3;
+      t0 &= fl;
+      c6 = c7;
+      pr8 = pr2;
+      if (t0 != 0) {
+        a3 |= p5;
+      } else {
+        a3 = p5;
+      }
+    }
+    ((struct VFX* (*)())CreateSlashedEnemy)(c7, sip, 0, a3);
+    {
+      register struct Coord* c5 asm("r5");
+      const struct SlashedEnemy* s7;
+      u8 p2;
+      c5 = c6;
+      s7 = &sSlashedEnemies[3];
+      {
+        register u8* pl asm("r1");
+        pl = pr8;
+        p2 = pl[8];
+      }
+      {
+        register u8 fl asm("r1");
+        register u32 t0 asm("r0");
+        fl = (p->s).flags;
+        a3 = 0x10;
+        t0 = a3;
+        t0 &= fl;
+        if (t0 != 0) {
+          a3 |= p2;
+        } else {
+          a3 = p2;
+        }
+      }
+      ((struct VFX* (*)())CreateSlashedEnemy)(c5, s7, 0, a3);
+    }
+    CreateSmoke(1, c6);
+    if ((p->s).flags & 0x10) {
+      register u32 k0 asm("r0");
+      register struct Coord* cc asm("r1");
+      k0 = 2;
+      asm("" : "+r"(k0));
+      cc = c6;
+      CreateSmoke(k0, cc);
+    } else {
+      register u32 k2 asm("r0");
+      register struct Coord* c1b asm("r1");
+      k2 = 2;
+      c1b = c6;
+      CreateSmoke(k2, c1b);
+    }
+    {
+      register struct Coord* c1 asm("r1");
+      c1 = c6;
+      TryDropItem(4, c1);
+    }
+    PlaySound(0x2A);
+    if (gMission.enemyCount <= 0x270E) {
+      gMission.enemyCount++;
+    }
+    TryDropZakoDisk(p, c6);
+    SET_ENEMY_ROUTINE(p, 4);
+  }
+#else
+  INCCODE("asm/enemy/gyro_cannon_dccc.inc");
+#endif
+}
+
+
 
 NAKED static void FUN_0806ddfc(struct Enemy* p) {
   asm(".syntax unified\n\
