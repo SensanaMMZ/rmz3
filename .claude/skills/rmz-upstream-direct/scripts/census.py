@@ -50,11 +50,35 @@ def main():
          "-e", "INCCODE", "--", "src/"]
     )
 
-    ordered = sorted((a, n) for n, a in addr.items())
+    # Size = delta to the NEXT label in the SAME inc (labels in one inc are
+    # contiguous in ROM). For the last label of a file, estimate from line
+    # content (2 B per insn, 4 per .4byte, 2 per .short) — a repo-wide
+    # global delta would silently swallow the C functions between incs.
     sizes = {}
-    for i, (a, n) in enumerate(ordered):
-        nxt = ordered[i + 1][0] if i + 1 < len(ordered) else a
-        sizes[n] = max(0, nxt - a)
+    for fpath, entries in by_file.items():
+        text = open(fpath, encoding="utf-8", errors="replace").read().splitlines()
+        entries = sorted(entries)
+        for k, (ln, name) in enumerate(entries):
+            if name not in addr:
+                continue
+            if k + 1 < len(entries) and entries[k + 1][1] in addr:
+                sizes[name] = max(0, addr[entries[k + 1][1]] - addr[name])
+                continue
+            est = 0
+            for line in text[ln : len(text)]:
+                t = line.strip()
+                if not t or t.startswith(("@", "thumb_func", ".align", ".include",
+                                          ".syntax", ".text")) or t.endswith(":"):
+                    continue
+                if t.startswith(".4byte"):
+                    est += 4
+                elif t.startswith((".short", ".2byte")):
+                    est += 2
+                elif t.startswith(".byte"):
+                    est += 1
+                elif not t.startswith("."):
+                    est += 2
+            sizes[name] = est
 
     incof = {name: f for f, _, name in labels}
     rows = sorted(
