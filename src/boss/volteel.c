@@ -458,7 +458,152 @@ INCASM("asm/boss/volteel_p8.inc");
 
 bool8 FUN_08044cb4(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p9.inc");
+// Scratch-parity basin: two register pairs refuse to flip - the case-2 flags
+// load wants r1 with its test const in r0 (mine mirror them), and the cage-off
+// arm's masked-and computes the z-0x11 before the byte load regardless of
+// barrier or eval-order levers. 4 bytes of pure parity; every arm, the k-select
+// diamonds, and both probe transfers otherwise stream-match.
+NON_MATCH void volteelElectricCage(struct Boss* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      if (!((p->s).flags & 0x10)) {
+        s32 r0v = FUN_08009f6c((p->s).coord.x + 0x3600, (p->s).coord.y + -0x800);
+        s32 r;
+        asm volatile("add %0, %1, #0" : "=&l"(r) : "l"(r0v));
+        if (r != (p->s).coord.y) {
+          (p->s).mode[2]++;
+        } else {
+          (p->s).mode[2] = 0xA;
+        }
+      } else {
+        s32 r0v = FUN_08009f6c((p->s).coord.x + -0x3600, (p->s).coord.y + -0x800);
+        s32 r;
+        asm volatile("add %0, %1, #0" : "=&l"(r) : "l"(r0v));
+        if (r != (p->s).coord.y) {
+          (p->s).mode[2]++;
+        } else {
+          (p->s).mode[2] = 0xA;
+        }
+      }
+      break;
+    case 1:
+      SetMotion(&p->s, 0xA507);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        u32 m10;
+        if (!((p->s).flags & ({ m10 = 0x10; asm("" : "+r"(m10)); 0x10; }))) {
+          u8* xa = (u8*)p + 0x4c;
+          u8 ov;
+          u8 fv;
+          *xa = 1;
+          xa -= 2;
+          ov = *xa;
+          ov |= m10;
+          *xa = ov;
+          fv = (p->s).flags;
+          fv |= m10;
+          (p->s).flags = fv;
+        } else {
+          u8* xa = (u8*)p + 0x4c;
+          s32 z = 0;
+          asm("" : "+r"(z));
+          *xa = z;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            *oa = *oa & (({ asm("" : "+r"(z)); z; }) - 0x11);
+          }
+          (p->s).flags &= ~0x10;
+        }
+        (p->s).mode[2] = 0xA;
+      }
+      break;
+    case 10:
+      (p->s).work[2] = 0x46;
+      SetMotion(&p->s, 0xA508);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[3] = 0x12;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 11: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      t = (p->s).work[3];
+      if (t != 0) {
+        t--;
+        (p->s).work[3] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 12: {
+      u8* ow;
+      s32 k;
+      SetMotion(&p->s, 0xA509);
+      SetDDP(&p->body, &sCollisions[5]);
+      ow = (u8*)&gOverworld;
+      if ((*(u16*)(ow + 0x1D0) & 0x7F) == 0xD) {
+        k = 0x2D024;
+        asm volatile("");
+      } else {
+        k = 0x2D026;
+      }
+      *(ow + k) = 1;
+      PlaySound(0x7D);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 13: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2];
+      if (t != 0) {
+        t--;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 14: {
+      u8* ow;
+      s32 k;
+      SetMotion(&p->s, 0xA50A);
+      ow = (u8*)&gOverworld;
+      if ((*(u16*)(ow + 0x1D0) & 0x7F) == 0xD) {
+        k = 0x2D024;
+        asm volatile("");
+      } else {
+        k = 0x2D026;
+      }
+      *(ow + k) = 0;
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 15:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+#else
+  INCCODE("asm/boss/volteel_cage.inc");
+#endif
+}
 
 bool8 FUN_08044f00(struct Boss* p) { return TRUE; }
 
