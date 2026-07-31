@@ -326,7 +326,135 @@ void FUN_0800f2e0(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED)
   gBlendRegBuffer.bldclt = 0;
 }
 
-INCASM("asm/stage_gfx/missile_factory_p1_p2.inc");
+static const struct MetatileShift sMetatileShifts1[4];
+static const struct MetatileShift sMetatileShifts2[4];
+static const struct MetatileShift sMetatileShifts3[4];
+
+// Pool-scratch basin: seven independent sites pick the opposite scratch for a
+// pool load or a case-ending store (0x2D025 offset r0-vs-r2, the phase counter
+// strh around crossjump boundaries, case-3/5 base adds). Every case's logic,
+// the metatile shift indexing, and the quake block stream-match.
+NON_MATCH void missileFactory_0800f2ec(struct StageLayer* l, const struct Stage* stage UNUSED) {
+#if MODERN
+  struct Coord c;
+  switch (l->phase) {
+    case 0: {
+      register u8* ow asm("r4") = (u8*)&gOverworld;
+      if (*(ow + 0x2D024) > 2) {
+        u16 z;
+        register u8* st asm("r1");
+        StartPaletteAnimation(0xD0, 0);
+        st = ow + 0x2D025;
+        z = 0;
+        *st = 8;
+        PlaySound(0x121);
+        l->unk_10 = z;
+        asm volatile("");
+        l->phase++;
+      }
+      break;
+    }
+    case 1: {
+      u16 t;
+      StepPaletteAnimation(0xD0);
+      t = l->unk_10 + 1;
+      l->unk_10 = t;
+      if (t > 0xB) {
+        l->unk_10 = 6;
+      }
+      ShiftMetatile(0xF0, 0x65, &sMetatileShifts2[(u16)(*(volatile u16*)&l->unk_10 / 3)]);
+      ShiftMetatile(0xEB, 0x65, &sMetatileShifts3[(u16)(*(volatile u16*)&l->unk_10 / 3)]);
+      {
+        u8* ow = (u8*)&gOverworld;
+        if (*(ow + 0x2D025) == 0) {
+          RemovePaletteAnimation(0xD0);
+          StartPaletteAnimation(0xD5, 0);
+          l->phase = 6;
+        }
+      }
+      break;
+    }
+    case 6:
+      StepPaletteAnimation(0xD5);
+      l->phase = 2;
+      break;
+    case 2:
+      RemovePaletteAnimation(0xD5);
+      {
+        u8* ow = (u8*)&gOverworld;
+        if (*(ow + 0x2D025) != 0) {
+          StartPaletteAnimation(0xCF, 0);
+          l->unk_10 = 0;
+          asm volatile("");
+          l->phase++;
+        }
+      }
+      break;
+    case 3: {
+      u8* ow;
+      u8* st;
+      s32 x4;
+      StepPaletteAnimation(0xCF);
+      if (((l->unk_10 % 9) << 16) == 0) {
+        PlaySound(0x120);
+      }
+      l->unk_10++;
+      ow = (u8*)&gOverworld;
+      st = ow + 0x2D025;
+      x4 = (*st * 3 + 0x10) * 15;
+      ShiftMetatile(x4, 0x65, &sMetatileShifts1[(u16)(l->unk_10 / 3) % 3]);
+      if (l->unk_10 > 0x19) {
+        c.x = l->viewportCenterPixel.x << 8;
+        c.y = l->viewportCenterPixel.y << 8;
+        RemovePaletteAnimation(0xCF);
+        *(ow + 0x2D024) = *st + 4;
+        AppendQuake(0x10, &c);
+        l->unk_10 = 6;
+        asm volatile("");
+        l->phase++;
+      }
+      break;
+    }
+    case 4: {
+      u16 t = l->unk_10 - 1;
+      l->unk_10 = t;
+      if (t == 0) {
+        PlaySound(0x121);
+        StartPaletteAnimation(0xD0, 0);
+        l->unk_10 = t;
+        asm volatile("");
+        l->phase++;
+      }
+      break;
+    }
+    case 5: {
+      u16 t;
+      u8* ow;
+      u8* st;
+      s32 x4;
+      StepPaletteAnimation(0xD0);
+      t = l->unk_10 + 1;
+      l->unk_10 = t;
+      if (t > 0xB) {
+        l->unk_10 = 6;
+      }
+      ow = (u8*)&gOverworld;
+      st = ow + 0x2D025;
+      x4 = (*st * 3 + 0x10) * 15;
+      ShiftMetatile(x4, 0x65, &sMetatileShifts2[(u16)(l->unk_10 / 3)]);
+      if (*st == 0) {
+        RemovePaletteAnimation(0xD0);
+        StartPaletteAnimation(0xD5, 0);
+        *(ow + 0x2D024) = 4;
+        l->phase++;
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/stage_gfx/missile_factory_f2ec.inc");
+#endif
+}
 
 void FUN_0800f54c(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED) {
   RemovePaletteAnimation(0xcf);
