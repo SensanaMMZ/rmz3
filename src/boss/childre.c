@@ -333,6 +333,83 @@ NON_MATCH void childreMode0(struct Boss* p) {
 
 INCASM("asm/boss/childre_pre_b.inc");
 
+// 0x0804102C
+void childreStartRising(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 sq;
+      s32 tx;
+      PlaySound(0x67);
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).coord.y -= 0x800;
+      sq = 0x100;
+      sq = (u16)Sqrt(sq);
+      (p->s).d.y = -(sq << 6);
+      (p->s).coord.y += (p->s).d.y;
+      {
+        s32 base = *(s32*)((u8*)p + 0xbc);
+        (p->s).d.x = base - 0x6000;
+        tx = (p->s).d.x;
+        if ((p->s).flags & X_FLIP) {
+          tx = base + 0x6000;
+        }
+      }
+      (p->s).d.x = tx - (p->s).coord.x;
+      (p->s).d.x /= sq;
+      SetMotion(&p->s, 0xA41A);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 fl = 0;
+      s32* pbc;
+      s32 nx = (p->s).coord.x + (p->s).d.x;
+      register s32 dd asm("r5");
+      (p->s).coord.x = nx;
+      pbc = (s32*)((u8*)p + 0xbc);
+      {
+        s32 bv = *pbc;
+        dd = bv - nx;
+        asm volatile("" :: "r"(bv));
+        asm volatile("" :: "r"(nx));
+      }
+      if ((u32)(dd + 0x6800) > 0xD000) {
+        fl = 1;
+      }
+      asm volatile("" :: "r"(dd));
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if (fl != 0 || (p->s).d.y > 0) {
+        s32 base2 = *pbc;
+        s32 tx2;
+        (p->s).coord.x = base2 - 0x6800;
+        tx2 = (p->s).coord.x;
+        if ((p->s).flags & X_FLIP) {
+          s32 k68;
+          asm("movs %0, #0xD0
+	lsl %0, %0, #7" : "=l"(k68));
+          tx2 = base2 + k68;
+        }
+        (p->s).coord.x = tx2;
+        {
+          s32 z = 0;
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = z;
+        }
+      }
+      if ((s8)(p->s).motion.cmdIdx != 6) {
+        UpdateMotionGraphic(&p->s);
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/childre_pre_b2.inc");
+
 void childreEndEarShot(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0:
