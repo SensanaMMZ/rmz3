@@ -104,6 +104,54 @@ NON_MATCH void FUN_080a9250(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1b.inc");
 
+// 0x080A9810
+void FUN_080a9810(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  {
+    u8 w2 = (p->s).work[2];
+    s32 nx = w2 + 1;
+    asm("" : "+r"(nx));
+    (p->s).work[2] = nx;
+    {
+      s32 k7 = 7;
+      register s32 res asm("r0");
+      asm("" : "+r"(k7));
+      res = w2 & k7;
+      asm volatile("" :: "r"(w2));
+      if (res == 0) {
+        FUN_080a90a0(&p->s, 6, 1);
+      }
+    }
+  }
+  if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+    if (*(s32*)((u8*)p + 0xb8) <= (p->s).coord.y) {
+      FUN_080a90a0(&p->s, 5, 0x2B);
+      FUN_080a90a0(&p->s, 5, 0x15);
+      FUN_080a90a0(&p->s, 5, 0);
+      FUN_080a90a0(&p->s, 5, 0xEA);
+      FUN_080a90a0(&p->s, 5, 0xD4);
+    } else if ((p->s).flags & X_FLIP) {
+      FUN_080a90a0(&p->s, 5, 0xEB);
+      FUN_080a90a0(&p->s, 5, 0xD5);
+      FUN_080a90a0(&p->s, 5, 0xC0);
+      FUN_080a90a0(&p->s, 5, 0xAB);
+      FUN_080a90a0(&p->s, 5, 0x95);
+    } else {
+      FUN_080a90a0(&p->s, 5, 0x6B);
+      FUN_080a90a0(&p->s, 5, 0x55);
+      FUN_080a90a0(&p->s, 5, 0x40);
+      FUN_080a90a0(&p->s, 5, 0x2B);
+      FUN_080a90a0(&p->s, 5, 0x15);
+    }
+    PlaySound(0x3F);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1c.inc");
+
 void FUN_080a99d4(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
   (p->s).coord.x += (p->s).d.x;
