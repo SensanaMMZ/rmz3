@@ -809,6 +809,84 @@ void glacierle_0805836c(struct Boss* p) {
 
 INCASM("asm/boss/glacierle_b.inc");
 
+// 0x080594DC
+void glacierle_080594dc(struct Boss* p) {
+  struct Entity* q = (p->s).unk_28;
+  u8 m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0: {
+      u32 xf;
+      register u32 xf2 asm("r1");
+      (p->s).flags2 |= 0x10;
+      (p->s).invincibleID = q->uniqueID;
+      (p->body).status = m2;
+      (p->body).prevStatus = m2;
+      (p->body).invincibleTime = m2;
+      (p->s).flags &= ~COLLIDABLE;
+      {
+        register u32 one asm("r2");
+        xf = q->flags >> 4;
+        one = 1;
+        xf &= one;
+        ((p->s).spr).xflip = xf;
+        xf2 = (q->flags >> 4) & one;
+      }
+      {
+        register u8* oa asm("ip");
+        u32 k4a = 0x4a;
+        u32 sh4;
+        s32 ov, m11;
+        asm("" : "+r"(k4a));
+        oa = (u8*)((u32)p + k4a);
+        sh4 = xf2 << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      if (xf2 != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      if (*(s32*)((u8*)q + 0xb4) & 1) {
+        SetMotion(&p->s, MOTION(0xB2, 0x02));
+      } else {
+        SetMotion(&p->s, MOTION(0xB2, 0x1C));
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 k asm("r0");
+      s32 cx;
+      register s32 dx asm("r1");
+      cx = (p->s).coord.x;
+      dx = (p->s).d.x;
+      (p->s).coord.x = cx + dx;
+      if ((p->s).work[3] != 0) {
+        k = 0xF6;
+      } else {
+        k = 0xFA;
+      }
+      k *= dx;
+      (p->s).d.x = k / 256;
+      FUN_0801779c(&p->s);
+      if (q->mode[0] == 4) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        (p->body).status = 0;
+        (p->body).prevStatus = 0;
+        (p->body).invincibleTime = 0;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_BOSS_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
 // 0x080595ec
 void glacierle_080595ec(struct Boss* p) {
   u8 m = (p->s).mode[2];
