@@ -381,7 +381,61 @@ void FUN_080cab58(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/icebon_ice_p2b.inc");
+// 0x080CABE8 -- shattered-ice disappear: shrink both mags, dust every 4th
+// tick, kill body and route to DISAPPEAR. Blocker (home-transposition basin):
+// the staged RMW zero and the staged 3 (shared by the &3 mask and the mode
+// word) come out r10/r9; retail has them r9/r10. Everything else is
+// byte-exact (asm-def k3 + rowp split + index-first cast reproduce the whole
+// tail); no ref/range/birth-order shape flipped the pair.
+NON_MATCH void FUN_080cabe8(struct Solid* p) {
+#if MODERN
+  u8 m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0:
+      InitScalerotMotion1(&p->s);
+      SetMotion(&p->s, MOTION(0x11, 0x05));
+      (p->s).work[2] = 0xFF;
+      (p->s).work[3] = m2;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 k3;
+      s32 t = (p->s).work[3] + 1;
+      (p->s).work[3] = t;
+      asm("movs %0, #3" : "=l"(k3));
+      if ((t & k3) == 0) {
+        s32 xo = (s32)(RANDOM(RNG_0202f388) % 0x1800) - 0xE00;
+        s32 x = (p->s).coord.x + xo;
+        FUN_080b98ac(x, (p->s).coord.y + (RANDOM(RNG_0202f388) & 0xFFF));
+      }
+      UpdateMotionGraphic(&p->s);
+      ((p->s).spr).mag.x = (p->s).work[2];
+      ((p->s).spr).mag.y = (p->s).work[2];
+      {
+        if ((u8)((p->s).work[2] -= 8) <= 8) {
+          (p->s).flags &= ~DISPLAY;
+          (p->s).flags &= ~FLIPABLE;
+          (p->body).status = 0;
+          (p->body).prevStatus = 0;
+          (p->body).invincibleTime = 0;
+          (p->s).flags &= ~COLLIDABLE;
+          {
+            const SolidRoutine* const* base = gSolidFnTable;
+            const SolidRoutine* const* rowp;
+            asm("" : "+r"(base));
+            rowp = (const SolidRoutine* const*)(((u32)(p->s).id << 2) + (u32)base);
+            *(u32*)((p->s).mode) = k3;
+            (p->s).onUpdate = (void*)(**rowp)[ENTITY_DISAPPEAR];
+          }
+        }
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/solid/icebon_cabe8.inc");
+#endif
+}
 
 static const struct Collision sCollisions[5] = {
     {

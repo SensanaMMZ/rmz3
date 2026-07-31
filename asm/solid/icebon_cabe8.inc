@@ -1,12 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-
-	thumb_func_start FUN_080cabe8
-FUN_080cabe8: @ 0x080CABE8
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, sb
