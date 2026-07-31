@@ -215,7 +215,166 @@ INCASM("asm/enemy/cattatank_p4.inc");
 
 bool8 nop_080994e8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/cattatank_p5.inc");
+// Scratch-parity basin: the case-12 flip block wants its flags load before the
+// m10 const with mask-side and/or dests, the -0x11 synth after the byte load,
+// and one turn-check arm keeps re-inverting to a direct conditional. Six sites
+// of pure register parity; the walker, probes, and turn logic stream-match.
+NON_MATCH void FUN_080994ec(struct Enemy* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).unk_coord.x = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 v;
+      SetMotion(&p->s, 0xD502);
+      SetDDP(&p->body, &sCollisions[1]);
+      if (!((p->s).flags & 0x10)) {
+        v = 0x100;
+        asm volatile("");
+      } else {
+        v = -0x100;
+      }
+      (p->s).d.x = v;
+      (p->s).d.y = 0;
+      (p->s).unk_coord.x = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 2: {
+      s32 dx, nx, r, px, c0;
+      UpdateMotionGraphic(&p->s);
+      c0 = (p->s).coord.x;
+      dx = (p->s).d.x;
+      nx = c0 + dx;
+      (p->s).coord.x = nx;
+      (p->s).unk_coord.x += 0x100;
+      if (dx > 0) {
+        r = PushoutToLeft1(nx + 0xA00, (p->s).coord.y);
+      } else {
+        r = PushoutToRight1(nx + -0xA00, (p->s).coord.y);
+      }
+      if (r != 0) {
+        (p->s).coord.x += r;
+      }
+      if ((p->s).d.x > 0) {
+        px = (p->s).coord.x + 0xA00;
+      } else {
+        px = (p->s).coord.x + -0xA00;
+      }
+      {
+        s32 r0v = FUN_08009f6c(px, (p->s).coord.y);
+        s32 gr;
+        asm volatile("add %0, %1, #0" : "=&l"(gr) : "l"(r0v));
+        if (gr != (p->s).coord.y) {
+          (p->s).coord.x -= (p->s).d.x;
+        }
+      }
+      if ((p->s).work[1] == 1) {
+        if (*((u8*)p + 0xbb) > 1) {
+          struct Zero* z2 = pZero2;
+          if ((p->s).coord.y >= (z2->s).coord.y) {
+            if ((p->s).d.x > 0) {
+              if ((z2->s).coord.x <= (p->s).coord.x) {
+                goto noturn;
+              }
+              asm volatile("");
+              goto turn;
+            } else {
+              if ((z2->s).coord.x < (p->s).coord.x) {
+                goto turn;
+              }
+            }
+          }
+        }
+      } else {
+        if ((p->s).d.x > 0) {
+          if ((pZero2->s).coord.x <= (p->s).coord.x) {
+            goto noturn;
+          }
+          asm volatile("");
+          goto turn;
+        } else {
+          if ((pZero2->s).coord.x < (p->s).coord.x) {
+          turn:
+            (p->s).mode[2] = 0xA;
+          }
+        }
+      }
+    noturn:
+      if ((p->s).unk_coord.x > 0x1800) {
+        (p->s).mode[2] = 3;
+      }
+      break;
+    }
+    case 3:
+      SetMotion(&p->s, 0xD500);
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4: {
+      s32 t;
+      u8 t1;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t1 = t;
+      if (t1 == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = t1;
+      }
+      break;
+    }
+    case 10:
+      SetMotion(&p->s, 0xD511);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 11:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 12: {
+      u32 m10;
+      s32 mEF;
+      SetMotion(&p->s, 0xD512);
+      m10 = 0x10;
+      asm("" : "+r"(m10));
+      if (!((p->s).flags & m10)) {
+        u8 one = 1;
+        u8* oa;
+        (p->s).flags |= 0x10;
+        ((p->s).spr).xflip = one;
+        oa = (u8*)p + 0x4a;
+        asm volatile("mov %0, #0x11
+	neg %0, %0" : "=l"(mEF));
+        *oa = (u8)((*oa & mEF) | m10);
+      } else {
+        u8 z = 0;
+        u8* oa;
+        (p->s).flags &= ~0x10;
+        ((p->s).spr).xflip = z;
+        oa = (u8*)p + 0x4a;
+        asm volatile("mov %0, #0x11
+	neg %0, %0" : "=l"(mEF));
+        *oa = (u8)(*oa & mEF);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 13:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2] = 1;
+      }
+      break;
+  }
+#else
+  INCCODE("asm/enemy/cattatank_94ec.inc");
+#endif
+}
 
 bool8 nop_0809973c(struct Enemy* p) { return TRUE; }
 
