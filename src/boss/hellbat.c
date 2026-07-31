@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "global.h"
+#include "mission.h"
 #include "overworld.h"
 #include "zero.h"
 
@@ -790,7 +791,165 @@ static bool32 nop_0804b6b4(struct Boss* p) {
   return TRUE;
 }
 
-INCASM("asm/boss/hellbat_p1.inc");
+extern const u8 HellbatNearModes[34];
+extern const u8 HellbatFarModes[34];
+u16 FUN_0804cccc(void* _, u32 a, bool32 rankAS);
+bool32 isHellbatFarAway(struct Boss* p);
+void hellbat_0804cd5c(struct Boss* p);
+
+// Home-transposition basin: t7 (the countdown byte) and the b5 mode-history
+// pointer sit swapped (r8/r7 vs retail r7/r8) - the allocator prices b5's four
+// low-reg derefs above t7's three, boosts cannot outbid it, and pins on either
+// side ghost-save-trap. Everything else stream-matches including all four
+// RNG/table arms.
+NON_MATCH void hellbatNeutral(struct Boss* p) {
+#if MODERN
+  u8 m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0:
+      (p->s).flags |= DISPLAY;
+      (p->s).angle = m2;
+      SetMotion(&p->s, 0xA804);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).d.y = m2;
+      (p->s).d.x = m2;
+      (p->s).unk_coord.y = m2;
+      (p->s).unk_coord.x = m2;
+      (p->s).work[3] = 0x17;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 ty = *(s32*)((u8*)p + 0xd4) + -0x4800;
+      s32 cy = (p->s).coord.y;
+      (p->s).coord.y = cy + (((ty - cy) << 5) >> 8);
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 cy2 = (p->s).coord.y;
+        s32 d = ty - cy2;
+        if (d > 0) {
+          if (d > 0x3FF) {
+            break;
+          }
+        } else {
+          if (cy2 - ty > 0x3FF) {
+            break;
+          }
+        }
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2: {
+      s32 t;
+      u8 t7;
+      s8* b5;
+      s8* b6;
+      u16 nxt;
+      hellbat_0804cd5c(p);
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[3];
+      if (t == 0) {
+        break;
+      }
+      t--;
+      (p->s).work[3] = t;
+      t7 = t;
+      asm volatile("" :: "r"(t7));
+      asm volatile("" :: "r"(t7));
+      if (t7 != 0) {
+        break;
+      }
+      {
+        s8* a0 = (s8*)p + 0xb5;
+        s8* a1 = (s8*)p + 0xb6;
+        s8 v3 = *a0;
+        s8 v2 = *a1;
+        b5 = a0;
+        b6 = a1;
+        if (v3 == v2) {
+        if ((gMission.unk_00)->rank > 4) {
+          s32 far = isHellbatFarAway(p);
+          u32 v = (RNG_0202f388 * 0x343FD + 0x269EC3) << 1;
+          u32 m;
+          u32 hv;
+          const u8* tb;
+          s32 k;
+          RNG_0202f388 = v >> 1;
+          hv = v >> 0x11;
+          tb = HellbatFarModes;
+          k = far * 17;
+          m = hv % tb[k];
+          k++;
+          k = m + k;
+          nxt = tb[k];
+          if (nxt == *b5) {
+            nxt = ((int (*)(void*, u32, int))FUN_0804cccc)(p, nxt, 1);
+            asm volatile("");
+          }
+        } else {
+          s32 far = isHellbatFarAway(p);
+          u32 v = (RNG_0202f388 * 0x343FD + 0x269EC3) << 1;
+          u32 m;
+          u32 hv;
+          const u8* tb;
+          s32 k;
+          RNG_0202f388 = v >> 1;
+          hv = v >> 0x11;
+          tb = HellbatNearModes;
+          k = far * 17;
+          m = hv % tb[k];
+          k++;
+          k = m + k;
+          nxt = tb[k];
+          if (nxt == *b5) {
+            nxt = ((int (*)(void*, u32, int))FUN_0804cccc)(p, nxt, 0);
+          }
+        }
+      } else {
+        if ((gMission.unk_00)->rank > 4) {
+          s32 far = isHellbatFarAway(p);
+          u32 v = (RNG_0202f388 * 0x343FD + 0x269EC3) << 1;
+          u32 m;
+          u32 hv;
+          const u8* tb;
+          s32 k;
+          RNG_0202f388 = v >> 1;
+          hv = v >> 0x11;
+          tb = HellbatFarModes;
+          k = far * 17;
+          m = hv % tb[k];
+          k++;
+          k = m + k;
+          nxt = tb[k];
+        } else {
+          s32 far = isHellbatFarAway(p);
+          u32 v = (RNG_0202f388 * 0x343FD + 0x269EC3) << 1;
+          u32 m;
+          u32 hv;
+          const u8* tb;
+          s32 k;
+          RNG_0202f388 = v >> 1;
+          hv = v >> 0x11;
+          tb = HellbatNearModes;
+          k = far * 17;
+          m = hv % tb[k];
+          k++;
+          k = m + k;
+          nxt = tb[k];
+        }
+      }
+        (p->s).mode[1] = nxt;
+        (p->s).mode[2] = t7;
+        *b6 = *b5;
+        *b5 = nxt;
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/boss/hellbat_neutral.inc");
+#endif
+}
 
 bool8 FUN_0804b900(struct Boss* p) { return TRUE; }
 
