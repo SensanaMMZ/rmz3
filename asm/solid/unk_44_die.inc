@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-	thumb_func_start Solid44_Die
-Solid44_Die: @ 0x080DE3B8
 	push {r4, r5, r6, r7, lr}
 	sub sp, #8
 	adds r6, r0, #0
