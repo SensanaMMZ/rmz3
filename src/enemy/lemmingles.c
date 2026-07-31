@@ -335,6 +335,71 @@ void FUN_0806ee0c(struct Enemy* p) {
   }
 }
 
+// 0x0806EE94
+void FUN_0806ee94(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[0] == 1) {
+        SetMotion(&p->s, MOTION(0x1D, 0x05));
+      } else {
+        SetMotion(&p->s, MOTION(0x1D, 0x0B));
+      }
+      (p->s).work[2] = 0;
+      (p->s).d.y = -0x59C;
+      (p->s).d.x = (p->s).d.x * 0xD0 / 256;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 r;
+      if ((u8)++(p->s).work[2] == 0x12) {
+        if ((p->s).work[0] == 1) {
+          SetMotion(&p->s, MOTION(0x1D, 0x06));
+        } else {
+          SetMotion(&p->s, MOTION(0x1D, 0x0C));
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if ((p->s).work[3] == 0) {
+        r = PushoutToDown1((p->s).coord.x, (p->s).coord.y);
+        if (r > 0) {
+          (p->s).coord.y += r;
+        }
+      }
+      {
+        s32 x = (p->s).coord.x + (p->s).d.x;
+        (p->s).coord.x = x;
+        if ((p->s).work[3] == 0) {
+          if ((p->s).d.x > 0) {
+            r = PushoutToLeft1(x, (p->s).coord.y);
+            if (r < 0) {
+              (p->s).coord.x += r;
+            }
+          } else {
+            r = PushoutToRight1(x, (p->s).coord.y);
+            if (r > 0) {
+              (p->s).coord.x += r;
+            }
+          }
+        }
+      }
+      if ((p->s).d.y > 0) {
+        s32 z = 0;
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = z;
+      }
+      if ((p->s).work[3] != 0) {
+        (p->s).work[3] = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/lemmingles_p2_p2_p2b.inc");
 
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
