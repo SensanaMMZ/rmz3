@@ -1,5 +1,6 @@
 #include "palette_animation.h"
 #include "boss.h"
+#include "stagerun.h"
 #include "collision.h"
 #include "global.h"
 #include "mission.h"
@@ -1161,6 +1162,75 @@ void copyx_08057520(struct Boss* p) {
 }
 
 INCASM("asm/boss/copy_x_p2_p2_b2.inc");
+
+struct Entity* CreateVFX39(struct Coord* c, u8 r1, u8 r2);
+
+void copyx_0805763c(struct Boss* p) {
+  struct Coord c;
+  u32 m2 = (p->s).mode[2];
+  if (m2 == 0) {
+    struct Entity** a;
+    struct Entity* v;
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y - 0x1000;
+    v = CreateVFX39(&c, 1, 0);
+    a = (struct Entity**)((u8*)p + 0xe0);
+    *a = v;
+    if (v == NULL) {
+      return;
+    }
+    *((u8*)*a + 0x74) = 0x1F;
+    *((u8*)*a + 0x75) = 0x1F;
+    *((u8*)*a + 0x76) = 0x1F;
+    *(s32*)((u8*)*a + 0x78) = m2;
+    asm volatile("" ::: "memory");
+    *((u8*)*a + 0x7c) = 0x21;
+    *((u8*)*a + 0x7d) = 0x1E;
+    StartPaletteAnimation(0x64, 0x280);
+    gStageRun.vm.active |= VM_FLAG1;
+    (p->s).work[2] = 0xFF;
+    (p->s).work[3] = m2;
+    StopSound(0x39);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).mode[2] <= 1) {
+    s32 msk;
+    struct Entity** a2;
+    StepPaletteAnimation(0x64);
+    {
+      u8 w3 = (p->s).work[3];
+      s32 t = w3 + 4;
+      if (t > 0xFF) {
+        t = 0xFF;
+      }
+      (p->s).work[3] = t;
+      asm volatile("" :: "r"(w3));
+    }
+    msk = (p->s).work[2] & 1;
+    if (msk != 0) {
+      struct Entity** b = (struct Entity**)((u8*)p + 0xe0);
+      *(s32*)((u8*)*b + 0x78) = (p->s).work[3] << 8;
+      a2 = b;
+    } else {
+      s32 v = ((p->s).work[3] << 8) - 0xF00;
+      if (v > 0) {
+        struct Entity** b = (struct Entity**)((u8*)p + 0xe0);
+        *(s32*)((u8*)*b + 0x78) = v;
+        a2 = b;
+      } else {
+        struct Entity** b = (struct Entity**)((u8*)p + 0xe0);
+        *(s32*)((u8*)*b + 0x78) = msk;
+        a2 = b;
+      }
+    }
+    if ((u8)--(p->s).work[2] == 0xFF) {
+      RemovePaletteAnimation(0x64);
+      *((u8*)*a2 + 0x77) = 1;
+      (p->s).mode[2]++;
+    }
+  }
+}
 
 void copyx_08057744(struct Boss* p) {
   s32 b = *(s32*)&((p->props).copyx).unk_b4[0];
