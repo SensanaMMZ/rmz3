@@ -50,8 +50,7 @@ reference environment — trust it, and fix your host to match.
 ## Picking a target
 
 ```sh
-git grep -h thumb_func_start -- asm/ | awk '{print $2}' | sort > /tmp/live.txt
-wc -l /tmp/live.txt
+scripts/census.py          # TSV: size  name  inc — smallest-first
 ```
 
 Beware: `NON_MATCH` / `NAKED` / `INCCODE` definitions in `src/` look like
@@ -76,61 +75,22 @@ built objects). Small functions teach the compiler's habits cheaply.
    ROM order is preserved: split the `.inc` around the function if it
    sits mid-file, and keep every remaining asm function in its original
    order relative to the C.
-4. **Gate**: `make -j"$(nproc)" compare`.
+4. **Gate**: `scripts/gate.sh` (wraps `make compare`; detects the
+   stale-ROM-on-overflow case and says which artifact to trust).
 5. **On mismatch, diff the instruction stream** of your object against
    the original asm — never the ROM bytes (pool offsets shift):
 
-```python
-#!/usr/bin/env python3
-# streamdiff.py OBJ SYMBOL INC — canonicalized insn diff
-import subprocess, re, sys, difflib
-obj, sym, inc = sys.argv[1:4]
-d = subprocess.run(['arm-none-eabi-objdump','-d',obj],capture_output=True,text=True).stdout
-i = d.find(f'<{sym}>:'); nxt = re.search(r'<[A-Za-z_0-9]+>:', d[i+len(sym)+3:])
-body = d[i:i+len(sym)+3+nxt.start()] if nxt else d[i:]
-mine = [m.group(1).split(';')[0].strip() for l in body.splitlines()[1:]
-        if (m := re.match(r'\s*[0-9a-f]+:\s+[0-9a-f ]+\t(.*)', l)) and m.group(1).strip()]
-g = open(inc).read(); seg = g[g.find(f'thumb_func_start {sym}'):]
-end = re.search(r'thumb_func_start (?!'+sym+')', seg)
-theirs = []
-for ls in (seg[:end.start()] if end else seg).splitlines():
-    ls = ls.strip()
-    if not ls or ls[0] in '.@' or ls.startswith('thumb_func') or ls.endswith(':'): continue
-    theirs.append(ls.split('@')[0].strip())
-def canon(x):
-    x = re.sub(r'@.*','',x); x = re.sub(r'\s+',' ',x).strip()
-    x = re.sub(r'^adds (r\d+), #', r'add \1, #', x)
-    x = re.sub(r'\bnegs (r\d+), (r\d+)\b', r'rsbs \1, \2, #0x0', x)
-    x = re.sub(r'\bip\b','r12',x); x = re.sub(r'\bsb\b','r9',x); x = re.sub(r'\bsl\b','r10',x)
-    x = re.sub(r'^muls (r\d+), (r\d+), \1$', r'muls \1, \2', x)
-    m = re.match(r'^(b(?:l|x|eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(?:\.n|\.w)?) (.*)$', x)
-    if m and not x.startswith('bic'):
-        op, tgt = m.group(1).replace('.n','').replace('.w',''), m.group(2)
-        s = re.search(r'<([^>+]+)', tgt)
-        x = f'bl {s.group(1)}' if op=='bl' and s else (f'bl {tgt}' if op=='bl' else f'{op} X')
-    x = re.sub(r'\[pc, #\d+\].*','=POOL',x); x = re.sub(r'=\S+.*','=POOL',x)
-    x = re.sub(r', \[(r\d+|sp), #0(?:x0)?\]', r', [\1]', x)
-    x = re.sub(r'#0x([0-9a-f]+)', lambda m:'#'+str(int(m.group(1),16)), x)
-    x = re.sub(r'#(\d+)', lambda m:'#'+hex(int(m.group(1))), x)
-    return x.rstrip(', ')
-A = [canon(x) for x in mine if not x.startswith(('.word','.short'))]
-B = [canon(x) for x in theirs if not x.startswith('.4byte')]
-sm = difflib.SequenceMatcher(None, A, B, autojunk=False)
-for tag,i1,i2,j1,j2 in sm.get_opcodes():
-    if tag=='equal': continue
-    print(f'--- {tag} mine[{i1}:{i2}] theirs[{j1}:{j2}]')
-    for x in A[i1:i2]: print('  M', x)
-    for x in B[j1:j2]: print('  T', x)
-```
+Run `scripts/streamdiff.py BUILT_OBJECT SYMBOL ORIGINAL_INC` (keep a
+copy of the original inc via `git show HEAD:asm/... > /tmp/orig.inc`
+before truncating it). Every surviving hunk is a real codegen
+difference; pool offsets, branch targets, and spelling variants are
+masked.
 
 6. **Micro-test** a shape without a full build (fast error text and
    codegen probes):
 
 ```sh
-cpp -I tools/agbcc -I tools/agbcc/include -iquote include -nostdinc \
-    -std=gnu89 -DMODERN=0 src/path/file.c \
-  | tools/agbcc/bin/agbcc -mthumb-interwork -Wimplicit -Wparentheses \
-    -O2 -fshort-enums -fhex-asm -o /tmp/probe.s
+scripts/microtest.sh src/path/file.c /tmp/probe.s
 ```
 
 Always check the makefile for per-file flag overrides before trusting
@@ -203,6 +163,16 @@ masks); fix warnings, don't suppress them.
 Label-filter trap: an instruction-stream diff that only shows branch
 target "labels" differing can hide an inverted branch polarity — the
 ROM gate is the only truth.
+
+## Scripts
+
+All in `scripts/` next to this file (run from the repo root):
+
+- `census.py` — remaining-function census, smallest-first TSV with
+  sizes and inc paths; excludes NON_MATCH/NAKED/INCCODE dual-forms.
+- `gate.sh` — the byte gate with overflow/stale-ROM detection.
+- `streamdiff.py` — canonicalized instruction diff, object vs inc.
+- `microtest.sh` — single-file compile probe with the repo flags.
 
 ## Community escalation
 
