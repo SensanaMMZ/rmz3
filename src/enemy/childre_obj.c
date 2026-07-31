@@ -2,8 +2,10 @@
 #include "enemy.h"
 #include "global.h"
 #include "metatile.h"
+#include "overworld.h"
 #include "motion.h"
 #include "vfx.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[2 * 4];
 static const u8 sInitModes[4];
@@ -405,6 +407,127 @@ void FUN_08073a0c(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/childre_obj_post_post_p1.inc");
+
+static const motion_t sMotions[8];
+static const s8 s8_ARRAY_ARRAY_08366e08[8][2];
+static const s32 s32_08366e18;
+void FUN_080b834c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+
+// Snapshot-register basin: retail funnels coord.x through r3 into the shared
+// ArcTan2 tail from every case (with an explicit copy in the kill path); the
+// allocator here picks r2 and the whole chain of scratch picks mirrors, plus
+// the homing block's a*a/b*b copies rotate with it. Structure, physics,
+// clamps, and the spawn tail stream-match.
+NON_MATCH void FUN_08073b28(struct Enemy* p) {
+#if MODERN
+  struct Coord c;
+  struct Coord dc;
+  u8 m2 = (p->s).mode[2];
+  u32 oct;
+  switch (m2) {
+    case 0: {
+      s32* pb = (s32*)((u8*)p + 0xb4);
+      (p->s).work[3] = m2;
+      *pb = ((p->s).coord.x / 0xF000) * 0xF000 + 0x7800;
+      *(s32*)((u8*)p + 0xb8) = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      SetMotion(&p->s, 0x2406);
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.x = ((p->s).work[2] << 9) + -0x100;
+      (p->s).d.y = -0x400;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 ny;
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 g = (p->s).d.y + 0x40;
+        (p->s).d.y = g;
+        if (g > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+      }
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      if ((p->s).d.y > 0) {
+        goto seachk;
+      }
+      break;
+    seachk:
+      if (ny > gOverworld.sea) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      (p->s).d.x = ((p->s).work[2] << 10) + -0x200;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 ox = (p->s).coord.x;
+      s32 cy;
+      s32 dy, a, b, vy, ny2, kb;
+      u16 mag;
+      s32 m8;
+      (p->s).unk_coord.x = ox;
+      cy = (p->s).coord.y;
+      (p->s).unk_coord.y = cy;
+      ox = (pZero2->s).coord.x - ox;
+      cy += 0x1800;
+      dy = (pZero2->s).coord.y - cy;
+      a = ox >> 8;
+      b = dy >> 8;
+      mag = Sqrt(a * a + b * b);
+      m8 = mag << 8;
+      vy = (dy << 8) / m8;
+      vy <<= 1;
+      {
+        s32 nd = (p->s).d.y + (vy - (p->s).d.y) / 8;
+        (p->s).d.y = nd;
+        (p->s).coord.x += (p->s).d.x;
+        (p->s).coord.y += (nd * 448) / 256;
+      }
+      ny2 = (p->s).coord.y;
+      if (ny2 < gOverworld.sea) {
+        (p->s).coord.y = gOverworld.sea;
+      }
+      if ((p->s).coord.y > *(s32*)((u8*)p + 0xb8)) {
+        (p->s).coord.y = *(s32*)((u8*)p + 0xb8);
+      }
+      kb = *(s32*)((u8*)p + 0xb4) - (p->s).coord.x + 0x6800;
+      if ((u32)kb > 0xD000 || ((p->body).status & 4)) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = (p->s).work[0];
+      }
+      break;
+    }
+  }
+  {
+    s32 dx16 = (p->s).coord.x - (p->s).unk_coord.x;
+    s32 dy16 = (p->s).unk_coord.y - (p->s).coord.y;
+    u32 a8 = ((u16)ArcTan2(dx16, dy16)) >> 8;
+    oct = ((u8)(a8 + 0x10)) >> 5;
+    GotoMotion(&p->s, sMotions[oct], (u16)(p->s).motion.cmdIdx, (u16)(p->s).motion.duration);
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[3]++;
+  {
+    u8 r6v = (p->s).work[3] % 6;
+    if (r6v == 0) {
+      c.x = (p->s).coord.x + (s8_ARRAY_ARRAY_08366e08[oct][0] << 8);
+      c.y = (p->s).coord.y + (s8_ARRAY_ARRAY_08366e08[oct][1] << 8);
+      dc.x = r6v;
+      dc.y = r6v;
+      FUN_080b834c(&p->s, &c, &dc, 0, (motion_t*)&s32_08366e18, 0xF);
+    }
+  }
+#else
+  INCCODE("asm/enemy/childre_obj_3b28.inc");
+#endif
+}
+
 
 void FUN_08073d88(struct Enemy* p) {
   CreateVFX31_1((p->s).coord.x, (p->s).coord.y);
