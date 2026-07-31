@@ -1,11 +1,88 @@
+#include "anim_loader.h"
 #include "game.h"
 #include "global.h"
 #include "minigame.h"
+#include "overworld_terrain.h"
 #include "sound.h"
 #include "text.h"
+#include "zero.h"
 #include "vfx.h"
 
-INCASM("asm/minigame/harpuia_a.inc");
+struct Zero* CreatePlayerHarpuia(void* p, struct Coord* c, u8 n);
+struct VFX* FUN_080c82b8(struct Entity* e, struct Coord* c, u8 a2, u32 a3, u8 a4);
+
+void initHarpuiaMinigame(struct GameState* g) {
+  u8* mg = (u8*)g + 0xDCC;
+  struct Coord* rc = (struct Coord*)((u8*)g + 0xDC4);
+  struct Coord c;
+  struct Zero* e;
+  s32 i;
+  rc->x = 0x16800;
+  rc->y = 0xF000;
+  ResetLandscape(0xA, rc);
+  wStaticGraphicTilenums[0x47] = 0;
+  wStaticMotionPalIDs[0x47] = 7;
+  LOAD_STATIC_GRAPHIC(0x47);
+  {
+    u32 n = 0xF3;
+    wStaticGraphicTilenums[n] = 0xC8;
+    wStaticMotionPalIDs[n] = 8;
+    LOAD_STATIC_GRAPHIC(n);
+  }
+  {
+    u32 n = 0xA1;
+    wStaticGraphicTilenums[n] = 0x1E0;
+    wStaticMotionPalIDs[n] = 9;
+    LOAD_STATIC_GRAPHIC(n);
+  }
+  LOAD_STATIC_GRAPHIC(0xAA);
+  wStaticGraphicTilenums[0] = 0xF0;
+  wStaticMotionPalIDs[0] = 0xE;
+  LOAD_STATIC_GRAPHIC(0);
+  c.x = 0x12C00;
+  c.y = 0xF000;
+  e = CreatePlayerHarpuia(mg, &c, 0);
+  *(struct Zero**)(mg + 0x14) = e;
+  *(struct Zero* volatile*)&pZero2 = e;
+  i = 0;
+  do {
+    s32 n = i + 1;
+    struct VFX* v;
+    c.x = 0x1D800 - n * 0x1000;
+    c.y = 0x12800;
+    v = FUN_080c82b8((struct Entity*)mg, &c, 3, (u32)(mg + 0xc), (u8)i);
+    *(struct GameState**)((u8*)v + 0x2c) = g;
+    i = n;
+  } while (i <= 2);
+  {
+    s32 z = 0;
+    u8 z2;
+    mg[0xc] = 3;
+    z2 = 0;
+    *(u16*)(mg + 0) = z;
+    *(u16*)((u8*)g + 6) = 0x78;
+    *(u16*)((u8*)g + 8) = z;
+    *(u16*)((u8*)g + 0xa) = z;
+    *(u16*)(mg + 4) = z;
+    *(u16*)(mg + 6) = z;
+    *(s32*)(mg + 0x18) = z;
+    *(s32*)(mg + 0x1c) = z;
+    *(s32*)(mg + 0x30) = z;
+    *(s32*)(mg + 0x2c) = z;
+    *(u16*)(mg + 0xe) = z;
+    *(u16*)(mg + 0x38) = z;
+    *(s32*)(mg + 0x34) = 0x200;
+    mg[0xd] = z2;
+    *(s32*)(mg + 0x20) = z;
+    *(s32*)(mg + 0x24) = z;
+    *(u16*)(mg + 0x28) = z;
+    *(u16*)(mg + 0x2a) = z;
+    *(s32*)(mg + 0x3c) = gSystemSavedataManager.minigameHiscores[3];
+    *(u16*)(mg + 0x3a) = z;
+    playBGM(0xB7);
+    *(u16*)((u8*)g + 4) = z;
+  }
+}
 
 extern const MinigameFunc HarpuiaMinigameLoops[3];
 
