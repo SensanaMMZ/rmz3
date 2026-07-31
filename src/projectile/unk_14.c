@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "zero.h"
 #include "projectile.h"
 #include "vfx.h"
 
@@ -138,6 +139,154 @@ void Projectile14_Die(struct Projectile* p) {
 }
 
 void nop_080a0b6c(struct Projectile* p) {}
+
+void FUN_080a0b70(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).unk_coord.y = (p->s).coord.y;
+      SetDDP(&p->body, sCollisions);
+      (p->s).d.x = 0x80;
+      SetMotion(&p->s, 0x3701);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 lim;
+      if ((p->s).work[2] != 0) {
+        s32 nx = (p->s).coord.x + (p->s).d.x;
+        (p->s).coord.x = nx;
+        lim = *(s32*)((u8*)p + 0xb4) + 0x6800;
+        if (nx > lim) {
+          asm volatile("");
+          goto clampx1;
+        }
+      } else {
+        s32 nx = (p->s).coord.x - (p->s).d.x;
+        (p->s).coord.x = nx;
+        lim = *(s32*)((u8*)p + 0xb4) + -0x6800;
+        if (nx < lim) {
+        clampx1:
+          (p->s).coord.x = lim;
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    }
+    case 2: {
+      u8 t2 = 0;
+      if ((pZero2->s).coord.y > (p->s).coord.y) {
+        t2 = 1;
+      }
+      (p->s).work[3] = t2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 lim;
+      if ((p->s).work[3] != 0) {
+        s32 ny = (p->s).coord.y + (p->s).d.x;
+        (p->s).coord.y = ny;
+        lim = *(s32*)((u8*)p + 0xb8) + 0x9000;
+        if (ny > lim) {
+          (p->s).coord.y = lim;
+          asm volatile("");
+          goto inc3;
+        }
+      } else {
+        s32 ny = (p->s).coord.y - (p->s).d.x;
+        (p->s).coord.y = ny;
+        lim = *(s32*)((u8*)p + 0xb8) + -0x9000;
+        if (ny < lim) {
+          (p->s).coord.y = lim;
+        inc3:
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    }
+    case 4: {
+      u32 v = (RNG_0202f388 * 0x343FD + 0x269EC3) << 1;
+      RNG_0202f388 = v >> 1;
+      (p->s).d.x = ((v >> 0x11) & 1) * (p->s).d.x;
+      (p->s).work[2] ^= 1;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5: {
+      s32 lim;
+      if ((p->s).work[2] != 0) {
+        s32 nx = (p->s).coord.x + (p->s).d.x;
+        (p->s).coord.x = nx;
+        lim = *(s32*)((u8*)p + 0xb4) + 0x5800;
+        if (nx <= lim) {
+          break;
+        }
+        goto clampx5;
+      } else {
+        s32 nx = (p->s).coord.x - (p->s).d.x;
+        (p->s).coord.x = nx;
+        lim = *(s32*)((u8*)p + 0xb4) + -0x5800;
+        if (nx < lim) {
+        clampx5:
+          (p->s).coord.x = lim;
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    }
+    case 6:
+      (p->s).work[3] ^= 1;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7:
+      if ((p->s).work[3] != 0) {
+        s32 ny = (p->s).coord.y + (p->s).d.x;
+        (p->s).coord.y = ny;
+        if (ny <= (p->s).unk_coord.y) {
+          break;
+        }
+        goto hitset;
+      } else {
+        s32 ny = (p->s).coord.y - (p->s).d.x;
+        (p->s).coord.y = ny;
+        if (ny < (p->s).unk_coord.y) {
+        hitset:
+          (p->s).mode[2]++;
+          *((u8*)q + 0xbe) = 1;
+        }
+      }
+      break;
+    case 8:
+      (p->s).work[2] = 2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 9: {
+      s32 t = (p->s).work[2] - 1;
+      u8 t2;
+      (p->s).work[2] = t;
+      t2 = t;
+      if (t2 == 0) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+        return;
+      }
+      break;
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 d = (p->s).d.x + 0x30;
+    (p->s).d.x = d;
+    if (d > 0x800) {
+      (p->s).d.x = 0x800;
+    }
+  }
+  if (q->mode[0] > 1) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 INCASM("asm/projectile/unk_14_p2.inc");
 
