@@ -23,19 +23,16 @@ read from it lies. Re-check the object stream, not the image.
 ## Setup (once)
 
 ```sh
-# Debian/Ubuntu
-sudo apt install build-essential git python3 libpng-dev binutils-arm-none-eabi
-# macOS
-brew install libpng arm-none-eabi-binutils   # or the gcc-arm-embedded cask
-
-git clone https://github.com/pret/agbcc && cd agbcc
-./build.sh
-git clone https://github.com/mmzret/rmz3 ../rmz3
-./install.sh ../rmz3
-cd ../rmz3
-# place your legally dumped retail ROM where the README says (baserom)
-make -j"$(nproc)" compare        # must print the OK line on a clean tree
+scripts/setup.sh --corpus --ghidra --rom /path/to/your/dump.gba
 ```
+
+One shot: system deps (apt/brew), agbcc build+install, the upstream
+repo clone, a first gate run, the 17-repo GBA decomp corpus (shallow),
+and the Ghidra/pyghidra-mcp second-decompiler stack with a ready
+`.mcp.json`. Each piece is optional (`--corpus`/`--ghidra` flags) and
+the script is idempotent. You supply your own legally dumped ROM;
+nothing is downloaded for it. Manual equivalents and the GBA-specific
+Ghidra loading rules live in `resources/ghidra-mcp.md`.
 
 If the local build ever disagrees with CI, CI's container is the
 reference environment — trust it, and fix your host to match.
@@ -168,11 +165,40 @@ ROM gate is the only truth.
 
 All in `scripts/` next to this file (run from the repo root):
 
+- `setup.sh` — one-shot environment bootstrap: deps, agbcc, repo,
+  decomp corpus, Ghidra + pyghidra-mcp with `.mcp.json`.
 - `census.py` — remaining-function census, smallest-first TSV with
   sizes and inc paths; excludes NON_MATCH/NAKED/INCCODE dual-forms.
 - `gate.sh` — the byte gate with overflow/stale-ROM detection.
 - `streamdiff.py` — canonicalized instruction diff, object vs inc.
 - `microtest.sh` — single-file compile probe with the repo flags.
+- `corpus-grep.sh` — search the 17-repo corpus for an asm shape (`-c`
+  for C idioms). Grep the corpus BEFORE inventing a lever.
+
+## Resources (read when you reach that phase)
+
+In `resources/` next to this file:
+
+- `matching-levers.md` — **the research library**: 21 sections of
+  verified source-shape techniques (RMW-zero mechanism, crossjump
+  predecessor rule, keep-alive/barrier/pin control, RNG-loop and
+  bitfield templates, park basins, verification traps). Read the
+  relevant section when the diff shows that shape; extend it when you
+  discover a new lever.
+- `matching-workflow.md` — the deep version of the matching loop.
+- `extracted-practices.md` — practices distilled from across the GBA
+  decomp scene.
+- `decomp-corpus.md` — the 17-repo corpus list and search discipline.
+- `fe8j-playbook.md` — what the fireemblem8j project's techniques
+  transfer (same compiler family).
+- `holdout-playbook.md` — structural reconstruction for functions m2c
+  cannot decompile (with Ghidra as the second opinion).
+- `ghidra-mcp.md` — the pyghidra-mcp second-decompiler stack: install,
+  `.mcp.json`, GBA ROM loading rules, when it helps and when it cannot.
+- `objdiff-ranking.md` — ranking candidates by near-match distance.
+- `porting-to-mmz1-2-4.md` — bootstrapping the sibling RMZ games.
+- `handwritten-asm.md` — recognizing non-compiler (hand-written) asm
+  that should NOT be matched as C.
 
 ## Community escalation
 
