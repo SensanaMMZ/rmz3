@@ -2,6 +2,7 @@
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
+#include "zero.h"
 
 struct Enemy* CreateSwordy(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -56,7 +57,125 @@ INCASM("asm/enemy/swordy_p1_p2_b.inc");
 
 bool8 FUN_0807c230(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/swordy_p2.inc");
+static const struct Collision sCollisions[5];
+
+void FUN_0807c234(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      SetMotion(&p->s, 0x3F00);
+      SetDDP(&p->body, sCollisions);
+      if ((pZero2->s).coord.y + -0x800 > (p->s).coord.y) {
+        (p->s).work[3] = 0;
+      } else {
+        (p->s).work[3] = 1;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 zy;
+      if ((p->s).work[3] == 0) {
+        s32 ny = (p->s).coord.y + 0x180;
+        (p->s).coord.y = ny;
+        zy = (pZero2->s).coord.y + -0x800;
+        if (zy >= ny) {
+          goto nosnap;
+        }
+        goto snap;
+      } else {
+        s32 ny = (p->s).coord.y + -0x180;
+        (p->s).coord.y = ny;
+        zy = (pZero2->s).coord.y + -0x800;
+        if (zy > ny) {
+        snap:
+          (p->s).coord.y = zy;
+          (p->s).mode[2]++;
+        }
+      }
+    }
+    nosnap:
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        if (!((p->s).flags & 0x10)) {
+          u8 sh = (p->s).flags >> 4;
+          u8 on = 1;
+          on &= ~sh;
+          SET_XFLIP(p, on);
+        }
+      } else {
+        if ((p->s).flags & 0x10) {
+          u8 sh = (p->s).flags >> 4;
+          u8 on = 1;
+          on &= ~sh;
+          SET_XFLIP(p, on);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2: {
+      register s32 v asm("r0");
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        if (!((p->s).flags & 0x10)) {
+          u8 sh = (p->s).flags >> 4;
+          u8 on = 1;
+          on &= ~sh;
+          SET_XFLIP(p, on);
+        }
+        v = 0x180;
+      } else {
+        if ((p->s).flags & 0x10) {
+          u8 sh = (p->s).flags >> 4;
+          u8 on = 1;
+          on &= ~sh;
+          SET_XFLIP(p, on);
+        }
+        v = -0x180;
+      }
+      (p->s).d.x = v;
+      (p->s).unk_coord.x = 0;
+      (p->s).d.y = 0;
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2];
+      if (t != 0) {
+        t--;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4:
+      SetMotion(&p->s, 0x3F01);
+      PlaySound(0);
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      s32 d, a;
+      (p->s).coord.x += (p->s).d.x;
+      d = (p->s).unk_coord.x + (p->s).d.x;
+      (p->s).unk_coord.x = d;
+      a = d;
+      if (a < 0) {
+        a = -a;
+      }
+      if (a > 0x1E000) {
+        s32 g = (p->s).d.y + 0x80;
+        (p->s).d.y = g;
+        (p->s).coord.y -= g;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 bool8 FUN_0807c47c(struct Enemy* p) { return TRUE; }
 
