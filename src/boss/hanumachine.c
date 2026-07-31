@@ -464,6 +464,90 @@ void FUN_0805c760(struct Boss* p) {
 
 INCASM("asm/boss/hanumachine_p2_p1b.inc");
 
+// 0x0805C87C
+void FUN_0805c87c(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    u32 xf;
+    u32 xf2;
+    SetMotion(&p->s, MOTION(0xB5, 0x0E));
+    SetDDP(&p->body, &sCollisions[6]);
+    xf = (((p->s).flags >> 4) ^ 1) & 1;
+    ((p->s).spr).xflip = xf;
+    xf2 = (((p->s).flags >> 4) ^ 1) & 1;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      u32 sh4 = xf2 << 4;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    if (xf2 != 0) {
+      (p->s).flags |= 0x10;
+    } else {
+      (p->s).flags &= 0xEF;
+    }
+    (p->s).d.y = -0x480;
+    (p->s).d.x = 0;
+    {
+      s32 wv;
+      register s32* w asm("r4");
+      w = (s32*)((u8*)p + 0xb4);
+      if (*w == FUN_0800a31c((p->s).coord.x, (p->s).coord.y)) {
+        w += 1;
+        if (*w == FUN_0800a22c((p->s).coord.x, (p->s).coord.y)) {
+          s32* st = (s32*)((u8*)p + 0xc0);
+          asm("" : "+r"(st));
+          *st = (p->s).coord.y;
+          wv = 0xFF;
+          goto st;
+        }
+      }
+      wv = 0x1B;
+    st:
+      (p->s).work[2] = wv;
+    }
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 cy asm("r0");
+    register s32 dy asm("r1");
+    register s32 ny asm("r2");
+    cy = (p->s).coord.y;
+    dy = (p->s).d.y;
+    ny = cy + dy;
+    (p->s).coord.y = ny;
+    dy += 0x40;
+    (p->s).d.y = dy;
+    {
+      u8 w2 = (p->s).work[2];
+      s32 tv = w2;
+      asm("" : "+r"(tv));
+      if (tv == 0xFF) {
+        if (*(s32*)((u8*)p + 0xc0) <= ny) {
+          if ((u16)FUN_080098a4((p->s).coord.x, ny) != 0) {
+            s32 z;
+            (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+            z = 0;
+            (p->s).mode[1] = 7;
+            (p->s).mode[2] = z;
+            *((u8*)p + 0xbe) = z;
+          }
+        }
+      } else {
+        if ((u8)--(p->s).work[2] == 0xFF) {
+          (p->s).mode[1] = 0xE;
+          (p->s).mode[2] = 0;
+        }
+      }
+    }
+  }
+}
+
+INCASM("asm/boss/hanumachine_p2_p1b2.inc");
+
 // 0x0805cdbc
 void FUN_0805cdbc(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
