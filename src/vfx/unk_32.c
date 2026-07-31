@@ -291,7 +291,103 @@ void Ghost32_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_32_post.inc");
+// Chained-RNG basin (Solid44 family): the spark block wants its c3.y init
+// stored direct-to-sp with the &c3 pointer materialized only at the RMW, the
+// multiplier constant in r6 with an a-copy, and the unstored middle seed
+// parked in r8 - each ordering lever rotates the const/seed homes instead.
+// Both explosion paths and the glide physics stream-match.
+NON_MATCH void FUN_080bade8(struct VFX* p) {
+#if MODERN
+  struct Coord c;
+  struct Coord c2;
+  struct Coord c3;
+  s32 t = (p->s).work[2] - 1;
+  (p->s).work[2] = t;
+  if ((t << 24) == 0) {
+    u32 a, v, k;
+    CreateSmoke(2, &(p->s).coord);
+    a = RNG_0202f388;
+    v = (a * 0x343FD + 0x269EC3) << 1;
+    RNG_0202f388 = v >> 1;
+    k = (v >> 0x11) & 3;
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    FUN_080ba81c(&c, (p->s).work[0], 0x2710, k);
+    FUN_080ba81c(&c, (p->s).work[0], 0x2711, k);
+    FUN_080ba81c(&c, (p->s).work[0], 0x2712, k);
+    FUN_080ba81c(&c, (p->s).work[0], 0x2713, k);
+    FUN_080ba81c(&c, (p->s).work[0], 0x2714, k);
+    FUN_080ba81c(&c, (p->s).work[0], 0x2715, k);
+    PlaySound(0x31);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  {
+    u32 gr = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+    if (gr != 0 && !(gr & 0x8000)) {
+      u32 a, v, k;
+      CreateSmoke(2, &(p->s).coord);
+      PlaySound(0x31);
+      a = RNG_0202f388;
+      v = (a * 0x343FD + 0x269EC3) << 1;
+      RNG_0202f388 = v >> 1;
+      k = (v >> 0x11) & 3;
+      c2.x = (p->s).coord.x;
+      c2.y = (p->s).coord.y;
+      FUN_080ba81c(&c2, (p->s).work[0], 0x2710, k);
+      FUN_080ba81c(&c2, (p->s).work[0], 0x2711, k);
+      FUN_080ba81c(&c2, (p->s).work[0], 0x2712, k);
+      FUN_080ba81c(&c2, (p->s).work[0], 0x2713, k);
+      FUN_080ba81c(&c2, (p->s).work[0], 0x2714, k);
+      FUN_080ba81c(&c2, (p->s).work[0], 0x2715, k);
+      SET_VFX_ROUTINE(p, ENTITY_DIE);
+      return;
+    }
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x3C;
+      (p->s).d.y = 0;
+      (p->s).work[3] = 0;
+      SetMotion(&p->s, 0x270A);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 g = (p->s).d.y + 8;
+      (p->s).d.y = g;
+      if (g > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if (((p->s).work[2] % 0x14 << 24) == 0) {
+        u32 a1, v1, s1, r1v, v2;
+        struct Coord* p3;
+        c3.x = (p->s).coord.x;
+        *(volatile s32*)&c3.y = (p->s).coord.y;
+        a1 = RNG_0202f388;
+        v1 = (a1 * 0x343FD + 0x269EC3) << 1;
+        s1 = v1 >> 1;
+        r1v = (v1 >> 0x11) & 0x7FF;
+        p3 = &c3;
+        p3->y = *(volatile s32*)&p3->y - r1v;
+        {
+          s32 cx = *(volatile s32*)&c3.x + -0x400;
+          v2 = (s1 * 0x343FD + 0x269EC3) << 1;
+          RNG_0202f388 = v2 >> 1;
+          c3.x = cx + ((v2 >> 0x11) & 0x7FF);
+        }
+        FUN_080ba9f4(p3, 0);
+        FUN_080ba9f4(p3, 1);
+      }
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/vfx/unk_32_ade8.inc");
+#endif
+}
 
 static const s32* const PTR_ARRAY_0836ed24[6];
 

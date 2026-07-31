@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-
-	.text
-
-	thumb_func_start FUN_080bade8
-FUN_080bade8: @ 0x080BADE8
 	push {r4, r5, r6, r7, lr}
 	mov r7, sb
 	mov r6, r8
