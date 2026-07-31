@@ -14,7 +14,7 @@ scratchpad; recreate them from this description if absent.
 
 ## Setup (once per session)
 
-* Work in the **worktree** `C:/Users/SaroGamingPC/MMZ5-X8-Base/rmz3-up`, never in
+* Work in the **worktree** `<repo-parent>/rmz3-up`, never in
   the main repo. `git worktree add -f -b <branch> ../rmz3-up upstream/dev`.
   Branch from **`upstream/dev`**, never `main` — PRs target `dev`.
 * Copy `baseimg.gba` in from the main repo (verification needs it); `rm` it again
