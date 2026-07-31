@@ -463,7 +463,123 @@ INCASM("asm/boss/tretista_p7.inc");
 
 bool8 FUN_0804e8f4(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/tretista_p8.inc");
+void FUN_0804e8f8(struct Boss* p) {
+  s32 zx;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 k;
+      SetMotion(&p->s, 0xAB0C);
+      SetDDP(&p->body, &sCollisions[1]);
+      zx = (pZero2->s).coord.x;
+      if (!((p->s).flags & 0x10)) {
+        if (zx <= (p->s).coord.x) {
+          goto skipturn;
+        }
+        goto turn;
+      } else {
+        if (zx < (p->s).coord.x) {
+        turn:
+          SetMotion(&p->s, 0xAB0B);
+          (p->s).work[3] = 1;
+        }
+      }
+    skipturn:
+      (p->s).work[2] = 0x38;
+      (p->s).d.x = (zx - (p->s).coord.x) / 0x38;
+      k = 0xC400;
+      asm("" : "+r"(k));
+      (p->s).d.y = -(k / 0x38);
+      (p->s).work[2] = 0x37;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if ((p->s).work[3] == 1) {
+        (p->s).mode[2]++;
+      } else {
+        (p->s).mode[2] = 4;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        u8 v;
+        ((p->s).spr).xflip = ((p->s).flags >> 4 ^ 1) & 1;
+        v = ((p->s).flags >> 4 ^ 1) & 1;
+        asm volatile("" :: "r"(zx));
+        ((p->s).spr).oam.xflip = v;
+        if (v != 0) {
+          (p->s).flags |= 0x10;
+        } else {
+          (p->s).flags &= ~0x10;
+        }
+        (p->s).mode[2]++;
+      }
+      break;
+    case 3:
+      SetMotion(&p->s, 0xAB0C);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 5:
+      SetMotion(&p->s, 0xAB0D);
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 6: {
+      s32 dy = (p->s).d.y;
+      s32 r;
+      s32 t;
+      dy += 0x20;
+      (p->s).d.y = dy;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += dy;
+      if (dy > 0 && (p->s).work[3] == 0) {
+        (p->s).work[3] = 1;
+        SetDDP(&p->body, &sCollisions[4]);
+      }
+      if ((p->s).d.x > 0) {
+        r = PushoutToLeft1((p->s).coord.x + 0x2800, (p->s).coord.y);
+      } else {
+        r = PushoutToRight1((p->s).coord.x + -0x2800, (p->s).coord.y);
+      }
+      if (r != 0) {
+        (p->s).coord.x += r;
+      }
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2];
+      if (t != 0) {
+        t--;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 7:
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, 0xAB0F);
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y + -0x1000);
+      PlaySound(0xDE);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_0804eb38(struct Boss* p) { return TRUE; }
 
