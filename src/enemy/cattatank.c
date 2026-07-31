@@ -439,7 +439,166 @@ void FUN_08099954(struct Enemy* p) {
 
 bool8 nop_08099a94(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/cattatank_p8.inc");
+void FUN_08099a98(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0xD50A);
+      SetDDP(&p->body, &sCollisions[16]);
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        (p->s).d.x = -0x600;
+        (p->s).unk_coord.x = -0xC0;
+      } else {
+        (p->s).d.x = 0x600;
+        (p->s).unk_coord.x = 0xC0;
+      }
+      (p->s).d.y = 0;
+      (p->s).work[2] = 0x1A;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).unk_coord.x - (p->s).d.x;
+      s32 dx = (p->s).d.x + ((t * 28) >> 8);
+      s32 g;
+      s32 px;
+      s32 r;
+      s32 z;
+      struct Entity** slot;
+      (p->s).d.x = dx;
+      (p->s).coord.x += dx;
+      g = (p->s).d.y + 0x40;
+      (p->s).d.y = g;
+      if (g > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t2 = (p->s).work[2] - 1;
+        asm volatile("movs %0, #0" : "=l"(z) : "r"(t2));
+        (p->s).work[2] = t2;
+        if ((t2 << 24) == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      if ((p->s).d.x > 0) {
+        px = (p->s).coord.x + -0xA00;
+      } else {
+        px = (p->s).coord.x + 0xA00;
+      }
+      r = PushoutToUp1(px, (p->s).coord.y);
+      if (r != 0) {
+        (*((u8*)p + 0xbb))++;
+        (p->s).coord.y += r;
+        (p->s).d.y = z;
+      }
+      slot = (struct Entity**)((u8*)p + 0xbc);
+      if (isKilled(*slot)) {
+        goto clear1;
+      }
+      break;
+    clear1: {
+      u8* c0 = (u8*)p + 0xc0;
+      s32 zz = 0;
+      *c0 = zz;
+      *slot = (struct Entity*)zz;
+      break;
+    }
+    }
+    case 2:
+      SetMotion(&p->s, 0xD50B);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 t = (p->s).unk_coord.x - (p->s).d.x;
+      s32 dx = (p->s).d.x + ((t * 28) >> 8);
+      s32 g;
+      s32 px;
+      register s32 r asm("r2");
+      s32 ny;
+      struct Entity** slot;
+      (p->s).d.x = dx;
+      (p->s).coord.x += dx;
+      g = (p->s).d.y + 0x40;
+      (p->s).d.y = g;
+      if (g > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      if ((p->s).d.x > 0) {
+        px = (p->s).coord.x + -0xA00;
+      } else {
+        px = (p->s).coord.x + 0xA00;
+      }
+      r = PushoutToUp1(px, ny);
+      if (r != 0) {
+        u8* bb = (u8*)p + 0xbb;
+        u8 nv = *bb + 1;
+        s32 z2 = 0;
+        *bb = nv;
+        (p->s).coord.y += r;
+        (p->s).d.y = z2;
+      }
+      slot = (struct Entity**)((u8*)p + 0xbc);
+      if (isKilled(*slot)) {
+        u8* c0 = (u8*)p + 0xc0;
+        s32 zz = 0;
+        *c0 = zz;
+        *slot = (struct Entity*)zz;
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      if (*slot != NULL) {
+        u8 k = *((u8*)p + 0xc0);
+        if (k == 1) {
+          if ((p->body).hp > 1) {
+            goto set7;
+          }
+          (p->s).mode[3] = 0;
+          asm volatile("");
+          goto die;
+        set7:
+          (p->s).mode[1] = 7;
+          (p->s).mode[2] = 0;
+        } else if (k == 2) {
+          if ((p->body).hp > 1) {
+            goto set9;
+          }
+          (p->s).mode[3] = 0;
+          SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+          break;
+        set9:
+          asm volatile("");
+          (p->s).mode[1] = 9;
+          (p->s).mode[2] = 0;
+        } else {
+          if ((p->body).hp > 1) {
+            goto set1;
+          }
+          (p->s).mode[3] = 0;
+          goto die;
+        set1:
+          (p->s).mode[1] = 1;
+          (p->s).mode[2] = 0;
+        }
+      } else {
+        if ((p->body).hp > 1) {
+          goto set1b;
+        }
+        (p->s).mode[3] = 0;
+      die:
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        break;
+      set1b:
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
 
 bool8 nop_08099ce0(struct Enemy* p) { return TRUE; }
 
