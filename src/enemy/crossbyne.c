@@ -291,6 +291,49 @@ void FUN_0807d0f0(struct Enemy* p) {
 
 INCASM("asm/enemy/crossbyne_p3_post_postb.inc");
 
+// 0x0807D2B8
+void FUN_0807d2b8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 k;
+      u32 a;
+      u32 b;
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, MOTION(0x43, 0x14));
+      k = -0x160;
+      a = (p->s).work[1] & 1;
+      (p->s).d.x = a * 0x2C0 + k;
+      b = ((u8)(p->s).work[1] >> 1) & 1;
+      (p->s).d.y = b * 0x2C0 + k;
+      SET_XFLIP(p, a);
+      SET_YFLIP(p, ((p->s).work[1] >> 1) & 1);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x1000) {
+        u32 z;
+        u8 t = (p->s).flags;
+        register u8 fv asm("r0");
+        fv = 0xFE;
+        fv &= t;
+        asm volatile("" ::"r"(t));
+        z = 0;
+        fv &= 0xFD;
+        (p->s).flags = fv;
+        (p->body).status = z;
+        (p->body).prevStatus = z;
+        (p->body).invincibleTime = z;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
 extern void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 
 void MaybeKillCrossbyne(struct Enemy* p) {
