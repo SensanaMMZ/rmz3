@@ -472,6 +472,67 @@ void deathtanzMode7(struct Boss* p) {
 
 INCASM("asm/boss/deathtanz_c2.inc");
 
+void deathtanz_080a09a0(struct Entity* parent, s32 x, s32 y, u8 n);
+
+// 0x0804A59C
+void deathtanzMode16(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 x;
+      s32 y;
+      u32 fl;
+      u8 dir;
+      SetDDP(&p->body, &sCollisions[65]);
+      x = (p->s).coord.x - 0x800;
+      fl = (p->s).flags;
+      if (X_FLIP & fl) {
+        x = (p->s).coord.x + 0x800;
+      }
+      y = (p->s).coord.y - 0x2600;
+      dir = (fl >> 4) & 1;
+      deathtanz_080a09a0(&p->s, x, y, dir);
+      ((p->props).deathtanz).unk_c1 &= ~1;
+      SetMotion(&p->s, MOTION(0xA7, 0x18));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (((p->props).deathtanz).unk_be == 0) {
+        break;
+      }
+      goto inc;
+    case 2:
+      ((p->props).deathtanz).unk_c1 |= 1;
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0xA7, 0x1A));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    inc:
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      SetMotion(&p->s, MOTION(0xA7, 0x1B));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        u8 z = 0;
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/deathtanz_c3.inc");
+
 // --------------------------------------------
 
 // 0x083627dc
