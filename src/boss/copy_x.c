@@ -888,6 +888,87 @@ void copyx_08056724(struct Boss* p) {
   }
 }
 
+void FUN_080a83e4(struct Entity* e, u8 w0, u8 w1);
+void FUN_080a88a4(struct Entity* e, u8 a1, u8 a2);
+void FUN_080a9048(struct Entity* e, u8 a1, u8 a2);
+
+// 0x08056794
+void copyx_08056794(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    u8* q;
+    u8 z;
+    SetMotion(&p->s, MOTION(0xB3, 0x17));
+    (p->s).mode[2] = 0;
+    if ((p->s).flags & X_FLIP) {
+      (p->s).d.x = -0x200;
+    } else {
+      (p->s).d.x = 0x200;
+    }
+    (p->s).d.y = -0x200;
+    q = &((p->props).copyx).unk_c6[0];
+    z = *q;
+    if (z != 0) {
+      u8 z0;
+      FUN_080a83e4(&p->s, 3, 0);
+      z0 = 0;
+      *q = z0;
+      (p->s).work[2] = 0xC;
+      ((p->props).copyx).unk_c6[1] = z0;
+      PlaySound(0x46);
+    } else {
+      s16 sid;
+      switch (((p->props).copyx).unk_c5) {
+        case 0:
+          FUN_080a83e4(&p->s, 2, 0);
+          goto snd46;
+        case 1:
+          FUN_080a88a4(&p->s, 1, 6);
+          (p->s).work[2] = 0xC;
+          ((p->props).copyx).unk_c6[1] = 6;
+          break;
+        case 2:
+          FUN_080a9048(&p->s, 1, 0);
+          sid = 0x49;
+          goto play;
+        case 3:
+          FUN_080a9048(&p->s, 4, 0);
+        snd46:
+          sid = 0x46;
+        play:
+          PlaySound(sid);
+          (p->s).work[2] = 6;
+          ((p->props).copyx).unk_c6[1] = z;
+          break;
+      }
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    u8* w3 = &((p->props).copyx).unk_c6[1];
+    if (*w3 != 0) {
+      *w3 = *w3 - 1;
+      return;
+    }
+  }
+  (p->s).coord.x += (p->s).d.x;
+  {
+    s32 y = (p->s).coord.y;
+    s32 dy = (p->s).d.y;
+    (p->s).coord.y = y + dy;
+    dy += 0x40;
+    (p->s).d.y = dy;
+  }
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    u8 m = 0xFF;
+    if ((m & --(p->s).work[3]) == 0) {
+      (p->s).mode[1] = 0x19;
+    } else {
+      (p->s).mode[1] = 0x17;
+    }
+    (p->s).mode[2] = 1;
+  }
+}
+
 INCASM("asm/boss/copy_x_p1_b_a2.inc");
 
 void copyx_080568bc(struct Boss* p) {
