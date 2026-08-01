@@ -200,7 +200,97 @@ NON_MATCH void FUN_080bca5c(struct VFX* vfx) {
 #endif
 }
 
-INCASM("asm/vfx/unk_37_post_c.inc");
+u8 GetEntityPalID(struct Entity* p);
+
+// 0x080BCB6C -- baby elf appear/vanish: blink in, run palette animation 0x18,
+// blink out and disappear. Blocker (const-dest AND operand homes): both blink
+// blocks need `ldrb r1,[flags]; movs r0,#0xFE; ands r0,r1`; ours loads the
+// flags byte into r0 and the mask into r1 (same `ands r0,r1`, swapped
+// sources) - 4 bytes total. Pinning the result to r0 fixed the shared store
+// and the OR arm; pinning the loaded value to r1 as well makes it worse (8
+// bytes). Everything else, including the palette-arg transfer chain and the
+// u16 truncation removal, is byte-exact.
+NON_MATCH void FUN_080bcb6c(struct VFX* vfx) {
+#if MODERN
+  switch ((vfx->s).mode[2]) {
+    case 0:
+      (vfx->s).taskCol = 0x11;
+      (vfx->s).work[2] = 6;
+      SetMotion(&vfx->s, MOTION(0x33, 0x00));
+      (vfx->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      if ((u8)--(vfx->s).work[2] == 0) {
+        (vfx->s).mode[2]++;
+      }
+      {
+        register u8 fv asm("r0");
+        if ((1 & (vfx->s).work[2]) != 0) {
+          fv = (vfx->s).flags;
+          fv |= DISPLAY;
+        } else {
+          u8 t = (vfx->s).flags;
+          fv = 0xFE;
+          fv &= t;
+        }
+        (vfx->s).flags = fv;
+      }
+      goto draw;
+    case 2: {
+      u32 v;
+      u32 sv;
+      u32 k;
+      (vfx->s).flags |= DISPLAY;
+      v = GetEntityPalID(&vfx->s);
+      sv = ((u32)(u8)v) << 5;
+      k = 0x200;
+      {
+        u32 kc;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0x18, sv | kc);
+      }
+      (vfx->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      if ((u8)StepPaletteAnimation(0x18) == 3) {
+        (vfx->s).mode[2]++;
+      }
+    draw:
+      UpdateMotionGraphic(&vfx->s);
+      break;
+    case 4:
+      RemovePaletteAnimation(0x18);
+      (vfx->s).work[2] = 6;
+      (vfx->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      if ((u8)--(vfx->s).work[2] == 0) {
+        (vfx->s).flags &= ~DISPLAY;
+        (vfx->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(vfx, ENTITY_DISAPPEAR);
+      }
+      {
+        register u8 fv asm("r0");
+        if ((1 & (vfx->s).work[2]) != 0) {
+          fv = (vfx->s).flags;
+          fv |= DISPLAY;
+        } else {
+          u8 t = (vfx->s).flags;
+          fv = 0xFE;
+          fv &= t;
+        }
+        (vfx->s).flags = fv;
+      }
+      UpdateMotionGraphic(&vfx->s);
+      break;
+  }
+#else
+  INCCODE("asm/vfx/unk_37_cb6c.inc");
+#endif
+}
+
+INCASM("asm/vfx/unk_37_post_c2.inc");
 
 void FUN_080bcc94(struct VFX* vfx) {
   struct Entity* e = (vfx->s).unk_28;
