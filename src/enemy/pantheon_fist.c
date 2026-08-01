@@ -309,6 +309,91 @@ void FUN_08095664(struct Enemy* p) {
 
 INCASM("asm/enemy/pantheon_fist_post_p2_p2_c.inc");
 
+void CreateSmoke(u8 n, struct Coord* c);
+
+// 0x080957D4
+void FUN_080957d4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 k;
+      s32 v;
+      PlaySound(0x109);
+      SetDDP(&p->body, &sCollisions[3]);
+      k = 0x10;
+      (p->s).unk_coord.x = k;
+      (p->s).work[2] = Sqrt(0x500);
+      v = (p->s).work[2] * (p->s).unk_coord.x;
+      (p->s).d.x = v;
+      k &= (p->s).flags;
+      if (k == 0) {
+        (p->s).d.x = -v;
+      } else {
+        (p->s).unk_coord.x = -(p->s).unk_coord.x;
+      }
+      (p->s).work[3] = 0;
+      SetMotion(&p->s, MOTION(0xD4, 0x04));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      u32 one;
+      u32 four;
+      u32 st;
+      UpdateMotionGraphic(&p->s);
+      st = (pZero2->body).status;
+      one = 1;
+      if ((st & one) == 0) {
+        goto move;
+      }
+      {
+        u32 st2 = (p->body).status;
+        four = 4;
+        if ((st2 & four) != 0 && (p->s).work[2] > 0x10) {
+          u8 w3 = (p->s).work[3];
+          if (w3 == 0) {
+            PlaySound(0x52);
+            (p->s).work[3] = one;
+            *((u8*)pZero2 + 0x122) = one;
+            (pZero2->s).mode[1] = four;
+            (pZero2->s).mode[2] = w3;
+          }
+        }
+      }
+    move:
+      (p->s).d.x += (p->s).unk_coord.x;
+      (p->s).work[2]--;
+      {
+        u8 w = (p->s).work[2];
+        if ((3 & w) == 0 && w > 8) {
+          CreateSmoke(3, &(p->s).coord);
+        }
+      }
+      if ((u8)FUN_08094fa8(p, (p->s).d.x) == 0) {
+        goto reset;
+      }
+      if ((p->s).work[2] == 0) {
+        goto reset;
+      }
+      if ((u8)FUN_08095014(p, (p->s).d.x) == 0) {
+        goto tick;
+      }
+    reset : {
+      u8 z2 = 0;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = z2;
+    }
+    tick:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)FUN_08094fe0(p, 1) == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      FUN_08094fe0(p, 1);
+      break;
+    }
+  }
+}
+
 void FUN_08095914(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0:
