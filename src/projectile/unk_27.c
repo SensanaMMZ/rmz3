@@ -170,6 +170,70 @@ void FUN_080a9358(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1b.inc");
 
+// 0x080A96F8
+void FUN_080a96f8(struct Projectile* p) {
+  struct Entity* e = (p->s).unk_28;
+  u32 xf;
+  u32 one;
+  {
+    const ProjectileRoutine* const* base = gProjectileFnTable;
+    const ProjectileRoutine* const* rowp = base + (p->s).id;
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(**rowp)[ENTITY_UPDATE];
+  }
+  InitRotatableMotion(&p->s);
+  (p->s).flags = DISPLAY | (p->s).flags;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x5C, 0x02));
+  xf = (e->flags >> 4) & one;
+  if (xf != 0) {
+    (p->s).flags |= 0x10;
+  } else {
+    (p->s).flags &= 0xEF;
+  }
+  {
+    u32 xf2;
+    asm volatile("add %0, %1, #0" : "=&l"(xf2) : "l"(xf));
+    ((p->s).spr).xflip = xf2;
+    xf = xf2;
+  }
+  {
+    u8* oa = (u8*)p + 0x4a;
+    u32 sh4 = xf << 4;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    m11 |= sh4;
+    *oa = m11;
+  }
+  if ((p->s).flags & X_FLIP) {
+    (p->s).coord.x += 0x1000;
+    (p->s).d.x = gSineTable[0x60] << 2;
+    (p->s).d.y = gSineTable[0x20] << 2;
+  } else {
+    (p->s).coord.x -= 0x1000;
+    (p->s).d.x = gSineTable[0xA0] << 2;
+    (p->s).d.y = gSineTable[0x60] << 2;
+  }
+  {
+    s32 z;
+    (p->s).angle = 0xA0;
+    z = 0;
+    (p->s).coord.y -= 0x1200;
+    (p->prevCoord).x = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    {
+      struct Body* body;
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      InitBody(body, &sCollisions[6], &(p->s).coord, 0x40);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z;
+    }
+  }
+  Projectile27_Update(p);
+}
+
 // 0x080A9810
 void FUN_080a9810(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
