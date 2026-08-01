@@ -217,7 +217,74 @@ void FUN_080be230(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_41_post_b.inc");
+static const motion_t motion_t_ARRAY_0836ef74[3];
+static const motion_t motion_t_ARRAY_0836ef7a[3];
+
+// 0x080BE330
+void FUN_080be330(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 w0 = (p->s).work[0];
+      if (w0 == 0) {
+        SetMotion(&p->s, MOTION(0xA9, 0x07));
+      } else if (w0 == 1) {
+        SetMotion(&p->s, MOTION(0xA9, 0x07));
+      } else if (w0 == 2) {
+        SetMotion(&p->s, MOTION(0xA9, 0x07));
+      } else if (w0 == 3) {
+        SetMotion(&p->s, MOTION(0xA9, 0x07));
+      } else if (w0 == 4) {
+        SetMotion(&p->s, MOTION(0xA9, 0x0B));
+      } else if (w0 == 5) {
+        SetMotion(&p->s, MOTION(0xA9, 0x0B));
+      }
+      {
+        u8 t = *((u8*)p + 0x7c);
+        bool8 xf2 = 1;
+        xf2 &= t;
+        asm volatile("" ::"r"(t));
+        if (xf2) {
+          (p->s).flags |= X_FLIP;
+        } else {
+          (p->s).flags &= ~X_FLIP;
+        }
+        ((p->s).spr).xflip = xf2 & 1;
+        ((p->s).spr).oam.xflip = xf2;
+      }
+      (p->s).work[3] = 3;
+      (p->s).work[2] = 0xA;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+        if ((u8)(p->s).work[2] != 0) {
+          goto draw;
+        }
+      }
+      (p->s).work[2] = 0xA;
+      if ((p->s).work[3] != 0) {
+        (p->s).work[3]--;
+        if ((u8)(p->s).work[3] != 0) {
+          goto sel;
+        }
+      }
+      SET_VFX_ROUTINE(p, ENTITY_DIE);
+      goto draw;
+    sel:
+      if ((p->s).work[0] <= 3) {
+        SetMotion(&p->s, motion_t_ARRAY_0836ef74[(p->s).work[3] - 1]);
+      } else {
+        SetMotion(&p->s, motion_t_ARRAY_0836ef7a[(p->s).work[3] - 1]);
+      }
+    draw:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/vfx/unk_41_post_b2.inc");
 
 void VFX41_Init(struct VFX* vfx);
 void VFX41_Update(struct VFX* vfx);
