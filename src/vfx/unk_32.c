@@ -521,6 +521,81 @@ void FUN_080bb048(struct VFX* p) {
 
 INCASM("asm/vfx/unk_32_post_b.inc");
 
+// 0x080BB68C
+void FUN_080bb68c(struct VFX* p) {
+  if ((u8)--(p->s).work[2] == 0) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 z;
+      (p->s).work[2] = RANDOM(RNG_0202f388) % 6 + 0x1E;
+      if ((p->s).work[0] == 0) {
+        SetMotion(&p->s, MOTION(0x27, 0x0E));
+      } else {
+        SetMotion(&p->s, MOTION(0x27, 0x0F));
+      }
+      {
+        u32 t = RNG_0202f388 * 0x343FD + 0x269EC3;
+        t <<= 1;
+        RNG_0202f388 = t >> 1;
+        (p->s).unk_coord.x = (s32)((t << 6) >> 23) - 0x100;
+      }
+      z = 0;
+      (p->s).d.y = z;
+      (p->s).d.x = z;
+      (p->s).work[3] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 dy;
+      s32 dx;
+      s32 w3 = (p->s).work[3] + 1;
+      (p->s).work[3] = w3;
+      {
+        u32 kf;
+        u32 one;
+        kf = 0xFF;
+        w3 &= kf;
+        one = 1;
+        w3 &= one;
+        if (w3 != 0) {
+          (p->s).flags |= one;
+        } else {
+          u8 t = (p->s).flags;
+          u8 fv = 0xFE;
+          fv &= t;
+          asm volatile("" ::"r"(t));
+          (p->s).flags = fv;
+        }
+      }
+      {
+        s32 g = (p->props).unk32.unk_8;
+        s32 d = 0x180 - g;
+        g += (d * 5 << 3) >> 8;
+        (p->props).unk32.unk_8 = g;
+        ((p->s).spr).mag.x = g;
+        ((p->s).spr).mag.y = (p->props).unk32.unk_8;
+      }
+      dy = (p->s).d.y;
+      dy += ((-0x100 - dy) << 4) >> 8;
+      (p->s).d.y = dy;
+      {
+        s32 ux = (p->s).unk_coord.x;
+        dx = (p->s).d.x;
+        dx += ((ux - dx) << 4) >> 8;
+      }
+      (p->s).d.x = dx;
+      (p->s).coord.y += dy;
+      (p->s).coord.x += dx;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 void FUN_080bb7c4(struct VFX* p) {
   if (--(p->s).work[2] == 0) {
     SET_VFX_ROUTINE(p, ENTITY_DIE);
