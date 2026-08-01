@@ -2029,6 +2029,65 @@ void ActorLastFefnirFireball_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p2_b_d.inc");
 
+// 0x080D59D4
+void ActorLastX_Update(struct Solid* p) {
+  u8 m = (p->s).mode[1];
+  switch (m) {
+    case 0: {
+      s16 j;
+      s32 k;
+      u32 n = SM253_UNK;
+      wStaticGraphicTilenums[n] = 0x2B7;
+      wStaticMotionPalIDs[n] = 0xA;
+      LOAD_STATIC_GRAPHIC(n);
+      (p->s).taskCol = 0x12;
+      SetMotion(&p->s, MOTION(SM253_UNK, 0));
+      (p->s).d.y = m;
+      (p->s).unk_coord.y = 0x10;
+      j = 0;
+      k = 0x10;
+      asm("" : "+r"(k));
+      do {
+        (p->s).d.y += k;
+        (p->s).coord.y -= (p->s).d.y;
+        j++;
+      } while (j <= 0x5F);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 y;
+      s32 dy;
+      UpdateMotionGraphic(&p->s);
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      dy = (p->s).d.y - (p->s).unk_coord.y;
+      (p->s).d.y = dy;
+      if (dy != 0) {
+        break;
+      }
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).unk_coord.y = y;
+      (p->s).work[3] = dy;
+      (p->s).mode[1]++;
+      break;
+    }
+    case 2: {
+      u32 w3;
+      u32 nw;
+      UpdateMotionGraphic(&p->s);
+      w3 = (p->s).work[3];
+      nw = w3 + 1;
+      (p->s).work[3] = nw;
+      (p->s).coord.x = (p->s).unk_coord.x + (gSineTable[(u8)(w3 + 0x81)] << 1);
+      (p->s).coord.y = (p->s).unk_coord.y + (gSineTable[(nw << 25) >> 24] << 2);
+      break;
+    }
+  }
+}
+
+INCASM("asm/solid/actor_p1_p2_b_d2.inc");
+
 void Actor48_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
     case 0:
