@@ -46,6 +46,71 @@ void Projectile26_Update(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_26_post_a.inc");
 
+static const struct Collision sCollisions[4];
+
+// 0x080A8A38 -- launch the thrown weapon: flip to match the owner, kick it
+// out and away, arm the body. Blocker (const-slot scheduling): retail
+// materialises the shared "1" (routine modeID + xflip mask) AFTER the
+// fn-table address arithmetic and reuses that register for the 0xC0
+// pointer; ours is hoisted to the top of the block and the 0xFFFF pool
+// constant then needs a copy. Literal-asm placement makes the macro index
+// at runtime; barrier/pin variants move the copy instead of removing it.
+NON_MATCH void FUN_080a8a38(struct Projectile* p) {
+#if MODERN
+  struct Entity* e = (p->s).unk_28;
+  u16* sp;
+  u32 xf;
+  u32 one = 1;
+  SET_PROJECTILE_ROUTINE(p, one);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags = DISPLAY | (p->s).flags;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x5B, 0x01));
+  xf = (e->flags >> 4) & one;
+  if (xf != 0) {
+    (p->s).flags |= 0x10;
+  } else {
+    (p->s).flags &= 0xEF;
+  }
+  ((p->s).spr).xflip = xf;
+  {
+    u8* oa = (u8*)p + 0x4a;
+    u32 sh4 = xf << 4;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    m11 |= sh4;
+    *oa = m11;
+  }
+  sp = (u16*)((u8*)p + 0xc0);
+  *sp = 0xFFFF;
+  *sp = PlaySound(0x48);
+  if ((p->s).flags & X_FLIP) {
+    (p->s).coord.x += 0x1000;
+    (p->s).d.x = 0x380;
+  } else {
+    (p->s).coord.x += -0x1000;
+    (p->s).d.x = -0x380;
+  }
+  (p->s).coord.y += -0x1800;
+  (p->s).d.y = 0;
+  {
+    s16* q = (s16*)((u8*)p + 0xbc);
+    *q = -0x10;
+    *(s32*)((u8*)q - 8) = (p->s).coord.x;
+    *(s32*)((u8*)q - 4) = (p->s).coord.y;
+  }
+  ++*((u8*)e + 0xcf);
+  INIT_BODY(p, sCollisions, 0x40, NULL);
+  (p->s).work[2] = 2;
+  Projectile26_Update(p);
+#else
+  INCCODE("asm/projectile/unk_26_8a38.inc");
+#endif
+}
+
+INCASM("asm/projectile/unk_26_post_a2.inc");
+
 // 0x080a8f14
 void FUN_080a8f14(struct Projectile* p) {
   if ((p->s).mode[1] == 0) {
