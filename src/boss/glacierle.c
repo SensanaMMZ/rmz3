@@ -1,4 +1,5 @@
 #include "boss.h"
+#include "enemy.h"
 #include "collision.h"
 #include "element.h"
 #include "global.h"
@@ -808,6 +809,57 @@ void glacierle_0805836c(struct Boss* p) {
 }
 
 INCASM("asm/boss/glacierle_b.inc");
+
+void FUN_08082348(struct Entity* e);
+static const u8 u8_ARRAY_08364b26[5];
+
+// 0x080593C4 -- finisher: retract the arm chain, then retire both the arm
+// and the hand entity and switch to the wrap-up motion.
+// Blocker (two allocation nits): retail computes the props pointer
+// (0xB4 + p, kept in r9) between the chain byte's load and its test, and
+// keeps the hand entity in the callee-saved r5 with a backup in ip;
+// ours emits the props block four slots earlier and homes the entity in a
+// scratch register, needing one restore from ip. Const-first address form,
+// assignment resequencing, priority boosts and an r5 pin each fix one nit
+// while displacing the other (the pin also drops r10 from the push list).
+NON_MATCH void glacierle_080593c4(struct Boss* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      struct Enemy* q = (struct Enemy*)(p->s).unk_2c;
+      u32* w;
+      struct Enemy* e;
+      w = (u32*)(0xb4 + (u32)p);
+      while (*((u8*)q + 0xb4) != 0) {
+        FUN_08082348(&q->s);
+      }
+      e = (struct Enemy*)(p->s).unk_28;
+      (e->s).flags &= ~DISPLAY;
+      (e->s).flags &= ~FLIPABLE;
+      EXIT_BODY(e);
+      SET_ENEMY_ROUTINE(e, ENTITY_DISAPPEAR);
+      (q->s).flags &= ~DISPLAY;
+      (q->s).flags &= ~FLIPABLE;
+      EXIT_BODY(q);
+      SET_ENEMY_ROUTINE(q, ENTITY_DISAPPEAR);
+      *w |= 1;
+      SetMotion(&p->s, MOTION(0xB2, 0x19));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364b26[(p->s).motion.cmdIdx]]);
+      break;
+  }
+#else
+  INCCODE("asm/boss/glacierle_593c4.inc");
+#endif
+}
 
 // 0x080594DC
 void glacierle_080594dc(struct Boss* p) {
