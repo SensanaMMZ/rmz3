@@ -49,19 +49,26 @@ INCASM("asm/projectile/unk_26_post_a.inc");
 static const struct Collision sCollisions[4];
 
 // 0x080A8A38 -- launch the thrown weapon: flip to match the owner, kick it
-// out and away, arm the body. Blocker (const-slot scheduling): retail
-// materialises the shared "1" (routine modeID + xflip mask) AFTER the
-// fn-table address arithmetic and reuses that register for the 0xC0
-// pointer; ours is hoisted to the top of the block and the 0xFFFF pool
-// constant then needs a copy. Literal-asm placement makes the macro index
-// at runtime; barrier/pin variants move the copy instead of removing it.
+// out and away, arm the body. Blocker (pool-constant transfer): the two
+// u16 stores (0xFFFF handle, 0xFFF0 prevCoord.y) load their pool constant
+// into a scratch register and copy it into the store register, where
+// retail loads straight into it (+2 copies, ROM overflow). The routine
+// const-slot half of this basin IS solved here by the hand-expanded
+// SET_*_ROUTINE with the row pointer built first; only the pool transfer
+// remains. Pointer-var, direct-field, cast and barrier forms all keep it.
 NON_MATCH void FUN_080a8a38(struct Projectile* p) {
 #if MODERN
   struct Entity* e = (p->s).unk_28;
   u16* sp;
   u32 xf;
-  u32 one = 1;
-  SET_PROJECTILE_ROUTINE(p, one);
+  u32 one;
+  {
+    const ProjectileRoutine* const* base = gProjectileFnTable;
+    const ProjectileRoutine* const* rowp = base + (p->s).id;
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(**rowp)[ENTITY_UPDATE];
+  }
   InitNonAffineMotion(&p->s);
   (p->s).flags = DISPLAY | (p->s).flags;
   (p->s).flags |= FLIPABLE;
@@ -72,7 +79,12 @@ NON_MATCH void FUN_080a8a38(struct Projectile* p) {
   } else {
     (p->s).flags &= 0xEF;
   }
-  ((p->s).spr).xflip = xf;
+  {
+    u32 xf2;
+    asm volatile("add %0, %1, #0" : "=&l"(xf2) : "l"(xf));
+    ((p->s).spr).xflip = xf2;
+    xf = xf2;
+  }
   {
     u8* oa = (u8*)p + 0x4a;
     u32 sh4 = xf << 4;
@@ -95,8 +107,8 @@ NON_MATCH void FUN_080a8a38(struct Projectile* p) {
   (p->s).coord.y += -0x1800;
   (p->s).d.y = 0;
   {
-    s16* q = (s16*)((u8*)p + 0xbc);
-    *q = -0x10;
+    u16* q = (u16*)((u8*)p + 0xbc);
+    *q = 0xFFF0;
     *(s32*)((u8*)q - 8) = (p->s).coord.x;
     *(s32*)((u8*)q - 4) = (p->s).coord.y;
   }
