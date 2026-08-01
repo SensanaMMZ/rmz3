@@ -299,6 +299,66 @@ void FUN_080bcc94(struct VFX* vfx) {
 
 INCASM("asm/vfx/unk_37_post_b.inc");
 
+extern const motion_t motion_t_ARRAY_0836ee0a[3];
+
+// 0x080BCE48
+void FUN_080bce48(struct VFX* vfx) {
+  switch ((vfx->s).mode[2]) {
+    case 0:
+      (vfx->s).taskCol = 0x19;
+      (vfx->s).palID = (vfx->s).work[2];
+      SetMotion(&vfx->s, motion_t_ARRAY_0836ee0a[RANDOM(RNG_0202f388) % 3]);
+      (vfx->s).work[2] = 0x12;
+      (vfx->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      if ((u8)--(vfx->s).work[2] == 0) {
+        (vfx->s).mode[2]++;
+      }
+      (vfx->s).coord.x += (vfx->s).d.x;
+      (vfx->s).coord.y += (vfx->s).d.y;
+      UpdateMotionGraphic(&vfx->s);
+      break;
+    case 2:
+      (vfx->s).work[2] = 0x10;
+      (vfx->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      u8 w0 = (vfx->s).work[2];
+      u32 w;
+      u32 k1 = 1;
+      s32 v;
+      register u32 res asm("r0");
+      asm volatile("add %0, %1, #0" : "=&l"(w) : "l"(w0));
+      if (w > 8) {
+        asm("" : "+r"(k1));
+        res = w & k1;
+        asm volatile("" ::"r"(w));
+        if (res != 0) {
+          (vfx->s).flags |= DISPLAY;
+        } else {
+          (vfx->s).flags &= ~DISPLAY;
+        }
+      } else if ((u8)(*(volatile u8*)&(vfx->s).work[2] % 3) == 0) {
+        (vfx->s).flags |= DISPLAY;
+      } else {
+        (vfx->s).flags &= ~DISPLAY;
+      }
+      v = w - 1;
+      (vfx->s).work[2] = v;
+      if ((u8)v == 0) {
+        (vfx->s).flags &= ~DISPLAY;
+        (vfx->s).flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(vfx, ENTITY_DISAPPEAR);
+      }
+      (vfx->s).coord.x += (vfx->s).d.x;
+      (vfx->s).coord.y += (vfx->s).d.y;
+      UpdateMotionGraphic(&vfx->s);
+      break;
+    }
+  }
+}
+
 // --------------------------------------------
 
 void FUN_080bc8c0(struct VFX* vfx);
