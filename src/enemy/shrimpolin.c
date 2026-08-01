@@ -568,6 +568,78 @@ void shrimporinSpin(struct Enemy* p) {
   }
 }
 
+// 0x0806A0F8
+void shrimporinIce(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 dx;
+      s32 dy;
+      s32 d;
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, MOTION(0x0D, 0x06));
+      (p->s).d.x = (pZero2->s).coord.x - (p->s).coord.x;
+      {
+        u8 w2 = (p->s).work[2];
+        if ((p->s).d.x > 0) {
+          if (w2 != 1) {
+            goto zero;
+          }
+          goto aim;
+        }
+        if (w2 == 0) {
+          goto aim;
+        }
+      }
+    zero:
+      (p->s).d.x = 0;
+      (p->s).d.y = 0x280;
+      goto done;
+    aim:
+      {
+        struct Zero* z = pZero2;
+        s32 yy = (p->s).coord.y + 0x1800;
+        dy = (z->s).coord.y - yy;
+      }
+      (p->s).d.y = dy;
+      dx = (p->s).d.x;
+      d = (dx >> 8) * (dx >> 8);
+      d += (dy >> 8) * (dy >> 8);
+      d = (u16)Sqrt(d) << 8;
+      if (d != 0) {
+        s32 ux = ((p->s).d.x << 8) / d;
+        s32 uy;
+        (p->s).d.x = ux;
+        uy = ((p->s).d.y << 8) / d;
+        (p->s).d.y = uy;
+        (p->s).d.x = (ux * 5 << 7) / 256;
+        (p->s).d.y = (uy * 5 << 7) / 256;
+      } else {
+        (p->s).d.x = 0x280;
+        (p->s).d.y = d;
+      }
+    done:
+      (p->s).work[2] = 0xFF;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 x = (p->s).coord.x + (p->s).d.x;
+      s32 y;
+      (p->s).coord.x = x;
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      (p->s).work[2]--;
+      if ((u16)GetGroundMetatileAttr(x, y) != 0 || ((p->body).status & 4) != 0 ||
+          (p->s).work[2] == 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = 3;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/shrimpolin_c.inc");
 
 void shrimporinIceCrash(s32 x, s32 y, u8 frame);
