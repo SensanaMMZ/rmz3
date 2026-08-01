@@ -688,6 +688,103 @@ void FUN_0805cfe8(struct Boss* p) {
   }
 }
 
+// 0x0805D080 -- leap toward Zero, clamped to the arena edge stored at +0xB8.
+// The flip pair (one reused flag variable recomputed twice, r5-pinned oam
+// pointer) is byte-exact. Blocker (aim-math register rotation): retail keeps
+// the Zero-delta in r2 and copies it to r0 for the divide, then builds the
+// clamp bound in r2 as well, so {delta, scaled, bound} rotate through
+// r0/r1/r2; ours computes the delta in place and loads the +0xB8 bound before
+// the scaled value. Statement splits and a keep-alive moved the rotation
+// without landing it; 62 bytes.
+NON_MATCH void FUN_0805d080(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] == 0) {
+    s32 base;
+    s32 t;
+    SetMotion(&p->s, MOTION(0xB5, 0x06));
+    {
+      u32 xf = 0;
+      struct Zero* z = pZero2;
+      if ((p->s).coord.x < (z->s).coord.x) {
+        xf = 1;
+      }
+      ((p->s).spr).xflip = xf;
+      xf = 0;
+      if ((p->s).coord.x < (z->s).coord.x) {
+        xf = 1;
+      }
+      {
+        register u8* oa asm("r5");
+        u32 sh4;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        {
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          m11 |= sh4;
+          *oa = m11;
+        }
+      }
+      if (xf != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+    }
+    {
+      struct Zero* z = pZero2;
+      s32* bp = (s32*)((u8*)p + 0xb4);
+      s32 zx = (z->s).coord.x;
+      base = *bp;
+      t = zx - base;
+    }
+    {
+      s32 u = t / 0x3000;
+      s32 v = ((u * 3) << 12) + 0x1800;
+      if ((p->s).flags & X_FLIP) {
+        s32 lim;
+        v = base + v;
+        v += -0x4800;
+        lim = *(s32*)((u8*)p + 0xb8) - 0x1800;
+        if (v > lim) {
+          v = lim;
+        }
+      } else {
+        s32 lim = base + 0x1800;
+        v = base + v + 0x4800;
+        if (v < lim) {
+          v = lim;
+        }
+      }
+      (p->s).d.x = (v - (p->s).coord.x) / 0x1C;
+    }
+    if ((p->s).d.x > 0) {
+      (p->s).unk_coord.x = 0x1000;
+    } else {
+      (p->s).unk_coord.x = -0x1000;
+    }
+    (p->s).d.y = -0x700;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (FUN_0805d594(p, (p->s).unk_coord.x, 0) == 0) {
+    (p->s).coord.x += (p->s).d.x;
+  }
+  if (FUN_0805d594(p, 0, (p->s).d.y) == 0) {
+    (p->s).coord.y += (p->s).d.y;
+  }
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y >= 0) {
+    u8 z2 = 0;
+    (p->s).mode[1] = 0x1A;
+    (p->s).mode[2] = z2;
+  }
+#else
+  INCCODE("asm/boss/hanumachine_5d080.inc");
+#endif
+}
+
 INCASM("asm/boss/hanumachine_p2_p1d.inc");
 
 u16 FUN_08010d70(s32 x, s32 y);
