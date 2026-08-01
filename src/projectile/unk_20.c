@@ -167,6 +167,105 @@ INCASM("asm/projectile/unk_20_post_d.inc");
 
 void FUN_080a4f3c(struct Projectile* p);
 
+// 0x080A598C
+void FUN_080a598c(struct Projectile* p) {
+  struct Entity* e = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 xf;
+      u8 z;
+      SetDDP(&p->body, &sCollisions[1]);
+      InitRotatableMotion(&p->s);
+      xf = (e->flags >> 4) & 1;
+      if (xf != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        u32 xf2;
+        asm volatile("add %0, %1, #0" : "=&l"(xf2) : "l"(xf));
+        ((p->s).spr).xflip = xf2;
+        z = 0;
+        xf = xf2;
+      }
+      {
+        u8* oa = (u8*)p + 0x4a;
+        u32 sh4 = xf << 4;
+        s32 ov = *oa;
+        s32 m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      SetMotion(&p->s, MOTION(0x49, 0x01));
+      (p->s).taskCol = 0x17;
+      (p->s).work[2] = z;
+      (p->s).work[3] = z;
+      (p->s).d.y = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 a;
+      s32 dy;
+      {
+        s32 w2 = (p->s).work[2] + 1;
+        (p->s).work[2] = w2;
+        a = (p->s).work[3] + w2;
+      }
+      (p->s).work[3] = a;
+      (p->s).angle = a;
+      dy = (p->s).d.y + 0x40;
+      (p->s).d.y = dy;
+      (p->s).coord.y += dy;
+      if (PushoutToUp1((p->s).coord.x, (p->s).coord.y) < 0) {
+        FUN_080a4f3c(p);
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2: {
+      u8 k;
+      u8 z2;
+      SetDDP(&p->body, &sCollisions[0]);
+      {
+        register u8 t asm("r1");
+        u8 fv;
+        t = (p->s).flags;
+        k = 0xFE;
+        fv = k;
+        fv &= t;
+        asm volatile("" ::"r"(t));
+        z2 = 0;
+        (p->s).flags = fv;
+      }
+      if (*(u32*)((u8*)e + 0xc0) & 0x40) {
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = z2;
+      }
+      if (e->mode[0] > 1) {
+        register u8 t asm("r1");
+        u8 fv;
+        t = (p->s).flags;
+        fv = k;
+        fv &= t;
+        asm volatile("" ::"r"(t));
+        fv &= 0xFD;
+        (p->s).flags = fv;
+        (p->body).status = z2;
+        (p->body).prevStatus = z2;
+        (p->body).invincibleTime = z2;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
+void FUN_080a4f3c(struct Projectile* p);
+
 void FUN_080a5ac0(struct Projectile* p) {
   switch ((p->s).mode[2]) {
     case 0:
