@@ -16,8 +16,8 @@ struct Projectile* FUN_080ac818(struct Coord* c, s32 prevX, s32 prevY, struct En
     (p->s).coord = *c;
     (p->s).work[0] = 0;
     (p->s).work[1] = 0;
-    (p->prevCoord).x = prevX;
-    (p->prevCoord).y = prevY;
+    (p->prevCoord).c.x = prevX;
+    (p->prevCoord).c.y = prevY;
     (p->s).unk_28 = e;
   }
   return p;
@@ -33,8 +33,8 @@ struct Projectile* FUN_080ac880(struct Coord* c, s32 prevX, s32 prevY, struct En
     (p->s).coord = *c;
     (p->s).work[0] = 1;
     (p->s).work[1] = 0;
-    (p->prevCoord).x = prevX;
-    (p->prevCoord).y = prevY;
+    (p->prevCoord).c.x = prevX;
+    (p->prevCoord).c.y = prevY;
     (p->s).unk_28 = e;
   }
   return p;
@@ -50,8 +50,8 @@ struct Projectile* FUN_080ac8e8(struct Coord* c, s32 prevX, s32 prevY, struct En
     (p->s).coord = *c;
     (p->s).work[0] = 0;
     (p->s).work[1] = 1;
-    (p->prevCoord).x = prevX;
-    (p->prevCoord).y = prevY;
+    (p->prevCoord).c.x = prevX;
+    (p->prevCoord).c.y = prevY;
     (p->s).unk_28 = e;
   }
   return p;
@@ -67,8 +67,8 @@ struct Projectile* FUN_080ac950(struct Coord* c, s32 prevX, s32 prevY, struct En
     (p->s).coord = *c;
     (p->s).work[0] = 1;
     (p->s).work[1] = 1;
-    (p->prevCoord).x = prevX;
-    (p->prevCoord).y = prevY;
+    (p->prevCoord).c.x = prevX;
+    (p->prevCoord).c.y = prevY;
     (p->s).unk_28 = e;
   }
   return p;
@@ -83,8 +83,8 @@ struct Projectile* FUN_080ac9b4(struct Coord* c, s32 prevX, s32 prevY, struct En
     (p->s).palID = 0;
     (p->s).coord = *c;
     (p->s).work[0] = 2;
-    (p->prevCoord).x = prevX;
-    (p->prevCoord).y = prevY;
+    (p->prevCoord).c.x = prevX;
+    (p->prevCoord).c.y = prevY;
     (p->s).unk_28 = e;
   }
   return p;
@@ -120,7 +120,7 @@ void FUN_080acb54(struct Projectile* p) {
         UpdateMotionGraphic(&p->s);
         break;
     }
-    if ((p->prevCoord).y == 0 || --(p->prevCoord).y == 0) {
+    if ((p->prevCoord).c.y == 0 || --(p->prevCoord).c.y == 0) {
       (p->s).work[2] = 0x7f;
       (p->s).mode[1] = 1;
       (p->s).mode[2] = 0;
@@ -141,12 +141,12 @@ void FUN_080acbe0(struct Projectile* p) {
         if ((p->s).work[0] == 0) {
           SetMotion(&p->s, 0xa01);
           SetDDP(&p->body, &sCollisions[1]);
-          (p->s).d.y = (p->prevCoord).x;
+          (p->s).d.y = (p->prevCoord).c.x;
           (p->s).d.x = m;
         } else {
           SetMotion(&p->s, 0xa04);
           SetDDP(&p->body, &sCollisions[2]);
-          (p->s).d.x = -(p->prevCoord).x;
+          (p->s).d.x = -(p->prevCoord).c.x;
           (p->s).d.y = m;
         }
         RNG_0202f388 = LCG(RNG_0202f388);

@@ -63,7 +63,7 @@ static void BlazinTail_Update(struct Projectile* p) {
     BlazinTail_Die(p);
     return;
   }
-  (p->prevCoord).x = (((p->s).unk_28)->flags & X_FLIP) ? 1 : 0;
+  (p->prevCoord).c.x = (((p->s).unk_28)->flags & X_FLIP) ? 1 : 0;
   (sUpdates[(p->s).mode[1]])(p);
 }
 
@@ -110,13 +110,13 @@ static void onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord
   bool8 flag = FALSE;
   struct Projectile* parent = (struct Projectile*)body->parent;
   if (body->unk_23 == 1 || body->unk_23 == 3) {
-    if ((parent->prevCoord).x == 0) {
+    if ((parent->prevCoord).c.x == 0) {
       if ((pZero2->s).coord.x > (parent->s).coord.x) {
         do {
           return;
         } while (0);
       }
-    } else if ((parent->prevCoord).x == 1) {
+    } else if ((parent->prevCoord).c.x == 1) {
       if ((pZero2->s).coord.x < (parent->s).coord.x) {
         flag = TRUE;
       }

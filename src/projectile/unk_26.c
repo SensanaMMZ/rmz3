@@ -48,16 +48,8 @@ INCASM("asm/projectile/unk_26_post_a.inc");
 
 static const struct Collision sCollisions[4];
 
-// 0x080A8A38 -- launch the thrown weapon: flip to match the owner, kick it
-// out and away, arm the body. Blocker (pool-constant transfer): the two
-// u16 stores (0xFFFF handle, 0xFFF0 prevCoord.y) load their pool constant
-// into a scratch register and copy it into the store register, where
-// retail loads straight into it (+2 copies, ROM overflow). The routine
-// const-slot half of this basin IS solved here by the hand-expanded
-// SET_*_ROUTINE with the row pointer built first; only the pool transfer
-// remains. Pointer-var, direct-field, cast and barrier forms all keep it.
-NON_MATCH void FUN_080a8a38(struct Projectile* p) {
-#if MODERN
+// 0x080A8A38
+void FUN_080a8a38(struct Projectile* p) {
   struct Entity* e = (p->s).unk_28;
   u32 xf;
   u32 one;
@@ -93,9 +85,8 @@ NON_MATCH void FUN_080a8a38(struct Projectile* p) {
     m11 |= sh4;
     *oa = m11;
   }
-  sp = (u16*)((u8*)p + 0xc0);
-  *sp = 0xFFFF;
-  *sp = PlaySound(0x48);
+  p->soundID = 0xFFFF;
+  p->soundID = PlaySound(0x48);
   if ((p->s).flags & X_FLIP) {
     (p->s).coord.x += 0x1000;
     (p->s).d.x = 0x380;
@@ -106,35 +97,22 @@ NON_MATCH void FUN_080a8a38(struct Projectile* p) {
   (p->s).coord.y += -0x1800;
   (p->s).d.y = 0;
   {
-    u16* q = (u16*)((u8*)p + 0xbc);
-    *q = 0xFFF0;
-    *(s32*)((u8*)q - 8) = (p->s).coord.x;
-    *(s32*)((u8*)q - 4) = (p->s).coord.y;
+    register u8* q asm("r1");
+    p->prevCoord.h.ylo = 0xFFF0;
+    q = (u8*)p + 0xb4;
+    *(s32*)q = (p->s).coord.x;
+    asm volatile("add %0, #4" : "+r"(q));
+    *(s32*)q = (p->s).coord.y;
   }
   ++*((u8*)e + 0xcf);
   INIT_BODY(p, sCollisions, 0x40, NULL);
   (p->s).work[2] = 2;
   Projectile26_Update(p);
-#else
-  INCCODE("asm/projectile/unk_26_8a38.inc");
-#endif
 }
 
-// 0x080A8B50 -- twin of FUN_080a8a38: launch the thrown weapon with the
-// steeper arc. Blocker (u16-store-through-cast transfer): storing 0xFFE8
-// into the low half of prevCoord.y needs a cast, and the cast makes agbcc
-// load the pool constant into a scratch and copy it into the store register
-// (+1 insn, +register cascade on the -0x1000 pool). PROVEN FIX, not applied:
-// giving the field its own 16-bit struct member removes the cast and the
-// copy outright (the same change on unk_c0 -> s16 fixed the identical 0xFFFF
-// store in this function). prevCoord.y is read as a full s32 counter in
-// projectile/omega_gold.c, so splitting it needs a union plus a sweep of
-// every prevCoord user - do that as its own change, then unpark this,
-// FUN_080a8a38 and unk_27_9250 together.
-NON_MATCH void FUN_080a8b50(struct Projectile* p) {
-#if MODERN
+// 0x080A8B50
+void FUN_080a8b50(struct Projectile* p) {
   struct Entity* e = (p->s).unk_28;
-  u16* sp;
   u32 xf;
   u32 one;
   s32 z;
@@ -170,11 +148,8 @@ NON_MATCH void FUN_080a8b50(struct Projectile* p) {
     m11 |= sh4;
     *oa = m11;
   }
-  {
-    u16* sp = (u16*)&p->unk_c0;
-    *sp = 0xFFFF;
-    *sp = PlaySound(0x48);
-  }
+  p->soundID = 0xFFFF;
+  p->soundID = PlaySound(0x48);
   if ((p->s).flags & X_FLIP) {
     (p->s).coord.x += 0x1000;
     (p->s).d.x = 0x380;
@@ -186,14 +161,15 @@ NON_MATCH void FUN_080a8b50(struct Projectile* p) {
   }
   (p->s).coord.y += -0x1200;
   {
+    p->prevCoord.h.ylo = 0xFFE8;
     z = 0;
-    *(u16*)&(p->prevCoord).y = 0xFFE8;
   }
   ++*((u8*)e + 0xcf);
   {
-    u8* q = (u8*)p + 0xb4;
+    register u8* q asm("r1");
+    q = (u8*)p + 0xb4;
     *(s32*)q = (p->s).coord.x;
-    q += 4;
+    asm volatile("add %0, #4" : "+r"(q));
     *(s32*)q = (p->s).coord.y;
   }
   {
@@ -206,9 +182,6 @@ NON_MATCH void FUN_080a8b50(struct Projectile* p) {
   }
   (p->s).work[2] = 2;
   Projectile26_Update(p);
-#else
-  INCCODE("asm/projectile/unk_26_8b50.inc");
-#endif
 }
 
 INCASM("asm/projectile/unk_26_post_a2.inc");

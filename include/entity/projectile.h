@@ -11,8 +11,16 @@ struct Projectile {
   struct Body body;
   // 0xB4 ..
   u8 work[4];  // general purpose buffer
-  struct Coord prevCoord;
-  u32 unk_c0;
+  union {
+    struct Coord c;
+    struct {
+      s32 x;
+      s16 ylo;
+      s16 yhi;
+    } h;
+  } prevCoord;
+  s16 soundID;
+  u16 unk_c2;
 };  // 196 bytes
 
 typedef void (*ProjectileFunc)(struct Projectile*);

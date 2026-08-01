@@ -35,8 +35,8 @@ struct Projectile* createOmega1Laser(s32 x, u8 n, s32 y, struct Entity* omega) {
     (p->s).palID = 0;
     (p->s).work[0] = 0;
     p->work[0] = n;
-    (p->prevCoord).x = x;
-    (p->prevCoord).y = y;
+    (p->prevCoord).c.x = x;
+    (p->prevCoord).c.y = y;
     (p->s).unk_28 = omega;
   }
   return p;
@@ -53,8 +53,8 @@ struct Projectile* CreateOmegaWhiteHoop(s32 x, s32 y, u8 n) {
     (p->s).coord.x = x;
     (p->s).coord.y = y;
     p->work[0] = n;
-    (p->prevCoord).x = 0x400;
-    (p->prevCoord).y = 1;
+    (p->prevCoord).c.x = 0x400;
+    (p->prevCoord).c.y = 1;
     (p->s).unk_28 = NULL;
   }
   return p;
@@ -188,7 +188,7 @@ void doOmega1BallLaser1(struct Projectile* p) {
         UpdateMotionGraphic(&p->s);
         break;
     }
-    if ((p->prevCoord).y == 0 || --(p->prevCoord).y == 0) {
+    if ((p->prevCoord).c.y == 0 || --(p->prevCoord).c.y == 0) {
       (p->s).mode[1] = 1;
       (p->s).mode[2] = 0;
     }
@@ -201,16 +201,16 @@ void doOmega1BallLaser1(struct Projectile* p) {
 // in the trail toggle that clean C optimizes away (the ldrb value is already 0..255),
 // plus a r4/r6 alloc shuffle in Hoopshot's sine setup. Permuter TODO. C sketch:
 //   doOmega1BallLaser2: if (unk_28->mode[0] > 1 || --work[2]==0) { smoke3; DIE; }
-//     else switch(mode[2]){ case 0: prevCoord.x = (u32)(prevCoord.x*5<<6)>>8;
+//     else switch(mode[2]){ case 0: prevCoord.c.x = (u32)(prevCoord.c.x*5<<6)>>8;
 //       work[3]=0; SetMotion(0xa07); SetDDP(&sCollisions[1]);
-//       d.x = -((u32)(gSineTable[work0]*prevCoord.x)>>8);
-//       d.y =  (u32)(gSineTable[(u8)(work0+0x40)]*prevCoord.x)>>8;
+//       d.x = -((u32)(gSineTable[work0]*prevCoord.c.x)>>8);
+//       d.y =  (u32)(gSineTable[(u8)(work0+0x40)]*prevCoord.c.x)>>8;
 //       work1=1; PlaySound(0x12c); mode[2]++;  // fallthrough
 //     case 1: if(((u8)work[3]++ & 1)==0) FUN_080b9184(&coord,0); coord += d;
 //       push=PushoutToUp1(coord.x,coord.y); if(push && work1){ work1=0; coord.y+=push;
 //       d.y=-d.y; } UpdateMotionGraphic(); }
 //   doOmega1Hoopshot: same as BallLaser2 case 0/1 but the death check is just
-//     `if (--work[2]==0) DIE;` (no unk_28, no smoke) and case 0 skips the prevCoord.x scale.
+//     `if (--work[2]==0) DIE;` (no unk_28, no smoke) and case 0 skips the prevCoord.c.x scale.
 void FUN_080b9184(struct Coord* c, u8 kind);
 
 void doOmega1BallLaser2(struct Projectile* p) {
@@ -221,12 +221,12 @@ void doOmega1BallLaser2(struct Projectile* p) {
     s32 push;
     switch ((p->s).mode[2]) {
       case 0:
-        (p->prevCoord).x = (u32)((p->prevCoord).x * 5 << 6) >> 8;
+        (p->prevCoord).c.x = (u32)((p->prevCoord).c.x * 5 << 6) >> 8;
         (p->s).work[3] = 0;
         SetMotion(&p->s, 0xA07);
         SetDDP(&p->body, &sCollisions[1]);
-        (p->s).d.x = -((u32)(gSineTable[p->work[0]] * (p->prevCoord).x) >> 8);
-        (p->s).d.y = (u32)(gSineTable[(u8)(p->work[0] + 0x40)] * (p->prevCoord).x) >> 8;
+        (p->s).d.x = -((u32)(gSineTable[p->work[0]] * (p->prevCoord).c.x) >> 8);
+        (p->s).d.y = (u32)(gSineTable[(u8)(p->work[0] + 0x40)] * (p->prevCoord).c.x) >> 8;
         p->work[1] = 1;
         PlaySound(0x12C);
         (p->s).mode[2]++;
@@ -261,8 +261,8 @@ void doOmega1Hoopshot(struct Projectile* p) {
         (p->s).work[3] = 0;
         SetMotion(&p->s, 0xA07);
         SetDDP(&p->body, &sCollisions[1]);
-        (p->s).d.x = -((u32)((p->prevCoord).x * gSineTable[p->work[0]]) >> 8);
-        (p->s).d.y = (u32)((p->prevCoord).x * gSineTable[(u8)(p->work[0] + 0x40)]) >> 8;
+        (p->s).d.x = -((u32)((p->prevCoord).c.x * gSineTable[p->work[0]]) >> 8);
+        (p->s).d.y = (u32)((p->prevCoord).c.x * gSineTable[(u8)(p->work[0] + 0x40)]) >> 8;
         p->work[1] = 1;
         PlaySound(0x12C);
         (p->s).mode[2]++;

@@ -57,7 +57,7 @@ INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1.inc");
 static const struct Collision sCollisions[10];
 
 // Spawn init for the crab mine: flip toward the parent, offset ±0x1000/-0x1200,
-// aim table halves at prevCoord.y, delayed body with NULL handler. Matches
+// aim table halves at prevCoord.c.y, delayed body with NULL handler. Matches
 // except the xflip block: retail computes the flip flag into r2 then copies to
 // r1 for the store/insert; agbcc folds the copy or (with pins) adds
 // truncation - the oam-bitfield tie family (see rmz3-oam-bitfield-lever).
@@ -78,16 +78,16 @@ NON_MATCH void FUN_080a9250(struct Projectile* p) {
     (p->s).coord.x += 0x1000;
     (p->s).d.x = 0x300;
     (p->s).d.y = 0x300;
-    *(u16*)&(p->prevCoord).y = 0xFFE0;
+    *(u16*)&(p->prevCoord).c.y = 0xFFE0;
   } else {
     (p->s).coord.x -= 0x1000;
     (p->s).d.x = -0x300;
     (p->s).d.y = 0x300;
-    *(u16*)&(p->prevCoord).y = 0x20;
+    *(u16*)&(p->prevCoord).c.y = 0x20;
   }
   (p->s).coord.y -= 0x1200;
   z = 0;
-  *(u16*)((u8*)&(p->prevCoord).y + 2) = 0xFFE0;
+  *(u16*)((u8*)&(p->prevCoord).c.y + 2) = 0xFFE0;
   {
     struct Body* body;
     (p->s).flags |= COLLIDABLE;
@@ -221,7 +221,7 @@ void FUN_080a96f8(struct Projectile* p) {
     (p->s).angle = 0xA0;
     z = 0;
     (p->s).coord.y -= 0x1200;
-    (p->prevCoord).x = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->prevCoord).c.x = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
     {
       struct Body* body;
       (p->s).flags |= COLLIDABLE;

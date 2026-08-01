@@ -16,8 +16,8 @@ struct Projectile* createGoldOmega1Laser(s32 a0, u8 a1, s32 a2, struct Entity* e
     (p->s).palID = 0;
     (p->s).work[0] = 0;
     p->work[0] = a1;
-    (p->prevCoord).x = a0;
-    (p->prevCoord).y = a2;
+    (p->prevCoord).c.x = a0;
+    (p->prevCoord).c.y = a2;
     (p->s).unk_28 = e;
   }
   return p;
@@ -34,7 +34,7 @@ struct Projectile* FUN_080ac3e8(struct Coord* c, u8 a1, u16 a2) {
     (p->s).coord.x = c->x;
     (p->s).coord.y = c->y;
     (p->s).work[1] = a1;
-    (p->prevCoord).y = a2;
+    (p->prevCoord).c.y = a2;
   }
   return p;
 }
@@ -67,7 +67,7 @@ void doGoldOmega1Laser1(struct Projectile* p) {
         UpdateMotionGraphic(&p->s);
         break;
     }
-    if ((p->prevCoord).y == 0 || --(p->prevCoord).y == 0) {
+    if ((p->prevCoord).c.y == 0 || --(p->prevCoord).c.y == 0) {
       (p->s).mode[1] = 1;
       (p->s).mode[2] = 0;
     }
@@ -85,12 +85,12 @@ void doGoldOmega1Laser2(struct Projectile* p) {
     s32 push;
     switch ((p->s).mode[2]) {
       case 0:
-        (p->prevCoord).x = (u32)((p->prevCoord).x * 5 << 6) >> 8;
+        (p->prevCoord).c.x = (u32)((p->prevCoord).c.x * 5 << 6) >> 8;
         (p->s).work[3] = 0;
         SetMotion(&p->s, 0xA07);
         SetDDP(&p->body, &sCollisions[3]);
-        (p->s).d.x = -((u32)(gSineTable[p->work[0]] * (p->prevCoord).x) >> 8);
-        (p->s).d.y = (u32)(gSineTable[(u8)(p->work[0] + 0x40)] * (p->prevCoord).x) >> 8;
+        (p->s).d.x = -((u32)(gSineTable[p->work[0]] * (p->prevCoord).c.x) >> 8);
+        (p->s).d.y = (u32)(gSineTable[(u8)(p->work[0] + 0x40)] * (p->prevCoord).c.x) >> 8;
         p->work[1] = 1;
         PlaySound(0x12C);
         (p->s).mode[2]++;
