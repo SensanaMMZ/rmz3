@@ -273,6 +273,68 @@ NON_MATCH void FUN_08091d0c(struct Enemy* p) {
 INCASM("asm/enemy/unk_59_post_a3.inc");
 
 struct VFX* CreateGhost18(struct Coord* c, u8 r1, bool8 isRight, u8 r3);
+static const struct SlashedEnemy sSlashedEnemies[4];
+
+// 0x080921C8 -- decoy hunter clone: flash, explode, spawn ghost + slash VFX.
+// Blocker (const-dest AND + u8 opacity): retail keeps X_FLIP live in r3 and
+// ANDs a COPY of it against flags (adds r0,r3,#0; ands r0,r1), then ORs the
+// work[3] byte into r3 itself. Pinning r3 makes the value opaque so a u8
+// truncation pair appears before the call (+4 B, ROM overflow); unpinning
+// puts the constant in r7 (extra push). Const-barrier, transfer-asm copy and
+// operand-order variants each fix one half and break the other.
+NON_MATCH void FUN_080921c8(struct Enemy* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      InitNonAffineMotion(&p->s);
+      SET_XFLIP(p, (p->s).work[3]);
+      SetMotion(&p->s, MOTION(SM019_PANTHEON_HUNTER, 3));
+      (p->s).work[2] = 18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if (((p->s).work[2] & 3) == 0) FUN_08091280(&p->s);
+      if ((p->s).work[2] == 0) (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) PlaySound(SE_ZAKO_EXPLODE);
+      (p->s).work[2]++;
+      if ((p->s).motion.state == 3) {
+        register struct Coord* c asm("r4") = &(p->s).coord;
+        CreateGhost18(c, 0, ((p->s).flags & X_FLIP) != 0, (p->s).work[3]);
+        {
+          register const struct SlashedEnemy* tmp asm("r6") = &sSlashedEnemies[3];
+          u8 work3 = (p->s).work[3];
+          u8 k = X_FLIP;
+          if ((p->s).flags & k) {
+            k |= work3;
+          } else {
+            k = work3;
+          }
+          CreateSlashedEnemy(c, tmp, 0, k);
+        }
+        SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      }
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/unk_59_921c8.inc");
+#endif
+}
 
 // 0x080922e0
 NON_MATCH void FUN_080922e0(struct Enemy* p) {
