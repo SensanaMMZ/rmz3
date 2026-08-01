@@ -289,6 +289,79 @@ void FUN_0807d0f0(struct Enemy* p) {
   }
 }
 
+// 0x0807D178
+void FUN_0807d178(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 w0;
+      SetDDP(&p->body, &sCollisions[3]);
+      w0 = (p->s).work[1];
+      if (w0 <= 1) {
+        u32 z3;
+        SetMotion(&p->s, MOTION(0x43, 0x13));
+        SET_XFLIP(p, (p->s).work[1]);
+        z3 = 0;
+        (p->s).d.x = ((p->s).work[1] << 10) - 0x200;
+        (p->s).d.y = z3;
+      } else {
+        u32 one;
+        u32 m = 1;
+        u32 z5;
+        m &= w0;
+        if (m != 0) {
+          (p->s).flags |= 0x20;
+        } else {
+          (p->s).flags &= 0xDF;
+        }
+        one = 1;
+        {
+          u32 yv = one;
+          yv &= m;
+          ((p->s).spr).yflip = yv;
+          z5 = 0;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            u32 sh5 = yv << 5;
+            s32 ov = *oa;
+            s32 m21 = -0x21;
+            m21 &= ov;
+            m21 |= sh5;
+            *oa = m21;
+          }
+        }
+        SetMotion(&p->s, MOTION(0x43, 0x12));
+        (p->s).d.x = z5;
+        one &= (p->s).work[1];
+        (p->s).d.y = (one << 10) - 0x200;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x1000) {
+        u32 z;
+        register u8 t asm("r1");
+        u8 fv;
+        t = (p->s).flags;
+        fv = 0xFE;
+        fv &= t;
+        asm volatile("" ::"r"(t));
+        z = 0;
+        fv &= 0xFD;
+        (p->s).flags = fv;
+        (p->body).status = z;
+        (p->body).prevStatus = z;
+        (p->body).invincibleTime = z;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
 INCASM("asm/enemy/crossbyne_p3_post_postb.inc");
 
 // 0x0807D2B8
