@@ -497,6 +497,84 @@ void childreMode6(struct Boss* p) {
 
 INCASM("asm/boss/childre_pre_b3.inc");
 
+void CreateVFX31_2(s32 x, s32 y);
+
+// 0x0804185C -- screw-ice dive: wind up, spawn the ice VFX, launch on an arc
+// and land back on the stored floor height.
+// Blocker (const home + add dest): the 0x6000 window constant belongs in the
+// callee-saved r5 that later carries the props pointer, with a three-operand
+// `adds r1,r0,r5`; ours materialises it in r1 and adds in place (7 bytes).
+// Explicit sum temps drop two instructions (ROM 4 bytes short); pinning the
+// constant to r5 costs 50. Everything else is byte-exact, including the
+// `*q + -0x800` associativity that the pool entry depends on.
+NON_MATCH void childreScrewIce(struct Boss* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x40);
+      SetDDP(&p->body, &sCollisions[7]);
+      SetMotion(&p->s, MOTION(0xA4, 0x0D));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      s32 dx;
+      SetDDP(&p->body, &sCollisions[3]);
+      CreateVFX31_2((p->s).coord.x, (p->s).coord.y);
+      (p->s).d.x = 0x280;
+      dx = (p->s).d.x;
+      if ((p->s).flags & X_FLIP) {
+        dx = -0x280;
+      }
+      (p->s).d.x = dx;
+      (p->s).d.y = -0x300;
+      (p->s).coord.y += -0x2000;
+      SetMotion(&p->s, MOTION(0xA4, 0x0E));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 y;
+      s32 cx = (p->s).coord.x;
+      s32 dx = (p->s).d.x;
+      s32 x = cx + dx;
+      (p->s).coord.x = x;
+      if ((u32)(*(s32*)((u8*)p + 0xbc) - x + 0x6000) > 0xC000) {
+        (p->s).coord.x = x - dx;
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      {
+        s32* q = (s32*)((u8*)p + 0xc0);
+        s32 qy = *q + -0x800;
+        if (qy - y < 0) {
+          SetMotion(&p->s, MOTION(0xA4, 0x00));
+          UpdateMotionGraphic(&p->s);
+          (p->s).coord.y = *q;
+          (p->s).mode[1] = 0;
+          (p->s).mode[2] = 0;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/boss/childre_screw_ice.inc");
+#endif
+}
+
+INCASM("asm/boss/childre_pre_b4.inc");
+
 void childreEndEarShot(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0:
