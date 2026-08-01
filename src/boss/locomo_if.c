@@ -183,6 +183,57 @@ void FUN_08054e94(struct Boss* p) {
 
 INCASM("asm/boss/locomo_if_p2_post_b.inc");
 
+static const struct Collision sCollisions[];
+void FUN_080a7c60(s32 x, s32 y, u8 a2);
+void FUN_080a7cb0(s32 x, s32 y, u8 a2);
+
+// 0x08054FCC
+void FUN_08054fcc(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x54, 0x04));
+      (p->s).work[2] = 0x5A;
+      if (*((u8*)p + 0xbc) != 0) {
+        PlaySound(0x129);
+      } else {
+        PlaySound(0x128);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      if ((u8)((p->s).work[2] % 12) == 0) {
+        if (*((u8*)p + 0xbc) != 0) {
+          FUN_080a7c60((p->s).coord.x - 0xC00, (p->s).coord.y - 0xC00, 0);
+          FUN_080a7c60((p->s).coord.x + 0xC00, (p->s).coord.y - 0xC00, 1);
+        } else {
+          FUN_080a7cb0((p->s).coord.x - 0xC00, (p->s).coord.y + 0xC00, 0);
+          FUN_080a7cb0((p->s).coord.x + 0xC00, (p->s).coord.y + 0xC00, 1);
+        }
+      }
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      SetMotion(&p->s, MOTION(0x54, 0x05));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      if ((s8)(p->s).motion.cmdIdx == 1) {
+        SetDDP(&p->body, sCollisions);
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/locomo_if_p2_post_b2.inc");
+
 void LocomoIF_Init(struct Boss* p);
 void LocomoIF_Update(struct Boss* p);
 void LocomoIF_Die(struct Boss* p);
