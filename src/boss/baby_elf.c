@@ -56,10 +56,13 @@ void babyelf_08045bc4(struct Boss* p);
 void babyelf_08045c84(struct Boss* p);
 void FUN_080bc594(s32 x1, s32 y1, s32 x2, s32 y2, u8 n);
 
-// Same palette-anim basin as FUN_08046ccc below: the retail
-// (palID<<5)|0x200 argument keeps its 0x200 web with an adds-copy feeding the
-// or (two per-arm copies, 4 bytes) that no kc/barrier/k+0 spelling reproduces
-// without also emitting a u16 truncation pair.
+// The palette-argument half of this park is SOLVED (2026-07-31): a transfer-asm
+// copy of the 0x200 const plus a cast-call that drops the u16 truncation now
+// reproduces retail's per-arm adds-copy - see rmz3-set-flip-macro-fold. What
+// still differs is a separate defect in the table-index block near 0x080467A8:
+// retail folds the pool base into the index arithmetic and keeps the sum in r4
+// (`adds r4,r0,r1`), ours adds the base to the loaded halfword instead;
+// 7 instructions short overall. Retry from here, not from scratch.
 NON_MATCH void babyelf_0804662c(struct Boss* p) {
 #if MODERN
   u8 m2 = (p->s).mode[2];
@@ -79,12 +82,20 @@ c0:
     (p->s).work[2] = m2;
     *(u16*)((u8*)p + 0xc4) = m2;
     if ((p->s).work[0] == 0) {
+      u32 v = GetEntityPalID(&p->s);
+      u32 sv = ((u32)(u8)v) << 5;
       u32 k = 0x200;
-      StartPaletteAnimation(0x14, ((u32)GetEntityPalID(&p->s) << 5) | (k + 0));
+      u32 kc;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(0x14, sv | kc);
       *((u8*)p + 0xc6) = 0x14;
     } else {
+      u32 v = GetEntityPalID(&p->s);
+      u32 sv = ((u32)(u8)v) << 5;
       u32 k = 0x200;
-      StartPaletteAnimation(0xF, ((u32)GetEntityPalID(&p->s) << 5) | (k + 0));
+      u32 kc;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(0xF, sv | kc);
       *((u8*)p + 0xc6) = 0xF;
     }
     {
