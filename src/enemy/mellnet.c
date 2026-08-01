@@ -281,6 +281,60 @@ NON_MATCH void FUN_0807dd24(struct Enemy* p) {
 INCASM("asm/enemy/mellnet_post_post_post_b.inc");
 
 void FUN_0807dfa4(struct Enemy* p);
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b84f4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_080b857c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+
+// 0x0807E060
+void FUN_0807e060(struct Enemy* p) {
+  struct Coord c;
+  s32 m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0: {
+      u8 dir = 0;
+      if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+        dir = 1;
+      }
+      (p->s).coord.x -= dir << 8;
+      SetMotion(&p->s, MOTION(0x47, 0x05));
+      (p->body).status = m2;
+      (p->body).prevStatus = m2;
+      (p->body).invincibleTime = m2;
+      (p->s).flags &= ~COLLIDABLE;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      FUN_080b2b40(0, &c, 0x200, dir);
+      {
+        s32 h = 0x60;
+        c.x = h - ((dir * 3) << 6);
+        c.y = h;
+      }
+      if ((p->s).work[0] == 0) {
+        FUN_080b84f4(&p->s, &(p->s).coord, &c, 0x40, (motion_t*)&sMotions2[5], 0x18);
+      } else {
+        FUN_080b857c(&p->s, &(p->s).coord, &c, 0x40, (motion_t*)&sMotions2[5], 0x18);
+      }
+      (p->s).d.x = c.x / 2;
+      (p->s).d.y = 0;
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0 ||
+          (u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+        FUN_0807dfa4(p);
+      }
+      break;
+  }
+}
 
 void FUN_0807e178(struct Enemy* p0) {
   register struct Enemy* p asm("r5") = p0;
