@@ -165,6 +165,70 @@ void FUN_0808242c(struct Enemy* p, s32 dx, s32 dy) {
   }
 }
 
+// 0x08082484 -- lay the arm chain along the vector to (dx, dy).
+// Blocker (home-rotation basin): {by, bx, dx, dy} come out r7/r8/r9/r10
+// in retail but rotate one place in ours (bx/dx/dy/by); declaration
+// order, symmetric-vs-split bx, in-loop and in-branch priority boosts,
+// and r7/r8 pins each moved the rotation without landing it.
+NON_MATCH void FUN_08082484(struct Enemy* p, s32 dx, s32 dy) {
+#if MODERN
+  s32 cx, cy;
+  u8* ap;
+  s32 by, bx;
+  s32 d;
+  dx -= (p->s).coord.x;
+  dy -= (p->s).coord.y;
+  d = (dx >> 8) * (dx >> 8);
+  d += (dy >> 8) * (dy >> 8);
+  d = (u16)Sqrt(d) << 8;
+  bx = (p->s).coord.x;
+  by = (p->s).coord.y;
+  if (d != 0) {
+    s32 ux = (dx << 8) / d;
+    s32 uy;
+    bx = (ux << 2) + (p->s).coord.x;
+    uy = (dy << 8) / d;
+    by = (uy << 2) + (p->s).coord.y;
+    dx -= ux << 3;
+    dy -= uy << 3;
+  }
+  {
+    struct Entity* q = (p->s).unk_2c;
+    u8* a1 = &p->props[0];
+    if (*a1 == 1) {
+      cx = dx >> 8;
+      cy = dy >> 8;
+      ap = &(p->s).angle;
+      if (q != NULL) {
+        q->coord.x = bx;
+        q->coord.y = by;
+      }
+    } else {
+      cx = dx >> 8;
+      cy = dy >> 8;
+      ap = &(p->s).angle;
+      if (q != NULL) {
+        u8* np = a1;
+        s32 ya = 0;
+        s32 xa = 0;
+        do {
+          q->coord.x = bx;
+          q->unk_coord.x = q->coord.x = bx + xa / (*np - 1);
+          q->coord.y = by;
+          q->unk_coord.y = q->coord.y = by + ya / (*np - 1);
+          ya += dy;
+          xa += dx;
+          q = q->unk_2c;
+        } while (q != NULL);
+      }
+    }
+  }
+  *ap = ArcTan2(cx, cy) >> 8;
+#else
+  INCCODE("asm/enemy/glacierle_arm_82484.inc");
+#endif
+}
+
 INCASM("asm/enemy/glacierle_arm_bb_b.inc");
 
 void FUN_0808288c(struct Enemy* p, u8 a) {
