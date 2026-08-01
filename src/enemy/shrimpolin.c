@@ -640,7 +640,96 @@ void shrimporinIce(struct Enemy* p) {
   }
 }
 
+bool8 IsVoidSpace(s32 x, s32 y);
+
+// 0x0806A230
+void shrimporin_0806a230(struct Enemy* p) {
+  s32 r;
+  u8 m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0:
+      (p->s).flags |= DISPLAY;
+      (p->s).d.x = m2;
+      (p->s).d.y = m2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 dx;
+      (p->s).coord.x += (p->s).d.x;
+      dx = (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if (dx != 0) {
+        if (dx > 0) {
+          r = PushoutToLeft2((p->s).coord.x + 0xC00, (p->s).coord.y - 0x800);
+          if (r >= 0) {
+            goto up;
+          }
+        } else {
+          r = PushoutToRight2((p->s).coord.x - 0xC00, (p->s).coord.y - 0x800);
+          if (r <= 0) {
+            goto up;
+          }
+        }
+        (p->s).coord.x += r;
+      }
+    up:
+      r = PushoutToUp2((p->s).coord.x, (p->s).coord.y + 0x600);
+      if ((u8)IsVoidSpace((p->s).coord.x, (p->s).coord.y) != 0) {
+        u32 z;
+        u8 t = (p->s).flags;
+        u8 fv = 0xFE;
+        fv &= t;
+        asm volatile("" ::"r"(t));
+        z = 0;
+        fv &= 0xFD;
+        (p->s).flags = fv;
+        (p->body).status = z;
+        (p->body).prevStatus = z;
+        (p->body).invincibleTime = z;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+        break;
+      }
+      if (r >= 0) {
+        break;
+      }
+      if ((p->s).d.x != 0) {
+        s32* q = (s32*)((u8*)p + 0xb8);
+        s32 x = (p->s).coord.x;
+        s32 b = *q;
+        if (x > b) {
+          if (x <= b + 0x16800) {
+            goto place;
+          }
+          *q = x + -0x16800;
+          goto place2;
+        }
+        if (x >= b - 0x16800) {
+          goto place;
+        }
+        *q = x + 0x16800;
+      place2:;
+      }
+    place:
+      (p->s).coord.y += r;
+      createShrimporinIce((p->s).coord.x, (p->s).coord.y, (p->s).work[1]);
+      {
+        u8 z2 = 0;
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = z2;
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/shrimpolin_c.inc");
+
+
 
 void shrimporinIceCrash(s32 x, s32 y, u8 frame);
 
