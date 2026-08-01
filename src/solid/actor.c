@@ -1381,6 +1381,73 @@ NON_MATCH void initActor21(struct Solid* p) {
 
 INCASM("asm/solid/actor_b_b.inc");
 
+// 0x080D303C
+void Actor22_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      u32 n;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      n = SM130_PROLOGUE_RESISTANCE;
+      wStaticGraphicTilenums[n] = 0x24D;
+      wStaticMotionPalIDs[n] = 8;
+      if ((p->s).work[1] == 0) {
+        LOAD_STATIC_GRAPHIC(n);
+      }
+      SetMotion(&p->s, MOTION(SM130_PROLOGUE_RESISTANCE, 0));
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      u8 t;
+      u8 r;
+      UpdateMotionGraphic(&p->s);
+      t = ((p->s).scriptEntity)->flags;
+      r = 1;
+      r &= t;
+      asm volatile("" ::"r"(t));
+      if (r == 0) {
+        break;
+      }
+      SET_XFLIP(p, 0);
+      (p->s).work[2] = 8;
+      goto inc;
+    }
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0x82, 0x02));
+      goto inc;
+    case 3: {
+      s32 x;
+      UpdateMotionGraphic(&p->s);
+      x = (p->s).coord.x - 0x80;
+      (p->s).coord.x = x;
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        if (x >= cam->viewport.x - 0x8800) {
+          break;
+        }
+      }
+      {
+        register u8 t asm("r0");
+        u8 fv;
+        t = (p->s).flags;
+        fv = 0xFE;
+        fv &= t;
+        asm volatile("" ::"r"(t));
+        (p->s).flags = fv;
+      }
+    inc:
+      (p->s).mode[1]++;
+      break;
+    }
+    case 4:
+      break;
+  }
+}
+
 extern const struct Rect Rect_08370c60;
 
 void initActor23(struct Solid* p) {
