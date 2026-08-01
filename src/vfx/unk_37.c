@@ -202,16 +202,8 @@ NON_MATCH void FUN_080bca5c(struct VFX* vfx) {
 
 u8 GetEntityPalID(struct Entity* p);
 
-// 0x080BCB6C -- baby elf appear/vanish: blink in, run palette animation 0x18,
-// blink out and disappear. Blocker (const-dest AND operand homes): both blink
-// blocks need `ldrb r1,[flags]; movs r0,#0xFE; ands r0,r1`; ours loads the
-// flags byte into r0 and the mask into r1 (same `ands r0,r1`, swapped
-// sources) - 4 bytes total. Pinning the result to r0 fixed the shared store
-// and the OR arm; pinning the loaded value to r1 as well makes it worse (8
-// bytes). Everything else, including the palette-arg transfer chain and the
-// u16 truncation removal, is byte-exact.
-NON_MATCH void FUN_080bcb6c(struct VFX* vfx) {
-#if MODERN
+// 0x080BCB6C
+void FUN_080bcb6c(struct VFX* vfx) {
   switch ((vfx->s).mode[2]) {
     case 0:
       (vfx->s).taskCol = 0x11;
@@ -232,6 +224,7 @@ NON_MATCH void FUN_080bcb6c(struct VFX* vfx) {
           u8 t = (vfx->s).flags;
           fv = 0xFE;
           fv &= t;
+          asm volatile("" ::"r"(t));
         }
         (vfx->s).flags = fv;
       }
@@ -279,15 +272,13 @@ NON_MATCH void FUN_080bcb6c(struct VFX* vfx) {
           u8 t = (vfx->s).flags;
           fv = 0xFE;
           fv &= t;
+          asm volatile("" ::"r"(t));
         }
         (vfx->s).flags = fv;
       }
       UpdateMotionGraphic(&vfx->s);
       break;
   }
-#else
-  INCCODE("asm/vfx/unk_37_cb6c.inc");
-#endif
 }
 
 INCASM("asm/vfx/unk_37_post_c2.inc");
