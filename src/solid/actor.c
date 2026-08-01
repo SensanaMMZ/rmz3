@@ -1408,6 +1408,74 @@ void Actor24_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p2_a2.inc");
 
+struct VFX* FUN_080c5628(u8 r0, u8 r1, s32 x, s32 y);
+
+// 0x080D3594 -- Dark Elf fly-by: borrow the SM081 graphic slot, ride a sine
+// path across the screen, then restore the slot and stop.
+// Blocker (store-operand order): the two restore stores emit the value load
+// before the +0xA2 address form, where retail emits the address first; the
+// instruction stream is otherwise byte-identical (only those two halfword
+// pairs differ). Pointer temps and barriers fix the order but let CSE reuse
+// case 0's address and drop three instructions; volatile reads do not move it.
+NON_MATCH void Actor26_Update(struct Solid* p) {
+#if MODERN
+  s32 m = (p->s).mode[1];
+  if (m == 1) {
+    goto phase1;
+  }
+  if (m > 1) {
+    return;
+  }
+  if (m != 0) {
+    return;
+  }
+  {
+    {
+      u8 z;
+      (p->s).unk_coord.x = wStaticGraphicTilenums[0x51];
+      (p->s).unk_coord.y = wStaticMotionPalIDs[0x51];
+      (p->s).d.x = (p->s).coord.x;
+      (p->s).d.y = (p->s).coord.y;
+      z = 0;
+      wStaticGraphicTilenums[0x51] = 0x305;
+      wStaticMotionPalIDs[0x51] = 8;
+      LOAD_STATIC_GRAPHIC(SM081_DARK_ELF);
+      SetMotion(&p->s, MOTION(SM081_DARK_ELF, 0));
+      (p->s).work[2] = z;
+      (p->s).mode[1]++;
+    }
+  phase1: {
+      u32 w;
+      s32 x;
+      UpdateMotionGraphic(&p->s);
+      if ((0xF & (p->s).work[2]) == 0) {
+        FUN_080c5628(3, 0, (p->s).coord.x, (p->s).coord.y);
+      }
+      w = (p->s).work[2] + 1;
+      (p->s).work[2] = w;
+      x = (p->s).d.x + 0x200;
+      (p->s).d.x = x;
+      x += gSineTable[((w << 25) + 0x40000000) >> 24] << 1;
+      (p->s).coord.x = x;
+      (p->s).coord.y = (p->s).d.y + (gSineTable[(w << 26) >> 24] << 2);
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        if (x >= cam->viewport.x + 0x97FF) {
+        (p->s).flags &= ~DISPLAY;
+        wStaticGraphicTilenums[0x51] = (p->s).unk_coord.x;
+        wStaticMotionPalIDs[0x51] = (p->s).unk_coord.y;
+        (p->s).mode[1]++;
+        }
+      }
+    }
+  }
+#else
+  INCCODE("asm/solid/actor_26_update.inc");
+#endif
+}
+
+INCASM("asm/solid/actor_p1_p2_a3.inc");
+
 // 0x080d38a4
 void initActor28(struct Solid* p) {
   gWindowRegBuffer.dispcnt |= 0x4000;
