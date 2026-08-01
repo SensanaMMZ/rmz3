@@ -410,6 +410,93 @@ void childreStartRising(struct Boss* p) {
 
 INCASM("asm/boss/childre_pre_b2.inc");
 
+// 0x08041320
+void childreMode6(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 xf;
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).flags &= ~DISPLAY;
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      xf = (((p->s).flags >> 4) ^ 1) & 1;
+      ((p->s).spr).xflip = xf;
+      {
+        u32 xf2 = (((p->s).flags >> 4) ^ 1) & 1;
+        u8* oa = (u8*)p + 0x4a;
+        u32 sh4 = xf2 << 4;
+        s32 ov = *oa;
+        s32 m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+        if (xf2 != 0) {
+          (p->s).flags |= 0x10;
+        } else {
+          (p->s).flags &= 0xEF;
+        }
+      }
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      u8 fl;
+      s32 base;
+      register s32 x asm("r1");
+      s32 z;
+      base = *(s32*)((u8*)p + 0xbc);
+      {
+        s32 t = base + 0x5000;
+        (p->s).coord.x = t;
+        asm volatile("add %0, %1, #0" : "=&l"(x) : "l"(t));
+      }
+      fl = (p->s).flags;
+      if (fl & X_FLIP) {
+        x = base - 0x5000;
+      }
+      (p->s).coord.x = x;
+      {
+        u8 k = DISPLAY;
+        register u8 res asm("r0");
+        asm("" : "+r"(k));
+        z = 0;
+        res = k | fl;
+        (p->s).flags = res;
+      }
+      SetMotion(&p->s, MOTION(0xA4, 0x06));
+      (p->s).d.y = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 y;
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      if (y > gOverworld.sea) {
+        u8 z2;
+        (p->s).coord.y = gOverworld.sea;
+        z2 = 0;
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = z2;
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/childre_pre_b3.inc");
+
 void childreEndEarShot(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0:
