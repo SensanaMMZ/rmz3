@@ -231,7 +231,105 @@ NON_MATCH void FUN_080918ec(struct Enemy* p) {
 #endif
 }
 
+// 0x08091980 -- decoy fade-out: three blink phases of different cadence,
+// then retire the entity. Blocker (shared flag-value home): the value the
+// four blink arms converge on lives in r0 in retail (so the set arms read
+// `ldrb r0; movs r1,#1; orrs r0,r1`); function scope puts it in r1 and
+// mirrors every arm. Pinning it to r0 collides with the parameter copy
+// (879 bytes) and a priority boost is worse; per-arm copies lose the
+// cross-case jump from phase 2 into phase 3's clear block.
+NON_MATCH void FUN_08091980(struct Enemy* p) {
+#if MODERN
+  u8 fv;
+  u8 one;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[0]);
+      (p->s).work[2] = 0x1B;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      (p->s).work[2] = 0xF;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      (p->s).work[2]--;
+      if ((u8)((p->s).work[2] % 3) == 2) {
+        goto clr;
+      }
+      fv = (p->s).flags | DISPLAY;
+      goto store;
+    case 4:
+      (p->s).work[2] = 0xF;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      (p->s).work[2]--;
+      one = 1;
+      if ((one & (p->s).work[2]) != 0) {
+        fv = (p->s).flags | one;
+      } else {
+      clr : {
+        u8 t = (p->s).flags;
+        fv = 0xFE;
+        fv &= t;
+        asm volatile("" ::"r"(t));
+      }
+      }
+    store:
+      (p->s).flags = fv;
+      if ((p->s).work[2] != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 6:
+      (p->s).work[2] = 0xF;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7: {
+      u8 w;
+      (p->s).work[2]--;
+      if ((u8)((p->s).work[2] % 3) == 2) {
+        fv = (p->s).flags | DISPLAY;
+      } else {
+        u8 t = (p->s).flags;
+        fv = 0xFE;
+        fv &= t;
+        asm volatile("" ::"r"(t));
+      }
+      (p->s).flags = fv;
+      w = (p->s).work[2];
+      if (w == 0) {
+        u8 t2 = (p->s).flags;
+        u8 g = 0xFE;
+        g &= t2;
+        asm volatile("" ::"r"(t2));
+        g &= 0xFD;
+        (p->s).flags = g;
+        (p->body).status = w;
+        (p->body).prevStatus = w;
+        (p->body).invincibleTime = w;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/unk_59_91980.inc");
+#endif
+}
+
 INCASM("asm/enemy/unk_59_post_a2.inc");
+
 
 // 0x08091d0c -- parked one insn from a match (was a raw .byte blob; fully
 // decoded): agbcc hoists the gSineTable pool load into the work[2]
