@@ -59,7 +59,6 @@ static const struct Collision sCollisions[4];
 NON_MATCH void FUN_080a8a38(struct Projectile* p) {
 #if MODERN
   struct Entity* e = (p->s).unk_28;
-  u16* sp;
   u32 xf;
   u32 one;
   {
@@ -118,6 +117,97 @@ NON_MATCH void FUN_080a8a38(struct Projectile* p) {
   Projectile26_Update(p);
 #else
   INCCODE("asm/projectile/unk_26_8a38.inc");
+#endif
+}
+
+// 0x080A8B50 -- twin of FUN_080a8a38: launch the thrown weapon with the
+// steeper arc. Blocker (u16-store-through-cast transfer): storing 0xFFE8
+// into the low half of prevCoord.y needs a cast, and the cast makes agbcc
+// load the pool constant into a scratch and copy it into the store register
+// (+1 insn, +register cascade on the -0x1000 pool). PROVEN FIX, not applied:
+// giving the field its own 16-bit struct member removes the cast and the
+// copy outright (the same change on unk_c0 -> s16 fixed the identical 0xFFFF
+// store in this function). prevCoord.y is read as a full s32 counter in
+// projectile/omega_gold.c, so splitting it needs a union plus a sweep of
+// every prevCoord user - do that as its own change, then unpark this,
+// FUN_080a8a38 and unk_27_9250 together.
+NON_MATCH void FUN_080a8b50(struct Projectile* p) {
+#if MODERN
+  struct Entity* e = (p->s).unk_28;
+  u16* sp;
+  u32 xf;
+  u32 one;
+  s32 z;
+  {
+    const ProjectileRoutine* const* base = gProjectileFnTable;
+    const ProjectileRoutine* const* rowp = base + (p->s).id;
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(**rowp)[ENTITY_UPDATE];
+  }
+  InitNonAffineMotion(&p->s);
+  (p->s).flags = DISPLAY | (p->s).flags;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x5B, 0x01));
+  xf = (e->flags >> 4) & one;
+  if (xf != 0) {
+    (p->s).flags |= 0x10;
+  } else {
+    (p->s).flags &= 0xEF;
+  }
+  {
+    u32 xf2;
+    asm volatile("add %0, %1, #0" : "=&l"(xf2) : "l"(xf));
+    ((p->s).spr).xflip = xf2;
+    xf = xf2;
+  }
+  {
+    u8* oa = (u8*)p + 0x4a;
+    u32 sh4 = xf << 4;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    m11 |= sh4;
+    *oa = m11;
+  }
+  {
+    u16* sp = (u16*)&p->unk_c0;
+    *sp = 0xFFFF;
+    *sp = PlaySound(0x48);
+  }
+  if ((p->s).flags & X_FLIP) {
+    (p->s).coord.x += 0x1000;
+    (p->s).d.x = 0x380;
+    (p->s).d.y = 0x380;
+  } else {
+    (p->s).coord.x += -0x1000;
+    (p->s).d.x = -0x380;
+    (p->s).d.y = 0x380;
+  }
+  (p->s).coord.y += -0x1200;
+  {
+    z = 0;
+    *(u16*)&(p->prevCoord).y = 0xFFE8;
+  }
+  ++*((u8*)e + 0xcf);
+  {
+    u8* q = (u8*)p + 0xb4;
+    *(s32*)q = (p->s).coord.x;
+    q += 4;
+    *(s32*)q = (p->s).coord.y;
+  }
+  {
+    struct Body* body;
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 0x40);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)z;
+  }
+  (p->s).work[2] = 2;
+  Projectile26_Update(p);
+#else
+  INCCODE("asm/projectile/unk_26_8b50.inc");
 #endif
 }
 
