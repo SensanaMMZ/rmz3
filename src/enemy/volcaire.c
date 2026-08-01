@@ -1,3 +1,4 @@
+#include "zero.h"
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
@@ -477,7 +478,77 @@ void MaybeKillVolcaire(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/volcaire_p2_post_b.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b84f4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+
+// 0x08077FA4
+void FUN_08077fa4(struct Enemy* p) {
+  struct Coord c;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 d0 = 0;
+      u32 dir;
+      u32 xf;
+      s32 sh;
+      if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+        d0 = 1;
+      }
+      asm volatile("add %0, %1, #0" : "=&l"(dir) : "l"(d0));
+      asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(dir));
+      if (dir != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        u32 xf2;
+        asm volatile("add %0, %1, #0" : "=&l"(xf2) : "l"(xf));
+        ((p->s).spr).xflip = xf2;
+        xf = xf2;
+      }
+      {
+        u8* oa = (u8*)p + 0x4a;
+        u32 sh4 = xf << 4;
+        s32 ov = *oa;
+        s32 m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      sh = dir << 8;
+      (p->s).coord.x -= sh;
+      SetMotion(&p->s, MOTION(0x2E, 0x07));
+      (p->body).status = 0;
+      (p->body).prevStatus = 0;
+      (p->body).invincibleTime = 0;
+      (p->s).flags &= ~COLLIDABLE;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      ((void (*)(u8, struct Coord*, s32, u32))FUN_080b2b40)(0, &c, 0x200, dir);
+      c.x = 0x80 - sh;
+      c.y = 0x60;
+      (p->s).d.x = c.x / 3;
+      (p->s).d.y = 0;
+      FUN_080b84f4(&p->s, &(p->s).coord, &c, 0x20, (motion_t*)&sMotions[3], 0x18);
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x15;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0 ||
+          (u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+        MaybeKillVolcaire(p);
+      }
+      break;
+  }
+}
 
 // --------------------------------------------
 
