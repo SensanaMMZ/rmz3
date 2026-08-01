@@ -441,6 +441,129 @@ void FUN_08094110(struct Enemy* p) {
 
 INCASM("asm/enemy/shotloid_post_p2_p2b.inc");
 
+// 0x0809468C -- turret sweep: clear the aim bit, flip toward the stored side,
+// step the aim angle and re-enter the motion at the new frame.
+// Case 0 is byte-exact (pinned r2 address + transfer-asm XOR copy + separate
+// "1" constants + load-before-const ordering). Blocker is confined to case 1:
+// retail reuses the now-dead flip-pointer register r6 for a copy of d.x
+// (`adds r6,r1,#0`) and rotates {d.x, sum, limit} through r1/r2/r3, where
+// ours lands r3/r1/r2 with no copy. Reload-after-call and const-sinking fixed
+// the ordering; the rotation itself resisted pins on each of the three.
+NON_MATCH void FUN_0809468c(struct Enemy* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8* bd;
+      u32 xf;
+      u8 z;
+      s32 dx;
+      {
+        s32* w = (s32*)((u8*)p + 0xb8);
+        *w &= ~1;
+      }
+      SetMotion(&p->s, MOTION(0x8E, 0x06));
+      {
+        register u8* a asm("r2");
+        register u8 bv asm("r1");
+        u32 one;
+        a = (u8*)p + 0xbd;
+        bv = *a;
+        one = 1;
+        asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(one));
+        xf ^= bv;
+        bd = a;
+        if (xf != 0) {
+          (p->s).flags |= 0x10;
+        } else {
+          (p->s).flags &= 0xEF;
+        }
+        {
+          u32 xv = 1;
+          xv &= xf;
+          ((p->s).spr).xflip = xv;
+          z = 0;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            u32 sh4 = xv << 4;
+            s32 ov = *oa;
+            s32 m11 = -0x11;
+            m11 &= ov;
+            m11 |= sh4;
+            *oa = m11;
+          }
+        }
+      }
+      dx = 0x100;
+      (p->s).d.x = dx;
+      (p->s).d.x = dx - (*bd << 9);
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.y = z;
+      (p->s).work[2] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      if ((u8)FUN_08093a98(p, (p->s).d.x) == 0) {
+        u8 fl = 0;
+        s32 dx = (p->s).d.x;
+        s32 ny = (p->s).d.y + dx;
+        s32 lim;
+        (p->s).d.y = ny;
+        lim = 0x100;
+        if (ny > lim) {
+          (p->s).d.y = ny - 0x100;
+          goto turn;
+        }
+        if (ny < -0x100) {
+          (p->s).d.y = ny + lim;
+          fl = 1;
+        }
+        if (fl != 0) {
+        turn: {
+          u32 a;
+          (p->s).work[2] &= 7;
+          a = 0;
+          if (dx > 0) {
+            a = 1;
+          }
+          if ((p->s).flags & X_FLIP) {
+            if (a != 0) {
+              goto dec;
+            }
+            goto incm;
+          }
+          if (a == 0) {
+            goto incm;
+          }
+        dec:
+          (p->s).work[2]--;
+          goto go;
+        incm:
+          (p->s).work[2]++;
+        go:
+          GotoMotion(&p->s, MOTION(0x8E, 0x06), (p->s).work[2], 1);
+          UpdateMotionGraphic(&p->s);
+        }
+        }
+      }
+      {
+        u8 r = FUN_08093a64(p, 1);
+        if (r == 0) {
+          *((u8*)p + 0xbc) = 2;
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = r;
+        }
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/shotloid_9468c.inc");
+#endif
+}
+
+INCASM("asm/enemy/shotloid_post_p2_p2c.inc");
+
 void Shotloid_Init(struct Enemy* p);
 void Shotloid_Update(struct Enemy* p);
 void Shotloid_Die(struct Enemy* p);
