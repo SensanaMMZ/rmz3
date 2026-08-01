@@ -1,3 +1,4 @@
+#include "zero.h"
 #include "collision.h"
 #include "global.h"
 #include "metatile.h"
@@ -100,6 +101,71 @@ NON_MATCH void FUN_080a9250(struct Projectile* p) {
 #else
   INCCODE("asm/projectile/unk_27_9250.inc");
 #endif
+}
+
+// 0x080A9358
+void FUN_080a9358(struct Projectile* p) {
+  UpdateMotionGraphic(&p->s);
+  switch ((p->s).mode[1]) {
+    case 0: {
+      s32 v;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.x += *(s16*)((u8*)p + 0xbc);
+      (p->s).d.y += *(s16*)((u8*)p + 0xbe);
+      v = (p->s).d.x;
+      if (v < 0) {
+        v = -v;
+      }
+      if (v <= 0x100) {
+        (p->s).mode[1]++;
+      }
+      break;
+    }
+    case 1: {
+      s32 cy;
+      s32 v;
+      (p->s).coord.x += (p->s).d.x;
+      cy = (p->s).coord.y;
+      v = cy + 0x1800;
+      v -= (pZero2->s).coord.y;
+      v >>= 9;
+      if (v > 0) {
+        (p->s).coord.y = cy - 0x40;
+      } else if (v < 0) {
+        (p->s).coord.y = cy + 0x40;
+      }
+      if ((u8)--(p->s).work[2] == 0xFF) {
+        (p->s).mode[1]++;
+        (p->s).work[2] = 0x40;
+      }
+      break;
+    }
+    case 2: {
+      u8 w;
+      u32 m;
+      s32 t;
+      s32 v;
+      (p->s).coord.x += (p->s).d.x;
+      w = (p->s).work[2];
+      m = w & 3;
+      t = w;
+      if (m > 1) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+      v = t - 1;
+      (p->s).work[2] = v;
+      if ((u8)v == 0xFF) {
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+    }
+  }
+  if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
 }
 
 INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1b.inc");
