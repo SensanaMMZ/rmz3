@@ -56,38 +56,57 @@ INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1.inc");
 
 static const struct Collision sCollisions[10];
 
-// Spawn init for the crab mine: flip toward the parent, offset ±0x1000/-0x1200,
-// aim table halves at prevCoord.c.y, delayed body with NULL handler. Matches
-// except the xflip block: retail computes the flip flag into r2 then copies to
-// r1 for the store/insert; agbcc folds the copy or (with pins) adds
-// truncation - the oam-bitfield tie family (see rmz3-oam-bitfield-lever).
-NON_MATCH void FUN_080a9250(struct Projectile* p) {
-#if MODERN
+// 0x080A9250
+void FUN_080a9250(struct Projectile* p) {
   struct Entity* q = (p->s).unk_28;
   u8 fl;
   s32 z;
-  s32 one = 1;
-  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  s32 one;
+  {
+    const ProjectileRoutine* const* base = gProjectileFnTable;
+    const ProjectileRoutine* const* rowp = base + (p->s).id;
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(**rowp)[ENTITY_UPDATE];
+  }
   InitNonAffineMotion(&p->s);
   (p->s).flags |= DISPLAY;
   (p->s).flags |= FLIPABLE;
   SetMotion(&p->s, MOTION(0x5C, 0x00));
   fl = (q->flags >> 4) & one;
-  SET_XFLIP(p, fl);
+  if (fl != 0) {
+    (p->s).flags |= X_FLIP;
+  } else {
+    (p->s).flags &= ~X_FLIP;
+  }
+  {
+    u32 xf2;
+    asm volatile("add %0, %1, #0" : "=&l"(xf2) : "l"(fl));
+    ((p->s).spr).xflip = xf2;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      u32 sh4 = xf2 << 4;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+  }
   if ((p->s).flags & 0x10) {
     (p->s).coord.x += 0x1000;
     (p->s).d.x = 0x300;
     (p->s).d.y = 0x300;
-    *(u16*)&(p->prevCoord).c.y = 0xFFE0;
+    p->prevCoord.h.ylo = 0xFFE0;
   } else {
     (p->s).coord.x -= 0x1000;
     (p->s).d.x = -0x300;
     (p->s).d.y = 0x300;
-    *(u16*)&(p->prevCoord).c.y = 0x20;
+    p->prevCoord.h.ylo = 0x20;
   }
   (p->s).coord.y -= 0x1200;
+  p->prevCoord.h.yhi = 0xFFE0;
   z = 0;
-  *(u16*)((u8*)&(p->prevCoord).c.y + 2) = 0xFFE0;
   {
     struct Body* body;
     (p->s).flags |= COLLIDABLE;
@@ -98,9 +117,6 @@ NON_MATCH void FUN_080a9250(struct Projectile* p) {
   }
   (p->s).work[2] = 0xFF;
   Projectile27_Update(p);
-#else
-  INCCODE("asm/projectile/unk_27_9250.inc");
-#endif
 }
 
 // 0x080A9358
