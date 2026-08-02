@@ -810,6 +810,40 @@ void glacierle_0805836c(struct Boss* p) {
 
 INCASM("asm/boss/glacierle_b.inc");
 
+static const u8 u8_ARRAY_08364ac2[4];
+
+// 0x08058498
+void glacierleHammerPunch1(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x1E;
+      SetMotion(&p->s, MOTION(0xb2, 0x12));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364ac2[(p->s).motion.cmdIdx]]);
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      SetDDP(&p->body, &sCollisions[123]);
+      SetMotion(&p->s, MOTION(0xb2, 0x13));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.duration == 1) {
+        (p->s).mode[1] = 9;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/glacierle_b_post.inc");
+
 static const u8 u8_ARRAY_08364b22[4];
 
 // 0x08058ff0
