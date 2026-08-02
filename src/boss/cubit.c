@@ -529,6 +529,81 @@ bool8 cubit_080544c0(struct Boss* p) {
 
 INCASM("asm/boss/cubit_p13_p1_b.inc");
 
+static const u16 u16_ARRAY_ARRAY_08363a98[2][4];
+
+// 0x080545CC
+u16 cubit_080545cc(struct Boss* p, s32 v, s32 mode) {
+  register s32 i asm("r2");
+  register s32 idx asm("r0");
+  register const u16* t asm("r3");
+  register const u16* base asm("r5");
+  if (*(u8*)((u8*)p + 0xc8) != 0) {
+    if (mode != 1) {
+      goto b;
+    }
+    i = 0;
+    base = u16_ARRAY_ARRAY_08363a98[1];
+    t = base;
+    do {
+      if (*t == v) {
+        goto found3;
+      }
+      t++;
+      i++;
+    } while (i <= 2);
+    goto end;
+  b:
+    i = 0;
+    base = u16_ARRAY_ARRAY_08363a98[1];
+    t = base;
+    do {
+      if (*t == v) {
+        goto found3;
+      }
+      t++;
+      i++;
+    } while (i <= 2);
+    goto end;
+  }
+  if (mode != 1) {
+    goto d;
+  }
+  i = 0;
+  base = u16_ARRAY_ARRAY_08363a98[0];
+  t = base;
+  do {
+    if (*t == v) {
+      register s32 n asm("r1");
+      n = i + 1;
+      idx = n;
+      if (n < 0) {
+        idx = i + 4;
+      }
+      idx = n - ((idx >> 2) << 2);
+      goto ret;
+    }
+    t++;
+    i++;
+  } while (i <= 3);
+  goto end;
+found3:
+  idx = (i + 1) % 3;
+ret:
+  return base[idx];
+d:
+  i = 0;
+  base = u16_ARRAY_ARRAY_08363a98[0];
+  t = base;
+  do {
+    if (*t == v) {
+      goto found3;
+    }
+    t++;
+    i++;
+  } while (i <= 3);
+end:;
+}
+
 bool8 cubit_08054674(struct Boss* p) {
   if (*(u8*)((u8*)p + 0xc8) != 0) {
     return TRUE;
