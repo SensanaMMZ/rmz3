@@ -1,3 +1,4 @@
+#include "physics.h"
 #include "collision.h"
 #include "mod.h"
 #include "enemy.h"
@@ -388,6 +389,52 @@ void FUN_080761b8(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
     (p->s).mode[1] = 8;
     (p->s).mode[2] = 0;
+  }
+}
+
+// 0x08076220
+void FUN_08076220(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.y = 0;
+      if (p->props[4] != 0) {
+        SetMotion(&p->s, MOTION(0x2A, 0x04));
+        (p->s).work[2] = 0;
+      } else {
+        SetMotion(&p->s, MOTION(0x2A, 0x02));
+        (p->s).work[2] = 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 r;
+      s32 dy;
+      s32 push;
+      if (p->props[4] != 0) {
+        if ((p->s).work[2] != 0) {
+          (p->s).work[2] = 0;
+          SetMotion(&p->s, MOTION(0x2A, 0x04));
+          UpdateMotionGraphic(&p->s);
+        }
+        FUN_08075aa8(p);
+      }
+      r = IsFrozen(&p->s);
+      if (r != 0) break;
+      dy = (p->s).d.y + 0x40;
+      (p->s).d.y = dy;
+      if (dy > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (push < 0 && push > -0x800) {
+        (p->s).d.y = r;
+        (p->s).coord.y += push;
+      }
+      break;
+    }
   }
 }
 
