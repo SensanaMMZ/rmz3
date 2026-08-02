@@ -54,7 +54,42 @@ static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struc
   return;
 }
 
-INCASM("asm/solid/glacierle_arm_pre_a.inc");
+extern const u8 u8_ARRAY_08370538[2];
+extern const struct Collision sGlacierleArmCollisions[];
+void onCollision(struct Body* body, struct Coord* r1, struct Coord* r2);
+s32 FUN_0800a134(s32 x, s32 y);
+
+// 0x080CE920
+void GlacierleArm_Init(struct Solid* p) {
+  struct Body* b;
+  u8 w;
+  register s32* q asm("r1");
+  w = (p->s).work[0];
+  if (w == 0 || w == 2) {
+    (p->s).work[2] = 0;
+  } else {
+    (p->s).work[2] = 8;
+  }
+  if ((p->s).work[0] == 2) {
+    (p->s).work[0]--;
+  }
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = u8_ARRAY_08370538[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= COLLIDABLE;
+  b = &p->body;
+  InitBody(b, sGlacierleArmCollisions, &(p->s).coord, 8);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = onCollision;
+  (p->s).coord.y = FUN_0800a134((p->s).coord.x, (p->s).coord.y);
+  q = (s32*)((u8*)p + 0xb4);
+  *q = (p->s).coord.x;
+  asm volatile("add %0, #4" : "+r"(q));
+  *q = (p->s).coord.y;
+  GlacierleArm_Update(p);
+}
 
 extern const SolidFunc sGlacierleArmUpdates1[2];
 extern const SolidFunc sGlacierleArmUpdates2[2];
