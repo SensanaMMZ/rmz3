@@ -152,7 +152,41 @@ void snowyplains_080133b4(struct StageLayer* l, const struct Stage* _ UNUSED) {
   }
 }
 
-INCASM("asm/stage_gfx/snowy_plains_c_b.inc");
+extern const struct MetatilePatch MetatilePatch_08343f50;
+extern const struct MetatilePatch MetatilePatch_08343f58;
+extern const struct MetatilePatch MetatilePatch_08343f60;
+extern const struct MetatilePatch MetatilePatch_08343f68;
+
+// 0x080133E8
+NON_MATCH void FUN_080133e8(struct Coord* c) {
+#if MODERN
+  struct MetatilePatch* q;
+  register s32 x asm("r5");
+  register s32 y asm("r6");
+  x = (c->x - 0x800) >> 12;
+  y = (c->y + 0x800) >> 12;
+  if (x == 0x18B) {
+    q = (struct MetatilePatch*)&MetatilePatch_08343f58;
+    asm("" : "+r"(q) : "r"(x));
+  } else if (x == 0x193) {
+    q = (struct MetatilePatch*)&MetatilePatch_08343f58;
+    asm("" : "+r"(q) : "r"(y));
+  } else if (x == 0x1AB) {
+    q = (struct MetatilePatch*)&MetatilePatch_08343f60;
+  } else if (x == 0x1B9) {
+    q = (struct MetatilePatch*)&MetatilePatch_08343f68;
+  } else {
+    q = (struct MetatilePatch*)&MetatilePatch_08343f50;
+    PatchMetatileMap(x, y, q);
+    PatchMetatileMap(x, y + 1, q);
+    return;
+  }
+  PatchMetatileMap(x, y, q);
+  PatchMetatileMap(x, y + 1, q);
+#else
+  INCCODE("asm/stage_gfx/snowy_080133e8.inc");
+#endif
+}
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
