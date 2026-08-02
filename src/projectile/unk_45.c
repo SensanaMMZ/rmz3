@@ -163,6 +163,70 @@ void FUN_080b1b7c(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_45_p2_p1b.inc");
 
+static const struct Collision Collision_ARRAY_0836d7dc[8];
+
+// 0x080B1F00
+void FUN_080b1f00(struct Projectile* p) {
+  if (*(s16*)((u8*)(p->s).unk_28 + 4) == 2) {
+    (p->s).work[2] = 0xFF;
+  }
+  if ((u8)--(p->s).work[2] == 0) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 y;
+      InitNonAffineMotion(&p->s);
+      y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      (p->s).coord.y = y;
+      if (y <= 0x117FF) {
+        goto die;
+      }
+      if (y > 0x13BFF) {
+        goto land;
+      }
+      {
+        FUN_0800a31c((p->s).coord.x, y - 0x800);
+        FUN_0800a22c((p->s).coord.x, (p->s).coord.y - 0x800);
+        if (FUN_08009f6c((p->s).coord.x - 0x2000, (p->s).coord.y - 0x800) > 0x13C00) {
+          goto die;
+        }
+        if (FUN_08009f6c((p->s).coord.x + 0x2000, (p->s).coord.y - 0x800) <= 0x13C00) {
+          goto land;
+        }
+      }
+    die:
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      (p->s).flags &= ~DISPLAY;
+      return;
+    land : {
+      s32 z;
+      (p->s).taskCol = 0x12;
+      z = 0;
+      (p->s).flags |= COLLIDABLE;
+      {
+        struct Body* body = &p->body;
+        InitBody(body, &Collision_ARRAY_0836d7dc[6], &(p->s).coord, 1);
+        body->parent = (struct CollidableEntity*)p;
+        body->fn = (void*)z;
+      }
+      SetMotion(&p->s, MOTION(0xF3, 0x00));
+      (p->s).work[2] = 0xB4;
+      (p->s).mode[2]++;
+    }
+      FALLTHROUGH;
+    }
+    case 1:
+      if (((p->s).unk_28)->mode[1] == 1) {
+        (p->s).coord.x += -0x3C000;
+      }
+      UpdateMotionGraphic(&p->s);
+      CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord);
+      break;
+  }
+}
+
 void FUN_080b2204(struct Body* body);
 extern const struct Collision Collision_ARRAY_0836d7dc[];
 
