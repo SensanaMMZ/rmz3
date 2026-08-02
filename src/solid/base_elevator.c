@@ -164,7 +164,58 @@ static void rBase_080cfd4c(struct ElevatorObject* p) {
 void FUN_080d0224(struct Solid* p);
 void rBaseElevatorScript(struct Solid* p);
 
-INCASM("asm/solid/base_elevator_p1.inc");
+u8 GetEntityPalID(struct Entity* p);
+extern const struct Rect Rect_08370730;
+
+// 0x080CFF48
+void FUN_080cff48(struct Solid* p) {
+  struct Entity* q = (p->s).unk_28;
+  u8* skin;
+  s32 one;
+  (p->s).work[2] = 0;
+  skin = (u8*)q + 0xbd;
+  if (*skin != 0) {
+    s32 z;
+    InitNonAffineMotion(&p->s);
+    (p->s).flags |= DISPLAY;
+    (p->s).flags |= FLIPABLE;
+    if (*skin == 1) {
+      SetMotion(&p->s, MOTION(0x89, 0x00));
+    } else {
+      u8* pal;
+      u8 v;
+      SetMotion(&p->s, MOTION(0x8A, 0x00));
+      (p->s).work[2] = 0xBB;
+      v = GetEntityPalID(&p->s);
+      pal = (u8*)p + 0xc2;
+      *pal = v;
+      StartPaletteAnimation((p->s).work[2], (*pal << 5) | 0x200);
+    }
+    z = 0;
+    (p->s).flags &= 0xEF;
+    ((p->s).spr).xflip = z;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      *oa = m11;
+    }
+    (p->s).taskCol = 0xF;
+  }
+  (p->s).flags2 |= ENTITY_HAZARD;
+  (p->s).size = &Rect_08370730;
+  one = 1;
+  (p->s).hazardAttr = one;
+  {
+    u32 tbl = (u32)gSolidFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(*rt)[ENTITY_UPDATE];
+  }
+  BaseElevator_Update(p);
+}
 
 void FUN_080d0008(struct Solid* p) {
   if ((p->s).mode[1] != 0) {
