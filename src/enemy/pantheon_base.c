@@ -3,6 +3,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "motion.h"
+#include "story.h"
 
 static const struct Collision sCollisions[25];
 
@@ -88,6 +89,27 @@ void pBase_0808a210(struct Enemy* p) {
       (p->s).mode[2] = 0;
     }
   }
+}
+
+static const u8 sInitModes[1];
+void PantheonBase_Update(struct Enemy* p);
+
+// 0x0808A248
+void PantheonBase_Init(struct Enemy* p) {
+  u8 g40;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  if ((gSystemSavedataManager.mods[9] & 8) && (g40 = gCurStory.s.gameflags[0] & 0x40) == 0) {
+    INIT_BODY(p, sCollisions, 0x10, NULL);
+  } else {
+    INIT_BODY(p, sCollisions, 0xC, NULL);
+  }
+  SET_BODY_INTERSECT_HANDLER(p, nop_0808a140);
+  *(u32*)&p->props[0] = 0;
+  PantheonBase_Update(p);
 }
 
 INCASM("asm/enemy/pantheon_base_p2_pre_b.inc");
