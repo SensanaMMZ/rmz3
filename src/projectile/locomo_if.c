@@ -102,7 +102,68 @@ void FUN_080a7e0c(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
 }
 
-INCASM("asm/projectile/locomo_if_post_p2.inc");
+// 0x080A7E9C
+void FUN_080a7e9c(struct Projectile* p) {
+  s32 m;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 w2;
+      SetDDP(&p->body, sCollisions);
+      w2 = (p->s).work[2];
+      (p->s).d.x = ((w2 * 5) << 7) - 0x140;
+      (p->s).d.y = -0x80;
+      SetMotion(&p->s, 0x5700);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      if (*(u8*)((u8*)pZero2 + 0x94) != 0) {
+        SetDDP(&p->body, &sCollisions[3]);
+      } else {
+        SetDDP(&p->body, sCollisions);
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      m = *(u8*)((u8*)p + 0x73);
+      if (m == 3) {
+        s32 z;
+        {
+          register u8 fv asm("r0");
+          register u8 fl asm("r1");
+          fl = (p->s).flags;
+          asm("" : "+r"(fl));
+          fv = 0xFE;
+          fv &= fl;
+          z = 0;
+          fl = 0xFD;
+          fv &= fl;
+          (p->s).flags = fv;
+        }
+        {
+          u8* a = (u8*)p + 0x8c;
+          *(u32*)a = z;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *(u32*)a = z;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *a = z;
+        }
+        (p->s).flags &= 0xFB;
+        {
+          u32 tbl = (u32)gProjectileFnTable;
+          u32 id = ((p->s).id) << 2;
+          EntityFunc** rt = (EntityFunc**)(tbl + id);
+          *(u32*)((p->s).mode) = m;
+          (p->s).onUpdate = (void*)(*rt)[ENTITY_DISAPPEAR];
+        }
+      }
+      break;
+  }
+}
 
 void FUN_080a7f70(struct Projectile* p) {
   s32 md = (p->s).mode[2];
