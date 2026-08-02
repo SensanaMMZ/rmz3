@@ -503,6 +503,55 @@ void nop_080cf918(struct Solid* p) {}
 
 INCASM("asm/solid/snowboard_post.inc");
 
+static const struct Collision sCollisions[10];
+
+// 0x080CFB38
+NON_MATCH void FUN_080cfb38(struct Solid* p) {
+#if MODERN
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 a;
+      SetDDP(&p->body, &sCollisions[9]);
+      SetMotion(&p->s, MOTION(0x6D, 0x0D));
+      *(s32*)((u8*)p + 0xb8) = (p->s).coord.y;
+      (p->s).d.x = m;
+      {
+        s32 k = -0x20;
+        (p->s).unk_coord.x = k;
+        asm volatile("add %0, %1, #0" : "=&l"(a) : "l"(k));
+        asm("" : "+r"(a));
+      }
+      if ((pZero2->s).flags & 0x10) {
+        a = 0x20;
+      }
+      (p->s).unk_coord.x = a;
+      (p->s).mode[2]++;
+    }
+    case 1: {
+      s32 dx;
+      (p->s).coord.x += (p->s).d.x;
+      dx = (p->s).d.x + (p->s).unk_coord.x;
+      (p->s).d.x = dx;
+      if (dx > 0x380) {
+        (p->s).d.x = 0x380;
+      }
+      if ((p->s).d.x < -0x380) {
+        (p->s).d.x = -0x380;
+      }
+      UpdateMotionGraphic(&p->s);
+      if (FUN_080cf428(p)) {
+        (p->s).d.x = -(p->s).d.x;
+        (p->s).unk_coord.x = -(p->s).unk_coord.x;
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/solid/snowboard_080cfb38.inc");
+#endif
+}
+
 // --------------------------------------------
 
 void nop_080cf914(struct Solid* p);
