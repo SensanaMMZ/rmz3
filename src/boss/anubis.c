@@ -229,6 +229,61 @@ void nop_080503c8(struct Boss* p) {}
 
 INCASM("asm/boss/anubis_p2.inc");
 
+// 0x080507E0
+void anubisMode2(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 k asm("r1");
+      u32* st;
+      u32 v;
+      *(u16*)((u8*)p + 0xd0) = PlaySound(0x54);
+      st = (u32*)((u8*)p + 0xc0);
+      v = *st;
+      k = 2;
+      v |= k;
+      k -= 7;
+      v &= k;
+      k -= 0xc;
+      v &= k;
+      *st = v;
+      SetMotion(&p->s, 0xAF02);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((s8)*(u8*)((u8*)p + 0x71) == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      u32* st2 = (u32*)((u8*)p + 0xc0);
+      s32 dx;
+      *st2 &= -3;
+      {
+        s32 dx0 = 0x200;
+        *(volatile s32*)&(p->s).d.x = dx0;
+        asm volatile("add %0, %1, #0" : "=&l"(dx) : "l"(dx0));
+      }
+      if ((p->s).flags & 0x10) {
+        dx = -0x200;
+      }
+      (p->s).d.x = dx;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 3:
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x2000) {
+        u8 z = 0;
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+}
+
 void FUN_08050090(struct Boss* p);
 
 void anubisMode3(struct Boss* p) {
