@@ -2319,6 +2319,40 @@ void Actor48_Update(struct Solid* p) {
   }
 }
 
+// 0x080D5C5C
+void FUN_080d5c5c(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      wDynamicGraphicTilenums[0xbe] = 0x280;
+      wDynamicMotionPalIDs[0xbe] = 5;
+      SetMotion(&p->s, MOTION(0xbe, 0x00));
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) != 0) {
+        SetMotion(&p->s, MOTION(0xbe, 0x20));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1]++;
+      }
+      break;
+    case 3:
+      SetMotion(&p->s, MOTION(0xbe, 0x00));
+      (p->s).coord.x += 0x800;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 INCASM("asm/solid/actor_p2.inc");
 
 struct VFX* FUN_080c5628(u8 r0, u8 r1, s32 x, s32 y);
