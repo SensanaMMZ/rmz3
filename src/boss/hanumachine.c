@@ -443,6 +443,54 @@ void FUN_0805c3cc(struct Boss* p) {
   }
 }
 
+// 0x0805c404
+void FUN_0805c404(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    register struct Zero* z asm("r2");
+    register s32 v asm("r3");
+    SetMotion(&p->s, MOTION(0xB5, 0x08));
+    v = 0;
+    z = pZero2;
+    if ((p->s).coord.x < (z->s).coord.x) {
+      v = 1;
+    }
+    (p->s).spr.xflip = v;
+    v = 0;
+    if ((p->s).coord.x < (z->s).coord.x) {
+      v = 1;
+    }
+    {
+      register u8* oa asm("ip");
+      u32 k;
+      s32 sh4, ov, m11;
+      k = 0x4a;
+      asm("" : "+r"(k));
+      oa = (u8*)(k + (u32)p);
+      sh4 = v << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    if (v != 0) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+    (p->s).d.y = -0x480;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if ((p->s).motion.state == 3) {
+    s32 zz = 0;
+    (p->s).mode[1] = 0xb;
+    (p->s).mode[2] = zz;
+  }
+}
+
 INCASM("asm/boss/hanumachine_p2_p1.inc");
 
 void FUN_0805c760(struct Boss* p) {
