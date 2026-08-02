@@ -1305,7 +1305,51 @@ void copyx_08057520(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p2_b2.inc");
+struct Entity* CreateVFX56(struct Entity* e, u8 a, u8 b);
+
+// 0x08057590
+void copyx_08057590(struct Boss* p) {
+  if (((p->s).scriptEntity->flags & 2) == 0) {
+    return;
+  }
+  if ((p->s).mode[2] != 0) {
+    u8 z = 0;
+    (p->s).mode[2] = z;
+    StartPaletteAnimation(0x63, 0x280);
+    PlaySound(0x39);
+    (p->s).work[2] = 0xFF;
+    (p->s).work[3] = z;
+  }
+  UpdateMotionGraphic(&p->s);
+  StepPaletteAnimation(0x63);
+  {
+    u8 m = 7 & (p->s).work[2];
+    if (m == 3) {
+      CreateVFX56(&p->s, 2, (p->s).work[3]);
+      (p->s).work[3] += 0xC;
+    } else if (m == 7) {
+      u32 t = RNG_0202f388 * 0x343FD + 0x269EC3;
+      t <<= 1;
+      RNG_0202f388 = t >> 1;
+      CreateVFX56(&p->s, 2, t >> 0x11);
+    }
+  }
+  {
+    u8 fl = (p->s).scriptEntity->flags;
+    register u8 four asm("r4");
+    u32 v;
+    four = 4;
+    asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(four));
+    v &= fl;
+    if (v != 0) {
+      u8 z;
+      RemovePaletteAnimation(0x63);
+      z = 0;
+      (p->s).mode[1] = four;
+      (p->s).mode[2] = z;
+    }
+  }
+}
 
 struct Entity* CreateVFX39(struct Coord* c, u8 r1, u8 r2);
 
