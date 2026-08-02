@@ -160,7 +160,81 @@ void FUN_080cc968(struct LavaGeyserObject* p) {
   }
 }
 
-INCASM("asm/solid/lava_geyser_p4.inc");
+// 0x080CCA14
+void FUN_080cca14(struct Solid* p0) {
+  register struct Solid* p asm("r4");
+  u8 m;
+  p = p0;
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register s32 t asm("r2");
+      register s32 t2 asm("r1");
+      s32 k;
+      register s32 k2 asm("r5");
+      s32 u;
+      PlaySound(0x77);
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).d.y = m;
+      {
+        u32 w0 = (p->s).work[0];
+        asm volatile("lsr %0, %1, #0x2" : "=l"(k2) : "l"(w0));
+      }
+      k = k2 * 3;
+      u = (k << 11) - 0xC000;
+      (p->s).unk_coord.y = u;
+      t = k2 << 2;
+      t2 = 0x18 - t;
+      asm volatile("add %0, %1, #0" : "=l"(t) : "l"(t2));
+      t *= t2;
+      asm volatile("add %0, %1, #0" : "=l"(t2) : "l"(t));
+      (p->s).unk_coord.y = u / t2;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 base;
+      s32 cy0;
+      s32 cy;
+      s32 dy;
+      register s32 k3 asm("r5");
+      s32 sh;
+      s32 diff;
+      s32 ny;
+      register s32* lp asm("r3");
+      {
+        u32 w0b = (p->s).work[0];
+        asm volatile("lsr %0, %1, #0x2" : "=l"(k3) : "l"(w0b));
+      }
+      {
+        register s32 k200 asm("r0");
+        s32 bv = *(s32*)((u8*)p + 0xc0);
+        k200 = -0x200;
+        asm("" : "+r"(k200));
+        base = bv + k200;
+      }
+      (p->s).coord.x = base + (RANDOM(RNG_0202f388) & 0x3FF);
+      cy0 = (p->s).coord.y;
+      dy = (p->s).d.y;
+      cy = cy0 + dy;
+      (p->s).coord.y = cy;
+      (p->s).d.y = dy + (p->s).unk_coord.y;
+      lp = (s32*)((u8*)p + 0xb8);
+      diff = *lp - cy;
+      sh = (k3 * 3) << 11;
+      if (diff > 0x6000 - sh) {
+        (p->s).coord.x = (p->s).unk_coord.x;
+        ny = *lp - 0x6000;
+        (p->s).coord.y = ny + sh;
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 
 void FUN_080ccae0(struct Solid* p) {
   s32 a;
