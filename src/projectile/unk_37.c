@@ -32,7 +32,52 @@ struct Projectile* FUN_080adad0(struct Coord* c, u8 a1) {
   return p;
 }
 
-INCASM("asm/projectile/unk_37_p3_p1.inc");
+static const struct Collision sCollisions[3];
+void Projectile37_Update(struct Projectile* p);
+
+// 0x080ADB24
+void Projectile37_Init(struct Projectile* p) {
+  u8 w1 = (p->s).work[1];
+  asm("" : "+r"(w1));
+  if (w1 == 0) {
+      InitNonAffineMotion(&p->s);
+      (p->s).flags = DISPLAY | (p->s).flags;
+      (p->s).flags |= FLIPABLE;
+      INIT_BODY(p, &sCollisions[1], 4, NULL);
+      SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+      (p->s).mode[1] = w1;
+      (p->s).mode[2] = w1;
+      (p->s).mode[3] = w1;
+      asm volatile("" ::"r"(w1));
+  } else if (w1 == 1) {
+      u32 z;
+      register u8 fv asm("r0");
+      register u8 fl asm("r1");
+      InitNonAffineMotion(&p->s);
+      fl = (p->s).flags;
+      fv = DISPLAY;
+      z = 0;
+      asm("" : "+r"(z));
+      fv |= fl;
+      fl = FLIPABLE;
+      fv |= fl;
+      fl = COLLIDABLE;
+      fv |= fl;
+      (p->s).flags = fv;
+      {
+        struct Body* body = &p->body;
+        InitBody(body, &sCollisions[0], &(p->s).coord, 1);
+        body->parent = (struct CollidableEntity*)p;
+        body->fn = (void*)z;
+      }
+      SET_PROJECTILE_ROUTINE(p, w1);
+      (p->s).mode[1] = w1;
+      (p->s).mode[2] = z;
+      (p->s).mode[3] = z;
+  }
+  (p->s).work[2] = 0xFF;
+  Projectile37_Update(p);
+}
 
 static const ProjectileFunc sUpdates[2];
 void Projectile37_Die(struct Projectile* p);
