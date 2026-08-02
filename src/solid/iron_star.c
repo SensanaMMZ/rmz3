@@ -83,7 +83,40 @@ void killIronStar(struct Solid* p) {
 
 void nop_080cbcc0(struct Solid* p) {}
 
-INCASM("asm/solid/iron_star_p2.inc");
+#include "zero.h"
+#include "overworld_terrain.h"
+
+extern const struct Coord Coord_0836fe58;
+
+// 0x080CBCC4
+void FUN_080cbcc4(struct Solid* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).work[2] = m;
+      (p->s).flags2 |= 8;
+      (p->s).size = (const struct Rect*)&Coord_0836fe58;
+      (p->s).hazardAttr = 0x801;
+      SetMotion(&p->s, MOTION(0x2D, 0x01));
+      (p->s).coord.y = SEA;
+      (p->s).mode[2]++;
+    case 1: {
+      s32 y;
+      s32 d;
+      s32 mk = *(u32*)((u8*)p + 0x8c) & 4;
+      y = (p->s).coord.y;
+      if (mk != 0 && y > (pZero2->s).coord.y) {
+        (p->s).unk_coord.y = 0x800;
+      } else {
+        (p->s).unk_coord.y = 0;
+      }
+      d = SEA + (p->s).unk_coord.y - y;
+      (p->s).coord.y = y + d / 8;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 extern const struct Collision Collision_ARRAY_0836fe10[3];
 
