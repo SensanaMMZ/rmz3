@@ -75,6 +75,55 @@ void Ghost73_Die(struct VFX* p) {
 
 INCASM("asm/vfx/unk_73_post_post.inc");
 
+// 0x080C705C
+void FUN_080c705c(struct VFX* p) {
+  s32 cx;
+  s32 dx;
+  s32 cy;
+  s32 dy;
+  cx = (p->s).coord.x;
+  dx = (p->s).d.x;
+  (p->s).coord.x = cx + dx;
+  (p->s).d.x = dx * 0xF5 / 0x100;
+  cy = (p->s).coord.y;
+  dy = (p->s).d.y;
+  (p->s).coord.y = cy + dy;
+  if ((p->s).work[3] != 0) {
+    s32 nd = dy + 0x20;
+    (p->s).d.y = nd;
+    if (nd > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[2]--;
+  if ((p->s).work[3] != 0) {
+    s32 x = (p->s).coord.x;
+    register s32 y asm("r2");
+    register s32 yy asm("r3");
+    y = (p->s).coord.y;
+    yy = y - 0x200;
+    if ((p->s).flags & 0x20) {
+      yy = y + 0x200;
+    }
+    if (((bool16 (*)(s32, s32))FUN_080098a4)(x, yy)) {
+      (p->s).work[2] = 0;
+    }
+  } else {
+    s32 g = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    if ((p->s).coord.y > g) {
+      (p->s).coord.y = g;
+    }
+  }
+  if ((p->s).work[2] == 0) {
+    struct Entity* q = (p->s).unk_28;
+    struct Coord* pc = &(p->s).coord;
+    FUN_080c6e70(q, pc);
+    CreateSmoke(1, pc);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 extern const motion_t motion_t_ARRAY_0836f884[3];
 
 void FUN_080c7120(struct VFX* p) {
