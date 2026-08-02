@@ -4,8 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_08045910
-FUN_08045910: @ 0x08045910
 	push {r4, r5, lr}
 	adds r4, r1, #0
 	cmp r2, #1

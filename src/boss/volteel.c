@@ -873,7 +873,89 @@ void FUN_0804586c(struct Body* body) {
   }
 }
 
-INCASM("asm/boss/volteel_p14_p1_b.inc");
+extern const u16 unk_080fee80[3 + 5 + 4];
+bool8 FUN_080459d4(struct Boss* p);
+
+// 0x08045910 -- given a mode value, return the next one in its cyclic table.
+// Which table and how long depends on `flag` and FUN_080459d4(p).
+// Logic verified; parked three instructions short. Retail materialises
+// `ldr r5, =&unk_080fee80[N]` separately inside each of the four arms (four
+// pool entries); agbcc cse's the address constant and hoists a single load
+// above the branch, so the four arms lose their own load and gain one.
+// `asm("" : "+r"(t))` after each assignment does not re-materialise it -- the
+// barrier makes the value opaque only after the hoisted constant is formed.
+// (The bool8 return of FUN_080459d4 IS solved: the `(s32(*)(...))` cast kills
+// the lsls#24/lsrs#24 mask, and routing all four `return t[idx]` through one
+// `goto pick` label collapsed the duplicated index-to-value tails, 93 -> 79.)
+NON_MATCH u16 FUN_08045910(struct Boss* p, u32 m, s32 flag) {
+#if MODERN
+  s32 ret;
+  s32 i;
+  s32 idx;
+  const u16* t;
+  const u16* q;
+  if (flag == 1) {
+    ret = ((s32(*)(struct Boss*))FUN_080459d4)(p);
+    if (ret != 0) {
+      i = 0;
+      t = &unk_080fee80[8];
+      q = t;
+      do {
+        if (*q == m) {
+          idx = (i + 1) % 3;
+          goto pick;
+        }
+        q++;
+        i++;
+      } while (i <= 2);
+    } else {
+      i = 0;
+      t = &unk_080fee80[3];
+      q = t;
+      do {
+        if (*q == m) {
+          idx = (i + 1) % 5;
+          goto pick;
+        }
+        q++;
+        i++;
+      } while (i <= 4);
+    }
+  } else {
+    ret = ((s32(*)(struct Boss*))FUN_080459d4)(p);
+    if (ret != 0) {
+      i = 0;
+      t = &unk_080fee80[8];
+      q = t;
+      do {
+        if (*q == m) {
+          idx = (i + 1) % 3;
+          goto pick;
+        }
+        q++;
+        i++;
+      } while (i <= 2);
+    } else {
+      i = 0;
+      t = &unk_080fee80[3];
+      q = t;
+      do {
+        if (*q == m) {
+          idx = (i + 1) % 4;
+          goto pick;
+        }
+        q++;
+        i++;
+      } while (i <= 3);
+    }
+  }
+  return ret;
+pick:
+  return t[idx];
+#else
+  INCCODE("asm/boss/volteel_p14_p1_b.inc");
+#endif
+}
 
 bool8 FUN_080459d4(struct Boss* p) {
   if ((p->s).mode[1] == 5) {
