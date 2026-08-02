@@ -185,7 +185,51 @@ void FUN_08084b2c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/eye_cannon_post_post_pre_b.inc");
+#include "zero.h"
+
+// 0x08084C30
+void FUN_08084c30(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x60;
+      (p->s).mode[2]++;
+    case 1: {
+      u8 z;
+      s32 d = (p->s).work[2] - 1;
+      struct Zero* zp;
+      register s32 dx asm("r0");
+      z = 0;
+      (p->s).work[2] = d;
+      if ((u8)d == 0) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = z;
+      }
+      {
+        register s32 k asm("r1");
+        if (((p->s).flags & 0x10) == 0) {
+          register s32 zx asm("r0");
+          zp = pZero2;
+          zx = (zp->s).coord.x;
+          dx = zx - (p->s).coord.x;
+          k = 0x7800;
+        } else {
+          register s32 zx asm("r0");
+          zp = pZero2;
+          zx = (zp->s).coord.x;
+          dx = zx - (p->s).coord.x;
+          k = -0x1000;
+        }
+        dx += k;
+      }
+      if ((u32)dx > 0x6800 || (u32)((zp->s).coord.y - (p->s).coord.y) > 0x7000) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = z;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_08084cbc(struct Enemy* p) {
   switch ((p->s).mode[2]) {
