@@ -74,7 +74,46 @@ static void Flopper_Update(struct FlopperObject* p) {
   (sUpdates[(p->s).mode[1]])((void*)p);
 }
 
-INCASM("asm/enemy/flopper_p1.inc");
+#include "quake.h"
+#include "mission.h"
+
+struct Entity* CreateProjectile7(struct Coord* c, u16 a, u8 b);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x0806BF38
+void Flopper_Die(struct Enemy* p) {
+  struct Coord c;
+  struct Coord* co = &(p->s).coord;
+  u32* q;
+  u32 v;
+  AppendQuake(4, co);
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  q = (u32*)((u8*)p + 0xbc);
+  v = *q;
+  if (*(u8*)q == 0) {
+    CreateProjectile7(&c, 0x180, v >> 3);
+    (p->s).work[2]++;
+  }
+  *q += 0x100;
+  if (*q == 0x800) {
+    {
+      u8 t = (p->s).flags;
+      register u8 fv asm("r1");
+      fv = 0xFE;
+      fv &= t;
+      (p->s).flags = fv;
+      asm volatile("" :: "r"(t));
+    }
+    PlaySound(0x35);
+    TryDropItem(0, co);
+    if (gMission.enemyCount <= 0x270E) {
+      gMission.enemyCount++;
+    }
+    TryDropZakoDisk(p, co);
+    SET_ENEMY_ROUTINE(p, 4);
+  }
+}
 
 void Flopper_onCollision(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {}
 
