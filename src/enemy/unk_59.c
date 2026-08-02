@@ -370,6 +370,50 @@ NON_MATCH void FUN_08091d0c(struct Enemy* p) {
 
 INCASM("asm/enemy/unk_59_post_a3.inc");
 
+// 0x08091e58
+void FUN_08091e58(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x88, 0x02));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 x = (p->s).coord.x + (p->s).d.x;
+      s32 dy;
+      s32 y;
+      s32 r;
+      (p->s).coord.x = x;
+      dy = (p->s).d.y + 0x40;
+      (p->s).d.y = dy;
+      y = (p->s).coord.y + dy;
+      (p->s).coord.y = y;
+      r = PushoutToUp1(x, y);
+      if (r < 0) {
+        PlaySound(0x100);
+        (p->s).coord.y += r;
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      (p->s).work[3] = 0xc0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((t << 24) != 0 && q->mode[0] <= 1) {
+        break;
+      }
+      SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      (p->s).mode[1] = 3;
+      break;
+    }
+  }
+}
+
 #include "stagerun.h"
 #include "camera.h"
 
