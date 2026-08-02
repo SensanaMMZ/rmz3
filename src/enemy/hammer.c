@@ -298,7 +298,52 @@ static void FUN_080755f4(struct Enemy* p) {
 
 static bool8 FUN_08075628(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/hammer_p1.inc");
+// 0x0807562C
+void FUN_0807562c(struct Enemy* p0) {
+  register struct Enemy* p asm("r4");
+  p = p0;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x2900);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 dx;
+      u16* ang;
+      s32 a;
+      const s16* st;
+      s32 sv;
+      s32 t;
+      s32 dxs;
+      register s32 s1 asm("r5");
+      register s32 c1 asm("r6");
+      s32* r;
+      dx = (p->s).d.x;
+      dx += ((0x1A00 - dx) << 2) >> 8;
+      (p->s).d.x = dx;
+      ang = (u16*)((u8*)p + 0xc0);
+      a = (s8)p->props[0] + *ang;
+      *ang = a;
+      st = gSineTable;
+      sv = st[(u8)a];
+      *(u16*)((u8*)p + 0xc2) = sv;
+      dxs = (p->s).d.x >> 8;
+      t = dxs;
+      t = sv * t;
+      t >>= 8;
+      (p->s).d.y = t;
+      s1 = st[(u8)t];
+      c1 = st[(u8)(t + 0x40)];
+      r = (s32*)((u8*)p + 0xbc);
+      (p->s).coord.x = ((s1 * *r) >> 8) + (p->s).unk_coord.x;
+      (p->s).coord.y = ((c1 * *r) >> 8) + (p->s).unk_coord.y;
+      (p->s).angle = -t;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 bool8 FUN_080756e8(struct Enemy* p) { return TRUE; }
 
