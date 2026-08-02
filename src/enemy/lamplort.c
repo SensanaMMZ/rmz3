@@ -4,6 +4,7 @@
 #include "global.h"
 #include "camera.h"
 #include "stagerun.h"
+#include "zero.h"
 
 static const struct Coord sElementCoord;
 
@@ -568,7 +569,40 @@ bool8 lamplort_0806ce08(struct Enemy* p) {
 
 s32 FUN_0806ce5c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p12.inc");
+// 0x0806CE60
+void FUN_0806ce60(struct Body* b, struct Coord* c, struct Coord* r2 UNUSED) {
+  u8 k = (b->enemy)->processing->atkType;
+  if (k == 3 || k == 0xE || k == 0xF) {
+    struct Enemy* e = (struct Enemy*)b->parent;
+    if (*(u32*)((u8*)e + 0x8c) & 0x200) {
+      if ((e->s).coord.x < c->x) {
+        *((u8*)e + 0xbb) = 0xFF;
+      } else {
+        *((u8*)e + 0xbb) = 0xFE;
+      }
+    }
+  }
+  if (b->processing->kind == 2 && (*(u32*)&(b->enemy)->processing->atkType & 0x200FF) == 0x20002) {
+    struct Enemy* q = (struct Enemy*)b->parent;
+    if ((u8)((q->s).mode[1] - 5) > 1) {
+      u8 fl = (q->s).flags & 0x10;
+      if (fl == 0) {
+        if ((pZero2->s).coord.x < (q->s).coord.x) {
+          (q->s).mode[1] = 5;
+          (q->s).mode[2] = fl;
+        }
+      } else {
+        if ((pZero2->s).coord.x > (q->s).coord.x) {
+          (q->s).mode[1] = 5;
+          (q->s).mode[2] = 0;
+        }
+      }
+      if (*(u32*)((u8*)q + 0x8c) & 0x200) {
+        *(u16*)((u8*)q + 0xa4) = 1;
+      }
+    }
+  }
+}
 
 bool8 FUN_0806c81c(struct Enemy* p);
 bool8 FUN_0806c824(struct Enemy* p);
