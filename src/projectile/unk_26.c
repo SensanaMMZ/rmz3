@@ -49,6 +49,7 @@ void Projectile26_Die(struct Projectile* p) {
   struct Entity* o = (p->s).unk_28;
   u8* q;
   s32 z;
+  s32 one;
   if ((p->s).work[0] <= 1) {
     s32 t = (p->s).work[2] - 1;
     z = 0;
@@ -229,6 +230,48 @@ void FUN_080a8b50(struct Projectile* p) {
 }
 
 INCASM("asm/projectile/unk_26_post_a2.inc");
+
+// 0x080A8E64
+void FUN_080a8e64(struct Projectile* p) {
+  struct Entity* o = (p->s).unk_28;
+  struct Body* b;
+  s32 z;
+  s32 one;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  one = 1;
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 t asm("r1");
+    register u8 fv asm("r0");
+    t = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    asm("" : "+l"(z));
+    fv |= t;
+    asm volatile("" ::"r"(t));
+    fv |= FLIPABLE;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0x5b, 2));
+  SET_XFLIP(p, (o->flags >> 4) & one);
+  {
+    register s16* sp asm("r1");
+    register s32 h asm("r0");
+    sp = (s16*)((u8*)p + 0xc0);
+    asm("" : "+r"(sp));
+    h = 0xFFFF;
+    asm("" : "+r"(h));
+    *sp = h;
+  }
+  (p->s).flags |= COLLIDABLE;
+  b = &p->body;
+  InitBody(b, &sCollisions[2], &(p->s).coord, 0x40);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = NULL;
+  (p->s).work[2] = 0;
+  asm volatile("" ::"l"(z));
+  Projectile26_Update(p);
+}
 
 // 0x080a8f14
 void FUN_080a8f14(struct Projectile* p) {
