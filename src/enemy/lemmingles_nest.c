@@ -90,7 +90,38 @@ static bool8 FUN_0806dfa4(struct Entity* p) {
 
 static const u8 sInitModes[];
 
-INCASM("asm/enemy/lemmingles_nest_p1_a.inc");
+static const struct Collision sCollisions[];
+void LemminglesNest_Update(struct Enemy* p);
+
+// 0x0806E010
+void LemminglesNest_Init(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  if ((u8)((p->s).work[0] - 2) > 1) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    if ((p->s).work[0] <= 1) {
+      FUN_0806df3c(&p->s);
+    }
+    INIT_BODY(p, sCollisions, 0x10, NULL);
+    {
+      u32* w = (u32*)&p->props[0];
+      u32 v = *w;
+      v |= 1;
+      v |= 2;
+      v |= 4;
+      v |= 8;
+      v &= 0xFFFFFEFF;
+      v &= 0xFFFFFDFF;
+      v &= 0xFFFFFBFF;
+      v &= 0xFFFFF7FF;
+      *w = v;
+    }
+  }
+  LemminglesNest_Update(p);
+}
 
 void LemminglesNest_Update(struct Enemy* p) {
   bool8 r;
