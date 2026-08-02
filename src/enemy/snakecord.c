@@ -257,6 +257,36 @@ void FUN_0807472c(struct Enemy* p) {
 
 INCASM("asm/enemy/snakecord_p2_a.inc");
 
+// 0x0807484c
+void FUN_0807484c(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u8 fv asm("r0");
+      u8 t;
+      t = (p->s).flags;
+      fv = DISPLAY;
+      fv |= t;
+      (p->s).flags = fv;
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      (p->s).d.x = m;
+      (p->s).d.y = m;
+      InitRotatableMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x28, 0x00));
+      (p->s).angle = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/snakecord_p2_a2.inc");
+
 static const u8 u8_ARRAY_08366fec[13];
 
 void FUN_08074bac(struct Enemy* p) {
