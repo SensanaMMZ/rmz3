@@ -105,7 +105,60 @@ void FUN_08094bf0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/unk_63_p3_p2.inc");
+// 0x08094C80
+void FUN_08094c80(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[3] = 2;
+      (p->s).flags &= ~DISPLAY;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] != 0) {
+        break;
+      }
+      goto inc;
+    case 2:
+      FUN_08094a54((p->s).coord.x, (p->s).coord.y, (p->s).work[0]);
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] != 0) {
+        break;
+      }
+      (p->s).work[3]--;
+      if ((u8)(p->s).work[3] != 0) {
+        goto set2;
+      }
+    inc:
+      (p->s).mode[2]++;
+      break;
+    set2:
+      (p->s).mode[2] = 2;
+      break;
+    case 4:
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      s32 w;
+      if ((p->s).work[2] % 9 == 0) {
+        FUN_080949d4((p->s).coord.x, (p->s).coord.y, (p->s).work[0]);
+      }
+      w = (p->s).work[2] - 1;
+      (p->s).work[2] = w;
+      w = (u8)w;
+      if (w == 0) {
+        (p->s).mode[2] = w;
+        (p->s).work[2] = 0x78;
+      }
+      break;
+    }
+  }
+}
 
 // 0x08094D48
 void FUN_08094d48(struct Enemy* p) {
