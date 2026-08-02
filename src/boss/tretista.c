@@ -307,7 +307,56 @@ INCASM("asm/boss/tretista_p2b.inc");
 
 bool8 FUN_0804df70(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/tretista_p3.inc");
+// 0x0804DF74
+void tretista_0804df74(struct Boss* p) {
+  motion_t m;
+  s32 z;
+  u8* q;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x3c;
+      m = MOTION(0xAB, 0x21);
+      goto setmotion;
+    case 2:
+      m = MOTION(0xAB, 0x22);
+      goto setmotion;
+    case 4:
+      if ((p->s).work[2] == 0) {
+        goto adv;
+      }
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      goto adv;
+    case 5:
+      m = MOTION(0xAB, 0x23);
+    setmotion:
+      SetMotion(&p->s, m);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+    case 3:
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) != 3) {
+        break;
+      }
+    adv:
+      (p->s).mode[2]++;
+      break;
+    case 7:
+      q = (u8*)p + 0xc8;
+      z = 0;
+      *(s32*)q = z;
+      asm("" : "+r"(q));
+      q += 4;
+      *(s32*)q = z;
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = z;
+      break;
+  }
+}
 
 bool8 FUN_0804e01c(struct Boss* p) { return TRUE; }
 
