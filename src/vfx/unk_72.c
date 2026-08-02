@@ -110,6 +110,40 @@ void Ghost72_Die(struct VFX* p) {
 
 INCASM("asm/vfx/unk_72_a.inc");
 
+// 0x080c6ad8
+void FUN_080c6ad8(struct VFX* p) {
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).d.x = ((p->s).d.x * 0xE6) / 0x100;
+  if ((p->s).work[3] != 0) {
+    s32 v = (p->s).d.y + 0x20;
+    (p->s).d.y = v;
+    if (v > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[2]--;
+  if ((p->s).work[3] != 0) {
+    if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+      (p->s).work[2] = 0;
+    }
+  } else {
+    s32 y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    if ((p->s).coord.y > y) {
+      (p->s).coord.y = y;
+    }
+  }
+  if ((p->s).work[2] == 0) {
+    struct Entity* e = (p->s).unk_28;
+    struct Coord* c = &(p->s).coord;
+    FUN_080c68cc(e, c);
+    CreateSmoke(1, c);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/vfx/unk_72_a_b.inc");
+
 // 0x080c6c60
 void FUN_080c6c60(struct VFX* p) {
   (p->s).coord.x += (p->s).d.x;
