@@ -71,7 +71,30 @@ static void Solid37_Die(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/unk_37_pre_a.inc");
+// 0x080DC81C
+void FUN_080dc81c(struct Solid* p) {
+  u8 v = gSystemSavedataManager.mods[10] & 0x10;
+  if (v == 0) {
+    u8 fl;
+    register u8* q asm("r0");
+    fl = (p->s).flags & 0xFE;
+    fl &= 0xFD;
+    (p->s).flags = fl;
+    q = (u8*)p + 0x8c;
+    *(u32*)q = v;
+    asm volatile("add %0, #4" : "+r"(q));
+    *(u32*)q = v;
+    asm volatile("add %0, #4" : "+r"(q));
+    *q = v;
+    (p->s).flags &= 0xFB;
+    SET_SOLID_ROUTINE(p, 3);
+  } else {
+    (p->s).work[2] = 0;
+    (p->s).work[3] = 0x1E;
+    SET_SOLID_ROUTINE(p, 1);
+    Solid37_Update(p);
+  }
+}
 
 void FUN_080dc898(struct Solid* p) {
   if ((u8)(--(p->s).work[3]) == 0xff) {
