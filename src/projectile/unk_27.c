@@ -186,6 +186,49 @@ void FUN_080a9358(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1b.inc");
 
+// 0x080A953C
+void FUN_080a953c(struct Projectile* p) {
+  if ((p->s).mode[2] != 0) {
+    s32 z;
+    struct Body* body;
+    if ((p->s).work[1] != 0) {
+      (p->s).coord.x += -0x2000;
+    } else {
+      (p->s).coord.x += 0x2000;
+    }
+    z = 0;
+    (p->s).mode[2] = z;
+    (p->s).flags |= 4;
+    body = &p->body;
+    InitBody(body, &sCollisions[2], &(p->s).coord, 0x40);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)z;
+    (p->s).work[2] = z;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  {
+    s32 raw = (p->s).work[2] + 1;
+    (p->s).work[2] = raw;
+    if ((u8)raw == 0xB) {
+      struct Body* body;
+      (p->s).flags |= 4;
+      body = &p->body;
+      InitBody(body, &sCollisions[4], &(p->s).coord, 0x40);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)0;
+    }
+  }
+  if (*(u8*)((u8*)p + 0x73) == 4) {
+    (p->s).mode[2]++;
+  }
+  if (((bool16 (*)(s32, s32))FUN_080098a4)((p->s).coord.x, (p->s).coord.y)) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
+INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1b_b.inc");
+
 // 0x080A96F8
 void FUN_080a96f8(struct Projectile* p) {
   struct Entity* e = (p->s).unk_28;
