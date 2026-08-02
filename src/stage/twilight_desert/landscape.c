@@ -190,6 +190,42 @@ void FUN_0800fa34(struct StageLayer* l, const struct Stage* stage) {
 
 INCASM("asm/stage_gfx/twilight_desert.inc");
 
+// 0x0800FF98
+void desert_0800ff98(struct StageLayer* l, const struct Stage* _ UNUSED) {
+  u8 ph;
+  u32 n;
+  u32 c;
+  u16* bg;
+  ph = l->phase;
+  if (ph != 0) {
+    return;
+  }
+  n = (l->bgIdx << 16) >> 20;
+  bg = &BGCNT16(n);
+  c = l->prio | l->screenBase | 0x44;
+  *bg = c;
+  *((u32*)&gVideoRegBuffer.bgofs[n]) = ph;
+  CpuFastSet(BGMAP(62), (void*)(VRAM + ((c & 0x1F00) << 3)), 0x200);
+  gBlendRegBuffer.bldclt = 0x3D42;
+  gWindowRegBuffer.dispcnt |= DISPCNT_WIN1_ON;
+  gWindowRegBuffer.winin[1] = 0xFF;
+  {
+    register u8 wv asm("r1");
+    register u8 kk asm("r0");
+    wv = gWindowRegBuffer.winin[2];
+    kk = 0xC;
+    kk |= wv;
+    kk &= 0xFD;
+    gWindowRegBuffer.winin[2] = kk;
+  }
+  gWindowRegBuffer.winH.half[1] = 0xFF;
+  BGnVOFS(n) = 0xFF80;
+  gWindowRegBuffer.winV.half[1] = 0x80A0;
+  l->phase++;
+}
+
+INCASM("asm/stage_gfx/twilight_desert_post.inc");
+
 static void LayerExit_TwilightDesert_4(struct StageLayer* l, const struct Stage* stage) {
   gBlendRegBuffer.bldclt = 0;
   gWindowRegBuffer.dispcnt &= ~(DISPCNT_WIN1_ON);
