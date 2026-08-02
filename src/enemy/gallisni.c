@@ -81,7 +81,35 @@ void gallisni_080871b4(struct GallisniObject* p) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p1_pre_p2_a_b.inc");
+static const u8 sInitModes[2];
+void Gallisni_Update(struct Enemy* p);
+void FUN_08086ff0(struct Body* body, struct Coord* r1, struct Coord* r2);
+
+// 0x08087200
+void Gallisni_Init(struct Enemy* p) {
+  struct Body* b;
+  u32 z;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  z = 0;
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= COLLIDABLE;
+  b = &p->body;
+  InitBody(b, sCollisions, &(p->s).coord, 6);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = FUN_08086ff0;
+  *(u32*)((u8*)p + 0xb4) = z;
+  {
+    u8 w = (p->s).work[0];
+    if (w == 0) {
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      *(u8*)((u8*)p + 0xb8) = w;
+    }
+  }
+  Gallisni_Update(p);
+}
 
 void Gallisni_Update(struct Enemy* p) {
   if ((p->s).work[0] == 1) {
