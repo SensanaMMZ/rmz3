@@ -405,7 +405,37 @@ void FUN_08074d90(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/snakecord_p2_b.inc");
+// 0x08074E90
+void FUN_08074e90(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[6]);
+      SetMotion(&p->s, MOTION(0x28, 0x09));
+      (p->s).mode[2]++;
+    case 1:
+      FUN_08073ea8(&p->s, (p->s).d.x);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if ((u8)FUN_08073ef0(&p->s, (p->s).d.y) == 1) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      SetMotion(&p->s, MOTION(0x28, 0x0A));
+      (p->s).mode[2]++;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) == 3) {
+        u8 z = 0;
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+}
 
 struct Entity* FUN_080bb830(struct Entity* e);
 
