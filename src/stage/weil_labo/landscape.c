@@ -352,6 +352,21 @@ void FUN_08015510(struct StageLayer* l, const struct Stage* stage) {
 
 INCASM("asm/stage_gfx/weil_labo_p1_p1b.inc");
 
+// 0x08015710
+void weilLabo_08015710(struct StageLayer* l, const struct Stage* stage) {
+  if (gOverworld.state[0] == 0) {
+    DrawGeneralStageLayer(l, stage);
+  } else if (gOverworld.terrain.reload_graphic) {
+    CpuFastSet(BGMAP(76), gOverworld.bgmap, 0x200);
+    LoadGraphic((void*)&(TILESETS(16, 4)[0]).g, (void*)0x4000);
+    LoadPalette(&(TILESETS(16, 4)[0]).pal, 0);
+    LoadGraphic((void*)&(TILESETS(16, 5)[0]).g, (void*)0x4000);
+    LoadPalette(&(TILESETS(16, 5)[0]).pal, 0);
+  }
+}
+
+INCASM("asm/stage_gfx/weil_labo_p1_p1b_post.inc");
+
 void FUN_08015c40(struct StageLayer* l, const struct Stage* stage) {
   gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN1_ON;
   gWindowRegBuffer.winin[2] |= 0xe;
