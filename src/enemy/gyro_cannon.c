@@ -477,6 +477,47 @@ void gyrocannon_0806d32c(struct Enemy* p) {
 
 INCASM("asm/enemy/gyro_cannon_p1b.inc");
 
+// 0x0806d618
+void FUN_0806d618(struct Enemy* p) {
+  register struct Enemy* pp asm("r4");
+  register s32 m asm("r5");
+  s32 v;
+  s32 y;
+  pp = p;
+  m = (pp->s).mode[2];
+  if (m == 0) {
+    SetMotion(&p->s, MOTION(0x17, 0x00));
+    (pp->s).d.y = m;
+    (pp->s).mode[2]++;
+  }
+  v = (pp->s).d.y + 0x40;
+  (pp->s).d.y = v;
+  if (v > 0x700) {
+    (pp->s).d.y = 0x700;
+  }
+  y = (pp->s).coord.y + (pp->s).d.y;
+  (pp->s).coord.y = y;
+  if ((u16)FUN_080098a4((pp->s).coord.x, y + 0xA00) != 0) {
+    s32 z;
+    (pp->s).coord.y = FUN_08009f6c((pp->s).coord.x, (pp->s).coord.y) - 0xA00;
+    z = 0;
+    (pp->s).mode[1] = 7;
+    (pp->s).mode[2] = z;
+    {
+      register u8* pr asm("r1");
+      register s32 one asm("r0");
+      pr = pp->props;
+      asm("" : "+r"(pr));
+      one = 1;
+      pr[11] = one;
+    }
+    asm volatile("" ::"r"(pp));
+  }
+}
+
+
+INCASM("asm/enemy/gyro_cannon_p1b_b.inc");
+
 void FUN_0806d998(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
     SetMotion(&p->s, 0x1700);
