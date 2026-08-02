@@ -1,3 +1,4 @@
+#include "zero.h"
 #include "cyberelf.h"
 #include "entity.h"
 #include "global.h"
@@ -26,7 +27,48 @@ struct Elf* CreateElf5(struct Entity* e, u8 a1, u8 a2) {
   return (struct Elf*)p;
 }
 
-INCASM("asm/cyberelf/unk_5_p1_p2.inc");
+void Elf5_Update(struct Elf* p);
+
+// 0x080E34BC
+void Elf5_Init(struct Elf* p) {
+  struct Zero* z = (struct Zero*)((struct CyberElf5*)p)->player;
+  struct Rect r = gZeroRanges[z->posture];
+  s32 one;
+  s32 zero;
+  u8* gp = (u8*)&gPause;
+  asm volatile("movs %0, #1" : "=l"(one));
+  *gp = one;
+  SET_ELF_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  {
+    u8 fl = (p->s).flags;
+    zero = 0;
+    one |= fl;
+    one |= FLIPABLE;
+    (p->s).flags = one;
+  }
+  SetMotion(&p->s, 0x9000);
+  ((p->s).spr).xflip = zero;
+  {
+    u8* oa = (u8*)p + 0x4a;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    *oa = m11;
+  }
+  (p->s).flags &= 0xEF;
+  {
+    u8* b = (u8*)p + 0x49;
+    s32 bv = *b;
+    s32 md = -0xD;
+    md &= bv;
+    *b = md;
+  }
+  (p->s).coord.x = (z->s).coord.x + r.x;
+  (p->s).coord.y = (z->s).coord.y + r.y;
+  Elf5_Update(p);
+}
 
 void Elf5_Update(struct Elf* p) {
   UpdateMotionGraphic(&p->s);
