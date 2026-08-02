@@ -184,4 +184,53 @@ void FUN_080c13c8(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_55c.inc");
+// 0x080C143C
+void FUN_080c143c(struct VFX* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 one;
+  UpdateMotionGraphic(&p->s);
+  StepPaletteAnimation(0x61);
+  {
+    s32 xf = (q->flags >> 4) & 1;
+    s32 v;
+    if (xf != 0) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= 0xEF;
+    }
+    one = 1;
+    v = one & xf;
+    ((p->s).spr).xflip = v;
+    {
+      register u8* oa asm("ip");
+      u8* oa0;
+      u32 k;
+      s32 sh4, ov, m11;
+      k = 0x4a;
+      asm("" : "+r"(k));
+      oa0 = (u8*)(k + (u32)p);
+      asm volatile("mov %0, %1" : "=r"(oa) : "r"(oa0));
+      sh4 = v << 4;
+      ov = *oa0;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+  }
+  (p->s).coord = q->coord;
+  {
+    s32 w = (p->s).work[2] + 1;
+    (p->s).work[2] = w;
+    if ((w & one) != 0) {
+      (p->s).flags |= DISPLAY;
+    } else {
+      (p->s).flags &= 0xFE;
+    }
+  }
+  if ((p->s).motion.state == 3 || (((u16)q->motionID << 8) | q->motion.step) != 0xB31C) {
+    RemovePaletteAnimation(0x61);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    VFX55_Die(p);
+  }
+}
