@@ -54,7 +54,46 @@ bool8 gallisni_080870bc(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/gallisni_p1_pre_p2_a_a_y.inc");
+static const EnemyFunc sUpdates1[8];
+static const EnemyFunc sUpdates2[8];
+
+// 0x08087118
+bool8 gallisni_08087118(struct Enemy* p) {
+  if ((p->s).mode[1] != 7) {
+    s32 v = *(s32*)((u8*)p + 0xb4);
+    if (v == 0) {
+      switch ((p->s).mode[3]) {
+        case 0:
+          if (IsFrozen(&p->s)) {
+            if ((p->s).work[0] == 0) {
+              (p->s).mode[1] = 1;
+              (p->s).mode[2] = v;
+            }
+            (sUpdates1[(p->s).mode[1]])(p);
+            (sUpdates2[(p->s).mode[1]])(p);
+            (p->s).mode[3]++;
+            UpdateMotionGraphic(&p->s);
+            return 1;
+          }
+          break;
+        case 1: {
+          u32 fr = IsFrozen(&p->s);
+          if (fr) {
+            if ((*(u32*)((u8*)p + 0x8c) & 0x20001) == 0x20001) {
+              (p->s).mode[3] = v;
+            } else {
+              return 1;
+            }
+          } else {
+            (p->s).mode[3] = fr;
+          }
+          break;
+        }
+      }
+    }
+  }
+  return 0;
+}
 
 struct GallisniObject {
   OBJECT_HDR;
