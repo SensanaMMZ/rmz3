@@ -1366,6 +1366,46 @@ void ActorOperator_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_b_a.inc");
 
+// 0x080D2D50
+void Actor19_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      s32 x;
+      wDynamicGraphicTilenums[0xc5] = 0x380;
+      wDynamicMotionPalIDs[0xc5] = 8;
+      SetMotion(&p->s, MOTION(0xc5, 0x01));
+      x = (p->s).coord.x;
+      (p->s).unk_coord.x = x;
+      (p->s).coord.x = x + 0x1000;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        (p->s).coord.y = cam->viewport.y - 0x5000;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 x;
+      s32 y;
+      UpdateMotionGraphic(&p->s);
+      x = (p->s).coord.x;
+      (p->s).coord.x = (((x << 7) - x) + (p->s).unk_coord.x) >> 7;
+      y = (p->s).coord.y;
+      (p->s).coord.y = (((y << 7) - y) + (p->s).unk_coord.y) >> 7;
+      if (((p->s).scriptEntity->flags & 1) != 0) {
+        (p->s).mode[1]++;
+      }
+      break;
+    }
+    case 2:
+      if (((u16)FUN_080d0934(&p->s, MOTION(0xc5, 0x01), 1) << 16) != 0) {
+        (p->s).mode[1]++;
+      }
+      break;
+  }
+}
+
 void Actor20_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
     case 0:
