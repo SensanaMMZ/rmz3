@@ -104,6 +104,42 @@ void FUN_080bba18(struct VFX* p) {
 
 INCASM("asm/vfx/unk_33_post_b.inc");
 
+// 0x080BBA8C
+void FUN_080bba8c(struct VFX* p) {
+  struct Entity* q = (p->s).unk_28;
+  if (q->mode[0] <= 1) {
+    s32 x;
+    s32 y;
+    u8 a;
+    switch ((p->s).mode[2]) {
+      case 0:
+        SetMotion(&p->s, MOTION(0x28, 0x02));
+        (p->s).mode[2]++;
+      case 1:
+        x = q->coord.x;
+        (p->s).coord.x = x;
+        y = q->coord.y;
+        (p->s).coord.y = y;
+        a = *(u8*)((u8*)q + 0x24);
+        (p->s).coord.x = x + gSineTable[(u8)(a + 0xC0)] * 10;
+        (p->s).coord.y = y + gSineTable[(u8)(a + 0x80)] * 10;
+        UpdateMotionGraphic(&p->s);
+        if (*(u8*)((u8*)p + 0x73) != 4) {
+          return;
+        }
+        break;
+      default:
+        return;
+    }
+  }
+  {
+    u8 fl = (p->s).flags & 0xFE;
+    fl &= 0xFD;
+    (p->s).flags = fl;
+  }
+  SET_VFX_ROUTINE(p, 3);
+}
+
 // 0x080BBB30
 void FUN_080bbb30(struct VFX* p) {
   struct Entity* q = (p->s).unk_28;
