@@ -163,6 +163,50 @@ void FUN_080b24c8(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
 }
 
+// 0x080B258C
+void FUN_080b258c(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  u8* b;
+  UpdateMotionGraphic(&p->s);
+  b = (u8*)q + 0xDCC;
+  if (b[4] > 3) return;
+  switch ((p->s).mode[1]) {
+    case 0:
+      if ((p->s).motion.state == 3) {
+        SetMotion(&p->s, MOTION(0xE9, 0x03));
+        UpdateMotionGraphic(&p->s);
+        (p->s).mode[1]++;
+      }
+      break;
+    case 1: {
+      u8* t0 = (u8*)q + 0xDE9;
+      u8* t = t0 + (p->s).work[1];
+      u8 w2 = (p->s).work[2];
+      if (w2 < *t) {
+        SetMotion(&p->s, MOTION(0xE9, 0x04));
+        UpdateMotionGraphic(&p->s);
+        PlaySound(0x13A);
+        (p->s).work[2]++;
+        (p->s).mode[1]++;
+      }
+      break;
+    }
+    case 2:
+      if ((p->s).motion.state == 3) {
+        SetMotion(&p->s, MOTION(0xE9, 0x02));
+        UpdateMotionGraphic(&p->s);
+        (p->s).mode[1] = 0;
+        if ((p->s).work[2] == 4) {
+          u8* t0 = (u8*)q + 0xDE9;
+          u8* t = t0 + (p->s).work[1];
+          *t = *t - 4;
+          (p->s).work[2] = 0;
+        }
+      }
+      break;
+  }
+}
+
 INCASM("asm/projectile/unk_46_p4_p1_b.inc");
 
 void FUN_080b274c(struct Projectile* p) {
