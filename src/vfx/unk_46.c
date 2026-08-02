@@ -242,7 +242,54 @@ sw:
   }
 }
 
-INCASM("asm/vfx/unk_46_post2.inc");
+// 0x080BF2F0
+void FUN_080bf2f0(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 f = 1 & *(u8*)((u8*)p + 0x7c);
+      if (f != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        register u32 xf asm("r1");
+        register u8* oa asm("ip");
+        u32 sh4;
+        s32 ov;
+        s32 m11;
+        asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(f));
+        ((p->s).spr).xflip = xf;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      (p->s).work[3] = 3;
+      (p->s).work[2] = 0xA;
+      (p->s).mode[2]++;
+    }
+    case 1:
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          goto draw;
+        }
+      }
+      (p->s).work[2] = 0xA;
+      if ((p->s).work[3] != 0) {
+        if ((u8)--(p->s).work[3] != 0) {
+          goto draw;
+        }
+      }
+      SET_VFX_ROUTINE(p, 2);
+    draw:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void FUN_080bef44(struct VFX* vfx);
 void FUN_080bf0a0(struct VFX* vfx);
