@@ -57,7 +57,41 @@ void FUN_0804d0a4(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/bee_server_p2.inc");
+void FUN_0807d6c0(s32 x, s32 y, u8 a2);
+
+void FUN_0804d0f8(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0xFF;
+      SetMotion(&p->s, MOTION(0x46, 0x00));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s16* t = (s16*)&p->props.raw[6];
+      u8 v;
+      if (*t == 0 && ((p->body).status & 0x00020008) == 0x00020008) {
+        u32 r;
+        *t = 0x78;
+        r = RANDOM(RNG_0202f388) & 3;
+        FUN_0807d6c0((p->s).coord.x,
+                     (p->s).coord.y + ({
+                       s32 o_ = ((r >> 1) << 14) - 0x2000;
+                       asm("" : "+r"(o_));
+                       o_;
+                     }),
+                     r & 1);
+      }
+      v = --(p->s).work[2];
+      if (v == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = v;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 u8 GetEntityPalID(struct Entity* p);
 
