@@ -482,6 +482,47 @@ void FUN_0808da24(struct Enemy* p) {
 
 INCASM("asm/enemy/deathlock_post_p2b.inc");
 
+extern void FUN_080b7f70(struct Enemy* p, struct Coord* c, const motion_t* m, s32 n);
+static const motion_t sMotions2[4];
+
+// 0x0808e228
+void FUN_0808e228(struct Enemy* p) {
+  struct Coord c;
+  {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    u8* q = (u8*)p + 0x8c;
+    s32 z;
+    asm("" : "+r"(q));
+    z = 0;
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *q = z;
+    t = (p->s).flags;
+    f = 0xFB;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    k2 = 0xFE;
+    f &= k2;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1000;
+  CreateSmoke(1, &c);
+  PlaySound(0x2a);
+  FUN_080b7f70(p, &c, sMotions2, 3);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+INCASM("asm/enemy/deathlock_post_p2b_b.inc");
+
 void Deathlock_Init(struct Enemy* p);
 void Deathlock_Update(struct Enemy* p);
 void Deathlock_Die(struct Enemy* p);
