@@ -64,6 +64,31 @@ void FUN_080b2310(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_46_p4_p1.inc");
 
+// 0x080b2428
+void FUN_080b2428(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0xE9, 0x05));
+  UpdateMotionGraphic(&p->s);
+  ForceEntityPalette(&p->s, (p->s).work[1] + 5);
+  (p->s).taskCol = 9;
+  SET_XFLIP(p, FALSE);
+  ((p->s).coord).x = PIXEL(((p->s).work[1] * 32) + 8);
+  ((p->s).coord).y = PIXEL(0x78);
+  {
+    u8* a = (u8*)q + 0xDE9;
+    asm("" : "+r"(a));
+    a += (p->s).work[1];
+    (p->s).work[2] = *a;
+  }
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  FUN_080b22e0(p);
+}
+
+INCASM("asm/projectile/unk_46_p4_p1_b.inc");
+
 void FUN_080b274c(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
