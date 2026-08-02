@@ -107,7 +107,37 @@ NON_MATCH s32 FUN_0808d160(struct Enemy* p, s32 dx) {
 #endif
 }
 
-INCASM("asm/enemy/deathlock_pre_p1_p3.inc");
+// 0x0808D268
+NON_MATCH bool8 FUN_0808d268(struct Enemy* p, s32 dy) {
+#if MODERN
+  s32 y = (p->s).coord.y + dy;
+  (p->s).coord.y = y;
+  if (dy < 0) {
+    s32 a = PushoutToDown1((p->s).coord.x - 0x1200, y - 0x1E00);
+    s32 b = PushoutToDown1((p->s).coord.x + 0x1200, (p->s).coord.y - 0x1E00);
+    if (a < b) {
+      a = b;
+    }
+    if (a > 0) {
+      (p->s).coord.y += a;
+      return 1;
+    }
+  } else {
+    s32 a = PushoutToUp1((p->s).coord.x - 0x1200, y);
+    s32 b = PushoutToUp1((p->s).coord.x + 0x1200, (p->s).coord.y);
+    if (a > b) {
+      a = b;
+    }
+    if (a < 0) {
+      (p->s).coord.y += a;
+      return 2;
+    }
+  }
+  return 0;
+#else
+  INCCODE("asm/enemy/deathlock_0808d268.inc");
+#endif
+}
 
 void nop_0808d2f4(struct Enemy* p) {}
 
@@ -393,7 +423,6 @@ void FUN_0808d76c(struct Enemy* p) {
 INCASM("asm/enemy/deathlock_post_p2a.inc");
 
 bool8 FUN_0808d268(struct Enemy* p, s32 dy);
-
 void FUN_0808da24(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0:
