@@ -35,7 +35,41 @@ void CopyXProjectile_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/copy_x_post_p2.inc");
+// 0x080a81d0
+void initCopyXSlidingSonicBoom(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 one;
+  {
+    u32 tbl, id;
+    EntityFunc** routine_table;
+    tbl = (u32)gProjectileFnTable;
+    id = ((p->s).id) << 2;
+    routine_table = (EntityFunc**)(tbl + id);
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(*routine_table)[ENTITY_UPDATE];
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register s32 z asm("r6");
+    u8 t = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    asm("" : "+r"(z));
+    asm volatile("" ::"r"(z));
+    fv |= t;
+    fv |= FLIPABLE;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0x5E, 0x00));
+  UpdateMotionGraphic(&p->s);
+  SET_XFLIP(&p->s, (q->flags >> 4) & one);
+  INIT_BODY(p, &sCollisions[0], 0x40, NULL);
+  (p->s).work[2] = 0x28;
+  (p->s).mode[2] = 1;
+  CopyXProjectile_Update(p);
+}
 
 // 0x080a8280
 void moveSlidingSonicBoom(struct Projectile* p) {
