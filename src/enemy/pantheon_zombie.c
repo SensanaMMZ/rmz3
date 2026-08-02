@@ -142,7 +142,34 @@ void FUN_0807ffb0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_zombie_p2_post_pre.inc");
+// 0x0807FFD8
+void FUN_0807ffd8(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x4C, 0x02));
+      (p->s).d.y = m;
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).mode[2]++;
+    case 1:
+      if (*(u8*)((u8*)p + 0xb8) != 0) {
+        (p->s).coord.y += 0x20;
+      } else {
+        s32 hit;
+        (p->s).d.y += 0x40;
+        if ((p->s).d.y > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        hit = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (hit < 0) {
+          (p->s).coord.y += hit;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void FUN_08080054(struct Enemy* p) {
   struct Boss* anubis = (struct Boss*)(p->s).unk_28;
