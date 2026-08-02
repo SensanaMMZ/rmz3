@@ -252,7 +252,62 @@ void FUN_080892a4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1a.inc");
+s32 FUN_0800a40c(s32 x, s32 y);
+
+// 0x080892C4
+void FUN_080892c4(struct Enemy* p) {
+  register s32 x asm("r3");
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).d.x = m;
+      (p->s).work[2] = 0x3C;
+      SetDDP(&p->body, &sCollisions[0]);
+      SetMotion(&p->s, MOTION(0xDD, 0x02));
+      (p->s).mode[2]++;
+    case 1:
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+        x = (p->s).coord.x;
+        goto move;
+      }
+      {
+        struct Zero* z = pZero2;
+        s32 zx = (z->s).coord.x;
+        s32 cx = (p->s).coord.x;
+        s32 d;
+        d = zx - cx;
+        asm volatile("add %0, %1, #0" : "=&l"(x) : "l"(cx));
+        if (d < 0) {
+          goto neg;
+        }
+        {
+          s32 k = 0x5FFF;
+          asm("" : "+r"(k));
+          if (d <= k) {
+            goto set;
+          }
+        }
+        goto move;
+      neg:
+        d = x - zx;
+        {
+          s32 k = 0x5FFF;
+          asm("" : "+r"(k));
+          if (d > k) {
+            goto move;
+          }
+        }
+      set:
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+    move:
+      FUN_08088bc8(p, FUN_0800a40c(x, (p->s).coord.y + 0x400), 0x800);
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void FUN_080892c4(struct Enemy* p);
 s32 FUN_0800a40c(s32 x, s32 y);
