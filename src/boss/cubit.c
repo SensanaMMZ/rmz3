@@ -529,6 +529,61 @@ bool8 cubit_080544c0(struct Boss* p) {
 
 INCASM("asm/boss/cubit_p13_p1_b.inc");
 
+// 0x08054530
+void FUN_08054530(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+  const struct Collision* pr = (body->enemy)->processing;
+  struct Entity* e;
+  {
+    u8 k = pr->atkType;
+    if (k == 3 || k == 0xE || k == 0xF) {
+      struct Entity* q;
+      e = (struct Entity*)body->parent;
+      q = (struct Entity*)(body->enemy)->parent;
+      if ((*(u32*)((u8*)e + 0x8c) & 0x200) != 0) {
+        goto chk;
+      }
+      if (*(s16*)((u8*)e + 0xa4) != 0) {
+        goto skip;
+      }
+    chk:
+      if ((gStageRun.missionStatus & 8) == 0) {
+        s32 r;
+        if (q->d.x < 0) {
+          r = 0xFF;
+          asm("" : "+r"(r));
+        } else {
+          r = 0xFE;
+          asm("" : "+r"(r) : "r"(e));
+        }
+        e->work[1] = r;
+      }
+    }
+  }
+skip:
+  pr = (body->enemy)->processing;
+  {
+    const struct Collision* mp = body->processing;
+    if (mp->kind == 2) {
+      return;
+    }
+    if (*(s32*)((u8*)mp + 0xc) == -1) {
+      return;
+    }
+  }
+  if ((*(u32*)&pr->atkType & 0x200FF) != 0x20002) {
+    return;
+  }
+  e = (struct Entity*)body->parent;
+  if ((u8)(e->mode[1] - 0xA) <= 1) {
+    return;
+  }
+  {
+    u8 z = 0;
+    e->mode[1] = 0xB;
+    e->mode[2] = z;
+  }
+}
+
 static const u16 u16_ARRAY_ARRAY_08363a98[2][4];
 
 // 0x080545CC
