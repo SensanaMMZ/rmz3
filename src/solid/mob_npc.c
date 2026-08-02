@@ -679,7 +679,33 @@ void FUN_080da41c(struct Solid* p) {
   (p->s).mode[1] = 0;
   MobNPC_Update(p);
 }
-INCASM("asm/solid/mob_npc_pre_p1_3_2.inc");
+// 0x080DA494
+TextID pic_080da494(struct Solid* p) {
+  if (FLAG(gCurStory.s.gameflags, 16)) {
+    if (gCurStory.s.counts[8] <= 2) {
+      gCurStory.s.counts[8] = 3;
+      return 0x277;
+    }
+    return 0x278;
+  }
+  if (FLAG(gCurStory.s.gameflags, 11)) {
+    if (gCurStory.s.counts[8] <= 1) {
+      gCurStory.s.counts[8] = 2;
+      return 0x275;
+    }
+    return 0x276;
+  }
+  {
+    TextID ret;
+    if (gCurStory.s.counts[8] != 0) {
+      ret = 0x274;
+    } else {
+      gCurStory.s.counts[8] = 1;
+      ret = 0x273;
+    }
+    return ret;
+  }
+}
 
 // 0x080da500
 void FUN_080da500(struct Solid* p) {
