@@ -280,6 +280,74 @@ NON_MATCH void FUN_0807dd24(struct Enemy* p) {
 
 INCASM("asm/enemy/mellnet_post_post_post_b.inc");
 
+#include "mission.h"
+#include "vfx.h"
+
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+static const motion_t sMotions2[6];
+
+// 0x0807dfa4
+void FUN_0807dfa4(struct Enemy* p) {
+  struct Coord c;
+  register struct Coord* co asm("r4");
+  {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    u8* qq = (u8*)p + 0x8c;
+    s32 z;
+    asm("" : "+r"(qq));
+    z = 0;
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *qq = z;
+    t = (p->s).flags;
+    f = 0xFB;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    k2 = 0xFE;
+    f &= k2;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  CreateSmoke(1, &c);
+  PlaySound(0x2a);
+  if ((p->s).work[0] == 0) {
+    FUN_080b7f70(&p->s, &c, (motion_t*)&sMotions2[2], 3);
+  } else {
+    FUN_080b7ffc(&p->s, &c, (motion_t*)&sMotions2[2], 3);
+  }
+  if ((p->s).work[0] == 0) {
+    co = &(p->s).coord;
+    TryDropItem(3, co);
+  } else {
+    co = &(p->s).coord;
+    TryDropItem(3, co);
+  }
+  {
+    register struct Coord* a1 asm("r1");
+    register struct Mission* gm asm("r3");
+    register u16 cnt asm("r2");
+    a1 = co;
+    gm = &gMission;
+    cnt = gm->enemyCount;
+    if (cnt <= 0x270E) {
+      gm->enemyCount = cnt + 1;
+      asm volatile("" ::"r"(cnt));
+    }
+    TryDropZakoDisk(p, a1);
+  }
+  SET_ENEMY_ROUTINE(p, 4);
+}
+
 void FUN_0807dfa4(struct Enemy* p);
 void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
 void FUN_080b84f4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
