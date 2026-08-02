@@ -4,56 +4,6 @@
 	
 	.text
 
-	thumb_func_start tryKillLocomoIF
-tryKillLocomoIF: @ 0x08054750
-	push {lr}
-	adds r2, r0, #0
-	adds r0, #0x8c
-	ldr r0, [r0]
-	movs r1, #0x80
-	lsls r1, r1, #2
-	ands r0, r1
-	cmp r0, #0
-	bne _0805476E
-	adds r0, r2, #0
-	adds r0, #0xa4
-	movs r1, #0
-	ldrsh r0, [r0, r1]
-	cmp r0, #0
-	bne _080547A4
-_0805476E:
-	ldr r0, _0805479C @ =gStageRun
-	ldrh r1, [r0, #8]
-	movs r0, #8
-	ands r0, r1
-	lsls r0, r0, #0x10
-	lsrs r3, r0, #0x10
-	cmp r3, #0
-	bne _080547A4
-	ldr r1, _080547A0 @ =gBossFnTable
-	ldrb r0, [r2, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #2
-	str r1, [r2, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #8]
-	str r0, [r2, #0x14]
-	strb r3, [r2, #0xd]
-	adds r0, r2, #0
-	bl LocomoIF_Die
-	movs r0, #1
-	b _080547A6
-	.align 2, 0
-_0805479C: .4byte gStageRun
-_080547A0: .4byte gBossFnTable
-_080547A4:
-	movs r0, #0
-_080547A6:
-	pop {r1}
-	bx r1
-	.align 2, 0
-
 	thumb_func_start LocomoIF_Init
 LocomoIF_Init: @ 0x080547AC
 	push {r4, r5, r6, r7, lr}

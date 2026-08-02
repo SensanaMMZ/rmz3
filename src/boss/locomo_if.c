@@ -10,6 +10,18 @@ void nop_0805474c(struct Boss* p) {}
 static const BossFunc sDeads[1];
 static const struct Coord sElementCoord;
 
+void LocomoIF_Die(struct Boss* p);
+
+bool8 tryKillLocomoIF(struct Boss* p) {
+  if ((((p->body).status & BODY_STATUS_DEAD) || ((p->body).hp == 0)) && !(gStageRun.missionStatus & MISSION_FAIL)) {
+    SET_BOSS_ROUTINE(p, ENTITY_DIE);
+    (p->s).mode[1] = 0;
+    LocomoIF_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
 INCASM("asm/boss/locomo_if_p1_pre_a.inc");
 
 static const BossFunc sUpdates1[7];
