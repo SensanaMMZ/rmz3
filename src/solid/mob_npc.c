@@ -539,7 +539,33 @@ void FUN_080da01c(struct Solid* p) {
   (p->s).mode[1] = 1;
   MobNPC_Update(p);
 }
-INCASM("asm/solid/mob_npc_pre_p1_1_2.inc");
+// 0x080DA098
+TextID hibou_080da098(struct Solid* p) {
+  if (FLAG(gCurStory.s.gameflags, 16)) {
+    if (gCurStory.s.counts[5] <= 2) {
+      gCurStory.s.counts[5] = 3;
+      return 0x250;
+    }
+    return 0x251;
+  }
+  if (FLAG(gCurStory.s.gameflags, 11)) {
+    if (gStageDiskManager.disk[0x2a] & 1) {
+      return 0x24F;
+    }
+    return 0x24E;
+  }
+  {
+    TextID ret;
+    if (gCurStory.s.counts[5] != 0) {
+      gCurStory.s.counts[5] = 2;
+      ret = 0x24D;
+    } else {
+      gCurStory.s.counts[5] = 1;
+      ret = 0x24C;
+    }
+    return ret;
+  }
+}
 
 // 0x080da114
 void FUN_080da114(struct Solid* p) {
