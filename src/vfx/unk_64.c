@@ -140,7 +140,76 @@ void Ghost64_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_64_p3_a.inc");
+// 0x080C3CBC
+void FUN_080c3cbc(struct VFX* vfx) {
+  struct Sprite* spr = &((vfx->s).spr);
+  struct Entity* e = (vfx->s).unk_28;
+  struct Sprite* espr = (struct Sprite*)((u8*)e + 0x34);
+  switch ((vfx->s).mode[2]) {
+    case 0:
+      (vfx->s).work[2] = 0;
+      (vfx->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 v asm("r2");
+      (vfx->s).work[2]++;
+      (vfx->s).work[3]++;
+      (vfx->s).work[3] %= 3;
+      {
+        register s32 sv asm("r0");
+        v = 0x138;
+        asm("" : "+r"(v));
+        sv = gSineTable[(vfx->s).work[2]];
+        sv /= 16;
+        v = sv + v;
+      }
+      {
+        register s32 wv asm("r1");
+        register s32 kx asm("r0");
+        wv = (vfx->s).work[3] * 16;
+        kx = 0x110;
+        asm("" : "+r"(kx));
+        kx -= wv;
+        {
+          register s32 tt asm("r1");
+          tt = v;
+          asm("" : "+r"(tt));
+          tt *= kx;
+          tt /= 256;
+          {
+            register u8* ax asm("r0");
+            ax = (u8*)vfx + 0x50;
+            *(u16*)ax = tt;
+          }
+        }
+      }
+      {
+        register s32 wv2 asm("r1");
+        register s32 ky asm("r0");
+        wv2 = (vfx->s).work[3] * 16;
+        ky = 0x100;
+        asm("" : "+r"(ky));
+        ky -= wv2;
+        ky *= v;
+        ky /= 256;
+        {
+          register u8* ay asm("r1");
+          ay = (u8*)vfx + 0x52;
+          *(u16*)ay = ky;
+        }
+      }
+      spr->sprites = espr->sprites;
+      spr->spriteIdx = espr->spriteIdx;
+      spr->xflip = (e->flags >> 4) & 1;
+      spr->oam.xflip = (e->flags >> 4) & 1;
+      if (e->mode[0] > 1) {
+        (vfx->s).mode[1] = 1;
+        (vfx->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
 
 void FUN_080c3d84(struct VFX* vfx) {
   struct Sprite* spr = &((vfx->s).spr);
