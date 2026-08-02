@@ -439,6 +439,39 @@ void FUN_08094110(struct Enemy* p) {
   }
 }
 
+// 0x08094178
+void FUN_08094178(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32* w = (u32*)&p->props[4];
+      *w &= ~1;
+      (p->s).work[2] = 0;
+      SetMotion(&p->s, MOTION(0x8E, 0x08));
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      u8 r;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0 && (p->s).motion.cmdIdx == 3) {
+        u8 k = 1;
+        (p->s).work[2] = k;
+        SET_XFLIP(p, k & ~((p->s).flags >> 4));
+      }
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      r = FUN_08093a64(p, 1);
+      if (r == 0) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = r;
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/shotloid_post_p2_p2b.inc");
 
 // 0x0809468C -- turret sweep: clear the aim bit, flip toward the stored side,
