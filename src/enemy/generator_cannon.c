@@ -349,7 +349,39 @@ void generatorcannon_0808c8d4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/generator_cannon_post_p2_p2.inc");
+static const u8 sCollisionIdxs2[4];
+
+// 0x0808c970
+void generatorcannon_0808c970(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x71, 0x01));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      SetDDP(&p->body, &sCollisions[sCollisionIdxs2[(s8)(p->s).motion.cmdIdx]]);
+      break;
+    case 2:
+      SetDDP(&p->body, &sCollisions[13]);
+      (p->s).work[2] = 0x50;
+      SetMotion(&p->s, MOTION(0x71, 0x06));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      u8 t = --(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 // 0x0808ca28
 void generatorcannon_0808ca28(struct Enemy* p) {
