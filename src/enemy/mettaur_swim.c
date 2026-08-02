@@ -554,6 +554,50 @@ void FUN_08089e60(struct Enemy* p) {
 
 INCASM("asm/enemy/mettaur_swim_p2_post.inc");
 
+#include "mission.h"
+
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x08089EB0
+void FUN_08089eb0(struct Enemy* p) {
+  struct Coord c;
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      struct Coord* co;
+      register u8* q asm("r0");
+      (p->s).flags &= 0xFE;
+      q = (u8*)p + 0x8c;
+      *(u32*)q = m;
+      asm volatile("add %0, #4" : "+r"(q));
+      *(u32*)q = m;
+      asm volatile("add %0, #4" : "+r"(q));
+      *q = m;
+      (p->s).flags &= 0xFB;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y - 0x800;
+      CreateSmoke(1, &c);
+      if ((p->s).work[0] == 2) {
+        PlaySound(0x31);
+      } else {
+        PlaySound(0x2A);
+      }
+      if (gMission.enemyCount <= 0x270E) {
+        gMission.enemyCount++;
+      }
+      co = &(p->s).coord;
+      TryDropZakoDisk(p, co);
+      TryDropItem(4, co);
+      (p->s).mode[2]++;
+      break;
+    }
+    case 1:
+      SET_ENEMY_ROUTINE(p, 4);
+      break;
+  }
+}
+
 void FUN_08089eb0(struct Enemy* p);
 
 void FUN_08089f60(struct Enemy* p) {
