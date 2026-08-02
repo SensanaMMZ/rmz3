@@ -462,7 +462,35 @@ void FUN_080ab550(struct Projectile* p) {
   Projectile32_Update(p);
 }
 
-INCASM("asm/projectile/unk_32_p4_p2_s1_b.inc");
+// 0x080AB668
+void FUN_080ab668(struct Projectile* p) {
+  struct Coord c;
+  struct Entity* q = (p->s).unk_28;
+  s32 dx = (p->s).d.x;
+  (p->s).work[3] += dx;
+  if (((p->s).work[2] & 7) == 0) {
+    u32 fl0 = (p->s).flags;
+    u32 fl;
+    s32 t = fl0 & X_FLIP;
+    asm volatile("add %0, %1, #0" : "=&l"(fl) : "l"(fl0));
+    if (t != 0) {
+      c.x = (p->s).coord.x + 0x1000;
+    } else {
+      c.x = (p->s).coord.x - 0x1000;
+    }
+    c.y = (p->s).coord.y - ((RANDOM(RNG_0202f388) & 0x3F) << 8) + 0x1F00;
+    FUN_080aad0c(&c, (((u32)fl << 24) >> 28) & 1, &p->s);
+  }
+  {
+    s32 w = (p->s).work[2] - 1;
+    (p->s).work[2] = w;
+    if ((u8)w == 0xFF || q->mode[0] > 1 || q->mode[1] == 0x13) {
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      Projectile32_Die(p);
+    }
+  }
+}
+
 
 void FUN_080ab724(struct Projectile* p) {
   gVideoRegBuffer.dispcnt &= ~(DISPCNT_WIN0_ON | DISPCNT_BG2_ON);
