@@ -30,7 +30,45 @@ void FUN_08061b68(struct Boss* p, s32 dx, s32 dy) {
   CreateSmoke(3, &c);
 }
 
-INCASM("asm/boss/spearook_p1_pre_pre_a.inc");
+static const u8 u8_ARRAY_0836591c[16];
+
+// 0x08061BF8
+NON_MATCH void FUN_08061bf8(struct Boss* p0) {
+#if MODERN
+  register struct Boss* p asm("r5");
+  u32* rng;
+  const u8* tbl;
+  register u8* b asm("ip");
+  u8* a;
+  s32 i;
+  p = p0;
+  rng = &RNG_0202f388;
+  tbl = u8_ARRAY_0836591c;
+  do {
+    register u32 k asm("r4");
+    u32 t = *rng * 0x343FD;
+    k = 0x269EC3;
+    t += k;
+    t <<= 1;
+    *rng = t >> 1;
+    i = (t >> 0x11) & 0xF;
+    a = (u8*)p + 0xc2;
+    asm("" : "+r"(a));
+    b = (u8*)p + 0xc3;
+    asm("" : "+r"(b));
+  } while (*a == tbl[i] && *b != 0);
+  if (*a == tbl[i]) {
+    (*b)++;
+  } else {
+    *a = tbl[i];
+    *b = 0;
+  }
+  (p->s).mode[1] = tbl[i];
+  (p->s).mode[2] = 0;
+#else
+  INCCODE("asm/boss/spearook_08061bf8.inc");
+#endif
+}
 
 #include "entity/macros.h"
 
