@@ -480,6 +480,62 @@ void FUN_0808fb10(struct Enemy* p) {
 
 INCASM("asm/enemy/seimeran_p2_p3b.inc");
 
+#include "mission.h"
+#include "vfx.h"
+
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x0808fcec
+void maybeKillSeimeran(struct Enemy* p) {
+  struct Coord c;
+  {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    u8* q = (u8*)p + 0x8c;
+    s32 z;
+    asm("" : "+r"(q));
+    z = 0;
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *q = z;
+    t = (p->s).flags;
+    f = 0xFB;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    k2 = 0xFE;
+    f &= k2;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  if ((p->s).work[0] != 2) {
+    c.y = (p->s).coord.y - 0x1000;
+  }
+  CreateSmoke(1, &c);
+  if ((p->s).work[0] != 2) {
+    struct Coord* co;
+    PlaySound(0x2a);
+    co = &(p->s).coord;
+    TryDropItem(2, co);
+    if (gMission.enemyCount <= 0x270E) {
+      gMission.enemyCount++;
+    }
+    TryDropZakoDisk(p, co);
+  } else {
+    PlaySound(0x35);
+  }
+  SET_ENEMY_ROUTINE(p, 4);
+}
+
+INCASM("asm/enemy/seimeran_p2_p3b_b.inc");
+
 void Seimeran_Init(struct Enemy* p);
 void Seimeran_Update(struct Enemy* p);
 void Seimeran_Die(struct Enemy* p);
