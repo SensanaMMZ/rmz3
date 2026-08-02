@@ -277,6 +277,60 @@ void FUN_080af3ec(struct Projectile* p) {
   }
 }
 
+static const ProjectileFunc PTR_ARRAY_0836d424[3];
+
+// 0x080af46c
+void FUN_080af46c(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  if (q->mode[0] > 1) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  (PTR_ARRAY_0836d424[(p->s).mode[2]])(p);
+  if ((struct Projectile*)q->unk_2c == p && q->mode[2] <= 4) {
+    if (q->mode[2] == 4) {
+      q->coord = (p->s).coord;
+    }
+    return;
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x2000) {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    register s32 z asm("r2");
+    u8* qq;
+    t = (p->s).flags;
+    f = 0xFE;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    z = 0;
+    k2 = 0xFD;
+    f &= k2;
+    (p->s).flags = f;
+    qq = (u8*)p + 0x8c;
+    asm("" : "+r"(qq));
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *qq = z;
+    {
+      register u8 f3 asm("r0");
+      register u8 t3 asm("r1");
+      t3 = (p->s).flags;
+      f3 = 0xFB;
+      f3 &= t3;
+      (p->s).flags = f3;
+      asm volatile("" ::"r"(t3));
+    }
+    SET_PROJECTILE_ROUTINE(p, 3);
+  }
+}
+
 INCASM("asm/projectile/phantom_p1_p1_p1b.inc");
 
 bool8 FUN_080afdf0(struct Entity* e, struct Coord* a, struct Coord* b, struct Coord* c);
