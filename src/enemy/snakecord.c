@@ -541,6 +541,41 @@ void MaybeKillSnakecord(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
+// 0x080750f8
+void FUN_080750f8(struct Enemy* p) {
+  struct Coord c;
+  {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    u8* q = (u8*)p + 0x8c;
+    s32 z;
+    asm("" : "+r"(q));
+    z = 0;
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *q = z;
+    t = (p->s).flags;
+    f = 0xFB;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    k2 = 0xFE;
+    f &= k2;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y + 0x800;
+  CreateSmoke(1, &c);
+  PlaySound(0x2a);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
 INCASM("asm/enemy/snakecord_p2_d.inc");
 
 void Snakecord_Init(struct Enemy* p);
