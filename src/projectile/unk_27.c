@@ -296,7 +296,52 @@ void FUN_080a9810(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_27_pre_post_p2_p1_p1c.inc");
+// 0x080A9920
+void FUN_080a9920(struct Projectile* p) {
+  s32 z;
+  u8 w1;
+  u32 a;
+  {
+    const ProjectileRoutine* const* base = gProjectileFnTable;
+    const ProjectileRoutine* const* rowp = base + (p->s).id;
+    u32 one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(**rowp)[ENTITY_UPDATE];
+  }
+  InitRotatableMotion(&p->s);
+  (p->s).flags = DISPLAY | (p->s).flags;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x5C, 0x03));
+  z = 0;
+  asm("" : "+r"(z));
+  (p->s).flags &= 0xEF;
+  ((p->s).spr).xflip = z;
+  {
+    u8* oa = (u8*)p + 0x4a;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    *oa = m11;
+  }
+  {
+    const s16* st = gSineTable;
+    w1 = (p->s).work[1];
+    a = w1 + 0xC0;
+    (p->s).d.x = st[w1] << 2;
+    (p->s).d.y = st[(u8)a] << 2;
+  }
+  (p->s).work[2] = 8;
+  (p->s).angle = w1;
+  {
+    struct Body* body;
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    InitBody(body, &sCollisions[8], &(p->s).coord, 0x40);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)z;
+  }
+  Projectile27_Update(p);
+}
 
 void FUN_080a99d4(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
