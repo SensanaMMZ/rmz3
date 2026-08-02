@@ -194,7 +194,59 @@ void CielMinigameEnemy_Die(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/minigame_ciel1_post.inc");
+static const u8 u8_ARRAY_ARRAY_0836a85c[5][6];
+static const u8 u8_ARRAY_ARRAY_0836a87a[5][5];
+
+// 0x0809C110 -- parked (allocation tie): retail parks the entity in ip and both
+// table bases plus the k*5 row offset in r8/sb/sl, reloading them through
+// mov-from-high each iteration. agbcc keeps the entity in a low register and
+// spills a different set, so every pinning combination tried (ip alone, ip+r8+sb+sl)
+// costs 4-8 extra insns instead of the 6 retail spends on the high-register moves.
+// Structure, the (x8-0x18)/32 rounding division, the double ldrb of the row byte
+// and the three-way skip chain are all verified against the asm.
+NON_MATCH s32 FUN_0809c110(struct Enemy* p0) {
+#if MODERN
+
+  register struct Enemy* p asm("ip");
+  const u8* base6;
+  const u8* base5;
+  u32 o5;
+  struct Entity* q;
+  s32 x8;
+  u8 k;
+  u8 i;
+  u32 o6;
+  p = p0;
+  q = (p->s).unk_28;
+  x8 = (p->s).coord.x >> 8;
+  k = (x8 - 0x18) / 32;
+  i = 0;
+  base6 = (const u8*)u8_ARRAY_ARRAY_0836a85c;
+  o6 = k * 6;
+  base5 = (const u8*)u8_ARRAY_ARRAY_0836a87a;
+  o5 = k * 5;
+  do {
+    const u8* e = base6 + i + o6;
+    if (*e == 0xFF) {
+      break;
+    }
+    {
+      u8 v = *e;
+      s32 yy = ((v >> 1) << 12) + 0x2800;
+      if (*(u16*)((u8*)q + 0xdf0 + v * 2) != 0xFF && *(s32*)((u8*)p + 0xb8) < yy && (p->s).coord.y >= yy) {
+        *(u8*)((u8*)p + 0xbc) = v;
+        (*((u8*)q + 0xE04 + *(u8*)((u8*)p + 0xbc)))++;
+        (p->s).coord.y = yy;
+        return base5[i + o5];
+      }
+    }
+    i++;
+  } while (i <= 5);
+  return 0;
+#else
+  INCCODE("asm/enemy/minigame_ciel1_c110.inc");
+#endif
+}
 
 void CielMinigameEnemy_Init(struct Enemy* p);
 void CielMinigameEnemy_Update(struct Enemy* p);
