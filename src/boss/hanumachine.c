@@ -742,6 +742,76 @@ void FUN_0805c87c(struct Boss* p) {
 
 INCASM("asm/boss/hanumachine_p2_p1b2.inc");
 
+// 0x0805CBFC
+void hanu_0805cbfc(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, 0xB510);
+    {
+      s32 onR = 0;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        onR = 1;
+      }
+      ((p->s).spr).xflip = onR;
+    }
+    {
+      s32 onR2 = 0;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        onR2 = 1;
+      }
+      {
+        register u8* t0 asm("r0");
+        register u8* oa asm("ip");
+        register u32 sh asm("r2");
+        u32 off = 0x4a;
+        asm("" : "+r"(off));
+        off += (u32)p;
+        t0 = (u8*)off;
+        oa = t0;
+        asm("" : "+r"(oa));
+        sh = onR2 << 4;
+        {
+          s32 ov = *t0;
+          s32 m11 = -0x11;
+          u32 vv;
+          register u8* fa asm("r1");
+          asm("" : "+r"(m11));
+          vv = (m11 & ov) | sh;
+          fa = oa;
+          asm("" : "+r"(fa));
+          *fa = vv;
+        }
+      }
+      if (onR2 != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+    }
+    PlaySound(0x50);
+    {
+      u8 z = 0;
+      (p->s).work[2] = 0x28;
+      (p->s).mode[3] = z;
+    }
+    (p->s).mode[2]++;
+  }
+  if ((p->s).mode[3] == 0) {
+    s32 raw = (p->s).work[2] - 1;
+    (p->s).work[2] = raw;
+    if ((u8)raw == 0xFF) {
+      SetMotion(&p->s, 0xB511);
+      (p->s).mode[3]++;
+    }
+  } else if (*(u8*)((u8*)p + 0x73) == 3) {
+    u8 z = 0;
+    (p->s).mode[1] = 0x14;
+    (p->s).mode[2] = z;
+  }
+  UpdateMotionGraphic(&p->s);
+}
+
+INCASM("asm/boss/hanumachine_p2_p1b2_post.inc");
+
 // 0x0805cdbc
 void FUN_0805cdbc(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
