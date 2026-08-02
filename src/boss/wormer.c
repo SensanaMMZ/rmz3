@@ -1,6 +1,7 @@
 #include "boss.h"
 #include "collision.h"
 #include "entity.h"
+#include "element.h"
 #include "global.h"
 #include "motion.h"
 #include "overworld.h"
@@ -34,6 +35,57 @@ bool8 tryKillOrWormer(struct Boss* p) {
 }
 
 INCASM("asm/boss/wormer_p1.inc");
+
+static const BossFunc sUpdates1[11];
+static const BossFunc sUpdates2[11];
+extern const struct Coord Coord_08362264;
+void summonPurpleNerple(struct Entity* e, s32 x);
+
+// 0x08042648
+void Wormer_Update(struct Boss* p0) {
+  register struct Boss* p asm("r5");
+  register struct VFX** ep asm("r4");
+  struct VFX* nv;
+  p = p0;
+  ep = (struct VFX**)((u8*)p + 0xbc);
+  if (*ep != NULL) {
+    if (!isKilled((struct Entity*)*ep)) {
+      goto after;
+    }
+    nv = NULL;
+    goto store;
+  }
+  if ((*(u32*)((u8*)p + 0x8c) & 1) == 0) {
+    goto after;
+  }
+  if ((p->s).work[0] != 1) {
+    goto after;
+  }
+  nv = ApplyElementEffect(0xC, &p->s, &Coord_08362264);
+store:
+  *ep = nv;
+after:
+  if ((p->s).work[0] == 0 && (p->s).mode[1] != 1) {
+    u16* t = (u16*)((u8*)p + 0xb8);
+    s32 v = *t - 1;
+    *t = v;
+    if ((v << 16) == 0) {
+      struct Camera* cam;
+      s32 d;
+      *t = 0xC0;
+      cam = &gStageRun.vm.camera;
+      d = ((RANDOM(RNG_0202f388) % 3) * 3) << 12;
+      d -= 0x800;
+      summonPurpleNerple(&p->s, cam->viewport.x + d);
+    }
+  }
+  if (!tryKillOrWormer(p)) {
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/boss/wormer_p1b.inc");
 
 void nop_08042890(struct Boss* p) {}
 
