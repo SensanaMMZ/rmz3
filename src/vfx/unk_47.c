@@ -143,6 +143,49 @@ static void VFX47_Update(struct Entity* p) {
 
 static void VFX47_Die(struct Entity* p) { SET_VFX_ROUTINE(p, ENTITY_EXIT); }
 
+#include "palette_animation.h"
+
+u8 GetEntityPalID(struct Entity* p);
+
+// 0x080bf634
+void FUN_080bf634(struct VFX* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[2] != 0) {
+        (p->s).taskCol = 0x1a;
+        SetMotion(&p->s, MOTION(0x4B, 0x01));
+      } else {
+        u32 g0;
+        u32 g;
+        (p->s).taskCol = 0x16;
+        SetMotion(&p->s, MOTION(0x4B, 0x00));
+        g0 = GetEntityPalID(&p->s);
+        g = (u8)g0 << 5;
+        StartPaletteAnimation(0x46, g | 0x200);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 one;
+      s32 x = (q->coord).x - 0x300;
+      u32 f;
+      (p->s).coord.x = x + (((p->s).work[2] * 3) << 9);
+      (p->s).coord.y = (q->coord).y;
+      f = *(u32*)((u8*)q + 0xc0);
+      one = 1;
+      if ((f & one) != 0) {
+        s32 z = 0;
+        (p->s).mode[1] = one;
+        (p->s).mode[2] = z;
+      }
+      StepPaletteAnimation(0x46);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/vfx/unk_47_a.inc");
 
 void FUN_080bf890(struct VFX* p) {
