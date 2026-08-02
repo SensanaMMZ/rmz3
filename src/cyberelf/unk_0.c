@@ -1,6 +1,7 @@
 #include "cyberelf.h"
 #include "entity.h"
 #include "global.h"
+#include "mission.h"
 #include "stagerun.h"
 #include "trig.h"
 #include "zero.h"
@@ -109,7 +110,45 @@ void FUN_080e1fb8(struct Elf* p) {
   }
 }
 
-INCASM("asm/cyberelf/unk_0_post_p2.inc");
+// 0x080E1FE8
+void FUN_080e1fe8(struct Elf* p) {
+  struct Zero* q = ((struct CyberElf0*)p)->player;
+  u8 n;
+  if ((p->s).work[0] == 0) {
+    struct ZeroAsset* a = &(q->unk_b4).status.asset;
+    s32 r;
+    a->fusions += 3;
+    r = (u8)IsDoubleHP(q) << 24;
+    n = 4;
+    if (r != 0) {
+      n = 8;
+    }
+  } else {
+    struct ZeroAsset* a = &(q->unk_b4).status.asset;
+    a->fusions += 5;
+    n = GetMaxHP(q);
+  }
+  {
+    struct PlayInfo* m = gMission.unk_00;
+    if (m->fusionCount <= 0x62) {
+      m->fusionCount++;
+    }
+  }
+  {
+    u8(**pp)[CYBERELF_LENGTH] = &gUnlockedElfPtr;
+    u8 id = q->unk_121;
+    (**pp)[id] |= 2;
+  }
+  {
+    s16* h = &(q->body).hp;
+    *h += n;
+    if (GetMaxHP(q) < *h) {
+      *h = GetMaxHP(q);
+    }
+  }
+  SET_ELF_ROUTINE(p, ENTITY_DIE);
+  Elf0_Die(p);
+}
 
 // --------------------------------------------
 
