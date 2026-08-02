@@ -8,7 +8,49 @@
 
 extern const EnemyFunc sDeads[4];
 
-INCASM("asm/enemy/cannon_hopper_pre_p1.inc");
+// 0x08096FB0
+s32 FUN_08096fb0(struct Enemy* pp) {
+  register struct Enemy* p asm("r3");
+  register s32 v asm("r4");
+  register u32 fl asm("r2");
+  p = pp;
+  {
+    register s32 t asm("r1");
+    t = (p->s).coord.x;
+    (p->s).unk_coord.x = t;
+    t = (p->s).coord.y;
+    (p->s).unk_coord.y = t;
+  }
+  {
+    register u32* w asm("r2");
+    register u32 zz asm("r1");
+    w = (u32*)((u8*)p + 0xc0);
+    zz = 0;
+    *w = zz;
+  }
+  {
+    register s32 k asm("r1");
+    k = -0x200;
+    (p->s).d.x = k;
+    asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(k));
+  }
+  fl = (p->s).flags;
+  if (({ register u32 m_ asm("r1"); m_ = 0x10; m_ &= fl; m_; }) != 0) {
+    v = 0x200;
+  }
+  (p->s).d.x = v;
+  {
+    register s32 k asm("r1");
+    k = -0x400;
+    (p->s).d.y = k;
+    asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(k));
+  }
+  if (({ register u32 m_ asm("r1"); m_ = 0x20; m_ &= fl; m_; }) != 0) {
+    v = 0x400;
+  }
+  (p->s).d.y = v;
+  asm volatile("" :: "r"(fl));
+}
 
 void FUN_08096ffc(struct Enemy* p, s32 a, s32 b) {
   s32 hit = 0;
