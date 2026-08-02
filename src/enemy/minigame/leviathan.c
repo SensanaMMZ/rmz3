@@ -535,6 +535,49 @@ void FUN_0809acdc(struct Enemy* p) {
 
 INCASM("asm/enemy/minigame_leviathan_p3c_b.inc");
 
+// 0x0809AE68
+void FUN_0809ae68(struct Enemy* p) {
+  u8* q = (u8*)(p->s).unk_28;
+  s32 z;
+  switch ((p->s).mode[2]) {
+    case 0:
+      z = 0;
+      if (*(q + 0x34) == 0) {
+        u8* n = q + 0x35;
+        *n = z;
+        *(s32*)(q + 0x1c) = z;
+        *(n - 3) = z;
+        FUN_08099f54((p->s).coord.x, (p->s).coord.y, -1, -5);
+        *(s32*)(q + 0x20) += -0x12C;
+      }
+      *(u32*)((u8*)p + 0x8c) = z;
+      *(u32*)((u8*)p + 0x90) = z;
+      *(u8*)((u8*)p + 0x94) = z;
+      (p->s).flags &= ~COLLIDABLE;
+      (p->s).work[2] = 0x18;
+      (p->s).work[3] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 w3 = (p->s).work[3] + 1;
+      u32 one;
+      (p->s).work[3] = w3;
+      one = 1;
+      if ((w3 & one) != 0) {
+        (p->s).flags |= one;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      if (*(q + 0x31) == 0) {
+        if ((u8)--(p->s).work[2] == 0) {
+          SET_ENEMY_ROUTINE(p, 4);
+        }
+      }
+      break;
+    }
+  }
+}
+
 void LeviathanMinigameEnemy_Init(struct Enemy* p);
 void LeviathanMinigameEnemy_Update(struct Enemy* p);
 void LeviathanMinigameEnemy_Die(struct Enemy* p);
