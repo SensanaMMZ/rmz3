@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "global.h"
+#include "trig.h"
 #include "projectile.h"
 
 static const ProjectileFunc* const PTR_ARRAY_0836b4e4[4];
@@ -106,7 +107,48 @@ void FUN_080a4f3c(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/tretista_post_p2_p2.inc");
+// 0x080a4fa4
+void FUN_080a4fa4(struct Projectile* p) {
+  register struct Projectile* pp asm("r3") = p;
+  register struct Entity* q asm("r5") = (pp->s).unk_28;
+  register s32 cx asm("r6");
+  register u32 a asm("r4");
+  register const s16* tbl asm("r2");
+  const s16* tbl2;
+  s32 t1;
+  register s32 cy asm("r1");
+  register u32 h asm("r2");
+  a = *(u16*)((u8*)p + 0xb4);
+  if ((q->flags & X_FLIP) != 0) {
+    register s32 n asm("r0");
+    n = -(s32)a;
+    a = (u16)n;
+  }
+  cx = (q->coord).x;
+  (pp->s).coord.x = cx;
+  tbl = gSineTable;
+  t1 = (tbl[a >> 8] * 3) << 11;
+  t1 = -t1;
+  asm("" : "+r"(t1));
+  tbl2 = tbl;
+  h = a >> 8;
+  (pp->s).coord.x = cx + t1 / 0x100;
+  asm volatile("" ::"r"(cx));
+  if ((s16)(a - 0x4000) >= 0) {
+    (pp->s).taskCol = 0x17;
+  } else {
+    (pp->s).taskCol = 0x19;
+  }
+  asm volatile("" ::"r"(a));
+  cy = (q->coord).y;
+  (pp->s).coord.y = cy;
+  cy = cy + (tbl2[(u8)(*(s32*)((u8*)pp + 0xb8) >> 8)] << 2);
+  (pp->s).coord.y = cy;
+  (pp->s).coord.y = cy + (-(tbl2[(u8)(h + 0x40)] << 10)) / 0x100;
+  asm volatile("" ::"r"(h), "r"(cy));
+}
+
+
 
 void TretistaProjectile_Init(struct Projectile* p);
 void TretistaProjectile_Update(struct Projectile* p);
