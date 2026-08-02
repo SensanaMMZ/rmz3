@@ -138,7 +138,43 @@ bool8 FUN_08075d40(struct Enemy* p) {
   return FALSE;
 }
 
-INCASM("asm/enemy/purple_nerple_p1_a_c_b.inc");
+extern const EnemyFunc PTR_ARRAY_083670d0[10];
+extern const EnemyFunc PTR_ARRAY_083670f8[10];
+void FUN_08075aa8(struct Enemy* p);
+
+// 0x08075DC8
+bool8 FUN_08075dc8(struct Enemy* p) {
+  if ((p->s).mode[1] == 8) return FALSE;
+  if (*(u32*)&p->props[0] != 0) return FALSE;
+  switch ((p->s).mode[3]) {
+    case 0:
+      if ((p->s).work[0] == 1) return FALSE;
+      if (!IsFrozen(&p->s)) return FALSE;
+      (PTR_ARRAY_083670d0[(p->s).mode[1]])(p);
+      (PTR_ARRAY_083670f8[(p->s).mode[1]])(p);
+      (p->s).mode[3]++;
+      UpdateMotionGraphic(&p->s);
+      return TRUE;
+    case 1:
+      if ((p->s).work[0] == 0 || (p->s).work[0] == 3) {
+        if (p->props[4] != 0) {
+          FUN_08075aa8(p);
+          SetMotion(&p->s, MOTION(0x2A, 0x04));
+          UpdateMotionGraphic(&p->s);
+        }
+      }
+      if (IsFrozen(&p->s)) {
+        if (((p->body).status & 0x00020001) == 0x00020001) {
+          (p->s).mode[3] = 0;
+          return FALSE;
+        }
+        return TRUE;
+      }
+      (p->s).mode[3] = 0;
+      return FALSE;
+  }
+  return FALSE;
+}
 
 #include "element.h"
 #include "vfx.h"
