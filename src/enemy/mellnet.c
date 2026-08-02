@@ -1,3 +1,5 @@
+#include "camera.h"
+#include "stagerun.h"
 #include "collision.h"
 #include "metatile.h"
 #include "element.h"
@@ -278,7 +280,45 @@ NON_MATCH void FUN_0807dd24(struct Enemy* p) {
 #endif
 }
 
-INCASM("asm/enemy/mellnet_post_post_post_b.inc");
+// 0x0807DEE8
+void FUN_0807dee8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 idx;
+      PlaySound(0x108);
+      idx = *(u8*)&(p->s).motion.cmdIdx;
+      GotoMotion(&p->s, sMotions2[((p->s).flags & X_FLIP) ? 1 : 0], idx, 3);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      if ((p->s).work[0] == 1) {
+        if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+          register u8 f asm("r0");
+          register u8 t1 asm("r1");
+          register u8 k2 asm("r1");
+          register s32 z asm("r2");
+          t1 = (p->s).flags;
+          f = 0xFE;
+          f &= t1;
+          asm volatile("" ::"r"(t1));
+          z = 0;
+          k2 = 0xFD;
+          f &= k2;
+          (p->s).flags = f;
+          *(u32*)((u8*)p + 0x8c) = z;
+          *(u32*)((u8*)p + 0x90) = z;
+          *(u8*)((u8*)p + 0x94) = z;
+          (p->s).flags &= ~COLLIDABLE;
+          SET_ENEMY_ROUTINE(p, 3);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 #include "mission.h"
 #include "vfx.h"
