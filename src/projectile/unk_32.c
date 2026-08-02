@@ -261,7 +261,31 @@ void FUN_080ab178(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_32_p4_p2_s1.inc");
+static const struct Collision sCollisions[14];
+
+// 0x080AB190
+void FUN_080ab190(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  struct Body* b;
+  u32 z;
+  u8* c;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  z = 0;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x62, 0x01));
+  (p->s).flags |= COLLIDABLE;
+  b = &p->body;
+  InitBody(b, &sCollisions[2], &(p->s).coord, 6);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = (BodyFunc)z;
+  *(u8*)((u8*)p + 0x25) = 9;
+  (p->s).work[2] = 0x30;
+  c = (u8*)q + 0xc6;
+  *c = *c + 1;
+  Projectile32_Update(p);
+}
 
 static const struct Collision sCollisions[14];
 void FUN_080ab3ac(struct Projectile* p);
