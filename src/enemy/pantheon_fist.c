@@ -437,6 +437,70 @@ void FUN_08095914(struct Enemy* p) {
 
 INCASM("asm/enemy/pantheon_fist_post_p2_p2b.inc");
 
+// 0x08095ac4
+void FUN_08095ac4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8* pb asm("r2");
+      register u8 w asm("r1");
+      register s32 one asm("r0");
+      register s32 v asm("r3");
+      register u8* pb9 asm("r5");
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0xD4, 0x02));
+      pb = (u8*)p + 0xb9;
+      w = *pb;
+      one = 1;
+      asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(one));
+      v ^= w;
+      pb9 = pb;
+      if (v != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+      {
+        register s32 xf asm("r1");
+        u8* oa;
+        s32 sh4, ov, m11;
+        xf = 1;
+        xf &= v;
+        (p->s).spr.xflip = xf;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      {
+        s32 d = 0x80;
+        (p->s).d.x = d;
+        (p->s).d.x = d - (*pb9 << 8);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      u8 r;
+      FUN_08095014(p, (p->s).d.x);
+      UpdateMotionGraphic(&p->s);
+      r = FUN_08094fe0(p, 1);
+      if (r == 0) {
+        register u8* pb8 asm("r1");
+        register s32 two asm("r0");
+        pb8 = (u8*)p + 0xb8;
+        asm("" : "+r"(pb8));
+        two = 2;
+        *pb8 = two;
+        (p->s).mode[1] = two;
+        (p->s).mode[2] = r;
+      }
+      break;
+    }
+  }
+}
+
 #include "mission.h"
 
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
