@@ -82,6 +82,22 @@ static void VFX39_Update(struct VFX* vfx) {
 
 INCASM("asm/vfx/unk_39_p1.inc");
 
+// 0x080BD578
+void FUN_080bd578(struct VFX* p) {
+  register u8 m asm("r4");
+  m = (p->s).mode[2];
+  if (m == 0) {
+    gWindowRegBuffer.dispcnt |= DISPCNT_WIN1_ON;
+    gWindowRegBuffer.winin[1] = *(u8*)((u8*)p + 0x7c);
+    gWindowRegBuffer.winin[2] |= *(u8*)((u8*)p + 0x7d);
+    (p->s).mode[2] = m + 1;
+    asm volatile("" :: "r"(m));
+  }
+  if (*(u8*)((u8*)p + 0x77) != 0) {
+    SET_VFX_ROUTINE(p, 2);
+  }
+}
+
 void VFX39_Die(struct VFX* p) {
   PALETTE16(0) = 0;
   gWindowRegBuffer.dispcnt &= 0xBFFF;
