@@ -457,6 +457,37 @@ void FUN_08062b70(struct Boss* p) {
   }
 }
 
+static const u8 u8_ARRAY_08365938[16];
+
+// 0x08062BB4
+void FUN_08062bb4(struct Boss* p) {
+  struct Entity* q = (p->s).unk_28;
+  (p->s).coord.x = (q->coord).x;
+  (p->s).coord.y = (q->coord).y - 0x1200;
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x103);
+      (p->s).work[2] = u8_ARRAY_08365938[RANDOM(RNG_0202f388) & 0xF];
+      (p->s).work[3] = 0xFF;
+      (p->s).unk_coord.x = 0;
+      SetMotion(&p->s, MOTION(0xD6, 0x03));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        SetDDP(&p->body, &sCollisions[9]);
+        if ((RANDOM(RNG_0202f388) & 1) != 0) {
+          (p->s).mode[1] = 0xC;
+        } else {
+          (p->s).mode[1] = 0xB;
+        }
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 INCASM("asm/boss/spearook_p1_post_p2_b.inc");
 
 void FUN_08061b68(struct Boss* p, s32 dx, s32 dy);
