@@ -671,19 +671,18 @@ void blizzackMode18(struct Boss* p) {
 INCASM("asm/boss/blizzack_post_p2_a2b.inc");
 
 // 0x0805AB5C
-NON_MATCH void blizzackMode19(struct Boss* p) {
-#if MODERN
+void blizzackMode19(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
     s32 v;
-    u8 z;
+    register u8 z asm("r2");
     SetMotion(&p->s, MOTION(0xB4, 0x0B));
     ((p->s).unk_2c)->mode[2] = 1;
-    asm volatile("" ::: "memory");
     {
       register u16* h asm("r0");
-      register u16 hv asm("r1");
+      register s32 hv asm("r1");
       h = (u16*)((u8*)(p->s).unk_2c + 0xbc);
       z = 0;
+      asm("" : "+r"(z));
       hv = 0x640B;
       *h = hv;
     }
@@ -715,9 +714,6 @@ NON_MATCH void blizzackMode19(struct Boss* p) {
   } else {
     (p->s).coord.x += (p->s).d.x;
   }
-#else
-  INCCODE("asm/boss/blizzack_0805ab5c.inc");
-#endif
 }
 
 void blizzackMode20(struct Boss* p) {
