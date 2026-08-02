@@ -510,6 +510,41 @@ NON_MATCH void FUN_0800f604(struct StageLayer* l, const struct Stage* _ UNUSED) 
 #endif
 }
 
+// 0x0800F68C
+void FUN_0800f68c(struct StageLayer* l0, const struct Stage* _ UNUSED) {
+  register struct StageLayer* l asm("r4");
+  register u32 k asm("r3");
+  u32 n;
+  u16 b;
+  u8 ph;
+  u32 buf[2];
+  u32 c;
+  u32 k0;
+  u32 m;
+  u32 sb;
+  void* dst;
+  u16* bg;
+  l = l0;
+  n = l->bgIdx << 16;
+  b = n >> 16;
+  ph = l->phase;
+  if (ph != 0) {
+    return;
+  }
+  m = n >> 20;
+  bg = &BGCNT16(m);
+  sb = l->screenBase;
+  k = 0x4046;
+  asm volatile("add %0, %1, #0" : "=&l"(k0) : "l"(k));
+  c = sb | k0;
+  *bg = c;
+  dst = (void*)(VRAM + ((c & 0x1F00) << 3));
+  buf[0] = ph;
+  CpuFastSet(buf, dst, 0x01000400);
+  LoadBgMap(b, gBgMapOffsets, 0x59, 0, ph);
+  l->phase++;
+}
+
 INCASM("asm/stage_gfx/missile_factory_p2_p1b.inc");
 
 // 0x0800f840

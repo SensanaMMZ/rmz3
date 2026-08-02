@@ -4,58 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_0800f68c
-FUN_0800f68c: @ 0x0800F68C
-	push {r4, r5, r6, lr}
-	sub sp, #0xc
-	adds r4, r0, #0
-	ldr r0, [r4, #0x5c]
-	lsls r0, r0, #0x10
-	lsrs r6, r0, #0x10
-	ldrb r5, [r4, #0xe]
-	cmp r5, #0
-	bne _0800F6DE
-	lsrs r2, r0, #0x14
-	lsls r2, r2, #1
-	ldr r0, _0800F6E8 @ =gVideoRegBuffer+4
-	adds r2, r2, r0
-	ldr r1, [r4, #0x64]
-	ldr r3, _0800F6EC @ =0x00004046
-	adds r0, r3, #0
-	orrs r1, r0
-	strh r1, [r2]
-	movs r0, #0xf8
-	lsls r0, r0, #5
-	ands r1, r0
-	lsls r1, r1, #3
-	movs r0, #0xc0
-	lsls r0, r0, #0x13
-	adds r1, r1, r0
-	str r5, [sp, #4]
-	ldr r2, _0800F6F0 @ =0x01000400
-	add r0, sp, #4
-	bl CpuFastSet
-	lsls r0, r6, #0x18
-	lsrs r0, r0, #0x18
-	ldr r1, _0800F6F4 @ =gBgMapOffsets
-	str r5, [sp]
-	movs r2, #0x59
-	movs r3, #0
-	bl LoadBgMap
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_0800F6DE:
-	add sp, #0xc
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0800F6E8: .4byte gVideoRegBuffer+4
-_0800F6EC: .4byte 0x00004046
-_0800F6F0: .4byte 0x01000400
-_0800F6F4: .4byte gBgMapOffsets
-
 	thumb_func_start FUN_0800f6f8
 FUN_0800f6f8: @ 0x0800F6F8
 	push {r4, r5, r6, r7, lr}
