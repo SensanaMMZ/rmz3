@@ -44,6 +44,36 @@ void Projectile20_Die(struct Projectile* p) {
 
 void FUN_080a5144(struct Projectile* p) {}
 
+void FUN_080a4fa4(struct Projectile* p);
+
+// 0x080a5148
+void FUN_080a5148(struct Projectile* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      *(s32*)((u8*)p + 0xb4) = m;
+      *(s32*)((u8*)p + 0xb8) = 0x2000;
+      (p->s).taskCol = 0x19;
+      SetMotion(&p->s, MOTION(0x49, 0x00));
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32* q = (s32*)((u8*)p + 0xb4);
+      s32 v = *q + 0x100;
+      *q = v;
+      if (v > 0x3FFF) {
+        s32 z = 0;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = z;
+      }
+      FUN_080a4fa4(p);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/projectile/unk_20_post.inc");
 
 void FUN_080a53e8(struct Projectile* p) {
