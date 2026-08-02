@@ -459,6 +459,89 @@ void FUN_0807336c(struct Body* body, struct Coord* c) {
 
 INCASM("asm/enemy/pantheon_aqua_p10.inc");
 
+u8 FUN_08073500(struct Enemy* p) {
+  register struct Zero* z asm("r3");
+  register s32 dx asm("r4");
+  register s32 dy asm("r5");
+  register s32 norm asm("r6");
+  register s32 t asm("r0");
+  register s32 zx asm("r2");
+  register s32 px asm("r1");
+  register s32 zy asm("r1");
+  s32 a, b, s1, s2;
+  s32 ret;
+  z = pZero2;
+  zx = (z->s).coord.x;
+  px = (p->s).coord.x;
+  dx = zx - px;
+  t = (p->s).coord.y + 0xC00;
+  zy = (z->s).coord.y;
+  dy = zy - t;
+  a = dx >> 2;
+  s1 = a;
+  s1 = s1 * a;
+  b = dy >> 2;
+  s2 = b;
+  s2 = s2 * b;
+  norm = Sqrt(s1 + s2) << 2;
+  if (norm != 0) {
+    dx = (dx << 8) / norm;
+    dy = (dy << 8) / norm;
+  }
+  if (dx > 0) {
+    s32 a = dy;
+    asm("" : "+r"(a));
+    if (a < 0) {
+      a = -a;
+    }
+    if (a > 0xEC) {
+      ret = 0;
+      if (dy > 0) {
+        ret = 4;
+      }
+    } else {
+      s32 b = dy;
+      asm("" : "+r"(b));
+      if (b < 0) {
+        b = -b;
+      }
+      ret = 2;
+      if (b > 0x60) {
+        ret = 1;
+        if (dy > 0) {
+          ret = 3;
+        }
+      }
+    }
+  } else {
+    s32 a = dy;
+    asm("" : "+r"(a));
+    if (a < 0) {
+      a = -a;
+    }
+    if (a > 0xEC) {
+      ret = 0;
+      if (dy > 0) {
+        ret = 4;
+      }
+    } else {
+      s32 b = dy;
+      asm("" : "+r"(b));
+      if (b < 0) {
+        b = -b;
+      }
+      ret = 6;
+      if (b > 0x60) {
+        ret = 7;
+        if (dy > 0) {
+          ret = 5;
+        }
+      }
+    }
+  }
+  return ret;
+}
+
 extern const u8 u8_ARRAY_080ff00c[80];
 
 s32 FUN_080735ac(struct Enemy* p) {
