@@ -10,6 +10,32 @@ static const BossFunc sDeinitializers[2];
 
 void FUN_08045b68(struct Boss* p);
 
+// 0x08045b68
+void FUN_08045b68(struct Boss* p) {
+  if ((p->s).work[0] == 0) {
+    u8* q = (u8*)p + 0xd0;
+    switch (*q) {
+      case 0:
+        if (*((u8*)p + 0xcf) != 0) {
+          StartPaletteAnimation(0x19, 0x320);
+          StepPaletteAnimation(0x19);
+          (*q)++;
+        }
+        break;
+      case 1: {
+        u8 t;
+        StepPaletteAnimation(0x19);
+        t = *((u8*)p + 0xcf);
+        if (t == 0) {
+          RemovePaletteAnimation(0x19);
+          *q = t;
+        }
+        break;
+      }
+    }
+  }
+}
+
 INCASM("asm/boss/baby_elf_p1_pre_p1.inc");
 
 // 0x08045C84
