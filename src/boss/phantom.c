@@ -1542,6 +1542,42 @@ s8 FUN_08060974(struct Boss* p) {
 
 INCASM("asm/boss/phantom_p2_post_p2.inc");
 
+static const BossFunc PTR_ARRAY_08365568[2];
+
+// 0x08060A48
+NON_MATCH void FUN_08060a48(struct Boss* p0, s8 n0) {
+#if MODERN
+  register struct Boss* p asm("r6");
+  u8 n;
+  struct Coord c[3];
+  struct Entity* q;
+  s32 i;
+  p = p0;
+  n = n0;
+  q = (p->s).unk_2c;
+  c[0] = q->coord;
+  c[1] = q->d;
+  c[2] = q->unk_coord;
+  i = 0;
+  if (q->mode[2] > 1) {
+    i = 1;
+  }
+  do {
+    if (((bool8(*)(struct Boss*, struct Coord*, struct Coord*, struct Coord*))PTR_ARRAY_08365568[i])(p, &c[0], &c[1], &c[2])) {
+      s32 t = 0;
+      if (i == 0) {
+        t = 1;
+      }
+      i = t;
+    }
+  } while (--n != 0);
+  *(s32*)((u8*)p + 0xbc) = c[0].x;
+  *(s32*)((u8*)p + 0xc0) = c[0].y;
+#else
+  INCCODE("asm/boss/phantom_08060a48.inc");
+#endif
+}
+
 void Phantom_Init(struct Boss* p);
 void Phantom_Update(struct Boss* p);
 void Phantom_Die(struct Boss* p);
