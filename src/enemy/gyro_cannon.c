@@ -518,6 +518,32 @@ void FUN_0806da20(struct Enemy* p) {
 
 INCASM("asm/enemy/gyro_cannon_p3a.inc");
 
+// 0x0806DA5C
+void FUN_0806da5c(struct Enemy* p) {
+  u8 z;
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, MOTION(0x17, 0x00));
+    (p->s).work[2] = 0x78;
+    (p->s).mode[2]++;
+  }
+  {
+    register u8* q asm("r1");
+    q = (u8*)p + 0xb4;
+    asm("" : "+r"(q));
+    z = 0;
+    q[0xb] = 1;
+  }
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0xB00) == 0) {
+    (p->s).mode[1] = z;
+  } else {
+    if ((u8)--(p->s).work[2] != 0xFF) {
+      return;
+    }
+    (p->s).mode[1] = 3;
+  }
+  (p->s).mode[2] = z;
+}
+
 // 0x0806DAB8
 void FUN_0806dab8(struct Enemy* p) {
   struct Entity** slot;
