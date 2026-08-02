@@ -98,7 +98,89 @@ void Elf0_Die(struct Elf* p) {
 
 struct Entity* FUN_080bfce8(struct Coord* c, s32 r1);
 
-INCASM("asm/cyberelf/unk_0_post_p1.inc");
+s32 CalcAngle(s32 x, s32 y);
+struct Entity* FUN_080bfc94(struct Coord* c, u8 r1);
+
+// 0x080E1EF8 -- parked (scratch-register tie): 92/92 insns, every instruction
+// and every other register home matches retail. The single divergence is the
+// zero index register of the SECOND ldrsh into gSineTable: retail reuses r7
+// (freed by the 0x200 range constant) where agbcc picks r2. Both are free at
+// that point, so it is a pure allocation-order preference. Six keep-alive /
+// pin placements were tried (on the constant, on dy, on the first sine value,
+// on the entity pointer); each either left r2 in place or scrambled an
+// upstream home that was already correct.
+NON_MATCH void FUN_080e1ef8(struct Elf* p0) {
+#if MODERN
+
+  register struct Elf* p asm("r4");
+  s32* tx;
+  s32* ty;
+  s32 dx;
+  s32 dy;
+  p = p0;
+  {
+    u8* cp = (u8*)p + 0xc0;
+    s32 t = *cp + 1;
+    *cp = t % 32;
+  }
+  tx = (s32*)((u8*)p + 0xb4);
+  dx = *tx - (p->s).unk_coord.x;
+  ty = (s32*)((u8*)p + 0xb8);
+  dy = *ty - (p->s).unk_coord.y;
+  asm volatile("" ::"r"(tx));
+  asm volatile("" ::"r"(ty));
+  {
+    register s32 k200 asm("r1");
+    register s32 k400 asm("r1");
+    s32 k200b;
+    s32 sum1;
+    s32 sum2;
+    k200 = 0x200;
+    asm("" : "+r"(k200));
+    sum1 = dx + k200;
+    k400 = 0x400;
+    asm("" : "+r"(k400));
+    if ((u32)sum1 > (u32)k400) {
+      goto move;
+    }
+    k200b = 0x200;
+    asm("" : "+r"(k200b));
+    sum2 = dy + k200b;
+    if ((u32)sum2 > (u32)k400) {
+      goto move;
+    }
+    if ((dx * dx) + (dy * dy) <= 0x40000) {
+      asm volatile("" ::"r"(k200b));
+      (p->s).mode[1]++;
+      (p->s).unk_coord.x = *tx;
+      (p->s).unk_coord.y = *ty;
+      return;
+    }
+  }
+move:
+  {
+    s32 a = CalcAngle(dx, dy);
+    const s16* st = gSineTable;
+    u32 a2;
+    asm("" : "+r"(st));
+    asm volatile("add %0, %1, #0" : "=&l"(a2) : "l"(a));
+    a2 += 0x40;
+    (p->s).unk_coord.x += st[(u8)a2] << 1;
+    (p->s).unk_coord.y += st[(u8)a] << 1;
+    {
+      u8* r = (u8*)p + 0xc1;
+      s32 v = *r - 1;
+      *r = v;
+      if ((u8)v == 0xFF) {
+        FUN_080bfc94((struct Coord*)((u8*)p + 0x54), 0);
+        *r = 0x20;
+      }
+    }
+  }
+#else
+  INCCODE("asm/cyberelf/unk_0_1ef8.inc");
+#endif
+}
 
 void FUN_080e1fb8(struct Elf* p) {
   if ((p->s).mode[2] == 0) {
