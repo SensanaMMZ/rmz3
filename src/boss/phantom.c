@@ -1090,7 +1090,50 @@ store:
 #endif
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p5_p2b.inc");
+// 0x0805FEAC
+void FUN_0805feac(struct Boss* p) {
+  s32 z;
+  s32 v;
+  *(s32*)((u8*)p + 0xc4) = 0;
+  {
+    s32 n = (p->s).work[2] + 1;
+    u8 nu;
+    z = 0;
+    (p->s).work[2] = n;
+    nu = n;
+    if (nu <= 0x4F) {
+      if ((n & 3) == 0) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+    } else if (nu <= 0x6F) {
+      if ((n & 2) != 0) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+    } else {
+      if ((n & 3) != 0) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+    }
+  }
+  v = gSineTable[(p->s).work[2]] + 0x100;
+  *(u16*)((u8*)p + 0x52) = v;
+  if ((p->s).work[2] == 0x80) {
+    SetDDP(&p->body, &sCollisions[8]);
+    InitNonAffineMotion(&p->s);
+    ResetDynamicMotion(&p->s);
+    FUN_080607a0(p, 0xF);
+    *(s32*)((u8*)p + 0xc4) = 8;
+    *(u16*)&(p->s).mode[2] = 2;
+    (p->s).work[2] = 0;
+    (p->s).work[3] = 0x10;
+  }
+}
 
 void FUN_0805ff64(struct Boss* p) {
   (PTR_ARRAY_0836552c[(p->s).mode[3]])(p);
