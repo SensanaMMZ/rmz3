@@ -289,7 +289,44 @@ void generatorcannon_0808c7e0(struct Enemy* p) {
   }
 }
 
+struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
+
 INCASM("asm/enemy/generator_cannon_post_p2_p2.inc");
+
+// 0x0808ca28
+void generatorcannon_0808ca28(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 3;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      struct Coord c;
+      PlaySound(0x2c);
+      c.x = (p->s).coord.x - 0x2500;
+      c.y = (p->s).coord.y - 0xE00;
+      CreateLemon(&c, 0x300, 0);
+      c.x = (p->s).coord.x + 0x2500;
+      c.y = (p->s).coord.y - 0xE00;
+      CreateLemon(&c, 0x300, 0x80);
+      SetMotion(&p->s, MOTION(0x71, 0x02));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        u8 t = --(p->s).work[2];
+        if (t == 0) {
+          (p->s).mode[1] = 1;
+          (p->s).mode[2] = t;
+        } else {
+          (p->s).mode[2] = 1;
+        }
+      }
+      break;
+  }
+}
 
 void generatorcannon_0808cad8(struct Enemy* p) {
   switch ((p->s).mode[2]) {
