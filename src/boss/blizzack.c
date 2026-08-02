@@ -331,6 +331,61 @@ void blizzackMode1(struct Boss* p) {
 
 INCASM("asm/boss/blizzack_rest_a.inc");
 
+// 0x0805A140
+void blizzackPreAI(struct Boss* p) {
+  struct Zero* z;
+  u8 f;
+  if ((p->s).mode[2] != 0) {
+    register u8 zz asm("r2");
+    SetMotion(&p->s, MOTION(0xB4, 0x00));
+    ((p->s).unk_2c)->mode[2] = 1;
+    {
+      register u16* h asm("r0");
+      register s32 hv asm("r1");
+      h = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+      zz = 0;
+      asm("" : "+r"(zz));
+      hv = 0x6400;
+      *h = hv;
+    }
+    (p->s).mode[2] = zz;
+    (p->s).work[2] = 0x20;
+  }
+  UpdateMotionGraphic(&p->s);
+  f = 0;
+  z = pZero2;
+  if ((z->s).coord.x > (p->s).coord.x) {
+    f = 1;
+  }
+  ((p->s).spr).xflip = f;
+  f = 0;
+  if ((z->s).coord.x > (p->s).coord.x) {
+    f = 1;
+  }
+  {
+    register u8* oa asm("ip");
+    u32 sh4;
+    s32 ov;
+    s32 m11;
+    oa = (u8*)p + 0x4a;
+    sh4 = f << 4;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    m11 |= sh4;
+    *oa = m11;
+  }
+  if (f != 0) {
+    (p->s).flags |= 0x10;
+  } else {
+    (p->s).flags &= 0xEF;
+  }
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    (p->s).mode[1] = 2;
+    (p->s).mode[2] = 1;
+  }
+}
+
 // blizzackNextMode does not match for the same regmove reason as blizzackMode1:
 // agbcc schedules the mode[2]=0 zero early, forcing the 0x6402 constant into a
 // spare reg + copy the target avoids. Logic is faithful in the MODERN branch;
