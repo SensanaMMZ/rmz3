@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "enemy.h"
+#include "physics.h"
 #include "global.h"
 #include "trig.h"
 #include "vfx.h"
@@ -163,6 +164,75 @@ void FUN_08071778(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/carry_arm_p3_p1_c.inc");
+
+// 0x08071964
+void FUN_08071964(struct Enemy* p) {
+  struct Entity* q;
+  struct Entity* r;
+  s32 v;
+  if (((p->s).unk_2c)->mode[0] > 1) {
+    (p->s).unk_2c = NULL;
+  }
+  q = (p->s).unk_28;
+  if (q->mode[0] > 1) {
+    (p->s).unk_28 = NULL;
+    q = NULL;
+  }
+  r = *(struct Entity**)((u8*)p + 0xb4);
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 z = (p->s).mode[2];
+      (p->s).work[2] = z;
+      (p->s).work[3] = z;
+      (p->s).d.y = z;
+      SetMotion(&p->s, 0x2300);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      if (q == NULL) {
+        s32 dy = (p->s).d.y + 0x40;
+        (p->s).d.y = dy;
+        if (dy > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        v = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (v < 0) {
+          if ((p->s).work[2] == 0) {
+            PlaySound(0x91);
+            (p->s).work[2] = 1;
+          }
+          (p->s).d.y = (s32)q;
+          (p->s).coord.y += v;
+        } else {
+          (p->s).work[2] = (s32)q;
+          if (*(u8*)((u8*)r + 0x2f) == 0) {
+            {
+              register u8 w3 asm("r0");
+              register s32 k3 asm("r1");
+              w3 = (p->s).work[3];
+              k3 = 3;
+              w3 &= k3;
+              if (w3 == 0) {
+                *(s32*)((u8*)r + 0x20) += 4;
+              }
+            }
+            (p->s).work[3]++;
+          }
+        }
+      } else {
+        s32 z2 = 0;
+        (p->s).work[2] = z2;
+        (p->s).work[3] = 4;
+        (p->s).d.y = z2;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/enemy/carry_arm_p3_p1_c_b.inc");
 
 void FUN_08071b88(struct Enemy* p) {
   (p->s).d.y -= 0x10;
