@@ -138,7 +138,83 @@ NON_MATCH void FUN_08068618(struct Enemy* p) {
 
 bool8 FUN_080686b0(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/piller_cannon_p4.inc");
+// 0x080686B4
+void FUN_080686b4(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      struct VFX** vp;
+      struct VFX* v;
+      register u8 k1 asm("r1");
+      SetMotion(&p->s, 0x800);
+      {
+        u8* a = (u8*)p + 0xb9;
+        *a = m;
+        asm("" : "+r"(a));
+        a -= 0x45;
+        SetDDP((struct Body*)a, sCollisions);
+      }
+      vp = (struct VFX**)((u8*)p + 0xbc);
+      v = *vp;
+      if (v != NULL) {
+        register u8 t asm("r0");
+        u8 fv = (v->s).flags;
+        k1 = 0xFE;
+        asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(k1));
+        t &= fv;
+        (v->s).flags = t;
+        {
+          struct VFX* v2 = *vp;
+          u8 f2 = (v2->s).flags;
+          register u8 k2 asm("r0");
+          k1 &= f2;
+          k2 = 0xFD;
+          k1 &= k2;
+          (v2->s).flags = k1;
+          SET_VFX_ROUTINE(v2, ENTITY_DISAPPEAR);
+        }
+      }
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 zx = (pZero2->s).coord.x;
+        s32 k38 = 0x3800;
+        s32 d;
+        s32 k70;
+        asm("" : "+r"(k38));
+        zx += k38;
+        d = zx - (p->s).coord.x;
+        k70 = 0x7000;
+        asm("" : "+r"(k70));
+        if ((u32)d < (u32)k70) {
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 zx2 = (pZero2->s).coord.x;
+        s32 k38b = 0x3800;
+        s32 d2;
+        s32 k70b;
+        asm("" : "+r"(k38b));
+        zx2 += k38b;
+        d2 = zx2 - (p->s).coord.x;
+        k70b = 0x7000;
+        asm("" : "+r"(k70b));
+        if ((u32)d2 >= (u32)k70b) {
+          u8 z = 0;
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = z;
+        }
+      }
+      break;
+  }
+}
 
 bool8 FUN_08068780(struct Enemy* p) { return TRUE; }
 
