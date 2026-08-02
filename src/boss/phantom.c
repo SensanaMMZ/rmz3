@@ -361,7 +361,45 @@ void phantom_0805f0a0(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_pre_p3.inc");
+void FUN_0805f180(struct Boss* p);
+u8 FUN_08060838(struct Boss* p);
+
+// 0x0805F0F4
+void FUN_0805f0f4(struct Boss* p) {
+  u8 f;
+  u32 one;
+  register u32 xf asm("r1");
+  SetDDP(&p->body, &sCollisions[0]);
+  *(u16*)&(p->s).mode[2] = 1;
+  FUN_080607a0(p, 1);
+  f = FUN_08060838(p);
+  one = 1;
+  asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(f));
+  xf &= one;
+  ((p->s).spr).xflip = xf;
+  {
+    register u8* oa asm("ip");
+    u32 sh4;
+    s32 ov;
+    s32 m11;
+    oa = (u8*)p + 0x4a;
+    sh4 = xf << 4;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    m11 |= sh4;
+    *oa = m11;
+  }
+  if (xf != 0) {
+    (p->s).flags |= 0x10;
+  } else {
+    (p->s).flags &= 0xEF;
+  }
+  (p->s).d.x = (((f * 2 - 1) * 15) << 6);
+  CreateParticle(&(p->s).coord, 0, ((p->s).flags >> 4) & 1);
+  (p->s).work[3] = 3;
+  FUN_0805f180(p);
+}
 
 void FUN_0805f180(struct Boss* p) {
   (PTR_ARRAY_0836544c[(p->s).mode[3]])(p);
