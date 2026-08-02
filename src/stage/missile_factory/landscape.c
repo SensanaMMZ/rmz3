@@ -461,7 +461,20 @@ void FUN_0800f54c(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED)
   RemovePaletteAnimation(0xd0);
 }
 
-INCASM("asm/stage_gfx/missile_factory_p2_p1.inc");
+// 0x0800F560
+void missileFactory_0800f560(struct StageLayer* l, const struct Stage* _ UNUSED) {
+  u8 ph = l->phase;
+  if (ph == 0) {
+    const u16 n = l->bgIdx;
+    BGCNT16(n >> 4) = l->prio | l->screenBase | 0x4044;
+    *(u32*)gVideoRegBuffer.bgofs[n >> 4] = ph;
+    CpuFastCopy(BGMAP(81), (void*)(VRAM + SCREEN_BASE_16(n >> 4)), 2048);
+    CpuFastCopy(BGMAP(82), (void*)(VRAM + 0x800 + SCREEN_BASE_16(n >> 4)), 2048);
+    l->unk_10 = ph;
+    l->phase++;
+  }
+  l->unk_10 += 4;
+}
 
 // 0x0800f604 -- HDMA BG3HOFS scanline-band table builder.
 // Blocker (giv/pool basin): agbcc hoists all four band shifts to the top,
