@@ -1081,7 +1081,41 @@ void FUN_08056a80(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_a.inc");
+// 0x08056AC0
+void copyx_08056ac0(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    struct Zero* z;
+    register u32 v asm("r3");
+    SetMotion(&p->s, MOTION(0xB3, 1));
+    v = 0;
+    asm("" : "+r"(v));
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    (p->s).spr.xflip = v;
+    v = (z->s).coord.x > (p->s).coord.x;
+    (p->s).spr.oam.xflip = v;
+    if (v) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0;
+  }
+  if ((p->s).mode[3] != 0) {
+    if (*(u8*)((u8*)p + 0x73) == 3) {
+      SetMotion(&p->s, MOTION(0xB3, 2));
+    }
+  } else {
+    if (*(u8*)((u8*)p + 0x73) == 3) {
+      (p->s).mode[1] = 0x1f;
+      (p->s).mode[2] = 1;
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+}
 
 void FUN_080a9aa0(struct Entity* e, u8 kind1, u8 kind2);
 
