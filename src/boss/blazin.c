@@ -686,7 +686,49 @@ void blazinMode0(struct Boss* p) {
 
 bool8 FUN_0803ee8c(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p2.inc");
+// 0x0803EE90
+void blazinMode1(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x1A;
+      SetMotion(&p->s, (motion_t)((*(u16*)((u8*)p + 0xc8) + 0x27) | 0xA200));
+      PlaySound(0x73);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) != 3) {
+        break;
+      }
+      goto inc;
+    case 3:
+      (p->s).work[2] = 0x1E;
+      SetMotion(&p->s, (motion_t)((*(u16*)((u8*)p + 0xc8) + 0x28) | 0xA200));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) != 3) {
+        break;
+      }
+      FALLTHROUGH;
+    case 2:
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+        if ((u8)(p->s).work[2] != 0) {
+          break;
+        }
+      }
+    inc:
+      (p->s).mode[2]++;
+      break;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_0803ef64(struct Boss* _) { return TRUE; }
 
