@@ -172,7 +172,38 @@ void FUN_080ad958(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_36_pre_post_p2_p2.inc");
+// 0x080AD994
+void FUN_080ad994(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 z asm("r6");
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    asm("" : "+r"(z));
+    fv |= fl;
+    fl = FLIPABLE;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0x6A, 0x06));
+  SET_XFLIP(p, (q->flags >> 4) & 1);
+  if ((p->s).flags & X_FLIP) {
+    (p->s).coord.x += 0xA00;
+  } else {
+    (p->s).coord.x += -0xA00;
+  }
+  (p->s).coord.y += 0x1000;
+  if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  }
+  asm volatile("" ::"r"(z));
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  Projectile36_Update(p);
+}
 
 void FUN_080ada50(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
