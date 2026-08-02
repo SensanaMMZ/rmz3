@@ -304,7 +304,40 @@ void rBaseElevatorScript(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/base_elevator_p2b.inc");
+// 0x080D0224
+void FUN_080d0224(struct Solid* p) {
+  s32 y;
+  s32 lv;
+  if ((p->s).mode[2] == 0) {
+    s16* se = (s16*)((u8*)p + 0xbe);
+    if (*se == -1) {
+      *se = PlaySound(0xA0);
+    }
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  y = (p->s).coord.y + (p->s).d.y;
+  (p->s).coord.y = y;
+  if ((p->s).d.y > 0) {
+    s32* base = (s32*)((u8*)p + 0xb8);
+    lv = (p->s).work[1] + 1;
+    if (y < *base + ((lv * 5) << 13)) goto after;
+  } else {
+    s32* base = (s32*)((u8*)p + 0xb8);
+    lv = (p->s).work[1] - 1;
+    if (y > *base + ((lv * 5) << 13)) goto after;
+  }
+  (p->s).work[1] = lv;
+  (p->s).mode[1] = 0;
+  (p->s).mode[2] = 0;
+after : {
+  u8* ob = (u8*)&gOverworld;
+  *(s32*)(ob + 0x2C014) = 0x63800;
+  *(s32*)(ob + 0x2C01C) = 0x66800;
+  *(s32*)(ob + 0x2C018) = (p->s).coord.y - 0x4000;
+  *(s32*)(ob + 0x2C020) = (p->s).coord.y + 0x400;
+}
+}
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
