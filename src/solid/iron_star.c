@@ -45,6 +45,37 @@ static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struc
 
 INCASM("asm/solid/iron_star_p1_a.inc");
 
+extern const SolidFunc PTR_ARRAY_0836fe00[2];
+extern const SolidFunc PTR_ARRAY_0836fe08[2];
+
+// 0x080CBC14
+void ironStarAI(struct Solid* p) {
+  if ((p->s).work[0] == 2) {
+    struct Entity* q = (p->s).unk_28;
+    if ((*(struct Entity**)((u8*)q + 8))->coord.x - (p->s).coord.x > 0xC000) {
+      register u8* w asm("r0");
+      u8 fl;
+      u32 z;
+      fl = (p->s).flags & 0xFE;
+      z = 0;
+      fl &= 0xFD;
+      (p->s).flags = fl;
+      w = (u8*)p + 0x8c;
+      *(u32*)w = z;
+      asm volatile("add %0, #4" : "+r"(w));
+      *(u32*)w = z;
+      asm volatile("add %0, #4" : "+r"(w));
+      *w = z;
+      (p->s).flags &= 0xFB;
+      SET_SOLID_ROUTINE(p, 3);
+      return;
+    }
+    (p->s).coord.x += *(s32*)((u8*)q + 0x14);
+  }
+  (PTR_ARRAY_0836fe00[(p->s).mode[1]])(p);
+  (PTR_ARRAY_0836fe08[(p->s).mode[1]])(p);
+}
+
 void killIronStar(struct Solid* p) {
   (p->s).flags2 &= ~ENTITY_HAZARD;
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
