@@ -336,7 +336,66 @@ void anubisMode3(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/anubis_p2_m4.inc");
+// 0x08050A1C
+void anubisMode4(struct Boss* p0) {
+  register struct Boss* p asm("r4");
+  s32 m;
+  p = p0;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s16 sv;
+      u32* st;
+      register u32 v asm("r0");
+      register s32 k asm("r1");
+      sv = PlaySound(SE_ANUBIS_BOOMERANG);
+      *(s16*)((u8*)p + 0xd0) = sv;
+      st = (u32*)((u8*)p + 0xc0);
+      v = *st;
+      k = 8;
+      v |= k;
+      k = 0x10;
+      v |= k;
+      *st = v;
+      SetMotion(&p->s, 0xAF02);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) != 3) {
+        break;
+      }
+      m = (p->s).mode[2] + 1;
+      goto store;
+    case 2: {
+      u32* st = (u32*)((u8*)p + 0xc0);
+      *st &= -9;
+      SetMotion(&p->s, 0xAF01);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 3:
+      FUN_08050090(p);
+      UpdateMotionGraphic(&p->s);
+      if ((*(u32*)((u8*)p + 0xc0) & 0x10) == 0) {
+        s16* snd = (s16*)((u8*)p + 0xd0);
+        register s32 v asm("r1");
+        v = *snd;
+        if (v != -1) {
+          u32 mv;
+          StopSound(v);
+          mv = 0xFFFF;
+          asm("" : "+r"(mv));
+          *snd = mv;
+        }
+        m = 1;
+        (p->s).mode[1] = m;
+      store:
+        (p->s).mode[2] = m;
+      }
+      break;
+  }
+}
 
 static const struct Collision sCollisions[3];
 
