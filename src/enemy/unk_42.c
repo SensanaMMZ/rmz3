@@ -181,6 +181,96 @@ void FUN_08084fb4(struct Enemy* p) {
   Enemy42_Update(&p->s);
 }
 
+// 0x08085060
+void FUN_08085060(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  u8 f;
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, *(u16*)((u8*)p + 0xbc));
+    (p->s).mode[2] = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s8* c = (s8*)((u8*)q + 0xe0);
+    s32 cv = *(u8*)c;
+    if (*c == 0) {
+      register u8 fl asm("r1");
+      register u8 fv asm("r0");
+      fl = (p->s).flags;
+      fv = 1;
+      fv |= fl;
+      (p->s).flags = fv;
+      goto fdone;
+    }
+    cv--;
+    *(u8*)c = cv;
+    if ((s8)cv <= 0x1f) {
+      if ((cv & 3) > 1) {
+        register s32 k1 asm("r1");
+        register u8 fv2 asm("r0");
+        fv2 = (p->s).flags;
+        k1 = 1;
+        fv2 |= k1;
+        (p->s).flags = fv2;
+        goto fdone;
+      }
+    }
+    {
+      register u8 fl2 asm("r1");
+      register u8 fv3 asm("r0");
+      fl2 = (p->s).flags;
+      asm("" : "+r"(fl2));
+      fv3 = 0xFE;
+      fv3 &= fl2;
+      (p->s).flags = fv3;
+    }
+  fdone:;
+  }
+  {
+    register s32 xf2 asm("r2");
+    register s32 xfc asm("r1");
+    {
+      u32 qf = q->flags;
+      register s32 one asm("r0");
+      asm volatile("lsr %0, %1, #0x4" : "=l"(xf2) : "l"(qf));
+      one = 1;
+      xf2 &= one;
+    }
+    if (xf2 != 0) {
+      register u8 fl3 asm("r1");
+      register u8 fv3 asm("r0");
+      fl3 = (p->s).flags;
+      fv3 = 0x10;
+      fv3 |= fl3;
+      (p->s).flags = fv3;
+    } else {
+      register u8 fl4 asm("r1");
+      register u8 fv4 asm("r0");
+      fl4 = (p->s).flags;
+      asm("" : "+r"(fl4));
+      fv4 = 0xEF;
+      fv4 &= fl4;
+      (p->s).flags = fv4;
+    }
+    xfc = xf2;
+    asm("" : "+r"(xfc));
+    ((p->s).spr).xflip = xfc;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      s32 sh = xfc << 4;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      *oa = m11 | sh;
+    }
+  }
+  (p->s).coord = q->coord;
+  if ((p->s).mode[3] != 0) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    Enemy42_Die(&p->s);
+  }
+}
+
 INCASM("asm/enemy/unk_42_p1_a_b.inc");
 
 void FUN_080852f4(struct Enemy* p) {
