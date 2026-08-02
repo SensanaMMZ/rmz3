@@ -1,6 +1,8 @@
 #include "game.h"
 #include "global.h"
 #include "minigame.h"
+#include "sound.h"
+#include "vfx.h"
 #include "text.h"
 
 extern const u8 Unicode_SCORE_0810e298[];
@@ -57,14 +59,56 @@ bool32 leviathanMinigame(struct GameState* g) {
   return r;
 }
 
+bool32 leviathan_minigame_080fb5dc(struct GameState* g);
+
+// 0x080FBBA0
+bool32 leviathan_minigame_080fbba0(struct GameState* g) {
+  u8* mg = (u8*)g + 0xDCC;
+  switch (mg[1]) {
+    case 0:
+      *((u8*)g + 0xDFF) = 0x3c;
+      mg[1]++;
+      /* fallthrough */
+    case 1: {
+      u8* t = mg + 0x33;
+      s32 v = *t - 1;
+      *t = v;
+      if ((v << 24) != 0) {
+        break;
+      }
+      mg[1]++;
+      break;
+    }
+    case 2:
+      PlaySound(0x1d);
+      *(struct VFX**)(mg + 8) = CreateMissionAlert(0);
+      mg[1]++;
+      /* fallthrough */
+    case 3:
+      if (*(u8*)(*(u8**)(mg + 8) + 0xc) > 1) {
+        u8 t0 = mg[0] + 1;
+        u8 z = 0;
+        mg[0] = t0;
+        mg[1] = z;
+        mg[2] = z;
+        mg[3] = z;
+      }
+      break;
+  }
+  *(u16*)(mg + 0x10) = 0;
+  *(u16*)(mg + 0x12) = 0;
+  leviathan_minigame_080fb5dc(g);
+  return 1;
+}
+
 INCASM("asm/minigame/leviathan_b.inc");
 
-void leviathan_minigame_080fbba0(struct GameState* g);
+bool32 leviathan_minigame_080fbba0(struct GameState* g);
 void leviathan_minigame_080fbc30(struct GameState* g);
 void leviathan_minigame_080fbcdc(struct GameState* g);
 
 const GameLoopFunc LeviathanMinigameLoops[3] = {
-    leviathan_minigame_080fbba0,
+    (GameLoopFunc)leviathan_minigame_080fbba0,
     leviathan_minigame_080fbc30,
     leviathan_minigame_080fbcdc,
 };
