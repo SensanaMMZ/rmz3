@@ -1258,6 +1258,57 @@ void copyxRaisingExcharge(struct Boss* p) {
 
 INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b2.inc");
 
+void copyx_080aa24c(struct Entity* e, u8 a1, u8 a2);
+
+// 0x08057094
+void copyx_08057094(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    register struct Zero* z asm("r2");
+    register s32 v asm("r3");
+    SetMotion(&p->s, MOTION(0xB3, 0x1B));
+    (p->s).mode[2] = 0;
+    v = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    (p->s).spr.xflip = v;
+    v = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    {
+      register u8* oa asm("ip");
+      u32 k;
+      s32 sh4, ov, m11;
+      k = 0x4a;
+      asm("" : "+r"(k));
+      oa = (u8*)(k + (u32)p);
+      sh4 = v << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    if (v != 0) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+    CreateVFX55(p, 1, 0);
+    copyx_080aa24c(&p->s, 0, 0);
+    *((u8*)p + 0xc6) = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 0x14;
+    (p->s).mode[2] = 1;
+  }
+}
+
+INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b3.inc");
+
 void copyx_08057418(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
     SetMotion(&p->s, MOTION(0xb3, 0x6));
