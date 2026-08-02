@@ -107,6 +107,55 @@ void FUN_08094bf0(struct Enemy* p) {
 
 INCASM("asm/enemy/unk_63_p3_p2.inc");
 
+// 0x08094D48
+void FUN_08094d48(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0xC800);
+      (p->s).unk_coord.y = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 x;
+      s32 y;
+      s32 t;
+      if (*((u8*)pZero2 + 0x94) != 0) {
+        SetDDP(&p->body, &sCollisions[0]);
+      } else {
+        SetDDP(&p->body, &sCollisions[1]);
+      }
+      x = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = x;
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      t = (p->s).unk_coord.y + (p->s).unk_coord.x;
+      (p->s).unk_coord.y = t;
+      if (t > 0x3800) {
+        register u8 f asm("r0");
+        register u8 t1 asm("r1");
+        register u8 k2 asm("r1");
+        register s32 z asm("r2");
+        FUN_08094a54(x, y, (p->s).work[1]);
+        t1 = (p->s).flags;
+        f = 0xFE;
+        f &= t1;
+        asm volatile("" ::"r"(t1));
+        z = 0;
+        k2 = 0xFD;
+        f &= k2;
+        (p->s).flags = f;
+        *(u32*)((u8*)p + 0x8c) = z;
+        *(u32*)((u8*)p + 0x90) = z;
+        *(u8*)((u8*)p + 0x94) = z;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, 3);
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 void FUN_08094e0c(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0: {
