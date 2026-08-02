@@ -813,7 +813,47 @@ void phunterShotBuster(struct Enemy* p) {
   (p->s).work[2]++;
 }
 
-INCASM("asm/enemy/pantheon_hunter_p3_b_2_x_n.inc");
+void FUN_08064e7c(struct Enemy* p);
+
+// 0x08065104
+void FUN_08065104(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, 0x1300);
+    (p->s).work[2] = 0x1E;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (gProjectileHeaderPtr->remaining > 6) {
+    s32 side = 0;
+    struct Zero* z = pZero2;
+    s32 zx = (z->s).coord.x;
+    s32 px = (p->s).coord.x;
+    if (zx <= px) {
+      side = 1;
+    }
+    if (side == (((p->s).flags >> 4) & 1)) goto tick;
+    if ((u32)(zx - px + 0x6E00) > 0xDC00) goto tick;
+    if ((u32)((z->s).coord.y - (p->s).coord.y + 0x5000) > 0xA000) goto tick;
+    (p->s).mode[3] = (p->s).mode[1];
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+    return;
+  }
+tick:
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    u8* f;
+    u8 v;
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+    v = 0;
+    f = (u8*)p + 0xbd;
+    if (*f == 0) {
+      v = 1;
+    }
+    *f = v;
+    FUN_08064e7c(p);
+  }
+}
 
 // 0x080651c0
 void phunter_080651c0(struct Enemy* p) {
