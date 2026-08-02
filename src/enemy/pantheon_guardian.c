@@ -292,6 +292,38 @@ void FUN_080640dc(struct Enemy* p) {
   }
 }
 
+// 0x080641ec
+void FUN_080641ec(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x14, 0x00));
+      SetDDP(&p->body, sCollisions);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      u16 r;
+      u16 mm;
+      s32 v = (p->s).d.y;
+      if (v <= 0x6FF) {
+        (p->s).d.y = v + 0x40;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      r = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+      mm = r & 0x10;
+      if (mm != 0) {
+        (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        PantheonGuardian_Die(p);
+      } else if (r != 0 && r != 0x800F && r != 0x800E) {
+        (p->s).mode[1] = mm;
+        (p->s).mode[2] = mm;
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_guardian_pre_p2_p2.inc");
 
 void FUN_08064444(struct Enemy* p) {
