@@ -436,6 +436,57 @@ void FUN_0809ab28(struct Enemy* p) {
 
 INCASM("asm/enemy/minigame_leviathan_p3c.inc");
 
+#include "vfx.h"
+
+void FUN_080b822c(struct Enemy* p, struct Coord* c, motion_t* motions, u8 len, u8 r4);
+static const motion_t sMotions[12];
+
+// 0x0809acdc
+void FUN_0809acdc(struct Enemy* p) {
+  struct Coord c;
+  u8* q = (u8*)(p->s).unk_28;
+  if (*(q + 0x34) == 0) {
+    u8* n;
+    *(s32*)(q + 0x20) += 0x12C;
+    n = q + 0x35;
+    (*n)++;
+    *(s32*)(q + 0x1c) += 1;
+    (*(q + 0x32))++;
+    FUN_08099f54((p->s).coord.x, (p->s).coord.y, *(s32*)(q + 0x1c), 5);
+    *(s32*)(q + 0x24) += *n * 5;
+  }
+  {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    u8* qq = (u8*)p + 0x8c;
+    s32 z;
+    asm("" : "+r"(qq));
+    z = 0;
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *qq = z;
+    t = (p->s).flags;
+    f = 0xFB;
+    f &= t;
+    (p->s).flags = f;
+    asm volatile("" ::"r"(t));
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  CreateSmoke(1, &c);
+  PlaySound(0x31);
+  FUN_080b822c(p, &c, (motion_t*)&sMotions[9], 3, 1);
+  SET_ENEMY_ROUTINE(p, 4);
+}
+
+INCASM("asm/enemy/minigame_leviathan_p3c_b.inc");
+
 void LeviathanMinigameEnemy_Init(struct Enemy* p);
 void LeviathanMinigameEnemy_Update(struct Enemy* p);
 void LeviathanMinigameEnemy_Die(struct Enemy* p);
