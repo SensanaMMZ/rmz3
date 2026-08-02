@@ -198,6 +198,107 @@ void Cubit_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
+// 0x080527FC
+void cubitDeath0(struct Boss* p0) {
+  register struct Boss* p asm("r6");
+  p = p0;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r4");
+      s32 z;
+      register s32 z5 asm("r5");
+      {
+        struct StageRun* sr = &gStageRun;
+        u16 ms = sr->missionStatus;
+        s32 t;
+        one = 1;
+        asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one));
+        t &= ms;
+        if (t != 0) {
+          u8 av = sr->vm.active;
+          s32 t2;
+          asm volatile("add %0, %1, #0" : "=&l"(t2) : "l"(one));
+          t2 &= av;
+          if (t2 == 0) {
+            {
+              register s32 mk asm("r0");
+              register s32 k10 asm("r1");
+              mk = 0xFFFE;
+              mk &= ms;
+              k10 = 0x10;
+              mk |= k10;
+              sr->missionStatus = mk;
+            }
+          }
+        }
+      }
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      {
+        u8* ap = (u8*)p + 0x24;
+        asm("" : "+r"(ap));
+        z = 0;
+        *ap = z;
+      }
+      {
+        register u16* mg asm("r1");
+        register s32 mv asm("r0");
+        mg = (u16*)((u8*)p + 0x50);
+        asm("" : "+r"(mg));
+        z5 = 0;
+        mv = 0x100;
+        *mg = mv;
+        asm("" : "+r"(mg));
+        mg = (u16*)((u8*)mg + 2);
+        asm("" : "+r"(mg));
+        *mg = mv;
+      }
+      SetMotion(&p->s, 0xB01E);
+      UpdateMotionGraphic(&p->s);
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z5;
+      }
+      (p->s).flags &= 0xFB;
+      {
+        s32* dp = (s32*)((u8*)p + 0x5c);
+        dp[1] = z;
+        (p->s).d.x = z;
+      }
+      (p->s).work[2] = 1;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 w = (p->s).work[2];
+      if (w == 0) {
+        break;
+      }
+      w--;
+      (p->s).work[2] = w;
+      if ((w << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      u8 z2 = 0;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = z2;
+      break;
+    }
+  }
+}
+
 INCASM("asm/boss/cubit_p1_post.inc");
 
 bool8 FUN_08052b48(struct Boss* p) { return TRUE; }
