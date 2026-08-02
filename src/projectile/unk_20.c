@@ -290,7 +290,36 @@ void FUN_080a5ac0(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_20_postb.inc");
+void FUN_080a4fa4(struct Projectile* p);
+
+// 0x080A5B28
+void FUN_080a5b28(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32* r;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).d.x = ((u32)((u16)Sqrt(0x400)) << 16) >> 11;
+      *(s32*)((u8*)p + 0xb4) = 0x4000;
+      (p->s).mode[2]++;
+    case 1:
+      r = (s32*)((u8*)p + 0xb4);
+      *r += (p->s).d.x;
+      if (*r > 0x30000) {
+        (p->s).d.x -= 0x20;
+      }
+      if ((p->s).d.x <= 0) {
+        s32* w = (s32*)((u8*)q + 0xc0);
+        *w &= ~0x80;
+        *r = 0x4000;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 1;
+      }
+      FUN_080a4fa4(p);
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 void Projectile20_Init(struct Projectile* p);
 void Projectile20_Update(struct Projectile* p);
