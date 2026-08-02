@@ -599,7 +599,50 @@ void FUN_080ab784(struct Projectile* p) {
   Projectile32_Update(p);
 }
 
-INCASM("asm/projectile/unk_32_p4_p2_s2b.inc");
+static const s32 s32_ARRAY_0836c57c[30];
+
+// 0x080AB8CC
+void FUN_080ab8cc(struct Projectile* p0) {
+  register struct Projectile* p asm("r5");
+  struct Entity* q;
+  u32 f;
+  u8 w;
+  p = p0;
+  q = (p->s).unk_28;
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[3] += (p->s).d.x;
+  if ((p->s).work[2] % 24 == 0) {
+    struct Coord c;
+    s32 v;
+    u32 f0;
+    u32 t;
+    const u8* base;
+    u32 k;
+    u32 idx;
+    f0 = (p->s).flags;
+    t = f0 & 0x10;
+    asm volatile("add %0, %1, #0" : "=&l"(f) : "l"(f0));
+    if (t) {
+      c.x = (p->s).coord.x + 0x1000;
+    } else {
+      c.x = (p->s).coord.x - 0x1000;
+    }
+    base = (const u8*)s32_ARRAY_0836c57c;
+    idx = (u8)((p->s).work[2] / 24) * 4;
+    k = *(u8*)((u8*)p + 0xc2);
+    idx += k * 40;
+    v = *(s32*)(base + idx);
+    if (v != -1) {
+      c.y = (p->s).coord.y + v;
+      FUN_080aac7c(&c, ((f << 24) >> 28) & 1, (struct Entity*)p);
+    }
+  }
+  w = --(p->s).work[2];
+  if (w == 0xFF || q->mode[0] > 1 || q->mode[1] == 0x13) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    Projectile32_Die(p);
+  }
+}
 
 void FUN_080ab990(struct Projectile* p) {
   gVideoRegBuffer.dispcnt &= ~(DISPCNT_WIN0_ON | DISPCNT_BG2_ON);
