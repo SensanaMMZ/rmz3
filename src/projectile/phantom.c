@@ -331,7 +331,40 @@ void FUN_080af46c(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/phantom_p1_p1_p1b.inc");
+// 0x080AF518 -- shuriken spawn: attach the hitbox, face away from the parent
+// and offset the start position/velocity by the facing sign.
+// Logic verified; parked one instruction short. Retail wastes a low register
+// on a dead `movs r7, #0` and therefore has to stash the parent's coord.y in
+// ip (`ldr r1,[r0,#0x58]; mov ip,r1`); ours keeps r7 free so the load needs no
+// copy. Reproducing the dead zero with the "+r"/volatile barrier pair puts it
+// in r8 (costing `mov r7,r8; push {r7}`), the "l" low-register constraint does
+// not restrict it, and `register s32 asm("ip")` on coord.y spills r8 as well.
+NON_MATCH void FUN_080af518(struct Projectile* p) {
+#if MODERN
+  struct Entity* q;
+  s32 qx;
+  s32 qy;
+  s32 xf;
+  s32 s;
+  INIT_BODY(p, &sCollisions[2], 0, NULL);
+  (p->s).mode[2] = 1;
+  SetMotion(&p->s, MOTION(0x86, 0x00));
+  q = (p->s).unk_28;
+  qx = (q->coord).x;
+  qy = (q->coord).y;
+  xf = (q->flags >> 4) & 1;
+  SET_XFLIP(p, xf == 0);
+  s = -1;
+  if (xf != 0) s = 1;
+  (p->s).coord.x = qx + ((s * 33) << 8);
+  (p->s).coord.y = qy - 0xE00;
+  (p->s).d.x = s << 10;
+  (p->s).d.y = 0;
+  (p->s).unk_coord.x = -(s << 6);
+#else
+  INCCODE("asm/projectile/phantom_p1_p1_p1b.inc");
+#endif
+}
 
 bool8 FUN_080afdf0(struct Entity* e, struct Coord* a, struct Coord* b, struct Coord* c);
 

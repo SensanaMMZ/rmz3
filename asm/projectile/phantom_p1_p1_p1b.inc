@@ -4,8 +4,6 @@
 	
 	.text
 
-	thumb_func_start FUN_080af518
-FUN_080af518: @ 0x080AF518
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	ldrb r1, [r6, #0xa]
