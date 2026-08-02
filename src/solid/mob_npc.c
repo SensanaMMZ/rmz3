@@ -725,7 +725,33 @@ void FUN_080da500(struct Solid* p) {
   (p->s).mode[1] = 1;
   MobNPC_Update(p);
 }
-INCASM("asm/solid/mob_npc_pre_p1_3_3.inc");
+// 0x080DA57C
+TextID perroquiet_080da57c(struct Solid* p) {
+  if (FLAG(gCurStory.s.gameflags, 16)) {
+    if (gCurStory.s.counts[9] <= 2) {
+      gCurStory.s.counts[9] = 3;
+      return 0x27D;
+    }
+    return 0x27E;
+  }
+  if (FLAG(gCurStory.s.gameflags, 11)) {
+    if (gCurStory.s.counts[9] <= 1) {
+      gCurStory.s.counts[9] = 2;
+      return 0x27B;
+    }
+    return 0x27C;
+  }
+  {
+    TextID ret;
+    if (gCurStory.s.counts[9] != 0) {
+      ret = 0x27A;
+    } else {
+      gCurStory.s.counts[9] = 1;
+      ret = 0x279;
+    }
+    return ret;
+  }
+}
 
 // 0x080da5e8
 void FUN_080da5e8(struct Solid* p) {
