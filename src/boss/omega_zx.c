@@ -817,7 +817,40 @@ void FUN_080616b8(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/omega_zx_p10_p2_c.inc");
+// 0x080616FC
+void FUN_080616fc(struct Boss* p) {
+  register const s16* st asm("r1");
+  s32 x;
+  {
+    u16* a = (u16*)((u8*)p + 0xc0);
+    s32 t = (*a + 1) & 0xFF;
+    register s32 sv asm("r3");
+    *a = t;
+    st = gSineTable;
+    {
+      register s32 sn asm("r0");
+      sn = st[t];
+      sv = sn << 2;
+    }
+    (p->s).coord.y = (p->s).unk_coord.y + sv;
+  }
+  {
+    u16* b = (u16*)((u8*)p + 0xc2);
+    s32 t = (*b + 2) & 0xFF;
+    register s32 sv asm("r3");
+    *b = t;
+    {
+      register s32 sn asm("r0");
+      sn = st[t];
+      sv = sn << 3;
+    }
+    x = (p->s).unk_coord.x + sv;
+  }
+  (p->s).coord.x = x;
+  asm volatile("" ::: "memory");
+  (p->s).d.y += (((p->s).coord.y - (p->s).d.y) << 3) >> 8;
+  (p->s).d.x = x;
+}
 
 // 0x083655d4
 static const struct Collision sCollisions[3] = {
