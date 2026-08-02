@@ -1542,6 +1542,58 @@ s8 FUN_08060974(struct Boss* p) {
 
 INCASM("asm/boss/phantom_p2_post_p2.inc");
 
+extern const s32 s32_ARRAY_08365240[32];
+
+// 0x080609A4
+s8 FUN_080609a4(struct Boss* p) {
+  struct Entity* q = (p->s).unk_2c;
+  s32 dy;
+  s32 dx;
+  s32 i;
+  const s32* t;
+  if (q->d.y > -0x80) {
+    return -1;
+  }
+  {
+    s32 y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    s32 x = (p->s).coord.x;
+    s32 qx = q->coord.x;
+    s32 qy = q->coord.y;
+    dy = qy - y - 0x500;
+    dx = qx - x + 0x1000;
+  }
+  if ((u32)dx <= 0x2000) {
+    s32 k;
+    i = 0;
+    k = -0x900;
+    t = s32_ARRAY_08365240;
+    do {
+      t++;
+      i++;
+      dy -= 0x80;
+    } while (-(*t + k) >= dy);
+    return i - 1;
+  }
+  {
+    s32 k;
+    s32 lim;
+    i = 0;
+    k = -0x900;
+    lim = 0x2000;
+    t = s32_ARRAY_08365240;
+    do {
+      t++;
+      i++;
+    } while (*t + k <= lim);
+  }
+  i--;
+  dy -= (i + 8) << 7;
+  if (dy > -0x2000) {
+    return -1;
+  }
+  return i;
+}
+
 static const BossFunc PTR_ARRAY_08365568[2];
 
 // 0x08060A48
