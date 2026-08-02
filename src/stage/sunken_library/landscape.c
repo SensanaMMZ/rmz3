@@ -297,7 +297,30 @@ NON_MATCH void FUN_08013a98(struct StageLayer* l, const struct Stage* stage) {
 #endif
 }
 
-INCASM("asm/stage_gfx/sunken_library_a2.inc");
+// 0x08013B10
+void FUN_08013b10(struct StageLayer* l, const struct Stage* stage) {
+  struct Solid* p = *(struct Solid**)&(l->work);
+  if (p != NULL) {
+    register u8* q asm("r0");
+    u8 fl;
+    u32 z;
+    fl = (p->s).flags & 0xFE;
+    z = 0;
+    fl &= 0xFD;
+    (p->s).flags = fl;
+    q = (u8*)p + 0x8c;
+    *(u32*)q = z;
+    asm volatile("add %0, #4" : "+r"(q));
+    *(u32*)q = z;
+    asm volatile("add %0, #4" : "+r"(q));
+    *q = z;
+    (p->s).flags &= 0xFB;
+    SET_SOLID_ROUTINE(p, 3);
+  }
+  if (isSoundPlaying(0x124)) {
+    StopSound(0x124);
+  }
+}
 
 void sunkenlib_08013b6c(struct StageLayer* l0, const struct Stage* stage) {
   register struct StageLayer* l asm("r5") = l0;
