@@ -310,6 +310,90 @@ static void tryMakeFlinch(struct Boss* p) {
 
 INCASM("asm/boss/deathtanz_pre_a.inc");
 
+// 0x08049330
+void deathtanzNeutral(struct Boss* p) {
+  u8* fp;
+  u8 fv;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      {
+        u8* fp0 = (u8*)p + 0xbd;
+        fv = *fp0;
+        asm volatile("add %0, %1, #0" : "=&l"(fp) : "l"(fp0));
+      }
+      if (fv != 0) {
+        register s32 one asm("r2");
+        s32 v;
+        s32 v2;
+        register u8* oa asm("ip");
+        u8* t0;
+        v = (p->s).flags >> 4;
+        one = 1;
+        v ^= one;
+        asm("" : "+r"(v));
+        v &= one;
+        ((p->s).spr).xflip = v;
+        v2 = (p->s).flags >> 4;
+        v2 ^= one;
+        asm("" : "+r"(v2));
+        v2 &= one;
+        {
+          u32 off = 0x4a;
+          u32 sh4;
+          s32 ov;
+          s32 m11;
+          register u8* fa asm("r2");
+          asm("" : "+r"(off));
+          off += (u32)p;
+          t0 = (u8*)off;
+          oa = t0;
+          asm("" : "+r"(oa));
+          sh4 = v2 << 4;
+          ov = *t0;
+          m11 = -0x11;
+          asm("" : "+r"(m11));
+          m11 &= ov;
+          m11 |= sh4;
+          fa = oa;
+          asm("" : "+r"(fa));
+          *fa = m11;
+        }
+        if (v2 != 0) {
+          (p->s).flags |= 0x10;
+        } else {
+          (p->s).flags &= 0xEF;
+        }
+      }
+      *fp = 0;
+      (p->s).work[2] = 8;
+      SetMotion(&p->s, 0xA706);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 raw;
+      struct Zero* z;
+      UpdateMotionGraphic(&p->s);
+      raw = (p->s).work[2] - 1;
+      (p->s).work[2] = raw;
+      if ((raw << 24) != 0) {
+        break;
+      }
+      z = pZero2;
+      if (*(u32*)((u8*)z + 0x8c) & 0x200) {
+        break;
+      }
+      if (*(s16*)((u8*)z + 0xa4) == 0) {
+        break;
+      }
+      calcNextAction(p);
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/deathtanz_pre_a2.inc");
+
 void deathtanzMode4(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0: {
