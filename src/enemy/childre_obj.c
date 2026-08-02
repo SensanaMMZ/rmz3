@@ -406,7 +406,35 @@ void FUN_08073a0c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/childre_obj_post_post_p1.inc");
+// 0x08073A74
+void FUN_08073a74(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      const s16* st;
+      InitRotatableMotion(&p->s);
+      (p->s).angle = 0x80 - (p->s).work[2];
+      SetMotion(&p->s, MOTION(0x25, 0x02));
+      st = gSineTable;
+      (p->s).d.x = (st[(u8)((p->s).work[2] + 0x40)] * 5 << 7) / 0x100;
+      (p->s).d.y = -((st[(p->s).work[2]] * 5 << 7) / 0x100);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      s32 x = (p->s).coord.x + (p->s).d.x;
+      s32 y;
+      (p->s).coord.x = x;
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      if (((u16)FUN_080098a4(x, y) << 16) != 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = (p->s).work[0];
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 static const motion_t sMotions[8];
 static const s8 s8_ARRAY_ARRAY_08366e08[8][2];
