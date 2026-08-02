@@ -964,7 +964,36 @@ bool8 FUN_080459d4(struct Boss* p) {
   return FALSE;
 }
 
-INCASM("asm/boss/volteel_p14_p2.inc");
+struct Projectile* FUN_0809f4dc(struct Entity* e, struct Coord* c, struct Coord* d, u8 n);
+
+// 0x080459E8
+void FUN_080459e8(struct Boss* p) {
+  struct Coord c;
+  struct Coord d;
+  const s16* st;
+  s32 cx = (p->s).coord.x;
+  c.x = cx;
+  c.y = (p->s).coord.y - 0x3E00;
+  if (((p->s).flags & 0x10) == 0) {
+    c.x = cx - 0x1200;
+    st = gSineTable;
+    d.x = st[0xb2];
+    d.y = st[0xf2];
+    FUN_0809f4dc(&p->s, &c, &d, 0x72);
+    d.x = st[0xce];
+    d.y = st[0xe];
+    FUN_0809f4dc(&p->s, &c, &d, 0x8e);
+  } else {
+    c.x = cx + 0x1200;
+    st = gSineTable;
+    d.x = st[0x32];
+    d.y = st[0x72];
+    FUN_0809f4dc(&p->s, &c, &d, 0xf2);
+    d.x = st[0x4e];
+    d.y = st[0x8e];
+    FUN_0809f4dc(&p->s, &c, &d, 0xe);
+  }
+}
 
 void volteel_08045abc(struct Boss* p) {
   if (MOTION_VALUE(p) == MOTION(0xA5, 0x07)) {
