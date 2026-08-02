@@ -225,7 +225,28 @@ void FUN_080784d8(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/tile_cannon_p3_post_pre.inc");
+static const u8 u8_ARRAY_0836754a[6];
+
+// 0x08078550
+void FUN_08078550(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, (p->s).work[0] | MOTION(0x2F, 0x00));
+      (p->s).mode[2]++;
+    case 1: {
+      u8 t;
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_0836754a[(s8) * (u8*)((u8*)p + 0x71)]]);
+      t = *(u8*)((u8*)p + 0x73);
+      if (t == 3) {
+        u8 z = 0;
+        (p->s).mode[1] = t;
+        (p->s).mode[2] = z;
+      }
+      break;
+    }
+  }
+}
 
 void FUN_080785bc(struct Enemy* p) {
   switch ((p->s).mode[2]) {
