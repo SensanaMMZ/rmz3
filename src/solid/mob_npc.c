@@ -1063,6 +1063,91 @@ alive:
 
 INCASM("asm/solid/mob_npc_pre_p1_5b.inc");
 
+// 0x080DAB40
+void FUN_080dab40(struct Solid* p) {
+  s32 one;
+  u32 t;
+  u8 v;
+  v = gSystemSavedataManager.mods[3];
+  one = 1;
+  asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one));
+  t &= v;
+  if (t == 0) {
+    u8 f = ~1 & (p->s).flags;
+    f = f & ~2;
+    (p->s).flags = f;
+    {
+      u8* a = (u8*)p + 0x8c;
+      *(u32*)a = t;
+      asm("" : "+r"(a));
+      a += 4;
+      *(u32*)a = t;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = t;
+    }
+    (p->s).flags &= 0xFB;
+    SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  {
+    s32 z5;
+    struct Body* bd;
+    {
+      register u32 fl asm("r1");
+      register s32 c4 asm("r0");
+      fl = (p->s).flags;
+      c4 = 4;
+      z5 = 0;
+      asm("" : "+r"(z5) : "r"(c4));
+      (p->s).flags = c4 | fl;
+    }
+    bd = &p->body;
+    InitBody(bd, sCollisions, &(p->s).coord, 1);
+    bd->parent = (struct CollidableEntity*)p;
+    bd->fn = (void*)z5;
+    {
+      register const motion_t* mt asm("r2");
+      s32 z3;
+      mt = sMotions;
+      {
+        u16 mv = mt[(p->s).work[0]];
+        u16* b1 = (u16*)((u8*)p + 0xbe);
+        z3 = 0;
+        asm("" : "+r"(z3) : "r"(b1));
+        *b1 = mv;
+      }
+      {
+        u16 mv2 = mt[(p->s).work[0]];
+        u16* b2 = (u16*)((u8*)p + 0xc0);
+        asm("" : "+r"(b2));
+        *b2 = mv2;
+      }
+      {
+        u16 mv3 = mt[(p->s).work[0]];
+        u8* a2 = (u8*)p + 0xc2;
+        asm("" : "+r"(a2));
+        *(u16*)a2 = mv3;
+      }
+      {
+        u8* a4 = (u8*)p + 0xb9;
+        *a4 = one;
+        asm("" : "+r"(a4));
+        a4 -= 1;
+        *a4 = z3;
+        asm("" : "+r"(a4));
+        a4 += 4;
+        asm("" : "+r"(a4));
+        *(u16*)a4 = z5;
+      }
+      (p->s).mode[1] = z3;
+    }
+    MobNPC_Update(p);
+  }
+}
+
+
 TextID kiss_080dac04(struct Solid* p) {
   if (gCurStory.s.counts[24] == 0) {
     return 0x2b6;
