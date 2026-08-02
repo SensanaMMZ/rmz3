@@ -403,7 +403,38 @@ void FUN_0807a068(struct Enemy* p) {}
 
 bool8 FUN_0807a06c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shelluno_p5.inc");
+// 0x0807A070
+void shelluno_0807a070(struct Enemy* p) {
+  struct Entity** slot;
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+    case 1:
+      (p->s).d.y += 0x10;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if (GetGroundMetatileAttr((p->s).coord.x, (p->s).coord.y + (p->s).d.y)) {
+        (p->s).d.y = 0;
+        (p->s).coord.y = FUN_0800a05c((p->s).coord.x, (p->s).coord.y);
+      } else {
+        (p->s).coord.y += (p->s).d.y;
+      }
+      break;
+  }
+  slot = (struct Entity**)((u8*)p + 0xbc);
+  if (isKilled(*slot)) {
+    u32 z;
+    SetDDP(&p->body, &sCollisions[2]);
+    z = 0;
+    *slot = (struct Entity*)z;
+    (p->s).mode[1] = z;
+    (p->s).mode[2] = z;
+  }
+}
 
 bool8 FUN_0807a0fc(struct Enemy* p) { return TRUE; }
 
