@@ -197,7 +197,87 @@ void FUN_080b0168(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/omega_zx_post_p2.inc");
+
+// 0x080B0214
+void FUN_080b0214(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  u8 m;
+  if (q->mode[0] > 1) {
+    goto die;
+  }
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u8 fv asm("r0");
+      register u8 fl asm("r1");
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      fl = (p->s).flags;
+      fv = 2;
+      fv |= fl;
+      fl = 1;
+      fv |= fl;
+      (p->s).flags = fv;
+      (p->s).taskCol = 0x11;
+      (p->s).work[2] = m;
+      SetMotion(&p->s, 0xB900);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      struct Entity* q1 = *(struct Entity* volatile*)&(p->s).unk_28;
+      (p->s).coord.x = q1->coord.x;
+      (p->s).coord.y = q1->coord.y;
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).unk_28)->mode[1] == 5) {
+        return;
+      }
+      goto clear;
+    }
+    case 2:
+      (p->s).coord.x = q->coord.x;
+      (p->s).coord.y = q->coord.y;
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 w asm("r1");
+        register s32 dec asm("r0");
+        w = (p->s).work[2];
+        dec = w;
+        dec += 0xFF;
+        (p->s).work[2] = dec;
+        {
+          register s32 k1 asm("r0");
+          k1 = 1;
+          k1 &= w;
+          if (k1 != 0) {
+            register u8 fl asm("r1");
+            register u8 fv asm("r0");
+            fl = (p->s).flags;
+            fv = 1;
+            fv |= fl;
+            (p->s).flags = fv;
+          } else {
+            register u8 fl2 asm("r1");
+            register u8 fv2 asm("r0");
+            fl2 = (p->s).flags;
+            asm("" : "+r"(fl2));
+            fv2 = 0xFE;
+            fv2 &= fl2;
+            (p->s).flags = fv2;
+          }
+        }
+      }
+      if ((p->s).work[2] != 0) {
+        return;
+      }
+    clear:
+      (p->s).flags &= 0xFE;
+    die:
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      break;
+  }
+}
+
 
 // 0x080b02dc
 void FUN_080b02dc(struct Projectile* p) {
