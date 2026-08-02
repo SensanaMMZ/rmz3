@@ -4,69 +4,6 @@
 
 	.text
 
-	thumb_func_start Solid27_Init
-Solid27_Init: @ 0x080D8FF4
-	push {r4, r5, r6, lr}
-	adds r5, r0, #0
-	movs r2, #0
-	movs r6, #0
-	strb r6, [r5, #0x13]
-	strb r6, [r5, #0x12]
-	ldrb r0, [r5, #0xa]
-	movs r1, #2
-	orrs r1, r0
-	orrs r1, r2
-	strb r1, [r5, #0xa]
-	ldrb r0, [r5, #0x10]
-	cmp r0, #0
-	bne _080D9024
-	movs r0, #4
-	orrs r1, r0
-	strb r1, [r5, #0xa]
-	adds r4, r5, #0
-	adds r4, #0x74
-	ldr r1, _080D9020 @ =0x083710F4
-	b _080D903A
-	.align 2, 0
-_080D9020: .4byte 0x083710F4
-_080D9024:
-	movs r0, #4
-	orrs r1, r0
-	strb r1, [r5, #0xa]
-	adds r4, r5, #0
-	adds r4, #0x74
-	ldrb r0, [r5, #0x11]
-	lsls r1, r0, #1
-	adds r1, r1, r0
-	lsls r1, r1, #3
-	ldr r0, _080D9068 @ =0x0837110C
-	adds r1, r1, r0
-_080D903A:
-	adds r2, r5, #0
-	adds r2, #0x54
-	adds r0, r4, #0
-	movs r3, #0
-	bl InitBody
-	str r5, [r4, #0x2c]
-	str r6, [r4, #0x24]
-	ldr r1, _080D906C @ =gSolidFnTable
-	ldrb r0, [r5, #9]
-	lsls r0, r0, #2
-	adds r0, r0, r1
-	movs r1, #1
-	str r1, [r5, #0xc]
-	ldr r0, [r0]
-	ldr r0, [r0, #4]
-	str r0, [r5, #0x14]
-	adds r0, r5, #0
-	bl Solid27_Update
-	pop {r4, r5, r6}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080D9068: .4byte 0x0837110C
-_080D906C: .4byte gSolidFnTable
-
 	thumb_func_start Solid27_Update
 Solid27_Update: @ 0x080D9070
 	push {r4, r5, r6, lr}
