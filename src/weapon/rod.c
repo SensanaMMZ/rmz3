@@ -1867,7 +1867,48 @@ void Rod_Die(struct Weapon* p) {
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/weapon/rod_post.inc");
+#include "mission.h"
+
+extern const u8 u8_ARRAY_08360460[12];
+struct Entity* CreateWeapon13(struct Entity* e, u8 n);
+
+// 0x08039960
+void FUN_08039960(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+  register struct Entity* p asm("r4");
+  register s32 four asm("r5");
+  struct Entity* q;
+  struct Entity* z;
+  p = (struct Entity*)body->parent;
+  q = (struct Entity*)(body->enemy)->parent;
+  z = *(struct Entity**)((u8*)p + 0xb4);
+  {
+    s32 hf = body->hitboxFlags;
+    four = 4;
+    if ((hf & four) == 0) {
+      return;
+    }
+  }
+  {
+    if (gMission.weaponCount[2] <= 0xFFFE) {
+      gMission.weaponCount[2]++;
+    }
+    if ((body->hitboxFlags & four) != 0) {
+      if ((u8)(p->work[0] - 0xB) <= 9) {
+        register struct Entity* pp asm("r4");
+        pp = (struct Entity*)body->parent;
+        CreateWeapon13(*(struct Entity**)((u8*)pp + 0xb4), u8_ARRAY_08360460[pp->work[0] - 0xB]);
+      }
+      if (p->work[0] == 0xD && p->coord.y < q->coord.y) {
+        p->work[0] = 0x13;
+        *(u8*)((u8*)z + 0x135) = 1;
+      }
+      if (p->work[0] == 0x10 && p->coord.y < q->coord.y) {
+        p->work[0] = 0x14;
+        *(u8*)((u8*)z + 0x135) = 1;
+      }
+    }
+  }
+}
 
 // upstream name: DeleteFlyingShield (0x080399FC)
 void FUN_080399fc(struct Weapon* w) {
