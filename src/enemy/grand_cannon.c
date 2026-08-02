@@ -441,6 +441,64 @@ void grandcannon_08069608(struct Enemy* p) {
   }
 }
 
+#include "mission.h"
+#include "vfx.h"
+
+void FUN_080b7f70(struct Enemy* p, struct Coord* c, const motion_t* m, s32 n);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x0806962c
+void explodeGrandCannon(struct Enemy* p) {
+  struct Coord c;
+  struct Coord* co;
+  {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    u8* q = (u8*)p + 0x8c;
+    s32 z;
+    asm("" : "+r"(q));
+    z = 0;
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *q = z;
+    t = (p->s).flags;
+    f = 0xFB;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    k2 = 0xFE;
+    f &= k2;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1000;
+  CreateSmoke(1, &c);
+  PlaySound(0x2a);
+  FUN_080b7f70(p, &c, sMotions, 3);
+  co = &(p->s).coord;
+  TryDropItem(3, co);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, co);
+  SET_ENEMY_ROUTINE(p, 4);
+  {
+    register u8 f2 asm("r0");
+    register u8 t2 asm("r1");
+    t2 = (p->s).flags2;
+    f2 = 0xF7;
+    f2 &= t2;
+    asm volatile("" ::"r"(t2));
+    (p->s).flags2 = f2;
+  }
+}
+
 INCASM("asm/enemy/grand_cannon_post.inc");
 
 // 0x080697BC
