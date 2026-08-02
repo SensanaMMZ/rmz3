@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "physics.h"
+#include "script.h"
 #include "vfx.h"
 
 static const EnemyFunc sUpdates[2];
@@ -52,7 +53,38 @@ void Enemy72_Die(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/unk_72_post_post.inc");
+// 0x0809c5bc
+void FUN_0809c5bc(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      struct Entity* q;
+      SetMotion(&p->s, *(u16*)((u8*)p + 0xb4));
+      (p->s).work[2] = 0x1e;
+      if ((p->s).d.x > 0) {
+        q = (p->s).unk_28;
+        (p->s).unk_coord.x = (q->coord).x + 0xC00;
+      } else {
+        q = (p->s).unk_28;
+        (p->s).unk_coord.x = (q->coord).x - 0xC00;
+      }
+      (p->s).d.y = 0x80;
+      (p->s).unk_coord.y = (q->coord).y + 0x600;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (((p->s).unk_coord.x - (p->s).coord.x) << 4) >> 8;
+      (p->s).coord.y += (((p->s).unk_coord.y - (p->s).coord.y) << 4) >> 8;
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      if ((((p->s).unk_28)->scriptEntity)->flags & 0x80) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
 
 static const struct Collision sCollisions[3];
 
