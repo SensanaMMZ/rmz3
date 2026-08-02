@@ -472,6 +472,27 @@ void deathtanzMode7(struct Boss* p) {
 
 INCASM("asm/boss/deathtanz_c2.inc");
 
+// 0x0804A540
+void deathtanzMode15(struct Boss* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      PlaySound(0x5C);
+      SetDDP(&p->body, &sCollisions[1]);
+      *(u8*)((u8*)p + 0xbe) = m;
+      SetMotion(&p->s, MOTION(0xA7, 0x16));
+      (p->s).mode[2]++;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) == 3) {
+        u8 z = 0;
+        (p->s).mode[1] = 0x10;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+}
+
 void deathtanz_080a09a0(struct Entity* parent, s32 x, s32 y, u8 n);
 
 // 0x0804A59C
