@@ -888,7 +888,75 @@ void blizzackMode20(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/blizzack_post_p2_a2c.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+
+// 0x0805AC5C
+void blizzack_0805ac5c(struct Boss* p) {
+  register s32 one asm("r5");
+  s32 nm;
+  register s32 z2 asm("r2");
+  u8* fp;
+  u32* st;
+  struct Coord c;
+  {
+    struct StageRun* sr = &gStageRun;
+    u16 ms = sr->missionStatus;
+    s32 t;
+    one = 1;
+    asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one));
+    t &= ms;
+    if (t != 0) {
+      u8 av = sr->vm.active;
+      s32 t2;
+      asm volatile("add %0, %1, #0" : "=&l"(t2) : "l"(one));
+      t2 &= av;
+      if (t2 == 0) {
+        register s32 mk asm("r0");
+        register s32 k10 asm("r1");
+        mk = 0xFFFE;
+        mk &= ms;
+        k10 = 0x10;
+        mk |= k10;
+        sr->missionStatus = mk;
+      }
+    }
+  }
+  StopSound(*(s16*)((u8*)p + 0xc8));
+  (p->s).mode[2] = 0;
+  (p->s).work[2] = 0;
+  {
+    s32 onR = 0;
+    if ((pZero2->s).coord.x > (p->s).coord.x) {
+      onR = 1;
+    }
+    fp = (u8*)p + 0xc4;
+    *fp = onR;
+  }
+  SetMotion(&p->s, 0xB40B);
+  UpdateMotionGraphic(&p->s);
+  {
+    u32* st0 = (u32*)((u8*)p + 0x8c);
+    u32 sv = *st0 & 0x10000;
+    asm volatile("add %0, %1, #0" : "=&l"(st) : "l"(st0));
+    if (sv != 0) {
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y - 0x1C00;
+    FUN_080b2b40(0, &c, 0x200, *fp);
+      nm = 2;
+    } else {
+      nm = 1;
+    }
+  }
+  (p->s).mode[1] = nm;
+  z2 = 0;
+  asm("" : "+r"(z2));
+  (p->s).mode[2] = 1;
+  ((p->s).unk_2c)->mode[3] = 1;
+  *st = z2;
+  *(u32*)((u8*)p + 0x90) = z2;
+  *(u8*)((u8*)p + 0x94) = z2;
+  (p->s).flags &= 0xFB;
+}
 
 struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
 
