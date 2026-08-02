@@ -99,6 +99,55 @@ void FUN_08045d28(struct Body* body) {
   }
 }
 
+void BabyElf_Die(struct Boss* p);
+
+// 0x08045d54
+bool8 FUN_08045d54(struct Boss* p) {
+  if ((p->s).work[0] == 0 && (p->body).hp <= 0) {
+    struct Boss* q;
+    register s32 f asm("r5");
+    u8 m1;
+    u8 v;
+    PlaySound(0x119);
+    {
+      register u16 st asm("r2");
+      register s32 one asm("r5");
+      register u8 av asm("r1");
+      st = gStageRun.missionStatus;
+      one = 1;
+      if ((one & st) != 0) {
+        register s32 res asm("r0");
+        av = gStageRun.vm.active;
+        res = one & av;
+        asm volatile("" ::"r"(one));
+        if (res == 0) {
+          gStageRun.missionStatus = (st & 0xFFFE) | 0x10;
+        }
+      }
+    }
+    q = (struct Boss*)(p->s).unk_2c;
+    f = 0;
+    m1 = (p->s).mode[1];
+    if ((u8)(m1 - 8) <= 2 || m1 == 0x10) {
+      f = 1;
+    }
+    SET_BOSS_ROUTINE(p, ENTITY_DIE);
+    SET_BOSS_ROUTINE(q, ENTITY_DIE);
+    if (f != 0) {
+      v = 0;
+      asm("" : "+r"(v));
+    } else {
+      v = 1;
+    }
+    (p->s).mode[1] = v;
+    (q->s).mode[1] = v;
+    BabyElf_Die(p);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+
 INCASM("asm/boss/baby_elf_p1_pre_p2_p1.inc");
 
 extern const BossFunc sUpdates1[19];
