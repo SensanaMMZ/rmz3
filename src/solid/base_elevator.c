@@ -1,3 +1,4 @@
+#include "palette_animation.h"
 #include "collision.h"
 #include "global.h"
 #include "overworld.h"
@@ -173,7 +174,44 @@ void FUN_080d0008(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/base_elevator_p2a.inc");
+// 0x080D0024
+void FUN_080d0024(struct Solid* p) {
+  struct Entity* q = (p->s).unk_28;
+  u8 v = *((u8*)q + 0xbd);
+  asm("" : "+r"(v));
+  if (v != 0) {
+    if ((p->s).mode[1] != q->mode[1]) {
+      if (q->mode[1] != 0) {
+        if (v == 1) {
+          SetMotion(&p->s, MOTION(0x89, 0x02));
+        } else {
+          RemovePaletteAnimation((p->s).work[2]);
+          (p->s).work[2] = 0xBC;
+          StartPaletteAnimation(0xBC, (*((u8*)p + 0xc2) << 5) | 0x200);
+        }
+      } else {
+        if (v == 1) {
+          SetMotion(&p->s, MOTION(0x89, 0x00));
+        } else {
+          RemovePaletteAnimation((p->s).work[2]);
+          (p->s).work[2] = 0xBB;
+          StartPaletteAnimation(0xBB, (*((u8*)p + 0xc2) << 5) | 0x200);
+        }
+      }
+    }
+    (p->s).mode[1] = q->mode[1];
+    UpdateMotionGraphic(&p->s);
+  }
+  StepPaletteAnimation((p->s).work[2]);
+  (p->s).coord = q->coord;
+  if (q->mode[0] > 1) {
+    u8 w = (p->s).work[2];
+    if (w != 0) {
+      RemovePaletteAnimation(w);
+    }
+    SET_SOLID_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 extern const motion_t sBaseElevatorMotions[6];
 void rBaseElevatorScript(struct Solid* p);
