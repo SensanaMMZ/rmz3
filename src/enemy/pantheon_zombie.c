@@ -379,7 +379,61 @@ void FUN_08080324(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_zombie_p2_mid.inc");
+// 0x080803DC
+void FUN_080803dc(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 dx;
+      SetDDP(&p->body, &sCollisions[5]);
+      (p->s).taskCol = 0xF;
+      if ((p->s).coord.x > (pZero2->s).coord.x) {
+        (p->s).flags &= 0xEF;
+        ((p->s).spr).xflip = m;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+        dx = 0x800;
+      } else {
+        s32 one = 1;
+        (p->s).flags |= 0x10;
+        ((p->s).spr).xflip = one;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 sh = 0x10;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          m11 |= sh;
+          *oa = m11;
+        }
+        dx = -0x800;
+      }
+      (p->s).unk_coord.x = dx;
+      SetMotion(&p->s, 0x4C03);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      struct Zero* z;
+      if (*(u8*)((u8*)p + 0xb8) != 0) {
+        (p->s).coord.y += 0x20;
+      }
+      z = pZero2;
+      (p->s).coord.x = (z->s).coord.x + (p->s).unk_coord.x;
+      if ((z->s).coord.y > (p->s).coord.y) {
+        (z->s).coord.y = (p->s).coord.y;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 
 void FUN_080804a8(struct Enemy* p) {
   s32 m = (p->s).mode[2];
