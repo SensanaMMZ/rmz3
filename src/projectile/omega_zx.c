@@ -144,6 +144,59 @@ void OmegaZXProjectile_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
+#include "vfx.h"
+
+static const struct Collision sCollisions[26];
+
+// 0x080b0168
+void FUN_080b0168(struct Projectile* p) {
+  s32 t = (p->s).work[2] - 1;
+  (p->s).work[2] = t;
+  if ((t << 24) == 0) {
+    CreateSmoke(3, &(p->s).coord);
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  {
+    s32 m = (p->s).mode[2];
+    switch (m) {
+      case 0: {
+        struct Body* body;
+        InitNonAffineMotion(&p->s);
+        ResetDynamicMotion(&p->s);
+        {
+          register u8 fv asm("r0");
+          register u8 k asm("r1");
+          fv = (p->s).flags;
+          k = FLIPABLE;
+          fv |= k;
+          asm volatile("movs %0, #0" : "=l"(k));
+          fv |= k;
+          k = DISPLAY;
+          fv |= k;
+          k = COLLIDABLE;
+          fv |= k;
+          (p->s).flags = fv;
+        }
+        body = &p->body;
+        InitBody(body, &sCollisions[17], &(p->s).coord, 2);
+        body->parent = (struct CollidableEntity*)p;
+        body->fn = (BodyFunc)m;
+        SetMotion(&p->s, MOTION(0xB8, 0x00));
+        (p->s).d.y = m;
+        (p->s).d.x = -0x500;
+        (p->s).work[2] = 0x78;
+        (p->s).mode[2]++;
+        FALLTHROUGH;
+      }
+      case 1:
+        (p->s).coord.x += (p->s).d.x;
+        UpdateMotionGraphic(&p->s);
+        break;
+    }
+  }
+}
+
 INCASM("asm/projectile/omega_zx_post_p2.inc");
 
 // 0x080b02dc
