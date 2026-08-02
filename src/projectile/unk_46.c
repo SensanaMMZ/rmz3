@@ -112,6 +112,57 @@ void FUN_080b2428(struct Projectile* p) {
   FUN_080b22e0(p);
 }
 
+struct Enemy* FUN_0809bdd4(struct Entity* e, u8 a1, u8 a2);
+
+// 0x080B24C8
+void FUN_080b24c8(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[1]) {
+    case 0: {
+      u8 w1 = (p->s).work[1];
+      register u8* t asm("r0");
+      register u8* t2 asm("r2");
+      u8 v;
+      t = (u8*)q + 0xDE4;
+      t2 = t + w1;
+      v = *t2;
+      if (v != 0xFF) {
+        struct Entity* r;
+        u8 v2;
+        asm volatile("add %0, %1, #0" : "=&l"(v2) : "l"(v));
+        r = (struct Entity*)FUN_0809bdd4(q, w1, v2);
+        (p->s).unk_2c = r;
+        if (r != NULL) {
+          *((u8*)q + 0xE12) = 1;
+          (p->s).mode[1]++;
+        }
+      }
+      break;
+    }
+    case 1:
+      if (((p->s).unk_2c)->mode[1] > 1) {
+        SetMotion(&p->s, MOTION(0xEA, 0x01));
+        PlaySound(0x139);
+        (p->s).mode[1]++;
+      }
+      /* fallthrough */
+    case 2:
+      if (((p->s).unk_2c)->coord.y > 0x1000) {
+        SetMotion(&p->s, MOTION(0xEA, 0x02));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 3:
+      if ((p->s).motion.state == 3) {
+        u8* t = (u8*)q + 0xDE4;
+        t[(p->s).work[1]] = 0xFF;
+        (p->s).mode[1] = 0;
+      }
+      break;
+  }
+  UpdateMotionGraphic(&p->s);
+}
+
 INCASM("asm/projectile/unk_46_p4_p1_b.inc");
 
 void FUN_080b274c(struct Projectile* p) {
