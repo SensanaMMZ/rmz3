@@ -133,7 +133,26 @@ void FUN_080a9d88(struct Projectile* p) {
   Projectile28_Update(&p->s);
 }
 
-INCASM("asm/projectile/unk_28_p2_p1a.inc");
+// 0x080A9DCC
+void FUN_080a9dcc(struct Projectile* p) {
+  struct Entity* o = *(struct Entity**)((u8*)p + 0x28);
+  (p->s).coord = o->coord;
+  SET_XFLIP(p, (o->flags >> 4) & 1);
+  if (*((u8*)o + 0xc6) != 0) {
+    if ((p->s).mode[2] != 0) {
+      SetMotion(&p->s, MOTION(0x5f, 1));
+    }
+    (p->s).flags |= 1;
+    (p->s).mode[2] = 0;
+  } else {
+    (p->s).flags &= ~1;
+    (p->s).mode[2] = 1;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (o->mode[0] > 1) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void FUN_080a9fe4(struct Sprite* t, struct DrawPivot* c);
 
