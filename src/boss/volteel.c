@@ -756,6 +756,71 @@ bool8 FUN_08045610(struct Boss* p) { return TRUE; }
 
 INCASM("asm/boss/volteel_p14_p1.inc");
 
+#include "element.h"
+
+extern const struct Coord Coord_ARRAY_08362570[7];
+
+// 0x080457c4
+bool8 volteel_080457c4(struct Boss* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xc0);
+  if (*slot != NULL) {
+    return TRUE;
+  }
+  if (!((p->body).status & 1)) {
+    return TRUE;
+  }
+  {
+    const struct Coord* c;
+    if ((p->s).mode[1] == 9) {
+      u8 w = (p->s).work[3];
+      if (w == 0) {
+        c = &Coord_ARRAY_08362570[4];
+      } else if (w == 1) {
+        c = &Coord_ARRAY_08362570[5];
+      } else if (w == 2) {
+        c = &Coord_ARRAY_08362570[3];
+      } else if (w == 3) {
+        c = &Coord_ARRAY_08362570[6];
+      } else {
+        goto after;
+      }
+    } else {
+      c = &Coord_ARRAY_08362570[0];
+    }
+    *slot = (struct Entity*)ApplyElementEffect(0xd, &p->s, c);
+  }
+after : {
+  struct Entity** s2 = (struct Entity**)((u8*)p + 0xc0);
+  if (*s2 == NULL) {
+    return TRUE;
+  }
+  if ((*((u8*)p + 0x97) & 0xf0) == 0x30) {
+    s32 z;
+    u8 v1 = (p->s).mode[1];
+    u8* d0 = (u8*)p + 0xd0;
+    asm("" : "+r"(d0));
+    z = 0;
+    *d0 = v1;
+    {
+      u8 v2 = (p->s).mode[2];
+      u8* d1 = (u8*)p + 0xd1;
+      u8 v3;
+      asm("" : "+r"(d1));
+      *d1 = v2;
+      v3 = (p->s).mode[3];
+      d1 += 1;
+      asm("" : "+r"(d1));
+      *d1 = v3;
+    }
+    (p->s).mode[1] = 0xb;
+    (p->s).mode[2] = z;
+  } else {
+    *s2 = NULL;
+  }
+}
+  return TRUE;
+}
+
 // 0x0804586c
 void FUN_0804586c(struct Body* body) {
   register const struct Collision* c asm("r2");
