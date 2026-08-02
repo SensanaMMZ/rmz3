@@ -462,7 +462,49 @@ void FUN_0805c760(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p2_p1b.inc");
+u16 FUN_08010d70(s32 x, s32 y);
+void FUN_08010dd8(s32 x, s32 y);
+
+// 0x0805C7C4
+void hanu_0805c7c4(struct Boss* p) {
+  s32 x;
+  register s32 m asm("r0");
+  if ((p->s).mode[2] == 0) {
+    s32 v;
+    SetMotion(&p->s, MOTION(0xB5, 0x0D));
+    SetDDP(&p->body, &sCollisions[12]);
+    if ((p->s).flags & X_FLIP) {
+      (p->s).d.x = 0x400;
+      v = 0x1000;
+    } else {
+      (p->s).d.x = -0x400;
+      v = -0x1000;
+    }
+    *(s32*)((u8*)p + 0x64) = v;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  x = (p->s).coord.x + (p->s).d.x;
+  (p->s).coord.x = x;
+  if (FUN_080098a4(x + *(s32*)((u8*)p + 0x64), (p->s).coord.y) != 0) {
+    if (FUN_08010d70((p->s).coord.x + *(s32*)((u8*)p + 0x64), (p->s).coord.y) != 0) {
+      FUN_08010dd8((p->s).coord.x + *(s32*)((u8*)p + 0x64), (p->s).coord.y);
+    }
+    AppendQuake(5, &(p->s).coord);
+    PlaySound(0x52);
+    if ((p->s).mode[3] == 0) {
+      m = 0x10;
+      asm("" : "+r"(m));
+    } else {
+      m = 0x11;
+      asm("" : "+r"(m));
+    }
+    (p->s).mode[1] = m;
+    m = 0;
+    asm("" : "+r"(m));
+    (p->s).mode[2] = m;
+  }
+}
 
 // 0x0805C87C
 void FUN_0805c87c(struct Boss* p) {
