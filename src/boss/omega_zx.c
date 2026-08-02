@@ -580,7 +580,46 @@ NON_MATCH void Boss22Neutral(struct Boss* p) {
 
 bool8 FUN_08061230(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/omega_zx_p6.inc");
+// 0x08061234
+void FUN_08061234(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      RemovePaletteAnimation(0xA7);
+      RemovePaletteAnimation(0xA8);
+      RemovePaletteAnimation(0xA9);
+      RemovePaletteAnimation(0xAA);
+      StartPaletteAnimation(0xA7, 0x2C0);
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      goto c1;
+    case 2:
+      (p->s).work[2] = 0x3C;
+      goto inc;
+    case 1:
+    case 3:
+    c1:
+      FUN_080616fc(p);
+      StepPaletteAnimation(0xA7);
+      if ((p->s).work[2] == 0) {
+        break;
+      }
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+    inc:
+      (p->s).mode[2]++;
+      break;
+    case 4: {
+      u8 z;
+      FUN_080616fc(p);
+      RemovePaletteAnimation(0xA7);
+      z = 0;
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
 
 bool8 FUN_080612d4(struct Boss* p) { return TRUE; }
 
