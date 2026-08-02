@@ -531,6 +531,86 @@ void andrew_080d9cd8(struct Solid* p) {
 
 INCASM("asm/solid/mob_npc_pre_p1_1_1b.inc");
 
+// 0x080D9EB8
+void alouette_080d9eb8(struct Solid* p) {
+  s32 z5;
+  struct Body* bd;
+  if (gSystemSavedataManager.mods[2] & 2) {
+    register const motion_t* mt asm("r2");
+    u16* b1;
+    u16 mv;
+    mt = sMotions;
+    mv = mt[(p->s).work[0]] + 2;
+    b1 = (u16*)((u8*)p + 0xbe);
+    *b1 = mv;
+    mv = mt[(p->s).work[0]] + 3;
+    asm("" : "+r"(b1));
+    b1 = (u16*)((u8*)b1 + 2);
+    asm("" : "+r"(b1));
+    *b1 = mv;
+    mv = mt[(p->s).work[0]] + 2;
+    asm("" : "+r"(b1));
+    b1 = (u16*)((u8*)b1 + 2);
+    asm("" : "+r"(b1));
+    *b1 = mv;
+    ForceEntityPalette(&p->s, 9);
+  } else {
+    register const motion_t* mt2 asm("r2");
+    u16* b2;
+    u16 mv;
+    mt2 = sMotions;
+    mv = mt2[(p->s).work[0]];
+    b2 = (u16*)((u8*)p + 0xbe);
+    *b2 = mv;
+    mv = mt2[(p->s).work[0]] + 1;
+    asm("" : "+r"(b2));
+    b2 = (u16*)((u8*)b2 + 2);
+    asm("" : "+r"(b2));
+    *b2 = mv;
+    mv = mt2[(p->s).work[0]];
+    asm("" : "+r"(b2));
+    b2 = (u16*)((u8*)b2 + 2);
+    asm("" : "+r"(b2));
+    *b2 = mv;
+    ForceEntityPalette(&p->s, 7);
+  }
+  {
+    register u32 fl asm("r1");
+    register s32 c4 asm("r0");
+    fl = (p->s).flags;
+    c4 = 4;
+    z5 = 0;
+    asm("" : "+r"(z5) : "r"(c4));
+    (p->s).flags = c4 | fl;
+  }
+  bd = &p->body;
+  InitBody(bd, sCollisions, &(p->s).coord, 1);
+  bd->parent = (struct CollidableEntity*)p;
+  bd->fn = (void*)z5;
+  {
+    register s32 one asm("r2");
+    register u8* a asm("r0");
+    register u8* b asm("r1");
+    register s32 v asm("r0");
+    a = (u8*)p + 0xb9;
+    asm("" : "+r"(a));
+    one = 1;
+    *a = one;
+    asm volatile("" ::"r"(a));
+    b = (u8*)p + 0xb8;
+    asm("" : "+r"(b));
+    v = 0x10;
+    *b = v;
+    asm("" : "+r"(b));
+    b += 4;
+    asm("" : "+r"(b));
+    v += 0xf0;
+    *(u16*)b = v;
+    (p->s).mode[1] = one;
+  }
+  MobNPC_Update(p);
+}
+
 // 0x080d9f88
 TextID alouette_080d9f88(struct Solid* p) {
   if (FLAG(gCurStory.s.gameflags, 16)) {
