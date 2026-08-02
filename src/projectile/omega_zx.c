@@ -239,6 +239,60 @@ void FUN_080b02dc(struct Projectile* p) {
 
 INCASM("asm/projectile/omega_zx_post_p2b.inc");
 
+#include "stagerun.h"
+#include "camera.h"
+
+// 0x080b10b8
+void FUN_080b10b8(struct Projectile* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      struct Body* body;
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      InitBody(body, &sCollisions[25], &(p->s).coord, 2);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (BodyFunc)m;
+      {
+        register u8 fv asm("r0");
+        register u8 k asm("r1");
+        fv = (p->s).flags;
+        k = FLIPABLE;
+        fv |= k;
+        k = DISPLAY;
+        fv |= k;
+        (p->s).flags = fv;
+      }
+      SetMotion(&p->s, MOTION(0xBB, 0x06));
+      (p->s).work[2] = 0x14;
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        (p->s).coord.y = cam->viewport.y + 0x3FFF;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2] = 0xa;
+      break;
+    case 0xa:
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      break;
+  }
+}
+
+INCASM("asm/projectile/omega_zx_post_p2b_b.inc");
+
 void FUN_080b0168(struct Projectile* p);
 void FUN_080b0214(struct Projectile* p);
 void FUN_080b02dc(struct Projectile* p);
