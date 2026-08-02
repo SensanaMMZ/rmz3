@@ -1003,6 +1003,29 @@ TextID kiss_080dac04(struct Solid* p) {
 
 INCASM("asm/solid/mob_npc_pre_p2.inc");
 
+// 0x080DADFC
+void FUN_080dadfc(struct Solid* p) {
+  struct MobObject* m = (struct MobObject*)p;
+  struct Body* b;
+  u8 z1;
+  s32 z2;
+  m->motion = sMotions[(p->s).work[0]];
+  z1 = 0;
+  z2 = 0;
+  m->m_c0 = sMotions[(p->s).work[0]];
+  m->m_c2 = sMotions[(p->s).work[0]];
+  (p->s).flags |= COLLIDABLE;
+  b = &p->body;
+  InitBody(b, &sCollisions[2], &(p->s).coord, 1);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = (BodyFunc)z2;
+  m->unk_05 = 1;
+  m->unk_04 = z1;
+  m->unk_08 = z2;
+  (p->s).mode[1] = z1;
+  MobNPC_Update(p);
+}
+
 TextID getCielComputerResearchTextID(struct Solid* p) {
   return 0x28c;
 }
