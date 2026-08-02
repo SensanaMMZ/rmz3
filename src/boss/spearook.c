@@ -400,7 +400,84 @@ void FUN_08062338(struct Boss* p) {
   }
 }
 
+extern void __umodsi3();
+
 INCASM("asm/boss/spearook_p1_post_p2_a1.inc");
+
+// 0x080624B0
+void FUN_080624b0(struct Boss* p) {
+  struct Entity* q = (p->s).unk_28;
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).work[2] = m;
+      SetMotion(&p->s, MOTION(0xD6, 0x01));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register u32* w asm("r2");
+      register s32 cx asm("r6");
+      s32 t;
+      if (q->mode[1] != 1) {
+        SetDDP(&p->body, (const struct Collision*)0x083657CC);
+      }
+      (p->s).work[2]++;
+      t = ((s32 (*)(s32, s32))__umodsi3)((p->s).work[2], 15);
+      (p->s).work[2] = t;
+      asm("" : "+r"(t));
+      t <<= 24;
+      if (t == 0) {
+        FUN_08061b68(p, 0x1400, -0x3100);
+      }
+      UpdateMotionGraphic(&p->s);
+      cx = (q->coord).x;
+      (p->s).coord.x = cx;
+      (p->s).coord.y = (q->coord).y - 0x1200;
+      w = (u32*)((u8*)q + 0xbc);
+      if ((*w & 2) == 0) {
+        register u32 one asm("r3");
+        register u32 fl asm("r1");
+        register u32 fv asm("r0");
+        fv = (p->s).flags;
+        fl = fv >> 4;
+        one = 1;
+        fl &= one;
+        if (cx < (pZero2->s).coord.x) {
+          if (fl != one) {
+            goto turn;
+          }
+          goto chk;
+        }
+        if (fl == 0) {
+          goto chk;
+        }
+      turn:
+        *w |= 1;
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = 0;
+        break;
+      }
+    chk: {
+      u32 v = *w;
+      u32 a = 4;
+      a &= v;
+      if (a != 0) {
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = 0;
+      } else {
+        v &= 0x20;
+        if (v != 0) {
+          (p->s).mode[1] = 0xA;
+          (p->s).mode[2] = a;
+        }
+      }
+      break;
+    }
+    }
+  }
+}
+
+INCASM("asm/boss/spearook_p1_post_p2_a1_b.inc");
 
 void FUN_0806293c(struct Boss* p) {
   switch ((p->s).mode[2]) {
