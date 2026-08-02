@@ -147,7 +147,55 @@ void FUN_080e2414(struct Elf* p) {
   }
 }
 
-INCASM("asm/cyberelf/unk_1_p2_p2.inc");
+// 0x080E244C -- elf release: credit the life-recover pool by breed+rank and,
+// at rank 3, top up the first subtank slot that is not already full.
+// Logic verified; parked on pool-load scheduling. Retail emits
+// `movs r2,#0; ldr r6,=gElfFnTable; adds r4,r5,#0; adds r4,#0xbc` -- the
+// gElfFnTable pool load sits between the loop counter init and the subtank
+// base. agbcc puts it after the base in every spelling tried (base as a local,
+// base folded into the loop body, `asm volatile("" ::"r"((u32)gElfFnTable))`
+// at the exact slot -- the last one lands the address in r0 and adds a copy to
+// r6). Instruction count is exact; only that one load is two slots late.
+NON_MATCH void FUN_080e244c(struct Elf* p0) {
+#if MODERN
+  register struct Elf* p asm("r3");
+  struct Zero* z;
+  p = p0;
+  z = ((struct CyberElf1*)p)->player;
+  switch ((p->s).work[0] + (p->s).work[1]) {
+    case 0:
+      gLifeRecoverAmount += 0x20;
+      break;
+    case 1:
+      gLifeRecoverAmount += 0x40;
+      break;
+    case 2:
+      gLifeRecoverAmount += 0x100;
+      break;
+    case 3: {
+      u8 i;
+      u8* base;
+      gLifeRecoverAmount += 0x100;
+      i = 0;
+      base = (u8*)z + 0xbc;
+      do {
+        u8* t = base + i;
+        if (*t <= 0x1F) {
+          *t = 0x20;
+          *((u8*)z + 0x233) = 2;
+          break;
+        }
+        i = i + 1;
+      } while (i <= 3);
+      break;
+    }
+  }
+  SET_ELF_ROUTINE(p, ENTITY_DIE);
+  Elf1_Die(p);
+#else
+  INCCODE("asm/cyberelf/unk_1_p2_p2.inc");
+#endif
+}
 
 // 0x080E2510
 void FUN_080e2510(struct Elf* p0) {
