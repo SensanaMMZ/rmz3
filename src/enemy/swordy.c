@@ -19,7 +19,62 @@ struct Enemy* CreateSwordy(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/swordy_p1_p2_a.inc");
+static const struct Collision sCollisions[5];
+void Swordy_Update(struct Enemy* p);
+
+// 0x0807BF04
+void Swordy_Init(struct Enemy* p) {
+  struct Body* b;
+  u32 z;
+  u8 one;
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 t asm("r1");
+    register u8 f asm("r0");
+    t = (p->s).flags;
+    f = 1;
+    f |= t;
+    f |= 2;
+    z = 0;
+    f &= 0xEF;
+    (p->s).flags = f;
+  }
+  one = 1;
+  ((p->s).spr).xflip = z;
+  {
+    u8* oa = (u8*)p + 0x4a;
+    u8 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    *oa = m11;
+  }
+  (p->s).flags |= COLLIDABLE;
+  b = &p->body;
+  InitBody(b, sCollisions, &(p->s).coord, 4);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = (BodyFunc)z;
+  {
+    register u8* q asm("r0");
+    q = (u8*)p + 0x5c;
+    *(u32*)(q + 4) = z;
+    (p->s).d.x = z;
+    asm volatile("add %0, #0x60" : "+r"(q));
+    *(u32*)q = z;
+    asm volatile("sub %0, #4" : "+r"(q));
+    *q = z;
+    asm volatile("add %0, #8" : "+r"(q));
+    *q = one;
+  }
+  SET_ENEMY_ROUTINE(p, 1);
+  (p->s).mode[1] = z;
+  (p->s).mode[2] = z;
+  (p->s).mode[3] = z;
+  if (IsFrozen(&p->s)) {
+    SetMotion(&p->s, MOTION(0x3F, 0x00));
+    UpdateMotionGraphic(&p->s);
+  }
+  Swordy_Update(p);
+}
 
 extern const EnemyFunc PTR_ARRAY_08367a38[4];
 extern const EnemyFunc PTR_ARRAY_08367a48[4];
