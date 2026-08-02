@@ -1002,7 +1002,34 @@ void FUN_080569a4(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p2_p1.inc");
+// 0x080569E4
+void copyx_080569e4(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xB3, 0x0D));
+    (p->s).mode[2] = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    u8 t = *(u8*)((u8*)p + 0x73);
+    if (t == 3) {
+      u8 z = 0;
+      (p->s).mode[1] = t;
+      (p->s).mode[2] = 1;
+      (p->s).mode[3] = 0x1D;
+      FUN_080a88a4(&p->s, 4, 0);
+      FUN_080a88a4(&p->s, 4, 1);
+      FUN_080a88a4(&p->s, 4, 2);
+      FUN_080a88a4(&p->s, 4, 3);
+      FUN_080a88a4(&p->s, 4, 4);
+      FUN_080a88a4(&p->s, 4, 5);
+      FUN_080a88a4(&p->s, 4, 6);
+      FUN_080a88a4(&p->s, 4, 7);
+      *(u8*)((u8*)p + 0xc6) = z;
+      (p->s).work[2] = 0x28;
+      PlaySound(0x46);
+    }
+  }
+}
 
 void FUN_08056a80(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
