@@ -521,6 +521,51 @@ void FUN_080bb048(struct VFX* p) {
 
 INCASM("asm/vfx/unk_32_post_b.inc");
 
+// 0x080BB5D4
+void FUN_080bb5d4(struct VFX* p) {
+  if ((u8)--(p->s).work[2] == 0) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      (p->s).work[2] = RANDOM(RNG_0202f388) % 6 + 0x12;
+      SetMotion(&p->s, MOTION(0x27, 0x0C));
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 dy;
+      s32 w3 = (p->s).work[3] + 1;
+      (p->s).work[3] = w3;
+      {
+        u32 kf;
+        u32 one;
+        kf = 0xFF;
+        w3 &= kf;
+        one = 1;
+        w3 &= one;
+        if (w3 != 0) {
+          (p->s).flags |= one;
+        } else {
+          u8 t = (p->s).flags;
+          u8 fv = 0xFE;
+          fv &= t;
+          asm volatile("" ::"r"(t));
+          (p->s).flags = fv;
+        }
+      }
+      dy = (p->s).d.y;
+      dy += ((-0x100 - dy) << 4) >> 8;
+      (p->s).d.y = dy;
+      (p->s).coord.y += dy;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 // 0x080BB68C
 void FUN_080bb68c(struct VFX* p) {
   if ((u8)--(p->s).work[2] == 0) {
