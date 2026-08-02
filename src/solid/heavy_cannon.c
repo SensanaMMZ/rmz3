@@ -91,6 +91,22 @@ void FUN_080cc298(struct Solid* p) {
   }
 }
 
+// 0x080cc2d4
+void FUN_080cc2d4(struct Solid* p) {
+  struct Entity** q = (struct Entity**)((u8*)p + 0xb8);
+  if (*q == NULL || isKilled(*q)) {
+    s32 z = 0;
+    *q = NULL;
+    if ((p->s).work[0] <= 3) {
+      (p->s).mode[1] = z;
+      SetDDP(&p->body, &sCollisions[3]);
+    } else {
+      (p->s).mode[1] = 1;
+      SetDDP(&p->body, &sCollisions[1]);
+    }
+  }
+}
+
 INCASM("asm/solid/heavy_cannon_post_post_p2_p1.inc");
 
 void FUN_080cc4dc(struct Solid* p) {

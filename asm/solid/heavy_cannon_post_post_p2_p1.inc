@@ -4,46 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080cc2d4
-FUN_080cc2d4: @ 0x080CC2D4
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	adds r5, r4, #0
-	adds r5, #0xb8
-	ldr r0, [r5]
-	cmp r0, #0
-	beq _080CC2EA
-	bl isKilled
-	cmp r0, #0
-	beq _080CC316
-_080CC2EA:
-	movs r1, #0
-	str r1, [r5]
-	ldrb r0, [r4, #0x10]
-	cmp r0, #3
-	bhi _080CC308
-	strb r1, [r4, #0xd]
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _080CC304 @ =0x0836FED4
-	bl SetDDP
-	b _080CC316
-	.align 2, 0
-_080CC304: .4byte sCollisions+(24*3)
-_080CC308:
-	movs r0, #1
-	strb r0, [r4, #0xd]
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _080CC31C @ =0x0836FEA4
-	bl SetDDP
-_080CC316:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080CC31C: .4byte sCollisions+(24*1)
-
 	thumb_func_start FUN_080cc320
 FUN_080cc320: @ 0x080CC320
 	push {r4, r5, lr}
