@@ -178,7 +178,72 @@ u32 FUN_0803a5c8(u32 a, s32 b, s32 c) {
   return b;
 }
 
-INCASM("asm/weapon/shield_fly_b.inc");
+// 0x0803A5FC
+bool32 shield_0803a5fc(struct Weapon* p) {
+  register struct Zero* z asm("ip");
+  register const struct Rect* tbl asm("r2");
+  register u8* q asm("r3");
+  s32 dx;
+  register s32 dy asm("r1");
+  register s32 rv asm("r1");
+  s32 cv;
+  register struct Zero* za asm("r4");
+  register struct Zero* zb asm("r3");
+  u32 lim;
+  register u32 k asm("r2");
+  register u32 k2 asm("r3");
+  u32 t;
+  s32 a;
+  s32 b;
+  z = *(struct Zero**)((u8*)p + 0xb4);
+  if (((z->s).flags & 0x10) != 0) {
+    tbl = gZeroRanges;
+    asm("" : "+r"(tbl));
+    q = (u8*)z + 0x147;
+    rv = tbl[*q].x;
+    za = z;
+    asm("" : "+r"(za));
+    cv = (za->s).coord.x;
+    dx = cv - rv;
+  } else {
+    tbl = gZeroRanges;
+    asm("" : "+r"(tbl));
+    q = (u8*)z + 0x147;
+    rv = tbl[*q].x;
+    za = z;
+    asm("" : "+r"(za));
+    cv = (za->s).coord.x;
+    dx = cv + rv;
+  }
+  rv = tbl[*q].y;
+  zb = z;
+  asm("" : "+r"(zb));
+  cv = (zb->s).coord.y;
+  dy = cv + rv;
+  dx -= (p->s).coord.x;
+  dy -= (p->s).coord.y;
+  k = 0x1000;
+  asm("" : "+r"(k));
+  t = dx + k;
+  lim = 0x2000;
+  if (t > lim) {
+    return 0;
+  }
+  k2 = 0x1000;
+  asm("" : "+r"(k2));
+  t = dy + k2;
+  if (t > lim) {
+    return 0;
+  }
+  a = dx;
+  a *= dx;
+  b = dy;
+  b *= dy;
+  if (a + b > 0x1000000) {
+    return 0;
+  }
+  return 1;
+}
 
 static const motion_t sShieldFlyMotions[3][4] = {
     {
