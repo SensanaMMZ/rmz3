@@ -187,7 +187,64 @@ void FUN_080ccae0(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/lava_geyser_p4b.inc");
+// 0x080CCB50
+void FUN_080ccb50(struct Solid* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 k;
+      s32 k2;
+      s32 c0;
+      register s32 t asm("r2");
+      register s32 t2 asm("r1");
+      s32 u;
+      (p->s).flags2 |= 8;
+      (p->s).size = &sSize;
+      (p->s).hazardAttr = 0x811;
+      SetDDP(&p->body, sCollisions);
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).d.y = m;
+      k2 = (p->s).work[0] >> 2;
+      c0 = 0xC000;
+      asm("" : "+r"(c0));
+      k = k2 * 3;
+      t = k << 3;
+      u = c0 - (k << 11);
+      (p->s).unk_coord.y = u;
+      t2 = 0x64 - t;
+      asm volatile("add %0, %1, #0" : "=l"(t) : "l"(t2));
+      t *= t2;
+      asm volatile("add %0, %1, #0" : "=l"(t2) : "l"(t));
+      (p->s).unk_coord.y = u / t2;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 base;
+      s32 cy0;
+      s32 cy;
+      s32 dy;
+      s32* lim;
+      base = *(s32*)((u8*)p + 0xc0) - 0x200;
+      (p->s).coord.x = base + (RANDOM(RNG_0202f388) & 0x1FF);
+      cy0 = (p->s).coord.y;
+      dy = (p->s).d.y;
+      cy = cy0 + dy;
+      (p->s).coord.y = cy;
+      (p->s).d.y = dy + (p->s).unk_coord.y;
+      lim = (s32*)((u8*)p + 0xb8);
+      if (cy > *lim) {
+        (p->s).coord.x = (p->s).unk_coord.x;
+        (p->s).coord.y = *lim;
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 
 // 0x080ccc1c
 void FUN_080ccc1c(struct Solid* p) {
