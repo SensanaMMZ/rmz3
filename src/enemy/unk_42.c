@@ -78,6 +78,42 @@ static void Enemy42_Die(struct Entity* p) {
 
 INCASM("asm/enemy/unk_42_p1_a.inc");
 
+s32 FUN_0800a22c(s32 x, s32 y);
+s32 FUN_0800a31c(s32 x, s32 y);
+
+// 0x08084f18
+void FUN_08084f18(struct Enemy* p) {
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register s32 dz asm("r5");
+    u8 t = (p->s).flags;
+    fv = FLIPABLE;
+    dz = 0;
+    asm("" : "+r"(dz));
+    asm volatile("" ::"r"(dz));
+    fv |= t;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0x62, 0x09));
+  SET_XFLIP(&p->s, (p->s).work[1]);
+  if (((p->s).flags & X_FLIP) != 0) {
+    (p->s).coord.x = FUN_0800a22c((p->s).coord.x, (p->s).coord.y);
+  } else {
+    (p->s).coord.x = FUN_0800a31c((p->s).coord.x, (p->s).coord.y);
+  }
+  {
+    s32 z = 0;
+    (p->s).work[2] = z;
+    (p->s).work[3] = z;
+    (p->s).d.y = z;
+  }
+  Enemy42_Update(&p->s);
+}
+
+INCASM("asm/enemy/unk_42_p1_a_b.inc");
+
 void FUN_080852f4(struct Enemy* p) {
   UpdateMotionGraphic(&p->s);
   if ((p->s).mode[3] == 0) {
