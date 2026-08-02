@@ -329,7 +329,51 @@ void FUN_0808f7ac(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/seimeran_p2_p1b.inc");
+// 0x0808f824
+void FUN_0808f824(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0x1e;
+      SetMotion(&p->s, MOTION(0x77, 0x07));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, MOTION(0x77, 0x01));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s8* mp;
+      u8 st;
+      UpdateMotionGraphic(&p->s);
+      st = (p->s).motion.state;
+      if (st == 3) {
+        (p->s).mode[1] = st;
+        (p->s).mode[2] = 0;
+      }
+      SetDDP(&p->body, &sCollisions[sCollisionIdxs[*(s8*)((u8*)p + 0x71)]]);
+      mp = (s8*)((u8*)p + 0x71);
+      {
+        register u8 mv asm("r1");
+        register u8* dp asm("r0");
+        mv = *(u8*)mp;
+        dp = (u8*)p + 0xc0;
+        asm("" : "+r"(dp));
+        *dp = mv;
+      }
+      break;
+    }
+  }
+}
 
 void FUN_0808f8e0(struct Enemy* p) {
   switch ((p->s).mode[2]) {
