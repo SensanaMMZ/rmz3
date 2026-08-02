@@ -19,6 +19,55 @@ void MinigamePhantom_DrawScoreHiscore(struct GameState* g) {
 
 INCASM("asm/minigame/phantom.inc");
 
+extern const GameLoopFunc PhantomMinigameLoops[3];
+
+// 0x080FC084
+bool32 phantomMinigame(struct GameState* g) {
+  u8* mg = (u8*)g + 0xDCC;
+  register bool32 r asm("r8");
+  r = ((MinigameFunc)PhantomMinigameLoops[mg[0]])(g);
+  if (*(s32*)(mg + 0x34) > 0x1869F) {
+    *(s32*)(mg + 0x34) = 0x1869F;
+  }
+  if (*(s32*)(mg + 0x34) > *(s32*)(mg + 0x3c)) {
+    u8* f = (u8*)g + 0xEA3;
+    if (*f == 0) {
+      *f = 1;
+      PlaySound(0x138);
+    } else {
+      PlaySound(0x137);
+    }
+    *(s32*)(mg + 0x3c) = *(s32*)(mg + 0x34);
+  } else if (*(s32*)(mg + 0x38) != *(s32*)(mg + 0x34)) {
+    PlaySound(0x137);
+  }
+  *(s32*)(mg + 0x38) = *(s32*)(mg + 0x34);
+  MinigamePhantom_DrawScoreHiscore(g);
+  {
+    register s32 i asm("r5");
+    u8* n;
+    u8* n0;
+    i = 0;
+    n0 = mg + 0xd5;
+    asm volatile("add %0, %1, #0" : "=&l"(n) : "l"(n0));
+    if (i < *n) {
+      register struct Sprite* sp asm("r4");
+      sp = (struct Sprite*)(mg + 0x44);
+      do {
+        void (*f)(struct Sprite*, struct DrawPivot*) = sp->fn;
+        register struct Sprite* a0 asm("r0");
+        a0 = sp;
+        asm("" : "+r"(mg));
+        f(a0, (struct DrawPivot*)(mg + 0xbc));
+        sp = (struct Sprite*)((u8*)sp + 0x20);
+        i++;
+      } while (i < *n);
+    }
+    asm volatile("" ::"r"(mg));
+  }
+  return r;
+}
+
 // 0x080FC13C
 bool32 phantomMinigame_080fc13c(struct GameState* g) {
   u8* mg = (u8*)g + 0xDCC;
