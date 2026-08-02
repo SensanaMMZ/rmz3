@@ -76,7 +76,42 @@ static void Enemy42_Die(struct Entity* p) {
   (sDeads[(p->work)[0]])((void*)p);
 }
 
-INCASM("asm/enemy/unk_42_p1_a.inc");
+// 0x08084e7c
+void FUN_08084e7c(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 one;
+  s32 z;
+  {
+    u32 tbl, id;
+    EntityFunc** routine_table;
+    tbl = (u32)gEnemyFnTable;
+    id = ((p->s).id) << 2;
+    routine_table = (EntityFunc**)(tbl + id);
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(*routine_table)[ENTITY_UPDATE];
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    u8 t = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    asm("" : "+l"(z));
+    fv |= t;
+    fv |= FLIPABLE;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, *(u16*)((u8*)p + 0xbc));
+  (p->s).flags2 |= WHITE_PAINTABLE;
+  (p->s).invincibleID = q->uniqueID;
+  SET_XFLIP(&p->s, (q->flags >> 4) & one);
+  (p->s).coord = q->coord;
+  (p->s).taskCol = 0x17;
+  (p->s).mode[2] = 1;
+  asm volatile("" ::"l"(z));
+  Enemy42_Update(&p->s);
+}
 
 s32 FUN_0800a22c(s32 x, s32 y);
 s32 FUN_0800a31c(s32 x, s32 y);
