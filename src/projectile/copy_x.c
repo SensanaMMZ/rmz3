@@ -37,6 +37,16 @@ void CopyXProjectile_Die(struct Projectile* p) {
 
 INCASM("asm/projectile/copy_x_post_p2.inc");
 
+// 0x080a8280
+void moveSlidingSonicBoom(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x = ((p->s).flags & X_FLIP) ? ((q->coord).x + PIXEL(28)) : ((q->coord).x - PIXEL(28));
+  if ((u8)--(p->s).work[2] == 0xff || q->mode[1] <= 5 || q->mode[1] > 8) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 void CopyXProjectile_Update(struct Projectile* p);
 
 // 0x080a82dc
