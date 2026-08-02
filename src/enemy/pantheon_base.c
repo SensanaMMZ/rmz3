@@ -44,7 +44,38 @@ bool8 FUN_0808a144(struct Enemy* p) {
   return 0;
 }
 
-INCASM("asm/enemy/pantheon_base_p2_pre_a.inc");
+static const EnemyFunc sUpdates1[2];
+static const EnemyFunc sUpdates2[2];
+
+// 0x0808A194
+bool32 pBase_0808a194(struct Enemy* p) {
+  if (*(struct Entity**)((u8*)p + 0xb4) == NULL) {
+    struct Entity* q = (p->s).unk_28;
+    switch ((p->s).mode[3]) {
+      case 0:
+        if (IsFrozen(&p->s)) {
+          (sUpdates1[(p->s).mode[1]])(p);
+          (sUpdates2[(p->s).mode[1]])(p);
+          (p->s).mode[3]++;
+          UpdateMotionGraphic(&p->s);
+          return 1;
+        }
+        break;
+      case 1: {
+        u32 fr;
+        (p->s).coord.x = q->coord.x;
+        (p->s).coord.y = q->coord.y;
+        fr = IsFrozen(&p->s);
+        if (fr) {
+          return 1;
+        }
+        (p->s).mode[3] = fr;
+        break;
+      }
+    }
+  }
+  return 0;
+}
 
 static const struct Coord sElementCoord;
 
