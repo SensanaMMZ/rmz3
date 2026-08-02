@@ -112,6 +112,30 @@ void Ghost77_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
+// 0x080c843c
+void FUN_080c843c(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8 fv asm("r0");
+      u8 t;
+      InitNonAffineMotion(&p->s);
+      t = (p->s).flags;
+      fv = DISPLAY;
+      fv |= t;
+      fv |= FLIPABLE;
+      (p->s).flags = fv;
+      (p->s).coord.x = 0xF000;
+      (p->s).coord.y = 0xA000;
+      SetMotion(&p->s, MOTION(0xF4, 0x00));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 INCASM("asm/vfx/minigame_icon_post.inc");
 
 // --------------------------------------------

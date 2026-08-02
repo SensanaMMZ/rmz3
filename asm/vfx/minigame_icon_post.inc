@@ -4,47 +4,6 @@
 
 	.text
 
-	thumb_func_start FUN_080c843c
-FUN_080c843c: @ 0x080C843C
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _080C844C
-	cmp r0, #1
-	beq _080C847A
-	b _080C8480
-_080C844C:
-	adds r0, r4, #0
-	bl InitNonAffineMotion
-	ldrb r1, [r4, #0xa]
-	movs r0, #1
-	orrs r0, r1
-	movs r1, #2
-	orrs r0, r1
-	strb r0, [r4, #0xa]
-	movs r0, #0xf0
-	lsls r0, r0, #8
-	str r0, [r4, #0x54]
-	movs r0, #0xa0
-	lsls r0, r0, #8
-	str r0, [r4, #0x58]
-	movs r1, #0xf4
-	lsls r1, r1, #8
-	adds r0, r4, #0
-	bl SetMotion
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_080C847A:
-	adds r0, r4, #0
-	bl UpdateMotionGraphic
-_080C8480:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-
 	thumb_func_start FUN_080c8488
 FUN_080c8488: @ 0x080C8488
 	push {r4, r5, r6, lr}
