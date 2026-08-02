@@ -59,7 +59,70 @@ void FUN_080c19b4(struct VFX* p) {
   VFX57_Update(p);
 }
 
-INCASM("asm/vfx/unk_57_post.inc");
+// 0x080c1a3c
+void FUN_080c1a3c(struct VFX* p) {
+  register s32 v asm("r2");
+  SET_VFX_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register s32 z asm("r5");
+    u8 t = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    asm volatile("" ::"r"(z));
+    fv |= t;
+    fv |= FLIPABLE;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0x62, 0x03) + (p->s).work[1]);
+  if ((p->s).work[1] != 1) {
+    register s32 t asm("r1");
+    t = 0;
+    if ((p->s).d.x > 0) {
+      t = 1;
+    }
+    v = t;
+    if (v != 0) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+  } else {
+    register s32 t asm("r1");
+    t = 0;
+    if ((p->s).d.x <= 0) {
+      t = 1;
+    }
+    v = t;
+    if (v != 0) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+  }
+  {
+    register s32 xf asm("r1");
+    u8* oa;
+    s32 sh4, ov, m11;
+    xf = v;
+    (p->s).spr.xflip = xf;
+    oa = (u8*)p + 0x4a;
+    sh4 = xf << 4;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    m11 |= sh4;
+    *oa = m11;
+    {
+      s32 wz = 0;
+      asm("" : "+r"(wz) : "r"(oa));
+      (p->s).work[2] = wz;
+    }
+  }
+  PlaySound(0x3f);
+  VFX57_Update(p);
+}
 
 void FUN_080c1aec(struct VFX* p) {
   UpdateMotionGraphic(&p->s);
