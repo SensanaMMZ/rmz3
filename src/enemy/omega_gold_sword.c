@@ -39,7 +39,68 @@ struct Enemy* CreateOmegaGoldSword(struct Coord* c, u8 r1, struct Entity* e) {
 
 static const EnemyFunc sDeads[2];
 
-INCASM("asm/enemy/omega_gold_sword_p1_pre_a.inc");
+static const struct Collision sCollisions[6];
+void nop_0808c384(struct Enemy* p);
+void OmegaGoldSword_Update(struct Enemy* p);
+
+// 0x0808B7FC
+void OmegaGoldSword_Init(struct Enemy* p) {
+  s32 z;
+  s32 one;
+  s32 one2;
+  struct Body* body;
+  InitNonAffineMotion(&p->s);
+  z = 0;
+  (p->s).flags &= 0xEF;
+  one2 = 1;
+  asm("" : "+r"(one2));
+  one = 1;
+  ((p->s).spr).xflip = z;
+  {
+    u8* oa = (u8*)p + 0x4a;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    *oa = m11;
+  }
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fv = (p->s).flags;
+    fv |= one2;
+    fl = FLIPABLE;
+    fv |= fl;
+    fl = COLLIDABLE;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  body = &p->body;
+  InitBody(body, sCollisions, &(p->s).coord, 1);
+  body->parent = (struct CollidableEntity*)p;
+  body->fn = (void*)nop_0808c384;
+  {
+    struct Coord* d = &(p->s).d;
+    d->y = z;
+  }
+  (p->s).d.x = z;
+  {
+    u32 tbl = (u32)gEnemyFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(*rt)[ENTITY_UPDATE];
+  }
+  (p->s).mode[1] = z;
+  (p->s).mode[2] = z;
+  (p->s).mode[3] = z;
+  *((u8*)p + 0x49) |= 0xC;
+  *(s32*)((u8*)p + 0xb4) = -0x1300;
+  *(s32*)((u8*)p + 0xb8) = -0x3A00;
+  *((u8*)p + 0xc0) = z;
+  (p->s).flags2 |= WHITE_PAINTABLE;
+  (p->s).invincibleID = ((p->s).unk_28)->uniqueID;
+  OmegaGoldSword_Update(p);
+}
 
 extern const EnemyFunc sUpdates1[5];
 extern const EnemyFunc sUpdates2[5];
