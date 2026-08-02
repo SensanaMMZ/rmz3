@@ -362,7 +362,60 @@ void FUN_080af634(struct Projectile* p) {
   FUN_080af65c(p);
 }
 
-INCASM("asm/projectile/phantom_p1_p2_p2_p1.inc");
+// 0x080AF65C
+void FUN_080af65c(struct Projectile* p) {
+  s32 x = (p->s).coord.x + (p->s).d.x;
+  s32 y;
+  (p->s).coord.x = x;
+  y = (p->s).coord.y + (p->s).d.y;
+  (p->s).coord.y = y;
+  if ((p->s).work[1] != 0) {
+    const s16* st = gSineTable;
+    s32 ox = st[(u8)((p->s).work[2] + 0x40)] << 3;
+    s32 oy = st[(p->s).work[2]] << 3;
+    if (((u16)FUN_080098a4(x + ox, y + oy) << 16) != 0) {
+      PlaySound(0x100);
+      (p->s).work[0] = 4;
+      (p->s).mode[1] = 0;
+    }
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x6000) {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    register s32 z asm("r2");
+    u8* qq;
+    t = (p->s).flags;
+    f = 0xFE;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    z = 0;
+    k2 = 0xFD;
+    f &= k2;
+    (p->s).flags = f;
+    qq = (u8*)p + 0x8c;
+    asm("" : "+r"(qq));
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *qq = z;
+    {
+      register u8 f3 asm("r0");
+      register u8 t3 asm("r1");
+      t3 = (p->s).flags;
+      f3 = 0xFB;
+      f3 &= t3;
+      (p->s).flags = f3;
+      asm volatile("" ::"r"(t3));
+    }
+    SET_PROJECTILE_ROUTINE(p, 3);
+  }
+}
 
 void FUN_080af70c(struct Projectile* p) {
   *(u32*)((u8*)p + 0x8c) = 0;
