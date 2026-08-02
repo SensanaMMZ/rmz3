@@ -37,6 +37,54 @@ static const BossFunc sDeads[1];
 
 INCASM("asm/boss/bee_server_p1_pre.inc");
 
+static const BossFunc sUpdates1[4];
+static const BossFunc sUpdates2[4];
+
+// 0x0804cfd4
+void BeeServer_Update(struct Boss* p) {
+  struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
+  if (*slot != NULL && isKilled(*slot)) {
+    *slot = NULL;
+  }
+  {
+    register s16* h0 asm("r0");
+    register s32 v asm("r1");
+    register s16* h asm("r3");
+    s32 lim;
+    h0 = (s16*)&p->props.raw[4];
+    v = *h0 + 0x100;
+    lim = 0x200;
+    h = h0;
+    asm("" : "+r"(h));
+    if ((u32)v > (u32)lim) {
+      s32 t;
+      *(u16*)h = -*(u16*)h;
+      t = *h;
+      *h = ((t * 15) << 4) / 0x100;
+    } else {
+      *h = 0;
+    }
+    {
+      s32 bx = *(s32*)&p->props.raw[8];
+      (p->s).coord.x = bx;
+      asm volatile("" ::: "memory");
+      (p->s).coord.x = bx + *h;
+    }
+  }
+  {
+    s16* w = (s16*)&p->props.raw[6];
+    u16 wv = *(u16*)w;
+    if (*w != 0) {
+      *(u16*)w = wv - 1;
+    }
+  }
+  if (!tryKillBeeServer(p)) {
+    (sUpdates1[(p->s).mode[1]])(p);
+    (sUpdates2[(p->s).mode[1]])(p);
+    StepPaletteAnimation(0x45);
+  }
+}
+
 void BeeServer_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
