@@ -329,7 +329,7 @@ NON_MATCH void volteelDeath0(struct Boss* p) {
       if (_isSoundPlaying(0x7F)) {
         StopSound(0x7F);
       }
-      if ((gOverworld.terrain.id & 0x7F) == 0xD) {
+      if ((*(u16*)(g + 0x1D0) & 0x7F) == 0xD) {
         gOverworld.state[0] = one;
       } else {
         gOverworld.state[2] = one;
@@ -684,7 +684,72 @@ void volteelEX(struct Boss* p) {
 
 bool8 FUN_08045570(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p13.inc");
+// 0x08045574
+void volteelMode11(struct Boss* p) {
+  struct Entity** slot;
+  register u8 m asm("r5");
+  m = (p->s).mode[2];
+  if (m == 0) {
+    if (isSoundPlaying(0x7F)) {
+      StopSound(0x7F);
+    }
+    {
+      register s32 off asm("r1");
+      u8* g;
+      g = (u8*)&gOverworld;
+      if ((gOverworld.terrain.id & 0x7F) == 0xD) {
+        off = 0x2D024;
+        asm("" : "+r"(off) : "r"(m));
+      } else {
+        off = 0x2D026;
+        asm("" : "+r"(off));
+      }
+      {
+        register u8* t asm("r0");
+        t = g + off;
+        *t = m;
+      }
+    }
+    {
+      u8 v = (p->s).flags;
+      register u8 fv asm("r1");
+      fv = 1;
+      fv |= v;
+      (p->s).flags = fv;
+    }
+    PlaySound(0x81);
+    (p->s).mode[2]++;
+  }
+  slot = (struct Entity**)((u8*)p + 0xc0);
+  if (isKilled(*slot)) {
+    u32 z = 0;
+    u8 a;
+    u8 r;
+    *slot = (struct Entity*)z;
+    a = *(u8*)((u8*)p + 0xd0);
+    {
+      register s32 ac asm("r1");
+      asm volatile("add %0, %1, #0" : "=&l"(ac) : "l"(a));
+      if (ac != 5 && ac != 9) {
+        goto other;
+      }
+    }
+    {
+      (p->s).mode[1] = a;
+      (p->s).mode[2] = *(u8*)((u8*)p + 0xd1);
+      r = *(u8*)((u8*)p + 0xd2);
+      goto done;
+    }
+  other:
+    {
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = z;
+      r = 0xFF;
+    }
+  done:
+    (p->s).mode[3] = r;
+  }
+}
 
 bool8 FUN_08045610(struct Boss* p) { return TRUE; }
 
