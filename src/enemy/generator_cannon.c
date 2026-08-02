@@ -416,6 +416,44 @@ void generatorcannon_0808cad8(struct Enemy* p) {
 
 INCASM("asm/enemy/generator_cannon_post_p2_p2_b.inc");
 
+static const motion_t sMotions[7];
+struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x0808CE4C
+void FUN_0808ce4c(struct Enemy* p) {
+  struct Coord c;
+  struct Coord* co;
+  register u8* q asm("r0");
+  u8 fl;
+  u32 z;
+  (p->s).flags2 &= 0xF7;
+  z = 0;
+  q = (u8*)p + 0x8c;
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *q = z;
+  fl = (p->s).flags & 0xFB;
+  fl &= 0xFE;
+  (p->s).flags = fl;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1000;
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080b7f70(&p->s, &c, (motion_t*)&sMotions[0], 3);
+  FUN_080b7f70(&p->s, &c, (motion_t*)&sMotions[0], 3);
+  co = &(p->s).coord;
+  TryDropItem(3, co);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, co);
+  SET_ENEMY_ROUTINE(p, 4);
+}
+
 
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
