@@ -107,6 +107,62 @@ void FUN_080ad840(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_36_pre_post_p2_p1b.inc");
 
+// 0x080AD8B8
+NON_MATCH void FUN_080ad8b8(struct Projectile* p) {
+#if MODERN
+  register u8 z6 asm("r6");
+  register u8 z4 asm("r4");
+  register u8 z3 asm("r3");
+  u8 f;
+  InitRotatableMotion(&p->s);
+  (p->s).flags |= DISPLAY;
+  z4 = 0;
+  z6 = 0;
+  (p->s).flags |= FLIPABLE;
+  SetMotion(&p->s, MOTION(0x6A, 0x05));
+  UpdateMotionGraphic(&p->s);
+  *(u8*)((u8*)p + 0x24) = z4;
+  f = (p->s).work[1];
+  if (f != 0) {
+    (p->s).flags |= 0x10;
+  } else {
+    (p->s).flags &= 0xEF;
+  }
+  {
+    u32 xf = 1 & f;
+    register u8* oa asm("r4");
+    z3 = 0;
+    ((p->s).spr).xflip = xf;
+    oa = (u8*)p + 0x4a;
+    {
+      u32 sh4 = xf << 4;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    (p->s).work[2] = z3;
+    (p->s).work[3] = z3;
+  }
+  {
+    s32 nf;
+    if ((p->s).flags & 0x10) {
+      nf = -4;
+      asm("" : "+r"(nf));
+    } else {
+      nf = 4;
+      asm("" : "+r"(nf) : "r"(z6));
+    }
+    (p->s).work[3] = nf;
+  }
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  Projectile36_Update(p);
+#else
+  INCCODE("asm/projectile/unk36_080ad8b8.inc");
+#endif
+}
+
 void FUN_080ad958(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
   (p->s).work[2] += (p->s).work[3];
