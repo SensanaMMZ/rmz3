@@ -384,6 +384,57 @@ void FUN_08091ab0(struct Enemy* p) {
 
 INCASM("asm/enemy/unk_59_post_a2.inc");
 
+// 0x08091C54
+void FUN_08091c54(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  struct Sprite* ps = &(p->s).spr;
+  struct Sprite* qs = &(q->spr);
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[2]);
+      InitScalerotSprite1(ps, qs->sprites, &(p->s).coord);
+      (p->s).flags |= 0x40;
+      (p->s).flags2 |= 1;
+      (p->s).angle = 0;
+      (p->s).work[2] = 0;
+      (p->s).work[3] = 0x59;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      u8 w2;
+      u8 w2_0 = (p->s).work[2];
+      asm volatile("add %0, %1, #0" : "=&l"(w2) : "l"(w2_0));
+      if (w2 == 0) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      {
+        s32 n = w2 + 1;
+        u8 w3;
+        (p->s).work[2] = n;
+        w3 = (p->s).work[3];
+        if ((u8)n == (w3 >> 4)) {
+          (p->s).work[2] = 0;
+          (p->s).work[3] = w3 - 3;
+        }
+      }
+      {
+        u16 v = *(u16*)((u8*)q + 0x52);
+        u16* dst = (u16*)((u8*)p + 0x52);
+        s32 z;
+        asm volatile("movs %0, #0" : "=l"(z));
+        *dst = v;
+        if ((*(u32*)((u8*)q + 0xc4) & 8) != 0) {
+          (p->s).mode[1] = z;
+          (p->s).mode[2] = z;
+        }
+      }
+      break;
+    }
+  }
+}
+
 
 // 0x08091d0c -- parked one insn from a match (was a raw .byte blob; fully
 // decoded): agbcc hoists the gSineTable pool load into the work[2]
