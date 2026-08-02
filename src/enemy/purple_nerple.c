@@ -403,6 +403,72 @@ void FUN_080763f8(struct Enemy* p) {
   }
 }
 
+// 0x08076508
+void FUN_08076508(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  u8 m;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8 f asm("r0");
+      register u8 t asm("r1");
+      t = (p->s).flags;
+      f = 0xFE;
+      f &= t;
+      (p->s).flags = f;
+      asm volatile("" ::"r"(t));
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x = (q->coord).x;
+      (p->s).coord.y = (q->coord).y;
+      break;
+  }
+  m = q->mode[0];
+  if (m > 1) {
+    register s32 z asm("r5");
+    z = 0;
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = z;
+  } else if (m == 4) {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    register s32 z asm("r2");
+    u8* qq;
+    t = (p->s).flags;
+    f = 0xFE;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    z = 0;
+    k2 = 0xFD;
+    f &= k2;
+    (p->s).flags = f;
+    qq = (u8*)p + 0x8c;
+    asm("" : "+r"(qq));
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *qq = z;
+    {
+      register u8 f3 asm("r0");
+      register u8 t3 asm("r1");
+      t3 = (p->s).flags;
+      f3 = 0xFB;
+      f3 &= t3;
+      (p->s).flags = f3;
+      asm volatile("" ::"r"(t3));
+    }
+    SET_ENEMY_ROUTINE(p, 3);
+  }
+}
+
 INCASM("asm/enemy/purple_nerple_p2_p2_p4_b.inc");
 
 extern const motion_t sMotions[9];
