@@ -380,7 +380,33 @@ s32 FUN_08010d70(s32 x, s32 y) {
   return 0;
 }
 
-INCASM("asm/stage_gfx/anatre_forest_b.inc");
+static const struct MetatilePatch3x3 MetatilePatch_08340278;
+void FUN_080cee14(u8 n, s32 x, s32 y);
+
+// 0x08010DD8
+void FUN_08010dd8(s32 x, s32 y) {
+  if (!((bool16 (*)(s32, s32))FUN_08010d70)(x, y)) {
+    return;
+  }
+  if (x > 0x1D0FFF) {
+    if (y > 0x10000) {
+      x = ((x >> 12) - 1) / 3 * 3 + 1;
+      y = ((y >> 12) + 2) / 3 * 3 - 2;
+    } else {
+      x = ((x >> 12) - 1) / 3 * 3 + 1;
+      y = ((y >> 12) + 1) / 3 * 3 - 1;
+    }
+    PatchMetatileMap(x, y, (struct MetatilePatch*)&MetatilePatch_08340278);
+  } else if (x > 0x1B2FFF) {
+    x = ((x >> 12) - 2) / 3 * 3 + 2;
+    y = ((y >> 12) - 1) / 3 * 3 + 1;
+    PatchMetatileMap(x, y, (struct MetatilePatch*)&MetatilePatch_08340278);
+  }
+  if (!isSoundPlaying(SE_UNK_41)) {
+    PlaySound(SE_UNK_41);
+  }
+  FUN_080cee14(0, x << 12, y << 12);
+}
 
 extern const struct ChunkMap sChunkMap1;
 INCBIN_STATIC(sChunkMap1, "data/stage/anatre_forest/layer1.bin");  // ./tools/dumper/bin.ts ./baserom.gba 0x0833f890 0x0833fa54 ./data/stage/anatre_forest/layer1.bin
