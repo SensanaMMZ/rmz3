@@ -1070,7 +1070,64 @@ void copyxMode18(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a2.inc");
+void FUN_080a83e4(struct Entity* e, u8 a1, u8 a2);
+void FUN_080a88a4(struct Entity* e, u8 a1, u8 a2);
+void FUN_080a9048(struct Entity* e, u8 a1, u8 a2);
+
+// 0x08056434
+void copyxMode19(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    u8* f;
+    register u8* g asm("r1");
+    register u8 v asm("r0");
+    s32 z;
+    SetMotion(&p->s, 0xB303);
+    z = 0;
+    (p->s).mode[2] = z;
+    f = (u8*)p + 0xc6;
+    if (*f != 0) {
+      FUN_080a83e4(&p->s, 1, 0);
+      *f = z;
+      PlaySound(0x46);
+      g = (u8*)p + 0xc7;
+      v = 1;
+      goto store;
+    }
+    switch (*(u8*)((u8*)p + 0xc5)) {
+      case 0:
+        FUN_080a83e4(&p->s, 0, 0);
+        PlaySound(0x46);
+        break;
+      case 1:
+        FUN_080a88a4(&p->s, 0, 6);
+        break;
+      case 2:
+        FUN_080a9048(&p->s, 0, 0);
+        PlaySound(0x49);
+        break;
+      case 3:
+        FUN_080a9048(&p->s, 3, 0);
+        PlaySound(0x46);
+        break;
+    }
+    g = (u8*)p + 0xc7;
+    v = 0;
+  store:
+    *g = v;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (*(u8*)((u8*)p + 0x73) == 3) {
+    s32 raw = (p->s).work[3] - 1;
+    (p->s).work[3] = raw;
+    if ((raw << 24) == 0) {
+      (p->s).mode[1] = 0x14;
+    } else {
+      (p->s).mode[1] = 0x12;
+    }
+    (p->s).mode[2] = 1;
+  }
+}
+
 
 // A pure register-name miss: retail loads the 0xC5 selector in place
 // (`ldrb r0,[r0]`) and compares it twice from r0; agbcc either loads into r3
