@@ -497,6 +497,31 @@ void childreMode6(struct Boss* p) {
 
 INCASM("asm/boss/childre_pre_b3.inc");
 
+// 0x08041800
+void childreMaybeMiddleScrewIce(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x40);
+      SetDDP(&p->body, &sCollisions[7]);
+      (p->s).work[2] = 0x30;
+      SetMotion(&p->s, MOTION(0xA4, 0x0C));
+      (p->s).mode[2]++;
+    case 1: {
+      s32 d;
+      u8 t;
+      UpdateMotionGraphic(&p->s);
+      d = (p->s).work[2] - 1;
+      (p->s).work[2] = d;
+      t = d;
+      if (t == 0) {
+        (p->s).mode[1] = 0xB;
+        (p->s).mode[2] = t;
+      }
+      break;
+    }
+  }
+}
+
 void CreateVFX31_2(s32 x, s32 y);
 
 // 0x0804185C -- screw-ice dive: wind up, spawn the ice VFX, launch on an arc
