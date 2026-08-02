@@ -572,7 +572,52 @@ void FUN_080cf9e0(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/snowboard_post_b.inc");
+extern const struct Collision sSolid18Collisions[2];
+
+// 0x080CFA80
+void FUN_080cfa80(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x6D, 0x0D));
+      SetDDP(&p->body, &sSolid18Collisions[1]);
+      (p->s).work[2] = 0x20;
+      (p->s).work[3] = 0;
+      {
+        s32 n = -(p->s).d.x;
+        s32 k;
+        asm volatile("movs %0, #0x20" : "=l"(k));
+        (p->s).unk_coord.x = n / k;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      u8 w2 = (p->s).work[2];
+      if (w2 != 0) {
+        (p->s).coord.x += (p->s).d.x;
+        (p->s).d.x += (p->s).unk_coord.x;
+        (p->s).work[2] = w2 - 1;
+      }
+      if (((u8)FUN_080cf428(p) << 24) != 0) {
+        (p->s).d.x = -(p->s).d.x;
+        (p->s).unk_coord.x = -(p->s).unk_coord.x;
+      }
+      if ((p->s).work[2] == 0) {
+        u32 st = (p->body).status;
+        u8 k4 = 4;
+        if ((st & k4) != 0) {
+          struct Zero* z = pZero2;
+          if ((z->s).coord.y < (p->s).coord.y - 8 && (z->s).mode[1] == 0) {
+            (p->s).mode[1] = k4;
+            (p->s).mode[2] = 0;
+          }
+        }
+      }
+      (p->s).work[3] = ((p->body).status >> 2) & 1;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 static const struct Collision sCollisions[10];
 
