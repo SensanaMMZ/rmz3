@@ -475,6 +475,40 @@ void gyrocannon_0806d32c(struct Enemy* p) {
   }
 }
 
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+static const EnemyFunc sUpdates2[3];
+
+// 0x0806D470
+void FUN_0806d470(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    u8* b0 = (u8*)p + 0xb4;
+    u8 v = b0[0xa];
+    u8* b;
+    asm volatile("add %0, %1, #0" : "=&l"(b) : "l"(b0));
+    if (v != 0) {
+      (p->s).mode[1] = 0;
+    } else if (((p->body).status & 0x10000) != 0) {
+      struct Coord c;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y - 0x1400;
+      FUN_080b2b40(0, &c, 0x200, b[8]);
+      if ((p->s).unk_2c != NULL) {
+        (p->s).mode[1] = 1;
+      } else if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0xB00) != 0) {
+        (p->s).mode[1] = 2;
+      } else {
+        (p->s).mode[1] = 0;
+      }
+    } else {
+      (p->s).mode[1] = 0;
+    }
+    EXIT_BODY(p);
+    b[9] = 1;
+    (p->s).mode[2]++;
+  }
+  (sUpdates2[(p->s).mode[1]])(p);
+}
+
 INCASM("asm/enemy/gyro_cannon_p1b.inc");
 
 // 0x0806d618
