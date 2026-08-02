@@ -482,6 +482,54 @@ void FUN_0808da24(struct Enemy* p) {
 
 INCASM("asm/enemy/deathlock_post_p2b.inc");
 
+#include "zero.h"
+
+// 0x0808e18c
+void FUN_0808e18c(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).work[2] = 0x40;
+      (p->s).work[3] = m;
+      SetMotion(&p->s, MOTION(0x76, 0x00));
+      (p->s).taskCol = 0x17;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        s32 x;
+        struct Zero* z;
+        (p->s).work[2] = 0xc0;
+        z = pZero2;
+        x = (p->s).coord.x;
+        if (x < (z->s).coord.x) {
+          s32 y = (p->s).coord.y + 0x1700;
+          u8 w3 = (p->s).work[3];
+          s32 a = 7;
+          if (w3 == 1) {
+            a = 5;
+          }
+          FUN_0808d0b0(x, y, a);
+        } else {
+          s32 y = (p->s).coord.y + 0x1700;
+          u8 w3 = (p->s).work[3];
+          s32 a = 6;
+          if (w3 == 1) {
+            a = 4;
+          }
+          FUN_0808d0b0(x, y, a);
+        }
+        (p->s).work[3]++;
+        (p->s).work[3] = (p->s).work[3] % 3;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 extern void FUN_080b7f70(struct Enemy* p, struct Coord* c, const motion_t* m, s32 n);
 static const motion_t sMotions2[4];
 
