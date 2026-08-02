@@ -271,7 +271,63 @@ void FUN_080874ac(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p2_post_a1.inc");
+// 0x08087518
+void FUN_08087518(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 v asm("r3");
+      register s32 one asm("r1");
+      register s32 xf asm("r2");
+      (p->s).taskCol = 0xe;
+      SetDDP(&p->body, &sCollisions[2]);
+      {
+        u8 w = (p->s).work[2];
+        v = 1;
+        v &= w;
+      }
+      if (v != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+      one = 1;
+      asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(one));
+      xf &= v;
+      (p->s).spr.xflip = xf;
+      {
+        register u8* oa asm("ip");
+        u32 k;
+        s32 sh4, ov, m11;
+        k = 0x4a;
+        asm("" : "+r"(k));
+        oa = (u8*)(k + (u32)p);
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      one &= (p->s).work[2];
+      (p->s).d.x = (one << 11) - 0x400;
+      (p->s).work[3] = 0xa;
+      SetMotion(&p->s, MOTION(0x67, 0x03));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      u8 t;
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).d.x;
+      t = --(p->s).work[3];
+      if (t == 0) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = t;
+      }
+      break;
+    }
+  }
+}
 
 void FUN_080875c8(struct Enemy* p) {
   s32 m = (p->s).mode[2];
