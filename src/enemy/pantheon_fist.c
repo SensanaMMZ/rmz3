@@ -307,7 +307,30 @@ void FUN_08095664(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_fist_post_p2_p2_c.inc");
+// 0x08095778
+void FUN_08095778(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0xD4, 0x03));
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+    case 1: {
+      s32 d;
+      u8 t;
+      UpdateMotionGraphic(&p->s);
+      d = (p->s).work[2] - 1;
+      (p->s).work[2] = d;
+      t = d;
+      if (t == 0) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = t;
+      }
+      FUN_08094fe0(p, 1);
+      break;
+    }
+  }
+}
 
 void CreateSmoke(u8 n, struct Coord* c);
 
