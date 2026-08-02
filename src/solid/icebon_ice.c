@@ -341,7 +341,30 @@ NON_MATCH void FUN_080ca988(struct Solid* p) {
   INCCODE("asm/solid/icebon_ca988.inc");
 #endif
 }
-INCASM("asm/solid/icebon_ice_p2.inc");
+// 0x080CAAFC
+void FUN_080caafc(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x11, 0x04));
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+    case 1: {
+      s32 d;
+      u8 t;
+      d = (p->s).work[2] - 1;
+      (p->s).work[2] = d;
+      t = d;
+      if (t == 0) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = t;
+      }
+      (p->s).coord.y -= 0x80;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_080cab58(struct Solid* p) {
   switch ((p->s).mode[2]) {
