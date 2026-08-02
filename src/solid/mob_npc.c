@@ -489,6 +489,48 @@ NON_MATCH void mob_chat_080d97b4(struct Solid* p) {
 
 INCASM("asm/solid/mob_npc_pre_p1_1_1.inc");
 
+// 0x080D9CD8
+void andrew_080d9cd8(struct Solid* p) {
+  struct MobObject* m = (struct MobObject*)p;
+  struct Body* b;
+  if (gSystemSavedataManager.mods[5] & 0x10) {
+    register motion_t* mp asm("r0");
+    register s32 z2 asm("r2");
+    register s32 z3 asm("r3");
+    motion_t v;
+    mp = &m->motion;
+    asm("" : "+r"(mp));
+    z2 = 0;
+    z3 = 0;
+    v = 0xBD00;
+    *mp = v;
+    mp++;
+    *mp = v;
+    mp++;
+    asm("" : "+r"(mp));
+    *mp = v;
+    m->unk_05 = 1;
+    m->unk_04 = z2;
+    m->unk_08 = z3;
+  } else {
+    m->motion = sMotions[(p->s).work[0]];
+    m->m_c0 = sMotions[(p->s).work[0]] + 1;
+    m->m_c2 = sMotions[(p->s).work[0]];
+    m->unk_05 = 1;
+    m->unk_04 = 0x30;
+    m->unk_08 = 0xC0;
+  }
+  (p->s).flags |= COLLIDABLE;
+  b = &p->body;
+  InitBody(b, sCollisions, &(p->s).coord, 1);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = NULL;
+  (p->s).mode[1] = 1;
+  MobNPC_Update(p);
+}
+
+INCASM("asm/solid/mob_npc_pre_p1_1_1b.inc");
+
 // 0x080d9f88
 TextID alouette_080d9f88(struct Solid* p) {
   if (FLAG(gCurStory.s.gameflags, 16)) {
