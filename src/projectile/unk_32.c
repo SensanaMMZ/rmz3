@@ -667,7 +667,90 @@ void FUN_080ab9f0(struct Projectile* p) {
   Projectile32_Update(p);
 }
 
-INCASM("asm/projectile/unk_32_p4_p2_s3.inc");
+// 0x080ABA60
+void FUN_080aba60(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 m1 asm("r1");
+  s32 nx;
+  UpdateMotionGraphic(&p->s);
+  m1 = (p->s).mode[1];
+  if (m1 == 0) {
+    s32 dx = (p->s).d.x + 0x10;
+    (p->s).d.x = dx;
+    if (dx > 0x280) {
+      (p->s).d.x = 0x280;
+    }
+    if (q->mode[0] > 1) {
+      u8* a;
+      (p->s).mode[1]++;
+      (p->s).work[2] = m1;
+      a = (u8*)p + 0x8c;
+      *(u32*)a = m1;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *(u32*)a = m1;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = m1;
+      (p->s).flags &= 0xFB;
+    }
+  } else {
+    register u8 wv asm("r1");
+    register s32 w asm("r2");
+    register u8 f asm("r0");
+    wv = (p->s).work[2];
+    f = 3;
+    f &= wv;
+    asm volatile("add %0, %1, #0" : "=&l"(w) : "l"(wv));
+    if (f > 1) {
+      register u8 fl asm("r1");
+      fl = (p->s).flags;
+      asm("" : "+r"(fl));
+      f = 0xFE;
+      f &= fl;
+      goto fstore;
+    }
+    {
+      register u8 fl2 asm("r1");
+      fl2 = (p->s).flags;
+      asm("" : "+r"(fl2));
+      f = 1;
+      f |= fl2;
+    }
+  fstore:
+    (p->s).flags = f;
+    (p->s).work[2] = w + 1;
+    {
+      register u32 wt asm("r0");
+      asm("lsl %0, %1, #0x18" : "=l"(wt) : "l"(w));
+      wt >>= 24;
+      if (wt > 0x10) {
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      }
+    }
+  }
+  if ((p->s).flags & 0x10) {
+    register s32 cx asm("r0");
+    register s32 dv asm("r1");
+    cx = (p->s).coord.x;
+    dv = (p->s).d.x;
+    nx = cx + dv;
+  } else {
+    register s32 cx2 asm("r0");
+    register s32 dv2 asm("r1");
+    cx2 = (p->s).coord.x;
+    dv2 = (p->s).d.x;
+    nx = cx2 - dv2;
+  }
+  (p->s).coord.x = nx;
+  asm("" ::: "memory");
+  if (((bool16 (*)(s32, s32))FUN_080098a4)((p->s).coord.x, (p->s).coord.y)) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
+
 
 void FUN_080abb2c(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
