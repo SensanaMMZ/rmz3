@@ -138,6 +138,33 @@ void FUN_080c843c(struct VFX* p) {
 
 INCASM("asm/vfx/minigame_icon_post.inc");
 
+// 0x080c8628
+void FUN_080c8628(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8 fv asm("r0");
+      u8 t;
+      InitNonAffineMotion(&p->s);
+      t = (p->s).flags;
+      fv = DISPLAY;
+      fv |= t;
+      fv |= FLIPABLE;
+      (p->s).flags = fv;
+      SetMotion(&p->s, 9);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        SET_VFX_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+  }
+}
+
+INCASM("asm/vfx/minigame_icon_post_b.inc");
+
 // --------------------------------------------
 
 void FUN_080c843c(struct VFX* p);
