@@ -39,7 +39,62 @@ struct Projectile* FUN_080ac3e8(struct Coord* c, u8 a1, u16 a2) {
   return p;
 }
 
-INCASM("asm/projectile/omega_gold_pre_p3.inc");
+static const struct Collision sCollisions[4];
+void OmegaGoldProjectile_Update(struct Projectile* p);
+
+// 0x080AC448
+void OmegaGoldProjectile_Init(struct Projectile* p0) {
+  register struct Projectile* p asm("r6");
+  s32 z;
+  p = p0;
+  z = (p->s).work[0];
+  if (z == 0) {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    struct Body* body;
+    InitNonAffineMotion(&p->s);
+    fl = (p->s).flags;
+    fv = DISPLAY;
+    fv |= fl;
+    fl = FLIPABLE;
+    fv |= fl;
+    fl = COLLIDABLE;
+    fv |= fl;
+    (p->s).flags = fv;
+    body = &p->body;
+    InitBody(body, &sCollisions[2], &(p->s).coord, 1);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)z;
+    (p->s).taskCol = z;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = z;
+  } else {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    struct Body* body;
+    InitNonAffineMotion(&p->s);
+    fl = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    fv |= fl;
+    fl = FLIPABLE;
+    fv |= fl;
+    fl = COLLIDABLE;
+    fv |= fl;
+    (p->s).flags = fv;
+    body = &p->body;
+    InitBody(body, &sCollisions[0], &(p->s).coord, 4);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)z;
+    (p->s).d.y = -0x100;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = 2;
+  }
+  (p->s).mode[2] = z;
+  (p->s).mode[3] = z;
+  (p->s).work[2] = 0xFF;
+  OmegaGoldProjectile_Update(p);
+}
 
 void OmegaGoldProjectile_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
