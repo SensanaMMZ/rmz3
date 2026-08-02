@@ -1424,7 +1424,70 @@ void copyx_080577c8(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p2.inc");
+// 0x080578E0
+void copyx_080578e0(struct Boss* p) {
+  u8 buf[4];
+  s32 n;
+  register s32 i asm("r2");
+  u8* f;
+  register s32 v asm("r1");
+  s32 one;
+  u32 t;
+  u8* sel;
+  register u32* rng asm("ip");
+  n = 0;
+  i = 0;
+  rng = &RNG_0202f388;
+  {
+    u8* q = (u8*)p + 0xdc;
+    v = *q;
+    one = 1;
+    asm volatile("add %0, %1, #0" : "=&l"(f) : "l"(q));
+  }
+  do {
+    if (((v >> i) & one) != 0) {
+      buf[n] = i;
+      n++;
+    }
+    i++;
+  } while (i <= 3);
+  t = *rng * 0x343FD + 0x269EC3;
+  t <<= 1;
+  {
+    register u32 h asm("r1");
+    h = t >> 1;
+    *rng = h;
+  }
+  {
+    u32 idx = (t >> 0x11) % n;
+    (p->s).mode[1] = 5;
+    sel = &buf[idx];
+  }
+  (p->s).mode[3] = *sel;
+  {
+    register s32 k asm("r4");
+    register u32 sv asm("r0");
+    register u32 b asm("r1");
+    u32 msk;
+    k = 1;
+    asm volatile("add %0, %1, #0" : "=&l"(sv) : "l"(k));
+    b = *sel;
+    sv <<= b;
+    msk = 0xF;
+    sv ^= msk;
+    sv &= *f;
+    *f = sv;
+    if (sv == 0) {
+      register u32 sv2 asm("r0");
+      register u32 b2 asm("r2");
+      asm volatile("add %0, %1, #0" : "=&l"(sv2) : "l"(k));
+      b2 = *sel;
+      sv2 <<= b2;
+      sv2 ^= msk;
+      *f = sv2;
+    }
+  }
+}
 
 // 0x08363c18
 static const struct Collision sCollisions[10] = {
