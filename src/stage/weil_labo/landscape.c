@@ -486,6 +486,18 @@ NON_MATCH void FUN_08015cf0(struct StageLayer* l, const struct Stage* stage) {
 
 INCASM("asm/stage_gfx/weil_labo_p1_p2_a2.inc");
 
+// 0x08015F7C
+void FUN_08015f7c(struct StageLayer* l, const struct Stage* stage) {
+  if (gOverworld.state[2] == 0) {
+    RequestGraphicTransfer(&(TILESETS(18, 172))->g, (void*)0x4000);
+    LoadPalette(&(TILESETS(18, 172))->pal, 0);
+  } else {
+    RequestGraphicTransfer(&(TILESETS(18, 173)[((u16)l->unk_10 >> 2) & 3]).g, (void*)0x4000);
+    LoadPalette(&(TILESETS(18, 173)[((u16)l->unk_10 >> 2) & 3]).pal, 0);
+  }
+  DrawGeneralStageLayer(l, stage);
+}
+
 void FUN_08016018(struct StageLayer* l, const struct Stage* stage) {
   s32 i;
   for (i = 0; i < 4; i++) {
