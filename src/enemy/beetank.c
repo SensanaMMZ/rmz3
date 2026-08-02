@@ -171,7 +171,83 @@ INCASM("asm/enemy/beetank_Die.inc");
 
 bool8 nop_0807bc8c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/beetank_p2.inc");
+#include "zero.h"
+
+// 0x0807bc90
+void FUN_0807bc90(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x3E, 0x00));
+      (p->s).work[2] = 0x78;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register u8 fl asm("r2");
+      register s32 v asm("r1");
+      register s32 sh asm("r0");
+      register u8 fv asm("r0");
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        fl = (p->s).flags;
+        if ((fl & X_FLIP) != 0) {
+          goto skip;
+        }
+        sh = fl >> 4;
+        v = 1;
+        v &= ~sh;
+        if (v != 0) {
+          fv = 0x10;
+          fv |= fl;
+          asm("" : "+r"(fv));
+        } else {
+          fv = 0xEF;
+          fv &= fl;
+        }
+      } else {
+        fl = (p->s).flags;
+        if ((fl & X_FLIP) == 0) {
+          goto skip;
+        }
+        sh = fl >> 4;
+        v = 1;
+        v &= ~sh;
+        if (v != 0) {
+          fv = 0x10;
+          fv |= fl;
+        } else {
+          fv = 0xEF;
+          fv &= fl;
+        }
+      }
+      (p->s).flags = fv;
+      (p->s).spr.xflip = v;
+      {
+        u8* oa = (u8*)p + 0x4a;
+        s32 sh4, ov, m11;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+    skip:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      {
+        s32 z = 0;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = z;
+      }
+      break;
+    }
+  }
+}
 
 bool8 nop_0807bd3c(struct Enemy* p) { return TRUE; }
 
