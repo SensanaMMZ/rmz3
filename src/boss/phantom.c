@@ -367,7 +367,42 @@ void FUN_0805f180(struct Boss* p) {
   (PTR_ARRAY_0836544c[(p->s).mode[3]])(p);
 }
 
-INCASM("asm/boss/phantom_p1_pre_p4.inc");
+u8 FUN_08060838(struct Boss* p);
+s32 FUN_08009f6c(s32 x, s32 y);
+
+// 0x0805F198
+void phantom_0805f198(struct Boss* p) {
+  u8 xf;
+  u8 one;
+  if (FUN_08060864(p, (p->s).d.x)) {
+    goto set;
+  }
+  xf = (p->s).flags >> 4;
+  one = 1;
+  xf &= one;
+  if (xf != (u8)FUN_08060838(p)) {
+    goto set;
+  }
+  {
+    register s32 dx asm("r1");
+    register s32 zx asm("r0");
+    zx = (pZero2->s).coord.x;
+    dx = zx - (p->s).coord.x;
+    if ((u32)(dx + 0x40C0) <= 0x8180) {
+      s32 y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      register s32 d2 asm("r1");
+      d2 = y - (pZero2->s).coord.y;
+      if (d2 <= 0x13FF) {
+        PlaySound(0xFB);
+        (p->s).mode[3] = one;
+        FUN_080607a0(p, 7);
+      }
+    }
+  }
+  return;
+set:
+  *(u16*)&(p->s).mode[2] = 2;
+}
 
 void FUN_0805f214(struct Boss* p) {
   if ((s8)(p->s).motion.cmdIdx == 2) {
