@@ -756,6 +756,60 @@ bool8 FUN_08045610(struct Boss* p) { return TRUE; }
 
 INCASM("asm/boss/volteel_p14_p1.inc");
 
+// 0x0804586c
+void FUN_0804586c(struct Body* body) {
+  register const struct Collision* c asm("r2");
+  u8 a;
+  c = (body->enemy)->processing;
+  a = c->atkType;
+  if (a == 3 || a == 14 || a == 15) {
+    struct CollidableEntity* q = body->parent;
+    struct CollidableEntity* r = (body->enemy)->parent;
+    if (((q->body).status & BODY_STATUS_DEAD) || (q->body).hp == 0) {
+      if ((gStageRun.missionStatus & MISSION_FAIL) == 0) {
+        if ((r->s).d.x < 0) {
+          (q->s).work[1] = 0xFF;
+        } else {
+          (q->s).work[1] = 0xFE;
+        }
+      }
+    }
+  }
+  {
+    const struct Collision* c2 = (body->enemy)->processing;
+    const struct Collision* pr = body->processing;
+    struct CollidableEntity* q;
+    u8 m;
+    if (pr->kind == 2) {
+      return;
+    }
+    if (pr->layer == 0xFFFFFFFF) {
+      return;
+    }
+    if ((*(u32*)&c2->atkType & 0x000200FF) != 0x00020002) {
+      return;
+    }
+    q = body->parent;
+    m = (q->s).mode[1];
+    if (m == 0xc) {
+      return;
+    }
+    if (m == 9) {
+      return;
+    }
+    if (m == 5 && (q->s).mode[2] > 4) {
+      return;
+    }
+    {
+      s32 z = 0;
+      (q->s).mode[1] = 0xc;
+      (q->s).mode[2] = z;
+    }
+  }
+}
+
+INCASM("asm/boss/volteel_p14_p1_b.inc");
+
 bool8 FUN_080459d4(struct Boss* p) {
   if ((p->s).mode[1] == 5) {
     return TRUE;
