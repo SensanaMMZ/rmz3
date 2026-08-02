@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "enemy.h"
+#include "zero.h"
 #include "global.h"
 #include "metatile.h"
 #include "overworld_terrain.h"
@@ -551,6 +552,69 @@ void FUN_0806d618(struct Enemy* p) {
 
 
 INCASM("asm/enemy/gyro_cannon_p1b_b.inc");
+
+// 0x0806D7E0
+void FUN_0806d7e0(struct Enemy* p) {
+  s32 onR;
+  if ((p->s).mode[2] == 0) {
+    SetMotion(&p->s, 0x1700);
+    (p->s).work[2] = 0x78;
+    (p->s).mode[2]++;
+  }
+  onR = 0;
+  if ((p->s).coord.x < (pZero2->s).coord.x) {
+    onR = 1;
+  }
+  if (onR != 0) {
+    (p->s).flags |= 0x10;
+  } else {
+    (p->s).flags &= 0xEF;
+  }
+  {
+    register s32 xfc asm("r1");
+    xfc = onR;
+    asm("" : "+r"(xfc));
+    ((p->s).spr).xflip = xfc;
+  {
+    u8* oa = (u8*)p + 0x4a;
+    s32 sh = xfc << 4;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    *oa = m11 | sh;
+  }
+  }
+  {
+    s32* bp = (s32*)((u8*)p + 0xb4);
+    (p->s).coord.y = bp[1] + (gSineTable[(p->s).work[3]] << 5);
+  }
+  (p->s).work[3]++;
+  {
+    s32 raw = (p->s).work[2] - 1;
+    (p->s).work[2] = raw;
+    if ((u8)raw == 0xFF) {
+      register u8 nm asm("r0");
+      u32 rv = RANDOM(RNG_0202f388) & 0xF;
+      asm("" : "+r"(rv));
+      if (rv <= 9) {
+        nm = 3;
+        asm("" : "+r"(nm));
+        goto setm;
+      }
+      nm = 5;
+      asm("" : "+r"(nm));
+    setm:
+      (p->s).mode[1] = nm;
+      {
+        register u8 zz asm("r0");
+        zz = 0;
+        (p->s).mode[2] = zz;
+      }
+    }
+  }
+}
+
+INCASM("asm/enemy/gyro_cannon_p1b_c.inc");
 
 void FUN_0806d998(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
