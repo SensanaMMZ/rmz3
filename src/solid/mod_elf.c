@@ -4,6 +4,10 @@
 #include "mod.h"
 #include "physics.h"
 #include "solid.h"
+#include "trig.h"
+#include "text_window.h"
+#include "definition.h"
+#include "collision.h"
 
 /*
 various:
@@ -14,6 +18,7 @@ various:
 static const struct Collision sCollision;
 
 void ModElf_Update(struct Solid* p);
+struct Entity* FUN_080bfc94(struct Coord* c, u8 r1);
 
 void ModElf_Init(struct Solid* p) {
   register struct Solid* q asm("r6");
@@ -111,7 +116,46 @@ void ModElf_Init(struct Solid* p) {
   ModElf_Update(q);
 }
 
-INCASM("asm/solid/mod_elf.inc");
+// 0x080DFA24
+void ModElf_Update(struct Solid* p) {
+  s32 w;
+  UpdateMotionGraphic(&p->s);
+  (p->s).unk_coord.x = *(s32*)((u8*)p + 0xb4);
+  (p->s).unk_coord.y = *(s32*)((u8*)p + 0xb8) + gSineTable[(p->s).work[2]] * 12;
+  ((p->s).spr).c = &(p->s).unk_coord;
+  w = (p->s).work[2] + 1;
+  (p->s).work[2] = w;
+  w &= 0x1f;
+  if (w == 0) {
+    FUN_080bfc94(&(p->s).unk_coord, 2);
+  }
+  switch ((p->s).mode[1]) {
+    case 0:
+      if ((p->body).status & 0x20000000) {
+        if (gInChat) {
+          if (gCollisionManager.talkTo == &p->body) {
+            if ((p->s).work[0] == 0) {
+              PrintNormalMessage(0x2D5);
+            } else {
+              PrintNormalMessage(0x2D4);
+            }
+            (p->s).mode[1]++;
+          }
+        }
+      }
+      break;
+    case 1:
+      {
+        struct TextWindowText* t = &gTextWindow.text;
+        u16 m = t->mode;
+        if (m == 0) {
+          gInChat = m;
+          (p->s).mode[1] = m;
+        }
+      }
+      break;
+  }
+}
 
 void ModElf_Die(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
