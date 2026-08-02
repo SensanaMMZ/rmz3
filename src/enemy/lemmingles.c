@@ -400,6 +400,62 @@ void FUN_0806ee94(struct Enemy* p) {
   }
 }
 
+// 0x0806EFA4
+void FUN_0806efa4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 8;
+      if ((p->s).work[0] == 1) {
+        SetMotion(&p->s, MOTION(0x1D, 0x08));
+      }
+      if ((p->s).work[0] == 3) {
+        SetMotion(&p->s, MOTION(0x1D, 0x0E));
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t <<= 24;
+      if (t == 0) {
+        (p->s).mode[2]++;
+      }
+      if ((p->s).work[0] == 1 || (p->s).work[0] == 3) {
+        UpdateMotionGraphic(&p->s);
+      }
+      break;
+    }
+    case 2:
+      (p->s).work[2] = 0x10;
+      if ((p->s).work[0] == 1) {
+        GotoMotion(&p->s, MOTION(0x1D, 0x09), 1, 8);
+      }
+      if ((p->s).work[0] == 3) {
+        GotoMotion(&p->s, MOTION(0x1D, 0x0F), 1, 8);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 t asm("r0");
+      register s32 u asm("r1");
+      if ((p->s).work[0] == 1 || (p->s).work[0] == 3) {
+        UpdateMotionGraphic(&p->s);
+      }
+      t = (p->s).work[2];
+      t--;
+      (p->s).work[2] = t;
+      t <<= 24;
+      u = (u32)t >> 24;
+      if (u == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 1;
+        *((u8*)p + 0xbd) = u;
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/lemmingles_p2_p2_p2b.inc");
 
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
