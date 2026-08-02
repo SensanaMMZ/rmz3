@@ -3,6 +3,7 @@
 #include "minigame.h"
 #include "sound.h"
 #include "text.h"
+#include "vfx.h"
 
 NAKED void initCopyXMinigame(struct GameState* g) {
   asm(".syntax unified\n\
@@ -334,11 +335,62 @@ bool32 copyXMinigame(struct GameState* g) {
   return (sUpdates[s->unk_04])(g);
 }
 
-INCASM("asm/minigame/copy_x_a.inc");
 
 extern const u8 Unicode_SCORE_0810e25c[];
 extern const u8 Unicode_HI_SCORE_0810e264[];
 struct Projectile* FUN_080b1934(struct Entity* e, struct Coord* c, u8 a2);
+
+// 0x080FA560
+bool32 copyx_minigame_080fa560(struct GameState* g) {
+  struct MinigameState* s = &(g->sceneState).mg;
+  u8 b1[8];
+  u8 b2[12];
+  switch (s->unk_06) {
+    case 0:
+      *(u16*)s->unk_00 = 0x3c;
+      s->unk_06++;
+      /* fallthrough */
+    case 1: {
+      s32 raw = *(u16*)s->unk_00 - 1;
+      *(u16*)s->unk_00 = raw;
+      if ((u16)raw != 0) {
+        break;
+      }
+      s->unk_06++;
+      break;
+    }
+    case 2:
+      *(struct VFX**)s->unk_10 = CreateMissionAlert(0);
+      PlaySound(0x1d);
+      s->unk_06++;
+      /* fallthrough */
+    case 3:
+      if (((*(struct VFX**)s->unk_10)->s).mode[0] > 1) {
+        s->unk_04++;
+        s->unk_06 = 0;
+      }
+      break;
+  }
+  memcpy(b1, Unicode_SCORE_0810e25c, 6);
+  PrintUnicodeString(b1, 0x12, 0);
+  {
+    u32 score = *(u32*)s->unk_1c;
+    PrintMinigameNumber(score, 0x1b, 0);
+    if (score > (u32)s->unk_24) {
+      s->unk_24 = score;
+    }
+  }
+  memcpy(b2, Unicode_HI_SCORE_0810e264, 9);
+  PrintUnicodeString(b2, 0xf, 1);
+  {
+    register u32 hs0 asm("r4");
+    u32 hs;
+    hs0 = s->unk_24;
+    asm volatile("add %0, %1, #0" : "=&l"(hs) : "l"(hs0));
+    PrintMinigameNumber(hs, 0x1b, 1);
+  }
+  return 1;
+}
 
 bool32 copyx_minigame_080fa62c(struct GameState* g) {
   struct MinigameState* s = &(g->sceneState).mg;
