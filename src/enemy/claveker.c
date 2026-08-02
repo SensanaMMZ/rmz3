@@ -93,7 +93,41 @@ INCASM("asm/enemy/claveker_p1_b.inc");
 
 bool8 FUN_0808eb20(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/claveker_p2.inc");
+#include "stagerun.h"
+
+s32 FUN_0800a134(s32 x, s32 y);
+
+// 0x0808EB24
+void FUN_0808eb24(struct Enemy* p) {
+  s32 m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0:
+      SetMotion(&p->s, 0x7500);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0x3FFF) {
+        (p->s).coord.y = FUN_0800a134((p->s).coord.x, (p->s).coord.y);
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      s32 d;
+      u8 t;
+      UpdateMotionGraphic(&p->s);
+      d = (p->s).work[2] - 1;
+      (p->s).work[2] = d;
+      t = d;
+      if (t == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = t;
+      }
+      break;
+    }
+  }
+}
 
 bool8 FUN_0808ebb0(struct Enemy* p) { return TRUE; }
 
