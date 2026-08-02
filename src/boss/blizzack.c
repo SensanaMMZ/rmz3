@@ -615,6 +615,56 @@ void blizzackMode18(struct Boss* p) {
 
 INCASM("asm/boss/blizzack_post_p2_a2b.inc");
 
+// 0x0805AB5C
+NON_MATCH void blizzackMode19(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    s32 v;
+    u8 z;
+    SetMotion(&p->s, MOTION(0xB4, 0x0B));
+    ((p->s).unk_2c)->mode[2] = 1;
+    asm volatile("" ::: "memory");
+    {
+      register u16* h asm("r0");
+      register u16 hv asm("r1");
+      h = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+      z = 0;
+      hv = 0x640B;
+      *h = hv;
+    }
+    (p->s).mode[2] = z;
+    v = 0x100;
+    (p->s).d.x = v;
+    (p->s).d.y = -0x300;
+    if (*(u8*)((u8*)p + 0xc4) != 0) {
+      (p->s).d.x = -v;
+    }
+    SetDDP(&p->body, &sCollisions[0]);
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 dy;
+    (p->s).coord.y += (p->s).d.y;
+    dy = (p->s).d.y + 0x60;
+    (p->s).d.y = dy;
+    if (dy > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+  }
+  if (FUN_08009f6c((p->s).coord.x, (p->s).coord.y) < (p->s).coord.y) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    if (*(s32*)((u8*)p + 0xd4) == 0) {
+      (p->s).mode[1] = 0x14;
+      (p->s).mode[2] = 1;
+    }
+  } else {
+    (p->s).coord.x += (p->s).d.x;
+  }
+#else
+  INCCODE("asm/boss/blizzack_0805ab5c.inc");
+#endif
+}
+
 void blizzackMode20(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
     u16* t;
