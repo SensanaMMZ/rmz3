@@ -314,6 +314,62 @@ static void LayerUpdate_4(struct StageLayer* l, const struct Stage* _ UNUSED) {
   l->unk_10 += 0x10;
 }
 
+// 0x0800EA78
+void FUN_0800ea78(struct StageLayer* l, const struct Stage* stage UNUSED) {
+  s32 vx;
+  u32 t;
+  u32 v;
+  u32 n;
+  u32* q;
+  register s32 i asm("r2");
+  vx = l->viewportCenterPixel.x;
+  t = (u32)(vx + l->unk_10) << 16;
+  v = t >> 16;
+  n = (u16)((l->viewportCenterPixel.y - 0x5A0) / 12);
+  q = Malloc(0xA0 * 4);
+  if (q == NULL) {
+    return;
+  }
+  gIntrManager.reservedDma0[0] = (u32)q;
+  gIntrManager.reservedDma0[1] = 0x0400001C;
+  gIntrManager.reservedDma0[2] = 0xA6600001;
+  i = 0;
+  if ((s32)n <= 0x4f) {
+    register u32 val asm("r1");
+    register u32* p asm("r3");
+    val = (n << 16) | (t >> 22);
+    p = q;
+    do {
+      *p++ = val;
+      i++;
+    } while ((s32)(n + i) <= 0x4f);
+  }
+  if ((s32)(n + i) <= 0x57) {
+    u32 val = (n << 16) | (v >> 5);
+    u32* p = (u32*)((i << 2) + (u32)q);
+    do {
+      *p++ = val;
+      i++;
+    } while ((s32)(n + i) <= 0x57);
+  }
+  if ((s32)(n + i) <= 0x6f) {
+    u32 val = (n << 16) | (v >> 3);
+    u32* p = (u32*)((i << 2) + (u32)q);
+    do {
+      *p++ = val;
+      i++;
+    } while ((s32)(n + i) <= 0x6f);
+  }
+  if (i <= 0x9f) {
+    u32 val = (n << 16) | (v >> 2);
+    u32* p = (u32*)((i << 2) + (u32)q);
+    do {
+      *p++ = val;
+      i++;
+    } while (i <= 0x9f);
+  }
+}
+
 INCASM("asm/stage_gfx/missile_factory_p1_p1_p1.inc");
 
 void FUN_0800f2c4(struct StageLayer* l, const struct Stage* stage) {
