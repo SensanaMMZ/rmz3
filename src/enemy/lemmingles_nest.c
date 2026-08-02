@@ -299,6 +299,18 @@ void FUN_0806e288(struct Enemy* p) {
 
 INCASM("asm/enemy/lemmingles_nest_p2.inc");
 
+// 0x0806E4BC
+void FUN_0806e4bc(struct Enemy* p) {
+  u32 v = *(u32*)((u8*)p + 0xb4);
+  s32 a = (v & 1) + ((v & 2) >> 1) + ((v & 4) >> 2) + ((v & 8) >> 3);
+  s32 b = ((v & 0x10) >> 4) + ((v & 0x20) >> 5) + ((v & 0x40) >> 6) + ((v & 0x80) >> 7);
+  if (a == b && a != 0) {
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 1;
+    (p->s).work[2] = 0x3C;
+  }
+}
+
 // --------------------------------------------
 
 static void FUN_0806e518(struct Entity* p) {
