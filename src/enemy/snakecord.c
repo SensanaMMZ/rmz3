@@ -454,7 +454,36 @@ NON_MATCH void FUN_08074f34(struct Enemy* p) {
 #endif
 }
 
-INCASM("asm/enemy/snakecord_p2_c.inc");
+static const u8 u8_ARRAY_08366fec[13];
+
+// 0x08074FCC
+void FUN_08074fcc(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).work[2] = m;
+      SetMotion(&p->s, MOTION(0x28, 0x0C));
+      (p->s).mode[2]++;
+    case 1: {
+      s32 hit = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (hit < 0) {
+        s32 k = -0x400;
+        if (hit < k) {
+          hit = (k * (p->s).work[2]) / 256;
+        }
+        (p->s).coord.y += hit;
+        (p->s).work[2] = ((p->s).work[2] + 4) & 0x3F;
+      } else {
+        u8 z = 0;
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = z;
+      }
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08366fec[(s8)(p->s).motion.cmdIdx]]);
+      break;
+    }
+  }
+}
 
 void FUN_080bb908(s32 x, s32 y);
 extern void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
