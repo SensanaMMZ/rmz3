@@ -216,7 +216,49 @@ void FUN_080cf250(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/unk_17_p2.inc");
+// 0x080cf378
+void FUN_080cf378(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2] = 1;
+      FALLTHROUGH;
+    case 1: {
+      s32 m = 0xFFFF;
+      s32 x, y;
+      if (*(u16*)&(p->s).work[2] == 1) {
+        const motion_t* tb = sSolid17Motions[1];
+        motion_t mo = tb[(p->s).work[0]];
+        s8* mp = (s8*)((u8*)p + 0x71);
+        u16 a = (u16)*mp;
+        u16 b;
+        mp += 1;
+        b = (u16)*mp;
+        GotoMotion(&p->s, mo, a, b);
+      }
+      m &= *(u16*)&(p->s).work[2];
+      if (m == 0x100) {
+        const motion_t* tb = sSolid17Motions[2];
+        motion_t mo = tb[(p->s).work[0]];
+        s8* mp = (s8*)((u8*)p + 0x71);
+        u16 a = (u16)*mp;
+        u16 b;
+        mp += 1;
+        b = (u16)*mp;
+        GotoMotion(&p->s, mo, a, b);
+      }
+      x = (p->s).coord.x - (p->s).d.x;
+      (p->s).coord.x = x;
+      y = (p->s).coord.y - (p->s).d.y;
+      (p->s).coord.y = y;
+      if (x == (p->s).unk_coord.x && y == (p->s).unk_coord.y) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 // --------------------------------------------
 
