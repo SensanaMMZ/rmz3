@@ -163,6 +163,57 @@ void FUN_080c8628(struct VFX* p) {
   }
 }
 
+// 0x080C8684
+void FUN_080c8684(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      InitNonAffineMotion(&p->s);
+      (p->s).flags = DISPLAY | (p->s).flags;
+      (p->s).flags |= FLIPABLE;
+      if ((p->s).work[1] == 0) {
+        SetMotion(&p->s, 8);
+      } else {
+        SetMotion(&p->s, 0x12);
+      }
+      ForceEntityPalette(&p->s, 0xE);
+      (p->s).work[2] = 0;
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 w;
+      s32 two;
+      (p->s).coord = ((p->s).unk_28)->coord;
+      (p->s).coord.y -= 0x1000;
+      w = (p->s).work[2] + 1;
+      (p->s).work[2] = w;
+      if ((u8)w > 0x5A) {
+        (p->s).work[2] = 0x5A;
+      }
+      if ((p->s).work[2] > 0x24 && (p->s).work[3] == 0) {
+        (p->s).work[3] = 1;
+        ForceEntityPalette(&p->s, 0xF);
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 inp = gJoypad[0].input;
+        s32 t;
+        two = 2;
+        asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(two));
+        t &= inp;
+        if (t == 0) {
+          u32 tbl = (u32)gVFXFnTable;
+          u32 id = ((p->s).id) << 2;
+          EntityFunc** rt = (EntityFunc**)(tbl + id);
+          *(u32*)((p->s).mode) = two;
+          (p->s).onUpdate = (void*)(*rt)[ENTITY_DIE];
+        }
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/vfx/minigame_icon_post_b.inc");
 
 // --------------------------------------------
