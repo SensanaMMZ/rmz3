@@ -175,6 +175,92 @@ void FUN_080a9e74(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_28_p2_p1b.inc");
 
+// 0x080a9fe4
+void FUN_080a9fe4(struct Sprite* s, struct DrawPivot* dp) {
+  register struct Coord* lt asm("r3");
+  register struct Entity* q asm("r2");
+  register s32 x asm("r5");
+  register s32 y asm("r4");
+  register u32 lo asm("r6");
+  lt = &dp->lefttop;
+  q = (struct Entity*)s->sprites;
+  if (q->mode[0] <= 1) {
+    register u16* pal asm("r1");
+    register s32 c asm("r3");
+    u8 w;
+    u32 d;
+    s32 sd;
+    {
+      register s32 a asm("r0");
+      register s32 b asm("r1");
+      a = (q->coord).x;
+      b = (dp->lefttop).x;
+      a = a - b;
+      x = a >> 8;
+    }
+    {
+      register s32 a asm("r0");
+      register s32 b asm("r1");
+      a = (q->coord).y;
+      b = lt->y;
+      a = a - b;
+      y = (a >> 8) + 2;
+    }
+    if ((q->mode[3] & 3) > 1) {
+      pal = (u16*)&gPaletteManager;
+      c = 0x7FFF;
+    } else {
+      pal = (u16*)&gPaletteManager;
+      c = 0x7C00;
+    }
+    {
+      register s32 cv asm("r0");
+      asm volatile("add %0, %1, #0" : "=&l"(cv) : "l"(c));
+      *pal = cv;
+    }
+    w = q->work[3];
+    d = (u32)(x - w) << 16;
+    x = (u32)((w + x) << 16) >> 16;
+    lo = d >> 16;
+    sd = (s32)d >> 16;
+    if (sd < 0) {
+      lo = 0;
+    } else if (sd > 0xF0) {
+      lo = 0xF0;
+    }
+    {
+      s32 sh = (s32)(x << 16) >> 16;
+      if (sh < 0) {
+        x = 0;
+      } else if (sh > 0xF0) {
+        x = 0xF0;
+      }
+    }
+    if (y < 0) {
+      y = 0;
+    } else if (y > 0xA0) {
+      y = 0xA0;
+    }
+    {
+      register struct WramWindowRegister* wb asm("r2");
+      register s32 m3 asm("r3");
+      register s32 hv asm("r1");
+      register s32 mask asm("r0");
+      register s32 lv asm("r0");
+      wb = &gWindowRegBuffer;
+      m3 = 0xFF;
+      hv = (s32)(x << 16) >> 16;
+      mask = 0xFF;
+      hv &= mask;
+      lv = (s32)(lo << 16) >> 8;
+      hv |= lv;
+      wb->winH.half[1] = hv;
+      y &= m3;
+      wb->winV.half[1] = y;
+    }
+  }
+}
+
 void FUN_080aa15c(struct Sprite* spr, struct DrawPivot* dp);
 
 // 0x080aa08c
