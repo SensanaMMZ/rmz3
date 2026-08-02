@@ -44,7 +44,51 @@ void Projectile26_Update(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
 }
 
-INCASM("asm/projectile/unk_26_post_a.inc");
+// 0x080A8990
+void Projectile26_Die(struct Projectile* p) {
+  struct Entity* o = (p->s).unk_28;
+  u8* q;
+  s32 z;
+  if ((p->s).work[0] <= 1) {
+    s32 t = (p->s).work[2] - 1;
+    z = 0;
+    (p->s).work[2] = t;
+    if ((u8)t == 0xff) {
+      q = (u8*)p + 0x8c;
+      *(s32*)q = z;
+      asm("" : "+r"(q));
+      q += 4;
+      *(s32*)q = z;
+      asm("" : "+r"(q));
+      q += 4;
+      asm("" : "+r"(q));
+      *q = z;
+      (p->s).flags &= ~4;
+      SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+      {
+        u8* r = (u8*)o + 0xcf;
+        if ((u8)--*r == 0) {
+          StopSound(*(s16*)((u8*)p + 0xc0));
+        }
+      }
+    }
+  } else {
+      q = (u8*)p + 0x8c;
+      z = 0;
+      asm("" : "+r"(z));
+      *(s32*)q = z;
+      asm("" : "+r"(q));
+      q += 4;
+      *(s32*)q = z;
+      asm("" : "+r"(q));
+      q += 4;
+      asm("" : "+r"(q));
+      *q = z;
+      (p->s).flags &= ~4;
+      SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
+    StopSound(*(s16*)((u8*)p + 0xc0));
+  }
+}
 
 static const struct Collision sCollisions[4];
 
