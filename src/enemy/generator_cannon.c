@@ -291,6 +291,34 @@ void generatorcannon_0808c7e0(struct Enemy* p) {
 
 struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
 
+// 0x0808c868
+void generatorcannon_0808c868(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[13]);
+      (p->s).work[2] = 0x30;
+      SetMotion(&p->s, MOTION(0x71, 0x06));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      u8 w = (p->s).work[2];
+      s32 t = w;
+      asm("" : "+r"(t));
+      if (t == 0) {
+        struct Camera* cam = &gStageRun.vm.camera;
+        if (CalcFromCamera(cam, &(p->s).coord) <= 0xFFF) {
+          (p->s).mode[1] = 2;
+          (p->s).mode[2] = t;
+        }
+      } else {
+        (p->s).work[2] = w - 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/generator_cannon_post_p2_p2.inc");
 
 // 0x0808ca28
