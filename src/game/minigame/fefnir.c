@@ -19,6 +19,46 @@ void MinigameFefnir_DrawScoreHiscore(struct GameState* g) {
 
 INCASM("asm/minigame/fefnir.inc");
 
+// 0x080FB2D8
+bool32 fefnir_minigame_080fb2d8(struct GameState* g) {
+  u8* mg = (u8*)g + 0xDCC;
+  s32 t;
+  switch (mg[1]) {
+    case 0:
+      *(s32*)(mg + 0x1c) = 0x3c;
+      mg[1]++;
+      /* fallthrough */
+    case 1:
+      t = *(s32*)(mg + 0x1c) - 1;
+      *(s32*)(mg + 0x1c) = t;
+      if (t != 0) {
+        break;
+      }
+      mg[1]++;
+      break;
+    case 2:
+      PlaySound(0x1d);
+      *(struct VFX**)(mg + 0x14) = CreateMissionAlert(0);
+      mg[1]++;
+      /* fallthrough */
+    case 3:
+      if (*(u8*)(*(u8**)(mg + 0x14) + 0xc) > 1) {
+        u8 t0 = mg[0] + 1;
+        u8 z = 0;
+        mg[0] = t0;
+        mg[1] = z;
+        mg[2] = z;
+        mg[3] = z;
+      }
+      break;
+  }
+  *(u16*)(mg + 0x18) = 0;
+  *(u16*)(mg + 0x1a) = 0;
+  return 1;
+}
+
+INCASM("asm/minigame/fefnir_b.inc");
+
 // 0x080FB48C
 bool32 fefnir_minigame_080fb48c(struct GameState* g) {
   u8* mg = (u8*)g + 0xDCC;
@@ -64,11 +104,11 @@ bool32 fefnir_minigame_080fb48c(struct GameState* g) {
 }
 
 
-void fefnir_minigame_080fb2d8(struct GameState* g);
+bool32 fefnir_minigame_080fb2d8(struct GameState* g);
 void fefnir_minigame_080fb354(struct GameState* g);
 
 const GameLoopFunc FefnirMinigameLoops[3] = {
-    fefnir_minigame_080fb2d8,
+    (GameLoopFunc)fefnir_minigame_080fb2d8,
     fefnir_minigame_080fb354,
     (GameLoopFunc)fefnir_minigame_080fb48c,
 };
