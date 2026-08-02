@@ -437,6 +437,62 @@ void FUN_08095914(struct Enemy* p) {
 
 INCASM("asm/enemy/pantheon_fist_post_p2_p2b.inc");
 
+#include "mission.h"
+
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+void FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+void FUN_080b7ffc(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+static const motion_t sMotions[4];
+
+// 0x08095b70
+void FUN_08095b70(struct Enemy* p) {
+  struct Coord c;
+  struct Coord* co;
+  {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    u8* q = (u8*)p + 0x8c;
+    s32 z;
+    asm("" : "+r"(q));
+    z = 0;
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *q = z;
+    t = (p->s).flags;
+    f = 0xFB;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    k2 = 0xFE;
+    f &= k2;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1000;
+  CreateSmoke(1, &c);
+  PlaySound(0x2a);
+  if ((p->s).work[1] == 0) {
+    FUN_080b7f70(&p->s, &c, (motion_t*)sMotions, 3);
+  } else {
+    FUN_080b7ffc(&p->s, &c, (motion_t*)sMotions, 3);
+  }
+  co = &(p->s).coord;
+  TryDropItem(4, co);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, co);
+  SET_ENEMY_ROUTINE(p, 4);
+}
+
+INCASM("asm/enemy/pantheon_fist_post_p2_p2b_b.inc");
+
 void PantheonFist_Init(struct Enemy* p);
 void PantheonFist_Update(struct Enemy* p);
 void PantheonFist_Die(struct Enemy* p);
