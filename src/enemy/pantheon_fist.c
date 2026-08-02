@@ -247,6 +247,80 @@ void FUN_0809542c(struct Enemy* p) {
   }
 }
 
+// 0x080954A4
+void FUN_080954a4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, (const struct Collision*)0x08369FEC);
+      (p->s).work[2] = 0x1E;
+      SetMotion(&p->s, MOTION(0xD4, 0x00));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 v asm("r2");
+      register s32 v5 asm("r5");
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      v = 0;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        v = 1;
+      }
+      asm volatile("add %0, %1, #0" : "=&l"(v5) : "l"(v));
+      if (v5 != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+      {
+        register s32 xf asm("r1");
+        u8* oa;
+        s32 sh4, ov, m11;
+        asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(v));
+        (p->s).spr.xflip = xf;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      t = (p->s).work[2];
+      t--;
+      (p->s).work[2] = t;
+      t <<= 24;
+      if (t == 0) {
+        register s32 d asm("r5");
+        register s32 r6 asm("r6");
+        register s32 sh asm("r0");
+        s32 rv;
+        sh = v5 << 1;
+        asm("" : "+r"(sh));
+        d = sh - 1;
+        rv = FUN_08095074(p, d);
+        rv <<= 24;
+        r6 = (u32)rv >> 24;
+        if (r6 != 0 || (u8)FUN_08094fa8(p, d) == 0) {
+          (p->s).work[2] = 0x10;
+        } else {
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = r6;
+        }
+      }
+      {
+        register s32 rr asm("r1");
+        s32 rw = FUN_08094fe0(p, 1);
+        rw <<= 24;
+        rr = (u32)rw >> 24;
+        if (rr == 0) {
+          (p->s).mode[1] = 2;
+          (p->s).mode[2] = rr;
+        }
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_fist_post_p2_p2.inc");
 
 void FUN_08095664(struct Enemy* p) {
