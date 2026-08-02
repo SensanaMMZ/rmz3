@@ -217,6 +217,107 @@ void FUN_080ccc1c(struct Solid* p) {
 
 INCASM("asm/solid/lava_geyser_p4c.inc");
 
+void CreateVFX43(s32 x, s32 y);
+
+// 0x080CCCA4
+void FUN_080ccca4(struct Solid* p) {
+  if (((p->s).unk_28)->mode[0] > 1) {
+    u32 z;
+    u8 t = (p->s).flags;
+    u8 fv = 0xFE;
+    fv &= t;
+    asm volatile("" ::"r"(t));
+    z = 0;
+    fv &= 0xFD;
+    (p->s).flags = fv;
+    (p->body).status = z;
+    (p->body).prevStatus = z;
+    (p->body).invincibleTime = z;
+    (p->s).flags &= ~COLLIDABLE;
+    SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 w1;
+      u32 k;
+      (p->s).taskCol = 0x1D;
+      (p->s).flags &= ~DISPLAY;
+      k = 0xD8;
+      (p->s).work[2] = k - ((p->s).work[1] << 4);
+      w1 = (p->s).work[1];
+      if (w1 == 0) {
+        SetMotion(&p->s, MOTION(0x39, 0x01));
+      } else if (({
+                   u8 m_ = 1;
+                   m_ &= w1;
+                   m_;
+                 }) != 0) {
+        SetMotion(&p->s, MOTION(0x39, 0x02));
+      } else {
+        SetMotion(&p->s, MOTION(0x39, 0x03));
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8 w2 asm("r0");
+      u32 w2c;
+      if ((p->s).work[3] != 0) {
+        (p->s).work[3]--;
+        if ((u8)(p->s).work[3] != 0) {
+          goto tick;
+        }
+      }
+      (p->s).flags |= DISPLAY;
+    tick:
+      w2 = (p->s).work[2];
+      w2c = w2;
+      asm("" : "+r"(w2c));
+      if (w2c <= 0xF) {
+        if (({
+              u8 m2_ = 2;
+              m2_ &= w2c;
+              m2_;
+            }) != 0) {
+          (p->s).flags |= DISPLAY;
+        } else {
+          u8 t = (p->s).flags;
+          u8 fv = 0xFE;
+          fv &= t;
+          asm volatile("" ::"r"(t));
+          (p->s).flags = fv;
+        }
+      }
+      {
+        u32 v = w2c - 1;
+        u32 z;
+        (p->s).work[2] = v;
+        z = (u8)v;
+        if (z == 0) {
+          PlaySound(0x3F);
+        CreateVFX43((p->s).coord.x, (p->s).coord.y + 0x800);
+        {
+          u8 t = (p->s).flags;
+          u8 fv = 0xFE;
+          fv &= t;
+          asm volatile("" ::"r"(t));
+          fv &= 0xFD;
+          (p->s).flags = fv;
+        }
+        (p->body).status = z;
+        (p->body).prevStatus = z;
+        (p->body).invincibleTime = z;
+          (p->s).flags &= ~COLLIDABLE;
+          SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 // --------------------------------------------
 
 void nop_080cc930(struct Solid* p);
