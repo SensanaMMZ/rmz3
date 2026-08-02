@@ -632,7 +632,59 @@ void copyxMode10(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p2_b.inc");
+// 0x08055ef8
+void copyxMode11(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    register struct Zero* z asm("r2");
+    register s32 v asm("r3");
+    SetMotion(&p->s, MOTION(0xB3, 0x08));
+    (p->s).mode[2] = 0;
+    v = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    (p->s).spr.xflip = v;
+    v = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    {
+      register u8* oa asm("ip");
+      u32 k;
+      s32 sh4, ov, m11;
+      k = 0x4a;
+      asm("" : "+r"(k));
+      oa = (u8*)(k + (u32)p);
+      sh4 = v << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    if (v != 0) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+    SetDDP(&p->body, sCollisions);
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 x = (p->s).coord.x + (p->s).d.x;
+    s32 y;
+    (p->s).coord.x = x;
+    y = (p->s).coord.y + (p->s).d.y;
+    (p->s).coord.y = y;
+    (p->s).d.y += 0x40;
+    if (FUN_08009f6c(x, y) < (p->s).coord.y) {
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      (p->s).mode[1] = 0xc;
+      (p->s).mode[2] = 1;
+    }
+  }
+}
 
 void copyxMode12(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
