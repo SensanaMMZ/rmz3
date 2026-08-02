@@ -72,6 +72,81 @@ void nop_080cbea4(struct Solid* p) {}
 
 INCASM("asm/solid/heavy_cannon_post_pre.inc");
 
+#include "story.h"
+
+extern const SolidFunc gHeavyCannonUpdates1[3];
+extern const SolidFunc gHeavyCannonUpdates2[3];
+
+// 0x080cc120
+void heavyCannonAI(struct Solid* p) {
+  register u8 f asm("r0");
+  register u32 g asm("r2");
+  if ((p->s).work[0] == 4) {
+    u8 fl = gCurStory.s.gameflags[4];
+    register s32 c40 asm("r0");
+    c40 = 0x40;
+    c40 &= fl;
+    asm volatile("" ::"r"(fl));
+    {
+      u32 fv = (u32)c40 << 24;
+      asm("" : "+r"(fv));
+      g = fv >> 24;
+    }
+    if (g != 0) {
+      u8 t = (p->s).flags;
+      f = 0xFE;
+      f &= t;
+      asm volatile("" ::"r"(t));
+      g = 0;
+      goto common;
+    }
+    {
+      struct Entity* q = (p->s).unk_28;
+      if (q != NULL && q->mode[0] == 4) {
+        u8 t = (p->s).flags;
+        f = 0xFE;
+        f &= t;
+        asm volatile("" ::"r"(t));
+      common: {
+        register u8 k2 asm("r1");
+        u8* qq;
+        k2 = 0xFD;
+        f &= k2;
+        (p->s).flags = f;
+        qq = (u8*)p + 0x8c;
+        asm("" : "+r"(qq));
+        *(s32*)qq = g;
+        asm("" : "+r"(qq));
+        qq += 4;
+        asm("" : "+r"(qq));
+        *(s32*)qq = g;
+        asm("" : "+r"(qq));
+        qq += 4;
+        asm("" : "+r"(qq));
+        *qq = g;
+        {
+          register u8 f3 asm("r0");
+          register u8 t3 asm("r1");
+          t3 = (p->s).flags;
+          f3 = 0xFB;
+          f3 &= t3;
+          (p->s).flags = f3;
+          asm volatile("" ::"r"(t3));
+        }
+        SET_SOLID_ROUTINE(p, 3);
+        return;
+      }
+      }
+    }
+  }
+  if (!FUN_080cbdc0((Object*)p)) {
+    (gHeavyCannonUpdates1[(p->s).mode[1]])(p);
+    (gHeavyCannonUpdates2[(p->s).mode[1]])(p);
+  }
+}
+
+INCASM("asm/solid/heavy_cannon_post_pre_b.inc");
+
 void FUN_080cc284(struct Solid* p) {
   (p->s).flags2 &= ~ENTITY_HAZARD;
   DeleteSolid((Object*)p);
