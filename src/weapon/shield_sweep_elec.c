@@ -81,6 +81,35 @@ struct Weapon* CreateShieldSweepElec(struct Zero* z, s32 x, s32 y) {
 
 INCASM("asm/weapon/shield_sweep_elec_pre.inc");
 
+void ElecShieldSweep_Die(struct Weapon* p);
+
+// 0x0803CD94
+void ElecShieldSweep_Update(struct Weapon* p) {
+  u8 w;
+  u8 t;
+  UpdateMotionGraphic(&p->s);
+  w = (p->s).work[2];
+  if (w <= 0xF) {
+    if (({ u8 m_ = 1; m_ &= w; m_; }) != 0) {
+      (p->s).flags &= 0xFE;
+    } else {
+      register u8 fv asm("r0");
+      fv = (p->s).flags;
+      fv |= 1;
+      (p->s).flags = fv;
+    }
+  }
+  {
+    s32 d = (p->s).work[2] - 1;
+    (p->s).work[2] = d;
+    t = d;
+  }
+  if (t == 0xFF || (p->s).work[1] != 0) {
+    SET_WEAPON_ROUTINE(p, 2);
+    ElecShieldSweep_Die(p);
+  }
+}
+
 void ElecShieldSweep_Die(struct Weapon* p) {
   (p->s).flags &= ~DISPLAY;
   SET_WEAPON_ROUTINE(p, ENTITY_EXIT);
