@@ -503,6 +503,77 @@ void nop_080cf918(struct Solid* p) {}
 
 INCASM("asm/solid/snowboard_post.inc");
 
+// 0x080cf9e0
+void FUN_080cf9e0(struct Solid* p) {
+  struct Entity* q = (p->s).unk_2c;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 1;
+      (p->s).unk_coord.x = -(p->s).d.x;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t;
+      (p->s).coord.x += (p->s).d.x;
+      FUN_080cf428(p);
+      (p->s).d.x += (p->s).unk_coord.x;
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        register u8 fl asm("r1");
+        register s32 sh asm("r0");
+        register s32 v asm("r2");
+        register s32 one asm("r3");
+        register s32 z asm("r4");
+        register s32 xf asm("r1");
+        register u8 fv asm("r0");
+        u8* oa;
+        s32 sh4, ov, m11;
+        fl = (p->s).flags;
+        sh = fl >> 4;
+        v = 1;
+        v &= ~sh;
+        if (v != 0) {
+          fv = 0x10;
+          fv |= fl;
+          (p->s).flags = fv;
+        } else {
+          fv = 0xEF;
+          fv &= fl;
+          (p->s).flags = fv;
+        }
+        one = 1;
+        asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(one));
+        xf &= v;
+        {
+          u8* xp = (u8*)p + 0x4c;
+          asm("" : "+r"(xp));
+          z = 0;
+          *xp = xf;
+        }
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+        (p->s).mode[1] = one;
+        (p->s).mode[2] = z;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+  if (q->mode[0] > 1) {
+    s32 z2 = 0;
+    (p->s).unk_2c = (struct Entity*)z2;
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = z2;
+  }
+}
+
+INCASM("asm/solid/snowboard_post_b.inc");
+
 static const struct Collision sCollisions[10];
 
 // 0x080CFB38
