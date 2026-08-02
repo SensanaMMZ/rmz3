@@ -403,6 +403,28 @@ void grandcannon_08069608(struct Enemy* p) {
 
 INCASM("asm/enemy/grand_cannon_post.inc");
 
+// 0x080697BC
+void FUN_080697bc(struct Enemy* p) {
+  struct Entity* e = (struct Entity*)(p->s).unk_28;
+  if (e->mode[0] == 4) {
+    register u8* q asm("r0");
+    u8 fl;
+    u32 z;
+    fl = (p->s).flags & 0xFE;
+    z = 0;
+    fl &= 0xFD;
+    (p->s).flags = fl;
+    q = (u8*)p + 0x8c;
+    *(u32*)q = z;
+    asm volatile("add %0, #4" : "+r"(q));
+    *(u32*)q = z;
+    asm volatile("add %0, #4" : "+r"(q));
+    *q = z;
+    (p->s).flags &= 0xFB;
+    SET_ENEMY_ROUTINE(p, 3);
+  }
+}
+
 // --------------------------------------------
 
 static const struct Collision sCollisions[3] = {
