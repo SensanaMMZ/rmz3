@@ -376,6 +376,29 @@ void FUN_080763f8(struct Enemy* p) {
 
 INCASM("asm/enemy/purple_nerple_p2_p2_p4_b.inc");
 
+// 0x08076D9C
+void FUN_08076d9c(struct Enemy* p) {
+  struct Coord c;
+  register u8* q asm("r0");
+  u8 fl;
+  u32 z;
+  q = (u8*)p + 0x8c;
+  z = 0;
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *q = z;
+  fl = (p->s).flags & 0xFB;
+  fl &= 0xFE;
+  (p->s).flags = fl;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x800;
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  SET_ENEMY_ROUTINE(p, 4);
+}
+
 extern const motion_t sMotions[9];
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
 
