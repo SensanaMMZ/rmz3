@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "projectile.h"
+#include "zero.h"
 
 void OmegaZXProjectile_Init(struct Projectile* p);
 void OmegaZXProjectile_Update(struct Projectile* p);
@@ -371,7 +372,72 @@ void FUN_080b10b8(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/omega_zx_post_p2b_b.inc");
+// 0x080B116C
+void FUN_080b116c(struct Projectile* p) {
+  u8 st = ((p->s).unk_28)->mode[0];
+  u8 m;
+  s32 z;
+  if (st > 1) {
+    goto disappear;
+  }
+  if (st == 4) {
+    goto disappear;
+  }
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      struct Body* body;
+      (p->s).flags |= 4;
+      body = &p->body;
+      InitBody(body, sCollisions, &(p->s).coord, 1);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)(u32)m;
+      (p->s).flags |= 2;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      struct Entity* r = (p->s).unk_2c;
+      s32 v;
+      (p->s).coord = r->coord;
+      (p->s).coord.x = (pZero2->s).coord.x;
+      v = *(s32*)((u8*)r + 0xbc) >> 9;
+      SetDDP(&p->body, &sCollisions[0x10 - v]);
+      if (((p->s).unk_2c)->mode[2] <= 9) {
+        return;
+      }
+      break;
+    }
+    default:
+      return;
+  }
+disappear : {
+  register u8 fv asm("r0");
+  register u8 fl asm("r1");
+  fl = (p->s).flags;
+  asm("" : "+r"(fl));
+  fv = 0xFE;
+  fv &= fl;
+  z = 0;
+  fl = 0xFD;
+  fv &= fl;
+  (p->s).flags = fv;
+}
+  {
+    u8* a = (u8*)p + 0x8c;
+    *(u32*)a = z;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *(u32*)a = z;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *a = z;
+  }
+  (p->s).flags &= 0xFB;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+}
 
 void FUN_080b0168(struct Projectile* p);
 void FUN_080b0214(struct Projectile* p);
