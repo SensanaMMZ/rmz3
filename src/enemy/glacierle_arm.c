@@ -97,9 +97,39 @@ struct Enemy* createGlacierleSucker(struct Entity* e, struct Entity* parent) {
   return p;
 }
 
-INCASM("asm/enemy/glacierle_arm_bb_a.inc");
+// 0x08082348
+void FUN_08082348(struct Enemy* p);
 
-void FUN_08082348(struct Entity* e);
+void FUN_08082348(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_2c;
+  if (q != NULL) {
+    u8* c;
+    u8 d;
+    u8 fl;
+    u32 z;
+    register u8* w asm("r0");
+    if (q->unk_2c != NULL) {
+      (q->unk_2c)->unk_28 = &p->s;
+    }
+    (p->s).unk_2c = q->unk_2c;
+    c = (u8*)p + 0xb4;
+    d = *c - 1;
+    z = 0;
+    *c = d;
+    fl = q->flags & 0xFE;
+    fl &= 0xFD;
+    q->flags = fl;
+    w = (u8*)q + 0x8c;
+    *(u32*)w = z;
+    asm volatile("add %0, #4" : "+r"(w));
+    *(u32*)w = z;
+    asm volatile("add %0, #4" : "+r"(w));
+    *w = z;
+    q->flags &= 0xFB;
+    SET_ENEMY_ROUTINE(q, 3);
+  }
+}
+
 
 // One insn over: retail hoists the target count 10 into a register and
 // compares const-left; plain literals compare the other way (ordering tie).
