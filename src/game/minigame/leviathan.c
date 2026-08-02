@@ -101,15 +101,61 @@ bool32 leviathan_minigame_080fbba0(struct GameState* g) {
   return 1;
 }
 
+struct Enemy* FUN_0809a02c(void* parent, u8 n);
+bool32 leviathan_minigame_080fb66c(struct GameState* g);
+
+// 0x080FBC30
+bool32 leviathan_minigame_080fbc30(struct GameState* g) {
+  u8* mg = (u8*)g + 0xDCC;
+  u8* t;
+  asm("" : "+r"(mg));
+  *(u16*)(mg + 0x10) = gJoypad[0].input;
+  *(u16*)(mg + 0x12) = gJoypad[0].pressed;
+  t = (u8*)g + 0xDFD;
+  asm("" : "+r"(t));
+  if (*t != 0) {
+    *t = *t - 1;
+  } else {
+    struct Entity* e = *(struct Entity**)(mg + 0xc);
+    if (e == NULL || e->mode[0] > 1) {
+      *(struct Enemy**)(mg + 0xc) = FUN_0809a02c(mg, RANDOM(RNG_0202f388) & 1);
+    }
+    leviathan_minigame_080fb66c(g);
+  }
+  if (*(s32*)(mg + 0x20) > 0x2A30) {
+    *(s32*)(mg + 0x20) = 0x2A30;
+  }
+  if (*(s32*)(mg + 0x20) != 0) {
+    s32 v = *(s32*)(mg + 0x20) - 1;
+    *(s32*)(mg + 0x20) = v;
+    if (v > 0) {
+      return 1;
+    }
+  }
+  {
+    u8 t0 = mg[0] + 1;
+    u8 z = 0;
+    mg[0] = t0;
+    mg[1] = z;
+    mg[2] = z;
+    mg[3] = z;
+    *(mg + 0x34) = 1;
+    *(s32*)(mg + 0x20) = z;
+  }
+  return 1;
+}
+
 INCASM("asm/minigame/leviathan_b.inc");
 
+
+
 bool32 leviathan_minigame_080fbba0(struct GameState* g);
-void leviathan_minigame_080fbc30(struct GameState* g);
+bool32 leviathan_minigame_080fbc30(struct GameState* g);
 void leviathan_minigame_080fbcdc(struct GameState* g);
 
 const GameLoopFunc LeviathanMinigameLoops[3] = {
     (GameLoopFunc)leviathan_minigame_080fbba0,
-    leviathan_minigame_080fbc30,
+    (GameLoopFunc)leviathan_minigame_080fbc30,
     leviathan_minigame_080fbcdc,
 };
 
