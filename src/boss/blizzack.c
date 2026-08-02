@@ -488,7 +488,73 @@ void blizzackStamp(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/blizzack_rest_b.inc");
+static const struct Collision sCollisions[];
+
+// 0x0805a368
+void blizzackMode7(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    register s32 one asm("r5");
+    register s32 v asm("r3");
+    register struct Zero* z asm("r2");
+    struct Entity* q;
+    s32 zz;
+    SetMotion(&p->s, MOTION(0xB4, 0x07));
+    q = (p->s).unk_2c;
+    one = 1;
+    q->mode[2] = one;
+    {
+      register u16* hp asm("r0");
+      register s32 hv asm("r1");
+      hp = (u16*)((u8*)((p->s).unk_2c) + 0xbc);
+      asm("" : "+r"(hp));
+      zz = 0;
+      asm("" : "+r"(zz) : "r"(hp));
+      hv = 0x6407;
+      *hp = hv;
+    }
+    (p->s).mode[2] = zz;
+    v = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    (p->s).spr.xflip = v;
+    v = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    {
+      register u8* oa asm("ip");
+      register s32 fv asm("r1");
+      u8* oa0;
+      u32 k;
+      s32 sh4, ov, m11;
+      k = 0x4a;
+      asm("" : "+r"(k));
+      oa0 = (u8*)(k + (u32)p);
+      oa = oa0;
+      asm volatile("add %0, %1, #0" : "=&l"(fv) : "l"(one));
+      fv &= v;
+      sh4 = fv << 4;
+      ov = *oa0;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+      if (fv != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+    }
+    SetDDP(&p->body, &sCollisions[2]);
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 8;
+    (p->s).mode[2] = 1;
+  }
+}
 
 void FUN_080aabd4(struct Boss* p);
 
