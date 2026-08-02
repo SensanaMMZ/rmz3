@@ -96,6 +96,52 @@ void FUN_08042914(struct Boss* p) {
 
 INCASM("asm/boss/wormer_p2_p1_p2b.inc");
 
+void CreateWormerRockDrone(s32 x, s32 y, u8 angle, u8 w2);
+
+// 0x08042C74
+void FUN_08042c74(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[5 + 7 * (p->s).work[0]]);
+      SetMotion(&p->s, MOTION(0x2b, 6));
+      (p->s).work[2] = 4;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 x;
+      s32 y;
+      u32 n;
+      (p->s).work[3] = 0x18;
+      PlaySound(0x2D);
+      x = (p->s).coord.x - 0x2600;
+      y = (p->s).coord.y - 0x4800;
+      n = RANDOM(RNG_0202f388) % 0x28;
+      n += 0x6c;
+      CreateWormerRockDrone(x, y, n, (p->s).palID);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 2: {
+      s32 raw3 = (p->s).work[3] - 1;
+      (p->s).work[3] = raw3;
+      if ((raw3 << 24) == 0) {
+        s32 raw2 = (p->s).work[2] - 1;
+        u8 t;
+        (p->s).work[2] = raw2;
+        t = raw2;
+        if (t == 0) {
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = t;
+        } else {
+          (p->s).mode[2] = 1;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 void FUN_08042d4c(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0:
