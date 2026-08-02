@@ -646,7 +646,56 @@ void copyxMode12(struct Boss* p) {
   (p->s).work[2] = 6;
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p1_a.inc");
+// 0x08055fe4
+void copyxJumpForNovaStrike(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    register struct Zero* z asm("r2");
+    register s32 v asm("r3");
+    SetMotion(&p->s, MOTION(0xB3, 0x07));
+    (p->s).mode[2] = 0;
+    v = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    (p->s).spr.xflip = v;
+    v = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    {
+      register u8* oa asm("ip");
+      u32 k;
+      s32 sh4, ov, m11;
+      k = 0x4a;
+      asm("" : "+r"(k));
+      oa = (u8*)(k + (u32)p);
+      sh4 = v << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    if (v != 0) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+    (p->s).d.y = -0x100;
+    (p->s).work[2] = 0xc;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  {
+    u8 t = --(p->s).work[2];
+    if (t == 0xff) {
+      (p->s).mode[1] = 0xe;
+      (p->s).mode[2] = 1;
+    }
+  }
+}
 
 void copyxNovaStrike2(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
