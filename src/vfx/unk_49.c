@@ -80,6 +80,76 @@ void VFX49_Die(struct VFX* vfx) {
 
 INCASM("asm/vfx/unk_49_post.inc");
 
+u8 GetEntityPalID(struct Entity* p);
+
+// 0x080C04D4
+void FUN_080c04d4(struct VFX* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 pid;
+      register u32 k2 asm("r2");
+      register u32 k0 asm("r0");
+      SetMotion(&p->s, 0x4E00);
+      pid = ((u32)GetEntityPalID(&p->s) << 24) >> 19;
+      k2 = 0x200;
+      asm volatile("add %0, %1, #0" : "=&l"(k0) : "l"(k2));
+      pid |= k0;
+      ((void (*)(u16, u32))StartPaletteAnimation)(0x57, pid);
+      StepPaletteAnimation(0x57);
+      (p->s).work[2] = 0x1e;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 raw = (p->s).work[2] - 1;
+      (p->s).work[2] = raw;
+      if ((raw << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      u32* st;
+      RemovePaletteAnimation(0x57);
+      st = (u32*)((u8*)q + 0xb4);
+      *st |= 4;
+      SetMotion(&p->s, 0x4E01);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 3: {
+      s32 m;
+      UpdateMotionGraphic(&p->s);
+      m = *(u8*)((u8*)p + 0x73);
+      if (m == 3) {
+        u32* st2 = (u32*)((u8*)q + 0xb4);
+        *st2 |= 8;
+        {
+          register u8 fv asm("r0");
+          register u8 fl asm("r1");
+          fl = (p->s).flags;
+          asm("" : "+r"(fl));
+          fv = 0xFE;
+          fv &= fl;
+          fl = 0xFD;
+          fv &= fl;
+          (p->s).flags = fv;
+        }
+        {
+          u32 tbl = (u32)gVFXFnTable;
+          u32 id = ((p->s).id) << 2;
+          EntityFunc** rt = (EntityFunc**)(tbl + id);
+          *(u32*)((p->s).mode) = m;
+          (p->s).onUpdate = (void*)(*rt)[ENTITY_DISAPPEAR];
+        }
+      }
+      break;
+    }
+  }
+}
+
 // 0x080c05a8
 void FUN_080c05a8(struct VFX* p) {
   switch ((p->s).mode[2]) {
