@@ -120,6 +120,29 @@ void FUN_0807b30c(struct Enemy* p) {
 
 INCASM("asm/enemy/wormer_snow_ball_p3_p2_p1.inc");
 
+// 0x0807B408
+void FUN_0807b408(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = m;
+      SetMotion(&p->s, 0x4000);
+      (p->s).mode[2]++;
+    case 1:
+      (p->s).work[2] += 6;
+      (p->s).coord.x += gSineTable[(p->s).work[2]] / 4;
+      (p->s).coord.y += 0x60;
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y)) {
+        SET_ENEMY_ROUTINE(p, 2);
+        (p->s).mode[1] = (p->s).work[0];
+      } else {
+        UpdateMotionGraphic(&p->s);
+      }
+      break;
+  }
+}
+
 u8 makeZeroSlower(struct Zero* z, u8 val);
 void CreateIceballParticle2(s32 x, s32 y);
 
