@@ -323,7 +323,46 @@ void FUN_0809b414(struct Enemy* p) {}
 
 bool8 FUN_0809b418(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/minigame_harpuia_p3_post_p1.inc");
+// 0x0809B41C
+void FUN_0809b41c(struct Enemy* p) {
+  if (((p->s).unk_28)->mode[0] > 1) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0;
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xbf, 0x02));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      struct Entity* q = (p->s).unk_28;
+      (p->s).coord.x = (q->coord).x;
+      (p->s).coord.y = (q->coord).y;
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)((p->s).unk_28)->unk_28 + 0x284) == 1) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, MOTION(0xbf, 0x03));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      struct Entity* q = (p->s).unk_28;
+      (p->s).coord.x = (q->coord).x;
+      (p->s).coord.y = (q->coord).y;
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)((p->s).unk_28)->unk_28 + 0x284) == 0) {
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
 
 bool8 FUN_0809b4d8(struct Enemy* p) { return TRUE; }
 
