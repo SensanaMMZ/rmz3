@@ -741,6 +741,57 @@ INCASM("asm/boss/blizzack_post_p2_a2c.inc");
 
 struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
 
+// 0x0805AD2C
+void blizzack_0805ad2c(struct Boss* p) {
+  struct Coord c;
+  if ((p->s).mode[2] != 0) {
+    u8 z;
+    SetMotion(&p->s, MOTION(0xB4, 0x0B));
+    z = 0;
+    (p->s).d.y = z;
+    (p->s).work[2] = z;
+    (p->s).mode[2] = z;
+    (p->s).mode[3] = z;
+  }
+  UpdateMotionGraphic(&p->s);
+  switch ((p->s).mode[3]) {
+    case 0:
+      if (((p->s).scriptEntity->flags & 0x80) == 0) {
+        return;
+      }
+      c.x = 0x600;
+      c.y = -0x1800;
+      (p->s).unk_2c = CreateBossExplosion(&p->s, &c);
+      break;
+    case 1:
+      if (((p->s).unk_2c)->mode[0] <= 1) {
+        return;
+      }
+      gStageRun.vm.active |= 2;
+      (p->s).work[2] = 0x20;
+      break;
+    case 2:
+      if ((u8)--(p->s).work[2] != 0xFF) {
+        return;
+      }
+      {
+        register u8 t asm("r0");
+        register u8 fv asm("r1");
+        t = (p->s).flags;
+        fv = 0xFE;
+        fv &= t;
+        (p->s).flags = fv;
+        asm volatile("" :: "r"(t));
+      }
+      break;
+    default:
+      return;
+  }
+  (p->s).mode[3]++;
+}
+
+struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
+
 // 0x0805ADD0
 void blizzack_0805add0(struct Boss* p) {
   struct Coord c;
