@@ -34,7 +34,39 @@ void CreateGallisni(s32 x, s32 y, u8 a2) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p1_pre_p2_a_a_x.inc");
+// 0x08086FF0
+void FUN_08086ff0(struct Body* b, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
+  struct CollidableEntity* q;
+  struct Enemy* e;
+  u8 z;
+  q = b->enemy->parent;
+  e = (struct Enemy*)b->parent;
+  if (*(u16*)&(q->s).kind == 0x2E03) {
+    return;
+  }
+  if ((e->s).work[0] != 0) {
+    return;
+  }
+  if ((b->hitboxFlags & 4) == 0) {
+    return;
+  }
+  z = *(u8*)((u8*)e + 0xb8);
+  if (z != 0) {
+    return;
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(e->s).coord) > 0x7FF) {
+    return;
+  }
+  *(u8*)((u8*)e + 0xb8) = 0xFF;
+  CreateGallisni(gStageRun.vm.camera.viewport.x + 0x8BFF, gStageRun.vm.camera.viewport.y - 0x6400, 0);
+  CreateGallisni(gStageRun.vm.camera.viewport.x - 0x8C00, gStageRun.vm.camera.viewport.y - 0x6400, 1);
+  CreateGallisni(gStageRun.vm.camera.viewport.x + 0x8BFF, gStageRun.vm.camera.viewport.y + 0x63FF, 2);
+  CreateGallisni(gStageRun.vm.camera.viewport.x - 0x8C00, gStageRun.vm.camera.viewport.y + 0x63FF, 3);
+  PlaySound(SE_GALLISNI_ATK);
+  (e->s).mode[1] = 2;
+  (e->s).mode[2] = z;
+  (e->s).work[2] = 0x40;
+}
 
 void Gallisni_Die(struct Enemy* p);
 
