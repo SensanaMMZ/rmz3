@@ -198,7 +198,51 @@ NON_MATCH void OmegaGoldHand_Init(struct Enemy* p) {
 #endif
 }
 
-INCASM("asm/enemy/omega_gold_hand_p1_pre_p2b.inc");
+extern const EnemyFunc PTR_ARRAY_08368188[6];
+extern const EnemyFunc PTR_ARRAY_083681a0[6];
+extern const EnemyFunc PTR_ARRAY_083681b8[6];
+extern const EnemyFunc PTR_ARRAY_083681d0[6];
+extern const EnemyFunc PTR_ARRAY_083681e8[6];
+extern const EnemyFunc PTR_ARRAY_08368200[6];
+void OmegaGoldHand_Die(struct Enemy* p);
+
+// 0x08082D70
+void OmegaGoldHand_Update(struct Enemy* p) {
+  if (((struct Entity*)(p->s).unk_28)->mode[0] > 1) {
+    SET_ENEMY_ROUTINE(p, 2);
+    OmegaGoldHand_Die(p);
+    return;
+  }
+  if ((p->s).work[1] == 0) {
+    (PTR_ARRAY_08368188[(p->s).mode[1]])(p);
+  } else {
+    (PTR_ARRAY_083681a0[(p->s).mode[1]])(p);
+  }
+  {
+    register const EnemyFunc* t asm("r0");
+    if ((p->s).work[0] != 0) {
+      goto b;
+    }
+    if ((p->s).work[1] == 0) {
+      t = PTR_ARRAY_083681b8;
+      asm("" : "+r"(t));
+    } else {
+      t = PTR_ARRAY_083681e8;
+      asm("" : "+r"(t) : "r"(p));
+    }
+    goto shared;
+  b:
+    if ((p->s).work[1] != 0) {
+      goto c;
+    }
+    t = PTR_ARRAY_083681d0;
+  shared:
+    (t[(p->s).mode[1]])(p);
+    return;
+  c:
+    (PTR_ARRAY_08368200[(p->s).mode[1]])(p);
+  }
+}
 
 void OmegaGoldHand_Die(struct Enemy* p) {
   (PTR_ARRAY_08368218[(p->s).mode[1]])(p);
