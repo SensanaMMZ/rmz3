@@ -435,7 +435,46 @@ void FUN_08072ffc(struct Enemy* p) {}
 
 bool8 FUN_08073000(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_aqua_p8.inc");
+// 0x08073004
+void FUN_08073004(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 dy = (p->s).d.y + 0x10;
+      (p->s).d.y = dy;
+      if (dy > 0x380) {
+        (p->s).d.y = 0x380;
+      }
+      if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y + (p->s).d.y) << 16) != 0) {
+        if ((p->s).coord.y - FUN_08009f6c((p->s).coord.x, (p->s).coord.y) > 0) {
+          if ((p->s).coord.y - FUN_08009f6c((p->s).coord.x, (p->s).coord.y) <= 0x6FF) goto land;
+          break;
+        } else {
+          if (FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - (p->s).coord.y > 0x6FF) break;
+        }
+      land:
+        (p->s).d.y = 0;
+        (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      } else {
+        (p->s).coord.y += (p->s).d.y;
+      }
+      break;
+    }
+  }
+  {
+    struct Entity** slot = (struct Entity**)((u8*)p + 0xbc);
+    if (isKilled(*slot)) {
+      SetDDP(&p->body, &sCollisions[0]);
+      *slot = NULL;
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
 
 bool8 FUN_080730cc(struct Enemy* p) { return TRUE; }
 
