@@ -80,6 +80,58 @@ void VFX49_Die(struct VFX* vfx) {
 
 INCASM("asm/vfx/unk_49_post.inc");
 
+// 0x080c05a8
+void FUN_080c05a8(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, (RANDOM(RNG_0202f388) & 1) + MOTION(0x4F, 0x03));
+      (p->s).work[2] = 0x1a;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register u8 w asm("r1");
+      (p->s).coord.y -= 0x100;
+      w = (p->s).work[2];
+      if (w <= 0xd) {
+        register u8 m asm("r0");
+        m = 1;
+        m &= w;
+        if (m != 0) {
+          register u8 f asm("r0");
+          register u8 t asm("r1");
+          t = (p->s).flags;
+          f = DISPLAY;
+          f |= t;
+          (p->s).flags = f;
+        } else {
+          register u8 f asm("r0");
+          register u8 t asm("r1");
+          t = (p->s).flags;
+          f = 0xFE;
+          f &= t;
+          asm volatile("" ::"r"(t));
+          (p->s).flags = f;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0) {
+        register u8 f asm("r0");
+        register u8 t asm("r1");
+        register u8 k2 asm("r1");
+        t = (p->s).flags;
+        f = 0xFE;
+        f &= t;
+        asm volatile("" ::"r"(t));
+        k2 = 0xFD;
+        f &= k2;
+        (p->s).flags = f;
+        SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
 u8 GetEntityPalID(struct Entity* p);
 
 void FUN_080c065c(struct VFX* p) {
