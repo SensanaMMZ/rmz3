@@ -299,6 +299,66 @@ void FUN_0806f7dc(struct Enemy* p) {
   Enemy14_Update(p);
 }
 
+s32 FUN_0800a22c(s32 x, s32 y);
+
+// 0x0806F89C
+void FUN_0806f89c(struct Enemy* p) {
+  s32 z;
+  s32 one;
+  struct Body* body;
+  s32 x;
+  InitRotatableMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    fv |= fl;
+    fl = FLIPABLE;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, 0x1500);
+  UpdateMotionGraphic(&p->s);
+  (p->s).flags |= COLLIDABLE;
+  body = &p->body;
+  InitBody(body, &sCollisions[2], &(p->s).coord, 0x100);
+  body->parent = (struct CollidableEntity*)p;
+  body->fn = (void*)FUN_08070000;
+  one = 1;
+  (p->s).flags |= 0x10;
+  ((p->s).spr).xflip = one;
+  {
+    u8* oa = (u8*)p + 0x4a;
+    s32 sh = 0x10;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    m11 |= sh;
+    *oa = m11;
+  }
+  (p->s).angle = 0x40;
+  *(s32*)((u8*)p + 0xbc) = z;
+  (p->s).d.y = 0x80;
+  x = FUN_0800a22c((p->s).coord.x, (p->s).coord.y);
+  (p->s).coord.x = x;
+  *(s32*)((u8*)p + 0xb4) = x;
+  *(s32*)((u8*)p + 0xb8) = (p->s).coord.y;
+  *((u8*)p + 0xc2) = z;
+  (p->s).work[2] = z;
+  {
+    u32 tbl = (u32)gEnemyFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(*rt)[ENTITY_UPDATE];
+  }
+  (p->s).mode[1] = z;
+  (p->s).mode[2] = one;
+  Enemy14_Update(p);
+}
+
 INCASM("asm/enemy/top_gabyoall_p2_b.inc");
 
 // 0x08070000
