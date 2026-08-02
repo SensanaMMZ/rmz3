@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "enemy.h"
+#include "stagerun.h"
 #include "global.h"
 #include "story.h"
 #include "vfx.h"
@@ -93,6 +94,79 @@ void HeavyCannon_Die(struct Enemy* p) {
 void FUN_0807acd0(struct Enemy* p) {}
 
 INCASM("asm/enemy/heavy_cannon_ball_p2.inc");
+
+// 0x0807B008
+void FUN_0807b008(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      u8* a = (u8*)p + 0x8c;
+      *(u32*)a = m;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *(u32*)a = m;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = m;
+      (p->s).flags &= 0xFB;
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 dy;
+      s32 w;
+      (p->s).coord.x += (p->s).d.x;
+      dy = (p->s).d.y + 0x40;
+      (p->s).d.y = dy;
+      if (dy > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      w = (p->s).work[2] + 1;
+      (p->s).work[2] = w;
+      w &= 2;
+      if (w != 0) {
+        (p->s).flags |= 1;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x6000) {
+        s32 z;
+        {
+          register u8 fv asm("r0");
+          register u8 fl asm("r1");
+          fl = (p->s).flags;
+          asm("" : "+r"(fl));
+          fv = 0xFE;
+          fv &= fl;
+          z = 0;
+          fl = 0xFD;
+          fv &= fl;
+          (p->s).flags = fv;
+        }
+        {
+          u8* b = (u8*)p + 0x8c;
+          *(u32*)b = z;
+          asm("" : "+r"(b));
+          b += 4;
+          asm("" : "+r"(b));
+          *(u32*)b = z;
+          asm("" : "+r"(b));
+          b += 4;
+          asm("" : "+r"(b));
+          *b = z;
+        }
+        (p->s).flags &= 0xFB;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
 
 void HeavyCannon_Init(struct Enemy* p);
 void HeavyCannon_Update(struct Enemy* p);
