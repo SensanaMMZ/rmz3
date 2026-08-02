@@ -533,7 +533,56 @@ void FUN_080806e0(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/pantheon_zombie_p2_post_postb.inc");
+// 0x08080734
+void FUN_08080734(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 dx;
+      s32 cy;
+      s32 dy;
+      s32 a;
+      s32 b;
+      register s32 sq1 asm("r6");
+      s32 sq2;
+      s32 len;
+      s32 vx;
+      s32 vy;
+      SetDDP(&p->body, &sCollisions[7]);
+      SetMotion(&p->s, 0x4C02);
+      dx = (p->s).coord.x - (pZero2->s).coord.x;
+      (p->s).d.x = dx;
+      cy = (p->s).coord.y - 0x1800;
+      dy = cy - (pZero2->s).coord.y;
+      (p->s).d.y = dy;
+      a = dx >> 8;
+      sq1 = a * a;
+      b = dy >> 8;
+      sq2 = b * b;
+      sq1 += sq2;
+      len = sq1;
+      len = (u32)Sqrt(len) << 8;
+      vx = ((p->s).d.x << 8) / len;
+      (p->s).d.x = vx;
+      vy = ((p->s).d.y << 8) / len;
+      (p->s).d.x = vx * 6;
+      (p->s).d.y = vy * 6;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if (((bool16 (*)(s32, s32))FUN_080098a4)((p->s).coord.x, (p->s).coord.y)) {
+        FUN_08080674(p);
+      }
+      break;
+  }
+}
 
 void PantheonZombie_Init(struct Enemy* p);
 void PantheonZombie_Update(struct Enemy* p);
