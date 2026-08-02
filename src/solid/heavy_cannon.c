@@ -1,7 +1,9 @@
 #include "collision.h"
 #include "element.h"
 #include "global.h"
+#include "mission.h"
 #include "solid.h"
+#include "vfx.h"
 
 static const struct Collision sCollisions[];
 
@@ -145,7 +147,58 @@ void heavyCannonAI(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/heavy_cannon_post_pre_b.inc");
+extern const motion_t gHeavyCannonMotions[3];
+void FUN_080b82c0(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+void TryDropZakoDisk(struct Solid* p, struct Coord* c);
+
+// 0x080CC1CC
+void killHeavyCannon(struct Solid* p) {
+  struct Coord c;
+  s32 z;
+  {
+    u8 f2 = (p->s).flags2 & ~ENTITY_HAZARD;
+    z = 0;
+    (p->s).flags2 = f2;
+  }
+  *(u32*)((u8*)p + 0x8c) = z;
+  *(u32*)((u8*)p + 0x90) = z;
+  *(u8*)((u8*)p + 0x94) = z;
+  {
+    register u8 fv asm("r1");
+    register u8 t asm("r0");
+    register u8 k2 asm("r0");
+    s32 y;
+    t = (p->s).flags;
+    fv = 0xFB;
+    fv &= t;
+    asm volatile("" ::"r"(t));
+    k2 = 0xFE;
+    fv &= k2;
+    (p->s).flags = fv;
+    c.x = (p->s).coord.x;
+    y = (p->s).coord.y;
+    c.y = y - 0x800;
+    {
+      s32 cy = c.y;
+      if ((fv & 0x20) != 0) {
+        cy = y + 0x800;
+      }
+      c.y = cy;
+    }
+  }
+  CreateSmoke(1, &c);
+  PlaySound(0x2A);
+  FUN_080b82c0(&p->s, &c, (motion_t*)gHeavyCannonMotions, 3);
+  if ((p->s).work[0] != 4) {
+    struct Coord* pc = &(p->s).coord;
+    TryDropItem(0, pc);
+    if (gMission.enemyCount <= 0x270E) {
+      gMission.enemyCount++;
+    }
+    TryDropZakoDisk(p, pc);
+  }
+  SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+}
 
 void FUN_080cc284(struct Solid* p) {
   (p->s).flags2 &= ~ENTITY_HAZARD;
