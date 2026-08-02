@@ -720,7 +720,16 @@ void FUN_080abdc8(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_32_p4_p3_p2.inc");
+void FUN_080ac1a4(struct Body* body, struct Coord* r1, struct Coord* r2);
+
+// 0x080ABDF8
+void FUN_080abdf8(struct Projectile* p) {
+  (p->s).flags |= FLIPABLE;
+  UpdateMotionGraphic(&p->s);
+  INIT_BODY(p, &sCollisions[6], 0x40, FUN_080ac1a4);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  Projectile32_Update(p);
+}
 
 void FUN_080abe54(struct Projectile* p) {
   struct Entity* q = (p->s).unk_28;
