@@ -28,6 +28,37 @@ void leviathan_minigame_080fb594(struct GameState* g) {
 
 INCASM("asm/minigame/leviathan.inc");
 
+extern const GameLoopFunc LeviathanMinigameLoops[3];
+
+// 0x080FBB0C
+bool32 leviathanMinigame(struct GameState* g) {
+  u8* mg = (u8*)g + 0xDCC;
+  bool32 r = ((MinigameFunc)LeviathanMinigameLoops[mg[0]])(g);
+  leviathan_minigame_080fb594(g);
+  if (*(s32*)(mg + 0x24) < 0) {
+    *(s32*)(mg + 0x24) = 0;
+  } else if (*(s32*)(mg + 0x24) > 0x1869F) {
+    *(s32*)(mg + 0x24) = 0x1869F;
+  }
+  if (*(s32*)(mg + 0x24) > *(s32*)(mg + 0x2c)) {
+    u8* f = mg + 0x30;
+    if (*f == 0) {
+      *f = 1;
+      PlaySound(0x138);
+    } else {
+      PlaySound(0x137);
+    }
+    *(s32*)(mg + 0x2c) = *(s32*)(mg + 0x24);
+  } else if (*(s32*)(mg + 0x28) != *(s32*)(mg + 0x24)) {
+    PlaySound(0x137);
+  }
+  *(s32*)(mg + 0x28) = *(s32*)(mg + 0x24);
+  MinigameLeviathan_DrawScoreHiscore(g);
+  return r;
+}
+
+INCASM("asm/minigame/leviathan_b.inc");
+
 void leviathan_minigame_080fbba0(struct GameState* g);
 void leviathan_minigame_080fbc30(struct GameState* g);
 void leviathan_minigame_080fbcdc(struct GameState* g);
