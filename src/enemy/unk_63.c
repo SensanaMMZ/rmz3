@@ -131,7 +131,56 @@ void FUN_08094e0c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/unk_63_p3_p3.inc");
+// 0x08094EA0
+NON_MATCH void FUN_08094ea0(struct Enemy* p0) {
+#if MODERN
+  register struct Enemy* p asm("r4");
+  u8 m;
+  p = p0;
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      *(u8*)((u8*)p + 0x25) = 0xF;
+      PlaySound(0x40);
+      (p->s).work[2] = m;
+      SetDDP(&p->body, &sCollisions[2]);
+      SetMotion(&p->s, MOTION(0x58, 0x00));
+      (p->s).mode[2]++;
+    case 1: {
+      u8 one;
+      u8 t;
+      {
+        u8* q = (u8*)pZero2 + 0x143;
+        s32 mv;
+        asm("" : "+r"(q));
+        mv = -0x10;
+        mv &= *q;
+        one = 1;
+        mv |= one;
+        *q = mv;
+      }
+      {
+        u8* q = (u8*)pZero2 + 0x143;
+        asm("" : "+r"(q));
+        *q = 0xF & *q;
+      }
+      t = (p->s).work[2] + 1;
+      (p->s).work[2] = t;
+      if ((t & 1) != 0) {
+        (p->s).flags |= one;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      (p->s).coord.x = (pZero2->s).coord.x;
+      (p->s).coord.y = (pZero2->s).coord.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/unk63_08094ea0.inc");
+#endif
+}
 
 
 

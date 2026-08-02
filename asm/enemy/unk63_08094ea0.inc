@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-
-	.text
-
-	thumb_func_start FUN_08094ea0
-FUN_08094ea0: @ 0x08094EA0
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldrb r5, [r4, #0xe]
@@ -84,6 +76,3 @@ _08094F38:
 	pop {r0}
 	bx r0
 	.align 2, 0
-
-
-
