@@ -2467,6 +2467,32 @@ void FUN_080d7638(struct Solid* p) {
 
 INCASM("asm/solid/actor_p2b.inc");
 
+// 0x080D787C
+void Actor63_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      LOAD_STATIC_GRAPHIC(SM194_CERVEAU);
+      SetMotion(&p->s, MOTION(0xc2, 0x03));
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x + 0xA000, (p->s).coord.y);
+      (p->s).work[2] = 0x5A;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += 0x80;
+      if ((u8)--(p->s).work[2] == 0) {
+        SetMotion(&p->s, MOTION(0xc2, 0x00));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
+INCASM("asm/solid/actor_p2b_post.inc");
+
 // ------------------------------------------------------------------------------------------------------------------------------------
 
 const struct Collision Collision_08370ab8 = {
