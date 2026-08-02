@@ -88,9 +88,37 @@ void SeaOtterElf_Die(struct Elf* p) {
   SET_ELF_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/cyberelf/sea_otter_p2.inc");
-
 bool8 CheckPlayerStandStill(struct Zero* z);
+struct Entity* FUN_080e1608(struct Coord* c);
+
+// 0x080E4A3C
+void FUN_080e4a3c(struct CyberElfSeaOtter* p);
+void FUN_080e4a3c(struct CyberElfSeaOtter* p) {
+  register struct Zero* z asm("r2");
+  register u8 m asm("r0");
+  s32 m2;
+  s32 mc;
+  z = p->player;
+  m2 = (p->s).mode[2];
+  if (m2 == 0) {
+    (p->s).mode[3] = 0x40;
+    asm("" : "+r"(m2));
+    (p->s).mode[2] = m2 + 1;
+  }
+  m = (p->s).mode[3];
+  mc = m;
+  asm("" : "+r"(mc));
+  if (mc != 0) {
+    (p->s).mode[3] = m - 1;
+  } else if (CheckPlayerStandStill(z)) {
+    struct Entity* e = FUN_080e1608(&(p->s).coord);
+    (p->s).unk_2c = e;
+    if (e != NULL) {
+      (p->s).mode[1]++;
+      (p->s).mode[2] = mc;
+    }
+  }
+}
 
 void FUN_080e4a88(struct Elf* p) {
   struct Zero* z = *(struct Zero**)&p->buffer[0];
@@ -133,7 +161,6 @@ void FUN_080e4ae8(struct Elf* p) {
 
 INCASM("asm/cyberelf/sea_otter_p2b.inc");
 
-void FUN_080e4a3c(struct Elf* p);
 void FUN_080e4a88(struct Elf* p);
 void FUN_080e4ae8(struct Elf* p);
 static void FUN_080e4b58(struct Entity* p);
