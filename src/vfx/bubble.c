@@ -190,6 +190,37 @@ void FUN_080b3144(struct VFX* p) {
 
 INCASM("asm/vfx/bubble_c.inc");
 
+// 0x080B31D8
+void FUN_080b31d8(struct VFX* p) {
+  s32 dy;
+  UpdateMotionGraphic(&p->s);
+  (p->s).work[2] += 8;
+  dy = (p->s).d.y - 0x60;
+  (p->s).d.y = dy;
+  if (dy < -0x100) {
+    (p->s).d.y = -0x100;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).coord.x += (p->s).d.x + (((u16)gSineTable[(p->s).work[2]] << 16) >> 18);
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) == 0) {
+    struct Overworld* ow = &gOverworld;
+    s32* sp;
+    s32 t;
+    s32 cy;
+    sp = &ow->sea;
+    asm("" : "+r"(sp));
+    t = (p->s).d.y * 2;
+    cy = (p->s).coord.y;
+    if (*sp < cy - t) {
+      return;
+    }
+    if ((GetMetatileAttr((p->s).coord.x, cy) << 16) == 0x80000000) {
+      return;
+    }
+  }
+  SET_VFX_ROUTINE(p, 2);
+}
+
 // 0x080B3278
 NON_MATCH void FUN_080b3278(struct VFX* p) {
 #if MODERN
