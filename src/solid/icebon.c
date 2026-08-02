@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "element.h"
 #include "global.h"
+#include "zero.h"
 #include "overworld.h"
 #include "physics.h"
 #include "solid.h"
@@ -346,6 +347,60 @@ NON_MATCH void icebon_080ca154(struct Solid* p) {
 }
 
 INCASM("asm/solid/icebon_b.inc");
+
+extern const motion_t motion_t_ARRAY_0836fc92[4];
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b83d4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void icebonDeath0(struct Solid* p);
+
+// 0x080CA488
+void icebonDeath1(struct Solid* p0) {
+  register struct Solid* p asm("r5");
+  register s32 m asm("r4");
+  struct Coord c;
+  p = p0;
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 onR;
+      s32 k80;
+      (p->s).flags2 &= 0xF7;
+      onR = 0;
+      if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+        onR = 1;
+      }
+      SetMotion(&p->s, 0x1001);
+      *(s32*)((u8*)p + 0x8c) = m;
+      *(s32*)((u8*)p + 0x90) = m;
+      *(u8*)((u8*)p + 0x94) = m;
+      (p->s).flags &= 0xFB;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      FUN_080b2b40(0, &c, 0x200, onR);
+      k80 = 0x80;
+      asm("" : "+r"(k80));
+      c.x = k80 - (onR << 8);
+      asm volatile("" ::"r"(onR));
+      c.y = m;
+      FUN_080b83d4(&p->s, &(p->s).coord, &c, 0, (motion_t*)&motion_t_ARRAY_0836fc92[3], 0x18);
+      (p->s).work[2] = 0x18;
+      (p->s).d.x = c.x / 3;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 raw;
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      raw = (p->s).work[2] - 1;
+      (p->s).work[2] = raw;
+      if ((u8)raw == 0) {
+        icebonDeath0(p);
+      }
+      break;
+    }
+  }
+}
 
 // 0x0836fc38
 const struct Collision sIcebonCollisions[3] = {
