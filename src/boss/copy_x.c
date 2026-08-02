@@ -1411,7 +1411,63 @@ void copyxRaisingExcharge(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b2.inc");
+// 0x08056FD4
+void copyxMode36(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    register struct Zero* z asm("r2");
+    register s32 v asm("r3");
+    SetMotion(&p->s, MOTION(0xB3, 0x14));
+    UpdateMotionGraphic(&p->s);
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0;
+    v = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    (p->s).spr.xflip = v;
+    v = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      v = 1;
+    }
+    {
+      register u8* oa asm("ip");
+      u8* oa0;
+      u32 k;
+      s32 sh4, ov, m11;
+      k = 0x4a;
+      asm("" : "+r"(k));
+      oa0 = (u8*)(k + (u32)p);
+      asm volatile("mov %0, %1" : "=r"(oa) : "r"(oa0));
+      sh4 = v << 4;
+      ov = *oa0;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    if (v != 0) {
+      (p->s).flags |= X_FLIP;
+    } else {
+      (p->s).flags &= ~X_FLIP;
+    }
+    SetDDP(&p->body, &sCollisions[4]);
+    (p->s).unk_2c = CreateVFX52(&p->s);
+    (p->s).work[2] = 0x20;
+    PlaySound(0x45);
+  }
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    struct Entity* q = (p->s).unk_2c;
+    s32 one = 1;
+    s32 z2;
+    q->work[1] = one;
+    z2 = 0;
+    (p->s).unk_2c = (struct Entity*)z2;
+    (p->s).mode[1] = 0xF;
+    (p->s).mode[2] = one;
+    *((u8*)p + 0xde) = one;
+  }
+}
 
 void copyx_080aa24c(struct Entity* e, u8 a1, u8 a2);
 
