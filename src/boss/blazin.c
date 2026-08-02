@@ -987,6 +987,43 @@ bool8 blazin_0803ffdc(struct Boss* p, u8 i) {
 
 INCASM("asm/boss/blazin_p12_p2_p1.inc");
 
+extern const u8 BlazinFireballAngles[8];
+struct Projectile* _createBlazinEXFireBall(struct Entity* e, struct Coord* c, struct Coord* d, u8 angle);
+
+// 0x08040110
+bool8 createBlazinEXFireBall(struct Boss* p, u8 a1, u8 a2, s32 a3) {
+  struct Coord dir;
+  struct Coord c;
+  u8 ang;
+  struct Projectile* q;
+  if (((p->s).flags & 0x10) == 0) {
+    const u8* tp = &BlazinFireballAngles[a1];
+    s32 m13 = a2 * 13;
+    ang = m13 + *tp;
+    asm("" : "+r"(ang));
+  } else {
+    const u8* tp2 = &BlazinFireballAngles[a1];
+    s32 m13b = a2 * 13;
+    ang = *tp2 - m13b;
+    asm("" : "+r"(ang));
+  }
+  dir.x = gSineTable[ang];
+  dir.y = -gSineTable[(u8)(ang + 0x40)];
+  c.x = 0;
+  c.y = -0x1C00;
+  c.x += ((dir.x * 3) << 11) >> 8;
+  c.y += ((dir.y * 3) << 11) >> 8;
+  c.x = (p->s).coord.x + c.x;
+  c.y = (p->s).coord.y + c.y;
+  q = _createBlazinEXFireBall(&p->s, &c, &dir, ang + 0x80);
+  if (q != NULL) {
+    *(s32*)((u8*)q + 0xbc) = a3;
+  }
+  return 1;
+}
+
+INCASM("asm/boss/blazin_p12_p2_p1c.inc");
+
 struct Projectile* blazin_0809e620(struct Entity* e, struct Coord* c, struct Coord* d);
 
 // One scheduling slot apart: retail hoists the &c arg add into the coord.y
