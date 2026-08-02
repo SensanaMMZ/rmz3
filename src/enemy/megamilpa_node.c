@@ -44,7 +44,38 @@ struct Entity* CreateMegamilpaNode(u8 idx) {
 
 // --------------------------------------------
 
-INCASM("asm/enemy/megamilpa_node_p1_a.inc");
+extern const u8 u8_ARRAY_08365cf0[2];
+extern const struct Collision gMegamilpaNodeHitbox[];
+
+// 0x08065778
+void MegamilpaNode_Init(struct Enemy* p) {
+  register struct Entity* q asm("r8");
+  register u32 z asm("r5");
+  struct Body* b;
+  q = *(struct Entity**)((u8*)p + 0xb4);
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  {
+    u8 mv = u8_ARRAY_08365cf0[(p->s).work[0]];
+    z = 0;
+    (p->s).mode[1] = mv;
+  }
+  (p->s).flags |= FLIPABLE;
+  (p->s).flags |= DISPLAY;
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  (p->s).flags |= COLLIDABLE;
+  b = &p->body;
+  InitBody(b, &gMegamilpaNodeHitbox[1], &(p->s).coord, 1);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = (BodyFunc)z;
+  if (*(u8*)((u8*)p + 0xb8) == 0) {
+    SetMotion(&p->s, MOTION(0xA0, 0x00));
+    UpdateMotionGraphic(&p->s);
+  }
+  (p->s).flags2 |= 0x10;
+  { register struct Entity* qq asm("r1"); qq = q; (p->s).invincibleID = qq->uniqueID; }
+  MegamilpaNode_Update(p);
+}
 
 extern const EnemyFunc sMegamilpaNodeUpdates1[3];
 extern const EnemyFunc sMegamilpaNodeUpdates2[3];
