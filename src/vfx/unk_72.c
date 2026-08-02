@@ -108,7 +108,72 @@ void Ghost72_Die(struct VFX* p) {
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_72_a.inc");
+// 0x080C6A1C
+void FUN_080c6a1c(struct VFX* p0) {
+  register struct VFX* p asm("r5");
+  register struct Entity* q asm("r6");
+  register struct Coord* qc asm("r8");
+  register u32 xf asm("r4");
+  s32 one;
+  u32 k54;
+  p = p0;
+  q = (p->s).unk_28;
+  k54 = 0x54;
+  asm("" : "+r"(k54));
+  qc = (struct Coord*)(k54 + (u32)q);
+  {
+    u8 fv;
+    register u8 fl asm("r1");
+    xf = q->flags;
+    xf >>= 4;
+    fv = 1;
+    xf &= fv;
+    fl = (p->s).flags;
+    one = 0;
+    asm("" : "+r"(one));
+    asm volatile("" ::"r"(one));
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  InitNonAffineMotion(&p->s);
+  SetMotion(&p->s, MOTION(0xDB, 0x0A));
+  if (xf != 0) {
+    (p->s).flags |= X_FLIP;
+  } else {
+    (p->s).flags &= 0xEF;
+  }
+  one = 1;
+  {
+    s32 v = one & xf;
+    ((p->s).spr).xflip = v;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      s32 sh4 = v << 4;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+  }
+  {
+    struct Coord* qcl = qc;
+    (p->s).coord.x = qcl->x;
+    (p->s).coord.y = qcl->y;
+  }
+  (p->s).d.x = (q->d.x * 5 << 5) / 0x100;
+  (p->s).d.y = q->d.y;
+  (p->s).work[3] = (q->mode[3] == 1);
+  (p->s).work[2] = 0x16;
+  {
+    u32 tbl = (u32)gVFXFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(*rt)[ENTITY_UPDATE];
+  }
+  Ghost72_Update(p);
+}
 
 // 0x080c6ad8
 void FUN_080c6ad8(struct VFX* p) {
