@@ -4,38 +4,6 @@
 	
 	.text
 
-	thumb_func_start leviathan_minigame_080fb594
-leviathan_minigame_080fb594: @ 0x080FB594
-	push {r4, lr}
-	adds r4, r0, #0
-	ldr r0, _080FB5D4 @ =0x00000DCC
-	adds r4, r4, r0
-	ldr r0, _080FB5D8 @ =0x0810E2AC
-	movs r1, #0xa
-	movs r2, #0x13
-	bl PrintUnicodeString
-	ldr r0, [r4, #0x20]
-	movs r1, #0x3c
-	bl __divsi3
-	movs r1, #0x3c
-	bl __modsi3
-	movs r1, #0x12
-	movs r2, #0x13
-	bl PrintMinigameNumber
-	ldr r0, [r4, #0x20]
-	movs r1, #0xe1
-	lsls r1, r1, #4
-	bl __divsi3
-	movs r1, #0xf
-	movs r2, #0x13
-	bl PrintMinigameNumber
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080FB5D4: .4byte 0x00000DCC
-_080FB5D8: .4byte 0x0810E2AC
-
 	thumb_func_start leviathan_minigame_080fb5dc
 leviathan_minigame_080fb5dc: @ 0x080FB5DC
 	push {r4, r5, r6, r7, lr}
