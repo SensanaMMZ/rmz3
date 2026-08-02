@@ -136,7 +136,32 @@ void leviathanMode1Pre(struct Zero* p) {
 
 void nop_08036044(struct Zero* z) {}
 
-INCASM("asm/player/leviathan_p2.inc");
+// 0x08036048
+void leviathanMode0(struct Zero* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[0]);
+      (p->s).unk_coord.x = (p->s).coord.y;
+      (p->s).work[2] = m;
+      SetMotion(&p->s, MOTION(0xBD, 0x04));
+      (p->s).mode[2]++;
+    case 1: {
+      s32 base;
+      FUN_08035e6c(p);
+      base = (p->s).unk_coord.x;
+      (p->s).coord.y = base;
+      (p->s).coord.y = base + ((gSineTable[(p->s).work[2]] * 5) << 7) / 256;
+      (p->s).work[2] += 2;
+      if (FUN_08035e48(&p->s)) {
+        (p->s).d.x = 0;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void leviathanMode1(struct Zero* p) {
   struct Entity* e = (p->s).unk_28;
