@@ -175,7 +175,57 @@ INCASM("asm/enemy/beetank_p2.inc");
 
 bool8 nop_0807bd3c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/beetank_p3.inc");
+struct Entity* FUN_080a244c(struct Coord* a, struct Coord* b, u8 c);
+
+// 0x0807BD40
+void FUN_0807bd40(struct Enemy* p) {
+  struct Coord c;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 4;
+      SetMotion(&p->s, MOTION(0x3E, 0x01));
+      (p->s).mode[2]++;
+    case 1:
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          goto draw;
+        }
+      }
+      {
+        register s32 x asm("r3");
+        register u8 fl asm("r1");
+        register s32 k asm("r2");
+        x = (p->s).coord.x;
+        c.x = x;
+        {
+          s32 cy = (p->s).coord.y;
+          s32 k1 = -0x1000;
+          asm("" : "+r"(k1));
+          c.y = cy + k1;
+        }
+        fl = (p->s).flags;
+        if ((0x10 & fl) == 0) {
+          k = -0x1000;
+          asm("" : "+r"(k));
+        } else {
+          k = 0x1000;
+        }
+        { register s32 nx asm("r0"); nx = x + k; c.x = nx; }
+        FUN_080a244c(&c, &c, (((u32)fl << 24) >> 28) & 1);
+        PlaySound(0x2D);
+        (p->s).mode[2]++;
+      }
+    case 2:
+    draw:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) == 3) {
+        u8 z = 0;
+        (p->s).mode[1] = z;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+}
 
 bool8 nop_0807bde4(struct Enemy* p) { return TRUE; }
 
