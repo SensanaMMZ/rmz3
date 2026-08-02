@@ -139,7 +139,75 @@ void FUN_0805b4a8(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/omega_gold_p4_b_a.inc");
+extern const u8 unk_080fefb8[24];
+u16 FUN_0805b8ac(struct Boss* _, u32 old);
+
+// 0x0805B4D8
+bool8 changeGoldOmega1Mode(struct Boss* p0) {
+  register struct Boss* p asm("r5");
+  s32 raw;
+  u8 w3;
+  u8 t;
+  s8* a0;
+  s8* b0;
+  s8* a;
+  s8* b;
+  s32 av;
+  s32 bv;
+  u16 nm;
+  u32 i;
+  const u8* tbl;
+  p = p0;
+  if ((p->s).mode[2] == 0) {
+    return 1;
+  }
+  w3 = (p->s).work[3];
+  if (w3 == 0) {
+    return 1;
+  }
+  raw = w3 - 1;
+  (p->s).work[3] = raw;
+  t = raw;
+  if (t != 0) {
+    return 1;
+  }
+  a0 = (s8*)((u8*)p + 0xb5);
+  b0 = (s8*)((u8*)p + 0xb6);
+  av = *a0;
+  bv = *b0;
+  a = a0;
+  asm("" : "+r"(a));
+  b = b0;
+  asm("" : "+r"(b));
+  if (av == bv) {
+    i = RANDOM(RNG_0202f388);
+    tbl = &unk_080fefb8[6];
+    asm("" : "+r"(tbl));
+    i %= tbl[0];
+    i++;
+    asm("" : "+r"(i));
+    i += (u32)tbl;
+    nm = *(const u8*)i;
+    if (nm == *a) {
+      nm = FUN_0805b8ac(p, nm);
+    }
+    goto tail;
+  }
+  i = RANDOM(RNG_0202f388);
+  tbl = &unk_080fefb8[6];
+  asm("" : "+r"(tbl));
+  i %= tbl[0];
+  i++;
+  asm("" : "+r"(i));
+  i += (u32)tbl;
+  nm = *(const u8*)i;
+tail:
+  (p->s).mode[1] = nm;
+  (p->s).mode[2] = t;
+  *(u8*)b = *(u8*)a;
+  *(u8*)a = nm;
+  return 1;
+}
 
 void goldOmega1Neutral(struct Boss* p) {
   switch ((p->s).mode[2]) {
@@ -310,7 +378,7 @@ void FUN_0805b7f0(struct Boss* p) {
 bool8 FUN_0805b41c(struct Boss* p);
 bool8 FUN_0805b45c(struct Boss* p);
 bool8 FUN_0805b4a4(struct Boss* p);
-void changeGoldOmega1Mode(struct Boss* p);
+bool8 changeGoldOmega1Mode(struct Boss* p);
 bool8 nop_0805b5dc(struct Boss* p);
 bool8 nop_0805b740(struct Boss* p);
 bool8 nop_0805b7ec(struct Boss* p);
