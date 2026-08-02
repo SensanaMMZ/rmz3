@@ -359,7 +359,32 @@ void FUN_08080610(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_zombie_p2_post_post.inc");
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+void FUN_080bf52c(s32 x, s32 y);
+
+// 0x08080674
+void FUN_08080674(struct Enemy* p) {
+  struct Coord c;
+  register u8* q asm("r0");
+  u32 z;
+  u8* w;
+  q = (u8*)p + 0x8c;
+  z = 0;
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *q = z;
+  (p->s).flags &= 0xFB;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1000;
+  CreateSmoke(1, &c);
+  PlaySound(0x56);
+  FUN_080bf52c(c.x, c.y);
+  SET_ENEMY_ROUTINE(p, 4);
+  w = (u8*)(p->s).unk_28 + 0xcb;
+  *w = *w - 1;
+}
 
 void FUN_080bf48c(s32 x, s32 y, u8 n);
 
