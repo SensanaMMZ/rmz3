@@ -412,6 +412,43 @@ void hanu_0805bf10(struct Boss* p) {
 
 INCASM("asm/boss/hanumachine_p1_b_p2_p2b.inc");
 
+// 0x0805C0D0
+void hanu_0805c0d0(struct Boss* p) {
+  s32 y;
+  if ((p->s).mode[2] == 0) {
+    s32 dy;
+    InitRotatableMotion(&p->s);
+    ResetDynamicMotion(&p->s);
+    SetMotion(&p->s, MOTION(0xB5, 0x01));
+    SetDDP(&p->body, &sCollisions[4]);
+    (p->s).angle = 0x40;
+    dy = -0x380;
+    (p->s).d.y = dy;
+    if ((p->s).flags & X_FLIP) {
+      s32 x = *(s32*)((u8*)p + 0xb8);
+      (p->s).coord.x = x;
+      (p->s).unk_coord.x = x - 0x1000;
+    } else {
+      s32 x = *(s32*)((u8*)p + 0xb4);
+      (p->s).coord.x = x;
+      (p->s).unk_coord.x = x + 0x1000;
+      (p->s).d.y = dy;
+    }
+    (p->s).coord.y -= 0x1600;
+    (p->s).work[2] = 0x80;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  y = (p->s).coord.y + (p->s).d.y;
+  (p->s).coord.y = y;
+  if ((u8)--(p->s).work[2] == 0xFF || ((u16)FUN_080098a4((p->s).unk_coord.x, y - 0x3000) << 16) != 0) {
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+  }
+}
+
+INCASM("asm/boss/hanumachine_p1_b_p2_p2b_post.inc");
+
 void hanu_0805c2a4(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
     if ((((p->s).motionID << 8) | (p->s).motion.step) == MOTION(0xB5, 0x14)) {
