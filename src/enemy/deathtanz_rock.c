@@ -98,6 +98,48 @@ void nop_0807a6f8(struct Enemy* p) {}
 
 INCASM("asm/enemy/deathtanz_rock_p3.inc");
 
+static const u16 u16_ARRAY_08367754[3];
+
+// 0x0807A97C
+void FUN_0807a97c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      const s16* st;
+      const u16* tb;
+      s32 v;
+      SetDDP(&p->body, &sCollisions[7]);
+      st = gSineTable;
+      tb = u16_ARRAY_08367754;
+      v = st[(u8)((u8)tb[(p->s).work[3]] + 0x40)] * 3;
+      (p->s).d.x = v;
+      if ((p->s).work[2] != 0) {
+        (p->s).d.x = -v;
+      }
+      {
+        s32 w = -st[(u8)tb[(p->s).work[3]]];
+        (p->s).d.y = w * 3;
+      }
+      (p->s).flags2 |= WHITE_PAINTABLE;
+      (p->s).invincibleID = (p->s).uniqueID;
+      (p->s).mode[2]++;
+    }
+      FALLTHROUGH;
+    case 1: {
+      s32 x = (p->s).coord.x + (p->s).d.x;
+      s32 y;
+      (p->s).coord.x = x;
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      if (((u16)FUN_080098a4(x, y) << 16) != 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 static const motion_t sMotions2[3];
 void FUN_080b7ffc(struct Entity* p, struct Coord* c, motion_t* m, s32 n);
 
