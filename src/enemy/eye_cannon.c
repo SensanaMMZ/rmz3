@@ -131,6 +131,65 @@ void FUN_08084974(struct Enemy* p) {
 
 INCASM("asm/enemy/eye_cannon_post_post_pre.inc");
 
+// 0x08084a80
+void FUN_08084a80(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x66, 0x02));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      register u8 fl asm("r2");
+      register s32 sh asm("r0");
+      register s32 v asm("r1");
+      register u8 fv asm("r0");
+      u8* oa;
+      s32 sh4, ov, m11;
+      fl = (p->s).flags;
+      sh = fl >> 4;
+      v = 1;
+      v &= ~sh;
+      if (v != 0) {
+        fv = 0x10;
+        fv |= fl;
+        (p->s).flags = fv;
+      } else {
+        fv = 0xEF;
+        fv &= fl;
+        (p->s).flags = fv;
+      }
+      (p->s).spr.xflip = v;
+      oa = (u8*)p + 0x4a;
+      sh4 = v << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+      SetMotion(&p->s, MOTION(0x66, 0x00));
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      u8 t;
+      UpdateMotionGraphic(&p->s);
+      t = --(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = t;
+      }
+      break;
+    }
+  }
+}
+
 static const u8 u8_ARRAY_08368370[4];
 
 void FUN_08084b2c(struct Enemy* p) {
