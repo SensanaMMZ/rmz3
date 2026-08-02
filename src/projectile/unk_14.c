@@ -290,6 +290,56 @@ void FUN_080a0b70(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_14_p2.inc");
 
+void CreateDeathtanzRock(struct Entity* e, s32 x, s32 y, u8 n);
+
+// 0x080A1280
+void FUN_080a1280(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[5]);
+      SetMotion(&p->s, MOTION(0x37, 0x04));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 y;
+      UpdateMotionGraphic(&p->s);
+      y = (p->s).coord.y - 0x700;
+      (p->s).coord.y = y;
+      if (y < *(s32*)((u8*)p + 0xb8) - 0xC000) {
+        if ((p->s).work[2] == 2) {
+          u8 w3 = (p->s).work[3];
+          s32 t = (w3 * 59) << 9;
+          t -= 0x3B00;
+          CreateDeathtanzRock(q, (p->s).coord.x + t, y, w3);
+        }
+        {
+          register u8 f asm("r0");
+          register u8 t1 asm("r1");
+          register u8 k2 asm("r1");
+          register s32 z asm("r2");
+          t1 = (p->s).flags;
+          f = 0xFE;
+          f &= t1;
+          asm volatile("" ::"r"(t1));
+          z = 0;
+          k2 = 0xFD;
+          f &= k2;
+          (p->s).flags = f;
+          *(u32*)((u8*)p + 0x8c) = z;
+          *(u32*)((u8*)p + 0x90) = z;
+          *(u8*)((u8*)p + 0x94) = z;
+        }
+        (p->s).flags &= ~COLLIDABLE;
+        SET_PROJECTILE_ROUTINE(p, 3);
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/projectile/unk_14_p2b.inc");
+
 void Projectile14_Init(struct Projectile* p);
 void Projectile14_Update(struct Projectile* p);
 void Projectile14_Die(struct Projectile* p);
