@@ -1376,7 +1376,47 @@ void FUN_080603d0(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_post_pre.inc");
+void FUN_0809142c(struct Entity* e, u8 a2);
+
+// 0x08060410
+void FUN_08060410(struct Boss* p) {
+  switch ((p->s).mode[3]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[6]);
+      (p->s).flags &= 0xFE;
+      (p->s).work[2] = 0x18;
+      (p->s).mode[3]++;
+      /* fallthrough */
+    case 1: {
+      s32 raw = (p->s).work[2] - 1;
+      (p->s).work[2] = raw;
+      if ((u8)raw != 0) {
+        break;
+      }
+      goto adv;
+    }
+    case 2:
+      SetDDP(&p->body, sCollisions);
+      (p->s).flags |= 1;
+      (p->s).coord.y -= 0x5000;
+      SetMotion(&p->s, 0xBC17);
+    adv:
+      (p->s).mode[3]++;
+      break;
+    case 3:
+      if ((*(u32*)((u8*)p + 0x70) & 0x00FFFF00) == 0x00010500) {
+        PlaySound(0xFC);
+        FUN_0809142c(&p->s, 0);
+        FUN_0809142c(&p->s, 1);
+        FUN_0809142c(&p->s, 2);
+      }
+      if (*(u8*)((u8*)p + 0x73) == 3) {
+        (p->s).mode[3] = 0;
+        (p->s).mode[2]++;
+      }
+      break;
+  }
+}
 
 void FUN_080604e0(struct Boss* p) {
   switch ((p->s).mode[3]) {
