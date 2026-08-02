@@ -84,6 +84,65 @@ struct Elf* CreateBirdElf(struct Zero* z, u8 breed, u8 availability, u8 satelite
 
 INCASM("asm/cyberelf/bird_p1_b.inc");
 
+struct Entity* FUN_080bfc94(struct Coord* c, u8 r1);
+
+// 0x080E5A70
+void BirdElf_Update(struct Elf* p) {
+  struct Zero* z = *(struct Zero**)((u8*)p + 0xb4);
+  s32 pz;
+  UpdateMotionGraphic(&p->s);
+  pz = gPause;
+  if (pz != 0) {
+    return;
+  }
+  if (*(u8*)((u8*)z + 0x232) != 0) {
+    {
+      register u8 fv asm("r0");
+      register u8 fl asm("r1");
+      fl = (p->s).flags;
+      asm("" : "+r"(fl));
+      fv = 0xFE;
+      fv &= fl;
+      fl = 0xFD;
+      fv &= fl;
+      (p->s).flags = fv;
+    }
+    {
+      u8* a = (u8*)p + 0x8c;
+      *(u32*)a = pz;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *(u32*)a = pz;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = pz;
+    }
+    (p->s).flags &= 0xFB;
+    SET_ELF_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  if ((*(u32*)((u8*)z + 0x8c) & 0x200) == 0) {
+    if (*(s16*)((u8*)z + 0xa4) != 0) {
+      goto run;
+    }
+  }
+  SET_ELF_ROUTINE(p, ENTITY_DIE);
+  return;
+run:
+  (sUpdates[(p->s).mode[1]])(p);
+  {
+    u8* q = (u8*)p + 0xc1;
+    s32 v = *q - 1;
+    *q = v;
+    if ((u8)v == 0xFF) {
+      FUN_080bfc94((struct Coord*)((u8*)p + 0x54), 2);
+      *q = 0x20;
+    }
+  }
+}
+
 void BirdElf_Die(struct Elf* p) {
   FUN_080bfce8(&(p->s).coord, 0);
   (p->s).flags &= ~DISPLAY;
