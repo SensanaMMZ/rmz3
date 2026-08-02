@@ -545,7 +545,88 @@ void FUN_080af8c8(struct Projectile* p) {
   FUN_080af8e8(p);
 }
 
-INCASM("asm/projectile/phantom_p1_p4_p2.inc");
+// 0x080AF8E8
+void FUN_080af8e8(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 z asm("r2");
+  register s32 z2 asm("r5");
+  if (q->mode[0] > 1) {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    asm("" : "+r"(fl));
+    fv = 0xFE;
+    fv &= fl;
+    z = 0;
+    fl = 0xFD;
+    fv &= fl;
+    (p->s).flags = fv;
+    {
+      u8* a = (u8*)p + 0x8c;
+      *(u32*)a = z;
+      asm("" : "+r"(a));
+      a += 4;
+      *(u32*)a = z;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = z;
+    }
+    goto disappear;
+  }
+  {
+    s32 x;
+    s32 y;
+    u8 a;
+    const s16* st;
+    x = q->coord.x;
+    *(volatile s32*)&(p->s).coord.x = x;
+    st = gSineTable;
+    a = (p->s).work[2];
+    x += st[(u8)(a + 0x40)] << 3;
+    (p->s).coord.x = x;
+    y = q->coord.y;
+    *(volatile s32*)&(p->s).coord.y = y;
+    y += st[*(volatile u8*)&(p->s).work[2]] << 3;
+    (p->s).coord.y = y;
+    {
+      u8* ap;
+      s32 ang = a + 0x20;
+      ap = (u8*)p + 0x24;
+      asm("" : "+r"(ap));
+      z2 = 0;
+      *ap = ang;
+    }
+    (p->s).work[2] += 8;
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x6000) {
+    {
+      register u8 fv2 asm("r0");
+      register u8 fl2 asm("r1");
+      fl2 = (p->s).flags;
+      asm("" : "+r"(fl2));
+      fv2 = 0xFE;
+      fv2 &= fl2;
+      fl2 = 0xFD;
+      fv2 &= fl2;
+      (p->s).flags = fv2;
+    }
+    {
+      u8* a2 = (u8*)p + 0x8c;
+      *(u32*)a2 = z2;
+      asm("" : "+r"(a2));
+      a2 += 4;
+      *(u32*)a2 = z2;
+      asm("" : "+r"(a2));
+      a2 += 4;
+      asm("" : "+r"(a2));
+      *a2 = z2;
+    }
+  disappear:
+    (p->s).flags &= 0xFB;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
 
 void nop_080af9ac(struct Projectile* p) {}
 
