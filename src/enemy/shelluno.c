@@ -224,7 +224,7 @@ INCASM("asm/enemy/shelluno_p1_p2_b.inc");
 
 bool8 nop_0807939c(struct Enemy* p) { return TRUE; }
 
-void FUN_0807a46c(struct Enemy* p);
+s32 FUN_0807a46c(struct Enemy* p);
 
 // Home/parity basin: retail keeps p in r5 with the pushout probes and RNG
 // draws rotating their temps one register lower; structure, physics, and both
@@ -409,7 +409,7 @@ bool8 FUN_0807a0fc(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/shelluno_p6a.inc");
 
-void FUN_0807a46c(struct Enemy* p);
+s32 FUN_0807a46c(struct Enemy* p);
 
 void shelluno_0807a100(struct Enemy* p) {
   switch ((p->s).mode[2]) {
@@ -527,7 +527,27 @@ NON_MATCH void FUN_0807a3ec(struct Body* body, struct Coord* c) {
 #endif
 }
 
-INCASM("asm/enemy/shelluno_p7b.inc");
+s32 FUN_0800a05c(s32 x, s32 y);
+
+// 0x0807A46C
+s32 FUN_0807a46c(struct Enemy* p) {
+  s32 sea = SEA;
+  s32 y = (p->s).coord.y;
+  if (sea > y - 0xC00) {
+    if (FUN_0800a05c((p->s).coord.x, y) != (p->s).coord.y) {
+      *(u8*)((u8*)p + 0xc1) = 0x1E;
+      (p->s).coord.y = sea + 0xC00;
+    }
+    {
+      s32 r = FUN_0800a05c((p->s).coord.x, (p->s).coord.y);
+      s32 cy = (p->s).coord.y;
+      if (r != cy && (p->s).d.x != 0 && (pZero2->s).coord.y < cy) {
+        *(u8*)((u8*)p + 0xc1) = 0x1E;
+        (p->s).coord.y = sea + 0xC00;
+      }
+    }
+  }
+}
 
 void Shelluno_Init(struct Enemy* p);
 void Shelluno_Update(struct Enemy* p);
