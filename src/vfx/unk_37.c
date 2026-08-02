@@ -154,6 +154,59 @@ void VFX37_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
+// 0x080BC8C0
+void FUN_080bc8c0(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).taskCol = 0x19;
+      SetMotion(&p->s, MOTION(0x30, 0x01));
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 w;
+      u8 wu;
+      register s32 z asm("r2");
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 3;
+      (p->s).coord.y += (p->s).d.y;
+      w = (p->s).work[2] - 1;
+      z = 0;
+      asm("" : "+r"(z));
+      (p->s).work[2] = w;
+      wu = w;
+      if (wu <= 7) {
+        if ((w & 2) == 0) {
+          (p->s).flags |= DISPLAY;
+        } else {
+          (p->s).flags &= ~DISPLAY;
+        }
+      } else if (wu <= 0xF) {
+        if ((w & 1) == 0) {
+          (p->s).flags |= DISPLAY;
+        } else {
+          (p->s).flags &= ~DISPLAY;
+        }
+      }
+      if ((p->s).work[2] == 0) {
+        register u8 f asm("r0");
+        register u8 t asm("r1");
+        register u8 k2 asm("r1");
+        t = (p->s).flags;
+        f = 0xFE;
+        f &= t;
+        asm volatile("" ::"r"(t));
+        k2 = 0xFD;
+        f &= k2;
+        (p->s).flags = f;
+        SET_VFX_ROUTINE(p, 3);
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/vfx/unk_37_post.inc");
 
 extern const s16 s16_ARRAY_0836edfe[6];
