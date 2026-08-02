@@ -870,7 +870,64 @@ bool8 cattatank_08099e20(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/cattatank_p11_b.inc");
+// 0x08099EB4
+void FUN_08099eb4(struct Body* body0, struct Coord* c0) {
+  register struct Body* body asm("r2");
+  register const struct Collision* pr asm("r3");
+  register struct Coord* c asm("r5");
+  struct Entity* e;
+  register u8 m asm("r0");
+  register s32 z asm("r1");
+  body = body0;
+  c = c0;
+  pr = (body->enemy)->processing;
+  {
+    u8 k = pr->atkType;
+    if (k == 3 || k == 0xE || k == 0xF) {
+      e = (struct Entity*)body->parent;
+      if (*(u32*)((u8*)e + 0x8c) & 0x200) {
+        if (e->coord.x < c->x) {
+          register u8* w asm("r1");
+          w = (u8*)e + 0xba;
+          asm("" : "+r"(w));
+          *w = 0xFF;
+        } else {
+          register u8* w asm("r1");
+          w = (u8*)e + 0xba;
+          asm("" : "+r"(w) : "r"(pr));
+          *w = 0xFE;
+        }
+      }
+    }
+  }
+  if ((*(u32*)&pr->atkType & 0x200FF) == 0x20002) {
+    e = (struct Entity*)body->parent;
+    if (e->mode[1] == 6) {
+      return;
+    }
+    if (*(u32*)((u8*)e + 0x8c) & 0x200) {
+      IsFrozen(e);
+    }
+    z = 0;
+    m = 6;
+    goto set;
+  }
+  e = (struct Entity*)body->parent;
+  if ((body->processing)->kind != 2) {
+    return;
+  }
+  if (pr->nature == 0x40) {
+    return;
+  }
+  z = IsFrozen(e);
+  if (z != 0) {
+    return;
+  }
+  m = 5;
+set:
+  e->mode[1] = m;
+  e->mode[2] = z;
+}
 
 void Cattatank_Init(struct Enemy* p);
 void Cattatank_Update(struct Enemy* p);
