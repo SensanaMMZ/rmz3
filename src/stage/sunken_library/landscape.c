@@ -354,6 +354,18 @@ void FUN_08013bdc(struct StageLayer* l, const struct Stage* _ UNUSED) {
 
 INCASM("asm/stage_gfx/sunken_library_b.inc");
 
+// 0x08013D38
+void FUN_08013d38(struct StageLayer* l, const struct Stage* stage) {
+  if (gOverworld.state[0] == 0) {
+    RequestGraphicTransfer(&(TILESETS(18, 83))->g, (void*)0x4000);
+    LoadPalette(&(TILESETS(18, 83))->pal, 0);
+  } else {
+    RequestGraphicTransfer(&(TILESETS(18, 84)[((u16)l->unk_10 >> 2) & 3]).g, (void*)0x4000);
+    LoadPalette(&(TILESETS(18, 84)[((u16)l->unk_10 >> 2) & 3]).pal, 0);
+  }
+  DrawGeneralStageLayer(l, stage);
+}
+
 void FUN_08013dd4(struct StageLayer* l, const struct Stage* stage) {
   s32 i;
   for (i = 0; i < 4; i++) {
