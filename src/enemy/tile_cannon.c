@@ -345,7 +345,44 @@ NON_MATCH void FUN_0807874c(struct Enemy* p) {
 #endif
 }
 
-INCASM("asm/enemy/tile_cannon_p3_post_post_b.inc");
+// 0x0807884C
+void FUN_0807884c(struct Enemy* p) {
+  struct Entity* q;
+  s32 r;
+  s32 d1;
+  s32 s1;
+  s32 d2;
+  q = (p->s).unk_28;
+  if ((p->s).mode[2] != 0) {
+    return;
+  }
+  r = IsFrozen(q);
+  if (r != 0) {
+    return;
+  }
+  d1 = (p->s).d.x;
+  s1 = d1 + (-d1 / 8);
+  (p->s).d.x = s1;
+  d2 = (p->s).d.y;
+  d2 = d2 + ((0x100 - d2) / 8);
+  (p->s).d.y = d2;
+  if (d2 > 0xF0) {
+    SetMotion(q, 0x2F02 + q->work[0]);
+    UpdateMotionGraphic(q);
+    *(u8*)((u8*)q + 0xb8) = 1;
+    q->unk_2c = (struct Entity*)r;
+    (p->s).flags &= 0xFE;
+    (p->s).flags &= 0xFD;
+    *(u32*)((u8*)p + 0x8c) = r;
+    *(u32*)((u8*)p + 0x90) = r;
+    *(u8*)((u8*)p + 0x94) = r;
+    (p->s).flags &= 0xFB;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  (p->s).angle = (u8)(ArcTan2(s1, d2) >> 8) - 0x40;
+}
+
 
 static const u8 u8_ARRAY_08367550[6];
 
