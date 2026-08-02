@@ -844,6 +844,50 @@ void glacierleHammerPunch1(struct Boss* p) {
 
 INCASM("asm/boss/glacierle_b_post.inc");
 
+static const u8 u8_ARRAY_08364ace[5];
+s32 FUN_0800a134(s32 x, s32 y);
+
+// 0x08058914
+void glacierleIceRainJump(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x90);
+      SetMotion(&p->s, MOTION(0xb2, 0x0A));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364ace[(p->s).motion.cmdIdx]]);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).unk_coord.y = FUN_0800a134((p->s).coord.x, (p->s).coord.y);
+      (p->s).d.y = -0x480;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3: {
+      s32 dy = (p->s).d.y + 0x20;
+      s32 y;
+      s32 lim;
+      (p->s).d.y = dy;
+      y = (p->s).coord.y + dy;
+      (p->s).coord.y = y;
+      lim = (p->s).unk_coord.y + 0x5D00;
+      if (y < lim) {
+        (p->s).coord.y = lim;
+        (p->s).mode[1] = 0xC;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/glacierle_b_post2.inc");
+
 static const u8 u8_ARRAY_08364b22[4];
 
 // 0x08058ff0
