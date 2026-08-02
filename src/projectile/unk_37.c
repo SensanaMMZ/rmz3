@@ -101,6 +101,52 @@ void Projectile37_Die(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_37_p3_p2.inc");
 
+// 0x080AE140
+void FUN_080ae140(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  if (q->mode[0] > 2) {
+    *(u32*)((u8*)p + 0x8c) = 0;
+    *(u32*)((u8*)p + 0x90) = 0;
+    *(u8*)((u8*)p + 0x94) = 0;
+    (p->s).flags &= ~COLLIDABLE;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x6E, 0x06));
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).coord = ((p->s).unk_28)->coord;
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).unk_28)->mode[0] > 1) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      s32 w;
+      u32 kf;
+      u32 one;
+      (p->s).coord = q->coord;
+      w = (p->s).work[2] + 1;
+      (p->s).work[2] = w;
+      kf = 0xFF;
+      w &= kf;
+      one = 1;
+      w &= one;
+      if (w != 0) {
+        (p->s).flags |= one;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 void Projectile37_Init(struct Projectile* p);
 void Projectile37_Update(struct Projectile* p);
 void Projectile37_Die(struct Projectile* p);
