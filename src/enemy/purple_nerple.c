@@ -8,7 +8,67 @@
 
 static const struct Collision sCollisions[];
 
-INCASM("asm/enemy/purple_nerple_p1_a_a.inc");
+s32 FUN_0800a40c(s32 x, s32 y);
+
+// 0x08075AA8
+void FUN_08075aa8(struct Enemy* p) {
+  s32 hit;
+  s32 v;
+  register s32 r asm("r2");
+  hit = 0;
+  r = FUN_0800a40c((p->s).coord.x, (p->s).coord.y + 0x200);
+  if (r == 0) {
+    goto zero;
+  }
+  if (r >= 0) {
+    goto pos;
+  }
+  {
+    s32 x;
+    u16 mm;
+    x = (p->s).coord.x;
+    (p->s).coord.x = x - 0x80;
+    mm = GetMetatileAttr(x - 0x280, (p->s).coord.y + 0x200) & 0x400;
+    hit = mm != 0;
+  }
+  goto check;
+pos:
+  {
+    s32 x = (p->s).coord.x;
+    (p->s).coord.x = x + 0x80;
+    if ((GetMetatileAttr(x + 0x280, (p->s).coord.y + 0x200) & 0x400) == 0) {
+      goto check;
+    }
+  }
+  goto bump;
+zero:
+  if (GetMetatileAttr((p->s).coord.x, (p->s).coord.y + 0x200) & 0x400) {
+    hit = 1;
+  }
+check:
+  if (hit == 0) {
+    s32 g;
+    register s32 d asm("r2");
+    s32 cy;
+    if (!((bool16 (*)(s32, s32))FUN_080098a4)((p->s).coord.x, (p->s).coord.y + 0x600)) {
+      return;
+    }
+    g = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    d = g;
+    asm("" : "+r"(d));
+    cy = (p->s).coord.y;
+    d -= cy;
+    if ((u32)(d + 0x3FF) > 0x7FE) {
+      return;
+    }
+    v = cy + d;
+    goto store;
+  }
+bump:
+  v = (p->s).coord.y + 0x80;
+store:
+  (p->s).coord.y = v;
+}
 
 #include "entity/macros.h"
 
