@@ -512,6 +512,49 @@ void FUN_08076594(struct Enemy* p) {
 
 INCASM("asm/enemy/purple_nerple_p2_p2_p4_b.inc");
 
+// 0x08076830
+void FUN_08076830(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      motion_t m;
+      u8 w1;
+      SetDDP(&p->body, &sCollisions[4]);
+      w1 = (p->s).work[1];
+      m = MOTION(0x2A, 0x07);
+      if (w1 == 0) {
+        m = MOTION(0x2A, 0x06);
+      }
+      SetMotion(&p->s, m);
+      if (*((u8*)p + 0xb9) == 0) {
+        (p->s).d.x = (p->s).work[1] * 0x266 - 0x133;
+        (p->s).d.y = -0x4E0;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 v;
+      s32 y;
+      (p->s).coord.x += (p->s).d.x;
+      v = (p->s).d.y + 0x40;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      if (FUN_080098a4((p->s).coord.x, y) != 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = 4;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/purple_nerple_p2_p2_p4_b3.inc");
+
 #include "mission.h"
 
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
