@@ -518,6 +518,39 @@ void FUN_0806da20(struct Enemy* p) {
 
 INCASM("asm/enemy/gyro_cannon_p3a.inc");
 
+// 0x0806DAB8
+void FUN_0806dab8(struct Enemy* p) {
+  struct Entity** slot;
+  u8 m = (p->s).mode[2];
+  if (m == 0) {
+    SetMotion(&p->s, MOTION(0x17, 0x00));
+    SetDDP(&p->body, &sCollisions[1]);
+    (p->s).d.y = m;
+    (p->s).mode[2]++;
+  }
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0xA00)) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - 0xA00;
+  }
+  slot = (struct Entity**)((u8*)p + 0xb4);
+  if (isKilled(*slot)) {
+    u32 z = 0;
+    *slot = (struct Entity*)z;
+    SetDDP(&p->body, &sCollisions[0]);
+    if ((p->s).unk_2c != NULL) {
+      (p->s).mode[1] = 9;
+      (p->s).mode[2] = z;
+    } else {
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 1;
+    }
+  }
+}
+
 void FUN_0806db58(struct Enemy* p) {
   UpdateMotionGraphic(&p->s);
   (p->s).coord.y -= 0x200;
