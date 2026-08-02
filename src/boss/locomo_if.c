@@ -181,9 +181,44 @@ void FUN_08054e94(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/locomo_if_p2_post_b.inc");
-
 static const struct Collision sCollisions[];
+
+void locomoIF_08054f18(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x54, 0x03));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      if ((s8)(p->s).motion.cmdIdx == 2) {
+        SetDDP(&p->body, &sCollisions[2]);
+      }
+      break;
+    case 2:
+      (p->s).work[2] = 0x1e;
+      if (*((u8*)p + 0xbc) != 0) {
+        SetMotion(&p->s, MOTION(0x54, 0x06));
+      } else {
+        SetMotion(&p->s, MOTION(0x54, 0x07));
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      u8 t = --(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = 6;
+        (p->s).mode[2] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 void FUN_080a7c60(s32 x, s32 y, u8 a2);
 void FUN_080a7cb0(s32 x, s32 y, u8 a2);
 
