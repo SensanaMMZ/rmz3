@@ -238,6 +238,46 @@ void FUN_08042f9c(struct Boss* p) {
 
 INCASM("asm/boss/wormer_p2_p3.inc");
 
+extern const struct Coord16 ALIGNED(2) Coord_ARRAY_0836229a[4];
+void FUN_0807b124(s32 x, s32 y, s32 dx, s32 dy);
+
+// 0x08043204
+void FUN_08043204(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x28;
+      (p->s).work[3] = 0;
+      SetMotion(&p->s, MOTION(0x2b, 6));
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+        break;
+      }
+      if ((p->s).work[2] % 10 == 0) {
+        PlaySound(SE_BLIZZACK_BOMB);
+        FUN_0807b124((p->s).coord.x + 0x2C00, (p->s).coord.y - 0x4600, Coord_ARRAY_0836229a[(p->s).work[3]].x,
+                     Coord_ARRAY_0836229a[(p->s).work[3]].y);
+        (p->s).work[3]++;
+      }
+      (p->s).work[2]--;
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      if (--(p->s).work[2] == 0) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 // --------------------------------------------
 
 void nop_08042890(struct Boss* p);
