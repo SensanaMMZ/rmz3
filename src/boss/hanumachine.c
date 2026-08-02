@@ -940,6 +940,46 @@ void FUN_0805d210(struct Boss* p) {
   }
 }
 
+// 0x0805d310
+void FUN_0805d310(struct Boss* p) {
+  u8 m = (p->s).mode[2];
+  if (m == 0) {
+    (p->s).angle = m;
+    InitNonAffineMotion(&p->s);
+    ResetDynamicMotion(&p->s);
+    SetMotion(&p->s, MOTION(0xB5, 0x06));
+    SetDDP(&p->body, sCollisions);
+    if (((p->s).flags & X_FLIP) != 0) {
+      (p->s).d.x = -0x180;
+      (p->s).unk_coord.x = -0x1000;
+    } else {
+      (p->s).d.x = 0x180;
+      (p->s).unk_coord.x = 0x1000;
+    }
+    (p->s).d.y = -0x3C0;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (FUN_0805d594(p, (p->s).unk_coord.x, 0) == 0) {
+    (p->s).coord.x += (p->s).d.x;
+  }
+  {
+    s32 y = (p->s).coord.y + (p->s).d.y;
+    (p->s).coord.y = y;
+    (p->s).d.y += 0x40;
+    if (FUN_080098a4((p->s).coord.x, y) == 0) {
+      return;
+    }
+  }
+  {
+    s32 z;
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    z = 0;
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = z;
+  }
+}
+
 INCASM("asm/boss/hanumachine_p2_p1e.inc");
 
 void FUN_0805d568(struct Body* body) {
