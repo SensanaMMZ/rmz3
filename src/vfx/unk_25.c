@@ -249,7 +249,59 @@ void FUN_080b970c(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_25_p2_a.inc");
+// 0x080B9738
+void FUN_080b9738(struct VFX* p) {
+  s32 k;
+  s32 w = (p->s).work[2] - 1;
+  (p->s).work[2] = w;
+  k = 0xFF;
+  asm("" : "+r"(k));
+  if ((u8)w == 0) {
+    (p->s).mode[1] = 6;
+    (p->s).mode[2] = 0;
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u32 a asm("r0");
+      u16* h;
+      register s32 zero asm("r1");
+      s32 v;
+      a = RANDOM(RNG_0202f388) % 0xFF;
+      (p->s).work[3] = a;
+      a &= k;
+      (p->s).angle = a;
+      h = &((p->s).spr).mag.x;
+      zero = 0;
+      asm("" : "+r"(zero));
+      v = 0x80;
+      *h = v;
+      ((p->s).spr).mag.y = v;
+      (p->s).angle = zero;
+      v += 0x80;
+      *h = v;
+      ((p->s).spr).mag.y = v;
+      SetMotion(&p->s, 0xE000);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 dx = (p->s).d.x;
+      s32 dy;
+      dx += ((-dx * 3) << 2) >> 8;
+      (p->s).d.x = dx;
+      dy = (p->s).d.y + 0x40;
+      (p->s).d.y = dy;
+      if (dy > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_080b97f4(struct VFX* vfx) {
   switch ((vfx->s).mode[2]) {
