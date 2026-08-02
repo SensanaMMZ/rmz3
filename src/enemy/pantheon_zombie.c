@@ -328,6 +328,57 @@ void FUN_0808027c(struct Enemy* p) {
   }
 }
 
+// 0x08080324
+void FUN_08080324(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u8 fv asm("r0");
+      u8 t = (p->s).flags;
+      fv = DISPLAY;
+      fv |= t;
+      (p->s).flags = fv;
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).d.y = m;
+      SetMotion(&p->s, MOTION(0x4C, 0x02));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 v = (p->s).d.y + 0x40;
+      s32 y;
+      s32 r;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      r = PushoutToUp1((p->s).coord.x, y);
+      if (r < 0) {
+        (p->s).coord.y += r;
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, MOTION(0x4C, 0x04));
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      u8 t = --(p->s).work[2];
+      if (t == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_zombie_p2_mid.inc");
 
 void FUN_080804a8(struct Enemy* p) {
