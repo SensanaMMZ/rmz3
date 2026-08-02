@@ -636,7 +636,34 @@ void FUN_080da21c(struct Solid* p) {
   (p->s).mode[1] = 0;
   MobNPC_Update(p);
 }
-INCASM("asm/solid/mob_npc_pre_p1_2.inc");
+// 0x080DA294
+TextID rocinolle_080da294(struct Solid* p) {
+  if (FLAG(gCurStory.s.gameflags, 16)) {
+    if (gCurStory.s.counts[12] <= 1) {
+      gCurStory.s.counts[12] = 2;
+      return 0x25C;
+    }
+    if (((gStageDiskManager.disk[0xa] & 0xF) >> 3) & 1) {
+      return 0x25E;
+    }
+    return 0x25D;
+  }
+  if (gCurStory.s.counts[12] == 0) {
+    gCurStory.s.counts[12] = 1;
+    return 0x259;
+  }
+  {
+    TextID ret;
+    if (((((gStageDiskManager.disk[0x29]) & 0xF) >> 2) & 1) == 0) {
+      ret = 0x25A;
+      asm("" : "+r"(ret));
+    } else {
+      ret = 0x25B;
+      asm("" : "+r"(ret));
+    }
+    return ret;
+  }
+}
 
 // 0x080da320
 void FUN_080da320(struct Solid* p) {
