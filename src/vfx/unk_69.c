@@ -191,7 +191,38 @@ INCASM("asm/vfx/unk_69_p1_post_post_b.inc");
 
 void nop_080c552c(struct VFX* p) {}
 
-INCASM("asm/vfx/unk_69_p2_a.inc");
+// 0x080C5530
+void FUN_080c5530(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 t = RNG_0202f388 * 0x343FD + 0x269EC3;
+      u32 r;
+      register u16* h asm("r0");
+      t <<= 1;
+      RNG_0202f388 = t >> 1;
+      r = (t >> 0x11) % 0xFF;
+      (p->s).work[3] = r;
+      *(u8*)((u8*)p + 0x24) = r;
+      h = (u16*)((u8*)p + 0x50);
+      *h = 0x80;
+      asm volatile("add %0, #2" : "+r"(h));
+      *h = 0x80;
+      (p->s).mode[2]++;
+    }
+    case 1: {
+      s32 dx = (p->s).d.x;
+      (p->s).d.x = dx + ((-dx * 12) >> 8);
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_080c55bc(struct VFX* p) {
   switch ((p->s).mode[2]) {
