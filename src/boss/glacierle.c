@@ -808,7 +808,59 @@ void glacierle_0805836c(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/glacierle_b.inc");
+extern const u8 u8_ARRAY_08364abf[3];
+
+// 0x080583C4
+void glacierle_080583c4(struct Boss* p0) {
+  register struct Boss* p asm("r4");
+  s32 m2;
+  p = p0;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32* st;
+      s32* cp;
+      PlaySound(0x91);
+      st = (u32*)((u8*)p + 0xb4);
+      *st |= 2;
+      cp = (s32*)((u8*)p + 0xc4);
+      *cp = (p->s).coord.x;
+      AppendQuake(3, (struct Coord*)((u8*)cp - 0x70));
+      (p->s).work[2] = 0x12;
+      SetMotion(&p->s, 0xB208);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 raw;
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364abf[(s8) * (u8*)((u8*)p + 0x71)]]);
+      raw = (p->s).work[2] - 1;
+      (p->s).work[2] = raw;
+      if ((raw << 24) != 0) {
+        break;
+      }
+      m2 = (p->s).mode[2] + 1;
+      goto store;
+    }
+    case 2: {
+      u32* st2 = (u32*)((u8*)p + 0xb4);
+      *st2 &= -3;
+      SetMotion(&p->s, 0xB209);
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) != 3) {
+        break;
+      }
+      m2 = 0;
+      (p->s).mode[1] = m2;
+    store:
+      (p->s).mode[2] = m2;
+      break;
+  }
+}
 
 static const u8 u8_ARRAY_08364ac2[4];
 
