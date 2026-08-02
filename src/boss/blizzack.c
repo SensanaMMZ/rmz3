@@ -440,6 +440,54 @@ void blizzackJump(struct Boss* p) {
   }
 }
 
+void CreateVFX57(struct Coord* c, u8 a1, u8 a2, s16 dx, s16 dy);
+
+// 0x0805a2c4
+void blizzackStamp(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    struct Entity* q;
+    s32 z;
+    SetMotion(&p->s, MOTION(0xB4, 0x04));
+    ((p->s).unk_2c)->mode[2] = 1;
+    q = (p->s).unk_2c;
+    {
+      register u16* hp asm("r0");
+      register s32 hv asm("r1");
+      hp = (u16*)((u8*)q + 0xbc);
+      asm("" : "+r"(hp));
+      z = 0;
+      asm("" : "+r"(z) : "r"(hp));
+      hv = 0x6404;
+      *hp = hv;
+    }
+    (p->s).mode[2] = z;
+    (p->s).work[2] = z;
+    PlaySound(0x91);
+    AppendQuake(4, &(p->s).coord);
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register u8 w asm("r1");
+    register s32 nx asm("r0");
+    w = (p->s).work[2];
+    nx = w + 1;
+    asm("" : "+r"(nx));
+    (p->s).work[2] = nx;
+    if ((w & 7) == 0) {
+      struct Coord* c = &(p->s).coord;
+      CreateVFX57(c, 0, 1, 0x118, -((p->s).work[2] << 2) - 0x40);
+      CreateVFX57(c, 0, 1, -0x118, -((p->s).work[2] << 2) - 0x40);
+    }
+  }
+  {
+    u8 st = (p->s).motion.state;
+    if (st == 3) {
+      (p->s).mode[1] = st;
+      (p->s).mode[2] = 1;
+    }
+  }
+}
+
 INCASM("asm/boss/blizzack_rest_b.inc");
 
 void FUN_080aabd4(struct Boss* p);
