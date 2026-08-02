@@ -3,7 +3,58 @@
 
 void FUN_080bfce8(struct Coord* c, s32 r1);
 
-INCASM("asm/cyberelf/unk_10_p1_a.inc");
+// 0x080E4B88
+void FUN_080e4b88(struct Elf* p0) {
+  register struct Elf* p asm("r3");
+  register s32 w asm("r2");
+  struct Entity* q;
+  p = p0;
+  q = *(struct Entity**)((u8*)p + 0xb4);
+  w = (p->s).unk_coord.x;
+  {
+    register u8 fl asm("r0");
+    u32 z;
+    register u8* r asm("r0");
+  if (w == 0) {
+    if ((p->s).work[3] == *(u8*)((u8*)q + 0xb4)) {
+      return;
+    }
+    {
+      register u8 t asm("r1");
+      t = (p->s).flags;
+      fl = 0xFE;
+      fl &= t;
+      asm volatile("" :: "r"(t));
+    }
+    z = w;
+  } else {
+    register u8* b asm("r1");
+    b = (u8*)q + 0xb4;
+    asm("" : "+r"(b));
+    if ((p->s).work[3] == b[1]) {
+      return;
+    }
+    {
+      register u8 t asm("r1");
+      t = (p->s).flags;
+      fl = 0xFE;
+      fl &= t;
+      asm volatile("" :: "r"(t));
+    }
+    z = 0;
+  }
+  fl &= 0xFD;
+  (p->s).flags = fl;
+  r = (u8*)p + 0x8c;
+  *(u32*)r = z;
+  asm volatile("add %0, #4" : "+r"(r));
+  *(u32*)r = z;
+  asm volatile("add %0, #4" : "+r"(r));
+  *r = z;
+  (p->s).flags &= 0xFB;
+  SET_ELF_ROUTINE(p, 3);
+  }
+}
 
 #include "zero.h"
 
