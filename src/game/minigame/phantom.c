@@ -1,7 +1,9 @@
 #include "game.h"
 #include "global.h"
 #include "minigame.h"
+#include "sound.h"
 #include "text.h"
+#include "vfx.h"
 
 extern const u8 Unicode_SCORE_0810e2b8[];
 extern const u8 Unicode_HI_SCORE_0810e2c0[];
@@ -17,8 +19,45 @@ void MinigamePhantom_DrawScoreHiscore(struct GameState* g) {
 
 INCASM("asm/minigame/phantom.inc");
 
-#include "vfx.h"
-#include "sound.h"
+// 0x080FC13C
+bool32 phantomMinigame_080fc13c(struct GameState* g) {
+  u8* mg = (u8*)g + 0xDCC;
+  s32 t;
+  switch (mg[1]) {
+    case 0:
+      *(s32*)(mg + 0x40) = 0x3c;
+      mg[1]++;
+      /* fallthrough */
+    case 1:
+      t = *(s32*)(mg + 0x40) - 1;
+      *(s32*)(mg + 0x40) = t;
+      if (t != 0) {
+        break;
+      }
+      mg[1]++;
+      break;
+    case 2:
+      PlaySound(0x1d);
+      *(struct VFX**)(mg + 0xc) = CreateMissionAlert(0);
+      mg[1]++;
+      /* fallthrough */
+    case 3:
+      if (*(u8*)(*(u8**)(mg + 0xc) + 0xc) > 1) {
+        u8 t0 = mg[0] + 1;
+        u8 z = 0;
+        mg[0] = t0;
+        mg[1] = z;
+        mg[2] = z;
+        mg[3] = z;
+      }
+      break;
+  }
+  *(u16*)(mg + 0x10) = 0;
+  *(u16*)(mg + 0x12) = 0;
+  return 1;
+}
+
+INCASM("asm/minigame/phantom_b.inc");
 
 // 0x080FC390
 bool32 phantomMinigame_080fc390(struct GameState* g);
@@ -61,11 +100,11 @@ end1:
   return 1;
 }
 
-void phantomMinigame_080fc13c(struct GameState* p);
+bool32 phantomMinigame_080fc13c(struct GameState* p);
 void phantomMinigame_080fc1b8(struct GameState* p);
 
 const GameLoopFunc PhantomMinigameLoops[3] = {
-    phantomMinigame_080fc13c,
+    (GameLoopFunc)phantomMinigame_080fc13c,
     phantomMinigame_080fc1b8,
     (GameLoopFunc)phantomMinigame_080fc390,
 };
