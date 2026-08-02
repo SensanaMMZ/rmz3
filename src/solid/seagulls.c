@@ -273,6 +273,61 @@ void FUN_080dced4(struct Solid* p) {
 
 INCASM("asm/solid/seagulls_p1b.inc");
 
+// 0x080DD364
+NON_MATCH void FUN_080dd364(struct Solid* p) {
+#if MODERN
+  s32 x;
+  register u8 fl asm("r3");
+  u8 t;
+  s32 mm;
+  u8 fv;
+  u32 z;
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 cx asm("r1");
+    cx = (p->s).coord.x;
+    x = cx + (p->s).d.x;
+  }
+  (p->s).coord.x = x;
+  fl = (p->s).flags;
+  mm = 0x10 & fl;
+  t = mm;
+  if (t != 0) {
+    if (x > 0x45000) {
+      fv = 0xFE & fl;
+      z = 0;
+      goto kill;
+    }
+    if (x > gStageRun.vm.camera.viewport.x + 0x97FF) {
+      fv = 0xFE & fl;
+      z = 0;
+      goto kill;
+    }
+    return;
+  }
+  if (x >= gStageRun.vm.camera.viewport.x - 0x9800) {
+    return;
+  }
+  fv = 0xFE & fl;
+  z = t;
+kill: {
+  register u8* q asm("r0");
+  fv &= 0xFD;
+  (p->s).flags = fv;
+  q = (u8*)p + 0x8c;
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *q = z;
+  (p->s).flags &= 0xFB;
+  SET_SOLID_ROUTINE(p, 3);
+}
+#else
+  INCCODE("asm/solid/seagulls_080dd364.inc");
+#endif
+}
+
 void FUN_080dd400(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
 }
