@@ -6,6 +6,7 @@
 #include "overworld.h"
 #include "script.h"
 #include "stagerun.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[24];
 
@@ -763,6 +764,31 @@ bool8 FUN_080459d4(struct Boss* p) {
 }
 
 INCASM("asm/boss/volteel_p14_p2.inc");
+
+void volteel_08045abc(struct Boss* p) {
+  if (MOTION_VALUE(p) == MOTION(0xA5, 0x07)) {
+    if ((p->s).motion.state == 3) {
+      if (((p->s).flags & X_FLIP) == 0) {
+        (p->s).spr.xflip = TRUE;
+        (p->s).spr.oam.xflip = TRUE;
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).spr.xflip = FALSE;
+        (p->s).spr.oam.xflip = FALSE;
+        (p->s).flags &= ~X_FLIP;
+      }
+      SetMotion(&p->s, MOTION(0xA5, 0x00));
+    }
+  } else if (pZero2->s.coord.x > (p->s).coord.x) {
+    if (((p->s).flags & X_FLIP) == 0) {
+      SetMotion(&p->s, MOTION(0xA5, 0x07));
+    }
+  } else {
+    if (((p->s).flags & X_FLIP) != 0) {
+      SetMotion(&p->s, MOTION(0xA5, 0x07));
+    }
+  }
+}
 
 // --------------------------------------------
 
