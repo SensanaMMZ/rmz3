@@ -334,7 +334,12 @@ void FUN_08011414(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
-INCASM("asm/stage_gfx/frostline_ice_base_p2.inc");
+// 0x08011464
+void FUN_08011464(struct StageLayer* l, const struct Stage* stage) {
+  RequestGraphicTransfer(&(TILESETS(18, 66)[(u16)(((u16)l->unk_10 >> 3) % 6)]).g, (void*)0x4000);
+  LoadPalette(&(TILESETS(18, 66)[(u16)(((u16)l->unk_10 >> 3) % 6)]).pal, 0);
+  DrawGeneralStageLayer(l, stage);
+}
 
 void icebase_080114d0(struct StageLayer* l, const struct Stage* stage) {
   u32 ph = l->phase;
