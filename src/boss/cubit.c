@@ -666,7 +666,58 @@ bool8 cubit_08054674(struct Boss* p) {
   return FALSE;
 }
 
-INCASM("asm/boss/cubit_p13_p2.inc");
+// 0x08054688
+void cubit_08054688(struct Boss* p) {
+  u32 mv;
+  u32 m;
+  mv = ((u16)(p->s).motionID << 8) | (p->s).motion.step;
+  m = MOTION(0xB0, 0x03);
+  if (mv == m) {
+    if ((p->s).motion.state == 3) {
+      u8 fl = (p->s).flags;
+      register s32 k10 asm("r3");
+      s32 msk;
+      k10 = 0x10;
+      asm("" : "+r"(k10));
+      msk = 0x10;
+      msk &= fl;
+      if (msk == 0) {
+        u8* xp = (u8*)p + 0x4c;
+        *xp = 1;
+        xp -= 2;
+        *xp |= k10;
+        (p->s).flags |= k10;
+      } else {
+        u8* xp;
+        u8* oa;
+        s32 ov;
+        register s32 z asm("r0");
+        xp = (u8*)p + 0x4c;
+        z = 0;
+        *xp = z;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        z -= 0x11;
+        z &= ov;
+        *oa = z;
+        (p->s).flags &= 0xEF;
+      }
+      if (*((u8*)p + 0xc8) != 0) {
+        SetMotion(&p->s, MOTION(0xB0, 0x01));
+      } else {
+        SetMotion(&p->s, MOTION(0xB0, 0x02));
+      }
+    }
+  } else if ((pZero2->s).coord.x > (p->s).coord.x) {
+    if (((p->s).flags & 0x10) == 0) {
+      SetMotion(&p->s, m);
+    }
+  } else {
+    if (((p->s).flags & 0x10) != 0) {
+      SetMotion(&p->s, m);
+    }
+  }
+}
 
 // --------------------------------------------
 
