@@ -6,6 +6,8 @@ static const ProjectileFunc sUpdates[2];
 
 static const ProjectileFunc sInitializers[2];
 
+static const struct Collision sCollisions[4];
+
 void createCopyXSonicBoom(struct Entity* e, u8 w0, u8 w1) {
   struct Projectile* p = (struct Projectile*)AllocEntityFirst(gProjectileHeaderPtr);
   if (p != NULL) {
@@ -34,6 +36,44 @@ void CopyXProjectile_Die(struct Projectile* p) {
 }
 
 INCASM("asm/projectile/copy_x_post_p2.inc");
+
+void CopyXProjectile_Update(struct Projectile* p);
+
+// 0x080a82dc
+void FUN_080a82dc(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 one;
+  {
+    u32 tbl, id;
+    EntityFunc** routine_table;
+    tbl = (u32)gProjectileFnTable;
+    id = ((p->s).id) << 2;
+    routine_table = (EntityFunc**)(tbl + id);
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(*routine_table)[ENTITY_UPDATE];
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register s32 z asm("r6");
+    u8 t = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    asm("" : "+r"(z));
+    asm volatile("" ::"r"(z));
+    fv |= t;
+    fv |= FLIPABLE;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0x5E, 0x01));
+  UpdateMotionGraphic(&p->s);
+  SET_XFLIP(&p->s, (q->flags >> 4) & one);
+  INIT_BODY(p, &sCollisions[2], 0x40, NULL);
+  (p->s).work[2] = 0x28;
+  (p->s).mode[2] = 1;
+  CopyXProjectile_Update(p);
+}
 
 void moveNovaStrikeSonicBoom(struct Projectile* p) {
   struct Entity* q = (p->s).unk_28;
