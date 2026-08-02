@@ -162,7 +162,20 @@ static const StageLayerRoutine sLayerRoutine[7] = {
 };
 // clang-format on
 
-INCASM("asm/stage_gfx/frostline_ice_base_p1_a.inc");
+// 0x08011140
+void FUN_08011140(struct StageLayer* l, const struct Stage* stage) {
+  if (l->phase == 0) {
+    BGCNT16((u16)l->bgIdx >> 4) &= 0xFFFC;
+    gBlendRegBuffer.bldclt = 0x3B44;
+    gBlendRegBuffer.bldalpha = 0x0C04;
+    l->phase++;
+  }
+  if (l->viewportCenterPixel.x <= 0x151F) {
+    SEA = PIXEL(800);
+  } else {
+    SEA = PIXEL(10240);
+  }
+}
 
 // 0x080111bc
 void FUN_080111bc(struct StageLayer* l UNUSED, const struct Stage* _ UNUSED) {
