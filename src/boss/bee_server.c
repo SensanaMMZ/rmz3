@@ -132,6 +132,31 @@ void FUN_0804d1ac(struct Boss* p) {
 
 INCASM("asm/boss/bee_server_p2b.inc");
 
+extern const u8 u8_ARRAY_0836332e[5];
+void FUN_080a2f34(s32 x, s32 y);
+
+// 0x0804d418
+void FUN_0804d418(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x10F);
+      FUN_080a2f34((p->s).coord.x, (p->s).coord.y);
+      SetMotion(&p->s, MOTION(0x46, 0x03));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_0836332e[(s8)(p->s).motion.cmdIdx]]);
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
+INCASM("asm/boss/bee_server_p2b_b.inc");
+
 // --------------------------------------------
 
 void FUN_0804d0a4(struct Boss* p);
@@ -268,8 +293,6 @@ static const u8 sInitModes[4] = {1, 0, 0, 0};
 
 const struct Coord Coord_0836331c = {0, 0};
 
-const u8 u8_ARRAY_ARRAY_08363324[3][5] = {
-    {2, 3, 4, 5, 5},
-    {4, 3, 3, 2, 2},
-    {5, 5, 4, 3, 2},
-};
+const u8 u8_ARRAY_08363324[5] = {2, 3, 4, 5, 5};
+const u8 u8_ARRAY_08363329[5] = {4, 3, 3, 2, 2};
+const u8 u8_ARRAY_0836332e[5] = {5, 5, 4, 3, 2};
