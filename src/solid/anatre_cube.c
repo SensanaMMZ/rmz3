@@ -95,6 +95,29 @@ static void FUN_080dec04(struct Solid* p) {
 
 INCASM("asm/solid/anatre_cube.inc");
 
+// 0x080def4c
+void FUN_080def4c(struct Solid* p) {
+  {
+    register u8 fv asm("r1");
+    u8 t = (p->s).flags;
+    fv = FLIPABLE;
+    fv |= t;
+    (p->s).flags = fv;
+  }
+  if ((p->s).work[1] != 4) {
+    (p->s).unk_coord.x = 0x7002;
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  } else {
+    (p->s).unk_coord.x = 0x7006;
+    (p->s).coord.x = FUN_0800a22c((p->s).coord.x, (p->s).coord.y);
+  }
+  (p->s).d.y = 0;
+  (p->s).d.x = 0;
+  SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
+}
+
+INCASM("asm/solid/anatre_cube_b.inc");
+
 static const struct Collision sCollisions[2] = {
     {
       kind : DRP,
