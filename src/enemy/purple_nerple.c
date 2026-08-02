@@ -469,6 +469,47 @@ void FUN_08076508(struct Enemy* p) {
   }
 }
 
+#include "physics.h"
+
+// 0x08076594
+void FUN_08076594(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).d.y = m;
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0x2A, 0x04));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 v = (p->s).d.y + 0x40;
+      s32 r;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (r < 0) {
+        if (r > -0x800) {
+          (p->s).coord.y += r;
+          if (*((u8*)p + 0xb9) != 0) {
+            (p->s).mode[1] = 9;
+          } else {
+            (p->s).mode[1] = 6;
+          }
+          (p->s).mode[2] = 0;
+        } else {
+          SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+          (p->s).mode[1] = 0;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/purple_nerple_p2_p2_p4_b.inc");
 
 extern const motion_t sMotions[9];
