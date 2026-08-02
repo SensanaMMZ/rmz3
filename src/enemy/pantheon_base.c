@@ -112,7 +112,66 @@ void PantheonBase_Init(struct Enemy* p) {
   PantheonBase_Update(p);
 }
 
-INCASM("asm/enemy/pantheon_base_p2_pre_b.inc");
+// 0x0808A304
+void PantheonBase_Update(struct Enemy* p) {
+  struct Entity* q;
+  register s32 z asm("r2");
+  register u8 f asm("r0");
+  {
+    u8 gf = gCurStory.s.gameflags[4];
+    z = 0x42;
+    z &= gf;
+  }
+  if (z != 0) {
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    asm("" : "+r"(fl));
+    f = 0xFE;
+    f &= fl;
+    z = 0;
+    asm("" : "+r"(z));
+    goto flagstore;
+  }
+  q = (p->s).unk_28;
+  if (q->mode[0] > 2) {
+    register u8 fl2 asm("r1");
+    fl2 = (p->s).flags;
+    asm("" : "+r"(fl2));
+    f = 0xFE;
+    f &= fl2;
+  flagstore:
+    {
+      register u8 k asm("r1");
+      k = 0xFD;
+      f &= k;
+    }
+    (p->s).flags = f;
+    *(u32*)((u8*)p + 0x8c) = z;
+    *(u32*)((u8*)p + 0x90) = z;
+    *(u8*)((u8*)p + 0x94) = z;
+    (p->s).flags &= 0xFB;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  {
+    u8 r = FUN_0808a144(p);
+    if (r != 0) {
+      return;
+    }
+    if (q->mode[0] > 1) {
+      SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      (p->s).mode[1] = r;
+      PantheonBase_Die(p);
+      return;
+    }
+  }
+  pBase_0808a210(p);
+  if (((bool8 (*)(struct Enemy*))pBase_0808a194)(p)) {
+    return;
+  }
+  (sUpdates1[(p->s).mode[1]])(p);
+  (sUpdates2[(p->s).mode[1]])(p);
+}
 
 void PantheonBase_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
