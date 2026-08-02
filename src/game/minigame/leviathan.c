@@ -28,6 +28,26 @@ void leviathan_minigame_080fb594(struct GameState* g) {
   PrintMinigameNumber(s->unk_20 / 3600, 15, 19);
 }
 
+void FUN_08099fb8(struct Entity* e, s32 y, u8 n, u8 w);
+extern const u8 u8_ARRAY_08386bb0[16];
+
+// 0x080FB5DC
+void leviathan_minigame_080fb5dc(struct GameState* g) {
+  u8* mg = (u8*)g + 0xDCC;
+  s32 t = *(u16*)(mg + 0x16) - 1;
+  *(u16*)(mg + 0x16) = t;
+  if ((t << 16) == 0) {
+    s32 a;
+    u8 b;
+    u8 c;
+    *(u16*)(mg + 0x16) = *(u16*)(mg + 0x14);
+    a = (RANDOM(RNG_0202f388) % 0x5000) + 0x3F000;
+    b = RANDOM(RNG_0202f388) & 1;
+    c = u8_ARRAY_08386bb0[RANDOM(RNG_0202f388) & 0xF];
+    FUN_08099fb8((struct Entity*)mg, a, b, c);
+  }
+}
+
 INCASM("asm/minigame/leviathan.inc");
 
 extern const GameLoopFunc LeviathanMinigameLoops[3];
@@ -59,7 +79,7 @@ bool32 leviathanMinigame(struct GameState* g) {
   return r;
 }
 
-bool32 leviathan_minigame_080fb5dc(struct GameState* g);
+void leviathan_minigame_080fb5dc(struct GameState* g);
 
 // 0x080FBBA0
 bool32 leviathan_minigame_080fbba0(struct GameState* g) {
