@@ -160,7 +160,38 @@ void FUN_080ccefc(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/lava_river_platform_b.inc");
+// 0x080CD03C
+void FUN_080cd03c(struct Solid* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).work[2] = m;
+      (p->s).d.y = m;
+      SetMotion(&p->s, MOTION(0x3B, 0x00));
+      (p->s).mode[2]++;
+    case 1: {
+      s32 hit;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      hit = PushoutToUp2((p->s).coord.x, (p->s).coord.y + *(s32*)((u8*)p + 0xb4));
+      if ((p->s).work[2] == 0) {
+        (p->s).d.y = 0x80;
+        if (hit == 0) {
+          (p->s).work[2] = 1;
+        }
+      } else if (hit < 0) {
+        (p->s).coord.y += hit;
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 // --------------------------------------------
 
