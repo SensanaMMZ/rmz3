@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "enemy.h"
+#include "mission.h"
 #include "global.h"
 #include "physics.h"
 #include "stagerun.h"
@@ -566,6 +567,64 @@ void FUN_0808e228(struct Enemy* p) {
   CreateSmoke(1, &c);
   PlaySound(0x2a);
   FUN_080b7f70(p, &c, sMotions2, 3);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
+
+void CreateGhost65(s32 x, s32 y, u8 w1, u8 w2);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x0808E294
+void maybeKillDeathlock(struct Enemy* p) {
+  struct Coord c;
+  {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    u8* q = (u8*)p + 0x8c;
+    s32 z;
+    asm("" : "+r"(q));
+    z = 0;
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *(s32*)q = z;
+    asm("" : "+r"(q));
+    q += 4;
+    asm("" : "+r"(q));
+    *q = z;
+    t = (p->s).flags;
+    f = 0xFB;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    k2 = 0xFE;
+    f &= k2;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1000;
+  CreateSmoke(1, &c);
+  PlaySound(0x2a);
+  if (*(u8*)((u8*)p + 0xbb) == 0) {
+    s32 i = *(u8*)((u8*)p + 0xb9);
+    if (i <= 5) {
+      do {
+        CreateGhost65((p->s).coord.x, (p->s).coord.y, i, ((p->s).flags >> 4) & 1);
+        i++;
+      } while (i <= 5);
+    }
+  }
+  if (*(u8*)((u8*)p + 0xbc) == 0) {
+    u8 w0 = (p->s).work[0];
+    struct Coord* pc = &(p->s).coord;
+    if (w0 != 9) {
+      TryDropItem(0, pc);
+    }
+    if (gMission.enemyCount <= 0x270E) {
+      gMission.enemyCount++;
+    }
+    TryDropZakoDisk(p, pc);
+  }
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
