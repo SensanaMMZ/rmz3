@@ -12,6 +12,52 @@ void FUN_08045b68(struct Boss* p);
 
 INCASM("asm/boss/baby_elf_p1_pre_p1.inc");
 
+// 0x08045C84
+NON_MATCH void babyelf_08045c84(struct Boss* p0) {
+#if MODERN
+  register struct Boss* p asm("ip");
+  register u8* q asm("r0");
+  register s32 x asm("r1");
+  register s32 y asm("r4");
+  register s32 a asm("r3");
+  p = p0;
+  q = (u8*)p + 0xbc;
+  x = *(s32*)q;
+  q = (u8*)p;
+  *(s32*)(q + 0x54) = x;
+  asm volatile("add %0, #0xc0" : "+r"(q));
+  y = *(s32*)q;
+  {
+    register struct Boss* pp asm("r2");
+    pp = p;
+    (pp->s).coord.y = y;
+  }
+  asm volatile("add %0, #4" : "+r"(q));
+  a = *(u16*)q & 0x1FF;
+  if (a <= 0xFF) {
+    register const s16* t asm("r2");
+    t = gSineTable;
+    asm("" : "+r"(t));
+    (p->s).coord.x = x + (t[(u8)a] << 4);
+    y += -0x1000;
+    (p->s).coord.y = y;
+    y += t[(u8)(a + 0x40)] << 4;
+  } else {
+    register const s16* t asm("r2");
+    a += -0x100;
+    t = gSineTable;
+    asm("" : "+r"(t) : "r"(x));
+    (p->s).coord.x = x + (t[(u8)a] << 4);
+    y += 0x1000;
+    (p->s).coord.y = y;
+    y -= t[(u8)(a + 0x40)] << 4;
+  }
+  (p->s).coord.y = y;
+#else
+  INCCODE("asm/boss/babyelf_08045c84.inc");
+#endif
+}
+
 void FUN_08045d28(struct Body* body) {
   struct Entity* self = (struct Entity*)body->parent;
   if (body->hitboxFlags & 1) {
