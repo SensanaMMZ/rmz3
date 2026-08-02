@@ -956,7 +956,69 @@ NON_MATCH void copyxNovaStrike3(struct Boss* p) {
 #endif
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a.inc");
+// 0x08056270
+void copyxMode16(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, 0xB310);
+    {
+      s32 onR = 0;
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        onR = 1;
+      }
+      ((p->s).spr).xflip = onR;
+    }
+    {
+      s32 onR2 = 0;
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        onR2 = 1;
+      }
+      {
+        register u8* t0 asm("r0");
+        register u8* oa asm("ip");
+        register u32 sh asm("r2");
+        u32 off = 0x4a;
+        asm("" : "+r"(off));
+        off += (u32)p;
+        t0 = (u8*)off;
+        oa = t0;
+        asm("" : "+r"(oa));
+        sh = onR2 << 4;
+        {
+          s32 ov = *t0;
+          s32 m11 = -0x11;
+          u32 vv;
+          register u8* fa asm("r1");
+          asm("" : "+r"(m11));
+          vv = (m11 & ov) | sh;
+          fa = oa;
+          asm("" : "+r"(fa));
+          *fa = vv;
+        }
+      }
+      if (onR2 != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+    }
+    (p->s).mode[2] = 0;
+    if ((p->s).flags & 0x10) {
+      (p->s).d.x = -0x300;
+    } else {
+      (p->s).d.x = 0x300;
+    }
+    (p->s).d.y = -0x300;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if (FUN_08009f6c((p->s).coord.x, (p->s).coord.y) < (p->s).coord.y) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).mode[1] = 0xC;
+    (p->s).mode[2] = 1;
+  }
+}
 
 extern const u8 u8_ARRAY_080fefb0[4];
 
