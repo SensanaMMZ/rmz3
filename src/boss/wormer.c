@@ -113,7 +113,43 @@ void FUN_08042d4c(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/wormer_p2_p2a.inc");
+void FUN_08075c40(s32 x, s32 y, s32 dx, s32 dy);
+extern const struct Coord Coord_ARRAY_08362278[3];
+
+// 0x08042DA4
+void FUN_08042da4(struct Boss* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[5 + 7 * (p->s).work[0]]);
+      SetMotion(&p->s, MOTION(0x2b, 6));
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      FUN_08075c40((p->s).coord.x - 0x2600, (p->s).coord.y - 0x4000,
+                   Coord_ARRAY_08362278[(p->s).work[2]].x,
+                   Coord_ARRAY_08362278[(p->s).work[2]].y);
+      (p->s).work[3] = 0x10;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 2: {
+      u8 t = --(p->s).work[3];
+      if (t == 0) {
+        s32 n = (p->s).work[2] + 1;
+        (p->s).work[2] = n;
+        if ((u8)n > 2) {
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = t;
+        } else {
+          (p->s).mode[2] = 1;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 extern const u8 u8_ARRAY_08362290[];
 void CreateGhost35(s32 x, s32 y, u8 r2);
