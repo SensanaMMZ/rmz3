@@ -81,6 +81,43 @@ struct Weapon* CreateSmashElec(struct Zero* z, struct Coord* c, u8 leftOrRight) 
 
 INCASM("asm/weapon/saber_smash_elec_p2.inc");
 
+// 0x0803CA44
+void SmashElec_Update(struct Weapon* p) {
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).work[1] == 0) {
+    s32 y;
+    s32 cy;
+    s32 d;
+    (p->s).work[2]--;
+    (p->s).coord.x += (p->s).d.x;
+    y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    cy = (p->s).coord.y;
+    d = y - cy;
+    if (d >= 0) {
+      if (d > 0xF00) {
+        goto die;
+      }
+    } else {
+      if (cy - y > 0xF00) {
+        goto die;
+      }
+    }
+    (p->s).coord.y = y;
+    if ((u8)--(p->s).work[2] != 0xFF) {
+      goto cam;
+    }
+  }
+die:
+  SET_WEAPON_ROUTINE(p, 2);
+  SmashElec_Die(p);
+  return;
+cam:
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x3000) {
+    SET_WEAPON_ROUTINE(p, 2);
+    SmashElec_Die(p);
+  }
+}
+
 void SmashElec_Die(struct Weapon* w) {
   struct Zero* z = (struct Zero*)(w->s).unk_28;
   if (z->unk_13a != 0) z->unk_13a--;
