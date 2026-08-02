@@ -378,7 +378,34 @@ void FUN_080bcc94(struct VFX* vfx) {
   }
 }
 
-INCASM("asm/vfx/unk_37_post_b.inc");
+// 0x080BCD9C
+void FUN_080bcd9c(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0x33, 0x0C));
+      *(u8*)((u8*)p + 0x25) = 0x19;
+      StartPaletteAnimation(0x1A, (((u32)(u8)GetEntityPalID(&p->s)) << 24 >> 19) | 0x200);
+      (p->s).work[2] = 0xC;
+      (p->s).mode[2]++;
+    case 1:
+      StepPaletteAnimation(0x1A);
+      UpdateMotionGraphic(&p->s);
+      if ((1 & (p->s).work[2]) != 0) {
+        (p->s).flags |= 1;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      if ((u8)--(p->s).work[2] == 0) {
+        u8 fl;
+        RemovePaletteAnimation(0x1A);
+        fl = (p->s).flags & 0xFE;
+        fl &= 0xFD;
+        (p->s).flags = fl;
+        SET_VFX_ROUTINE(p, 3);
+      }
+      break;
+  }
+}
 
 extern const motion_t motion_t_ARRAY_0836ee0a[3];
 
