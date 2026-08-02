@@ -394,6 +394,46 @@ void grandcannonMoveTurret(struct Enemy* p) {
 
 INCASM("asm/enemy/grand_cannon_pre_b.inc");
 
+struct Entity* CreateGrandCannonBomb(struct Coord* c, s32 v, u8 ang);
+
+// 0x08069560
+void grandcannonBombShot(struct Enemy* p) {
+  struct Coord c;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 ang;
+      s32 x;
+      s32 y;
+      PlaySound(0x2D);
+      ang = *(u8*)((u8*)p + 0x24) + 0x80;
+      x = (p->s).coord.x;
+      c.x = x;
+      c.x = gSineTable[(u8)(ang + 0x40)] * 28 + x;
+      y = (p->s).coord.y;
+      c.y = y;
+      c.y = gSineTable[ang] * 28 + y;
+      PlaySound(0x2D);
+      CreateGrandCannonBomb(&c, 0x500, ang);
+      (p->s).work[2] = 4;
+      SetMotion(&p->s, MOTION(0x07, 0x04));
+      (p->s).mode[2]++;
+    }
+    case 1: {
+      s32 d;
+      u8 t;
+      UpdateMotionGraphic(&p->s);
+      d = (p->s).work[2] - 1;
+      (p->s).work[2] = d;
+      t = d;
+      if (t == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = t;
+      }
+      break;
+    }
+  }
+}
+
 void grandcannon_08069608(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
     SetDDP(&p->body, &sCollisions[2]);
