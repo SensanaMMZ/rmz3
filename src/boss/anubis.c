@@ -35,7 +35,57 @@ void FUN_080500c8(struct Body* body) {
   }
 }
 
-INCASM("asm/boss/anubis_p1_pre_p2_a.inc");
+#include "stagerun.h"
+
+void Anubis_Die(struct Boss* p);
+void FUN_08010188(s32 n);
+
+// 0x080500F4
+NON_MATCH bool8 FUN_080500f4(struct Boss* p0) {
+#if MODERN
+  register struct Boss* p asm("r4");
+  register u32* st asm("r7");
+  p = p0;
+  st = (u32*)((u8*)p + 0x8c);
+  if ((*st & 0x200) == 0 && *(s16*)((u8*)p + 0xa4) != 0) {
+    return 0;
+  }
+  {
+    register u16 f asm("r6");
+    { u16 ms = gStageRun.missionStatus; s32 m_ = 8; m_ &= ms; f = m_; }
+    if (f != 0) {
+      return 0;
+    }
+    {
+      s16* sp = (s16*)((u8*)p + 0xd0);
+      if (*sp != -1) {
+        StopSound(*sp);
+        *sp = -1;
+      }
+    }
+    {
+      u8* q = (u8*)p + 0xce;
+      if (*q != 0) {
+        *q = f;
+        FUN_08010188(0);
+      }
+    }
+    SET_BOSS_ROUTINE(p, 2);
+    {
+      s32 v = *st & 0x10000;
+      if (v != 0) {
+        (p->s).mode[1] = 1;
+      } else {
+        (p->s).mode[1] = v;
+      }
+    }
+    Anubis_Die(p);
+    return 1;
+  }
+#else
+  INCCODE("asm/boss/anubis_080500f4.inc");
+#endif
+}
 
 static const u8 sInitModes[4];
 static const struct Collision sCollisions[3];
