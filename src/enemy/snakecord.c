@@ -87,6 +87,79 @@ void FUN_08074134(struct Body* body) {
   }
 }
 
+void Snakecord_Die(struct Enemy* p);
+
+// One instruction short: retail copies gEnemyFnTable into r7 (`adds r7,r4,#0`)
+// and pushes r7, using r4 for the tail lookups and r7 inside the chain loop.
+// agbcc refuses to allocate r7 here -- `register u32 tbl asm("r7")`, a "+r"
+// barrier on the copy, and the literal transfer asm are all coalesced back
+// into r4, so the copy has nowhere to live. Everything else matches.
+NON_MATCH bool8 FUN_0807415c(struct Enemy* p) {
+#if MODERN
+  if ((p->s).work[0] == 0) {
+    register u32* st asm("ip");
+    register u32* st0 asm("r0");
+    register u32 v asm("r1");
+    register s32 mask asm("r2");
+    st0 = (u32*)((u8*)p + 0x8c);
+    v = *st0;
+    mask = 0x200;
+    v &= mask;
+    st = st0;
+    if (v != 0) {
+      register s32 n asm("r2");
+      register u32 tbl0 asm("r4");
+      struct Entity* e;
+      n = 0;
+      e = (p->s).unk_28;
+      tbl0 = (u32)gEnemyFnTable;
+      if (e != NULL) {
+        register u32 tbl asm("r7");
+        register s32 two asm("r6");
+        register s32 one asm("r5");
+        tbl = tbl0;
+        two = 2;
+        one = 1;
+        do {
+          EntityFunc** rt = (EntityFunc**)(((e->id) << 2) + tbl);
+          *(u32*)(e->mode) = two;
+          e->onUpdate = (void*)(*rt)[2];
+          e->mode[1] = one;
+          e = e->unk_28;
+          {
+            register s32 t asm("r0");
+            t = n + 1;
+            n = (u8)t;
+          }
+        } while (e != NULL);
+      }
+      if ((u8)((p->s).mode[1] - 1) > 1 || n == 2) {
+        register s32 two2 asm("r2");
+        EntityFunc** rt = (EntityFunc**)((((p->s).id) << 2) + tbl0);
+        two2 = 2;
+        *(u32*)((p->s).mode) = two2;
+        (p->s).onUpdate = (void*)(*rt)[2];
+        if ((*st & 0x20000) != 0) {
+          (p->s).mode[1] = two2;
+        } else {
+          (p->s).mode[1] = 0;
+        }
+      } else {
+        EntityFunc** rt = (EntityFunc**)((((p->s).id) << 2) + tbl0);
+        *(u32*)((p->s).mode) = 2;
+        (p->s).onUpdate = (void*)(*rt)[2];
+        (p->s).mode[1] = 0;
+      }
+      Snakecord_Die(p);
+      return TRUE;
+    }
+  }
+  return FALSE;
+#else
+  INCCODE("asm/enemy/snakecord_0807415c.inc");
+#endif
+}
+
 INCASM("asm/enemy/snakecord_p1_p1_a_p2.inc");
 
 static const struct Coord sElementCoords[2];
