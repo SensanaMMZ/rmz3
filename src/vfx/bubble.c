@@ -222,8 +222,7 @@ void FUN_080b31d8(struct VFX* p) {
 }
 
 // 0x080B3278
-NON_MATCH void FUN_080b3278(struct VFX* p) {
-#if MODERN
+void FUN_080b3278(struct VFX* p) {
   s32 dy;
   UpdateMotionGraphic(&p->s);
   (p->s).work[2]++;
@@ -236,9 +235,15 @@ NON_MATCH void FUN_080b3278(struct VFX* p) {
   (p->s).coord.y += (p->s).d.y;
   (p->s).coord.x = *(s32*)((u8*)p + 0x74) + gSineTable[(p->s).work[2]] * ((p->s).d.x >> 8);
   if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) == 0) {
-    s32 t = (p->s).d.y * 2;
-    s32 cy = (p->s).coord.y;
-    if (cy - t > SEA) {
+    struct Overworld* ow = &gOverworld;
+    s32* sp;
+    s32 t;
+    s32 cy;
+    sp = &ow->sea;
+    asm("" : "+r"(sp));
+    t = (p->s).d.y * 2;
+    cy = (p->s).coord.y;
+    if (*sp < cy - t) {
       return;
     }
     if ((GetMetatileAttr((p->s).coord.x, cy) << 16) == 0x80000000) {
@@ -246,7 +251,4 @@ NON_MATCH void FUN_080b3278(struct VFX* p) {
     }
   }
   SET_VFX_ROUTINE(p, 2);
-#else
-  INCCODE("asm/vfx/bubble_080b3278.inc");
-#endif
 }
