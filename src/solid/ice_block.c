@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
+#include "stagerun.h"
 
 // 壊れた宇宙船の屋内とかで上から落ちてくる氷ブロック
 
@@ -65,6 +66,58 @@ NON_MATCH static void IceBlock_Init(struct Solid* p) {
 }
 
 INCASM("asm/solid/ice_block.inc");
+
+// 0x080D8E2C
+void IceBlock_Die(struct Solid* p) {
+  u8 m = (p->s).mode[1];
+  switch (m) {
+    case 0:
+      SetMotion(&p->s, 0xCB03);
+      PlaySound(0x3F);
+      (p->s).d.y = m;
+      (p->s).work[3] = m;
+      (p->s).mode[1]++;
+      /* fallthrough */
+    case 1: {
+      register s32 w3 asm("r1");
+      register s32 k1 asm("r0");
+      w3 = (p->s).work[3];
+      (p->s).work[3] = w3 + 1;
+      k1 = 1;
+      k1 &= w3;
+      if (k1 != 0) {
+        (p->s).flags &= 0xFE;
+      } else {
+        (p->s).flags |= 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).d.y <= 0x6FF) {
+        (p->s).d.y += 0x20;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x2000) {
+        s32 z;
+        {
+          register u8 fl asm("r1");
+          u8 fv;
+          fl = (p->s).flags;
+          fv = 0xFE & fl;
+          z = 0;
+          asm("" : "+r"(z));
+          (p->s).flags = fv;
+        }
+        *(u32*)((u8*)p + 0x8c) = z;
+        *(u32*)((u8*)p + 0x90) = z;
+        *(u8*)((u8*)p + 0x94) = z;
+        (p->s).flags &= 0xFB;
+        (p->s).flags2 &= 0xF7;
+        SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+      }
+      break;
+    }
+  }
+}
 
 void FUN_0800bdd4(s32 x, s32 y);
 
