@@ -501,7 +501,73 @@ void Solid18_Die(struct Solid* p) {
 void nop_080cf914(struct Solid* p) {}
 void nop_080cf918(struct Solid* p) {}
 
-INCASM("asm/solid/snowboard_post.inc");
+extern const struct Collision sSolid18Collisions[2];
+bool8 FUN_080cf428(struct Solid* p);
+
+// 0x080CF91C
+void FUN_080cf91c(struct Solid* p) {
+  struct Entity* q = (p->s).unk_2c;
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 v;
+      s32 v2;
+      SetMotion(&p->s, 0x6D0D);
+      SetDDP(&p->body, sSolid18Collisions);
+      *(s32*)((u8*)p + 0xb8) = (p->s).coord.y;
+      (p->s).d.x = m;
+      (p->s).d.y = m;
+      v = -0x40;
+      (p->s).unk_coord.x = v;
+      v2 = v;
+      if ((p->s).flags & 0x10) {
+        v2 = 0x40;
+      }
+      (p->s).unk_coord.x = v2;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      s32 cx;
+      s32 dx;
+      register s32 cur asm("r0");
+      register s32 lo asm("r1");
+      cx = (p->s).coord.x;
+      dx = (p->s).d.x;
+      (p->s).coord.x = cx + dx;
+      dx += (p->s).unk_coord.x;
+      (p->s).d.x = dx;
+      if ((p->s).work[0] == 0) {
+        if (dx > 0x300) {
+          (p->s).d.x = 0x300;
+        }
+        cur = (p->s).d.x;
+        lo = -0x300;
+        goto clamp;
+      }
+      if (dx > 0x400) {
+        (p->s).d.x = 0x400;
+      }
+      cur = (p->s).d.x;
+      lo = -0x400;
+    clamp:
+      if (cur < lo) {
+        (p->s).d.x = lo;
+      }
+      UpdateMotionGraphic(&p->s);
+      if (((u8)FUN_080cf428(p) << 24) != 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+  if (q->mode[0] > 1) {
+    (p->s).unk_2c = NULL;
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 0;
+  }
+}
 
 // 0x080cf9e0
 void FUN_080cf9e0(struct Solid* p) {
