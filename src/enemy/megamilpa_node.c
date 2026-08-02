@@ -141,6 +141,49 @@ void MegamilpaNode_Die(struct Enemy* p) {
 
 void nop_08065928(struct Enemy* p) {}
 
+// 0x0806592c
+void MegamilpaNode_0806592c(struct Enemy* p) {
+  struct Entity* q = *(struct Entity**)((u8*)p + 0xb4);
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8 fv asm("r0");
+      register u8 t asm("r1");
+      SetDDP(&p->body, &gMegamilpaNodeHitbox[1]);
+      t = (p->s).flags;
+      fv = 0xFE;
+      fv &= t;
+      (p->s).flags = fv;
+      asm volatile("" ::"r"(t));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u32* f asm("r1");
+      s32 one;
+      s32 v1;
+      f = (u32*)((u8*)q + 0xc0);
+      v1 = *f;
+      one = 1;
+      if ((v1 & one) != 0) {
+        s32 z = 0;
+        (p->s).mode[1] = one;
+        (p->s).mode[2] = z;
+      }
+      {
+        register s32 two asm("r1");
+        s32 v2 = *f;
+        two = 2;
+        if ((v2 & two) != 0) {
+          s32 z = 0;
+          (p->s).mode[1] = two;
+          (p->s).mode[2] = z;
+        }
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/megamilpa_node_p2.inc");
 
 void nop_08065928(struct Enemy* p);

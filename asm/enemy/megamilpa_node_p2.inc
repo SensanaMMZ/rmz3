@@ -4,57 +4,6 @@
 
 	.text
 
-	thumb_func_start MegamilpaNode_0806592c
-MegamilpaNode_0806592c: @ 0x0806592C
-	push {r4, r5, lr}
-	adds r4, r0, #0
-	adds r0, #0xb4
-	ldr r5, [r0]
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _08065940
-	cmp r0, #1
-	beq _08065958
-	b _0806597C
-_08065940:
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _08065984 @ =0x08365CD8
-	bl SetDDP
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xfe
-	ands r0, r1
-	strb r0, [r4, #0xa]
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_08065958:
-	adds r1, r5, #0
-	adds r1, #0xc0
-	ldr r0, [r1]
-	movs r2, #1
-	ands r0, r2
-	cmp r0, #0
-	beq _0806596C
-	movs r0, #0
-	strb r2, [r4, #0xd]
-	strb r0, [r4, #0xe]
-_0806596C:
-	ldr r0, [r1]
-	movs r1, #2
-	ands r0, r1
-	cmp r0, #0
-	beq _0806597C
-	movs r0, #0
-	strb r1, [r4, #0xd]
-	strb r0, [r4, #0xe]
-_0806597C:
-	pop {r4, r5}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08065984: .4byte 0x08365CD8
-
 	thumb_func_start MegamilpaNode_08065988
 MegamilpaNode_08065988: @ 0x08065988
 	push {r4, r5, r6, r7, lr}
