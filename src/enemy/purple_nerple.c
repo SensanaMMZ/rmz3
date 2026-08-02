@@ -512,6 +512,72 @@ void FUN_08076594(struct Enemy* p) {
 
 INCASM("asm/enemy/purple_nerple_p2_p2_p4_b.inc");
 
+// 0x08076780
+void FUN_08076780(struct Enemy* p) {
+  s32 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u8 fv asm("r0");
+      u8 t = (p->s).flags;
+      fv = DISPLAY;
+      fv |= t;
+      (p->s).flags = fv;
+      (p->s).d.y = m;
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, MOTION(0x2A, 0x03));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 v = (p->s).d.y - 0x20;
+      (p->s).d.y = v;
+      if (v < -0x700) {
+        (p->s).d.y = -0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+        register u8 f asm("r0");
+        register u8 t asm("r1");
+        register u8 k2 asm("r1");
+        register s32 z asm("r2");
+        u8* qq;
+        t = (p->s).flags;
+        f = 0xFE;
+        f &= t;
+        asm volatile("" ::"r"(t));
+        z = 0;
+        k2 = 0xFD;
+        f &= k2;
+        (p->s).flags = f;
+        qq = (u8*)p + 0x8c;
+        asm("" : "+r"(qq));
+        *(s32*)qq = z;
+        asm("" : "+r"(qq));
+        qq += 4;
+        asm("" : "+r"(qq));
+        *(s32*)qq = z;
+        asm("" : "+r"(qq));
+        qq += 4;
+        asm("" : "+r"(qq));
+        *qq = z;
+        {
+          register u8 f3 asm("r0");
+          register u8 t3 asm("r1");
+          t3 = (p->s).flags;
+          f3 = 0xFB;
+          f3 &= t3;
+          (p->s).flags = f3;
+          asm volatile("" ::"r"(t3));
+        }
+        SET_ENEMY_ROUTINE(p, 3);
+      }
+      break;
+    }
+  }
+}
+
+
 // 0x08076830
 void FUN_08076830(struct Enemy* p) {
   switch ((p->s).mode[2]) {
