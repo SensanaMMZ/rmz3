@@ -139,6 +139,45 @@ dispatch:
 
 INCASM("asm/enemy/lemmingles_nest_p1_b.inc");
 
+#include "mission.h"
+
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x0806E1DC
+void LemminglesNest_Die(struct Enemy* p) {
+  u8 w = (p->s).work[0];
+  if (w <= 1 || w == 4 || w == 5) {
+    struct Coord c;
+    struct Coord* co;
+    register u8* q asm("r0");
+    u8 fl;
+    u32 z;
+    q = (u8*)p + 0x8c;
+    z = 0;
+    *(u32*)q = z;
+    asm volatile("add %0, #4" : "+r"(q));
+    *(u32*)q = z;
+    asm volatile("add %0, #4" : "+r"(q));
+    *q = z;
+    fl = (p->s).flags & 0xFB;
+    fl &= 0xFE;
+    (p->s).flags = fl;
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y - 0x1000;
+    CreateSmoke(1, &c);
+    PlaySound(0x2A);
+    co = &(p->s).coord;
+    TryDropItem(4, co);
+    if (gMission.enemyCount <= 0x270E) {
+      gMission.enemyCount++;
+    }
+    TryDropZakoDisk(p, co);
+    SET_ENEMY_ROUTINE(p, 4);
+  }
+  SET_ENEMY_ROUTINE(p, 4);
+}
+
 void nop_0806e284(struct Enemy* p) {}
 
 static const struct Collision sCollisions[3];
