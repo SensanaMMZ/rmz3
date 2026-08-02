@@ -638,6 +638,107 @@ void blizzackMode20(struct Boss* p) {
 
 INCASM("asm/boss/blizzack_post_p2_a2c.inc");
 
+struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
+
+// 0x0805ADD0
+void blizzack_0805add0(struct Boss* p) {
+  struct Coord c;
+  if ((p->s).mode[2] != 0) {
+    u8* q;
+    register u32 one asm("r2");
+    register u8 fl asm("r1");
+    u32 z;
+    SetMotion(&p->s, MOTION(0xB4, 0x0C));
+    q = (u8*)p + 0xc4;
+    {
+      u8 qv = *q;
+      u32 v;
+      one = 1;
+      asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(one));
+      v &= qv;
+      ((p->s).spr).xflip = v;
+    }
+    {
+      register u8* oa asm("ip");
+      u8 qv = *q;
+      u32 v;
+      oa = (u8*)p + 0x4a;
+      asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(one));
+      v &= qv;
+      {
+        u32 sh4 = v << 4;
+        s32 ov = *oa;
+        s32 m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+    }
+    one &= *q;
+    if (one != 0) {
+      (p->s).flags |= 0x10;
+    } else {
+      (p->s).flags &= 0xEF;
+    }
+    fl = (p->s).flags;
+    if ((0x10 & fl) != 0) {
+      (p->s).d.x = 0x20;
+      (p->s).unk_coord.x = -1;
+    } else {
+      (p->s).d.x = -0x20;
+      (p->s).unk_coord.x = 1;
+    }
+    z = 0;
+    (p->s).work[2] = 0x20;
+    (p->s).mode[2] = z;
+    (p->s).mode[3] = z;
+    CreateEnemy42(&p->s, 2, (((u32)fl << 24) >> 28) & 1);
+    (p->s).unk_2c = (struct Entity*)z;
+    PlaySound(0x2F);
+  }
+  UpdateMotionGraphic(&p->s);
+  switch ((p->s).mode[3]) {
+    case 0:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.x += (p->s).unk_coord.x;
+      if ((u8)--(p->s).work[2] != 0xFF) {
+        break;
+      }
+      goto next;
+    case 1:
+      if ((((p->s).scriptEntity)->flags & 0x80) == 0) {
+        break;
+      }
+      c.x = 0xE00;
+      c.y = -0x1800;
+      (p->s).unk_2c = CreateBossExplosion(&p->s, &c);
+      goto next;
+    case 2:
+      if (((p->s).unk_2c)->mode[0] <= 1) {
+        break;
+      }
+      gStageRun.vm.active |= VM_FLAG1;
+      (p->s).work[2] = 0x20;
+      goto next;
+    case 3:
+      if ((u8)--(p->s).work[2] != 0xFF) {
+        break;
+      }
+      {
+        register u8 t asm("r0");
+        register u8 fv asm("r1");
+        t = (p->s).flags;
+        fv = (u8)~DISPLAY;
+        fv &= t;
+        (p->s).flags = fv;
+        asm volatile("" :: "r"(t));
+      }
+    next:
+      (p->s).mode[3]++;
+      break;
+  }
+}
+
 void FUN_0805af14(struct Boss* p) {
   if ((p->s).coord.x < *(s32*)((u8*)p + 0xb4) + 0x2000 ||
       (p->s).coord.x > *(s32*)((u8*)p + 0xd8) - 0x2000) {
