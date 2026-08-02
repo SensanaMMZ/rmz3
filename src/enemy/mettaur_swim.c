@@ -333,6 +333,79 @@ void FUN_08089364(struct Enemy* p) {
 
 INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1b.inc");
 
+struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
+
+// 0x080898BC -- swimming mettaur figure-eight: ride a sine path around the
+// stored anchor, flipping half-phase each wrap, and fire a lemon pair on a
+// 0x78-frame timer. Blocker (sine-path register rotation): retail threads
+// {x accumulator, gSineTable base, phase copy} through r4/r3/r3 with a
+// three-operand base add, ours rotates them and adds in place. An explicit
+// table-pointer variable and an r3 pin each fixed part of it; pinning both
+// the accumulator and the table did not close the remaining 23 bytes.
+NON_MATCH void FUN_080898bc(struct Enemy* p) {
+#if MODERN
+  struct Coord c;
+  s32 yb;
+  s32 sv;
+  u8 m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[0]);
+      SetMotion(&p->s, MOTION(0xDD, 0x06));
+      (p->s).work[2] = m2;
+      (p->s).work[3] = m2;
+      *(u16*)((u8*)p + 0xc0) = 0x78;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      u8 t;
+      (p->s).work[2]++;
+      t = (p->s).work[2];
+      if (t == 0) {
+        (p->s).work[3] ^= 1;
+      }
+      if ((p->s).work[3] != 0) {
+        s32 base = *(s32*)((u8*)p + 0xb8);
+        s32 x = base + 0x1800;
+        const s16* st = gSineTable;
+        s32 a = 0x80 - t;
+        x += st[(u8)(a + 0x40)] * 3 << 3;
+        (p->s).coord.x = x;
+        yb = *(s32*)((u8*)p + 0xbc);
+        sv = st[(u8)a];
+      } else {
+        s32 base = *(s32*)((u8*)p + 0xb8);
+        s32 x = base - 0x1800;
+        const s16* st = gSineTable;
+        x += st[(u8)(t + 0x40)] * 3 << 3;
+        (p->s).coord.x = x;
+        yb = *(s32*)((u8*)p + 0xbc);
+        sv = st[t];
+      }
+      (p->s).coord.y = yb + (sv << 5);
+      {
+        u16* tp = (u16*)((u8*)p + 0xc0);
+        *tp = *tp - 1;
+        if ((u16)*tp == 0) {
+          *tp = 0x78;
+          PlaySound(0x2C);
+          c.x = (p->s).coord.x - 0x800;
+          c.y = (p->s).coord.y + 0x400;
+          CreateLemon(&c, 0x200, 0xE0);
+          c.x = (p->s).coord.x + 0x800;
+          c.y = (p->s).coord.y + 0x400;
+          CreateLemon(&c, 0x200, 0xA0);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/mettaur_swim_898bc.inc");
+#endif
+}
+
 void FUN_08089a00(struct Enemy* p) {
   struct Entity* par = (p->s).unk_28;
   switch ((p->s).mode[2]) {
