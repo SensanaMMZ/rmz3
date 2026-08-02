@@ -731,7 +731,29 @@ void FUN_0805f870(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p1_post_p2_p2_p2.inc");
+struct Entity* FUN_080afbfc(struct Coord* c, s32 r1, s32 r2, s32 r3);
+
+// 0x0805F8C4
+void FUN_0805f8c4(struct Boss* p) {
+  struct Coord c;
+  s32 d;
+  u8 t;
+  d = (p->s).work[2] + 1;
+  (p->s).work[2] = d;
+  t = d;
+  if (t == 0xF) {
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    PlaySound(0xFC);
+    FUN_080afbfc(&c, 0x3C0, 0x10, 1);
+    FUN_080afbfc(&c, 0x3C0, 0x30, 1);
+    FUN_080afbfc(&c, 0x3C0, 0x50, 1);
+    FUN_080afbfc(&c, 0x3C0, 0x70, 1);
+  }
+  if (*(u8*)((u8*)p + 0x73) == 3) {
+    (p->s).mode[3] = 2;
+  }
+}
 
 void nop_0805f930(struct Boss* p) {}
 
