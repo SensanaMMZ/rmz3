@@ -251,7 +251,43 @@ void CarrybeeG_Disappear(struct Enemy* p) {
 
 bool8 FUN_0808af78(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/carrybee_g_p1_p2.inc");
+#include "stagerun.h"
+#include "camera.h"
+#include "zero.h"
+
+// 0x0808AF7C
+void FUN_0808af7c(struct Enemy* p) {
+  u8 m;
+  {
+    s32* pb4 = (s32*)((u8*)p + 0xb4);
+    struct Camera* cam = &gStageRun.vm.camera;
+    *pb4 = cam->viewport.y - 0x4000;
+  }
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      *(s32*)((u8*)p + 0xb8) = m;
+      (p->s).unk_coord.x = (pZero2->s).coord.x;
+      (p->s).d.x = 0x4600;
+      SetMotion(&p->s, 0x6E00);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+    case 1: {
+      s32 y = (p->s).coord.y + 0x200;
+      (p->s).coord.y = y;
+      if (y > *(s32*)((u8*)p + 0xb4)) {
+        u8 z;
+        (p->s).unk_coord.y = y;
+        z = 0;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = z;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 bool8 FUN_0808b008(struct Enemy* p) { return TRUE; }
 
