@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "element.h"
 #include "enemy.h"
+#include "zero.h"
 #include "global.h"
 #include "motion.h"
 #include "projectile.h"
@@ -129,7 +130,47 @@ void FUN_08084974(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/eye_cannon_post_post_pre.inc");
+
+// 0x080849B0
+void FUN_080849b0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, 0x6601);
+      (p->s).work[2] = 0x80;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      u8 xf = (p->s).flags & 0x10;
+      if (xf == 0) {
+        if ((u32)((pZero2->s).coord.x - (p->s).coord.x + 0x7800) <= 0x67FF &&
+            (u32)((pZero2->s).coord.y - (p->s).coord.y) <= 0x6FFF) {
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = xf;
+        }
+      } else {
+        if ((u32)((pZero2->s).coord.x - (p->s).coord.x - 0x1000) <= 0x67FF &&
+            (u32)((pZero2->s).coord.y - (p->s).coord.y) <= 0x6FFF) {
+          u8 z = 0;
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = z;
+        }
+      }
+      {
+        s32 raw = (p->s).work[2] - 1;
+        u8 t;
+        (p->s).work[2] = raw;
+        t = raw;
+        if (t == 0) {
+          (p->s).mode[1] = 2;
+          (p->s).mode[2] = t;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 // 0x08084a80
 void FUN_08084a80(struct Enemy* p) {
