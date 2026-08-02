@@ -370,6 +370,70 @@ NON_MATCH void FUN_08091d0c(struct Enemy* p) {
 
 INCASM("asm/enemy/unk_59_post_a3.inc");
 
+#include "stagerun.h"
+#include "camera.h"
+
+// 0x08091f00
+void FUN_08091f00(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 dx;
+      PlaySound(0x100);
+      (p->s).d.x = -0x300;
+      dx = -0x300;
+      if (*(s32*)((u8*)p + 0xb4) < 0) {
+        dx = 0x300;
+      }
+      (p->s).d.x = dx;
+      (p->s).d.y = -0x200;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+        register u8 f asm("r0");
+        register u8 t asm("r1");
+        register u8 k2 asm("r1");
+        register s32 z asm("r2");
+        u8* qq;
+        t = (p->s).flags;
+        f = 0xFE;
+        f &= t;
+        asm volatile("" ::"r"(t));
+        z = 0;
+        k2 = 0xFD;
+        f &= k2;
+        (p->s).flags = f;
+        qq = (u8*)p + 0x8c;
+        asm("" : "+r"(qq));
+        *(s32*)qq = z;
+        asm("" : "+r"(qq));
+        qq += 4;
+        asm("" : "+r"(qq));
+        *(s32*)qq = z;
+        asm("" : "+r"(qq));
+        qq += 4;
+        asm("" : "+r"(qq));
+        *qq = z;
+        {
+          register u8 f3 asm("r0");
+          register u8 t3 asm("r1");
+          t3 = (p->s).flags;
+          f3 = 0xFB;
+          f3 &= t3;
+          (p->s).flags = f3;
+          asm volatile("" ::"r"(t3));
+        }
+        SET_ENEMY_ROUTINE(p, 3);
+      }
+      break;
+  }
+}
+
+INCASM("asm/enemy/unk_59_post_a3_b.inc");
+
 struct VFX* CreateGhost18(struct Coord* c, u8 r1, bool8 isRight, u8 r3);
 static const struct SlashedEnemy sSlashedEnemies[4];
 
