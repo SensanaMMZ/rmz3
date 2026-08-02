@@ -328,6 +328,60 @@ NON_MATCH void FUN_08091980(struct Enemy* p) {
 #endif
 }
 
+// 0x08091AB0
+void FUN_08091ab0(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  struct Sprite* ps = &(p->s).spr;
+  struct Sprite* qs = &(q->spr);
+  switch ((p->s).mode[2]) {
+    case 0:
+      InitNonAffineSprite(ps, qs->sprites, &(p->s).coord);
+      SetDDP(&p->body, &sCollisions[2]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 z;
+      u8 w2;
+      u8 w2_0 = (p->s).work[2];
+      asm volatile("add %0, %1, #0" : "=&l"(w2) : "l"(w2_0));
+      if (w2 == 0) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+      {
+        s32 n = w2 + 1;
+        z = 0;
+        (p->s).work[2] = n;
+        if ((u8)n == 4) {
+          (p->s).work[2] = z;
+        }
+      }
+      (p->s).coord.y = q->coord.y;
+      if (*(u32*)((u8*)q + 0xc4) & 1) {
+        {
+          register u8 f asm("r0");
+          register u8 t asm("r1");
+          register u8 k2 asm("r1");
+          t = (p->s).flags;
+          f = 0xFE;
+          f &= t;
+          asm volatile("" ::"r"(t));
+          k2 = 0xFD;
+          f &= k2;
+          (p->s).flags = f;
+        }
+        *(u32*)((u8*)p + 0x8c) = z;
+        *(u32*)((u8*)p + 0x90) = z;
+        *(u8*)((u8*)p + 0x94) = z;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, 3);
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/unk_59_post_a2.inc");
 
 
