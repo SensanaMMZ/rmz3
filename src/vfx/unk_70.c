@@ -1,6 +1,7 @@
 #include "stagerun.h"
 #include "entity.h"
 #include "global.h"
+#include "physics.h"
 #include "vfx.h"
 
 static void Ghost70_Init(struct VFX* p);
@@ -99,6 +100,49 @@ void FUN_080c5764(struct VFX* p) {
 void FUN_080c5784(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+// 0x080C57A4
+void FUN_080c57a4(struct VFX* p) {
+  struct Coord c;
+  switch ((p->s).mode[1]) {
+    case 0:
+      if ((p->s).work[1] == 0) {
+        SetMotion(&p->s, 0x10);
+      } else {
+        SetMotion(&p->s, (p->s).work[1] | 0xBA00);
+      }
+      (p->s).work[2] = 0;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 x;
+      s32 y;
+      s32 w;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).d.y <= 0x6FF) {
+        (p->s).d.y += 0x2A;
+      }
+      y = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = y;
+      x = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = x;
+      w = (p->s).work[2] + 1;
+      (p->s).work[2] = w;
+      if ((u8)w > 0x3C) {
+        if (PushoutToUp1(x, y) != 0) {
+          if ((p->s).work[1] != 0) {
+            c.x = (p->s).coord.x;
+            c.y = (p->s).coord.y;
+            CreateSmoke(3, &c);
+          }
+          (p->s).flags &= ~DISPLAY;
+          SET_VFX_ROUTINE(p, ENTITY_DIE);
+        }
+      }
+      break;
+    }
+  }
 }
 
 INCASM("asm/vfx/unk_70_p3_p3.inc");
