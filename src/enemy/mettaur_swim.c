@@ -75,7 +75,55 @@ s32 FUN_08088bc8(struct Enemy* p, s32 dx, s32 dy) {
   }
 }
 
-INCASM("asm/enemy/mettaur_swim_p1_pre_p1.inc");
+// 0x08088c4c
+bool8 FUN_08088c4c(struct Enemy* p, s32 dx, s32 dy) {
+  s32 r = 0;
+  u8* f = (u8*)p + 0xc2;
+  if (*f == 0) {
+    if (dx != 0) {
+      (p->s).coord.x += dx;
+      if (dx > 0) {
+        s32 t = PushoutToLeft1((p->s).coord.x, (p->s).coord.y);
+        if (t < 0) {
+          (p->s).coord.x += t;
+        }
+      } else {
+        s32 t = PushoutToRight1((p->s).coord.x, (p->s).coord.y);
+        if (t > 0) {
+          (p->s).coord.x += t;
+        }
+      }
+    }
+    if (dy != 0) {
+      (p->s).coord.y += dy;
+      if (dy > 0) {
+        s32 t = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (t < 0) {
+          (p->s).coord.y += t;
+        }
+      } else {
+        s32 t = PushoutToDown1((p->s).coord.x, (p->s).coord.y);
+        if (t > 0) {
+          (p->s).coord.y += t;
+        }
+      }
+    }
+  } else {
+    (p->s).coord.x += dx;
+    (p->s).coord.y += dy;
+    if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) == 0) {
+      *f = r;
+    }
+  }
+  {
+    s32 lim = gOverworld.sea + 0x1000;
+    if ((p->s).coord.y < lim) {
+      (p->s).coord.y = lim;
+      r = 1;
+    }
+  }
+  return r;
+}
 
 bool8 FUN_08088cfc(struct Enemy* p) {
   u8 f[2];
