@@ -294,6 +294,55 @@ bool8 FUN_0809b950(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/minigame_harpuia_p3_post_p3.inc");
 
+// 0x0809bd2c
+void FUN_0809bd2c(struct Body* body) {
+  struct Body* e = body->enemy;
+  const struct Collision* c = e->processing;
+  struct Enemy* q = (struct Enemy*)body->parent;
+  if ((*(u32*)&c->atkType & 0x00FF00FF) == 0x00020002) {
+    if (q->props[0] == 1) {
+      (q->s).unk_2c = (struct Entity*)e->parent;
+    }
+  } else {
+    if (c->atkType == 2) {
+      return;
+    }
+    if (c->faction != 0) {
+      if (q->props[0] == 1) {
+        s16* hp = &(q->body).hp;
+        u16 h = *(u16*)hp;
+        if (*hp <= 0x10) {
+          *hp = h + 8;
+        }
+      } else {
+        q->props[2] = 1;
+      }
+    }
+  }
+  if (c->atkType == 2) {
+    return;
+  }
+  if (c->faction == 0) {
+    return;
+  }
+  {
+    struct Enemy* r = (struct Enemy*)(body->enemy)->parent;
+    u8 f;
+    if (r->props[0] == 1) {
+      return;
+    }
+    f = (body->processing)->faction;
+    if (f != 2) {
+      return;
+    }
+    if (q->props[3] != 0) {
+      r->props[2] = f;
+    } else {
+      q->props[3]++;
+    }
+  }
+}
+
 void HarpuiaMinigameEnemy_Init(struct Enemy* p);
 void HarpuiaMinigameEnemy_Update(struct Enemy* p);
 void HarpuiaMinigameEnemy_Die(struct Enemy* p);
