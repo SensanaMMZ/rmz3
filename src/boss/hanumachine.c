@@ -785,7 +785,23 @@ NON_MATCH void FUN_0805d080(struct Boss* p) {
 #endif
 }
 
-INCASM("asm/boss/hanumachine_p2_p1d.inc");
+// 0x0805D1C4
+void FUN_0805d1c4(struct Boss* p) {
+  u8 m = (p->s).mode[2];
+  if (m == 0) {
+    GotoMotion(&p->s, MOTION(0xb5, 0x0c), 2, 5);
+    (p->s).d.x = m;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.y += 0x40;
+  if (*(u8*)((u8*)p + 0x73) == 3) {
+    u8 z = 0;
+    (p->s).mode[1] = 0x1B;
+    (p->s).mode[2] = z;
+  }
+}
 
 u16 FUN_08010d70(s32 x, s32 y);
 void FUN_08010dd8(s32 x, s32 y);
