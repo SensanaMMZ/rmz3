@@ -368,7 +368,33 @@ NON_MATCH void FUN_08091d0c(struct Enemy* p) {
 #endif
 }
 
-INCASM("asm/enemy/unk_59_post_a3.inc");
+// 0x08091da4
+void FUN_08091da4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x100);
+      SetDDP(&p->body, &sCollisions[8]);
+      (p->s).d.x = ((p->s).work[2] * 3 << 7) - 0x180;
+      (p->s).d.y = -0x400;
+      SET_XFLIP(p, (p->s).work[2] >> 1);
+      SetMotion(&p->s, MOTION(0x88, 0x01));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 dy;
+      (p->s).coord.x += (p->s).d.x;
+      dy = (p->s).d.y + 0x40;
+      (p->s).d.y = dy;
+      if (dy > 0) {
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = 0;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 // 0x08091e58
 void FUN_08091e58(struct Enemy* p) {
