@@ -434,6 +434,25 @@ void MaybeKillCrossbyne(struct Enemy* p) {
 
 INCASM("asm/enemy/crossbyne_p3_post_postc.inc");
 
+// 0x0807D5C4
+void FUN_0807d5c4(struct Enemy* p) {
+  struct Coord c;
+  register u8* q asm("r0");
+  u32 z;
+  q = (u8*)p + 0x8c;
+  z = 0;
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *(u32*)q = z;
+  asm volatile("add %0, #4" : "+r"(q));
+  *q = z;
+  (p->s).flags &= 0xFB;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  CreateSmoke(2, &c);
+  SET_ENEMY_ROUTINE(p, 4);
+}
+
 // --------------------------------------------
 
 void FUN_0807cf5c(struct Enemy* p);
