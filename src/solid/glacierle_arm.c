@@ -113,7 +113,93 @@ void GlacierleArm_Update(struct Solid* p) {
   (sGlacierleArmUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/solid/glacierle_arm_pre_b.inc");
+extern const u8 u8_ARRAY_0837053a[10];
+void CreateIcicleParticle(s32 x, s32 y, s32 dy);
+
+// 0x080CEA5C -- parked (loop-invariant hoist): 93/93 insns and every other
+// register home matches. Retail recomputes `p + 0xbc` AND reloads the byte
+// inside every iteration of the icicle loop; agbcc hoists both out to the
+// preheader. Resisted: plain barrier on the pointer, asm volatile barrier,
+// volatile load, volatile load through a loop-dependent base, and an asm
+// with the loop counter as an input operand (agbcc LICM appears to ignore
+// asm input dependencies). The emitted form is otherwise byte-correct
+// (adds r0,r4,#0 / add r0,#0xbc / ldrb) - only its position differs.
+NON_MATCH void GlacierleArm_Die(struct Solid* p) {
+#if MODERN
+
+  s32 i;
+  const u8* tp;
+  PlaySound(0x3F);
+  {
+    u8* a = (u8*)p + 0x8c;
+    s32 z = 0;
+    *(u32*)a = z;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *(u32*)a = z;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *a = z;
+  }
+  (p->s).flags &= 0xFB;
+  i = 0;
+  tp = u8_ARRAY_0837053a;
+  if (i < tp[(p->s).work[2]]) {
+    const u8* tp2 = tp;
+    do {
+      u32 ix;
+      s32 v;
+      {
+        u8* vp;
+        u8* base = (u8*)p;
+        asm volatile("" : "+r"(base) : "r"(i));
+        vp = base + 0xbc;
+        v = *(volatile u8*)vp;
+      }
+      CreateIcicleParticle((p->s).coord.x, (p->s).coord.y + 0x1000, -((v * 3) << 8));
+      i++;
+      ix = (p->s).work[2];
+      ix += (u32)tp2;
+      if (i >= *(const u8*)ix) {
+        break;
+      }
+    } while (1);
+  }
+  {
+    register u8 fv asm("r0");
+    register u8 fm asm("r1");
+    fv = *(volatile u8*)&(p->s).flags;
+    fm = 0xFE;
+    fm &= fv;
+    (p->s).flags = fm;
+  }
+  if ((p->s).work[0] == 0) {
+    struct Entity* q = (p->s).unk_28;
+    if (q->mode[0] <= 1) {
+      s32* bp = (s32*)((u8*)p + 0xb4);
+      s32 bx;
+      s32 by;
+      bx = *bp;
+      asm("" : "+r"(bp));
+      bp = (s32*)((u8*)bp + 4);
+      asm("" : "+r"(bp));
+      by = *bp;
+      CreateSolidGlacierleArm((struct Boss*)q, bx, by);
+    }
+    SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+  } else {
+    (p->s).coord.x = *(s32*)((u8*)p + 0xb4);
+    (p->s).coord.y = *(s32*)((u8*)p + 0xb8);
+    SET_SOLID_ROUTINE(p, ENTITY_INIT);
+    (p->s).work[0] = 2;
+  }
+#else
+  INCCODE("asm/solid/glacierle_arm_ea5c.inc");
+#endif
+}
+
 
 void nop_080ceb28(struct Solid* p) {}
 

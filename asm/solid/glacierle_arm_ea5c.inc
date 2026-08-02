@@ -4,8 +4,6 @@
 
 	.text
 
-	thumb_func_start GlacierleArm_Die
-GlacierleArm_Die: @ 0x080CEA5C
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	movs r0, #0x3f
@@ -109,4 +107,3 @@ _080CEB1E:
 	bx r0
 	.align 2, 0
 _080CEB24: .4byte gSolidFnTable
-
