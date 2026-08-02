@@ -1,9 +1,12 @@
 #include "collision.h"
 #include "global.h"
 #include "quake.h"
+#include "camera.h"
 #include "solid.h"
 #include "sound.h"
+#include "stagerun.h"
 #include "story.h"
+#include "vfx.h"
 
 static const struct Collision sCollision;
 
@@ -100,7 +103,34 @@ void Solid43_Update(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/unk_43.inc");
+// 0x080DE13C
+void Solid43_Die(struct Solid* p) {
+  struct Coord c;
+  if ((p->s).mode[1] == 0) {
+    register u32 t asm("r0");
+    u32 r;
+    t = RNG_0202f388 * 0x343FD + 0x269EC3;
+    t <<= 1;
+    r = t >> 1;
+    c.x = (p->s).coord.x + ((t << 4) >> 21);
+    t = r * 0x343FD + 0x269EC3;
+    t <<= 1;
+    RNG_0202f388 = t >> 1;
+    c.y = (p->s).coord.y + ((t << 3) >> 20) - 0x800;
+    CreateSmoke(3, &c);
+    (p->s).mode[1]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).d.y <= 0x6FF) {
+    (p->s).d.y += 0x20;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).unk_coord.y = (p->s).coord.y;
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x3000) {
+    (p->s).flags &= ~DISPLAY;
+    SET_SOLID_ROUTINE(p, ENTITY_EXIT);
+  }
+}
 
 static const struct Collision sCollision = {
   kind : DRP,
