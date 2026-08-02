@@ -271,6 +271,63 @@ void FUN_08080054(struct Enemy* p) {
   }
 }
 
+void FUN_080bf48c(s32 x, s32 y, u8 n);
+void FUN_080bf438(s32 x, s32 y, u8 n);
+
+// 0x0808027c
+void FUN_0808027c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 v asm("r2");
+      {
+        register u8 f asm("r0");
+        register u8 t asm("r1");
+        t = (p->s).flags;
+        f = 0xFE;
+        f &= t;
+        (p->s).flags = f;
+        asm volatile("" ::"r"(t));
+      }
+      FUN_080bf48c((p->s).coord.x, (p->s).coord.y + 0x1000, 0);
+      FUN_080bf438((p->s).coord.x, (p->s).coord.y, 0);
+      v = 0;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        v = 1;
+      }
+      if (v != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+      {
+        register s32 xf asm("r1");
+        u8* oa;
+        s32 sh4, ov, m11;
+        xf = v;
+        (p->s).spr.xflip = xf;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      (p->s).coord.y -= 0x1000;
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      u8 t2 = --(p->s).work[2];
+      if (t2 == 0) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = t2;
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_zombie_p2_mid.inc");
 
 void FUN_080804a8(struct Enemy* p) {
