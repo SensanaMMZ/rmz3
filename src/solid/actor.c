@@ -1459,7 +1459,19 @@ void initActor23(struct Solid* p) {
   Actor_Update(p);
 }
 
-INCASM("asm/solid/actor_p1_p2_a.inc");
+// 0x080D31B0
+void Actor23_Update(struct Solid* p) {
+  if ((p->s).scriptEntity->flags & 1) {
+    if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0xFFF) {
+      (p->s).d.x += 4;
+      if ((p->s).d.x > 0x700) {
+        (p->s).d.x = 0x700;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y -= (p->s).d.x;
+    }
+  }
+}
 
 void Actor24_Update(struct Solid* p) {
   if ((p->s).mode[1] == 0) {
