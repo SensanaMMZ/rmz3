@@ -86,6 +86,62 @@ void OmegaGold_Disappear(struct Boss* p) {
 
 INCASM("asm/boss/omega_gold_p1_post_p2.inc");
 
+// 0x0805B358
+void FUN_0805b358(struct Boss* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).work[2] = 0xB4;
+      (p->s).d.y = m;
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      s32 dy = (p->s).d.y + 8;
+      (p->s).d.y = dy;
+      if (dy > 0x120) {
+        (p->s).d.y = 0x120;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      {
+      register u8 wv asm("r0");
+      register s32 k1 asm("r1");
+      wv = (p->s).work[2];
+      k1 = 1;
+      wv &= k1;
+      if (wv == 0) {
+        (p->s).coord.x = (p->s).unk_coord.x + (((s32)(RANDOM(RNG_0202f388) % 6) - 3) << 8);
+      }
+      }
+      {
+        u8 w = *(volatile u8*)&(p->s).work[2];
+        if (w != 0) {
+          s32 raw = w - 1;
+          (p->s).work[2] = raw;
+          if ((u8)raw != 0) {
+            break;
+          }
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      register u8 av asm("r1");
+      register s32 two asm("r0");
+      u8 z;
+      av = gStageRun.vm.active;
+      two = 2;
+      z = 0;
+      two |= av;
+      gStageRun.vm.active = two;
+      (p->s).flags &= 0xFE;
+      gOverworld.state[1] = z;
+      break;
+    }
+  }
+}
+
 bool8 FUN_0805b41c(struct Boss* p) { return TRUE; }
 
 void goldOmega1_0805b420(struct Boss* p) {
