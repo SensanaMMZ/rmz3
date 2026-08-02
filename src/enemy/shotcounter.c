@@ -957,7 +957,44 @@ void FUN_08066b34(struct Enemy* p) {}
 
 bool8 FUN_08066b38(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shotcounter_p7.inc");
+// 0x08066B3C
+void FUN_08066b3c(struct Enemy* p) {
+  struct Entity** slot;
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[8]);
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+    case 1:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y + (p->s).d.y + 0x1000)) {
+        (p->s).d.y = 0;
+        (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - 0x1000;
+      } else {
+        (p->s).coord.y += (p->s).d.y;
+      }
+      break;
+  }
+  slot = (struct Entity**)((u8*)p + 0xc0);
+  if (isKilled(*slot)) {
+    u32 z;
+    u8 one;
+    u8* q;
+    q = (u8*)p + 0xbf;
+    z = 0;
+    *q = z;
+    *slot = (struct Entity*)z;
+    one = 1;
+    (p->s).mode[1] = one;
+    (p->s).mode[2] = z;
+    SetDDP(&p->body, &sCollisions[7]);
+    (p->s).mode[2] = one;
+  }
+}
 
 bool8 FUN_08066bdc(struct Enemy* p) { return TRUE; }
 
