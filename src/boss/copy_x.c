@@ -1646,6 +1646,69 @@ void copyx_08057094(struct Boss* p) {
   }
 }
 
+// 0x0805713C
+void copyxMode38(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, 0xB31C);
+    (p->s).mode[2] = 0;
+    {
+      s32 onR = 0;
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        onR = 1;
+      }
+      ((p->s).spr).xflip = onR;
+    }
+    {
+      s32 onR2 = 0;
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        onR2 = 1;
+      }
+      {
+        register u8* t0 asm("r0");
+        register u8* oa asm("ip");
+        register u32 sh asm("r2");
+        u32 off = 0x4a;
+        asm("" : "+r"(off));
+        off += (u32)p;
+        t0 = (u8*)off;
+        oa = t0;
+        asm("" : "+r"(oa));
+        sh = onR2 << 4;
+        {
+          s32 ov = *t0;
+          s32 m11 = -0x11;
+          u32 vv;
+          register u8* fa asm("r1");
+          asm("" : "+r"(m11));
+          vv = (m11 & ov) | sh;
+          fa = oa;
+          asm("" : "+r"(fa));
+          *fa = vv;
+        }
+      }
+      if (onR2 != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+    }
+    CreateVFX55(p, 2, 0);
+    copyx_080aa24c(&p->s, 1, 0);
+    *(u8*)((u8*)p + 0xc6) = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (*(u8*)((u8*)p + 0x73) == 3) {
+    if ((p->s).flags & 0x10) {
+      (p->s).d.x = -0x200;
+    } else {
+      (p->s).d.x = 0x200;
+    }
+    (p->s).d.y = -0x200;
+    (p->s).mode[1] = 0x19;
+    (p->s).mode[2] = 1;
+  }
+}
+
 INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b3.inc");
 
 void copyx_08057418(struct Boss* p) {
