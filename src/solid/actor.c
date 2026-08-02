@@ -1286,6 +1286,36 @@ void ActorCrashedPantheon_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p1_a_post.inc");
 
+// 0x080d2804
+void Actor13_Update(struct Solid* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[1]) {
+    case 0:
+      InitScalerotMotion1(&p->s);
+      (p->s).spr.mag.x = 0x180;
+      (p->s).spr.mag.y = 0x180;
+      SetMotion(&p->s, MOTION(0x21, 0x00));
+      SET_XFLIP(&p->s, TRUE);
+      (p->s).coord.x = (q->coord).x + 0x1E00;
+      (p->s).coord.y = (q->coord).y - 0x1E00;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 x;
+      UpdateMotionGraphic(&p->s);
+      x = (p->s).coord.x + 0x400;
+      (p->s).coord.x = x;
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        if (x > cam->viewport.x + 0xB7FF) {
+          SET_SOLID_ROUTINE(&p->s, ENTITY_DIE);
+        }
+      }
+      break;
+    }
+  }
+}
+
 // 0x080d28b4
 void ActorSaveSelectCiel_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
