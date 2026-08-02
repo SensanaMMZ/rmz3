@@ -481,6 +481,41 @@ NON_MATCH void shrimporin_08069c80(struct Enemy* p) {
 #endif
 }
 
+// 0x08069d00
+void shrimporin_08069d00(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8 fv asm("r0");
+      register u8 t asm("r1");
+      SetDDP(&p->body, sCollisions);
+      t = (p->s).flags;
+      fv = 0xFE;
+      fv &= t;
+      (p->s).flags = fv;
+      asm volatile("" ::"r"(t));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 d = (pZero2->s).coord.x - (p->s).coord.x;
+      u8 w = (p->s).work[0];
+      if (w == 0) {
+        if (d <= 0x77FF) {
+          (p->s).mode[1] = 2;
+          (p->s).mode[2] = w;
+        }
+      } else {
+        if (d > 0x7800) {
+          s32 z = 0;
+          (p->s).mode[1] = 2;
+          (p->s).mode[2] = z;
+        }
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/shrimpolin.inc");
 
 void createShrimporinIce(s32 x, s32 y, u8 n);

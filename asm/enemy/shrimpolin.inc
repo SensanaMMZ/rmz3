@@ -5,63 +5,6 @@
 	.text
 
 
-	thumb_func_start shrimporin_08069d00
-shrimporin_08069d00: @ 0x08069D00
-	push {r4, lr}
-	adds r4, r0, #0
-	ldrb r0, [r4, #0xe]
-	cmp r0, #0
-	beq _08069D10
-	cmp r0, #1
-	beq _08069D28
-	b _08069D64
-_08069D10:
-	adds r0, r4, #0
-	adds r0, #0x74
-	ldr r1, _08069D48 @ =sCollisions
-	bl SetDDP
-	ldrb r1, [r4, #0xa]
-	movs r0, #0xfe
-	ands r0, r1
-	strb r0, [r4, #0xa]
-	ldrb r0, [r4, #0xe]
-	adds r0, #1
-	strb r0, [r4, #0xe]
-_08069D28:
-	ldr r0, _08069D4C @ =pZero2
-	ldr r0, [r0]
-	ldr r1, [r0, #0x54]
-	ldr r0, [r4, #0x54]
-	subs r1, r1, r0
-	ldrb r2, [r4, #0x10]
-	cmp r2, #0
-	bne _08069D54
-	ldr r0, _08069D50 @ =0x000077FF
-	cmp r1, r0
-	bgt _08069D64
-	movs r0, #2
-	strb r0, [r4, #0xd]
-	strb r2, [r4, #0xe]
-	b _08069D64
-	.align 2, 0
-_08069D48: .4byte sCollisions
-_08069D4C: .4byte pZero2
-_08069D50: .4byte 0x000077FF
-_08069D54:
-	movs r0, #0xf0
-	lsls r0, r0, #7
-	cmp r1, r0
-	ble _08069D64
-	movs r1, #0
-	movs r0, #2
-	strb r0, [r4, #0xd]
-	strb r1, [r4, #0xe]
-_08069D64:
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-
 	thumb_func_start shrimporinBurrowSnow
 shrimporinBurrowSnow: @ 0x08069D6C
 	push {r4, r5, r6, lr}
