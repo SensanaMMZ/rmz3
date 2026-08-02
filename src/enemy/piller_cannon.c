@@ -216,7 +216,18 @@ bool8 FUN_08068f08(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/piller_cannon_p10_b.inc");
+// 0x08068F68
+void FUN_08068f68(struct Body* body, struct Coord* c) {
+  const struct Collision* pr = (body->enemy)->processing;
+  struct Entity* e = (struct Entity*)body->parent;
+  e->d = *c;
+  if ((*(u32*)&pr->atkType & 0x200FF) == 0x20002) {
+    struct Entity* q = (struct Entity*)body->parent;
+    if (*(u8*)((u8*)q + 0xb9) != 0) {
+      SET_ENEMY_ROUTINE(q, 2);
+    }
+  }
+}
 
 bool8 FUN_0806860c(struct Enemy* p);
 bool8 FUN_08068614(struct Enemy* p);
