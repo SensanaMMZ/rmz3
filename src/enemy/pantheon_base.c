@@ -150,6 +150,61 @@ void pBase_0808a47c(struct Enemy* p) {
   }
 }
 
+#include "mission.h"
+#include "vfx.h"
+
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
+static const motion_t sMotions[10];
+
+// 0x0808a514
+void pBase_0808a514(struct Enemy* p) {
+  struct Coord c;
+  struct Coord* co;
+  u8* m;
+  {
+    register u8 f asm("r0");
+    register u8 t asm("r1");
+    register u8 k2 asm("r1");
+    u8* qq = (u8*)p + 0x8c;
+    s32 z;
+    asm("" : "+r"(qq));
+    z = 0;
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *(s32*)qq = z;
+    asm("" : "+r"(qq));
+    qq += 4;
+    asm("" : "+r"(qq));
+    *qq = z;
+    t = (p->s).flags;
+    f = 0xFB;
+    f &= t;
+    asm volatile("" ::"r"(t));
+    k2 = 0xFE;
+    f &= k2;
+    (p->s).flags = f;
+  }
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1000;
+  CreateSmoke(1, &c);
+  PlaySound(0x2a);
+  m = (u8*)sMotions;
+  FUN_080b7f70(&p->s, &c, (motion_t*)m, 3);
+  FUN_080b7f70(&p->s, &c, (motion_t*)(m + 6), 3);
+  m += 12;
+  FUN_080b7f70(&p->s, &c, (motion_t*)m, 3);
+  co = &(p->s).coord;
+  TryDropItem(4, co);
+  if (gMission.enemyCount <= 0x270E) {
+    gMission.enemyCount++;
+  }
+  TryDropZakoDisk(p, co);
+  SET_ENEMY_ROUTINE(p, 4);
+}
+
 INCASM("asm/enemy/pantheon_base_p3_post.inc");
 
 void PantheonBase_Init(struct Enemy* p);
