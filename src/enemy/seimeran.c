@@ -367,7 +367,55 @@ void FUN_0808fa24(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/seimeran_p2_p3.inc");
+// 0x0808FA70
+void FUN_0808fa70(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 w;
+      u32 xf;
+      SetDDP(&p->body, &sCollisions[1]);
+      w = (p->s).work[2];
+      if (w != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      xf = 1 & w;
+      ((p->s).spr).xflip = xf;
+      {
+        register u8* oa asm("r3");
+        u32 sh4;
+        s32 ov;
+        s32 m11;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      (p->s).work[3] = Sqrt(0x200);
+      (p->s).d.y = -((p->s).work[3] << 6);
+      SetMotion(&p->s, MOTION(0x77, 0x07));
+      (p->s).mode[2]++;
+    }
+    case 1: {
+      s32 d = (p->s).work[3] - 1;
+      u8 t;
+      (p->s).work[3] = d;
+      t = d;
+      if (t == 0) {
+        (p->s).mode[1] = 6;
+        (p->s).mode[2] = t;
+      }
+      (p->s).d.y += 0x40;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 // 0x0808fb10
 void FUN_0808fb10(struct Enemy* p) {
