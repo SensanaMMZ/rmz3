@@ -147,6 +147,40 @@ void FUN_08084f18(struct Enemy* p) {
   Enemy42_Update(&p->s);
 }
 
+// 0x08084fb4
+void FUN_08084fb4(struct Enemy* p) {
+  register struct Entity* q asm("r6");
+  s32 z;
+  q = (p->s).unk_28;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    u8 t = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    asm("" : "+l"(z));
+    fv |= t;
+    fv |= FLIPABLE;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0xB4, 0x0D));
+  SET_XFLIP(&p->s, (p->s).work[1]);
+  (p->s).flags2 |= WHITE_PAINTABLE;
+  (p->s).invincibleID = q->uniqueID;
+  if (((p->s).flags & X_FLIP) != 0) {
+    (p->s).d.x = -0x80;
+    (p->s).unk_coord.x = 2;
+  } else {
+    (p->s).d.x = 0x80;
+    (p->s).unk_coord.x = -2;
+  }
+  (p->s).work[2] = 0;
+  asm volatile("" ::"l"(z));
+  Enemy42_Update(&p->s);
+}
+
 INCASM("asm/enemy/unk_42_p1_a_b.inc");
 
 void FUN_080852f4(struct Enemy* p) {
