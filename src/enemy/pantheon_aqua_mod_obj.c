@@ -5,6 +5,7 @@
 #include "stagerun.h"
 #include "trig.h"
 #include "vfx.h"
+#include "palette_animation.h"
 
 void createPAquaModRubble(s32 x) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -448,6 +449,91 @@ void FUN_080817a8(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/pantheon_aqua_mod_obj_p3_b.inc");
+
+u8 GetEntityPalID(struct Entity* p);
+
+// 0x08081D2C
+void FUN_08081d2c(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      PlaySound(0x49);
+      *((u8*)p + 0x25) = 0xE;
+      SetMotion(&p->s, 0x5000);
+      StartPaletteAnimation(0x55, ((u32)GetEntityPalID(&p->s) << 5) | 0x200);
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 z asm("r5");
+      register u8 w asm("r1");
+      register s32 w2 asm("r2");
+      register u8 f asm("r0");
+      w = (p->s).work[2];
+      f = 3;
+      f &= w;
+      asm volatile("add %0, %1, #0" : "=&l"(w2) : "l"(w));
+      if (f == 0) {
+        register u8 fl asm("r1");
+        fl = (p->s).flags;
+        asm("" : "+r"(fl));
+        f = 0xFE;
+        f &= fl;
+      } else {
+        register u8 fl2 asm("r1");
+        fl2 = (p->s).flags;
+        asm("" : "+r"(fl2));
+        f = 1;
+        f |= fl2;
+      }
+      (p->s).flags = f;
+      {
+        register s32 nw asm("r0");
+        nw = w2 + 1;
+        z = 0;
+        (p->s).work[2] = nw;
+      }
+      StepPaletteAnimation(0x55);
+      UpdateMotionGraphic(&p->s);
+      if (*(u32*)((u8*)q + 0xb4) & 0x20) {
+        if (q->mode[0] <= 1) {
+          break;
+        }
+      }
+      RemovePaletteAnimation(0x55);
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        h = 0xFD;
+        g &= h;
+        (p->s).flags = g;
+      }
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= 0xFB;
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/pantheon_aqua_mod_obj_p3_b2.inc");
 
 void PantheonAquaModObj_Init(struct Enemy* p);
 void PantheonAquaModObj_Update(struct Enemy* p);
