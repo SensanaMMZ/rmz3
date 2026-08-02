@@ -891,6 +891,60 @@ void copyxMode18(struct Boss* p) {
 }
 
 INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a2.inc");
+
+// A pure register-name miss: retail loads the 0xC5 selector in place
+// (`ldrb r0,[r0]`) and compares it twice from r0; agbcc either loads into r3
+// or, when the selector is pinned to r0, inserts `adds r3,r0,#0` before the
+// first compare. Every spelling tried -- pinned/unpinned selector, pinned v,
+// barriered address pointer, two separate memory compares, and a switch --
+// gives one of those two forms. Instruction count is otherwise exact.
+NON_MATCH void copyx_08056508(struct Boss* p) {
+#if MODERN
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xB3, 0x04));
+    (p->s).mode[2] = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).motion.state == 3) {
+    u8* q = (u8*)p + 0xcd;
+    s32 v;
+    if (*q != 0) {
+      v = *q - 1;
+      goto store;
+    }
+    if (*((u8*)p + 0xc7) != 0) {
+      goto tail;
+    }
+    {
+      u8 k = *((u8*)p + 0xc5);
+      if (k == 1) {
+        s32 one = 1;
+        asm("" : "+r"(one));
+        v = RANDOM(RNG_0202f388) & one;
+        goto store;
+      }
+      if (k != 2) {
+        goto tail;
+      }
+    }
+    v = RANDOM(RNG_0202f388) % 3;
+  store:
+    *q = v;
+  tail:
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = 1;
+    (p->s).mode[3] = 2;
+    (p->s).work[2] = 4;
+  }
+#else
+  INCCODE("asm/boss/copyx_08056508.inc");
+#endif
+}
+
+
+
+
+INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a3.inc");
 extern const u8 u8_ARRAY_080fefb4[4];
 
 void copyx_080566b0(struct Boss* p) {
