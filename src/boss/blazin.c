@@ -985,7 +985,47 @@ bool8 blazin_0803ffdc(struct Boss* p, u8 i) {
   return 1;
 }
 
-INCASM("asm/boss/blazin_p12_p2_p1.inc");
+extern const u8 u8_ARRAY_080feda8[16];
+extern const struct Coord Coord_ARRAY_080fedb8[13];
+struct Projectile* FUN_0809e500(struct Entity* e, struct Coord* c, struct Coord* d);
+
+// 0x08040044
+bool8 blazin_08040044(struct Boss* p, u8 a1, u8 a2) {
+  struct Coord c;
+  struct Coord d;
+  u8 ang;
+  u8 a1b;
+  a1b = a1;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y;
+  if (((p->s).flags & 0x10) == 0) {
+    {
+      u32 t = (u32)u8_ARRAY_080feda8[a2] << 24;
+      t += 0xC0000000;
+      ang = t >> 24;
+    }
+    if (a2 <= 6) {
+      ang = ang + a1;
+    } else {
+      ang = ang - a1;
+    }
+    c.x = Coord_ARRAY_080fedb8[a2].x + c.x;
+  } else {
+    ang = 0x40 - u8_ARRAY_080feda8[a2];
+    if (a2 <= 6) {
+      ang = ang - a1;
+    } else {
+      ang = ang + a1b;
+    }
+    c.x = c.x - Coord_ARRAY_080fedb8[a2].x;
+  }
+  c.y = Coord_ARRAY_080fedb8[a2].y + c.y;
+  d.x = gSineTable[ang];
+  d.y = gSineTable[(u8)(ang + 0x40)];
+  FUN_0809e500(&p->s, &c, &d);
+  return 1;
+}
+
 
 extern const u8 BlazinFireballAngles[8];
 struct Projectile* _createBlazinEXFireBall(struct Entity* e, struct Coord* c, struct Coord* d, u8 angle);
