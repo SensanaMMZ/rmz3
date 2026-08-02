@@ -156,7 +156,72 @@ NON_MATCH void FUN_08061d24(struct Body* body, struct Coord* r1 UNUSED, struct C
 #endif
 }
 
-INCASM("asm/boss/spearook_p1_pre_pre_bc_b.inc");
+void Spearook_Die(struct Boss* p);
+
+// 0x08061E24
+bool8 FUN_08061e24(struct Boss* p) {
+  register s32 w0 asm("r4");
+  register s32 nm asm("r0");
+  w0 = (p->s).work[0];
+  switch (w0) {
+    case 0:
+      if ((*(u32*)((u8*)p + 0x8c) & 0x200) == 0) {
+        if (*(s16*)((u8*)p + 0xa4) != 0) {
+          return 0;
+        }
+      }
+      if (gStageRun.missionStatus & 8) {
+        return 0;
+      }
+      SET_BOSS_ROUTINE(p, ENTITY_DIE);
+      (p->s).mode[1] = w0;
+      goto die;
+    case 1: {
+      struct Entity* q = (p->s).unk_28;
+      register s32 two asm("r4");
+      if (q->mode[0] <= 1) {
+        return 0;
+      }
+      {
+        u32 tbl = (u32)gBossFnTable;
+        u32 id = ((p->s).id) << 2;
+        EntityFunc** rt = (EntityFunc**)(tbl + id);
+        two = 2;
+        *(u32*)((p->s).mode) = two;
+        (p->s).onUpdate = (void*)(*rt)[ENTITY_DIE];
+      }
+      if (*(u32*)((u8*)q + 0xbc) & 0x100) {
+        nm = 4;
+        goto setm;
+      }
+      asm("" : "+r"(two));
+      (p->s).mode[1] = two;
+      asm volatile("" ::"r"(two));
+      goto die;
+    }
+    case 2: {
+      register struct Entity* q asm("r3");
+      q = (p->s).unk_28;
+      if (q->mode[0] <= 1) {
+        return 0;
+      }
+      {
+        u32 tbl = (u32)gBossFnTable;
+        u32 id = ((p->s).id) << 2;
+        EntityFunc** rt = (EntityFunc**)(tbl + id);
+        *(u32*)((p->s).mode) = w0;
+        (p->s).onUpdate = (void*)(*rt)[ENTITY_DIE];
+      }
+      nm = 3;
+    setm:
+      (p->s).mode[1] = nm;
+    die:
+      Spearook_Die(p);
+      return 1;
+    }
+  }
+  return 0;
+}
 
 #include "element.h"
 #include "vfx.h"
