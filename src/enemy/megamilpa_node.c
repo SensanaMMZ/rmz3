@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "sound.h"
+#include "vfx.h"
 
 struct EnemyMegamilpaNode {
   OBJECT_HDR;
@@ -90,7 +92,52 @@ void MegamilpaNode_Update(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/megamilpa_node_p1_c.inc");
+void CreateGhost19_2(struct Entity* p, struct Coord* c);
+
+// 0x0806587C
+void MegamilpaNode_Die(struct Enemy* p) {
+  s32 z = (p->s).mode[1];
+  struct Coord* c;
+  switch (z) {
+    case 0: {
+      u8* q = (u8*)p + 0x8c;
+      *(s32*)q = z;
+      asm("" : "+r"(q));
+      q += 4;
+      *(s32*)q = z;
+      asm("" : "+r"(q));
+      q += 4;
+      asm("" : "+r"(q));
+      *q = z;
+      (p->s).flags &= ~4;
+      if (((p->s).flags & 1) == 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+        break;
+      }
+      *(s32*)((u8*)p + 0x60) = z;
+      (p->s).mode[1]++;
+      /* fallthrough */
+    }
+    case 1: {
+      s32 y = (p->s).coord.y;
+      s32 v = *(s32*)((u8*)p + 0x60);
+      (p->s).coord.y = y + v;
+      v += 0x20;
+      *(s32*)((u8*)p + 0x60) = v;
+      if (v > 0x700) {
+        *(s32*)((u8*)p + 0x60) = 0x700;
+      }
+      if (FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+        PlaySound(0x2a);
+        c = &(p->s).coord;
+        CreateSmoke(1, c);
+        CreateGhost19_2(&p->s, c);
+      }
+      break;
+    }
+  }
+}
 
 void nop_08065928(struct Enemy* p) {}
 
