@@ -479,6 +479,64 @@ void FUN_080624b0(struct Boss* p) {
 
 INCASM("asm/boss/spearook_p1_post_p2_a1_b.inc");
 
+// 0x0806267C
+void FUN_0806267c(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((*(u32*)((u8*)p + 0xbc) & 0x20) == 0) {
+        (p->s).mode[2] = 1;
+      }
+      break;
+    case 1:
+      (p->s).work[2] = 0x78;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 2: {
+      register s32 hit asm("r5");
+      register s32 zx asm("r3");
+      register s32 px asm("r2");
+      zx = (pZero2->s).coord.x;
+      px = (p->s).coord.x;
+      if ((u32)(zx - px + 0x6000) <= 0xBFFF) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+        break;
+      }
+      hit = 0;
+      if (px > zx) {
+        if (((bool16 (*)(s32, s32))FUN_080098a4)(px - 0x1600, (p->s).coord.y + 0x400)) {
+          (p->s).coord.x -= 0x80;
+        } else {
+          hit = 1;
+        }
+      } else {
+        if (((bool16 (*)(s32, s32))FUN_080098a4)(px + 0x1600, (p->s).coord.y + 0x400)) {
+          (p->s).coord.x += 0x80;
+        } else {
+          hit = 1;
+        }
+      }
+      {
+        register s32 t asm("r0");
+        register s32 zz asm("r1");
+        t = (p->s).work[2] - 1;
+        zz = 0;
+        (p->s).work[2] = t;
+        t <<= 24;
+        if (t == 0 || hit != 0) {
+          (p->s).mode[1] = zz;
+          (p->s).mode[2] = zz;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/spearook_p1_post_p2_a1_c.inc");
+
 void FUN_0806293c(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0: {
