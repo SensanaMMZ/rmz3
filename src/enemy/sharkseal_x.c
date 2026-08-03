@@ -76,6 +76,68 @@ void SharksealX_Init(struct SharksealX* p) {
   SharksealX_Update((struct Enemy*)p);
 }
 
+static const EnemyFunc PTR_ARRAY_08366a04[8];
+extern const EnemyFunc PTR_ARRAY_08366a24[8];
+bool8 nop_080711d4(struct Enemy* p);
+void sharksealx_08071030(struct Enemy* p);
+void SharksealX_Die(struct Enemy* p);
+
+// 0x080701D4
+void SharksealX_Update(struct Enemy* p) {
+  if ((*(u32*)((u8*)p + 0x8c) & 0x200) != 0) {
+    SET_ENEMY_ROUTINE(p, 2);
+    SharksealX_Die(p);
+    return;
+  }
+  nop_080711d4(p);
+  (PTR_ARRAY_08366a04[(p->s).mode[1]])(p);
+  sharksealx_08071030(p);
+  if ((p->s).mode[1] != 5 && (p->s).mode[1] != 7 && IsFrozen(&p->s) != 0) {
+    {
+      u8 mv = (p->s).mode[1];
+      u8* ba = (u8*)p + 0xbe;
+      *ba = mv;
+    }
+    return;
+  }
+  {
+    struct Overworld* ow = &gOverworld;
+    s32 sea = *(s32*)((u8*)ow + 0x2C00C);
+    if (sea > (p->s).coord.y + 0x800) {
+      register u8* q asm("r6");
+      register s32 v asm("r5");
+      s32 t;
+      q = (u8*)p + 0xbd;
+      v = *q;
+      if (v == 0) {
+        SetMotion(&p->s, MOTION(0x18, 0));
+        UpdateMotionGraphic(&p->s);
+        (p->s).d.y = v;
+      }
+      *q = 1;
+      t = (p->s).d.y + 0x20;
+      (p->s).d.y = t;
+      if (t > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      return;
+    }
+  }
+  {
+    register u8* q2 asm("r2");
+    u8 v2;
+    q2 = (u8*)p + 0xbd;
+    v2 = *q2;
+    if (v2 == 1) {
+      (p->s).mode[1] = v2;
+      (p->s).mode[2] = 0;
+    }
+    *q2 = 0;
+    (PTR_ARRAY_08366a24[(p->s).mode[1]])(p);
+  }
+}
+
 INCASM("asm/enemy/sharkseal_x_p2.inc");
 
 bool8 FUN_080707d0(struct Enemy* p) { return TRUE; }
