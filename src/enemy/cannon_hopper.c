@@ -623,7 +623,136 @@ void FUN_08097904(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/cannon_hopper_post_pre_p3.inc");
+static const struct Collision sCollisions[];
+
+// 0x08097924
+void FUN_08097924(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 nx asm("r1");
+      register u8 nf asm("r0");
+      register u8 fv asm("r2");
+      *((u8*)p + 0xbe) = 0;
+      FUN_08096fb0(p);
+      SetMotion(&p->s, MOTION(0xDC, 0));
+      SetDDP(&p->body, &sCollisions[0]);
+      (p->s).work[2] = 0x18;
+      if ((p->s).work[0] == 1) {
+        s32 a = *(s32*)((u8*)p + 0x28);
+        s32 b = (p->s).coord.x;
+        s32 d = a - b;
+        if (d < 0) {
+          goto nega;
+        }
+        {
+          s32 k = 0x80 << 9;
+          if (d > k) {
+            goto flipa;
+          }
+        }
+        goto done;
+      nega : {
+        s32 d2 = b - a;
+        s32 k2 = 0x80 << 9;
+        if (d2 <= k2) {
+          goto done;
+        }
+      }
+      flipa:;
+      {
+        register s32 t asm("r0");
+        fv = (p->s).flags;
+        t = fv >> 4;
+        nx = 1;
+        nx &= ~t;
+        if (nx == 0) {
+          goto clear;
+        }
+        nf = 0x10;
+        nf |= fv;
+        asm volatile("" ::: "cc");
+        goto stor;
+      }
+      } else {
+        s32 a = *(s32*)((u8*)p + 0x28);
+        s32 b = (p->s).coord.x;
+        s32 d = a - b;
+        if (d < 0) {
+          goto negb;
+        }
+        {
+          s32 k = 0x80 << 7;
+          if (d > k) {
+            goto flipb;
+          }
+        }
+        goto done;
+      negb : {
+        s32 d2 = b - a;
+        s32 k2 = 0x80 << 7;
+        if (d2 <= k2) {
+          goto done;
+        }
+      }
+      flipb:;
+      {
+        register s32 t asm("r0");
+        fv = (p->s).flags;
+        t = fv >> 4;
+        nx = 1;
+        nx &= ~t;
+        if (nx == 0) {
+          goto clear;
+        }
+        nf = 0x10;
+        nf |= fv;
+        asm volatile("" ::: "memory");
+        goto stor;
+      }
+      }
+    clear:
+      nf = 0xEF;
+      nf &= fv;
+    stor:
+      (p->s).flags = nf;
+      {
+        register u8* a2 asm("r0");
+        register u8* b2 asm("r3");
+        s32 sh;
+        u8 ov;
+        s32 m;
+        a2 = (u8*)p + 0x4c;
+        *a2 = nx;
+        b2 = (u8*)p + 0x4a;
+        sh = nx << 4;
+        ov = *b2;
+        m = -0x11;
+        m &= ov;
+        m |= sh;
+        *b2 = m;
+      }
+    done:
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 t0 asm("r0");
+      register s32 t1 asm("r1");
+      FUN_08096ffc(p, (p->s).d.x, (p->s).d.y);
+      t0 = (p->s).work[2];
+      t0 -= 1;
+      (p->s).work[2] = t0;
+      t0 <<= 24;
+      t1 = (u32)t0 >> 24;
+      if (t1 == 0) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = t1;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 // 0x08097A14
 void cannonHopper_08097a14(struct Enemy* p) {
