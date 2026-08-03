@@ -1,5 +1,6 @@
 #include "global.h"
 #include "vfx.h"
+#include "script.h"
 
 // volteel の尻尾と電撃
 
@@ -241,4 +242,76 @@ void FUN_080bc200(struct Entity* p) {
   }
 }
 
-INCASM("asm/vfx/unk_36.inc");
+// 0x080BC464
+void FUN_080bc464(struct VFX* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register struct Entity* q asm("r1");
+      register s32 dx asm("r0");
+      register s32 k asm("r2");
+      SetMotion(&p->s, MOTION(0xA5, 0x05));
+      (p->s).work[2] = 0x1E;
+      if ((p->s).d.x > 0) {
+        q = (p->s).unk_28;
+        dx = (q->coord).x;
+        k = 0xC00;
+      } else {
+        q = (p->s).unk_28;
+        dx = (q->coord).x;
+        k = -0xC00;
+      }
+      dx += k;
+      (p->s).unk_coord.x = dx;
+      (p->s).d.y = 0x80;
+      (p->s).unk_coord.y = (q->coord).y + 0x600;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      {
+        register s32 t asm("r0");
+        register s32 cx asm("r1");
+        t = (p->s).unk_coord.x;
+        cx = (p->s).coord.x;
+        t -= cx;
+        t <<= 4;
+        t >>= 8;
+        cx += t;
+        (p->s).coord.x = cx;
+      }
+      {
+        register s32 t2 asm("r0");
+        register s32 cy asm("r1");
+        t2 = (p->s).unk_coord.y;
+        cy = (p->s).coord.y;
+        t2 -= cy;
+        t2 <<= 4;
+        t2 >>= 8;
+        cy += t2;
+        (p->s).coord.y = cy;
+      }
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).unk_28)->flags & 1) {
+        (p->s).flags |= 1;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      break;
+    }
+    case 2:
+      if (((p->s).unk_28)->scriptEntity->flags & 0x80) {
+        CreateSmoke(1, &(p->s).coord);
+        PlaySound(0x2A);
+        {
+          u32 tbl = (u32)gVFXFnTable;
+          u32 id = ((p->s).id) << 2;
+          EntityFunc** rt = (EntityFunc**)(tbl + id);
+          *(u32*)((p->s).mode) = m;
+          (p->s).onUpdate = (void*)((*rt)[2]);
+        }
+      }
+      break;
+  }
+}
