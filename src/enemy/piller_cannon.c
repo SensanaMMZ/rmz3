@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "mission.h"
+#include "story.h"
 #include "zero.h"
 #include "vfx.h"
 
@@ -79,7 +81,77 @@ check2:
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/piller_cannon_p1_b.inc");
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x08068514
+void PillerCannon_Die(struct Enemy* p) {
+  struct Coord c;
+  u8 m;
+  if (gCurStory.s.gameflags[4] & 0x40) {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    register s32 z asm("r2");
+    u8* a;
+    h = (p->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    z = 0;
+    h = 0xFD;
+    g &= h;
+    (p->s).flags = g;
+    a = (u8*)p + 0x8c;
+    *(s32*)a = z;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *(s32*)a = z;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *a = z;
+    (p->s).flags &= ~4;
+    SET_ENEMY_ROUTINE(p, 3);
+    return;
+  }
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      u8* a;
+      (p->s).mode[2] = 1;
+      a = (u8*)p + 0x8c;
+      *(s32*)a = m;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *(s32*)a = m;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = m;
+      (p->s).flags &= ~4;
+      FALLTHROUGH;
+    }
+    case 1:
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      c.x = (p->s).d.x;
+      c.y = (p->s).d.y;
+      CreateSmoke(1, &c);
+      PlaySound(0x2a);
+      TryDropItem(4, &(p->s).coord);
+      if (gMission.enemyCount <= 0x270E) {
+        gMission.enemyCount++;
+      }
+      TryDropZakoDisk(p, &(p->s).coord);
+      (p->s).flags &= ~1;
+      SET_ENEMY_ROUTINE(p, 4);
+      break;
+  }
+}
 
 bool8 FUN_0806860c(struct Enemy* p) { return TRUE; }
 
