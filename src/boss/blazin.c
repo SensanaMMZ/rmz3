@@ -936,7 +936,81 @@ INCASM("asm/boss/blazin_p10.inc");
 
 bool8 FUN_0803fc70(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p11.inc");
+// 0x0803FC74
+void blazinMode10(struct Boss* p) {
+  register s32 z asm("r6");
+  z = (p->s).mode[2];
+  switch (z) {
+    case 0: {
+      u8* d0 = (u8*)p + 0xd0;
+      if (*d0 == 1) {
+        struct Projectile** slot;
+        *d0 = z;
+        slot = (struct Projectile**)((u8*)p + 0xc4);
+        *slot = (struct Projectile*)z;
+        *slot = createBlazinTail(&p->s, 2);
+        *(u16*)((u8*)p + 0xc8) = z;
+      }
+      if (isSoundPlaying(0x48)) {
+        StopSound(0x48);
+      }
+      if (isSoundPlaying(0x72)) {
+        StopSound(0x72);
+      }
+      (p->s).work[3] = z;
+      PlaySound(0x74);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if (*(u32*)((u8*)p + 0xcc) == 0) {
+        break;
+      }
+      if (*(u32*)((u8*)p + 0xc4) != 0) {
+        break;
+      }
+      if ((p->s).work[3] != 0) {
+        break;
+      }
+      GotoMotion(&p->s, (motion_t)((*(u16*)((u8*)p + 0xc8) + 6) | 0xA200), 4, 0);
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[3] = 1;
+      break;
+  }
+  {
+    register u32* c0 asm("r4");
+    c0 = (u32*)((u8*)p + 0xc0);
+    if (isKilled((struct Entity*)*c0)) {
+      register u32* cc asm("r2");
+      register struct Entity* e asm("r1");
+      cc = (u32*)((u8*)p + 0xcc);
+      e = (struct Entity*)*cc;
+      if (e == NULL) {
+        goto nullcase;
+      }
+      if (e->mode[0] <= 1) {
+        return;
+      }
+      {
+        register s32 zz asm("r0");
+        register s32 three asm("r1");
+        zz = 0;
+        *cc = zz;
+        *c0 = zz;
+        three = 3;
+        (p->s).mode[1] = three;
+        (p->s).mode[2] = zz;
+        goto tail;
+      }
+    nullcase:
+      *c0 = (u32)e;
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = (u8)(u32)e;
+    tail:
+      (p->s).mode[3] = 0xFF;
+    }
+  }
+}
 
 bool8 FUN_0803fd58(struct Boss* _) { return TRUE; }
 
