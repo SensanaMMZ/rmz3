@@ -402,7 +402,56 @@ void FUN_08062338(struct Boss* p) {
 
 extern void __umodsi3();
 
-INCASM("asm/boss/spearook_p1_post_p2_a1.inc");
+// 0x080623BC
+void FUN_080623bc(struct Boss* p) {
+  struct Camera* cam;
+  switch ((p->s).mode[2]) {
+    case 0:
+      cam = &gStageRun.vm.camera;
+      (p->s).coord.y = cam->viewport.y - 0x9000;
+      (p->s).flags &= ~1;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      if (((p->s).scriptEntity)->flags & 1) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      (p->s).flags |= 1;
+      cam = &gStageRun.vm.camera;
+      (p->s).coord.y = cam->viewport.y - 0x9000;
+      (p->s).d.y = 0;
+      SetMotion(&(p->s), 0xD600);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 push;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (push < 0) {
+        AppendQuake(3, &(p->s).coord);
+        (p->s).coord.y += push;
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&(p->s));
+      break;
+    }
+    case 4:
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      if ((gStageRun.vm.active & 1) == 0) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 // 0x080624B0
 void FUN_080624b0(struct Boss* p) {
