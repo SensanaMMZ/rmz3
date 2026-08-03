@@ -358,7 +358,138 @@ void FUN_080c6c60(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_72_b.inc");
+void FUN_080c6cd0(struct VFX* p) {
+  struct Coord* ec;
+  register s32 xf asm("r4");
+  register s32 w1 asm("r8");
+  register s32 one asm("r6");
+  {
+    struct Entity* e0 = (p->s).unk_28;
+    ec = (struct Coord*)((u8*)e0 + 0x54);
+    xf = e0->flags;
+    xf >>= 4;
+    {
+      register s32 t asm("r0");
+      t = 1;
+      xf &= t;
+    }
+  }
+  {
+    register s32 w asm("r0");
+    w = (p->s).work[1];
+    w1 = w;
+  }
+  {
+    register u8 fl asm("r1");
+    register s32 v asm("r0");
+    fl = (p->s).flags;
+    v = 1;
+    one = 0;
+    asm volatile("" : "+r"(one));
+    v |= fl;
+    (p->s).flags = v;
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    if (xf != 0) {
+      register u8 g asm("r0");
+      register s32 k asm("r1");
+      g = (p->s).flags;
+      k = 0x10;
+      g |= k;
+      (p->s).flags = g;
+    } else {
+      register u8 fl2 asm("r1");
+      register u8 g2 asm("r0");
+      fl2 = (p->s).flags;
+      asm("" : "+r"(fl2));
+      g2 = 0xEF;
+      g2 &= fl2;
+      (p->s).flags = g2;
+    }
+    {
+      register s32 xv asm("r1");
+      register u8* oa asm("r3");
+      s32 sh4, ov, m11;
+      one = 1;
+      xv = one;
+      xv &= xf;
+      *((u8*)p + 0x4c) = xv;
+      oa = (u8*)p + 0x4a;
+      sh4 = xv << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      *oa = m11 | sh4;
+    }
+  }
+  {
+    register const u16* tb asm("r1");
+    register u32 ix asm("r0");
+    tb = (const u16*)0x0836F85A;
+    ix = w1 << 1;
+    {
+      register const u16* me asm("r0");
+      asm volatile("add %0, %1, %2" : "=l"(me) : "l"(ix), "l"(tb));
+      SetMotion(&p->s, *me);
+    }
+  }
+  (p->s).coord.x = ec->x;
+  (p->s).coord.y = ec->y;
+  {
+    register s32 dx asm("r2");
+    {
+      register s32 w2 asm("r1");
+      register s32 t asm("r0");
+      w2 = (p->s).work[2];
+      t = (w2 * 3) << 8;
+      dx = 0x180;
+      dx -= t;
+    }
+    (p->s).d.x = dx;
+    {
+      u8 w1b = (p->s).work[1];
+      (p->s).d.x = dx * (((w1b * 3) << 5) + 0x140) / 256;
+    }
+  }
+  {
+    register s32 t asm("r2");
+    {
+      register s32 w asm("r0");
+      w = (p->s).work[1];
+      t = 1;
+      t ^= w;
+    }
+    {
+      register s32 m5 asm("r1");
+      register s32 k asm("r0");
+      m5 = (t * 5) << 6;
+      k = -0x200;
+      k -= m5;
+      (p->s).d.y = k;
+    }
+    t += 2;
+    {
+      register u8* a asm("r3");
+      register s32 msk asm("r0");
+      register s32 b asm("r1");
+      a = (u8*)p + 0x49;
+      t &= 3;
+      t <<= 2;
+      b = *a;
+      asm volatile("mov %0, #0xd\n\tneg %0, %0" : "=l"(msk));
+      msk &= b;
+      *a = msk | t;
+    }
+  }
+  {
+    u32 tbl = (u32)gVFXFnTable;
+    EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  Ghost72_Update(p);
+}
 
 void FUN_080c6dc4(struct VFX* p) {
   (p->s).coord.x += (p->s).d.x;
