@@ -1729,6 +1729,121 @@ void copyx_08056bd0(struct Boss* p) {
   }
 }
 
+// 0x08056C14
+void copyxKnockBackDamage(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    register s32 xf asm("r3");
+    register struct Zero* z asm("r2");
+    SetMotion(&p->s, 0xB311);
+    (p->s).mode[2] = 0;
+    (p->s).mode[3] = 0;
+    xf = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      xf = 1;
+    }
+    ((p->s).spr).xflip = xf;
+    xf = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      xf = 1;
+    }
+    {
+      register u8* oa asm("ip");
+      s32 sh4, ov, m11;
+      oa = (u8*)p + 0x4a;
+      sh4 = xf << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    if (xf != 0) {
+      (p->s).flags |= 0x10;
+    } else {
+      register u8 h asm("r1");
+      register u8 g asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xEF;
+      g &= h;
+      (p->s).flags = g;
+    }
+    if ((p->s).flags & 0x10) {
+      (p->s).d.x = -0x200;
+    } else {
+      (p->s).d.x = 0x200;
+    }
+    (p->s).d.y = -0x200;
+    {
+      register s32 z5 asm("r5");
+      u8* a = (u8*)p + 0xc6;
+      z5 = 0;
+      *a = z5;
+      (p->s).work[2] = 8;
+      PlaySound(0x47);
+      SetDDP(&p->body, sCollisions);
+      {
+        struct Entity* q = (p->s).unk_2c;
+        if (q != NULL) {
+          q->work[1] = 1;
+          (p->s).unk_2c = (struct Entity*)z5;
+        }
+      }
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s8 a = *(s8*)((u8*)p + 0xdd);
+    s16 b = *(s16*)((u8*)p + 0xa4);
+    if (a > b) {
+      (p->s).mode[1] = 0x24;
+      (p->s).mode[2] = 1;
+      return;
+    }
+  }
+  {
+    register s32 cx asm("r2");
+    register s32 cyv asm("r1");
+    {
+      register s32 cxv asm("r1");
+      register s32 dxv asm("r0");
+      cxv = (p->s).coord.x;
+      dxv = (p->s).d.x;
+      cx = cxv + dxv;
+    }
+    (p->s).coord.x = cx;
+    {
+      register s32 dyv asm("r0");
+      cyv = (p->s).coord.y;
+      dyv = (p->s).d.y;
+      cyv += dyv;
+      (p->s).coord.y = cyv;
+      dyv += 0x40;
+      (p->s).d.y = dyv;
+    }
+    if ((p->s).mode[3] == 0) {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0xFF) {
+        SetMotion(&p->s, 0xB308);
+        UpdateMotionGraphic(&p->s);
+        (p->s).mode[3]++;
+      }
+      return;
+    }
+    {
+      s32 r = FUN_08009f6c(cx, cyv);
+      cyv = (p->s).coord.y;
+      if (r < cyv) {
+        (p->s).coord.y = FUN_08009f6c((p->s).coord.x, cyv);
+        (p->s).mode[1] = 0x22;
+        (p->s).mode[2] = 1;
+      }
+    }
+  }
+}
+
 INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b1.inc");
 
 struct Entity* CreateVFX52(struct Entity* e);
