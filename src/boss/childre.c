@@ -335,6 +335,136 @@ NON_MATCH void childreMode0(struct Boss* p) {
 
 INCASM("asm/boss/childre_pre_b.inc");
 
+// 0x08040D18
+void childreMode2(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32* b8 asm("r2");
+      register u8 fl asm("r1");
+      register s32 w2 asm("r3");
+      struct Zero* z;
+      SetDDP(&p->body, &sCollisions[1]);
+      b8 = (s32*)((u8*)p + 0xb8);
+      z = pZero2;
+      *b8 = (z->s).coord.x - 0x3800;
+      w2 = (p->s).work[2];
+      if ((z->s).coord.x - (p->s).coord.x > 0) {
+        w2 ^= 1;
+      }
+      fl = (p->s).flags;
+      if (fl & 0x10) {
+        if (w2 != 1) {
+          goto other;
+        }
+      } else {
+        if (w2 != 0) {
+          goto other;
+        }
+      }
+      {
+        s32 v = *b8;
+        if (fl & 0x10) {
+          v += 0x7000;
+        }
+        *b8 = v;
+      }
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+      childreMode3(p);
+      return;
+    other:
+      {
+        s32 v = *b8;
+        if ((fl & 0x10) == 0) {
+          v += 0x7000;
+        }
+        *b8 = v;
+      }
+      SetMotion(&p->s, 0xA408);
+      (p->s).d.y = -0x200;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 cy asm("r1");
+      {
+        s32 dy = (p->s).d.y + 0x40;
+        (p->s).d.y = dy;
+        if (dy > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+      }
+      {
+        register s32 dyv asm("r0");
+        cy = (p->s).coord.y;
+        dyv = (p->s).d.y;
+        cy += dyv;
+      }
+      (p->s).coord.y = cy;
+      {
+        register s32 d asm("r0");
+        d = *(s32*)((u8*)p + 0xc0);
+        d -= cy;
+        if (d < 0) {
+          register s32 nv asm("r0");
+          nv = cy + d;
+          (p->s).coord.y = nv;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      SetMotion(&p->s, 0xA404);
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 one asm("r2");
+        register s32 xv asm("r1");
+        s32 t0;
+        t0 = (u32)(p->s).flags >> 4;
+        one = 1;
+        t0 ^= one;
+        asm("" : "+r"(t0));
+        t0 &= one;
+        ((p->s).spr).xflip = t0;
+        xv = (u32)(p->s).flags >> 4;
+        xv ^= one;
+        asm("" : "+r"(xv));
+        xv &= one;
+        {
+          register u8* oa asm("ip");
+          u8* ol;
+          s32 sh4, ov, m11;
+          ol = (u8*)p + 0x4a;
+          oa = ol;
+          sh4 = xv << 4;
+          ov = *ol;
+          m11 = -0x11;
+          m11 &= ov;
+          m11 |= sh4;
+          *oa = m11;
+        }
+        if (xv != 0) {
+          (p->s).flags |= 0x10;
+        } else {
+          register u8 h asm("r1");
+          register u8 g asm("r0");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xEF;
+          g &= h;
+          (p->s).flags = g;
+        }
+      }
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/childre_pre_b1b.inc");
+
 // 0x0804102C
 void childreStartRising(struct Boss* p) {
   switch ((p->s).mode[2]) {
