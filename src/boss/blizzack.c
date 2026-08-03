@@ -1,4 +1,5 @@
 #include "boss.h"
+#include "gba/syscall.h"
 #include "collision.h"
 #include "global.h"
 #include "zero.h"
@@ -775,7 +776,109 @@ NON_MATCH void blizzackBombJump(struct Boss* p) {
 #endif
 }
 
-INCASM("asm/boss/blizzack_post_p2_a.inc");
+void blizzack_080aaae0(struct Entity* e, u8 n);
+
+// 0x0805A744
+void blizzackBomb(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    struct Entity* q;
+    register u16* h asm("r0");
+    register s32 z asm("r2");
+    register s32 kv asm("r1");
+    SetMotion(&p->s, 0xB40F);
+    q = (p->s).unk_2c;
+    q->mode[2] = 1;
+    h = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    kv = 0x640E;
+    *h = kv;
+    (p->s).mode[2] = z;
+    (p->s).work[2] = z;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 xf asm("r3");
+    register struct Zero* z asm("r2");
+    xf = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      xf = 1;
+    }
+    ((p->s).spr).xflip = xf;
+    xf = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      xf = 1;
+    }
+    {
+      register u8* oa asm("r5");
+      s32 sh4, ov, m11;
+      oa = (u8*)p + 0x4a;
+      sh4 = xf << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    if (xf != 0) {
+      (p->s).flags |= 0x10;
+    } else {
+      register u8 h2 asm("r1");
+      register u8 g asm("r0");
+      h2 = (p->s).flags;
+      asm("" : "+r"(h2));
+      g = 0xEF;
+      g &= h2;
+      (p->s).flags = g;
+    }
+  }
+  (p->s).coord.x += (p->s).d.x;
+  {
+    register s32 cy asm("r0");
+    register s32 dy asm("r1");
+    cy = (p->s).coord.y;
+    dy = (p->s).d.y;
+    cy += dy;
+    (p->s).coord.y = cy;
+    dy += 0x60;
+    (p->s).d.y = dy;
+    if (dy > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+  }
+  {
+    s32 w = (p->s).work[2] + 1;
+    (p->s).work[2] = w;
+    if ((u8)w == 0xE) {
+      register s32 a asm("r5");
+      register struct Zero* zz asm("r3");
+      s32 dx;
+      register s32 ty asm("r2");
+      if ((p->s).work[3] == 1) {
+        zz = pZero2;
+        dx = (((zz->s).coord.x - (p->s).coord.x) << 12) >> 16;
+        ty = (p->s).coord.y;
+        ty += -0x2000;
+      } else {
+        zz = pZero2;
+        dx = (((zz->s).coord.x - (p->s).coord.x) << 12) >> 16;
+        ty = (p->s).coord.y;
+        ty += 0x3000;
+      }
+      {
+        s32 dy2 = (((zz->s).coord.y - ty) << 12) >> 16;
+        a = (u8)((((u16)ArcTan2(dx, dy2)) + 0x4000) >> 8);
+      }
+      PlaySound(0x43);
+      blizzack_080aaae0(&p->s, (u8)(a + 6));
+      blizzack_080aaae0(&p->s, (u8)(a - 6));
+    }
+  }
+  if ((p->s).motion.state == 3) {
+    (p->s).mode[1] = 0xF;
+    (p->s).mode[2] = 1;
+  }
+}
 
 // Same regmove tie as blizzackMode0: the mode[2]=0 zero and the 0x64xx pool
 // load fight for the same slot, spilling the constant through r3.
