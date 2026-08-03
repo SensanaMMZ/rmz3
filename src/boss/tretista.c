@@ -266,6 +266,101 @@ static void Tretista_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
+// 0x0804D804
+void FUN_0804d804(struct Boss* p) {
+  StepPaletteAnimation(0x49);
+  StepPaletteAnimation(0x4A);
+  StepPaletteAnimation(0x4B);
+  StepPaletteAnimation(0x4C);
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r5");
+      register s32 z asm("r2");
+      {
+        register u16 ms asm("r2");
+        register s32 t asm("r0");
+        ms = gStageRun.missionStatus;
+        one = 1;
+        asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one));
+        t &= ms;
+        if (t != 0) {
+          register u8 av asm("r1");
+          register s32 t2 asm("r0");
+          av = gStageRun.vm.active;
+          asm volatile("add %0, %1, #0" : "=&l"(t2) : "l"(one));
+          t2 &= av;
+          if (t2 == 0) {
+            gStageRun.missionStatus = (ms & 0xFFFE) | MISSION_SUCCESS;
+          }
+        }
+      }
+      SetMotion(&p->s, MOTION(0xAB, 0x25));
+      {
+        register u8 fl asm("r1");
+        register u8 g asm("r0");
+        fl = (p->s).flags;
+        asm("" : "+r"(fl));
+        g = 1;
+        z = 0;
+        g |= fl;
+        (p->s).flags = g;
+      }
+      *((u8*)p + 0x4d) = z;
+      {
+        register u8* oa asm("r3");
+        s32 ov;
+        s32 m21;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        m21 = -0x21;
+        m21 &= ov;
+        *oa = m21;
+      }
+      (p->s).flags &= 0xDF;
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= 0xFB;
+      {
+        register s32* d asm("r0");
+        d = (s32*)((u8*)p + 0x5c);
+        d[1] = z;
+        (p->s).d.x = z;
+      }
+      (p->s).work[2] = 1;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        break;
+      }
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t <<= 24;
+      if (t == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
 INCASM("asm/boss/tretista_p1.inc");
 
 bool8 FUN_0804dc8c(struct Boss* p) { return TRUE; }
