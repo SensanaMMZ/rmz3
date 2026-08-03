@@ -815,6 +815,129 @@ void deathtanzMode16(struct Boss* p) {
 
 INCASM("asm/boss/deathtanz_c3.inc");
 
+// 0x0804AB50
+void deathtanzMode19(struct Boss* p) {
+  struct Entity* e = (p->s).unk_28;
+  register s32 m asm("r1");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      s32 k10;
+      register s32 z6 asm("r6");
+      {
+        register u8 f2 asm("r0");
+        f2 = (p->s).flags2;
+        k10 = 0x10;
+        asm("" : "+r"(k10));
+        z6 = 0;
+        f2 |= k10;
+        (p->s).flags2 = f2;
+      }
+      (p->s).invincibleID = e->uniqueID;
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(s32*)a = m;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = m;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = m;
+      }
+      (p->s).flags &= ~4;
+      {
+        register s32 one asm("r2");
+        register s32 xv asm("r1");
+        u32 t0 = e->flags;
+        t0 >>= 4;
+        one = 1;
+        t0 &= one;
+        ((p->s).spr).xflip = t0;
+        xv = (u32)e->flags >> 4;
+        xv &= one;
+        {
+          register u8* oa asm("ip");
+          s32 sh4, ov, m11;
+          oa = (u8*)p + 0x4a;
+          sh4 = xv << 4;
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          m11 |= sh4;
+          *oa = m11;
+        }
+        if (xv != 0) {
+          register u8 g asm("r0");
+          g = (p->s).flags;
+          g |= k10;
+          (p->s).flags = g;
+        } else {
+          register u8 h asm("r1");
+          register u8 g2 asm("r0");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g2 = 0xEF;
+          g2 &= h;
+          (p->s).flags = g2;
+        }
+      }
+      SetMotion(&p->s, 0xA739);
+      (p->s).mode[2]++;
+      asm volatile("" : "+l"(z6));
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 dx asm("r1");
+      {
+        s32 cx = (p->s).coord.x;
+        dx = (p->s).d.x;
+        (p->s).coord.x = cx + dx;
+      }
+      {
+        register s32 k asm("r0");
+        if ((p->s).work[3] != 0) {
+          k = 0xF6;
+        } else {
+          k = 0xFA;
+        }
+        (p->s).d.x = dx * k / 256;
+      }
+      FUN_0801779c(&p->s);
+      if (e->mode[0] == 4) {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        register s32 zr asm("r2");
+        u8* a;
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        zr = 0;
+        h = 0xFD;
+        g &= h;
+        (p->s).flags = g;
+        a = (u8*)p + 0x8c;
+        *(s32*)a = zr;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = zr;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = zr;
+        (p->s).flags &= ~4;
+        SET_BOSS_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/deathtanz_c3b.inc");
+
 // --------------------------------------------
 
 // 0x083627dc
