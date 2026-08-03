@@ -712,7 +712,59 @@ void FUN_0806d7e0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gyro_cannon_p1b_c.inc");
+struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
+
+// 0x0806D8B0
+void FUN_0806d8b0(struct Enemy* p) {
+  struct Coord c;
+  register struct Entity* q asm("r4");
+  if ((p->s).mode[2] == 0) {
+    register s32 sp asm("r4");
+    SetMotion(&p->s, MOTION(0x17, 0x03));
+    c.y = (p->s).coord.y + 0x800;
+    if ((p->s).flags & X_FLIP) {
+      c.x = (p->s).coord.x + 0x1000;
+      sp = 0x180;
+      CreateLemon(&c, sp, 0x90);
+      c.y = (p->s).coord.y - 0x500;
+      CreateLemon(&c, sp, 0x70);
+    } else {
+      c.x = (p->s).coord.x - 0x1000;
+      sp = 0x180;
+      CreateLemon(&c, sp, 0xEF);
+      c.y = (p->s).coord.y - 0x500;
+      CreateLemon(&c, sp, 0x10);
+    }
+    PlaySound(0x2C);
+    (p->s).work[2] = 0x30;
+    (p->s).mode[2]++;
+  }
+  q = (p->s).unk_2c;
+  if (q == NULL) {
+    if (((bool16 (*)(s32, s32))FUN_080098a4)((p->s).coord.x, (p->s).coord.y + 0xA00)) {
+      (p->s).mode[1] = (u8)(u32)q;
+      (p->s).mode[2] = (u8)(u32)q;
+      return;
+    }
+  }
+  {
+    s32 t = (p->s).work[2] - 1;
+    (p->s).work[2] = t;
+    t <<= 24;
+    t = (u32)t >> 24;
+    if (t == 0xFF) {
+      register struct Entity* r asm("r1");
+      r = (p->s).unk_2c;
+      if (r != NULL) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+        return;
+      }
+      (p->s).mode[1] = 7;
+      (p->s).mode[2] = (u8)(u32)r;
+    }
+  }
+}
 
 void FUN_0806d998(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
