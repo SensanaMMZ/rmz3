@@ -771,7 +771,155 @@ void FUN_080750f8(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/snakecord_p2_d.inc");
+// 0x08075154
+// Blocker: retail keeps the cleared-entity pointer in ip and copies it to r5
+// at the 0xFB flag store; agbcc allocates r5 directly and never spills. 12
+// lever rounds (pins on ip/r8/r6, single-vs-two entity variables) all made
+// the register file diverge further.
+NON_MATCH void FUN_08075154(struct Enemy* p0) {
+#if MODERN
+  register struct Enemy* p asm("r6") = p0;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r1");
+      register s32 dy asm("r0");
+      register s32 len asm("r5");
+      struct Zero* zz;
+      register s32 c_fe asm("r1");
+      register s32 c_fd asm("r4");
+      register s32 c_fb asm("r3");
+      register s32 three asm("r2");
+      register u32 tbl asm("r8");
+      register struct Entity* q asm("r12");
+      q = (p->s).unk_28;
+      if (q != NULL) {
+                {
+          register s32 t asm("r0");
+          register u8 fv asm("r2");
+          fv = q->flags;
+          c_fe = 0xFE;
+          t = c_fe;
+          t &= fv;
+          c_fd = 0xFD;
+          t &= c_fd;
+          q->flags = t;
+        }
+        {
+          u8* a = (u8*)q + 0x8c;
+          asm("" : "+r"(a));
+          *(s32*)a = 0;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *(s32*)a = 0;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *a = 0;
+        }
+        {
+          register s32 t2 asm("r0");
+          register u8 fv2 asm("r2");
+          fv2 = q->flags;
+          c_fb = 0xFB;
+          t2 = c_fb;
+          t2 &= fv2;
+          q->flags = t2;
+        }
+        {
+          EntityFunc** rt;
+          tbl = (u32)gEnemyFnTable;
+          rt = (EntityFunc**)(tbl + ((q->id) << 2));
+          three = 3;
+          *(u32*)(q->mode) = three;
+          q->onUpdate = (void*)((*rt)[3]);
+        }
+        q = q->unk_28;
+        {
+          register u8 fv3 asm("r0");
+          fv3 = q->flags;
+          c_fe &= fv3;
+          c_fe &= c_fd;
+          q->flags = c_fe;
+        }
+        {
+          u8* a = (u8*)q + 0x8c;
+          asm("" : "+r"(a));
+          *(s32*)a = 0;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *(s32*)a = 0;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *a = 0;
+        }
+        {
+          register u8 fv4 asm("r0");
+          fv4 = q->flags;
+          c_fb &= fv4;
+          q->flags = c_fb;
+        }
+        {
+          EntityFunc** rt2 = (EntityFunc**)(tbl + ((q->id) << 2));
+          *(u32*)(q->mode) = three;
+          q->onUpdate = (void*)((*rt2)[3]);
+        }
+        (p->s).unk_28 = NULL;
+      }
+      SetDDP(&p->body, &sCollisions[13]);
+      InitNonAffineMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x28, 0xC));
+      UpdateMotionGraphic(&p->s);
+      zz = pZero2;
+      dx = (p->s).coord.x;
+      dx -= (zz->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y + -0x1800;
+      dy -= (zz->s).coord.y;
+      (p->s).d.y = dy;
+      dx >>= 8;
+      len = dx * dx;
+      dy >>= 8;
+      {
+        s32 u = dy * dy;
+        len += u;
+      }
+      len = (u32)Sqrt(len) << 8;
+      if (len != 0) {
+        s32 a = ((p->s).d.x << 8) / len;
+        s32 b;
+        (p->s).d.x = a;
+        b = ((p->s).d.y << 8) / len;
+        (p->s).d.x = a * 6;
+        (p->s).d.y = b * 6;
+      } else {
+        (p->s).d.x = 0xC0 << 3;
+        (p->s).d.y = len;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 v;
+      (p->s).coord.x += (p->s).d.x;
+      v = (p->s).d.y + 0x40;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if (((u16)GetGroundMetatileAttr((p->s).coord.x, (p->s).coord.y) << 16) != 0 || (*(u32*)((u8*)p + 0x8c) & 4) != 0) {
+        MaybeKillSnakecord(p);
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/snakecord_p2_d.inc");
+#endif
+}
 
 void Snakecord_Init(struct Enemy* p);
 void Snakecord_Update(struct Enemy* p);
