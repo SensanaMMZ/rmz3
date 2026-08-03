@@ -1081,7 +1081,111 @@ void nop_0806316c(struct Boss* p) {}
 
 void nop_08063170(struct Boss* p) {}
 
-INCASM("asm/boss/spearook_p3.inc");
+// 0x08063174
+void FUN_08063174(struct Boss* p) {
+  struct Coord c;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      struct StageRun* sr = &gStageRun;
+      register u16 ms asm("r2");
+      register s32 one asm("r5");
+      ms = sr->missionStatus;
+      one = 1;
+      {
+        register s32 t asm("r0");
+        t = one;
+        t &= ms;
+        if (t != 0) {
+          register u8 av asm("r1");
+          register s32 u asm("r0");
+          av = sr->vm.active;
+          u = one;
+          u &= av;
+          if (u == 0) {
+            sr->missionStatus = (ms & 0xFFFE) | 0x10;
+          }
+        }
+      }
+      {
+        s32 z = 0;
+        u8* a;
+        (p->s).work[2] = 0x3C;
+        a = (u8*)p + 0x8c;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= ~4;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t != 0) {
+        break;
+      }
+      *(u32*)((u8*)p + 0xbc) |= 0x80;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2:
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 z;
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        z = (u8)t;
+      }
+      if (z != 0) {
+        break;
+      }
+      TryDropItem(0x10, &(p->s).coord);
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y - 0xC00;
+      CreateSmoke(1, &c);
+      PlaySound(0x2A);
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        u8* a;
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        h = 0xFD;
+        g &= h;
+        (p->s).flags = g;
+        a = (u8*)p + 0x8c;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= ~4;
+      SET_BOSS_ROUTINE(p, ENTITY_DISAPPEAR);
+      gStageRun.vm.active |= 2;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4:
+      break;
+  }
+}
 
 void FUN_080632a0(struct Boss* p0) {
   register struct Boss* p asm("r2") = p0;
