@@ -675,7 +675,85 @@ _08057F34: .4byte gStageRun\n\
  .syntax divided\n");
 }
 
-INCASM("asm/boss/glacierle_a.inc");
+// 0x08057F38
+void glacierle_08057f38(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xB2, 0x01));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      {
+        register struct Body* bd asm("r0");
+        register const u8* tb asm("r2");
+        register s32 ix asm("r1");
+        u8 k;
+        bd = &p->body;
+        tb = (const u8*)0x08364AAE;
+        asm volatile("" : "+r"(bd));
+        asm volatile("" : "+r"(tb));
+        {
+          register u8* q asm("r1");
+          q = (u8*)p + 0x71;
+          ix = *q;
+        }
+        ix <<= 24;
+        ix >>= 24;
+        {
+          register const u8* e asm("r1");
+          asm volatile("add %0, %1, %2" : "=l"(e) : "l"(ix), "l"(tb));
+          k = *e;
+        }
+        SetDDP(bd, &sCollisions[k]);
+      }
+      break;
+    case 2: {
+      register s32 one asm("r2");
+      register s32 f asm("r1");
+      SetDDP(&p->body, (const struct Collision*)0x08363DE4);
+      {
+        register s32 t asm("r0");
+        t = (p->s).flags >> 4;
+        one = 1;
+        t ^= one;
+        asm volatile("" : "+r"(t));
+        t &= one;
+        ((p->s).spr).xflip = t;
+      }
+      f = (p->s).flags >> 4;
+      f ^= one;
+      asm volatile("" : "+r"(f));
+      f &= one;
+      {
+        register u8* oa asm("ip");
+        u32 sh4;
+        s32 ov;
+        s32 m11;
+        oa = (u8*)p + 0x4a;
+        sh4 = f << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      if (f != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      SetMotion(&p->s, MOTION(0xB2, 0x00));
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 1;
+      break;
+    }
+  }
+}
 
 static const u8 u8_ARRAY_08364ab1[8];
 
