@@ -352,7 +352,99 @@ void FUN_08013bdc(struct StageLayer* l, const struct Stage* _ UNUSED) {
   BGnVOFS(n >> 4) = (l->viewportCenterPixel.y * 3) >> 2;
 }
 
-INCASM("asm/stage_gfx/sunken_library_b.inc");
+struct Entity* FUN_080d8f7c(u8 a0);
+
+// 0x08013C0C
+void sunkenLib_08013c0c(struct StageLayer* l0, const struct Stage* _ UNUSED) {
+  register struct StageLayer* l asm("r5");
+  struct Overworld* ow;
+  l = l0;
+  if (l->phase == 0) {
+    s32 zero = 0;
+    s32* q = (s32*)((u8*)l + 0xc);
+    do {
+      *(s32*)((u8*)q + 0x68) = zero;
+      q--;
+    } while ((s32)q >= (s32)l);
+    l->unk_10 = 0;
+    l->phase++;
+  }
+  ow = &gOverworld;
+  if (ow->state[0] != 0) {
+    struct Solid** arr = (struct Solid**)l->work.raw;
+    register s32 one2 asm("r3");
+    s32 i;
+    l->unk_10++;
+    for (i = 0; i <= 3; i++) {
+      if (arr[i] == NULL) {
+        arr[i] = (struct Solid*)FUN_080d8f7c((u8)i);
+      }
+    }
+    if (!isSoundPlaying(0x92 * 2)) {
+      PlaySound(0x92 * 2);
+    }
+    {
+      register s32 t asm("r0");
+      u16 uv = l->unk_10;
+      one2 = 1;
+      asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one2));
+      t &= uv;
+      if (t == 0) {
+        goto out;
+      }
+    }
+    {
+      u32 rv = (gOverworld.work.sunkenLib.rng * 0x343FD + 0x269EC3) << 1;
+      gOverworld.work.sunkenLib.rng = rv >> 1;
+      if (((rv >> 0x11) & one2) != 0) {
+        gBlendRegBuffer.bldalpha = 0xC0A;
+        return;
+      }
+    }
+    goto out;
+  } else {
+    register s32 zero asm("r4");
+    u32 tbl;
+    register struct Solid** q asm("r3");
+    register s32 i asm("r6");
+    zero = 0;
+    tbl = (u32)gSolidFnTable;
+    q = (struct Solid**)l->work.raw;
+    i = 3;
+    do {
+      struct Solid* e = *q;
+      if (e != NULL) {
+        u8* a;
+        EntityFunc** routine_table;
+        (e->s).flags &= ~DISPLAY;
+        (e->s).flags &= ~FLIPABLE;
+        a = (u8*)e + 0x8c;
+        *(u32*)a = zero;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = zero;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = zero;
+        (e->s).flags &= ~COLLIDABLE;
+        routine_table = (EntityFunc**)((((e->s).id) << 2) + tbl);
+        *(u32*)((e->s).mode) = 3;
+        (e->s).onUpdate = (void*)(*routine_table)[3];
+        *q = (struct Solid*)zero;
+      }
+      q++;
+      i--;
+    } while (i >= 0);
+    if (isSoundPlaying(0x92 * 2)) {
+      StopSound(0x92 * 2);
+    }
+  }
+out:
+  gBlendRegBuffer.bldalpha = 0xC04;
+}
+
 
 // 0x08013D38
 void FUN_08013d38(struct StageLayer* l, const struct Stage* stage) {
