@@ -338,7 +338,112 @@ void FUN_080a1280(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_14_p2b.inc");
+// 0x080A133C
+void FUN_080a133c(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 w3 asm("r2");
+      (p->s).taskCol = 0x18;
+      {
+        register s32 base0 asm("r0");
+        register s32 base asm("r1");
+        register s32 mv asm("r0");
+        base0 = 0x3702;
+        asm volatile("add %0, %1, #0" : "=&l"(base) : "l"(base0));
+        mv = (p->s).work[2];
+        asm volatile("add %0, %0, %1" : "+l"(base) : "l"(mv));
+        ((void (*)(struct Entity*, s32))SetMotion)(&p->s, base);
+      }
+      w3 = (p->s).work[3];
+      if (w3 != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+      {
+        register s32 xf asm("r1");
+        u8* oa;
+        s32 sh4, ov, m11;
+        xf = 1;
+        xf &= w3;
+        ((p->s).spr).xflip = xf;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 st asm("r3");
+      UpdateMotionGraphic(&p->s);
+      {
+        register struct Body* bd asm("r0");
+        register const u8* tb asm("r3");
+        register s32 ix asm("r1");
+        register s32 k asm("r2");
+        bd = &p->body;
+        tb = (const u8*)0x0836B211;
+        asm volatile("" : "+r"(bd));
+        asm volatile("" : "+r"(tb));
+        ix = (s8)(p->s).motion.cmdIdx;
+        k = (p->s).work[2];
+        ix ^= k;
+        asm volatile("add %0, %0, %1" : "+l"(ix) : "l"(tb));
+        k = *(const u8*)ix;
+        ix = k << 1;
+        ix += k;
+        ix <<= 3;
+        {
+          register s32 cb asm("r2");
+          cb = 0x0836B11C;
+          asm volatile("add %0, %0, %1" : "+l"(ix) : "l"(cb));
+        }
+        SetDDP(bd, (const struct Collision*)ix);
+      }
+      st = (p->s).motion.state;
+      if (st != 3) {
+        break;
+      }
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        register s32 zz asm("r2");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        zz = 0;
+        h = 0xFD;
+        g &= h;
+        (p->s).flags = g;
+        {
+          u8* a = (u8*)p + 0x8c;
+          *(u32*)a = zz;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *(u32*)a = zz;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *a = zz;
+        }
+      }
+      (p->s).flags &= 0xFB;
+      {
+        u32 tbl = (u32)gProjectileFnTable;
+        EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+        *(u32*)((p->s).mode) = st;
+        (p->s).onUpdate = (void*)((*rt)[3]);
+      }
+      break;
+    }
+  }
+}
 
 void Projectile14_Init(struct Projectile* p);
 void Projectile14_Update(struct Projectile* p);
