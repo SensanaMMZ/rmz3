@@ -123,6 +123,99 @@ void LeviathanMinigameEnemy_Die(struct Enemy* p) {
 
 void nop_0809a1ec(struct Enemy* p) {}
 
+// 0x0809A1F0
+void FUN_0809a1f0(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  if (*((u8*)q + 0x31) != 0) {
+    SetDDP(&p->body, (const struct Collision*)0x0836A6D4);
+    return;
+  }
+  SetDDP(&p->body, (const struct Collision*)0x0836A6EC);
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 xf asm("r4");
+      register s32 zero asm("r3");
+      s32 w;
+      {
+        u8* pp = (u8*)p + 0x22;
+        xf = 1;
+        *pp = 1;
+      }
+      SetMotion(&p->s, MOTION(0x18, 0x00));
+      xf ^= (p->s).work[2];
+      if (xf != 0) {
+        register u8 fv asm("r0");
+        register s32 k10 asm("r1");
+        fv = (p->s).flags;
+        k10 = 0x10;
+        fv |= k10;
+        (p->s).flags = fv;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        register s32 v asm("r1");
+        register u8* oa asm("r4");
+        u8* xp;
+        s32 sh4, ov, m11;
+        v = 1;
+        v &= xf;
+        xp = (u8*)p + 0x4c;
+        zero = 0;
+        *xp = v;
+        oa = (u8*)p + 0x4a;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      {
+        register s32 k asm("r2");
+        k = 0xB0 * 2;
+        w = (p->s).work[2];
+        k -= ((w * 3 * 4) - w) << 6;
+        (p->s).d.x = k;
+      }
+      (p->s).work[3] = zero;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 zero2 asm("r4");
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += gSineTable[(p->s).work[3]] / 2;
+      {
+        s32 t = (p->s).work[3] + 4;
+        zero2 = 0;
+        (p->s).work[3] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((u32)((p->s).coord.x + -0xD000) > 0x98 * 512) {
+        u8* a;
+        *(u32*)((u8*)q + 0x1c) = zero2;
+        *((u8*)q + 0x32) = zero2;
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        a = (u8*)p + 0x8c;
+        *(u32*)a = zero2;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = zero2;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = zero2;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/minigame_leviathan_p3.inc");
 
 void FUN_0809a4bc(struct Enemy* p) {
