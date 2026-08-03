@@ -499,7 +499,110 @@ void explodeGrandCannon(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/grand_cannon_post.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b834c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void explodeGrandCannon(struct Enemy* p);
+static const motion_t sMotions[];
+
+// 0x080696CC
+void slashGrandCannon(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 f asm("r6");
+      register s32 z4 asm("r4");
+      register s32 xf2 asm("r2");
+      struct Coord c;
+      {
+        register s32 t3 asm("r3");
+        t3 = 0;
+        if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+          t3 = 1;
+        }
+        f = t3;
+        asm("" : "+r"(f));
+        xf2 = f;
+        asm("" : "+r"(xf2));
+      }
+      {
+        register u8 nf asm("r0");
+        if (f != 0) {
+          register u8 kk asm("r1");
+          kk = (p->s).flags;
+          nf = 0x10;
+          nf |= kk;
+        } else {
+          register u8 fl asm("r1");
+          fl = (p->s).flags;
+          asm("" : "+r"(fl));
+          nf = 0xEF;
+          nf &= fl;
+        }
+        (p->s).flags = nf;
+      }
+      {
+        register s32 x asm("r1");
+        register u8* a asm("r0");
+        register u8* b asm("r3");
+        s32 sh;
+        u8 ov;
+        s32 m;
+        x = xf2;
+        a = (u8*)p + 0x4c;
+        z4 = 0;
+        *a = x;
+        b = (u8*)p + 0x4a;
+        sh = x << 4;
+        ov = *b;
+        m = -0x11;
+        m &= ov;
+        m |= sh;
+        *b = m;
+      }
+      (p->s).coord.x -= f << 8;
+      SetMotion(&p->s, MOTION(0x07, 1));
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(s32*)a = z4;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z4;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z4;
+      }
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFB;
+        g &= h;
+        (p->s).flags = g;
+      }
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      ((void (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(0, &c, 0x80 << 2, f);
+      {
+        register s32 k60 asm("r1");
+        k60 = 0x60;
+        c.x = k60 - (((f << 1) + f) << 6);
+        c.y = 0x40;
+      }
+      ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b834c)(&p->s, &(p->s).coord, &c, 0, (motion_t*)&sMotions[3], 0x18);
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0) {
+        explodeGrandCannon(p);
+      }
+      break;
+  }
+}
 
 // 0x080697BC
 void FUN_080697bc(struct Enemy* p) {
