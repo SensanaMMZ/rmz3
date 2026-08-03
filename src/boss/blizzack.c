@@ -3,6 +3,7 @@
 #include "global.h"
 #include "zero.h"
 #include "stagerun.h"
+#include "element.h"
 
 void Blizzack_Init(struct Boss* p);
 void Blizzack_Update(struct Boss* p);
@@ -281,7 +282,53 @@ NAKED void Blizzack_Init(struct Boss* p) {
 ");
 }
 
-INCASM("asm/boss/blizzack_pre.inc");
+static const BossFunc sUpdates[21];
+static const struct Coord sElementCoord;
+void FUN_0805af14(struct Boss* p);
+
+// 0x08059CB4
+void Blizzack_Update(struct Boss* p) {
+  if ((*(u32*)((u8*)p + 0x8c) & 0x200) != 0 || *(s16*)((u8*)p + 0xa4) == 0) {
+    u16 ms = gStageRun.missionStatus & 8;
+    if (ms == 0) {
+      SET_BOSS_ROUTINE(p, 2);
+      (p->s).mode[1] = ms;
+      Blizzack_Die(p);
+      return;
+    }
+  }
+  FUN_0805af14(p);
+  {
+    u32* st = (u32*)((u8*)p + 0x8c);
+    s32 one;
+    s32 v = *st;
+    one = 1;
+    asm("" : "+r"(one));
+    if ((v & one) != 0) {
+      s32 f = 0;
+      s32* el;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        f = 1;
+      }
+      *((u8*)p + 0xc4) = f;
+      el = (s32*)((u8*)p + 0xd4);
+      if (*el == 0) {
+        *el = (s32)ApplyElementEffect(0x1A, &p->s, &sElementCoord);
+      }
+      if (isKilled((struct Entity*)*el)) {
+        *el = 0;
+      }
+      if ((*((u8*)p + 0x97) & 0xF0) == 0x20) {
+        *((u8*)p + 0xe0) = 0x80;
+      }
+      if ((*st & 0x20000) != 0) {
+        (p->s).mode[1] = 0x13;
+        (p->s).mode[2] = one;
+      }
+    }
+  }
+  (sUpdates[(p->s).mode[1]])(p);
+}
 
 void Blizzack_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
