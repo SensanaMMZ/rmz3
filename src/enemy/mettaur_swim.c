@@ -678,7 +678,59 @@ void FUN_08089694(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1b.inc");
+// 0x08089790
+void FUN_08089790(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, sCollisions);
+      SetMotion(&p->s, 0xDD01);
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      FUN_08088bc8(p, (p->s).d.x, (p->s).d.y);
+      {
+        s32 dx = (p->s).d.x;
+        (p->s).d.x = dx * 240 / 256;
+      }
+      {
+        s32 dy = (p->s).d.y + 0x40;
+        (p->s).d.y = dy;
+        if (dy > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+      }
+      if ((u8)FUN_08088ba8(p) != 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, 0xDD02);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      FUN_08088bc8(p, FUN_0800a40c((p->s).coord.x, (p->s).coord.y + 0x400), 0x100);
+      break;
+    case 4:
+      SetMotion(&p->s, 0xDD0D);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      FUN_08088bc8(p, FUN_0800a40c((p->s).coord.x, (p->s).coord.y + 0x400), 0x100);
+      break;
+  }
+}
 
 struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
 
