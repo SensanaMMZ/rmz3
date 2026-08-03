@@ -434,6 +434,66 @@ void FUN_08089364(struct Enemy* p) {
   }
 }
 
+s32 FUN_0800a40c(s32 x, s32 y);
+
+// 0x080894A4
+void FUN_080894a4(struct Enemy* p) {
+  s32 nm;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xDD, 1));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      nm = (p->s).mode[2] + 1;
+      asm volatile("" ::: "cc");
+      goto setmode;
+    case 2:
+      SetMotion(&p->s, MOTION(0xDD, 2));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      nm = (p->s).mode[2] + 1;
+      asm volatile("" ::: "cc", "memory");
+      goto setmode;
+    case 4:
+      SetMotion(&p->s, MOTION(0xDD, 0xD));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      nm = (p->s).mode[2] + 1;
+      asm volatile("" ::: "memory");
+      goto setmode;
+    case 6:
+      SetMotion(&p->s, MOTION(0xDD, 2));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      nm = 0;
+      (p->s).mode[1] = nm;
+    setmode:
+      (p->s).mode[2] = nm;
+      break;
+  }
+  FUN_08088bc8(p, FUN_0800a40c((p->s).coord.x, (p->s).coord.y + (0x80 << 3)), 0x80 << 4);
+}
+
 INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1b.inc");
 
 struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
