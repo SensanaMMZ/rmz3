@@ -160,7 +160,99 @@ NON_MATCH bool8 FUN_0807415c(struct Enemy* p) {
 #endif
 }
 
-INCASM("asm/enemy/snakecord_p1_p1_a_p2.inc");
+// 0x08074208
+bool8 FUN_08074208(struct Enemy* p) {
+  register s32 w asm("r5");
+  if ((p->s).mode[1] == 0xA) {
+    return 0;
+  }
+  if (*(u32*)((u8*)p + 0xb4) != 0) {
+    return 0;
+  }
+  w = (p->s).mode[3];
+  switch (w) {
+    case 0:
+      goto arm0;
+    case 1:
+      goto arm1;
+    default:
+      return 0;
+  }
+arm0:
+  {
+    if (!IsFrozen(&p->s)) {
+      return 0;
+    }
+    if ((p->s).mode[1] == 9) {
+      struct Entity* q;
+      (p->s).taskCol = 0x18;
+      if (PushoutToUp2((p->s).coord.x, (p->s).coord.y) < 0) {
+        (p->s).mode[1] = 0xB;
+      } else {
+        (p->s).mode[1] = 4;
+      }
+      (p->s).mode[2] = 0;
+      q = (p->s).unk_2c;
+      if (q != NULL) {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = q->flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        h = 0xFD;
+        g &= h;
+        q->flags = g;
+        {
+          u32 tbl = (u32)gVFXFnTable;
+          EntityFunc** rt = (EntityFunc**)(tbl + ((q->id) << 2));
+          *(u32*)(q->mode) = 3;
+          q->onUpdate = (void*)((*rt)[3]);
+        }
+      }
+    }
+    {
+      register EnemyFunc* t1 asm("r1");
+      t1 = (EnemyFunc*)0x08366E30;
+      asm volatile("" : "+r"(t1));
+      (t1[(p->s).mode[1]])(p);
+    }
+    {
+      register EnemyFunc* t2 asm("r1");
+      t2 = (EnemyFunc*)0x08366E60;
+      asm volatile("" : "+r"(t2));
+      (t2[(p->s).mode[1]])(p);
+    }
+    (p->s).mode[3]++;
+    UpdateMotionGraphic(&p->s);
+    return 1;
+  }
+arm1:
+  {
+    register s32 st asm("r1");
+    register s32 fr asm("r0");
+    fr = IsFrozen(&p->s);
+    if (fr == 0) {
+      goto notfrozen;
+    }
+    if ((p->s).mode[1] <= 2) {
+      return 1;
+    }
+    st = *(u32*)((u8*)p + 0x8c);
+    w &= st;
+    if (w == 0) {
+      return 1;
+    }
+    st &= 0x20000;
+    if (st != 0) {
+      return 0;
+    }
+    return 1;
+  notfrozen:
+    (p->s).mode[3] = fr;
+    return 0;
+  }
+}
 
 static const struct Coord sElementCoords[2];
 
