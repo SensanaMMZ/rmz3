@@ -90,7 +90,80 @@ struct Projectile* FUN_080ac9b4(struct Coord* c, s32 prevX, s32 prevY, struct En
   return p;
 }
 
-INCASM("asm/projectile/unk_34_pre_p6.inc");
+void Projectile34_Update(struct Projectile* p);
+
+// 0x080ACA18
+void Projectile34_Init(struct Projectile* p) {
+  register u8 f asm("r1");
+  register s32 z6 asm("r6");
+  s32 w0;
+  InitNonAffineMotion(&p->s);
+  {
+    register s32 k asm("r0");
+    register s32 z2 asm("r2");
+    f = (p->s).flags;
+    k = 1;
+    z2 = 0;
+    asm volatile("" : "+r"(z2));
+    z6 = 0;
+    f |= k;
+    k = 2;
+    f |= k;
+    asm volatile("" : "+r"(z2));
+    f |= z2;
+    (p->s).flags = f;
+  }
+  w0 = (p->s).work[0];
+  if (w0 == 2) {
+    struct Body* body;
+    f |= COLLIDABLE;
+    (p->s).flags = f;
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x0836C728, &(p->s).coord, 4);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)z6;
+    {
+      u32 tbl = (u32)gProjectileFnTable;
+      EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+      *(u32*)((p->s).mode) = 1;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    (p->s).mode[1] = w0;
+  } else if ((p->s).work[1] == 0) {
+    struct Body* body;
+    f |= COLLIDABLE;
+    (p->s).flags = f;
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x0836C728, &(p->s).coord, 1);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)z6;
+    {
+      u32 tbl = (u32)gProjectileFnTable;
+      EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+      *(u32*)((p->s).mode) = 1;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    asm volatile("strb %0, [%1, #0xd]" :: "l"(z6), "l"(p) : "memory");
+  } else {
+    struct Body* body;
+    f |= COLLIDABLE;
+    (p->s).flags = f;
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x0836C728, &(p->s).coord, 1);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)z6;
+    {
+      u32 tbl = (u32)gProjectileFnTable;
+      EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+      *(u32*)((p->s).mode) = 1;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    (p->s).mode[1] = 3;
+  }
+  (p->s).mode[2] = z6;
+  (p->s).mode[3] = z6;
+  Projectile34_Update(p);
+}
 
 void Projectile34_Update(struct Projectile* p) {
   (sUpdates[(p->s).mode[1]])(p);
