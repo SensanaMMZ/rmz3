@@ -1,4 +1,5 @@
 #include "cyberelf.h"
+#include "zero.h"
 #include "entity.h"
 #include "global.h"
 #include "mission.h"
@@ -39,6 +40,64 @@ struct Entity* CreateElf7(struct Zero* z, u8 breed, u8 availability, u8 _) {
     (p->s).work[1] = availability;
   }
   return (struct Entity*)p;
+}
+
+extern const u8 u8_ARRAY_08371d94[3];
+void Elf7_Update(struct Elf* p);
+
+// 0x080E3A5C
+void Elf7_Init(struct Elf* p) {
+  struct Zero* z = ((struct CyberElf7*)p)->player;
+  register s32 one asm("r4");
+  u8 post;
+  {
+    register u8* gp asm("r0");
+    gp = (u8*)&gPause;
+    asm volatile("" : "+r"(gp));
+    one = 1;
+    *gp = one;
+  }
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  one |= (p->s).flags;
+  one |= 2;
+  (p->s).flags = one;
+  post = *(u8*)((u8*)z + 0x121);
+  if (post <= 0x1A) {
+    SetMotion(&p->s, GetElfMotion(0));
+  } else if (post <= 0x27) {
+    SetMotion(&p->s, GetElfMotion(1));
+  } else {
+    SetMotion(&p->s, GetElfMotion(2));
+  }
+  SET_PLAYER_XFLIP(&p->s, ((z->s).flags >> 4) & 1);
+  {
+    u8 tv = u8_ARRAY_08371d94[(p->s).work[0]];
+    register u8* pb asm("r1");
+    register s32 zz asm("r2");
+    pb = (u8*)p + 0xba;
+    zz = 0;
+    *pb = tv;
+    asm("" : "+r"(pb));
+    pb += 6;
+    asm("" : "+r"(pb));
+    *(u32*)pb = 0xC00;
+    {
+      register u8* pc asm("r0");
+      pc = (u8*)p + 0xb8;
+      *pc = zz;
+      asm("" : "+r"(pc));
+      pc += 3;
+      asm("" : "+r"(pc));
+      *pc = zz;
+    }
+    asm("" : "+r"(pb));
+    pb -= 7;
+    asm("" : "+r"(pb));
+    *pb = 0x20;
+  }
+  SET_ELF_ROUTINE(p, ENTITY_UPDATE);
+  Elf7_Update(p);
 }
 
 INCASM("asm/cyberelf/unk_7_p1_p1.inc");
