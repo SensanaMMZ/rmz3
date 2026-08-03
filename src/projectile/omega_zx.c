@@ -320,6 +320,102 @@ void FUN_080b02dc(struct Projectile* p) {
 
 INCASM("asm/projectile/omega_zx_post_p2b.inc");
 
+extern void __umodsi3();
+
+// 0x080B0BB0
+void FUN_080b0bb0(struct Projectile* p) {
+  register s32 m asm("r6");
+  if ((p->s).mode[2] <= 9) {
+    struct Entity* o = (p->s).unk_28;
+    register s32 a asm("r4");
+    s32 b;
+    if (o->mode[0] > 1) {
+      goto set10;
+    }
+    a = ((s32(*)(s32, s32))__umodsi3)((p->s).work[1], 6);
+    b = ((s32(*)(s32, s32))__umodsi3)(o->work[1], 6);
+    a <<= 24;
+    b <<= 24;
+    if (a != b) {
+      goto rest;
+    }
+  set10:
+    (p->s).mode[2] = 0xA;
+  }
+rest:
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      {
+        register u8 fl asm("r1");
+        register u8 g asm("r0");
+        fl = (p->s).flags;
+        g = 4;
+        g |= fl;
+        (p->s).flags = g;
+      }
+      {
+        struct Body* body = &p->body;
+        InitBody(body, &sCollisions[24], &(p->s).coord, 2);
+        body->parent = (struct CollidableEntity*)p;
+        body->fn = (void*)m;
+      }
+      {
+        register u8 fv asm("r0");
+        register u8 k asm("r1");
+        fv = (p->s).flags;
+        k = 2;
+        fv |= k;
+        k = 1;
+        fv |= k;
+        (p->s).flags = fv;
+      }
+      (p->s).work[2] = m;
+      SetMotion(&p->s, MOTION(0xBA, 2));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 0xA: {
+      u8* a2 = (u8*)p + 0x8c;
+      s32 z = 0;
+      *(s32*)a2 = z;
+      asm("" : "+r"(a2));
+      a2 += 4;
+      asm("" : "+r"(a2));
+      *(s32*)a2 = z;
+      asm("" : "+r"(a2));
+      a2 += 4;
+      asm("" : "+r"(a2));
+      *a2 = z;
+      {
+        register u8 g2 asm("r0");
+        register u8 h2 asm("r1");
+        h2 = (p->s).flags;
+        asm("" : "+r"(h2));
+        g2 = 0xFB;
+        g2 &= h2;
+        (p->s).flags = g2;
+      }
+      SetMotion(&p->s, MOTION(0xBA, 3));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 0xB:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) == 3) {
+        SET_PROJECTILE_ROUTINE(p, 2);
+      }
+      break;
+  }
+}
+
+INCASM("asm/projectile/omega_zx_post_p2b2.inc");
+
 #include "stagerun.h"
 #include "camera.h"
 
