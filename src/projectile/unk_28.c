@@ -2,6 +2,7 @@
 #include "gfx.h"
 #include "global.h"
 #include "projectile.h"
+#include "stagerun.h"
 
 // コピーXのチャージショットに関係?
 
@@ -173,7 +174,94 @@ void FUN_080a9e74(struct Projectile* p) {
   Projectile28_Update(&p->s);
 }
 
-INCASM("asm/projectile/unk_28_p2_p1b.inc");
+static const struct Collision sCollisions[];
+
+// 0x080A9EF8
+void FUN_080a9ef8(struct Projectile* p) {
+  register s32 ms asm("r1");
+  register s32 m asm("r6");
+  {
+    register s32 t0 asm("r0");
+    register u16 raw asm("r1");
+    raw = gStageRun.missionStatus;
+    t0 = 8;
+    t0 &= raw;
+    asm("" : "+r"(t0));
+    t0 <<= 16;
+    ms = (u32)t0 >> 16;
+  }
+  if (ms != 0) {
+    SET_PROJECTILE_ROUTINE(p, 2);
+    Projectile28_Die((Object*)p);
+    return;
+  }
+  m = (p->s).mode[1];
+  switch (m) {
+    case 0: {
+      s32 t = (p->s).work[3] + 4;
+      (p->s).work[3] = t;
+      if ((u8)t <= 0x1F) {
+        break;
+      }
+      (p->s).mode[1]++;
+      (p->s).work[2] = 0x78;
+      (p->s).flags |= 4;
+      {
+        struct Body* body = &p->body;
+        InitBody(body, &sCollisions[2], &(p->s).coord, 1);
+        body->parent = (struct CollidableEntity*)p;
+        body->fn = (void*)m;
+      }
+      break;
+    }
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t != 0xFF) {
+        break;
+      }
+      (p->s).mode[1]++;
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = ms;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = ms;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = ms;
+      }
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFB;
+        g &= h;
+        (p->s).flags = g;
+      }
+      break;
+    }
+    case 2: {
+      s32 t = (p->s).work[3] - 4;
+      (p->s).work[3] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      {
+        u32 tbl = (u32)gProjectileFnTable;
+        EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+        *(u32*)((p->s).mode) = m;
+        (p->s).onUpdate = (void*)((*rt)[2]);
+      }
+      Projectile28_Die((Object*)p);
+      break;
+    }
+  }
+  (p->s).mode[3]++;
+}
 
 // 0x080a9fe4
 void FUN_080a9fe4(struct Sprite* s, struct DrawPivot* dp) {
