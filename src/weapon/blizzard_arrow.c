@@ -92,6 +92,78 @@ struct Weapon* CreateBlizzardArrow(struct Zero* z, struct Coord* c, u8 n, bool8 
   return w;
 }
 
+void hitBlizzardArrow(struct Body* body);
+void BlizzardArrow_Update(struct Weapon* p);
+
+// 0x0803B8EC
+void BlizzardArrow_Init(struct Weapon* p) {
+  struct Zero* z = (struct Zero*)(p->s).unk_28;
+  s32 z5;
+  struct Body* body;
+  const struct Collision* coll;
+  {
+    u32 tbl = (u32)gWeaponFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    *(u32*)((p->s).mode) = 1;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    asm("" : "+r"(fl));
+    fv = 1;
+    fv |= fl;
+    fl = 2;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0x52, 0x02));
+  {
+    s32 cx;
+    s32 dx;
+    if ((p->s).flags & X_FLIP) {
+      cx = (p->s).coord.x;
+      dx = 0xD00;
+    } else {
+      cx = (p->s).coord.x;
+      dx = -0xD00;
+    }
+    cx += dx;
+    (p->s).coord.x = cx;
+  }
+  {
+    register const s32* tb asm("r0");
+    register u32 ix asm("r1");
+    s32 v;
+    tb = (const s32*)0x08361624;
+    asm volatile("" : "+r"(tb));
+    ix = (p->s).work[0];
+    ix <<= 2;
+    {
+      register const s32* e asm("r1");
+      asm volatile("add %0, %1, %2" : "=l"(e) : "l"(ix), "l"(tb));
+      v = *e;
+    }
+    (p->s).d.y = v;
+    (p->s).unk_coord.y = -(v / 8);
+  }
+  z5 = 0;
+  (p->s).work[3] = z5;
+  (p->s).flags |= COLLIDABLE;
+  body = &p->body;
+  coll = (const struct Collision*)0x083615E0;
+  InitBody(body, coll, &(p->s).coord, 1);
+  body->parent = (struct CollidableEntity*)p;
+  body->fn = (BodyFunc)z5;
+  InitWeaponBody(body, coll, (u8)(CalcBusterBonus(z) + 4), -1, -1, (p->s).work[0] + 2);
+  body->fn = (BodyFunc)hitBlizzardArrow;
+  BlizzardArrow_Update(p);
+}
+
 INCASM("asm/weapon/blizzard_arrow_pre_b.inc");
 
 void BlizzardArrow_Die(struct Weapon* p) {
