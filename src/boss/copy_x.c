@@ -1258,7 +1258,64 @@ NON_MATCH void copyx_08056508(struct Boss* p) {
 
 
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p1_b_a3.inc");
+// 0x080565C0
+void copyx_080565c0(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    register s32 f asm("r3");
+    register struct Zero* z asm("r2");
+    SetMotion(&p->s, MOTION(0xB3, 7));
+    (p->s).mode[2] = 0;
+    f = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      f = 1;
+    }
+    ((p->s).spr).xflip = f;
+    f = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      f = 1;
+    }
+    {
+      u8* a = (u8*)p + 0x4a;
+      s32 sh = f << 4;
+      u8 ov = *a;
+      s32 m = -0x11;
+      m &= ov;
+      m |= sh;
+      *a = m;
+    }
+    {
+      register u8 nf asm("r0");
+      if (f != 0) {
+        register u8 kk asm("r1");
+        nf = (p->s).flags;
+        kk = 0x10;
+        nf |= kk;
+      } else {
+        register u8 fl asm("r1");
+        fl = (p->s).flags;
+        asm("" : "+r"(fl));
+        nf = 0xEF;
+        nf &= fl;
+      }
+      (p->s).flags = nf;
+    }
+    (p->s).d.y = -0x100;
+    (p->s).work[2] = (RANDOM(RNG_0202f388) & 3) + 6;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.y += (p->s).d.y;
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    register u8 nm asm("r0");
+    if (*((u8*)p + 0xc5) == 0 && (gMission.unk_00)->rank > 4 && *((u8*)p + 0xc6) != 0) {
+      nm = 0x26;
+    } else {
+      nm = 0x16;
+    }
+    (p->s).mode[1] = nm;
+    (p->s).mode[2] = 1;
+  }
+}
 extern const u8 u8_ARRAY_080fefb4[4];
 
 void copyx_080566b0(struct Boss* p) {
