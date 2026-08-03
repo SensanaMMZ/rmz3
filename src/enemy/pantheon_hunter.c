@@ -873,7 +873,69 @@ void phunter_080651c0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_hunter_p3_b_2_y_p.inc");
+// 0x08065218
+void phunter_08065218(struct Enemy* p) {
+  register s32 m asm("r5");
+  register s32 v asm("r2");
+  register s32 one asm("r6");
+  m = (p->s).mode[2];
+  if (m == 0) {
+    SetMotion(&p->s, 0x1300);
+    (p->s).d.y = m;
+    (p->s).d.x = m;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  v = 0;
+  if ((p->s).coord.x < (pZero2->s).coord.x) {
+    v = 1;
+  }
+  if (v != 0) {
+    (p->s).flags |= X_FLIP;
+  } else {
+    (p->s).flags &= ~X_FLIP;
+  }
+  one = 1;
+  {
+    register s32 xf asm("r1");
+    u8* oa;
+    s32 sh4, ov, m11;
+    xf = one;
+    xf &= v;
+    (p->s).spr.xflip = xf;
+    oa = (u8*)p + 0x4a;
+    sh4 = xf << 4;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    *oa = m11 | sh4;
+  }
+  if (gProjectileHeaderPtr->remaining > 6) {
+    register s32 side asm("r5");
+    struct Zero* z;
+    s32 zx;
+    s32 px;
+    side = 0;
+    z = pZero2;
+    zx = (z->s).coord.x;
+    px = (p->s).coord.x;
+    if (zx <= px) {
+      side = 1;
+    }
+    if (side == (s32)(((p->s).flags >> 4) & one)) {
+      return;
+    }
+    if ((u32)(zx - px + 0x6E00) > 0xDC00) {
+      return;
+    }
+    if ((u32)((z->s).coord.y - (p->s).coord.y + 0x5000) > 0xA000) {
+      return;
+    }
+    (p->s).mode[3] = (p->s).mode[1];
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
 
 // 0x080652e8
 void phunter_080652e8(struct Enemy* p) {
