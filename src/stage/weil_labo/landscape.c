@@ -365,7 +365,67 @@ void weilLabo_08015710(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
-INCASM("asm/stage_gfx/weil_labo_p1_p1b_post.inc");
+s32 RequestType2Transfer(void* src, void* dst, s32 r2);
+
+// 0x080157B0
+// Blocker: retail parks the u16 bgIdx copy in r8 (mov r8, r1) because its
+// four low callee-saved registers are all busy; agbcc has spare low
+// registers and keeps it in r6. Pinning it to r8 costs the u16 truncation
+// and six extra instructions. 4 lever rounds.
+NON_MATCH void FUN_080157b0(struct StageLayer* l, const struct Stage* stage) {
+#if MODERN
+  u16 b = l->bgIdx;
+  asm("" : "+r"(b));
+  switch (l->phase) {
+    case 0: {
+      u32 n = b >> 4;
+      u16 v = l->screenBase | 0x4046;
+      BGCNT16(n) = v;
+      RESET_BGOFS(n);
+      RequestType2Transfer(0, (void*)((v & 0x1F00) << 3), 0x80 << 5);
+      {
+        u8* ow = (u8*)&gOverworld;
+        s32 k = 0x2D025;
+        u8* a;
+        asm("" : "+r"(ow));
+        asm("" : "+r"(k));
+        a = (u8*)l + 0x68;
+        *a = *(ow + k);
+        asm("" : "+r"(a));
+        a += 1;
+        asm("" : "+r"(a));
+        *a = 0;
+      }
+      l->phase++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      u8* ow = (u8*)&gOverworld;
+      s32 k = 0x2D024;
+      asm("" : "+r"(ow));
+      asm("" : "+r"(k));
+      if (*(ow + k) == 0) {
+        break;
+      }
+      l->phase++;
+      FALLTHROUGH;
+    }
+    case 2: {
+      u32 n = b >> 4;
+      u16 v = l->screenBase | 0x4046;
+      s32 z = 0;
+      BGCNT16(n) = v;
+      RESET_BGOFS(n);
+      CpuFastSet(&z, (void*)(((v & 0x1F00) << 3) + 0x06000000), 0x01000400);
+      LoadBgMap(b, gBgMapOffsets, 0x4a, 0, 0);
+      l->phase++;
+      break;
+    }
+  }
+#else
+  INCCODE("asm/stage_gfx/weil_labo_p1_p1b_post.inc");
+#endif
+}
 
 void FUN_08015c40(struct StageLayer* l, const struct Stage* stage) {
   gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN1_ON;
