@@ -664,6 +664,92 @@ after : {
   }
 }
 
+// 0x0805C580
+void FUN_0805c580(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    register s32 one asm("r6");
+    register s32 f asm("r3");
+    register struct Zero* z asm("r2");
+    {
+      register s32 xb asm("r2");
+      u32 t = (p->s).flags;
+      xb = t >> 4;
+      one = 1;
+      xb &= one;
+      hanu_080ad598(&p->s, 2, xb);
+    }
+    (p->s).angle = 0;
+    InitNonAffineMotion(&p->s);
+    ResetDynamicMotion(&p->s);
+    SetMotion(&p->s, MOTION(0xB5, 6));
+    f = 0;
+    z = pZero2;
+    if ((p->s).coord.x < (z->s).coord.x) {
+      f = 1;
+    }
+    ((p->s).spr).xflip = f;
+    f = 0;
+    if ((p->s).coord.x < (z->s).coord.x) {
+      f = 1;
+    }
+    {
+      register s32 x asm("r1");
+      u8* a = (u8*)p + 0x4a;
+      s32 sh;
+      u8 ov;
+      s32 m;
+      x = one;
+      x &= f;
+      sh = x << 4;
+      ov = *a;
+      m = -0x11;
+      m &= ov;
+      m |= sh;
+      *a = m;
+      {
+        register u8 nf asm("r0");
+        if (x != 0) {
+          register u8 k asm("r1");
+          nf = (p->s).flags;
+          k = 0x10;
+          nf |= k;
+        } else {
+          register u8 fl asm("r1");
+          fl = (p->s).flags;
+          asm("" : "+r"(fl));
+          nf = 0xEF;
+          nf &= fl;
+        }
+        (p->s).flags = nf;
+      }
+    }
+    (p->s).coord.y += 0x1000;
+    {
+      register s32 z0 asm("r0");
+      z0 = 0;
+      (p->s).d.y = z0;
+    }
+    SetDDP(&p->body, &sCollisions[6]);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 y = (p->s).coord.y;
+    s32 dy = (p->s).d.y;
+    (p->s).coord.y = y + dy;
+    dy += 0x40;
+    (p->s).d.y = dy;
+    if (dy > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+  }
+  if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
+
 INCASM("asm/boss/hanumachine_p2_p1.inc");
 
 void FUN_0805c760(struct Boss* p) {
