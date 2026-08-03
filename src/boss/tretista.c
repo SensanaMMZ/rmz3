@@ -979,7 +979,80 @@ void tretista_0804fc70(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/tretista_p13_p1.inc");
+// 0x0804FDF8
+void FUN_0804fdf8(struct Body* b0) {
+  register struct Body* b asm("r3");
+  b = b0;
+  {
+    register const struct Collision* ep0 asm("r2");
+    u8 k;
+    ep0 = (b->enemy)->processing;
+    k = ep0->atkType;
+    if (k == 3 || k == 0xE || k == 0xF) {
+      struct Boss* q = (struct Boss*)b->parent;
+      struct Entity* e = (struct Entity*)(b->enemy)->parent;
+      if ((*(u32*)((u8*)q + 0x8c) & 0x200) == 0) {
+        if (*(s16*)((u8*)q + 0xa4) != 0) {
+          goto next;
+        }
+      }
+      if (gStageRun.missionStatus & 8) {
+        goto next;
+      }
+      if (e->d.x < 0) {
+        (q->s).work[1] = 0xFF;
+      } else {
+        (q->s).work[1] = 0xFE;
+      }
+    }
+  }
+next : {
+  struct Boss* q2 = (struct Boss*)b->parent;
+  if ((b->enemy)->processing->faction == 2) {
+    const struct Collision* pc = b->processing;
+    if (pc->kind != 2 && *(s32*)((u8*)pc + 0xc) != -1) {
+      *((u8*)q2 + 0xb7) = 1;
+    }
+  }
+}
+  {
+    register const struct Collision* ep asm("r2");
+    register const struct Collision* pc2 asm("r1");
+    ep = (b->enemy)->processing;
+    pc2 = b->processing;
+    if (pc2->kind == 2) {
+      return;
+    }
+    if (*(s32*)((u8*)pc2 + 0xc) == -1) {
+      return;
+    }
+    if ((*(u32*)&ep->atkType & 0x200FF) != 0x20002) {
+      return;
+    }
+    {
+      struct Boss* q3 = (struct Boss*)b->parent;
+      register s32 m asm("r3");
+      register s32 mc asm("r0");
+      m = (q3->s).mode[1];
+      asm volatile("add %0, %1, #0" : "=&l"(mc) : "l"(m));
+      if (mc == 0xA || mc == 6 || mc == 9) {
+        return;
+      }
+      if (mc == 7 && (q3->s).mode[2] > 9) {
+        return;
+      }
+      {
+        register u8* e1 asm("r0");
+        register s32 zz asm("r1");
+        e1 = (u8*)q3 + 0xe1;
+        zz = 0;
+        *e1 = m;
+        (q3->s).mode[1] = 0xA;
+        (q3->s).mode[2] = zz;
+      }
+    }
+  }
+}
 
 extern const u16 u16_ARRAY_080fef2c[6];
 
