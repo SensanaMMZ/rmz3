@@ -219,3 +219,62 @@ void BirdElf_Die(struct Elf* p) {
 }
 
 INCASM("asm/cyberelf/bird_p2.inc");
+
+extern const s16 gSineTable[256];
+
+// 0x080E5D68
+void FUN_080e5d68(struct Elf* p) {
+  struct Zero* z = ((struct CyberElfBird*)p)->player;
+  s32* b8;
+  s32* bc;
+  u8* c0;
+  s32 t;
+  if ((p->s).mode[2] == 0) {
+    *((u8*)p + 0xc0) = 0;
+    (p->s).mode[2]++;
+  }
+  b8 = (s32*)((u8*)p + 0xb8);
+  *b8 = (z->s).coord.x;
+  bc = (s32*)((u8*)p + 0xbc);
+  *bc = (z->s).coord.y - 0x2000;
+  c0 = (u8*)p + 0xc0;
+  t = (*c0 + 1) % 0x30;
+  *c0 = t;
+  {
+    s32 u = (t % 0x30) * 256 / 0x30;
+    (p->s).coord.x = *b8 + (gSineTable[(u8)u] << 3);
+  }
+  {
+    s32 v = (t % 0x18) * 256 / 0x18;
+    (p->s).coord.y = *bc - (gSineTable[(u8)v] << 3);
+  }
+  {
+    register u8 w asm("r1");
+    register u8 k asm("r0");
+    w = *((u8*)z + 0x120);
+    if (w <= 0x3B) {
+      k = 3;
+      k &= w;
+      if (k <= 1) {
+        register u8 fl asm("r1");
+        fl = (p->s).flags;
+        asm("" : "+r"(fl));
+        k = 0xFE;
+        k &= fl;
+      } else {
+        register u8 fv asm("r0");
+        register s32 one asm("r1");
+        fv = (p->s).flags;
+        one = 1;
+        fv |= one;
+        k = fv;
+      }
+      (p->s).flags = k;
+    }
+  }
+  if ((z->s).mode[1] != 8) {
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+  }
+}
+
