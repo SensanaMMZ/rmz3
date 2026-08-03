@@ -2,6 +2,9 @@
 #include "entity.h"
 #include "global.h"
 #include "solid.h"
+#include "zero.h"
+#include "overworld.h"
+#include "physics.h"
 
 // 水没した図書館関連の何か
 
@@ -94,7 +97,107 @@ void Solid27_Init(struct Solid* p) {
 }
 
 
-INCASM("asm/solid/unk_27_p1_p3.inc");
+// 0x080D9070
+void Solid27_Update(struct Solid* p) {
+  register s32 z asm("r6");
+  z = (p->s).work[0];
+  if (z == 0) {
+    register s32 w3 asm("r1");
+    register s32 w3a asm("r0");
+    register s32 w2 asm("r2");
+    w3a = (p->s).work[3];
+    asm volatile("add %0, %1, #0" : "=&l"(w3) : "l"(w3a));
+    w2 = (p->s).work[2];
+    if (w3 != w2) {
+      (p->s).work[2] = w3a;
+      if (w3 != 0) {
+        struct Body* body;
+        (p->s).flags |= COLLIDABLE;
+        body = &p->body;
+        InitBody(body, (const struct Collision*)0x083710F4, &(p->s).coord, 0);
+        body->parent = (struct CollidableEntity*)p;
+        body->fn = (BodyFunc)z;
+      } else {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = w3;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = w3;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = w3;
+        (p->s).flags &= ~COLLIDABLE;
+      }
+    }
+    (p->s).coord.x = (pZero2->s).coord.x;
+    {
+      register u8* ow asm("r0");
+      register u32 off asm("r1");
+      ow = (u8*)&gOverworld;
+      off = 0x2C00C;
+      asm volatile("" : "+r"(off));
+      asm volatile("add %0, %0, %1" : "+l"(ow) : "l"(off));
+      (p->s).coord.y = *(s32*)ow;
+    }
+    return;
+  }
+  {
+    struct Zero* zp = pZero2;
+    register s32 cx asm("r2");
+    cx = (zp->s).coord.x;
+    (p->s).coord.x = cx;
+    (p->s).coord.y = (zp->s).coord.y;
+    {
+      u8 w1 = (p->s).work[1];
+      if (w1 == 0) {
+        s32 cy;
+        (p->s).coord.x = FUN_0800a31c(cx, (p->s).coord.y);
+        {
+          register u8* ow2 asm("r0");
+          register s32 off2 asm("r2");
+          register u16 hv asm("r1");
+          register s32 mk asm("r0");
+          ow2 = (u8*)&gOverworld;
+          off2 = 0xE8 * 2;
+          asm volatile("add %0, %0, %1" : "+l"(ow2) : "l"(off2));
+          hv = *(u16*)ow2;
+          mk = 0x7F;
+          mk &= hv;
+          if (mk != 0xD) {
+            return;
+          }
+        }
+        cy = (p->s).coord.y;
+        {
+          s32 hi = 0x4B800;
+          if (cy > hi) {
+            (p->s).coord.y = hi;
+            return;
+          }
+        }
+        {
+          s32 lo = 0x427FF;
+          if (cy > lo) {
+            return;
+          }
+          (p->s).coord.y = lo + 1;
+          return;
+        }
+      }
+      if (w1 == 1) {
+        (p->s).coord.x = FUN_0800a22c(cx, (p->s).coord.y);
+        return;
+      }
+      if (w1 == 2) {
+        (p->s).coord.y = FUN_0800a134(cx, (p->s).coord.y);
+        return;
+      }
+      (p->s).coord.y = FUN_08009f6c(cx, (p->s).coord.y);
+    }
+  }
+}
 
 void Solid27_Die(struct Solid* p) {}
 
