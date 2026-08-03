@@ -420,7 +420,52 @@ void FUN_0807472c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/snakecord_p2_a.inc");
+// 0x08074754
+void snakecord_08074754(struct Enemy* p) {
+  s32 z = (p->s).mode[2];
+  switch (z) {
+    case 0: {
+      struct Enemy* q = (struct Enemy*)(p->s).unk_28;
+      if (q != NULL) {
+        struct Enemy* r;
+        (q->s).flags &= ~DISPLAY;
+        (q->s).flags &= ~FLIPABLE;
+        EXIT_BODY(q);
+        SET_ENEMY_ROUTINE(q, ENTITY_DISAPPEAR);
+        r = (struct Enemy*)(q->s).unk_28;
+        (r->s).flags &= ~DISPLAY;
+        (r->s).flags &= ~FLIPABLE;
+        EXIT_BODY(r);
+        SET_ENEMY_ROUTINE(r, ENTITY_DISAPPEAR);
+        (p->s).unk_28 = NULL;
+      }
+      (p->s).d.y = z;
+      InitNonAffineMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x28, 0x0C));
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, (const struct Collision*)0x08366F14);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if (IsFrozen(&p->s)) {
+        break;
+      }
+      if (((u16)GetGroundMetatileAttr((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+        break;
+      }
+      {
+        s32 v = (p->s).d.y + 0x40;
+        (p->s).d.y = v;
+        if (v > 0xE0 * 8) {
+          (p->s).d.y = 0xE0 * 8;
+        }
+        (p->s).coord.y += (p->s).d.y;
+      }
+      break;
+  }
+}
+
 
 // 0x0807484c
 void FUN_0807484c(struct Enemy* p) {
