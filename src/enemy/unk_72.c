@@ -42,7 +42,128 @@ struct Enemy* FUN_0809c430(struct Entity* e, struct Coord* c) {
   return p;
 }
 
-INCASM("asm/enemy/unk_72_pre_p2.inc");
+void Enemy72_Update(struct Enemy* p);
+static const struct Collision sCollisions[];
+
+// 0x0809C494
+void Enemy72_Init(struct Enemy* p) {
+  s32 z4;
+  register s32 z6 asm("r6");
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fl asm("r1");
+    register u8 fv asm("r0");
+    fl = (p->s).flags;
+    fv = 1;
+    z4 = 0;
+    asm volatile("" : "+l"(z4));
+    z6 = 0;
+    fv |= fl;
+    fl = 2;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  ResetDynamicMotion(&p->s);
+  asm volatile("" ::"l"(z4));
+  if ((p->s).work[1] == 0) {
+    register s32 dx asm("r0");
+    register s32 z2 asm("r2");
+    if ((p->s).work[0] == 0) {
+      register u8* a asm("r0");
+      register u8* b asm("r2");
+      register u8 ov asm("r1");
+      register s32 m asm("r0");
+      {
+        register u8 fl2 asm("r1");
+        register u8 g asm("r0");
+        fl2 = (p->s).flags;
+        asm("" : "+r"(fl2));
+        g = 0xEF;
+        g &= fl2;
+        (p->s).flags = g;
+      }
+      a = (u8*)p + 0x4c;
+      *a = z6;
+      b = (u8*)p + 0x4a;
+      ov = *b;
+      m = 0x11;
+      m = -m;
+      m &= ov;
+      *b = m;
+      dx = 0x80;
+    } else {
+      register s32 one asm("r2");
+      register u8* a2 asm("r0");
+      register u8* b2 asm("r3");
+      register s32 k10 asm("r2");
+      register u8 ov2 asm("r1");
+      register s32 m2 asm("r0");
+      one = 1;
+      {
+        register u8 g2 asm("r0");
+        register u8 h2 asm("r1");
+        g2 = (p->s).flags;
+        h2 = 0x10;
+        g2 |= h2;
+        (p->s).flags = g2;
+      }
+      a2 = (u8*)p + 0x4c;
+      *a2 = one;
+      b2 = (u8*)p + 0x4a;
+      k10 = 0x10;
+      ov2 = *b2;
+      m2 = 0x11;
+      m2 = -m2;
+      m2 &= ov2;
+      m2 |= k10;
+      *b2 = m2;
+      dx = -0x80;
+    }
+    (p->s).d.x = dx;
+    {
+      register u8 fl3 asm("r1");
+      register u8 g3 asm("r0");
+      fl3 = (p->s).flags2;
+      g3 = 0x10;
+      z2 = 0;
+      g3 |= fl3;
+      (p->s).flags2 = g3;
+    }
+    (p->s).invincibleID = ((p->s).unk_28)->uniqueID;
+    SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = z2;
+    (p->s).mode[2] = z2;
+    (p->s).mode[3] = z2;
+  } else {
+    register s32 one2 asm("r1");
+    (p->s).work[2] = 0xFF;
+    {
+      register u8 g4 asm("r0");
+      register u8 h4 asm("r1");
+      g4 = (p->s).flags;
+      h4 = 4;
+      g4 |= h4;
+      (p->s).flags = g4;
+    }
+    {
+      struct Body* body = &p->body;
+      InitBody(body, &sCollisions[1], &(p->s).coord, 0x10);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z6;
+    }
+    {
+      u32 tbl = (u32)gEnemyFnTable;
+      EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+      one2 = 1;
+      *(u32*)((p->s).mode) = one2;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    (p->s).mode[1] = one2;
+    (p->s).mode[2] = z6;
+    (p->s).mode[3] = z6;
+  }
+  Enemy72_Update(p);
+}
 
 void Enemy72_Update(struct Enemy* p) {
   (sUpdates[(p->s).mode[1]])(p);
