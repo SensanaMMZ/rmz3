@@ -169,7 +169,131 @@ void FUN_08091790(struct Body* body) {
 
 void FUN_08091810(struct Enemy* p) {}
 
-INCASM("asm/enemy/unk_59_post_a.inc");
+// 0x08091814
+void FUN_08091814(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  register u32* w asm("r5");
+  s32 z;
+  {
+    register struct Sprite* ps asm("r0");
+    register struct Sprite* qs asm("r2");
+    register u8 m asm("r1");
+    ps = (struct Sprite*)((u8*)p + 0x34);
+    qs = (struct Sprite*)((u8*)q + 0x34);
+    m = (p->s).mode[2];
+    switch (m) {
+      case 0:
+        {
+          register struct MetaspriteHeader* sp asm("r1");
+          register struct Coord* co asm("r2");
+          sp = qs->sprites;
+          co = &(p->s).coord;
+          InitNonAffineSprite(ps, sp, co);
+        }
+        (p->s).mode[2]++;
+        break;
+      case 1:
+        break;
+      default:
+        return;
+    }
+  }
+  {
+    register u32* c4 asm("r0");
+    c4 = (u32*)((u8*)q + 0xc4);
+    {
+      register s32 fv asm("r1");
+      fv = *c4;
+      fv &= 8;
+      asm volatile("add %0, %1, #0" : "=&l"(w) : "l"(c4));
+      if (fv != 0) {
+        SetDDP(&p->body, (const struct Collision*)0x08369864);
+      }
+    }
+  }
+  {
+    register s32 t asm("r2");
+    {
+      register s32 t0 asm("r0");
+      t0 = (p->s).work[2];
+      asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(t0));
+    }
+    if (t == 0) {
+      register u8 fl asm("r1");
+      register u8 g asm("r0");
+      fl = (p->s).flags;
+      asm("" : "+r"(fl));
+      g = 1;
+      g |= fl;
+      (p->s).flags = g;
+    } else {
+      register u8 fl2 asm("r1");
+      register u8 g2 asm("r0");
+      fl2 = (p->s).flags;
+      asm("" : "+r"(fl2));
+      g2 = 0xFE;
+      g2 &= fl2;
+      (p->s).flags = g2;
+    }
+    {
+      register s32 n asm("r0");
+      n = t + 1;
+      z = 0;
+      (p->s).work[2] = n;
+      n <<= 24;
+      n = (u32)n >> 24;
+      if (n == 3) {
+        (p->s).work[2] = z;
+      }
+    }
+  }
+  {
+    register u32* w3 asm("r3");
+    w3 = w;
+    if (*w3 & 1) {
+      {
+        register u8 h asm("r1");
+        register u8 g3 asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g3 = 0xFE;
+        g3 &= h;
+        h = 0xFD;
+        g3 &= h;
+        (p->s).flags = g3;
+      }
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= 0xFB;
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    }
+    if (*w3 & 2) {
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = z;
+    }
+  }
+  {
+    register s32 k asm("r1");
+    register s32 v asm("r0");
+    v = *w;
+    k = 4;
+    v &= k;
+    if (v != 0) {
+      (p->s).mode[1] = k;
+      (p->s).mode[2] = z;
+    }
+  }
+}
 
 static const struct Collision sCollisions[14];
 
