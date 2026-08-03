@@ -152,7 +152,142 @@ NON_MATCH void ShieldSweep_Init(struct Weapon* p) {
 #endif
 }
 
-INCASM("asm/weapon/shield_sweep_pre.inc");
+void CreateParticle(struct Coord* c, u8 action, bool8 isRight);
+
+// 0x0803C2FC
+void ShieldSweep_Update(struct Weapon* p) {
+  struct Entity* z = (p->s).unk_28;
+  register s32 w0 asm("r2");
+  UpdateMotionGraphic(&p->s);
+  w0 = (p->s).work[0];
+  if (w0 != 0) {
+    goto late;
+  }
+  if (z->mode[0] > 1) {
+    goto kill;
+  }
+  if (z->mode[1] == 3) {
+    goto main;
+  }
+kill : {
+  {
+    register u8 g2 asm("r0");
+    register u8 h2 asm("r1");
+    h2 = (p->s).flags;
+    asm("" : "+r"(h2));
+    g2 = 0xFE;
+    g2 &= h2;
+    h2 = 0xFD;
+    g2 &= h2;
+    (p->s).flags = g2;
+  }
+  {
+    u8* a2 = (u8*)p + 0x8c;
+    *(s32*)a2 = w0;
+    asm("" : "+r"(a2));
+    a2 += 4;
+    asm("" : "+r"(a2));
+    *(s32*)a2 = w0;
+    asm("" : "+r"(a2));
+    a2 += 4;
+    asm("" : "+r"(a2));
+    *a2 = w0;
+  }
+  {
+    register u8 g3 asm("r0");
+    register u8 h3 asm("r1");
+    h3 = (p->s).flags;
+    asm("" : "+r"(h3));
+    g3 = 0xFB;
+    g3 &= h3;
+    (p->s).flags = g3;
+  }
+  SET_WEAPON_ROUTINE(p, 3);
+  goto end;
+}
+main:
+  if (*(s32*)((u8*)z + 0x60) != 0) {
+    goto clearbit;
+  }
+  {
+    register s32 one asm("r6");
+    register u32 fv asm("r2");
+    register s32 one5 asm("r5");
+    register s32 t asm("r1");
+    register s32 t1 asm("r3");
+    {
+      register u8 f0 asm("r0");
+      f0 = (p->s).flags;
+      one = 1;
+      fv = one;
+      fv |= f0;
+      (p->s).flags = fv;
+    }
+    (p->s).coord.x = z->coord.x + (p->s).unk_coord.x;
+    (p->s).coord.y = z->coord.y + (0xD0 << 4);
+    t = (p->s).work[2];
+    t1 = t + 1;
+    (p->s).work[2] = t1;
+    one5 = 1;
+    {
+      register s32 a asm("r0");
+      a = one5;
+      a &= t;
+      if (a == 0) {
+        goto end;
+      }
+    }
+    {
+      register s32 k asm("r0");
+      k = (u8)t1;
+      k >>= 1;
+      k &= one;
+      if (k == 0) {
+        goto low;
+      }
+      {
+        register struct Coord* cp asm("r0");
+        register s32 sh asm("r1");
+        register s32 r2v asm("r2");
+        cp = &(p->s).coord;
+        asm("" : "+r"(cp));
+        sh = fv >> 4;
+        r2v = one5;
+        r2v &= ~sh;
+        ((void (*)(struct Coord*, s32, s32))CreateParticle)(cp, 4, r2v);
+        goto end;
+      }
+    low : {
+      register struct Coord* cp2 asm("r0");
+      register s32 sh2 asm("r1");
+      register s32 r2w asm("r2");
+      cp2 = &(p->s).coord;
+      asm("" : "+r"(cp2));
+      sh2 = fv >> 4;
+      r2w = one5;
+      r2w &= ~sh2;
+      ((void (*)(struct Coord*, s32, s32))CreateParticle)(cp2, 5, r2w);
+      goto end;
+    }
+    }
+  }
+clearbit : {
+  register u8 g asm("r0");
+  register u8 h asm("r1");
+  h = (p->s).flags;
+  asm("" : "+r"(h));
+  g = 0xFE;
+  g &= h;
+  (p->s).flags = g;
+  goto end;
+}
+late:
+  if (*((u8*)p + 0x73) == 3) {
+    SET_WEAPON_ROUTINE(p, 2);
+    ShieldSweep_Die(p);
+  }
+end:;
+}
 
 void ShieldSweep_Die(struct Weapon* p) {
   (p->s).flags &= ~DISPLAY;
