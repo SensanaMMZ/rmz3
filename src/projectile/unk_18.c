@@ -88,7 +88,104 @@ void FUN_080a308c(struct Projectile* p) {}
 
 void FUN_080a3090(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_18_p2_p2_p2_p3_a.inc");
+// 0x080A3094
+void FUN_080a3094(struct Projectile* p) {
+  register u32* st asm("r5");
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 w2 asm("r2");
+      SetDDP(&p->body, &sCollisions[1]);
+      w2 = (p->s).work[2];
+      if (w2 != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        register s32 xv asm("r1");
+        register u8* oa asm("r3");
+        s32 sh4, ov, m11;
+        xv = 1;
+        xv &= w2;
+        *((u8*)p + 0x4c) = xv;
+        oa = (u8*)p + 0x4a;
+        sh4 = xv << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      {
+        s32 k = -0x200;
+        (p->s).d.x = ((p->s).work[2] << 10) + k;
+        (p->s).d.y = k;
+      }
+      SetMotion(&p->s, 0x4604);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 dx asm("r2");
+      s32 push;
+      {
+        s32 cx = (p->s).coord.x;
+        dx = (p->s).d.x;
+        (p->s).coord.x = cx + dx;
+      }
+      {
+        s32 dy = (p->s).d.y + 0x20;
+        (p->s).d.y = dy;
+        if (dy > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if (dx < 0) {
+        push = PushoutToRight1((p->s).coord.x - 0x800, (p->s).coord.y);
+        if (push <= 0) {
+          goto upd;
+        }
+      } else {
+        push = PushoutToLeft1((p->s).coord.x + 0x800, (p->s).coord.y);
+        if (push >= 0) {
+          goto upd;
+        }
+      }
+      (p->s).coord.x += push;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+  st = (u32*)((u8*)p + 0x8c);
+  if (*st & 4) {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    register s32 zr asm("r2");
+    u8* a;
+    FUN_080a2ea0();
+    FUN_080a2ee8((p->s).coord.x, (p->s).coord.y);
+    h = (p->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    zr = 0;
+    h = 0xFD;
+    g &= h;
+    (p->s).flags = g;
+    *st = zr;
+    a = (u8*)p + 0x90;
+    *(s32*)a = zr;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *a = zr;
+    (p->s).flags &= ~4;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
 
 // 0x080A31C0
 void FUN_080a31c0(struct Projectile* p) {
