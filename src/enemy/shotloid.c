@@ -667,6 +667,81 @@ void FUN_08094178(struct Enemy* p) {
   }
 }
 
+// 0x08094224
+void FUN_08094224(struct Enemy* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).taskCol = 0x19;
+      *(u32*)&p->props[4] &= ~1;
+      SetMotion(&p->s, 0x8E04);
+      (p->s).d.x = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 push;
+      if (*((u8*)p + 0xbc) == 2) {
+        register s32 cx asm("r3");
+        register s32 nx asm("r2");
+        cx = (p->s).coord.x;
+        {
+          register s32 t asm("r0");
+          t = cx - 0x100;
+          (p->s).coord.x = t;
+          asm volatile("add %0, %1, #0" : "=&l"(nx) : "l"(t));
+        }
+        if ((p->s).flags & 0x10) {
+          nx = cx + 0x100;
+        }
+        (p->s).coord.x = nx;
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (push < 0) {
+        (p->s).coord.y += push;
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, 0x8E05);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register u8 st asm("r2");
+      UpdateMotionGraphic(&p->s);
+      st = (p->s).motion.state;
+      if (st == 3) {
+        register u8* f asm("r1");
+        u8 v;
+        register s32 nm asm("r0");
+        f = (u8*)p + 0xbc;
+        v = *f;
+        if (v == 0) {
+          *f = 1;
+          nm = 8;
+        } else {
+          if (v == 2) {
+            *f = st;
+          }
+          nm = 1;
+        }
+        (p->s).mode[1] = nm;
+        nm = 0;
+        (p->s).mode[2] = nm;
+      }
+      FUN_08093a64(p, 1);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/shotloid_post_p2_p2b.inc");
 
 // 0x0809468C -- turret sweep: clear the aim bit, flip toward the stored side,
