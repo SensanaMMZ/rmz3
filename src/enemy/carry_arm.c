@@ -250,7 +250,99 @@ void FUN_08071778(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/carry_arm_p3_p1_c.inc");
+extern void __divsi3();
+void FUN_08071b88(struct Enemy* p);
+
+// 0x08071888
+void FUN_08071888(struct Enemy* p) {
+  register struct Entity* q asm("r6");
+  q = (p->s).unk_2c;
+  if (q != NULL && q->mode[0] > 1) {
+    q = NULL;
+    (p->s).unk_2c = q;
+    (p->s).mode[1] = 5;
+    asm volatile("strb %0, [%1, #0xe]" ::"l"(q), "l"(p) : "memory");
+    FUN_08071b88(p);
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r4");
+      {
+        s32 t = (q->coord).x - (p->s).coord.x;
+        (p->s).d.x = t;
+        dx = ((s32 (*)(s32, s32))__divsi3)(t, 0x28);
+        (p->s).d.x = dx;
+      }
+      (p->s).unk_coord.y = -0x20;
+      {
+        register s32 cy asm("r0");
+        register s32 kc asm("r1");
+        s32 u;
+        cy = (q->coord).y;
+        kc = -0x2200;
+        asm volatile("" : "+r"(kc));
+        cy += kc;
+        kc = (p->s).coord.y;
+        u = cy - kc;
+        (p->s).d.y = u;
+        (p->s).d.y = ((s32 (*)(s32, s32))__divsi3)(u, 0x28) + 0x280;
+      }
+      {
+        register s32 v asm("r1");
+        register s32 v2 asm("r2");
+        v = 0;
+        if (dx > 0) {
+          v = 1;
+        }
+        asm volatile("add %0, %1, #0" : "=&l"(v2) : "l"(v));
+        if (v2 != 0) {
+          (p->s).flags |= X_FLIP;
+        } else {
+          (p->s).flags &= ~X_FLIP;
+        }
+        {
+          register s32 xf asm("r1");
+          u8* oa;
+          s32 sh4, ov, m11;
+          asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(v2));
+          ((p->s).spr).xflip = xf;
+          oa = (u8*)p + 0x4a;
+          sh4 = xf << 4;
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          *oa = m11 | sh4;
+        }
+      }
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 t asm("r1");
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 ny = (p->s).d.y + (p->s).unk_coord.y;
+        (p->s).d.y = ny;
+        (p->s).coord.y += ny;
+      }
+      {
+        register s32 u asm("r0");
+        u = (p->s).work[2];
+        u--;
+        (p->s).work[2] = u;
+        u <<= 24;
+        t = (u32)u >> 24;
+      }
+      if (t == 0) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 // 0x08071964
 void FUN_08071964(struct Enemy* p) {
