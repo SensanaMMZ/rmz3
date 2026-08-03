@@ -68,7 +68,68 @@ void Elf1_Init(struct CyberElf1* p) {
   Elf1_Update(p);
 }
 
-INCASM("asm/cyberelf/unk_1_p1_a.inc");
+extern const ElfFunc sElf1Updates[6];
+extern const s16 gSineTable[256];
+struct Entity* FUN_080bfc94(struct Coord* c, u8 r1);
+
+// 0x080E21C8
+void Elf1_Update(struct CyberElf1* p) {
+  struct Zero* z = p->player;
+  struct Rect r = gZeroRanges[z->posture];
+  register s32 a asm("r3");
+  UpdateMotionGraphic(&p->s);
+  (p->s).unk_coord.x = (z->s).coord.x + r.x;
+  (p->s).unk_coord.y = (z->s).coord.y + r.y;
+  (sElf1Updates[(p->s).mode[1]])((struct Elf*)p);
+  {
+    u8* pb8 = &p->unk_b8;
+    register s32 t asm("r3");
+    t = *pb8;
+    if ((p->s).mode[1] <= 3) {
+      register s32 q asm("r0");
+      t++;
+      asm volatile("add %0, %1, #0" : "=&l"(q) : "l"(t));
+      q >>= 4;
+      q <<= 4;
+      t -= q;
+      *pb8 = t;
+    }
+    a = t;
+    a <<= 4;
+    asm volatile("" : "+r"(a));
+  }
+  {
+    s32 sv = gSineTable[(u8)a];
+    s32 d = sv * 20;
+    register struct Coord* c asm("r2");
+    c = &p->coord_bc;
+    (p->s).coord.x = (c->x + d) + (p->s).unk_coord.x;
+    (p->s).coord.y = c->y + (p->s).unk_coord.y;
+  }
+  {
+    register s32 tc asm("r0");
+    register s32 k asm("r1");
+    asm volatile("add %0, %1, #0" : "=&l"(tc) : "l"(a));
+    tc += 0x40;
+    k = 0xFF;
+    tc &= k;
+    k = 0x10;
+    if (tc > 0x7F) {
+      k = 0x11;
+    }
+    (p->s).taskCol = k;
+  }
+  if ((p->s).mode[1] <= 4) {
+    u8* pb9 = &p->unk_b9;
+    s32 v = *pb9;
+    v--;
+    *pb9 = v;
+    if ((u8)v == 0xFF) {
+      FUN_080bfc94(&(p->s).coord, 0);
+      *pb9 = 0x20;
+    }
+  }
+}
 
 // Three instructions short of retail, which keeps the 0x121 offset in r5 and
 // schedules the pool loads ahead of the index math; agbcc folds the address
