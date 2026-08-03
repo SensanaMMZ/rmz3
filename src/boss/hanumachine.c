@@ -595,6 +595,75 @@ void FUN_0805c404(struct Boss* p) {
   }
 }
 
+void hanu_080ad598(struct Entity* e, u8 a1, u8 a2);
+
+// 0x0805C4A4
+void hanu_0805c4a4(struct Boss* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  if (m == 0) {
+    InitRotatableMotion(&p->s);
+    ResetDynamicMotion(&p->s);
+    SetMotion(&p->s, MOTION(0xB5, 0x09));
+    (p->s).coord.y -= 0x1000;
+    (p->s).work[2] = 0x30;
+    (p->s).work[3] = m;
+    SetDDP(&p->body, (const struct Collision*)0x08364F28);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).flags & X_FLIP) {
+    u8 w = (p->s).work[2];
+    if (w == 0x20) {
+      hanu_080ad598(&p->s, 0, 0x50);
+      PlaySound(0x51);
+      goto after;
+    }
+    if (w == 0x10) {
+      hanu_080ad598(&p->s, 0, 0x40);
+      PlaySound(0x51);
+      goto after;
+    }
+    if (w == 0) {
+      hanu_080ad598(&p->s, 0, 0x30);
+      PlaySound(0x51);
+    }
+    goto after;
+  }
+  {
+    u8 w = (p->s).work[2];
+    if (w == 0x20) {
+      hanu_080ad598(&p->s, 0, 0xB0);
+      PlaySound(0x51);
+      goto after;
+    }
+    if (w == 0x10) {
+      hanu_080ad598(&p->s, 0, 0xC0);
+      PlaySound(0x51);
+      goto after;
+    }
+    if (w == 0) {
+      hanu_080ad598(&p->s, 0, 0xD0);
+      PlaySound(0x51);
+    }
+  }
+after : {
+  s32 a2 = (p->s).work[3] + 0x10;
+  (p->s).work[3] = a2;
+  (p->s).angle = a2;
+}
+  {
+    s32 t = (p->s).work[2];
+    t--;
+    (p->s).work[2] = t;
+    t = (u8)t;
+    if (t == 0xFF) {
+      (p->s).mode[1] = 0xC;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
 INCASM("asm/boss/hanumachine_p2_p1.inc");
 
 void FUN_0805c760(struct Boss* p) {
