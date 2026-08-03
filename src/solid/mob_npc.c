@@ -1237,6 +1237,72 @@ TextID kiss_080dac04(struct Solid* p) {
 
 INCASM("asm/solid/mob_npc_pre_p2.inc");
 
+#ifdef NON_MATCHING
+// one-instruction tie: retail increments the loaded counter in place
+// (`adds r0, #1`), but agbcc's conditional constant propagation folds the
+// value to 0 on the taken branch and emits `movs r0, #1`. Every spelling
+// tried (barriered copy, literal-asm add, pointer post-increment,
+// inverted early return) either re-derives the constant or adds a reload.
+NON_MATCH // 0x080DAD10
+TextID colbor_080dad10(struct Solid* p) {
+  switch ((p->s).work[0]) {
+    case 0x16: {
+      register u8* g asm("r0");
+      register u8* c asm("r1");
+      u8 v;
+      g = (u8*)&gCurStory;
+      asm("" : "+r"(g));
+      c = g + 0x25;
+      v = *c;
+      if (v != 0) {
+        return 0x2B5;
+      }
+      *c = v + 1;
+      return 0x2B4;
+    }
+    case 0x17:
+      if (FLAG(gCurStory.s.gameflags, 16)) {
+        return 0x2AF;
+      }
+      if (FLAG(gCurStory.s.gameflags, 11)) {
+        return 0x2AE;
+      }
+      break;
+    case 0x18:
+      if (FLAG(gCurStory.s.gameflags, 16)) {
+        return 0x2B3;
+      }
+      if (FLAG(gCurStory.s.gameflags, 11)) {
+        if (((gStageDiskManager.disk[5] & 0xF) >> 2) & 1) {
+          return 0x2B2;
+        }
+        return 0x2B1;
+      }
+      return 0x2B0;
+    case 0x19: {
+      register u8* g2 asm("r0");
+      register u8* d asm("r1");
+      u8 w;
+      g2 = (u8*)&gCurStory;
+      asm("" : "+r"(g2));
+      d = g2 + 0x28;
+      w = *d;
+      if (w != 0) {
+        return 0x2B9;
+      }
+      *d = w + 1;
+      return 0x2B8;
+    }
+  }
+  return 0x2AD;
+}
+#else
+NAKED TextID colbor_080dad10(struct Solid* p) {
+  INCCODE("asm/solid/mob_npc_dad10.inc");
+}
+#endif
+
+
 // 0x080DADFC
 void FUN_080dadfc(struct Solid* p) {
   struct MobObject* m = (struct MobObject*)p;
