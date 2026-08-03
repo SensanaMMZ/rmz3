@@ -397,6 +397,7 @@ void FUN_0808d6f4(struct Enemy* p) {}
 
 extern const struct Collision sCollisions[15];
 extern const u8 sCollisionIdxs1[6];
+extern const u8 sCollisionIdxs2[6];
 
 void FUN_0808d6f8(struct Enemy* p) {
   struct Entity** slot = (struct Entity**)((u8*)p + 0xb4);
@@ -418,6 +419,64 @@ void FUN_0808d76c(struct Enemy* p) {
   if (((p->body).status & 0x00020001) == 0x00020001) {
     (p->s).mode[1] = 6;
     (p->s).mode[2] = 0;
+  }
+}
+
+// 0x0808D78C
+void FUN_0808d78c(struct Enemy* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u8* k asm("r6");
+      const u16* tb = sMotions1;
+      k = (u8*)&p->props[5];
+      SetMotion(&p->s, tb[*k]);
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[sCollisionIdxs2[*k]]);
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 hit asm("r5");
+      register u32 fz asm("r6");
+      hit = FUN_0800a40c((p->s).coord.x - 0x1200, (p->s).coord.y + 0x400);
+      if (hit == 0) {
+        hit = FUN_0800a40c((p->s).coord.x + 0x1200, (p->s).coord.y + 0x400);
+        if (hit == 0) {
+          goto skip;
+        }
+      }
+      FUN_0808d160(p, hit);
+    skip:
+      fz = IsFrozen(&p->s);
+      if (fz != 0) {
+        break;
+      }
+      if (((u8)FUN_0808d268(p, 1)) == 0) {
+        (p->s).d.y += 0x40;
+        if ((p->s).d.y > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        FUN_0808d268(p, 1);
+      } else {
+        (p->s).d.y = fz;
+        if ((p->s).work[1] != 0 && hit == 0) {
+          register s32 one asm("r2");
+          register u8* a asm("r0");
+          a = (u8*)p + 0xbb;
+          *a = hit;
+          asm volatile("add %0, #1" : "+r"(a));
+          one = 1;
+          *a = one;
+          SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+          (p->s).mode[1] = one;
+        }
+      }
+      break;
+    }
   }
 }
 
