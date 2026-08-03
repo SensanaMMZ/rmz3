@@ -205,6 +205,83 @@ void FUN_0807da34(struct Enemy* p) {
   }
 }
 
+// 0x0807DAA0
+void FUN_0807daa0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 w2 asm("r2");
+      (p->s).taskCol = 0x19;
+      w2 = (p->s).work[2];
+      if (w2 != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        register s32 xv asm("r1");
+        register u8* oa asm("r3");
+        s32 sh4, ov, m11;
+        xv = 1;
+        xv &= w2;
+        *((u8*)p + 0x4c) = xv;
+        oa = (u8*)p + 0x4a;
+        sh4 = xv << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      (p->s).d.x = (((p->s).work[2] * 3) << 9) - 0x300;
+      (p->s).work[2] = 0x15;
+      SetDDP(&p->body, &sCollisions[1]);
+      {
+        register const motion_t* tb asm("r2");
+        s32 f;
+        tb = &sMotions[2];
+        f = (u8)((p->s).flags & 0x10);
+        f = -f;
+        f >>= 31;
+        f &= 2;
+        {
+          register const motion_t* me asm("r0");
+          asm volatile("add %0, %1, %2" : "=l"(me) : "l"(f), "l"(tb));
+          SetMotion(&p->s, *me);
+        }
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((u8)t == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      (p->s).work[2] = 0x10;
+      (p->s).taskCol = 0x17;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 t = (p->s).work[2] - 1;
+      u8 w;
+      (p->s).work[2] = t;
+      w = t;
+      if (w == 0) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = w;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/mellnet_post_post_post.inc");
 
 // Everything reproduces (bitfield oam.xflip insert, 2D dive table, homing
