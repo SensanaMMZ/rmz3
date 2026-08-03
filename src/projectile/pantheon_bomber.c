@@ -35,7 +35,93 @@ struct Projectile* createPantheonBombBlast(struct Coord* c, u8 a1) {
   return p;
 }
 
-INCASM("asm/projectile/pantheon_bomber_p3_p1.inc");
+#include "motion.h"
+
+void PantheonBombProjectile_Update(struct Projectile* p);
+
+// 0x080AD0BC
+void PantheonBombProjectile_Init(struct Projectile* p) {
+  register s32 w asm("r6");
+  w = (p->s).work[1];
+  if (w == 0) {
+    struct Body* body;
+    InitNonAffineMotion(&p->s);
+    {
+      register u8 fv asm("r0");
+      register u8 k asm("r1");
+      k = (p->s).flags;
+      asm("" : "+r"(k));
+      fv = 1;
+      fv |= k;
+      k = 2;
+      fv |= k;
+      k = 4;
+      fv |= k;
+      (p->s).flags = fv;
+    }
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x0836C84C, &(p->s).coord, 4);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)w;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = w;
+    (p->s).mode[2] = w;
+    (p->s).mode[3] = w;
+  } else if (w == 1) {
+    register s32 z5 asm("r5");
+    register s32 z8 asm("r8");
+    struct Body* body;
+    InitScalerotMotion1(&p->s);
+    {
+      register u8* a asm("r1");
+      register s32 k asm("r0");
+      a = (u8*)p + 0x50;
+      z5 = 0;
+      {
+        register s32 t0 asm("r0");
+        t0 = 0;
+        asm volatile("" : "+r"(t0));
+        z8 = t0;
+      }
+      k = 0x100;
+      *(u16*)a = k;
+      asm("" : "+r"(a));
+      a += 2;
+      asm("" : "+r"(a));
+      *(u16*)a = k;
+    }
+    (p->s).angle = z5;
+    {
+      register u8 fv2 asm("r0");
+      register s32 k2 asm("r1");
+      fv2 = (p->s).flags;
+      k2 = 1;
+      fv2 |= k2;
+      k2 = 2;
+      fv2 |= k2;
+      k2 = 4;
+      fv2 |= k2;
+      (p->s).flags = fv2;
+    }
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x0836C84C, &(p->s).coord, 4);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)z8;
+    {
+      u32 tbl = (u32)gProjectileFnTable;
+      u32 id = ((p->s).id) << 2;
+      EntityFunc** rt = (EntityFunc**)(tbl + id);
+      *(u32*)((p->s).mode) = w;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    (p->s).mode[1] = w;
+    (p->s).mode[2] = z5;
+    (p->s).mode[3] = z5;
+  }
+  (p->s).work[2] = 0xFF;
+  PantheonBombProjectile_Update(p);
+}
+
 
 static const ProjectileFunc sUpdates[2];
 void PantheonBombProjectile_Die(struct Projectile* p);
