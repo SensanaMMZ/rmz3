@@ -615,6 +615,64 @@ void FUN_08081d2c(struct Enemy* p) {
 
 INCASM("asm/enemy/pantheon_aqua_mod_obj_p3_b2.inc");
 
+void FUN_080c02f4(s32 x, s32 y);
+
+// 0x08081FC4
+void FUN_08081fc4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      (p->s).taskCol = 0xE;
+      SetDDP(&p->body, &sCollisions[6]);
+      (p->s).work[2] = 0;
+      (p->s).work[3] = 0;
+      {
+        struct Camera* cam = &gStageRun.vm.camera;
+        (p->s).coord.y = cam->viewport.y + -0x7000;
+      }
+      (p->s).d.y = 0;
+      SetMotion(&p->s, MOTION(0x4F, 0));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 v;
+      (p->s).work[3]++;
+      asm volatile("" ::: "memory");
+      {
+        register s32 t asm("r0");
+        register s32 k3 asm("r1");
+        t = (p->s).work[3];
+        k3 = 3;
+        t &= k3;
+        if (t != 0) {
+          goto nodrop;
+        }
+      }
+      {
+        s32 r = (RANDOM(RNG_0202f388) & 0xFFF) + -0x800;
+        FUN_080c02f4((p->s).coord.x + r, (p->s).coord.y);
+      }
+    nodrop:
+      v = (p->s).d.y + 0x15;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] <= 0x1D) {
+        (p->s).work[2]++;
+        break;
+      }
+      if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0xA00) << 16) != 0) {
+        PlaySound(0xE2);
+        SET_ENEMY_ROUTINE(p, 2);
+      }
+      break;
+    }
+  }
+}
+
 extern void __umodsi3();
 struct VFX* FUN_080ba9a0(struct Coord* c);
 
