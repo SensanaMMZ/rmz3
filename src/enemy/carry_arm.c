@@ -105,7 +105,94 @@ void CarryArm_Die(struct Enemy* p) {
 
 void FUN_080716a8(struct Enemy* p) {}
 
-INCASM("asm/enemy/carry_arm_p3_p1.inc");
+// 0x080716AC
+void FUN_080716ac(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r2");
+      (p->s).taskCol = 0x17;
+      {
+        register s32 wv asm("r1");
+        register s32 t3 asm("r0");
+        dx = 0x3000;
+        asm("" : "+r"(dx));
+        wv = (p->s).work[1];
+        t3 = wv << 1;
+        t3 += wv;
+        t3 <<= 13;
+        dx -= t3;
+        (p->s).d.x = dx;
+        dx /= 16;
+        (p->s).d.x = dx;
+      }
+      {
+        register s32 g asm("r1");
+        register s32 h asm("r0");
+        g = -0x20;
+        (p->s).unk_coord.y = g;
+        h = 0x100;
+        asm("" : "+r"(h));
+        g <<= 3;
+        h -= g;
+        (p->s).d.y = h;
+      }
+      {
+        register s32 v asm("r1");
+        register s32 v2 asm("r2");
+        v = 0;
+        if (dx > 0) {
+          v = 1;
+        }
+        asm volatile("add %0, %1, #0" : "=&l"(v2) : "l"(v));
+        if (v2 != 0) {
+          (p->s).flags |= X_FLIP;
+        } else {
+          (p->s).flags &= ~X_FLIP;
+        }
+        {
+          register s32 xf asm("r1");
+          u8* oa;
+          s32 sh4, ov, m11;
+          asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(v2));
+          (p->s).spr.xflip = xf;
+          oa = (u8*)p + 0x4a;
+          sh4 = xf << 4;
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          *oa = m11 | sh4;
+        }
+      }
+      (p->s).work[2] = 0x10;
+      GotoMotion(&p->s, MOTION(0x22, 0x01), 6, 3);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 t asm("r0");
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 ny = (p->s).d.y + (p->s).unk_coord.y;
+        (p->s).d.y = ny;
+        (p->s).coord.y += ny;
+      }
+      t = (p->s).work[2];
+      t--;
+      (p->s).work[2] = t;
+      t <<= 24;
+      {
+        register s32 u asm("r1");
+        u = (u32)t >> 24;
+        if (u == 0) {
+          (p->s).mode[1] = 1;
+          (p->s).mode[2] = u;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_08071778(struct Enemy* p) {
   struct Entity* q = (p->s).unk_2c;
