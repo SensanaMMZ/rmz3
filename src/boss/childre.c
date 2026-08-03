@@ -1,4 +1,5 @@
 #include "boss.h"
+#include "mission.h"
 #include "collision.h"
 #include "global.h"
 #include "motion.h"
@@ -705,6 +706,82 @@ NON_MATCH void childreScrewIce(struct Boss* p) {
 }
 
 INCASM("asm/boss/childre_pre_b4.inc");
+
+void createEarShot(s32 x, s32 y, u8 n, bool8 is_big);
+
+// 0x08041CBC
+void childreEarShot(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      if (gMission.unk_00->rank > 4) {
+        SetDDP(&p->body, &sCollisions[12]);
+        SetMotion(&p->s, 0xA417);
+      } else {
+        SetDDP(&p->body, &sCollisions[9]);
+        SetMotion(&p->s, 0xA414);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      PlaySound(0x6B);
+      SetDDP(&p->body, &sCollisions[1]);
+      if (gMission.unk_00->rank > 4) {
+        s32 x;
+        u8 fl;
+        s32 cx;
+        cx = (p->s).coord.x;
+        x = cx + -0x4C00;
+        fl = (p->s).flags;
+        if (fl & 0x10) {
+          x = cx + 0x4C00;
+        }
+        {
+          s32 y;
+          s32 xf;
+          y = (p->s).coord.y;
+          y += -0xC00;
+          xf = (u32)fl >> 4;
+          xf &= 1;
+          createEarShot(x, y, xf, 1);
+        }
+      } else {
+        s32 x2;
+        u8 fl2;
+        s32 cx2;
+        cx2 = (p->s).coord.x;
+        x2 = cx2 + -0x2500;
+        fl2 = (p->s).flags;
+        if (fl2 & 0x10) {
+          x2 = cx2 + 0x2500;
+        }
+        {
+          s32 y2;
+          s32 xf2;
+          y2 = (p->s).coord.y;
+          y2 += -0xD00;
+          xf2 = (u32)fl2 >> 4;
+          xf2 &= 1;
+          createEarShot(x2, y2, xf2, 0);
+        }
+      }
+      SetMotion(&p->s, 0xA415);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0xF;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 void childreEndEarShot(struct Boss* p) {
   switch ((p->s).mode[2]) {
