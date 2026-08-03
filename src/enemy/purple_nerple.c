@@ -741,7 +741,121 @@ void FUN_08076594(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/purple_nerple_p2_p2_p4_b.inc");
+// 0x08076638
+void FUN_08076638(struct Enemy* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).d.y = m;
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, 0x2A04);
+      (p->s).work[2] = 0x64;
+      (p->s).work[3] = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      (p->s).work[2] = 0x3C;
+      SetMotion(&p->s, 0x2A05);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = 3;
+        FUN_08075bd0(&p->s);
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+  {
+    register s32 k asm("r5");
+    register s32 gx asm("r0");
+    register s32 gy asm("r1");
+    {
+      register s32 cx asm("r0");
+      register s32 cy asm("r1");
+      s32 r;
+      cx = (p->s).coord.x;
+      cy = (p->s).coord.y;
+      k = 0x200;
+      cy += k;
+      r = FUN_0800a40c(cx, cy);
+      asm volatile("add %0, %1, #0" : "=&l"(gy) : "l"(r));
+    }
+    if (gy == 0) {
+      goto zero;
+    }
+    if (gy >= 0) {
+      goto pos;
+    }
+    {
+      register s32 cx2 asm("r0");
+      register s32 nx asm("r1");
+      cx2 = (p->s).coord.x;
+      nx = cx2;
+      nx -= 0x80;
+      (p->s).coord.x = nx;
+      gx = cx2 + -0x280;
+      gy = (p->s).coord.y;
+      asm("" : "+r"(gy));
+      gy += k;
+      goto call;
+    }
+  pos:
+    {
+      register s32 cx3 asm("r1");
+      register s32 nx3 asm("r0");
+      cx3 = (p->s).coord.x;
+      nx3 = cx3;
+      nx3 += 0x80;
+      (p->s).coord.x = nx3;
+      gx = cx3 + 0x280;
+      gy = (p->s).coord.y + k;
+      goto call;
+    }
+  zero:
+    gx = (p->s).coord.x;
+    gy = (p->s).coord.y + 0x200;
+  call:
+    if (GetMetatileAttr(gx, gy) & 0x400) {
+      (p->s).work[3] = 1;
+    }
+  }
+  m = (p->s).work[3];
+  if (m != 0) {
+    goto simple;
+  }
+  {
+    s32 dy = (p->s).d.y + 0x40;
+    s32 push;
+    (p->s).d.y = dy;
+    if (dy > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+    (p->s).coord.y += (p->s).d.y;
+    push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+    if (push < 0) {
+      (p->s).coord.y += push;
+      (p->s).d.y = m;
+    }
+  }
+  return;
+simple:
+  (p->s).coord.y += 0x80;
+}
 
 // 0x08076780
 void FUN_08076780(struct Enemy* p) {
