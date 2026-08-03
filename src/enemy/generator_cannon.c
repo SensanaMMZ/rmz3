@@ -543,6 +543,65 @@ void generatorcannon_0808cad8(struct Enemy* p) {
 
 INCASM("asm/enemy/generator_cannon_post_p2_p2_b.inc");
 
+void FUN_0808cefc(struct Enemy* p);
+
+// 0x0808CD60
+void generatorcannon_0808cd60(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r1");
+      register s32 dy asm("r0");
+      register s32 q asm("r6");
+      struct Zero* z;
+      SetDDP(&p->body, &sCollisions[17]);
+      SetMotion(&p->s, MOTION(0x72, 0));
+      UpdateMotionGraphic(&p->s);
+      z = pZero2;
+      dx = (p->s).coord.x;
+      dx -= (z->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y + -0x1800;
+      dy -= (z->s).coord.y;
+      (p->s).d.y = dy;
+      dx >>= 8;
+      q = dx * dx;
+      dy >>= 8;
+      {
+        s32 u = dy * dy;
+        q += u;
+      }
+      q = (u32)Sqrt(q) << 8;
+      if (q != 0) {
+        s32 a = ((p->s).d.x << 8) / q;
+        s32 b;
+        (p->s).d.x = a;
+        b = ((p->s).d.y << 8) / q;
+        (p->s).d.x = a * 6;
+        (p->s).d.y = b * 6;
+      } else {
+        (p->s).d.x = 0xC0 << 3;
+        (p->s).d.y = q;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 v;
+      (p->s).coord.x += (p->s).d.x;
+      v = (p->s).d.y + 0x40;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) != 0 || (*(u32*)((u8*)p + 0x8c) & 4) != 0) {
+        FUN_0808cefc(p);
+      }
+      break;
+    }
+  }
+}
+
 static const motion_t sMotions[7];
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
 struct Entity* CreateSmoke(u8 kind, struct Coord* c);
