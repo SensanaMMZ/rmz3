@@ -496,6 +496,113 @@ void childreMode6(struct Boss* p) {
 
 INCASM("asm/boss/childre_pre_b3.inc");
 
+void CreateChildreScrewIce(s32 x, s32 y, u8 n);
+
+// 0x080416E4
+void childreStartScrewIce(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).flags &= ~1;
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      PlaySound(0x6A);
+      SetDDP(&p->body, &sCollisions[5]);
+      (p->s).coord.x = (pZero2->s).coord.x;
+      (p->s).flags |= 1;
+      SetMotion(&p->s, 0xA40B);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32* g;
+      s32 cy;
+      {
+        register s32 y0 asm("r0");
+        register s32 k asm("r2");
+        y0 = (p->s).coord.y;
+        k = 0x500;
+        cy = y0 + k;
+        (p->s).coord.y = cy;
+      }
+      g = (s32*)((u8*)p + 0xc0);
+      {
+        register s32 d asm("r0");
+        d = *g - cy;
+        if (d >= 0) {
+          goto upd;
+        }
+        cy += d;
+        (p->s).coord.y = cy;
+      }
+      {
+        register s32 x1 asm("r0");
+        register s32 k1 asm("r2");
+        x1 = (p->s).coord.x;
+        k1 = -0x500;
+        x1 += k1;
+        CreateChildreScrewIce(x1, cy, 0x68);
+      }
+      {
+        register s32 x2 asm("r0");
+        register s32 k2 asm("r1");
+        x2 = (p->s).coord.x;
+        k2 = 0x500;
+        x2 += k2;
+        CreateChildreScrewIce(x2, (p->s).coord.y, 0x18);
+      }
+      {
+        register s32 x3 asm("r0");
+        register s32 k3 asm("r2");
+        x3 = (p->s).coord.x;
+        k3 = -0x500;
+        x3 += k3;
+        CreateChildreScrewIce(x3, (p->s).coord.y, 0x78);
+      }
+      {
+        register s32 x4 asm("r0");
+        register s32 k4 asm("r1");
+        x4 = (p->s).coord.x;
+        k4 = 0x500;
+        x4 += k4;
+        CreateChildreScrewIce(x4, (p->s).coord.y, 8);
+      }
+      {
+        register s32 m asm("r0");
+        register s32 z asm("r1");
+        m = gOverworld.sea;
+        m -= *g;
+        z = -0x2000;
+        if (m <= z) {
+          goto lo;
+        }
+        z = 0;
+        m = 0xA;
+        goto setm;
+      lo:
+        z = 0;
+        m = 0xB;
+      setm:
+        (p->s).mode[1] = m;
+        (p->s).mode[2] = z;
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 // 0x08041800
 void childreMaybeMiddleScrewIce(struct Boss* p) {
   switch ((p->s).mode[2]) {
