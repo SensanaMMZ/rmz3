@@ -487,7 +487,63 @@ void anubisMode5(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/anubis_p2c.inc");
+static const u8 u8_ARRAY_083635c9[8];
+void CreateAnubisCoffins(struct Boss* p, u8 a);
+
+// 0x08050B74
+void anubisMode6(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register const u8* tb asm("r3");
+      s32 r;
+      (p->s).flags &= 0xFE;
+      LOAD_STATIC_GRAPHIC(SM075_ANUBIS_COFFIN);
+      tb = u8_ARRAY_083635c9;
+      r = RANDOM(RNG_0202f388) & 7;
+      if (*(s16*)((u8*)p + 0xa4) <= 0x1F) {
+        r += 8;
+      }
+      {
+        register s32 idx asm("r1");
+        register const u8* e asm("r0");
+        idx = r;
+        asm volatile("add %0, %1, %2" : "=l"(e) : "l"(idx), "l"(tb));
+        (p->s).work[2] = *e;
+      }
+      (p->s).work[3] = 0x1E;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 t0 asm("r0");
+      register s32 w2 asm("r1");
+      if ((u8)--(p->s).work[3] != 0) {
+        break;
+      }
+      (p->s).work[3] = 0x60;
+      t0 = (p->s).work[2] - 1;
+      (p->s).work[2] = t0;
+      t0 <<= 24;
+      w2 = (u32)t0 >> 24;
+      if (w2 == 0) {
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = w2;
+      } else {
+        (p->s).mode[2] = 1;
+      }
+      PlaySound(0x55);
+      {
+        register s32 f asm("r1");
+        f = 0;
+        if ((p->s).work[2] == 0) {
+          f = 1;
+        }
+        ((void (*)(struct Boss*, s32))CreateAnubisCoffins)(p, f);
+      }
+      break;
+    }
+  }
+}
 
 // 0x08050c68
 void anubisMode7(struct Boss* p) {
