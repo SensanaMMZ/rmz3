@@ -92,8 +92,7 @@ void FUN_080ad698(struct Projectile* p) {
     {
       register s32 ix asm("r0");
       s32 s2;
-      asm volatile("lsl %0, %1, #0x18
-	lsr %0, %0, #0x17" : "=l"(ix) : "l"(a2));
+      asm volatile("lsl %0, %1, #0x18\n\tlsr %0, %0, #0x17" : "=l"(ix) : "l"(a2));
       {
         register const s16* e asm("r0");
         asm volatile("add %0, %1, %2" : "=l"(e) : "l"(ix), "l"(tb));

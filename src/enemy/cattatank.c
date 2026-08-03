@@ -348,8 +348,7 @@ NON_MATCH void FUN_080994ec(struct Enemy* p) {
         (p->s).flags |= 0x10;
         ((p->s).spr).xflip = one;
         oa = (u8*)p + 0x4a;
-        asm volatile("mov %0, #0x11
-	neg %0, %0" : "=l"(mEF));
+        asm volatile("mov %0, #0x11\n\tneg %0, %0" : "=l"(mEF));
         *oa = (u8)((*oa & mEF) | m10);
       } else {
         u8 z = 0;
@@ -357,8 +356,7 @@ NON_MATCH void FUN_080994ec(struct Enemy* p) {
         (p->s).flags &= ~0x10;
         ((p->s).spr).xflip = z;
         oa = (u8*)p + 0x4a;
-        asm volatile("mov %0, #0x11
-	neg %0, %0" : "=l"(mEF));
+        asm volatile("mov %0, #0x11\n\tneg %0, %0" : "=l"(mEF));
         *oa = (u8)(*oa & mEF);
       }
       (p->s).mode[2]++;

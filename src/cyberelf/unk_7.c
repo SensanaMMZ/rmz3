@@ -293,18 +293,15 @@ void FUN_080e3f70(struct Elf* p) {
     SET_ELF_ROUTINE(p, 2);
   }
   if (((struct CyberElf7*)p)->unk_b8[2] == 0) {
-    asm volatile("lsl %0, %1, #16
-	asr %0, %0, #16" : "=l"(rx) : "l"(w0));
+    asm volatile("lsl %0, %1, #16\n\tasr %0, %0, #16" : "=l"(rx) : "l"(w0));
     dx = (z->s).coord.x + rx;
     dy = (z->s).coord.y + (w0 >> 16) - 0x200;
   } else if (((struct CyberElf7*)p)->unk_b8[2] == 1) {
-    asm volatile("lsl %0, %1, #16
-	asr %0, %0, #16" : "=l"(rx) : "l"(w0));
+    asm volatile("lsl %0, %1, #16\n\tasr %0, %0, #16" : "=l"(rx) : "l"(w0));
     dx = (z->s).coord.x + rx;
     dy = (z->s).coord.y;
   } else {
-    asm volatile("lsl %0, %1, #16
-	asr %0, %0, #16" : "=l"(rx) : "l"(w0));
+    asm volatile("lsl %0, %1, #16\n\tasr %0, %0, #16" : "=l"(rx) : "l"(w0));
     dx = (z->s).coord.x + rx;
     dy = (z->s).coord.y - (w1 >> 16);
   }

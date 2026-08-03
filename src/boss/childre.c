@@ -389,8 +389,7 @@ void childreStartRising(struct Boss* p) {
         tx2 = (p->s).coord.x;
         if ((p->s).flags & X_FLIP) {
           s32 k68;
-          asm("movs %0, #0xD0
-	lsl %0, %0, #7" : "=l"(k68));
+          asm("movs %0, #0xD0\n\tlsl %0, %0, #7" : "=l"(k68));
           tx2 = base2 + k68;
         }
         (p->s).coord.x = tx2;
@@ -793,8 +792,7 @@ void childreStun(struct Boss* p) {
         nv = cy + dv;
         (p->s).coord.y = nv;
         t = *(s32*)((u8*)p + 0xc0);
-        asm("movs %0, #0x80
-	lsl %0, %0, #4" : "=l"(k800));
+        asm("movs %0, #0x80\n\tlsl %0, %0, #4" : "=l"(k800));
         t += k800;
         dd = t - nv;
         dy = dv;
