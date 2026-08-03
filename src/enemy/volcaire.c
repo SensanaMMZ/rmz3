@@ -620,6 +620,92 @@ void FUN_08077af8(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/volcaire_p2_post.inc");
+// 0x08077CA4
+void FUN_08077ca4(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  register u8* fp asm("r6");
+  register s32 r asm("r5");
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 cx;
+      u8* f0 = (u8*)p + 0xb9;
+      u8 fv = *f0;
+      asm volatile("add %0, %1, #0" : "=&l"(fp) : "l"(f0));
+      if (fv == 0) {
+        cx = (p->s).coord.x + (p->s).d.x;
+        (p->s).coord.x = cx;
+        if (((p->s).flags & 0x10) == 0) {
+          r = PushoutToRight1(cx, (p->s).coord.y + -0x800);
+          if (r <= 0) {
+            goto nopush;
+          }
+          goto push;
+        } else {
+          r = PushoutToLeft1(cx, (p->s).coord.y + -0x800);
+          if (r < 0) {
+          push:
+            (p->s).coord.x += r;
+          }
+        }
+      }
+    nopush:;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0xE0 * 8) {
+        (p->s).d.y = 0xE0 * 8;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (r < 0) {
+        u32 at = (u16)GetMetatileAttr((p->s).coord.x, (p->s).coord.y);
+        asm("" : "+r"(at));
+        if ((at & 0x10) != 0) {
+          goto hit;
+        }
+        if (*fp != 0) {
+          goto hit;
+        }
+        (p->s).coord.y += r;
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = 1;
+        goto aftr;
+      hit:
+        *fp = 1;
+      aftr:;
+      }
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0xC0 * 128) {
+        s32 zero;
+        u8* a;
+        if (q != NULL) {
+          u8* c = (u8*)q + 0xb8;
+          *c = *c - 1;
+        }
+        (p->s).flags &= ~DISPLAY;
+        zero = 0;
+        (p->s).flags &= ~FLIPABLE;
+        a = (u8*)p + 0x8c;
+        *(u32*)a = zero;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = zero;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = zero;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/enemy/volcaire_p2_post_b.inc");
 
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
