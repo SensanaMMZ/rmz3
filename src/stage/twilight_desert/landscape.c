@@ -224,7 +224,130 @@ void desert_0800ff98(struct StageLayer* l, const struct Stage* _ UNUSED) {
   l->phase++;
 }
 
-INCASM("asm/stage_gfx/twilight_desert_post.inc");
+// 0x08010044
+void FUN_08010044(struct StageLayer* l, const struct Stage* _ UNUSED) {
+  s32 sub;
+  register u32 bi asm("r6");
+  register s32 vy asm("r5");
+  register u16* bo asm("r4");
+  register u16* bc asm("r2");
+  {
+    register u32 b asm("r1");
+    register u16* base asm("r2");
+    register s32 idx asm("r4");
+    b = l->bgIdx;
+    b <<= 16;
+    bi = b >> 16;
+    sub = 0x20;
+    asm volatile("" : "+r"(sub));
+    {
+      register s32 t asm("r0");
+      t = l->viewportCenterPixel.y;
+      t -= 0x1E0;
+      t <<= 16;
+      vy = (u32)t >> 16;
+    }
+    b >>= 20;
+    idx = b << 2;
+    base = (u16*)((u8*)&gVideoRegBuffer + 12);
+    {
+      register u16* p3 asm("r3");
+      asm volatile("add %0, %1, %2" : "=l"(p3) : "l"(idx), "l"(base));
+      *p3 = 0;
+    }
+    {
+      register u16* q0 asm("r0");
+      asm volatile("add %0, %1, #2" : "=l"(q0) : "l"(base));
+      asm volatile("add %0, %1, %2" : "=l"(bo) : "l"(idx), "l"(q0));
+    }
+    *bo = vy;
+    {
+      register s32 i2 asm("r1");
+      i2 = b << 1;
+      asm volatile("sub %0, %0, #8" : "+l"(base));
+      asm volatile("add %0, %1, %2" : "=l"(bc) : "l"(i2), "l"(base));
+    }
+  }
+  {
+    u32 msk;
+    {
+      register s32 cur asm("r1");
+      register s32 res asm("r0");
+      cur = *bc;
+      msk = 0xFFFC;
+      asm volatile("add %0, %1, #0" : "=&l"(res) : "l"(msk));
+      res &= cur;
+      res |= 2;
+      *bc = res;
+    }
+    {
+      register u8* ow asm("r0");
+      register u32 off asm("r1");
+      register u32 ov asm("r0");
+      ow = (u8*)&gOverworld;
+      off = 0x2D02A;
+      asm volatile("" : "+r"(off));
+      asm volatile("add %0, %0, %1\n\tldrb %0, [%0]" : "+l"(ow) : "l"(off));
+      ov = (u32)ow;
+      if (ov == 0) {
+        *bo -= 0x80;
+      } else if (ov == 1) {
+        *bo -= 0x40;
+        sub = 0x40;
+        asm volatile("" : "+r"(sub));
+      } else if (ov == 2) {
+        *bo -= 0x20;
+      } else if (ov == 4) {
+        register s32 cur2 asm("r1");
+        register s32 res2 asm("r0");
+        *bo += 0x20;
+        cur2 = *bc;
+        asm volatile("add %0, %1, #0" : "=&l"(res2) : "l"(msk));
+        res2 &= cur2;
+        res2 |= 1;
+        *bc = res2;
+      }
+    }
+  }
+  {
+    register s32 k asm("r3");
+    register s32 t asm("r1");
+    k = 0xA0;
+    t = k - sub;
+    {
+      register s32 sv asm("r0");
+      sv = vy << 16;
+      sv >>= 16;
+      t -= sv;
+    }
+    t <<= 16;
+    vy = (u32)t >> 16;
+    t >>= 16;
+    if (t > 0x9F) {
+      register u16* vb asm("r2");
+      register u32 mk asm("r1");
+      vb = &gVideoRegBuffer.dispcnt;
+      mk = bi << 8;
+      *vb &= ~mk;
+    } else {
+      register u16* vb2 asm("r2");
+      register u32 mk2 asm("r0");
+      vb2 = &gVideoRegBuffer.dispcnt;
+      mk2 = bi << 8;
+      mk2 |= *vb2;
+      *vb2 = mk2;
+      {
+        register u16* wb asm("r1");
+        register s32 wv asm("r0");
+        wb = (u16*)&gWindowRegBuffer;
+        wv = vy << 16;
+        wv >>= 8;
+        wv |= k;
+        wb[5] = wv;
+      }
+    }
+  }
+}
 
 static void LayerExit_TwilightDesert_4(struct StageLayer* l, const struct Stage* stage) {
   gBlendRegBuffer.bldclt = 0;
