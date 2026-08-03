@@ -163,7 +163,99 @@ void FUN_080951b4(struct PantheonFistObject* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_fist_pre_p2_a_b.inc");
+static const u8 sInitModes[2];
+void PantheonFist_Update(struct Enemy* p);
+
+// 0x08095200
+void PantheonFist_Init(struct Enemy* p) {
+  register s32 z6 asm("r6");
+  u8 w0 = (p->s).work[0];
+  if (w0 == 1) {
+    (p->s).work[0] = 0;
+    (p->s).work[1] = w0;
+  } else {
+    (p->s).work[1] = 0;
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  {
+    u8 v = sInitModes[(p->s).work[0]];
+    z6 = 0;
+    (p->s).mode[1] = v;
+  }
+  {
+    register u8 fv asm("r0");
+    register u8 k asm("r1");
+    fv = (p->s).flags;
+    k = 2;
+    fv |= k;
+    k = 1;
+    fv |= k;
+    (p->s).flags = fv;
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fl asm("r1");
+    register u8 g asm("r0");
+    fl = (p->s).flags;
+    g = 4;
+    g |= fl;
+    (p->s).flags = g;
+  }
+  {
+    struct Body* body = &p->body;
+    InitBody(body, &sCollisions[0], &(p->s).coord, 8);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)nop_080950cc;
+  }
+  *(s32*)((u8*)p + 0xb4) = z6;
+  if ((p->s).work[1] != 0) {
+    *((u8*)p + 0xb8) = z6;
+  } else {
+    *((u8*)p + 0xb8) = 3;
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  }
+  {
+    register s32 f asm("r2");
+    f = 0;
+    if ((p->s).coord.x < (pZero2->s).coord.x) {
+      f = 1;
+    }
+    {
+      register u8 nf asm("r0");
+      if (f != 0) {
+        register u8 kk asm("r1");
+        kk = (p->s).flags;
+        nf = 0x10;
+        nf |= kk;
+      } else {
+        register u8 fl2 asm("r1");
+        fl2 = (p->s).flags;
+        asm("" : "+r"(fl2));
+        nf = 0xEF;
+        nf &= fl2;
+      }
+      (p->s).flags = nf;
+    }
+    {
+      register s32 x asm("r1");
+      u8* a;
+      s32 sh;
+      u8 ov;
+      s32 m;
+      x = f;
+      ((p->s).spr).xflip = x;
+      a = (u8*)p + 0x4a;
+      asm("" : "+r"(a));
+      sh = x << 4;
+      ov = *a;
+      m = -0x11;
+      m &= ov;
+      m |= sh;
+      *a = m;
+    }
+  }
+  PantheonFist_Update(p);
+}
 
 
 void PantheonFist_Update(struct Enemy* p) {
