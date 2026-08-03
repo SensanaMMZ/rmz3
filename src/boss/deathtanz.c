@@ -815,6 +815,69 @@ void deathtanzMode16(struct Boss* p) {
 
 INCASM("asm/boss/deathtanz_c3.inc");
 
+s32 PushoutToUp1(s32 x, s32 y);
+s32 PushoutToDown1(s32 x, s32 y);
+
+// 0x0804AA24
+void deathtanzKnockBackDamage(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 dx, dy, dist, nx, ny;
+      PlaySound(0x60);
+      SetMotion(&p->s, MOTION(0xA7, 0x36));
+      dx = (p->s).coord.x - *(s32*)((u8*)p + 0xc8);
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y - 0x3000;
+      dy -= *(s32*)((u8*)p + 0xcc);
+      (p->s).d.y = dy;
+      dist = (dx >> 8) * (dx >> 8);
+      dist += (dy >> 8) * (dy >> 8);
+      dist = Sqrt(dist) << 8;
+      nx = ((p->s).d.x << 8) / dist;
+      (p->s).d.x = nx;
+      ny = ((p->s).d.y << 8) / dist;
+      (p->s).d.y = ny;
+      (p->s).d.x = nx * 1152 / 256;
+      (p->s).d.y = ny * 1152 / 256;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 r asm("r6");
+      s32 x, bx, ny;
+      x = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = x;
+      bx = *(s32*)((u8*)p + 0xb4);
+      if (x > bx + 0x5000) {
+        (p->s).coord.x = bx + 0x5000;
+      } else if (x < bx - 0x5000) {
+        (p->s).coord.x = bx - 0x5000;
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      if ((p->s).d.y > 0) {
+        r = PushoutToUp1((p->s).coord.x, ny);
+        if (r < 0) {
+          (p->s).coord.y += r;
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = 0;
+        }
+      } else {
+        r = PushoutToDown1((p->s).coord.x, ny - 0x2000);
+        if (r < 0) {
+          (p->s).coord.y += r;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 // 0x0804AB50
 void deathtanzMode19(struct Boss* p) {
   struct Entity* e = (p->s).unk_28;
