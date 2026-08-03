@@ -182,6 +182,137 @@ void shield_08039d3c(struct Weapon* w) {
 
 INCASM("asm/weapon/shield_fly_a.inc");
 
+s32 FUN_0803a574(s32 x, s32 y);
+u32 FUN_0803a5c8(u32 a, s32 b, s32 c);
+
+// 0x08039FFC
+void shield_08039ffc(struct Weapon* w) {
+  register struct Zero* z asm("ip");
+  register s32 cx asm("r6");
+  s32 cy;
+  register s32 tx asm("r4");
+  s32 ty;
+  z = (&PROP)->z;
+  cx = (w->s).coord.x;
+  cy = (w->s).coord.y;
+  {
+    register const struct Rect* tb asm("r2");
+    register u8* rp asm("r3");
+    if ((z->s).flags & 0x10) {
+      register s32 rx asm("r1");
+      register struct Zero* z4 asm("r4");
+      tb = gZeroRanges;
+      rp = (u8*)z + 0x147;
+      rx = tb[*rp].x;
+      z4 = z;
+      {
+        register s32 zx asm("r0");
+        zx = (z4->s).coord.x;
+        tx = zx - rx;
+      }
+    } else {
+      register s32 rx2 asm("r1");
+      register struct Zero* z5 asm("r4");
+      tb = gZeroRanges;
+      rp = (u8*)z + 0x147;
+      rx2 = tb[*rp].x;
+      z5 = z;
+      {
+        register s32 zx2 asm("r0");
+        zx2 = (z5->s).coord.x;
+        tx = zx2 + rx2;
+      }
+    }
+    {
+      register s32 ry asm("r0");
+      register struct Zero* z6 asm("r2");
+      ry = tb[*rp].y;
+      z6 = z;
+      ty = (z6->s).coord.y + ry;
+    }
+  }
+  tx -= cx;
+  ty -= cy;
+  {
+    register u8* b4 asm("r8");
+    register s32 ang asm("r3");
+    register s32 cur asm("r4");
+    ang = FUN_0803a574(tx, ty);
+    {
+      register u8* p1 asm("r1");
+      register u32 d asm("r2");
+      register s32 msk asm("r0");
+      p1 = (u8*)w;
+      asm volatile("add %0, #0xb4" : "+r"(p1));
+      cur = p1[0xc];
+      d = cur - ang;
+      d += 4;
+      msk = 0xFF;
+      d &= msk;
+      b4 = p1;
+      if (d > 8 && (w->s).mode[2] == 0) {
+        if (cur != 0) {
+          cur += 4;
+        } else {
+          cur -= 4;
+        }
+        cur &= 0xFF;
+      } else {
+        cur = FUN_0803a5c8(ang, cur, 4);
+      }
+    }
+    {
+      register u8* b3 asm("r3");
+      b3 = b4;
+      b3[0xc] = cur;
+    }
+    {
+      register const s16* st asm("r3");
+      register s32 v asm("r1");
+      register s32 t0 asm("r0");
+      t0 = 0x7F;
+      v = 0x360;
+      st = gSineTable;
+      t0 &= cur;
+      v = (st[t0] * v) >> 8;
+      {
+        register s32 k asm("r0");
+        k = 0x600;
+        v = k - v;
+      }
+      {
+        register s32 dxv asm("r2");
+        register s32 sc asm("r0");
+        sc = st[(u8)(cur + 0x40)];
+        dxv = v;
+        dxv *= sc;
+        dxv >>= 8;
+        (w->s).d.x = dxv;
+        {
+          register s32 dyv asm("r0");
+          register s32 ix asm("r0");
+          ix = cur << 24;
+          ix = (s32)((u32)ix >> 23);
+          {
+            register const s16* se asm("r0");
+            asm volatile("add %0, %1, %2" : "=l"(se) : "l"(ix), "l"(st));
+            dyv = *se;
+          }
+          dyv = (v * dyv) >> 8;
+          (w->s).d.y = dyv;
+          cx += dxv;
+          cy += dyv;
+        }
+      }
+    }
+  }
+  (w->s).coord.x = cx;
+  (w->s).coord.y = cy;
+  (w->s).mode[2] = 1;
+}
+
+INCASM("asm/weapon/shield_fly_a2.inc");
+
 s32 FUN_0803a574(s32 x, s32 y) {
   u16 angle;
   s32 tmp;
