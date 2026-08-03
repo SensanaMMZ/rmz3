@@ -1,4 +1,5 @@
 #include "boss.h"
+#include "mission.h"
 #include "gba/syscall.h"
 #include "collision.h"
 #include "global.h"
@@ -909,7 +910,114 @@ void blizzackBombFall(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/blizzack_post_p2_a2.inc");
+// 0x0805A8F4
+void blizzackBombStamp(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    struct Entity* q;
+    register u16* h asm("r0");
+    register s32 z asm("r2");
+    register s32 kv asm("r1");
+    SetMotion(&p->s, 0xB404);
+    q = (p->s).unk_2c;
+    q->mode[2] = 1;
+    h = (u16*)((u8*)(p->s).unk_2c + 0xbc);
+    z = 0;
+    kv = 0x6404;
+    *h = kv;
+    (p->s).mode[2] = z;
+    (p->s).work[2] = z;
+    PlaySound(0x91);
+    AppendQuake(4, &(p->s).coord);
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register u8 w asm("r1");
+    register s32 nx asm("r0");
+    w = (p->s).work[2];
+    nx = w + 1;
+    asm("" : "+r"(nx));
+    (p->s).work[2] = nx;
+    if ((w & 0xF) == 0) {
+      struct Coord* c = &(p->s).coord;
+      CreateVFX57(c, 0, 1, 0x118, -((p->s).work[2] << 2) - 0x40);
+      CreateVFX57(c, 0, 1, -0x118, -((p->s).work[2] << 2) - 0x40);
+    }
+  }
+  if ((p->s).work[2] != 0x30) {
+    return;
+  }
+  if (*((u8*)p + 0xc5) != 0) {
+    (p->s).mode[1] = 4;
+    (p->s).mode[2] = 1;
+    (p->s).mode[3] = 5;
+    return;
+  }
+  if (*((u8*)p + 0xc6) > 1) {
+    register s32 half asm("r0");
+    s16* lp;
+    register s32 m asm("r0");
+    half = *(s8*)((u8*)p + 0xd0);
+    half += (s32)((u32)half >> 31);
+    lp = (s16*)((u8*)p + 0xa4);
+    half >>= 1;
+    if (half > *lp) {
+      if (gMission.unk_00->rank > 4) {
+        m = 0xA;
+        goto setm;
+      }
+    }
+    m = 7;
+  setm:
+    (p->s).mode[1] = m;
+    (p->s).mode[2] = 1;
+    return;
+  }
+  {
+    register s32 seven asm("r4");
+    register u32* rp asm("r2");
+    register u32 ka asm("r3");
+    register u32 sv asm("r1");
+    u32 t;
+    rp = &RNG_0202f388;
+    {
+      u32 v = *rp;
+      ka = 0x343FD;
+      t = ka * v;
+    }
+    t += 0x269EC3;
+    t <<= 1;
+    sv = t >> 1;
+    *rp = sv;
+    t >>= 0x11;
+    seven = 7;
+    t &= seven;
+    if (t == 0) {
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 1;
+      return;
+    }
+    t = sv;
+    t *= ka;
+    t += 0x269EC3;
+    t <<= 1;
+    sv = t >> 1;
+    *rp = sv;
+    t >>= 0x11;
+    {
+      register s32 one asm("r1");
+      one = 1;
+      t &= one;
+      if (t != 0) {
+        (p->s).mode[1] = seven;
+        (p->s).mode[2] = one;
+        return;
+      }
+      (p->s).mode[1] = 4;
+      (p->s).mode[2] = one;
+      (p->s).mode[3] = 0xD;
+    }
+  }
+}
 
 struct Projectile* FUN_080aa7a8(struct Entity* e, u8 a, u8 b);
 
