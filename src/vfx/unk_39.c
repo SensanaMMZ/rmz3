@@ -80,7 +80,82 @@ static void VFX39_Update(struct VFX* vfx) {
 
 // --------------------------------------------
 
-INCASM("asm/vfx/unk_39_p1.inc");
+// 0x080BD48C
+void FUN_080bd48c(struct VFX* p) {
+  if ((p->s).mode[2] == 0) {
+    register s32 z asm("r3");
+    {
+      register u16 d asm("r2");
+      register s32 v asm("r0");
+      d = gWindowRegBuffer.dispcnt;
+      z = DISPCNT_WIN1_ON;
+      asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(z));
+      z = 0;
+      v |= d;
+      gWindowRegBuffer.dispcnt = v;
+    }
+    gWindowRegBuffer.winin[1] = 0x31;
+    gWindowRegBuffer.winin[2] |= 0xE;
+    *(s32*)((u8*)p + 0x78) = 0x2000;
+    *(u8*)((u8*)p + 0x74) = z;
+    *(u8*)((u8*)p + 0x75) = z;
+    *(u8*)((u8*)p + 0x76) = z;
+    (p->s).mode[2]++;
+  }
+  if (gJoypad[0].input & 1) {
+    register s32 amt asm("r3");
+    register s32 v asm("r0");
+    register u8* q asm("r2");
+    q = (u8*)p;
+    v = *(s32*)(q + 0x78);
+    amt = 0x100;
+    asm("" : "+r"(amt));
+    v += amt;
+    *(s32*)(q + 0x78) = v;
+  } else if (gJoypad[0].input & 2) {
+    register s32 amt2 asm("r3");
+    register s32 v2 asm("r0");
+    register u8* q2 asm("r2");
+    q2 = (u8*)p;
+    v2 = *(s32*)(q2 + 0x78);
+    amt2 = -0x100;
+    asm("" : "+r"(amt2));
+    v2 += amt2;
+    *(s32*)(q2 + 0x78) = v2;
+  }
+  if ((gJoypad[0].input & 0x300) == 0x300) {
+    register u8* a asm("r1");
+    a = (u8*)p;
+    *(s32*)(a + 0x60) = 0;
+  } else if (gJoypad[0].input & 0x100) {
+    register u8* b asm("r2");
+    s32 v;
+    b = (u8*)p;
+    v = *(s32*)(b + 0x60);
+    v += 0x10;
+    *(s32*)(b + 0x60) = v;
+  } else if (gJoypad[0].input & 0x200) {
+    register u8* c asm("r3");
+    s32 v;
+    c = (u8*)p;
+    v = *(s32*)(c + 0x60);
+    v -= 0x10;
+    *(s32*)(c + 0x60) = v;
+  }
+  {
+    s32 w = (p->s).work[3] + 1;
+    (p->s).work[3] = w;
+    if (w & 1) {
+      *(u8*)((u8*)p + 0x74) = 0x1F;
+      *(u8*)((u8*)p + 0x75) = 0x1F;
+      *(u8*)((u8*)p + 0x76) = 0x1F;
+    } else {
+      *(u8*)((u8*)p + 0x74) = 0x18;
+      *(u8*)((u8*)p + 0x75) = 0x1F;
+      *(u8*)((u8*)p + 0x76) = 0x18;
+    }
+  }
+}
 
 // 0x080BD578
 void FUN_080bd578(struct VFX* p) {
