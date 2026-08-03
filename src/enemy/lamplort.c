@@ -288,7 +288,90 @@ void FUN_0806c828(struct Enemy* p) {
 
 bool8 FUN_0806c8c8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/lamplort_p4.inc");
+// 0x0806C8CC
+void FUN_0806c8cc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r6");
+      u8 v;
+      SetMotion(&p->s, MOTION(0x19, 4));
+      SetDDP(&p->body, &sCollisions[0]);
+      {
+        u32* f = (u32*)((u8*)(p->s).unk_2c + 0xb4);
+        u32 fv = *f;
+        one = 1;
+        *f = fv | one;
+      }
+      (p->s).work[2] = 0;
+      PlaySound(0x11F);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+        (p->s).work[3] = 0;
+      } else {
+        (p->s).work[3] = one;
+      }
+      v = *((u8*)p + 0xbc);
+      {
+        register u8 nf asm("r0");
+        if (v != 0) {
+          register u8 fl asm("r1");
+          fl = (p->s).flags;
+          nf = 0x10;
+          nf |= fl;
+        } else {
+          register u8 fl2 asm("r1");
+          fl2 = (p->s).flags;
+          asm("" : "+r"(fl2));
+          nf = 0xEF;
+          nf &= fl2;
+        }
+        (p->s).flags = nf;
+      }
+      {
+        register s32 x asm("r1");
+        u8* a;
+        s32 sh;
+        u8 ov;
+        s32 m;
+        x = 1;
+        x &= v;
+        ((p->s).spr).xflip = x;
+        a = (u8*)p + 0x4a;
+        sh = x << 4;
+        ov = *a;
+        m = -0x11;
+        m &= ov;
+        m |= sh;
+        *a = m;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      u8 nv;
+      u8 st;
+      if ((p->s).work[3] == 0) {
+        if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+          goto skip;
+        }
+        nv = 1;
+      } else {
+        if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0x4000) {
+          goto skip;
+        }
+        nv = 0;
+      }
+      (p->s).work[3] = nv;
+    skip:
+      UpdateMotionGraphic(&p->s);
+      st = *((u8*)p + 0x73);
+      if (st == 3) {
+        (p->s).mode[1] = st;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
 
 bool8 FUN_0806c9c0(struct Enemy* p) { return TRUE; }
 
