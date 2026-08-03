@@ -1816,7 +1816,75 @@ void Actor28_Update(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/actor_p1_p2_b_a.inc");
+// 0x080D39FC
+void Actor29_Update(struct Solid* p) {
+  struct Coord c;
+  s32 z = (p->s).mode[1];
+  switch (z) {
+    case 0: {
+      register s32 zero asm("r5");
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x + -0xF000, (p->s).coord.y) + 1;
+      {
+        register u16* gt asm("r0");
+        register s32 v asm("r1");
+        const struct Graphic* g;
+        const struct Palette* pal;
+        u32 ofs;
+        gt = wStaticGraphicTilenums;
+        zero = 0;
+        v = 0x3CE;
+        gt[SM001_UNK] = v;
+        wStaticMotionPalIDs[SM001_UNK] = 9;
+        ofs = (sizeof(struct ColorGraphic) * SM001_UNK);
+        g = gStaticGraphic(ofs);
+        LoadGraphic((void*)g, (void*)((v - g->ofs) * 32 + 0x10000));
+        pal = gStaticPalette(ofs);
+        LoadPalette(pal, (wStaticMotionPalIDs[SM001_UNK] - pal->dst) * 32 + PLTT_SIZE / 2);
+      }
+      SetMotion(&p->s, MOTION(0x01, 0x00));
+      AppendQuake(8, &(p->s).coord);
+      (p->s).work[2] = zero;
+      (p->s).d.y = z;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      struct Coord* cp;
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      (p->s).d.y += 0x10;
+      (p->s).coord.y += (p->s).d.y;
+      cp = &(p->s).coord;
+      AppendQuake(2, cp);
+      t = (p->s).work[2] + 1;
+      (p->s).work[2] = t;
+      if ((t & 3) != 0) {
+        register u32 rnd asm("r1");
+        register u32 acc asm("r0");
+        u32 rv;
+        c.x = (p->s).coord.x + -0x4000;
+        rnd = RNG_0202f388;
+        acc = 0x343FD;
+        acc *= rnd;
+        acc += 0x269EC3;
+        rv = acc << 1;
+        asm("" : "+r"(rv));
+        RNG_0202f388 = rv >> 1;
+        c.y = (p->s).coord.y + ((rv << 3) >> 0x14);
+        CreateSmoke(3, &c);
+      }
+      if (CalcFromCamera(&gStageRun.vm.camera, cp) > 0x800) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).mode[1]++;
+      }
+      break;
+    }
+    case 2:
+      AppendQuake(2, &(p->s).coord);
+      break;
+  }
+}
+
 
 NAKED void Actor30_Update(struct Solid* p) {
   asm(".syntax unified
