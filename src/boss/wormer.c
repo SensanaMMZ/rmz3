@@ -148,6 +148,71 @@ void FUN_08042914(struct Boss* p) {
 
 INCASM("asm/boss/wormer_p2_p1_p2b.inc");
 
+// 0x08042B48
+void FUN_08042b48(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, (const struct Collision*)((u8*)&sCollisions[5] + (p->s).work[0] * 0xa8));
+      (p->s).work[2] = 2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      if ((RANDOM(RNG_0202f388) & 3) == 0) {
+        SetMotion(&p->s, 0x2B04);
+      } else {
+        SetMotion(&p->s, 0x2B03);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 2: {
+      s32 r;
+      UpdateMotionGraphic(&p->s);
+      if ((u8)((p->s).motion.state - 3) > 1) {
+        break;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((u8)t == 0) {
+          r = (p->s).mode[2] + 1;
+        } else {
+          r = 1;
+        }
+      }
+      (p->s).mode[2] = r;
+      break;
+    }
+    case 3:
+      SetMotion(&p->s, 0x2B05);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      if ((p->s).work[0] == 0) {
+        if (*((u8*)p + 0xbb) != 0) {
+          (p->s).mode[1] = 6;
+        } else {
+          (p->s).mode[1] = 4;
+        }
+      } else {
+        u8* f0 = (u8*)p + 0xc0;
+        u8 v = *f0;
+        u8* f = f0;
+        if (v != 0) {
+          (p->s).mode[1] = 0xA;
+        } else {
+          (p->s).mode[1] = 9;
+        }
+        *f ^= 1;
+      }
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
 void CreateWormerRockDrone(s32 x, s32 y, u8 angle, u8 w2);
 
 // 0x08042C74
