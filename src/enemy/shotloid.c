@@ -403,7 +403,91 @@ void FUN_08093e60(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shotloid_post_p2_p2.inc");
+// 0x08093EE4
+void FUN_08093ee4(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      *(u32*)&p->props[4] |= 1;
+      (p->s).work[2] = 0x28;
+      SetMotion(&p->s, 0x8E00);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 lf asm("r2");
+      u8 w;
+      UpdateMotionGraphic(&p->s);
+      lf = 0;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        lf = 1;
+      }
+      if ((p->s).flags & 0x10) {
+        if (lf == 0) {
+          goto turn;
+        }
+        goto cont;
+      } else {
+        if (lf == 0) {
+          goto cont;
+        }
+      }
+    turn:
+      (p->s).mode[1] = 4;
+      (p->s).mode[2] = 0;
+      break;
+    cont:
+      {
+        s32 t1 = (p->s).work[2] - 1;
+        (p->s).work[2] = t1;
+        w = t1;
+      }
+      if (w == 0) {
+        register s32 k asm("r2");
+        {
+          s32 t0 = (u8)FUN_08093a20(p);
+          k = t0;
+        }
+        if (k == 2) {
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = w;
+        } else {
+          register s32 dir asm("r5");
+          s32 lim;
+          lim = (pZero2->s).coord.x;
+          lim += -0x6000;
+          lim += (k * 3) << 14;
+          {
+            s32 cx = (p->s).coord.x;
+            dir = -1;
+            if (cx < lim) {
+              dir = 1;
+            }
+          }
+          {
+            u8 r0v = (u8)FUN_08093a98(p, dir);
+            if (r0v == 0) {
+              if (((u8)FUN_080939e8(p, dir)) != 0) {
+                (p->s).mode[1] = 2;
+                (p->s).mode[2] = r0v;
+                goto tail;
+              }
+            }
+          }
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = 0;
+        }
+      }
+    tail:
+      {
+        u8 r = (u8)FUN_08093a64(p, 1);
+        if (r == 0) {
+          (p->s).mode[1] = 5;
+          (p->s).mode[2] = r;
+        }
+      }
+      break;
+    }
+  }
+}
 
 void FUN_08093fe0(struct Enemy* p) {
   s32 m = (p->s).mode[2];
