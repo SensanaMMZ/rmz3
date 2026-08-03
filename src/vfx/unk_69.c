@@ -1,4 +1,5 @@
 #include "global.h"
+#include "script.h"
 #include "vfx.h"
 
 void Ghost69_Init(struct VFX* p);
@@ -145,6 +146,104 @@ void Ghost69_Update(struct VFX* p) {
 void Ghost69_Die(struct VFX* p) {
   (p->s).flags &= ~DISPLAY;
   SET_VFX_ROUTINE(p, ENTITY_EXIT);
+}
+
+// 0x080C5144
+void FUN_080c5144(struct VFX* p) {
+  register s32 m asm("r5");
+  if (((p->s).unk_28)->mode[0] > 1) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u8 fv asm("r0");
+      register u8 fl asm("r1");
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      fl = (p->s).flags;
+      asm("" : "+r"(fl));
+      fv = 0xFE;
+      fv &= fl;
+      fl = 2;
+      fv |= fl;
+      (p->s).flags = fv;
+      *(s32*)((u8*)p + 0x74) = m;
+      *(s32*)((u8*)p + 0x78) = m;
+      (p->s).taskCol = 0x19;
+      SetMotion(&p->s, 0xB700);
+      (p->s).work[3] = m;
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      struct Entity* q = (p->s).unk_28;
+      (p->s).coord.x = (q->coord).x + *(s32*)((u8*)p + 0x74);
+      (p->s).coord.y = (q->coord).y + *(s32*)((u8*)p + 0x78);
+      {
+        register u8 sf asm("r1");
+        register s32 k asm("r0");
+        sf = q->scriptEntity->flags;
+        k = 1;
+        k &= sf;
+        if (k == 0) {
+          goto off;
+        }
+      }
+      {
+        u8 md = q->mode[1];
+        if (md == 5) {
+          goto off;
+        }
+        if (md == 6 && q->mode[2] <= 1) {
+          goto off;
+        }
+      }
+      {
+        register s32 sv asm("r0");
+        register s32 k2 asm("r1");
+        sv = *(u32*)((u8*)q + 0x8c);
+        k2 = 1;
+        sv &= k2;
+        if (sv != 0) {
+          (p->s).work[2] = 0x5A;
+          goto off;
+        }
+      }
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        t <<= 24;
+        if (t != 0) {
+          goto off;
+        }
+      }
+      {
+        register u8 fl3 asm("r1");
+        register u8 g asm("r0");
+        fl3 = (p->s).flags;
+        asm("" : "+r"(fl3));
+        g = 1;
+        g |= fl3;
+        (p->s).flags = g;
+        goto fs;
+      }
+    off : {
+      register u8 h asm("r1");
+      register u8 g2 asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g2 = 0xFE;
+      g2 &= h;
+      (p->s).flags = g2;
+    }
+    fs:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
 }
 
 INCASM("asm/vfx/unk_69_p1_post_post.inc");
