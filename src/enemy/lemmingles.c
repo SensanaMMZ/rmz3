@@ -126,7 +126,95 @@ void FUN_0806e704(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/lemmingles_p1_a_b.inc");
+void Lemmingles_Update(struct Enemy* p);
+
+// 0x0806E750
+void Lemmingles_Init(struct Enemy* p) {
+  register s32 z asm("r4");
+  struct Body* body;
+  u8 g40;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  {
+    register const u8* tbl asm("r1");
+    register u32 idx asm("r0");
+    register const u8* e2 asm("r0");
+    tbl = (const u8*)0x0836691C;
+    asm volatile("" : "+r"(tbl));
+    idx = (p->s).work[0];
+    asm volatile("add %0, %1, %2" : "=l"(e2) : "l"(idx), "l"(tbl));
+    (p->s).mode[1] = *e2;
+  }
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fv = (p->s).flags;
+    fl = FLIPABLE;
+    fv |= fl;
+    fl = DISPLAY;
+    z = 0;
+    asm volatile("" : "+r"(z));
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  InitNonAffineMotion(&p->s);
+  if ((gSystemSavedataManager.mods[13] & 0x80) && (g40 = gCurStory.s.gameflags[0] & 0x40) == 0) {
+    register s32 hp asm("r3");
+    {
+      register u8 f asm("r0");
+      register u8 k asm("r1");
+      f = (p->s).flags;
+      k = COLLIDABLE;
+      f |= k;
+      (p->s).flags = f;
+    }
+    {
+      register const struct Collision* coll asm("r1");
+      register struct Coord* co asm("r2");
+      register u32 w0 asm("r0");
+      coll = (const struct Collision*)0x0836686C;
+      co = &(p->s).coord;
+      w0 = (p->s).work[0];
+      hp = 0xC;
+      body = &p->body;
+      if (w0 <= 1) {
+        hp = 8;
+      }
+      ((void (*)(struct Body*, const struct Collision*, struct Coord*, s32))InitBody)(body, coll, co, hp);
+    }
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)(u32)g40;
+  } else {
+    register s32 hp2 asm("r3");
+    {
+      register u8 f2 asm("r0");
+      register u8 k2 asm("r1");
+      f2 = (p->s).flags;
+      k2 = COLLIDABLE;
+      k2 |= f2;
+      (p->s).flags = k2;
+    }
+    {
+      register const struct Collision* coll2 asm("r1");
+      register struct Coord* co2 asm("r2");
+      register u32 w02 asm("r0");
+      coll2 = (const struct Collision*)0x0836686C;
+      co2 = &(p->s).coord;
+      w02 = (p->s).work[0];
+      hp2 = 8;
+      body = &p->body;
+      if (w02 <= 1) {
+        hp2 = 4;
+      }
+      ((void (*)(struct Body*, const struct Collision*, struct Coord*, s32))InitBody)(body, coll2, co2, hp2);
+    }
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = NULL;
+  }
+  body->fn = onCollision;
+  *(u32*)&p->props[0] = 0;
+  p->props[8] = 1;
+  Lemmingles_Update(p);
+}
 
 static const EnemyFunc sUpdates1[7];
 static const EnemyFunc sUpdates2[7];
