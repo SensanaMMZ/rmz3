@@ -622,6 +622,79 @@ INCASM("asm/boss/deathtanz_c2.inc");
 
 void deathtanz_080a0934(struct Entity* e, s32 x, s32 y, u8 a3, u8 a4);
 
+// 0x0804A234
+void deathtanzMode12(struct Boss* p) {
+  register s32 z asm("r5");
+  z = (p->s).mode[2];
+  switch (z) {
+    case 0:
+      if ((u32)(((p->s).coord.x - *(s32*)((u8*)p + 0xb4)) + 0xC8 * 64) > 0xC8 * 128) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = z;
+        UpdateMotionGraphic(&p->s);
+        break;
+      }
+      SetDDP(&p->body, &sCollisions[60]);
+      *((u8*)p + 0xbe) = z;
+      SetMotion(&p->s, MOTION(0xA7, 0x0D));
+      (p->s).work[2] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((s8)(p->s).motion.cmdIdx == 6) {
+        register s32 w asm("r5");
+        w = (p->s).work[2];
+        if (w == 0) {
+          register s32 one asm("r6");
+          register s32 x asm("r1");
+          register s32 cx asm("r2");
+          register u32 fl asm("r3");
+          s32 y;
+          one = 1;
+          (p->s).work[2] = one;
+          PlaySound(0x5D);
+          cx = (p->s).coord.x;
+          x = cx - 0x3700;
+          fl = (p->s).flags;
+          if (fl & 0x10) {
+            x = cx + 0x3700;
+          }
+          y = (p->s).coord.y - 0x3200;
+          ((void (*)(struct Entity*, s32, s32, s32, s32))deathtanz_080a0934)(&p->s, x, y, (fl >> 4) & one, w);
+          *((u8*)p + 0xc1) &= 0xFD;
+        }
+      }
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      u32 rv = (RNG_0202f388 * 0x343FD + 0x269EC3) << 1;
+      u32 b;
+      asm("" : "+r"(rv));
+      RNG_0202f388 = rv >> 1;
+      b = (rv >> 0x11) & 1;
+      (p->s).work[2] = b * 18 + 0x3C;
+      SetMotion(&p->s, MOTION(0xA7, 0x0E));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0) {
+        (p->s).mode[1] = 0xD;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+void deathtanz_080a0934(struct Entity* e, s32 x, s32 y, u8 a3, u8 a4);
+
 // 0x0804A378
 void deathtanzMode13(struct Boss* p) {
   register s32 m asm("r5");
