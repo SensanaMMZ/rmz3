@@ -448,6 +448,86 @@ void FUN_080817a8(struct Enemy* p) {
   }
 }
 
+// 0x080818B8
+void FUN_080818b8(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  struct Entity* r;
+  if (q->mode[0] <= 1) {
+    r = (p->s).unk_2c;
+    if (r->mode[0] != 4) {
+      goto body;
+    }
+  }
+  {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    register s32 z asm("r2");
+    h = (p->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    z = 0;
+    h = 0xFD;
+    g &= h;
+    (p->s).flags = g;
+    {
+      u8* a = (u8*)p + 0x8c;
+      *(u32*)a = z;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *(u32*)a = z;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = z;
+    }
+  }
+  (p->s).flags &= 0xFB;
+  SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  return;
+body:
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).taskCol = 0xF;
+      (p->s).flags2 |= 0x10;
+      (p->s).invincibleID = q->uniqueID;
+      SetMotion(&p->s, MOTION(0x4D, 0x04));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 dx asm("r1");
+      register s32 dy asm("r5");
+      register s32 b asm("r4");
+      register s32 off asm("r0");
+      {
+        register s32 wv asm("r1");
+        wv = (p->s).work[1];
+        off = wv << 2;
+        off += wv;
+        off <<= 11;
+        wv = -0x1400;
+        asm("" : "+r"(wv));
+        off += wv;
+      }
+      dx = q->coord.x + off;
+      b = r->coord.x;
+      dx -= b;
+      dy = q->coord.y - 0x500;
+      dy -= r->coord.y;
+      (p->s).coord.x = b;
+      b += (dx * (p->s).work[2]) / 6;
+      (p->s).coord.x = b;
+      b = r->coord.y;
+      (p->s).coord.y = b;
+      b += (dy * (p->s).work[2]) / 6;
+      (p->s).coord.y = b;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_aqua_mod_obj_p3_b.inc");
 
 u8 GetEntityPalID(struct Entity* p);
