@@ -1,5 +1,6 @@
 #include "boss.h"
 #include "global.h"
+#include "script.h"
 #include "vfx.h"
 
 struct VFX25 {
@@ -136,7 +137,7 @@ static void VFX25_Init(struct VFX25* p) {
 
 static void FUN_080b9494(struct Entity* p);
 void FUN_080b94dc(struct Entity* p);
-void FUN_080b9530(struct VFX* vfx);
+void FUN_080b9530(struct VFX25* vfx);
 void FUN_080b963c(struct VFX25* p);
 void FUN_080b970c(struct VFX* vfx);
 void FUN_080b9738(struct VFX* vfx);
@@ -203,7 +204,54 @@ void FUN_080b94dc(struct Entity* p) {
   }
 }
 
-INCASM("asm/vfx/unk_25_p1.inc");
+// 0x080B9530
+void FUN_080b9530(struct VFX25* p) {
+  struct Entity* e = (p->s).unk_28;
+  if (e->mode[0] > 1) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0xB00);
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      struct Entity* parent = (p->s).unk_28;
+      struct CollidableEntity* ce;
+      s32 t;
+      (p->s).coord.x = (parent->coord).x + (p->c).x;
+      (p->s).coord.y = (parent->coord).y + (p->c).y;
+      t = (p->s).work[3]++ & 1;
+      ce = (struct CollidableEntity*)parent;
+      if (t) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+      if ((ce->body).invincibleTime != 0 ||
+          (gWhitePaintFlags[(ce->s).invincibleID >> 5] & (1 << ((ce->s).invincibleID & 0x1F))) ||
+          ((ce->body).status & BODY_STATUS_WHITE)) {
+        (p->s).flags &= ~DISPLAY;
+      }
+      if ((((ce->s).scriptEntity)->flags & 1) == 0) {
+        (p->s).flags &= ~DISPLAY;
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*(u32*)((u8*)(p->s).unk_28 + 0xd4) & 2) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      (p->s).flags &= ~DISPLAY;
+      if (*(u32*)((u8*)e + 0xd4) & 8) {
+        (p->s).mode[2] = 1;
+      }
+      break;
+  }
+}
 
 // 0x080b963c: follow the parent entity, flickering every other frame;
 // hidden while the parent is invincible/painted white
