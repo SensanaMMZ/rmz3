@@ -510,7 +510,105 @@ void FUN_0806d470(struct Enemy* p) {
   (sUpdates2[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/gyro_cannon_p1b.inc");
+extern const struct SlashedEnemy sSlashedEnemies[4];
+
+// 0x0806D524
+void FUN_0806d524(struct Enemy* p) {
+  struct Coord c;
+  c.x = (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1200;
+  CreateSmoke(2, &c);
+  if (!((bool16 (*)(s32, s32))FUN_080098a4)(c.x, c.y)) {
+    const struct SlashedEnemy* t0;
+    register u8* b4 asm("r6");
+    t0 = sSlashedEnemies;
+    {
+      register u8* b40 asm("r2");
+      register s32 pal asm("r5");
+      register s32 k asm("r3");
+      register s32 kk asm("r0");
+      register u8 fl asm("r1");
+      b40 = (u8*)p + 0xb4;
+      pal = b40[8];
+      fl = (p->s).flags;
+      k = 0x10;
+      kk = k;
+      kk &= fl;
+      asm volatile("add %0, %1, #0" : "=&l"(b4) : "l"(b40));
+      if (kk != 0) {
+        k |= pal;
+      } else {
+        k = pal;
+      }
+      ((struct VFX* (*)())CreateSlashedEnemy)(&c, t0, 0, k);
+    }
+    {
+      register struct Coord* cp asm("r5");
+      const struct SlashedEnemy* t1;
+      register s32 pal2 asm("r2");
+      register s32 k2 asm("r3");
+      register s32 kk2 asm("r0");
+      register u8 fl2 asm("r1");
+      cp = &c;
+      t1 = sSlashedEnemies;
+      pal2 = b4[8];
+      fl2 = (p->s).flags;
+      k2 = 0x10;
+      kk2 = k2;
+      kk2 &= fl2;
+      if (kk2 != 0) {
+        k2 |= pal2;
+      } else {
+        k2 = pal2;
+      }
+      ((struct VFX* (*)())CreateSlashedEnemy)(cp, t1, 0, k2);
+    }
+    {
+      register struct Coord* cp2 asm("r5");
+      const struct SlashedEnemy* t2;
+      register s32 pal3 asm("r2");
+      register s32 k3 asm("r3");
+      register s32 kk3 asm("r0");
+      register u8 fl3 asm("r1");
+      cp2 = &c;
+      t2 = &sSlashedEnemies[1];
+      pal3 = b4[8];
+      fl3 = (p->s).flags;
+      k3 = 0x10;
+      kk3 = k3;
+      kk3 &= fl3;
+      if (kk3 != 0) {
+        k3 |= pal3;
+      } else {
+        k3 = pal3;
+      }
+      ((struct VFX* (*)())CreateSlashedEnemy)(cp2, t2, 0, k3);
+    }
+    {
+      register struct Coord* cp3 asm("r5");
+      const struct SlashedEnemy* t3;
+      register s32 pal4 asm("r2");
+      register s32 k4 asm("r3");
+      register s32 kk4 asm("r0");
+      register u8 fl4 asm("r1");
+      cp3 = &c;
+      t3 = &sSlashedEnemies[1];
+      pal4 = b4[8];
+      fl4 = (p->s).flags;
+      k4 = 0x10;
+      kk4 = k4;
+      kk4 &= fl4;
+      if (kk4 != 0) {
+        k4 |= pal4;
+      } else {
+        k4 = pal4;
+      }
+      ((struct VFX* (*)())CreateSlashedEnemy)(cp3, t3, 0, k4);
+    }
+  }
+  PlaySound(0x2A);
+  SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+}
 
 // 0x0806d618
 void FUN_0806d618(struct Enemy* p) {
