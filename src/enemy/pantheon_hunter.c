@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "enemy.h"
+#include "story.h"
 #include "global.h"
 #include "sound.h"
 #include "projectile.h"
@@ -582,7 +583,78 @@ static const EnemyFunc sDeads[3] = {
     (EnemyFunc)FUN_080656cc,
 };
 
-INCASM("asm/enemy/pantheon_hunter_p1_p1.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+
+// 0x08064ACC
+void PantheonHunter_Die(struct Enemy* p) {
+  struct Coord c;
+  register u8 m asm("r5");
+  m = (p->s).mode[2];
+  if (m == 0) {
+    register s32* bp asm("r5");
+    register s32 t0 asm("r0");
+    s32 msk;
+    t0 = FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0x800);
+    t0 <<= 16;
+    t0 = (s32)((u32)t0 >> 16);
+    msk = 0x10;
+    t0 &= msk;
+    if (t0 || (*((u8*)p + 0xbe) != 0)) {
+      (p->s).mode[1] = m;
+      bp = (s32*)((u8*)p + 0x8c);
+    } else {
+      register s32* b0 asm("r1");
+      s32 sv;
+      b0 = (s32*)((u8*)p + 0x8c);
+      sv = *b0 & 0x10000;
+      bp = b0;
+      if (sv != 0) {
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y - 0x1400;
+        FUN_080b2b40(0, &c, 0x200, *((u8*)p + 0xbc));
+        (p->s).mode[1] = 1;
+      } else {
+        (p->s).mode[1] = sv;
+      }
+    }
+    {
+      s32 z = 0;
+      *bp = z;
+      *(s32*)((u8*)p + 0x90) = z;
+      *((u8*)p + 0x94) = z;
+    }
+    (p->s).flags &= ~4;
+    (p->s).mode[2]++;
+  }
+  if (gCurStory.s.gameflags[4] & 0x40) {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    register s32 zr asm("r2");
+    u8* a;
+    h = (p->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    zr = 0;
+    h = 0xFD;
+    g &= h;
+    (p->s).flags = g;
+    a = (u8*)p + 0x8c;
+    *(s32*)a = zr;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *(s32*)a = zr;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *a = zr;
+    (p->s).flags &= ~4;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  } else {
+    (sDeads[(p->s).mode[1]])(p);
+  }
+}
 
 void phunter_08064bc8(struct Enemy* p) {
   if ((p->s).mode[1] > 1 && (p->s).mode[1] != 12) {
