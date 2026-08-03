@@ -322,7 +322,75 @@ void FUN_080954a4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_fist_post_p2_p2.inc");
+// 0x08095578
+void FUN_08095578(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 r;
+      s32 v;
+      SetMotion(&p->s, MOTION(0xD4, 0));
+      if (*((u8*)p + 0xb8) == 2) {
+        s32 x0 = (p->s).coord.x;
+        s32 nx = x0 - 0x80;
+        s32 res;
+        (p->s).coord.x = nx;
+        res = nx;
+        if (((p->s).flags & 0x10) != 0) {
+          res = x0 + 0x80;
+        }
+        (p->s).coord.x = res;
+      }
+      v = (p->s).d.y + 0x40;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (r < 0) {
+        (p->s).coord.y += r;
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, MOTION(0xD4, 1));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register u8 st asm("r2");
+      UpdateMotionGraphic(&p->s);
+      st = *((u8*)p + 0x73);
+      if (st == 3) {
+        u8* q = (u8*)p + 0xb8;
+        register u8 nm asm("r0");
+        if (*q == 0) {
+          *q = 1;
+          nm = 8;
+        } else {
+          if (*q == 2) {
+            *q = st;
+          }
+          nm = 1;
+        }
+        (p->s).mode[1] = nm;
+        {
+          register u8 z0 asm("r0");
+          z0 = 0;
+          (p->s).mode[2] = z0;
+        }
+      }
+      FUN_08094fe0(p, 1);
+      break;
+    }
+  }
+}
 
 void FUN_08095664(struct Enemy* p) {
   switch ((p->s).mode[2]) {
