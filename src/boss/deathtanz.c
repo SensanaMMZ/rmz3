@@ -504,7 +504,177 @@ void deathtanzPreAI(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/deathtanz_c.inc");
+// 0x08049928
+void deathtanzMode6(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32* bp asm("r3");
+      register s32 v asm("r0");
+      register s32 k asm("r1");
+      register s32 tx asm("r6");
+      register s32 sq asm("r4");
+      SetDDP(&p->body, &sCollisions[15]);
+      bp = (s32*)((u8*)p + 0xb4);
+      if ((p->s).coord.x < *bp) {
+        register s32 one asm("r1");
+        u8* oa;
+        s32 ov;
+        ((p->s).spr).xflip = 1;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        one = 0x10;
+        ov |= one;
+        *oa = ov;
+        (p->s).flags = one | (p->s).flags;
+        v = *bp;
+        k = 0xA8 * 128;
+      } else {
+        register s32 zero asm("r0");
+        register s32 ov asm("r1");
+        u8* xp;
+        u8* oa;
+        s32 m11;
+        xp = (u8*)p + 0x4c;
+        zero = 0;
+        *xp = zero;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        m11 = zero - 0x11;
+        m11 &= ov;
+        *oa = m11;
+        (p->s).flags &= 0xEF;
+        v = *bp;
+        k = -0x5400;
+      }
+      tx = v + k;
+      (p->s).unk_coord.x = tx;
+      sq = 0x666;
+      (p->s).work[2] = Sqrt(sq) + 0x10;
+      (p->s).d.x = (tx - (p->s).coord.x) / (p->s).work[2];
+      {
+        u32 t = (u16)Sqrt(sq);
+        (p->s).d.y = -(s32)(((t * 2 + t) << 3) + t);
+      }
+      SetMotion(&p->s, MOTION(0xA7, 0x0A));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x19;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t <= 0x14) {
+        goto tramp;
+      }
+      break;
+    tramp:
+      asm volatile("");
+      goto inc;
+    }
+    case 2:
+      SetDDP(&p->body, &sCollisions[21]);
+      SetMotion(&p->s, MOTION(0xA7, 0x20));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 t;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x19;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t != 0) {
+        break;
+      }
+      goto inc;
+    }
+    case 4: {
+      s32* bp = (s32*)((u8*)p + 0xb4);
+      s32 cx = (p->s).coord.x;
+      s32 bx = *bp;
+      s32 nx;
+      if (cx < bx) {
+        nx = bx + -0x5400;
+      } else {
+        nx = bx + 0xA8 * 128;
+      }
+      (p->s).coord.x = nx;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    inc:
+      (p->s).mode[2]++;
+      break;
+    case 6: {
+      register s32 one asm("r2");
+      SetDDP(&p->body, &sCollisions[24]);
+      {
+        register s32 xf0 asm("r0");
+        xf0 = (p->s).flags >> 4;
+        one = 1;
+        xf0 ^= one;
+        asm("" : "+r"(xf0));
+        xf0 &= one;
+        ((p->s).spr).xflip = xf0;
+      }
+      {
+        register s32 xf asm("r1");
+        register u8* oa asm("r4");
+        s32 sh4, ov, m11;
+        xf = (p->s).flags >> 4;
+        xf ^= one;
+        asm("" : "+r"(xf));
+        xf &= one;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+        if (xf != 0) {
+          (p->s).flags |= 0x10;
+        } else {
+          register u8 h asm("r1");
+          register u8 g asm("r0");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xEF;
+          g &= h;
+          (p->s).flags = g;
+        }
+      }
+      SetMotion(&p->s, MOTION(0xA7, 0x21));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        s32 z0 = 0;
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = z0;
+      }
+      break;
+  }
+}
+
 
 void FUN_080a08e0(struct Entity* e, s32 x, s32 y, u8 a3);
 
