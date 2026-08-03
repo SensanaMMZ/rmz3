@@ -5,6 +5,9 @@
 #include "mission.h"
 #include "story.h"
 #include "vfx.h"
+#include "zero.h"
+#include "trig.h"
+#include "projectile.h"
 
 struct Enemy* CreatePetatria(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -521,7 +524,133 @@ void FUN_08091174(struct Enemy* p) {
 
 bool8 FUN_08091188(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/petatria_p4_p1.inc");
+// 0x0809118C
+void FUN_0809118c(struct Enemy* p, struct Coord* c) {
+  register s32 dx asm("r4");
+  register s32 dy asm("r5");
+  register s32 len asm("r6");
+  register s32 ang asm("r2");
+  register struct Zero* z asm("r2");
+  register struct Projectile* q asm("r1");
+  z = pZero2;
+  {
+    register s32 t0 asm("r0");
+    register s32 t1 asm("r1");
+    t1 = (z->s).coord.x;
+    t0 = c->x;
+    dx = t1 - t0;
+    t0 = c->y;
+    t1 = 0x80 << 5;
+    t0 = t0 + t1;
+    t1 = (z->s).coord.y;
+    dy = t1 - t0;
+  }
+  {
+    register s32 sx asm("r0");
+    register s32 sy asm("r1");
+    register s32 px asm("r2");
+    register s32 py asm("r3");
+    sx = dx >> 2;
+    px = sx * sx;
+    asm("" : "+r"(px));
+    sx = px;
+    asm("" : "+r"(sx));
+    sy = dy >> 2;
+    py = sy * sy;
+    asm("" : "+r"(py));
+    sy = py;
+    asm("" : "+r"(sy));
+    sx = sx + sy;
+    len = (u32)Sqrt(sx) << 2;
+  }
+  if (len != 0) {
+    dx = (dx << 8) / len;
+    dy = (dy << 8) / len;
+  }
+  {
+  s32 a;
+  if (dx > 0) {
+    if (dy > 0) {
+      register const s16* tb asm("r0");
+      register s32 idx asm("r1");
+      register const s16* e asm("r1");
+      u16 sv;
+      tb = gSineTable;
+      asm("" : "+r"(tb));
+      idx = ((u8)dy) * 2;
+      asm volatile("add %0, %1, %2" : "=l"(e) : "l"(idx), "l"(tb));
+      sv = *(const u16*)e;
+      if (*e > 0) {
+        a = 0x7E - sv;
+        goto trunc;
+      }
+      a = sv;
+      a = a + 0x7E;
+      asm volatile("" : "+r"(a));
+      goto trunc;
+    }
+    {
+      register const s16* tb asm("r0");
+      register s32 idx asm("r1");
+      register const s16* e asm("r1");
+      u16 sv;
+      tb = gSineTable;
+      asm("" : "+r"(tb));
+      idx = ((u8)dy) * 2;
+      asm volatile("add %0, %1, %2" : "=l"(e) : "l"(idx), "l"(tb));
+      sv = *(const u16*)e;
+      if (*e > 0) {
+        a = sv;
+        a += 0x7F;
+        goto trunc;
+      }
+      a = -sv;
+      a = a + 0x7F;
+      asm volatile("" : "+r"(a));
+      goto trunc;
+    }
+  }
+  if (dy <= 0) {
+    goto last;
+  }
+  {
+    register const s16* tb2 asm("r0");
+    register s32 idx2 asm("r1");
+    register const s16* e2 asm("r1");
+    tb2 = gSineTable;
+    asm("" : "+r"(tb2));
+    idx2 = ((u8)(dy + 0x40)) * 2;
+    asm volatile("add %0, %1, %2" : "=l"(e2) : "l"(idx2), "l"(tb2));
+    a = -*(const u8*)e2;
+  trunc:
+    a <<= 24;
+    ang = (u32)a >> 24;
+    goto done;
+  }
+last : {
+    register const s16* tb3 asm("r1");
+    register s32 idx3 asm("r0");
+    register const s16* e3 asm("r0");
+    tb3 = gSineTable;
+    asm("" : "+r"(tb3));
+    idx3 = ((u8)(dy + 0x40)) * 2;
+    asm volatile("add %0, %1, %2" : "=l"(e3) : "l"(idx3), "l"(tb3));
+    ang = *(const u8*)e3;
+  }
+done:;
+  }
+  q = ((struct Projectile * (*)(struct Coord*, s32, s32)) CreateLemon)(c, 0x80 << 2, ang);
+  asm("" : "+r"(q));
+  if (q != NULL) {
+    register s32 t asm("r0");
+    t = dx << 9;
+    t >>= 8;
+    (q->s).d.x = t;
+    t = dy << 9;
+    t >>= 8;
+    (q->s).d.y = t;
+  }
+}
 
 void nop_0809127c(struct Enemy* p) {}
 
