@@ -764,6 +764,77 @@ void FUN_08076830(struct Enemy* p) {
 
 INCASM("asm/enemy/purple_nerple_p2_p2_p4_b3.inc");
 
+// 0x08076A50
+void FUN_08076a50(struct Enemy* p) {
+  register struct Entity* q asm("r1");
+  q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, (const struct Collision*)0x08367150);
+      SetMotion(&p->s, MOTION(0x2A, 0x04));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 nx = (p->s).coord.x + 0x80;
+      (p->s).coord.x = nx;
+      (p->s).coord.y = FUN_08009f6c(nx, (p->s).coord.y);
+      if ((p->s).coord.x > *(s32*)((u8*)p + 0xbc) - 0x1000) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 t asm("r2");
+      (p->s).coord.x += 0x80;
+      (p->s).coord.y += 0x80;
+      {
+        register s32 u asm("r0");
+        u = (p->s).work[2];
+        u--;
+        (p->s).work[2] = u;
+        u <<= 24;
+        t = (u32)u >> 24;
+      }
+      if (t == 0) {
+        if (q != NULL) {
+          *((u8*)q + 0xba) = 1;
+        }
+        {
+          register u8 g asm("r0");
+          register u8 h asm("r1");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xFE;
+          g &= h;
+          h = 0xFD;
+          g &= h;
+          (p->s).flags = g;
+        }
+        {
+          u8* a = (u8*)p + 0x8c;
+          *(u32*)a = t;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *(u32*)a = t;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *a = t;
+        }
+        (p->s).flags &= 0xFB;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 #include "mission.h"
 
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
