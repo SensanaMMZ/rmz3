@@ -973,6 +973,88 @@ void FUN_0805c87c(struct Boss* p) {
 
 INCASM("asm/boss/hanumachine_p2_p1b2.inc");
 
+// 0x0805CB00
+void FUN_0805cb00(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    register s32 f asm("r3");
+    s32 v;
+    (p->s).angle = 0;
+    InitNonAffineMotion(&p->s);
+    ResetDynamicMotion(&p->s);
+    {
+      register s32 t asm("r1");
+      t = 0;
+      if ((p->s).d.x > 0) {
+        t = 1;
+      }
+      ((p->s).spr).xflip = t;
+    }
+    f = 0;
+    if ((p->s).d.x > 0) {
+      f = 1;
+    }
+    {
+      u8* a = (u8*)p + 0x4a;
+      s32 sh = f << 4;
+      u8 ov = *a;
+      s32 m = -0x11;
+      m &= ov;
+      m |= sh;
+      *a = m;
+    }
+    {
+      register u8 nf asm("r0");
+      if (f != 0) {
+        register u8 kk asm("r1");
+        nf = (p->s).flags;
+        kk = 0x10;
+        nf |= kk;
+      } else {
+        register u8 fl asm("r1");
+        fl = (p->s).flags;
+        asm("" : "+r"(fl));
+        nf = 0xEF;
+        nf &= fl;
+      }
+      (p->s).flags = nf;
+    }
+    SetMotion(&p->s, MOTION(0xB5, 0x0E));
+    SetDDP(&p->body, &sCollisions[6]);
+    (p->s).d.y = -0x480;
+    {
+      register s32 k10 asm("r0");
+      register u8 fv2 asm("r1");
+      fv2 = *(volatile u8*)&(p->s).flags;
+      k10 = 0x10;
+      k10 &= fv2;
+      if (k10 != 0) {
+        (p->s).d.x = 0x80 << 2;
+        v = 0x80 << 5;
+      } else {
+        (p->s).d.x = -0x200;
+        v = -0x1000;
+      }
+    }
+    (p->s).unk_coord.x = v;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (((u16)FUN_0805d594(p, (p->s).unk_coord.x, 0) << 16) == 0) {
+    (p->s).coord.x += (p->s).d.x;
+  }
+  {
+    s32 cy = (p->s).coord.y;
+    s32 dy = (p->s).d.y;
+    (p->s).coord.y = cy + dy;
+    (p->s).d.y = dy + 0x40;
+  }
+  if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
+
 // 0x0805CBFC
 void hanu_0805cbfc(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
