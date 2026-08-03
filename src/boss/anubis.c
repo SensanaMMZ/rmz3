@@ -524,6 +524,76 @@ void anubisMode7(struct Boss* p) {
 
 INCASM("asm/boss/anubis_p2b.inc");
 
+struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
+
+// 0x08051018
+void anubis_08051018(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r5");
+      {
+        u8* a = (u8*)p + 0x8c;
+        s32 z = 0;
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= ~COLLIDABLE;
+      {
+        register u16 ms asm("r2");
+        register s32 t asm("r0");
+        ms = gStageRun.missionStatus;
+        one = 1;
+        asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one));
+        t &= ms;
+        if (t != 0) {
+          register u8 av asm("r1");
+          register s32 t2 asm("r0");
+          av = gStageRun.vm.active;
+          asm volatile("add %0, %1, #0" : "=&l"(t2) : "l"(one));
+          t2 &= av;
+          if (t2 == 0) {
+            gStageRun.missionStatus = (ms & 0xFFFE) | MISSION_SUCCESS;
+          }
+        }
+      }
+      (p->s).work[2] = 0x50;
+      SetMotion(&p->s, MOTION(0xAF, 0x04));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if (((p->s).scriptEntity->flags & 0x80) == 0) {
+        break;
+      }
+      goto inc;
+    case 2:
+      (p->s).unk_2c = CreateBossExplosion(&p->s, (struct Coord*)0x083635DC);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      if (((p->s).unk_2c)->mode[0] <= 1) {
+        break;
+      }
+      gStageRun.vm.active |= 2;
+    inc:
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      break;
+  }
+}
+
+INCASM("asm/boss/anubis_p2b2.inc");
+
 void Anubis_Init(struct Boss* p);
 void Anubis_Update(struct Boss* p);
 void Anubis_Die(struct Boss* p);
