@@ -84,7 +84,96 @@ void OmegaGold_Disappear(struct Boss* p) {
   DeleteBoss(p);
 }
 
-INCASM("asm/boss/omega_gold_p1_post_p2.inc");
+// 0x0805B270
+void FUN_0805b270(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r5");
+      register struct StageRun* sr asm("r3");
+      register s32 v asm("r2");
+      sr = &gStageRun;
+      v = sr->missionStatus;
+      one = 1;
+      {
+        s32 t = one;
+        t &= v;
+        if (t != 0) {
+          register s32 a asm("r1");
+          register s32 u asm("r0");
+          a = (sr->vm).active;
+          u = one;
+          u &= a;
+          if (u == 0) {
+            s32 w = 0xFFFE;
+            s32 k;
+            w &= v;
+            k = 0x10;
+            w |= k;
+            sr->missionStatus = w;
+          }
+        }
+      }
+      PlaySound(0xE8);
+      RemovePaletteAnimation(0xb);
+      RemovePaletteAnimation(0x66);
+      RemovePaletteAnimation(0x67);
+      RemovePaletteAnimation(0x10f);
+      {
+        u8* a = (u8*)p + 0x8c;
+        register s32 z asm("r1");
+        z = 0;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+        {
+          register u8 g asm("r0");
+          register u8 h asm("r2");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xFB;
+          g &= h;
+          (p->s).flags = g;
+        }
+        {
+          s32* d = (s32*)((u8*)p + 0x5c);
+          d[1] = z;
+          (p->s).d.x = z;
+        }
+      }
+      (p->s).work[2] = 0x5A;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t = *(s32*)((u8*)p + 0xb8);
+      s32 y = (p->s).coord.y;
+      (p->s).coord.y = y + (((t - y) << 3) >> 8);
+      if ((p->s).work[2] == 0) {
+        break;
+      }
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2: {
+      s32 t = *(s32*)((u8*)p + 0xb8);
+      s32 y = (p->s).coord.y;
+      (p->s).coord.y = y + (((t - y) << 3) >> 8);
+      if (((p->s).scriptEntity->flags & 0x80) != 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
 
 // 0x0805B358
 void FUN_0805b358(struct Boss* p) {
