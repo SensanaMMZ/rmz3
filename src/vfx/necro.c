@@ -640,6 +640,127 @@ void FUN_080b8c74(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/necro_b.inc");
+// 0x080B8D4C
+void FUN_080b8d4c(struct VFX* p) {
+  register s32 xf asm("r3");
+  register s32 yf asm("r5");
+  {
+    register s32 t asm("r0");
+    register s32 one asm("r1");
+    t = ((p->s).unk_28)->flags;
+    t <<= 24;
+    xf = (u32)t >> 28;
+    one = 1;
+    xf &= one;
+    yf = (u32)t >> 29;
+    yf &= one;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8 f asm("r2");
+      register s32 z6 asm("r6");
+      register s32 v asm("r1");
+      {
+        register u8 fl asm("r1");
+        register s32 one2 asm("r0");
+        fl = (p->s).flags;
+        one2 = 1;
+        z6 = 0;
+        asm volatile("" : "+r"(z6));
+        asm volatile("add %0, %1, #0" : "=&l"(f) : "l"(one2));
+        f |= fl;
+        (p->s).flags = f;
+      }
+      asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(xf));
+      if (v != 0) {
+        register s32 k asm("r0");
+        k = 0x10;
+        f |= k;
+      } else {
+        register s32 k2 asm("r0");
+        k2 = 0xEF;
+        f &= k2;
+      }
+      (p->s).flags = f;
+      *((u8*)p + 0x4c) = v;
+      {
+        register u8* oa asm("r2");
+        s32 sh4, ov, m11;
+        oa = (u8*)p + 0x4a;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+        asm volatile("add %0, %1, #0" : "=&l"(xf) : "l"(yf));
+        asm volatile("add %0, %1, #0" : "=&l"(yf) : "l"(oa));
+      }
+      if (xf != 0) {
+        register u8 g asm("r0");
+        register s32 k3 asm("r1");
+        g = (p->s).flags;
+        k3 = 0x20;
+        g |= k3;
+        (p->s).flags = g;
+      } else {
+        register u8 h asm("r1");
+        register u8 g2 asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g2 = 0xDF;
+        g2 &= h;
+        (p->s).flags = g2;
+      }
+      {
+        register s32 v2 asm("r1");
+        register u8* oa2 asm("r2");
+        s32 sh5, ov2, m21;
+        asm volatile("add %0, %1, #0" : "=&l"(v2) : "l"(xf));
+        oa2 = (u8*)p + 0x4d;
+        *oa2 = v2;
+        sh5 = v2 << 5;
+        ov2 = *(u8*)yf;
+        m21 = -0x21;
+        m21 &= ov2;
+        *(u8*)yf = m21 | sh5;
+      }
+      asm volatile("" ::"r"(z6));
+      SetMotion(&p->s, **(u16**)((u8*)p + 0x74));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 cx, cy, t;
+      {
+        register s32 a asm("r1");
+        register s32 b asm("r0");
+        a = (p->s).coord.x;
+        b = (p->s).d.x;
+        cx = a + b;
+        (p->s).coord.x = cx;
+        a = (p->s).coord.y;
+        b = (p->s).d.y;
+        cy = a + b;
+        (p->s).coord.y = cy;
+        a = (p->s).unk_coord.y;
+        b += a;
+        (p->s).d.y = b;
+      }
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t <<= 24;
+      if (t != 0) {
+        if (FUN_080098a4(cx, cy) == 0) {
+          goto skip;
+        }
+      }
+      CreateSmoke(1, &(p->s).coord);
+      SET_VFX_ROUTINE(p, ENTITY_DIE);
+    skip:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 static const u8 sInitModes[5] = {0, 1, 2, 3, 4};
