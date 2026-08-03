@@ -95,6 +95,43 @@ NON_MATCH void FUN_080c15d4(struct VFX* vfx) {
 #endif
 }
 
+extern const s16 gSineTable[256];
+// 0x080C161C
+void FUN_080c161c(struct VFX* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 z = 0;
+  s32 spd;
+  s32 dx;
+  s32 dy;
+  (p->s).flags &= ~X_FLIP;
+  ((p->s).spr).xflip = z;
+  {
+    u8* oa = (u8*)p + 0x4a;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    m11 &= ov;
+    *oa = m11;
+  }
+  (p->s).coord = q->coord;
+  (p->s).work[3] = RANDOM(RNG_0202f388) % 3 + 3;
+  (p->s).work[2] = z;
+  spd = (RANDOM(RNG_0202f388) & 0xFF) + 0x100;
+  dx = (spd * gSineTable[(u8)((p->s).work[1] + 0x40)]) >> 8;
+  (p->s).d.x = dx;
+  {
+    register s32 sv asm("r1");
+    register s32 t5 asm("r5");
+    sv = gSineTable[(p->s).work[1]];
+    asm volatile("add %0, %1, #0" : "=&l"(t5) : "l"(spd));
+    t5 *= sv;
+    dy = t5 >> 8;
+  }
+  (p->s).d.y = dy;
+  (p->s).unk_coord.x = dx / ((p->s).work[3] * 7);
+  (p->s).unk_coord.y = dy / ((p->s).work[3] * 7);
+  VFX56_Update(&p->s);
+}
+
 INCASM("asm/vfx/unk_56.inc");
 
 // 0x080c17e8
