@@ -144,10 +144,88 @@ void Enemy14_Die(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/top_gabyoall_p2.inc");
-
 static const struct Collision sCollisions[];
 void FUN_08070000(struct Body* body, struct Coord* r1, struct Coord* r2);
+
+// 0x0806F5D0
+void FUN_0806f5d0(struct Enemy* p) {
+  register s32 z6 asm("r6");
+  s32 z7;
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    f0 = (p->s).flags;
+    d0 = DISPLAY;
+    z6 = 0;
+    z7 = 0;
+    d0 |= f0;
+    d0 |= FLIPABLE;
+    (p->s).flags = d0;
+  }
+  SetMotion(&p->s, MOTION(0x15, 0x00));
+  UpdateMotionGraphic(&p->s);
+  {
+    struct Body* body;
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 0x100);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = FUN_08070000;
+  }
+  *(u32*)((u8*)p + 0xbc) = z7;
+  if ((pZero2->s).coord.x > (p->s).coord.x) {
+    register s32 one asm("r2");
+    u8* a;
+    s32 msk;
+    (p->s).d.x = 0x80;
+    one = 1;
+    (p->s).flags |= X_FLIP;
+    ((p->s).spr).xflip = one;
+    a = (u8*)p + 0x4a;
+    {
+      register s32 m asm("r2");
+      register u8 b asm("r1");
+      m = 0x10;
+      asm("" : "+r"(m));
+      b = *a;
+      msk = -0x11;
+      msk &= b;
+      msk |= m;
+    }
+    *a = msk;
+  } else {
+    u8* a;
+    s32 msk;
+    (p->s).d.x = -0x80;
+    (p->s).flags &= 0xEF;
+    ((p->s).spr).xflip = z7;
+    a = (u8*)p + 0x4a;
+    {
+      register u8 b asm("r1");
+      b = *a;
+      msk = -0x11;
+      msk &= b;
+    }
+    *a = msk;
+  }
+  (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+  *(s32*)((u8*)p + 0xb4) = (p->s).coord.x;
+  *(s32*)((u8*)p + 0xb8) = (p->s).coord.y;
+  {
+    u8* c;
+    s32 z2;
+    c = (u8*)p + 0xc2;
+    z2 = 0;
+    *c = z2;
+    (p->s).work[2] = z2;
+    SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+    (p->s).mode[1] = z2;
+    (p->s).mode[2] = 1;
+  }
+  asm volatile("" ::"r"(z6));
+  Enemy14_Update(p);
+}
 
 void FUN_0806f6cc(struct Enemy* p) {
   register s32 z6 asm("r6");
