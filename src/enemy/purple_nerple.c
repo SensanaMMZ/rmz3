@@ -5,6 +5,7 @@
 #include "global.h"
 #include "trig.h"
 #include "story.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[];
 
@@ -762,7 +763,113 @@ void FUN_08076830(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/purple_nerple_p2_p2_p4_b3.inc");
+void FUN_08076b30(struct Enemy* p);
+
+// 0x080768E0
+void FUN_080768e0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r1");
+      register s32 dy asm("r0");
+      register s32 len asm("r5");
+      struct Zero* z;
+      SetDDP(&p->body, &sCollisions[6]);
+      if (*((u8*)p + 0xb8) != 0) {
+        SetMotion(&p->s, MOTION(0x2A, 4));
+      } else {
+        SetMotion(&p->s, MOTION(0x2A, 2));
+      }
+      z = pZero2;
+      dx = (p->s).coord.x;
+      dx -= (z->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y + -0x1800;
+      dy -= (z->s).coord.y;
+      (p->s).d.y = dy;
+      dx >>= 8;
+      len = dx * dx;
+      dy >>= 8;
+      {
+        s32 u = dy * dy;
+        len += u;
+      }
+      len = (u32)Sqrt(len) << 8;
+      if (len != 0) {
+        s32 a = ((p->s).d.x << 8) / len;
+        s32 b;
+        (p->s).d.x = a;
+        b = ((p->s).d.y << 8) / len;
+        (p->s).d.x = a * 6;
+        (p->s).d.y = b * 6;
+      } else {
+        (p->s).d.x = 0xC0 << 3;
+        (p->s).d.y = len;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 nx asm("r0");
+      register s32 vx asm("r1");
+      register s32 r asm("r5");
+      s32 v;
+      s32 cy;
+      s32 vy;
+      s32 ny;
+      if (*((u8*)p + 0xb8) != 0) {
+        SetMotion(&p->s, MOTION(0x2A, 4));
+      } else {
+        SetMotion(&p->s, MOTION(0x2A, 2));
+      }
+      UpdateMotionGraphic(&p->s);
+      nx = (p->s).coord.x;
+      vx = (p->s).d.x;
+      nx += vx;
+      (p->s).coord.x = nx;
+      if (vx < 0) {
+        r = PushoutToRight1(nx, (p->s).coord.y);
+        if (r > 0) {
+          (p->s).coord.x += r;
+          asm volatile("" ::: "cc");
+          goto hit;
+        }
+      } else {
+        r = PushoutToLeft1(nx, (p->s).coord.y);
+        if (r < 0) {
+          (p->s).coord.x = (p->s).coord.x + r;
+          asm volatile("" : "+r"(r));
+          goto hit;
+        }
+      }
+      if ((*(u32*)((u8*)p + 0x8c) & 4) == 0) {
+        goto cont;
+      }
+    hit:
+      FUN_08076b30(p);
+      break;
+    cont:
+      v = (p->s).d.y + 0x40;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      cy = (p->s).coord.y;
+      vy = (p->s).d.y;
+      ny = cy + vy;
+      (p->s).coord.y = ny;
+      if (vy <= 0) {
+        break;
+      }
+      r = PushoutToUp1((p->s).coord.x, ny);
+      if (r >= 0) {
+        break;
+      }
+      (p->s).coord.y += r;
+      FUN_08076b30(p);
+      break;
+    }
+  }
+}
 
 // 0x08076A50
 void FUN_08076a50(struct Enemy* p) {
