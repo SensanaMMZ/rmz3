@@ -590,6 +590,94 @@ void FUN_0808959c(struct Enemy* p) {
   }
 }
 
+struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
+
+// 0x08089694
+void FUN_08089694(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 f asm("r2");
+      SetDDP(&p->body, &sCollisions[2]);
+      SetMotion(&p->s, MOTION(0xDD, 4));
+      f = 0;
+      if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+        f = 1;
+      }
+      {
+        register u8 nf asm("r0");
+        if (f != 0) {
+          register u8 kk asm("r1");
+          kk = (p->s).flags;
+          nf = 0x10;
+          nf |= kk;
+        } else {
+          register u8 fl asm("r1");
+          fl = (p->s).flags;
+          asm("" : "+r"(fl));
+          nf = 0xEF;
+          nf &= fl;
+        }
+        (p->s).flags = nf;
+      }
+      {
+        register s32 x asm("r1");
+        register u8* a asm("r0");
+        register u8* b asm("r3");
+        s32 sh;
+        u8 ov;
+        s32 m;
+        x = f;
+        a = (u8*)p + 0x4c;
+        *a = x;
+        b = (u8*)p + 0x4a;
+        sh = x << 4;
+        ov = *b;
+        m = -0x11;
+        m &= ov;
+        m |= sh;
+        *b = m;
+      }
+      (p->s).work[2] = 0x3C;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t <<= 24;
+      t = (u32)t >> 24;
+      if (t == 0x1E) {
+        register s32 xf asm("r4");
+        struct Coord c;
+        u32 fv = (p->s).flags;
+        xf = fv >> 4;
+        xf &= 1;
+        {
+          register s32 base asm("r1");
+          base = (p->s).coord.x + -0x600;
+          c.x = (((xf << 1) + xf) << 10) + base;
+        }
+        c.y = (p->s).coord.y + -0x200;
+        PlaySound(0x2C);
+        {
+          register s32 k200 asm("r1");
+          k200 = 0x80 << 2;
+          asm("" : "+r"(k200));
+          xf <<= 7;
+          ((struct Projectile * (*)(struct Coord*, s32, s32)) CreateLemon)(&c, k200, xf);
+        }
+      }
+      if ((p->s).work[2] == 0) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      FUN_08088bc8(p, FUN_0800a40c((p->s).coord.x, (p->s).coord.y + (0x80 << 3)), 0x80 << 4);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1b.inc");
 
 struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
