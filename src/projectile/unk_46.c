@@ -207,7 +207,68 @@ void FUN_080b258c(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_46_p4_p1_b.inc");
+void CreateGhost78_1(struct Entity* p, struct Coord* c, u8 r2, u8 r3);
+
+// 0x080B2654
+void FUN_080b2654(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  UpdateMotionGraphic(&p->s);
+  switch ((p->s).mode[1]) {
+    case 0: {
+      u8* b = (u8*)q + 0xDCC;
+      u8* t;
+      if (b[4] > 3) {
+        break;
+      }
+      t = b + 0x1D;
+      t += (p->s).work[1];
+      if ((p->s).work[2] >= *t) {
+        break;
+      }
+      SetMotion(&p->s, (u16)((((p->s).motionID << 8) | (p->s).motion.step) + 1));
+      (p->s).work[2]++;
+      goto incmode;
+    }
+    case 1:
+      if ((p->s).work[2] == 4) {
+        u8* b;
+        if ((p->s).motion.state != 3) {
+          break;
+        }
+        b = (u8*)q + 0xDCC;
+        if (b[4] <= 3) {
+          CreateGhost78_1(q, &(p->s).coord, 0, (p->s).work[1]);
+        }
+        (p->s).work[3] = 0x1E;
+        goto incmode;
+      }
+      if ((s8)(p->s).motion.cmdIdx <= 1) {
+        break;
+      }
+      (p->s).mode[1] = 0;
+      break;
+    case 2: {
+      s32 t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((u8)t != 0xFF) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xE9, 0x0A));
+    incmode:
+      (p->s).mode[1]++;
+      break;
+    }
+    case 3:
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xE9, 0x05));
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] = 0;
+      (p->s).work[2] = 0;
+      break;
+  }
+}
 
 void FUN_080b274c(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
