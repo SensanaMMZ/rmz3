@@ -1216,7 +1216,69 @@ void glacierle_080595ec(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/glacierle_c.inc");
+s32 PushoutToUp1(s32 x, s32 y);
+s32 PushoutToDown1(s32 x, s32 y);
+
+// 0x08059674
+void glacierle_08059674(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 dx, dy, dist, nx, ny;
+      PlaySound(0x97);
+      SetMotion(&p->s, MOTION(0xB2, 0x04));
+      dx = (p->s).coord.x - *(s32*)((u8*)p + 0xc8);
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y - 0x3000;
+      dy -= *(s32*)((u8*)p + 0xcc);
+      (p->s).d.y = dy;
+      dist = (dx >> 8) * (dx >> 8);
+      dist += (dy >> 8) * (dy >> 8);
+      dist = Sqrt(dist) << 8;
+      nx = ((p->s).d.x << 8) / dist;
+      (p->s).d.x = nx;
+      ny = ((p->s).d.y << 8) / dist;
+      (p->s).d.y = ny;
+      (p->s).d.x = nx * 640 / 256;
+      (p->s).d.y = ny * 640 / 256;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 r asm("r6");
+      s32 x, bx, ny;
+      x = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = x;
+      bx = *(s32*)((u8*)p + 0xbc);
+      if (x > bx + 0x9A00) {
+        (p->s).coord.x = bx + 0x9A00;
+      } else if (x < bx - 0x9A00) {
+        (p->s).coord.x = bx - 0x9A00;
+      }
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      if ((p->s).d.y > 0) {
+        r = PushoutToUp1((p->s).coord.x, ny);
+        if (r < 0) {
+          (p->s).coord.y += r;
+          (p->s).mode[1] = 0;
+          (p->s).mode[2] = 0;
+        }
+      } else {
+        r = PushoutToDown1((p->s).coord.x, ny - 0x3000);
+        if (r < 0) {
+          (p->s).coord.y += r;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 
 static const struct Coord sExplosionCoords[2];
 struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
