@@ -1570,7 +1570,111 @@ void FUN_080604e0(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/phantom_p2_pre_post_preb.inc");
+// 0x08060560
+// Blocker: retail materialises the p+0x4a pointer into r0
+// (movs r0,#0x4a / adds r0,r0,r4); agbcc always picks r1. Pinning it to r0
+// makes the allocator move `p` from r4 to r5 and the function comes out
+// 4 bytes short. 11 lever rounds; every other instruction matches.
+NON_MATCH void FUN_08060560(struct Boss* p) {
+#if MODERN
+  register s32 m3 asm("r1");
+  m3 = (p->s).mode[3];
+  switch (m3) {
+    case 0: {
+      register s32 f asm("r3");
+      register struct Zero* z asm("r2");
+      SetDDP(&p->body, sCollisions);
+      {
+        register u8 fl asm("r1");
+        register u8 g asm("r0");
+        fl = (p->s).flags;
+        g = 1;
+        g |= fl;
+        (p->s).flags = g;
+      }
+      (p->s).coord.y += 0xA0 << 7;
+      {
+        register s32 cx asm("r1");
+        register s32 t asm("r2");
+        s32* e0 = (s32*)((u8*)p + 0xe0);
+        cx = (p->s).coord.x;
+        if (cx < *e0) {
+          t = cx + -0x4000;
+          if (t >= *(s32*)((u8*)p + 0xd4)) {
+            goto store;
+          }
+          t = 0x80 << 7;
+        } else {
+          t = cx + (0x80 << 7);
+          if (t <= *(s32*)((u8*)p + 0xd8)) {
+            goto store;
+          }
+          t = -0x4000;
+        }
+        {
+          register s32 nx asm("r0");
+          nx = cx + t;
+          (p->s).coord.x = nx;
+        }
+        goto after;
+      store:
+        (p->s).coord.x = t;
+      after:;
+      }
+      f = 0;
+      z = pZero2;
+      if ((p->s).coord.x < (z->s).coord.x) {
+        f = 1;
+      }
+      ((p->s).spr).xflip = f;
+      f = 0;
+      if ((p->s).coord.x < (z->s).coord.x) {
+        f = 1;
+      }
+      {
+        u8* a;
+        register s32 sh asm("r2");
+        register u8 ov asm("r1");
+        s32 m;
+        a = (u8*)p + 0x4a;
+        sh = f << 4;
+        ov = *a;
+        m = -0x11;
+        m &= ov;
+        m |= sh;
+        *a = m;
+      }
+      {
+        register u8 nf asm("r0");
+        if (f != 0) {
+          register u8 kk asm("r1");
+          nf = (p->s).flags;
+          kk = 0x10;
+          nf |= kk;
+        } else {
+          register u8 fl2 asm("r1");
+          fl2 = (p->s).flags;
+          asm("" : "+r"(fl2));
+          nf = 0xEF;
+          nf &= fl2;
+        }
+        (p->s).flags = nf;
+      }
+      SetMotion(&p->s, MOTION(0xBC, 0x19));
+      (p->s).mode[3]++;
+      break;
+    }
+    case 1:
+      if (*((u8*)p + 0x73) == 3) {
+        (p->s).mode[1] = m3;
+        *(u16*)((u8*)p + 0xe) = 0;
+      }
+      break;
+  }
+#else
+  INCCODE("asm/boss/phantom_p2_pre_post_preb.inc");
+#endif
+}
 
 void Phantom_Die(struct Boss* p) {
   (sDeads[(p->s).mode[1]])(p);
