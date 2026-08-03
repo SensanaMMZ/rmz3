@@ -4,6 +4,8 @@
 #include "motion.h"
 #include "entity/macros.h"
 #include "solid.h"
+#include "stagerun.h"
+#include "zero.h"
 
 /*
   ロコモIF戦で出現する台座
@@ -76,7 +78,101 @@ void LocomoIFPlatform_Init(struct Solid* p) {
   LocomoIFPlatform_Update(p);
 }
 
-INCASM("asm/solid/locomoif_platform_part2_pre.inc");
+extern const SolidFunc sLocomoIFPlatformUpdates1[4];
+extern const SolidFunc sLocomoIFPlatformUpdates2[4];
+extern const struct Rect Rect_08370314;
+
+// 0x080CE600
+void LocomoIFPlatform_Update(struct Solid* p) {
+  struct Entity* q = (p->s).unk_28;
+  (sLocomoIFPlatformUpdates1[(p->s).mode[1]])(p);
+  (sLocomoIFPlatformUpdates2[(p->s).mode[1]])(p);
+  if (q->mode[0] > 1) {
+    register s32 z4 asm("r4");
+    register u8* a8c asm("r8");
+    u8* a90;
+    register u8* a94 asm("r6");
+    register s32 cfb asm("r9");
+    {
+      register u8 g asm("r0");
+      register u8 h asm("r1");
+      h = (p->s).flags2;
+      asm("" : "+r"(h));
+      g = 0xF7;
+      g &= h;
+      z4 = 0;
+      (p->s).flags2 = g;
+    }
+    a8c = (u8*)p + 0x8c;
+    *(s32*)a8c = z4;
+    a90 = (u8*)p + 0x90;
+    asm("" : "+l"(a90));
+    *(s32*)a90 = z4;
+    a94 = (u8*)p + 0x94;
+    *a94 = z4;
+    {
+      register u8 h2 asm("r1");
+      register s32 t2 asm("r2");
+      register u8 g2 asm("r0");
+      h2 = (p->s).flags;
+      asm("" : "+r"(h2));
+      t2 = 0xFB;
+      cfb = t2;
+      g2 = cfb;
+      g2 &= h2;
+      (p->s).flags = g2;
+    }
+    if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x4000) {
+      {
+        register u8 g3 asm("r0");
+        register u8 h3 asm("r1");
+        h3 = (p->s).flags;
+        asm("" : "+r"(h3));
+        g3 = 0xFE;
+        g3 &= h3;
+        h3 = 0xFD;
+        g3 &= h3;
+        (p->s).flags = g3;
+      }
+      *(s32*)a8c = z4;
+      *(s32*)a90 = z4;
+      *a94 = z4;
+      {
+        register u8 h4 asm("r1");
+        register u8 g4 asm("r0");
+        h4 = (p->s).flags;
+        asm("" : "+r"(h4));
+        g4 = cfb;
+        g4 &= h4;
+        (p->s).flags = g4;
+      }
+      SET_SOLID_ROUTINE(p, 3);
+    }
+  } else if ((pZero2->s).coord.y < (p->s).coord.y + (0xE0 << 3)) {
+    {
+      register u8 fl asm("r1");
+      register u8 g5 asm("r0");
+      fl = (p->s).flags2;
+      g5 = 8;
+      g5 |= fl;
+      (p->s).flags2 = g5;
+    }
+    *(const struct Rect**)((u8*)p + 0x30) = &Rect_08370314;
+    {
+      register s32 hv asm("r0");
+      hv = 0xA001;
+      *(u16*)((u8*)p + 0x26) = hv;
+    }
+  } else {
+    register u8 g6 asm("r0");
+    register u8 h6 asm("r1");
+    h6 = (p->s).flags2;
+    asm("" : "+r"(h6));
+    g6 = 0xF7;
+    g6 &= h6;
+    (p->s).flags2 = g6;
+  }
+}
 
 void LocomoIFPlatform_Die(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_EXIT);
