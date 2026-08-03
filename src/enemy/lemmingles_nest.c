@@ -367,7 +367,112 @@ void FUN_0806e288(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/lemmingles_nest_p2.inc");
+void FUN_0806e590(struct Entity* e, u8 kind1, u8 kind2, u8 kind3);
+
+// 0x0806E3B0
+void FUN_0806e3b0(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      u32* b4;
+      s32 n;
+      (p->s).work[2] = m;
+      (p->s).work[3] = m;
+      b4 = (u32*)((u8*)p + 0xb4);
+      n = *b4 & 1;
+      (p->s).d.x = n;
+      n += (*b4 & 2) >> 1;
+      (p->s).d.x = n;
+      n += (*b4 & 4) >> 2;
+      (p->s).d.x = n;
+      n += (*b4 & 8) >> 3;
+      (p->s).d.x = n;
+      {
+        register s32 m asm("r1");
+        s32 v = *b4;
+        m = 8;
+        asm volatile("sub %0, #0x19" : "+l"(m));
+        v &= m;
+        asm volatile("sub %0, #0x10" : "+l"(m));
+        v &= m;
+        asm volatile("sub %0, #0x20" : "+l"(m));
+        v &= m;
+        asm volatile("sub %0, #0x40" : "+l"(m));
+        v &= m;
+        *b4 = v;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t = (p->s).work[2];
+      if (t == 0) {
+        register s32 w3 asm("r3");
+        (p->s).work[2] = 0x20;
+        (p->s).work[3]++;
+        w3 = (p->s).work[3];
+        if ((p->s).d.x == w3) {
+          u32* bp;
+          register s32 sh asm("r2");
+          register s32 one asm("r5");
+          u32 msk;
+          register u32 bit asm("r0");
+          u8 xf;
+          u8 idx;
+          bp = (u32*)((u8*)p + 0xb4);
+          sh = w3 + 7;
+          one = 1;
+          msk = one;
+          msk <<= sh;
+          bit = *bp;
+          bit &= msk;
+          bit >>= sh;
+          if (bit != 0) {
+            xf = ((p->s).flags >> 4) & one;
+            idx = (u8)(w3 - 1);
+            FUN_0806e590(&p->s, 2, xf, idx);
+          } else {
+            xf = ((p->s).flags >> 4) & one;
+            idx = (u8)(w3 - 1);
+            FUN_0806e590(&p->s, 0, xf, idx);
+          }
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = 0;
+          break;
+        }
+        {
+          u32* bp2;
+          register s32 sh2 asm("r2");
+          register s32 one2 asm("r5");
+          u32 msk2;
+          register u32 bit2 asm("r0");
+          u8 xf2;
+          u8 idx2;
+          bp2 = (u32*)((u8*)p + 0xb4);
+          sh2 = w3 + 7;
+          one2 = 1;
+          msk2 = one2;
+          msk2 <<= sh2;
+          bit2 = *bp2;
+          bit2 &= msk2;
+          bit2 >>= sh2;
+          if (bit2 != 0) {
+            xf2 = ((p->s).flags >> 4) & one2;
+            idx2 = (u8)(w3 - 1);
+            FUN_0806e590(&p->s, 3, xf2, idx2);
+            break;
+          }
+          xf2 = ((p->s).flags >> 4) & one2;
+          idx2 = (u8)(w3 - 1);
+          FUN_0806e590(&p->s, 1, xf2, idx2);
+        }
+        break;
+      }
+      (p->s).work[2] = t - 1;
+      break;
+    }
+  }
+}
 
 // 0x0806E4BC
 void FUN_0806e4bc(struct Enemy* p) {
