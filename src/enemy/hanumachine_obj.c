@@ -210,6 +210,115 @@ void FUN_080869f4(struct Enemy* p) {
   }
 }
 
+// 0x08086A50
+void FUN_08086a50(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    register s32 xf asm("r2");
+    SetMotion(&p->s, 0x6A03);
+    xf = 0;
+    if ((p->s).coord.x < (pZero2->s).coord.x) {
+      xf = 1;
+    }
+    if (xf != 0) {
+      (p->s).flags |= 0x10;
+    } else {
+      register u8 h asm("r1");
+      register u8 g asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xEF;
+      g &= h;
+      (p->s).flags = g;
+    }
+    {
+      register s32 xv asm("r1");
+      register u8* oa asm("r3");
+      s32 sh4, ov, m11;
+      xv = xf;
+      *((u8*)p + 0x4c) = xv;
+      oa = (u8*)p + 0x4a;
+      sh4 = xv << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      *oa = m11 | sh4;
+    }
+    if ((p->s).flags & 0x10) {
+      (p->s).d.x = 0x180;
+    } else {
+      (p->s).d.x = -0x180;
+    }
+    (p->s).d.y = -0x300;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 k4 asm("r1");
+    register s32 t asm("r0");
+    t = *(u32*)((u8*)p + 0x8c);
+    k4 = 4;
+    t &= k4;
+    if (t != 0) {
+      (p->s).mode[1] = k4;
+      (p->s).mode[2] = 0;
+      return;
+    }
+  }
+  if ((u16)FUN_080098a4((p->s).coord.x + (p->s).d.x, (p->s).coord.y) != 0) {
+    register s32 fl asm("r2");
+    register s32 nf asm("r1");
+    (p->s).d.x = -(p->s).d.x;
+    fl = (p->s).flags;
+    {
+      register s32 sh asm("r0");
+      sh = (u32)fl >> 4;
+      nf = 1;
+      nf &= ~sh;
+    }
+    if (nf != 0) {
+      register s32 g asm("r0");
+      g = 0x10;
+      g |= fl;
+      (p->s).flags = g;
+    } else {
+      register s32 g2 asm("r0");
+      g2 = 0xEF;
+      g2 &= fl;
+      (p->s).flags = g2;
+    }
+    {
+      register u8* oa asm("r3");
+      s32 sh4, ov, m11;
+      *((u8*)p + 0x4c) = nf;
+      oa = (u8*)p + 0x4a;
+      sh4 = nf << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      *oa = m11 | sh4;
+    }
+  }
+  {
+    register s32 cx asm("r0");
+    register s32 cy asm("r1");
+    register s32 dy asm("r2");
+    cx = (p->s).coord.x;
+    cx += (p->s).d.x;
+    (p->s).coord.x = cx;
+    cy = (p->s).coord.y;
+    dy = (p->s).d.y;
+    cy += dy;
+    (p->s).coord.y = cy;
+    dy += 0x40;
+    (p->s).d.y = dy;
+    if ((u16)FUN_080098a4(cx, cy) != 0) {
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+    }
+  }
+}
+
 INCASM("asm/enemy/hanumachine_obj_post.inc");
 
 void FUN_08086cbc(struct Enemy* p) {
