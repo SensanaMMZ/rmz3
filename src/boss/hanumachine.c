@@ -1041,7 +1041,70 @@ void hanu_0805cbfc(struct Boss* p) {
   UpdateMotionGraphic(&p->s);
 }
 
-INCASM("asm/boss/hanumachine_p2_p1b2_post.inc");
+u16 FUN_08010d70(s32 x, s32 y);
+void FUN_08010dd8(s32 x, s32 y);
+
+// 0x0805CCC0
+void hanu_0805ccc0(struct Boss* p) {
+  register s32 z6 asm("r6");
+  register s32 k20 asm("r5");
+  if ((p->s).mode[2] == 0) {
+    s32 v;
+    SetMotion(&p->s, MOTION(0xB5, 0x12));
+    SetDDP(&p->body, &sCollisions[14]);
+    if (((p->s).flags & 0x10) != 0) {
+      (p->s).coord.x += -0x1000;
+      (p->s).d.x = 0x80 << 3;
+      v = 0xC0 << 6;
+    } else {
+      register s32 cx asm("r0");
+      register s32 k2 asm("r2");
+      cx = (p->s).coord.x;
+      k2 = 0x80 << 5;
+      asm("" : "+r"(k2));
+      (p->s).coord.x = cx + k2;
+      (p->s).d.x = -0x400;
+      v = -0x3000;
+    }
+    (p->s).unk_coord.x = v;
+    (p->s).d.y = -0x400;
+    (p->s).work[2] = 0x14;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 t = (p->s).work[2] - 1;
+    z6 = 0;
+    (p->s).work[2] = t;
+    t <<= 24;
+    t = (u32)t >> 24;
+    if (t == 0xFF) {
+      goto done;
+    }
+  }
+  if (((u16)FUN_0805d594(p, (p->s).unk_coord.x, 0) << 16) == 0) {
+    (p->s).coord.x += (p->s).d.x;
+  }
+  {
+    s32 ny = (p->s).coord.y + (p->s).d.y;
+    (p->s).coord.y = ny;
+    {
+      s32 ax = (p->s).coord.x + (p->s).unk_coord.x;
+      k20 = -0x2000;
+      if (((u16)FUN_080098a4(ax, ny + k20) << 16) == 0) {
+        return;
+      }
+    }
+    if (((u16)FUN_08010d70((p->s).coord.x + (p->s).unk_coord.x, (p->s).coord.y + k20) << 16) != 0) {
+      FUN_08010dd8((p->s).coord.x + (p->s).unk_coord.x, (p->s).coord.y + k20);
+    }
+    PlaySound(0x52);
+    AppendQuake(5, &(p->s).coord);
+  }
+done:
+  (p->s).mode[1] = 0x15;
+  (p->s).mode[2] = z6;
+}
 
 // 0x0805cdbc
 void FUN_0805cdbc(struct Boss* p) {
