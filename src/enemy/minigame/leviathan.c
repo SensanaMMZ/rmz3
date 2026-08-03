@@ -533,7 +533,78 @@ void FUN_0809acdc(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, 4);
 }
 
-INCASM("asm/enemy/minigame_leviathan_p3c_b.inc");
+// 0x0809AD8C
+void FUN_0809ad8c(struct Enemy* p) {
+  u8* q = (u8*)(p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 z = 0;
+      if (*(q + 0x34) == 0) {
+        u8* a = q + 0x35;
+        *a = z;
+        *(s32*)(q + 0x1c) = z;
+        a -= 3;
+        *a = z;
+        FUN_08099f54((p->s).coord.x, (p->s).coord.y, -1, -5);
+        *(s32*)(q + 0x20) += -0x12C;
+      }
+      {
+        register u8 f asm("r0");
+        register u8 t asm("r1");
+        u8* qq = (u8*)p + 0x8c;
+        asm("" : "+r"(qq));
+        *(s32*)qq = z;
+        asm("" : "+r"(qq));
+        qq += 4;
+        asm("" : "+r"(qq));
+        *(s32*)qq = z;
+        asm("" : "+r"(qq));
+        qq += 4;
+        asm("" : "+r"(qq));
+        *qq = z;
+        t = (p->s).flags;
+        asm("" : "+r"(t));
+        f = 0xFB;
+        f &= t;
+        (p->s).flags = f;
+      }
+      (p->s).d.y = z;
+      (p->s).work[2] = 0x18;
+      (p->s).work[3] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8 v asm("r0");
+      register s32 one asm("r1");
+      s32 t2 = (p->s).work[3] + 1;
+      (p->s).work[3] = t2;
+      one = 1;
+      if ((t2 & one) != 0) {
+        v = (p->s).flags;
+        v |= one;
+      } else {
+        register u8 fl asm("r1");
+        fl = (p->s).flags;
+        asm("" : "+r"(fl));
+        v = 0xFE;
+        v &= fl;
+      }
+      (p->s).flags = v;
+      if (*(q + 0x31) != 0) {
+        break;
+      }
+      if (--(p->s).work[2] == 0) {
+        SET_ENEMY_ROUTINE(p, 4);
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.x = (p->s).d.x * 248 / 256;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += 0x10;
+      break;
+    }
+  }
+}
 
 // 0x0809AE68
 void FUN_0809ae68(struct Enemy* p) {
