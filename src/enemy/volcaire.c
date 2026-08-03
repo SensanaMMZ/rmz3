@@ -705,7 +705,95 @@ void FUN_08077ca4(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/volcaire_p2_post_b.inc");
+void MaybeKillVolcaire(struct Enemy* p);
+
+// 0x08077DD0
+void FUN_08077dd0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dist asm("r6");
+      s32 dx, dy;
+      if ((p->s).work[0] == 1) {
+        SetDDP(&p->body, (const struct Collision*)0x083673C0);
+        SetMotion(&p->s, MOTION(0x2E, 0x00));
+      } else {
+        SetDDP(&p->body, (const struct Collision*)0x083673D8);
+        GotoMotion(&p->s, MOTION(0x2E, 0x05), 4, 1);
+      }
+      {
+        struct Zero* z = pZero2;
+        dx = (p->s).coord.x - (z->s).coord.x;
+        (p->s).d.x = dx;
+        dy = (p->s).coord.y + -0x1800;
+        dy -= (z->s).coord.y;
+        (p->s).d.y = dy;
+      }
+      dx >>= 8;
+      dist = dx * dx;
+      dy >>= 8;
+      dist += dy * dy;
+      dist = Sqrt(dist) << 8;
+      if (dist == 0) {
+        goto zerocase;
+      }
+      {
+        s32 nx = ((p->s).d.x << 8) / dist;
+        s32 ny;
+        (p->s).d.x = nx;
+        ny = ((p->s).d.y << 8) / dist;
+        (p->s).d.x = (nx * 2 + nx) * 2;
+        (p->s).d.y = (ny * 2 + ny) * 2;
+      }
+      goto donev;
+    zerocase:
+      (p->s).d.x = 0xC0 * 8;
+      (p->s).d.y = dist;
+    donev:;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8* fp asm("r4");
+      register s32 r asm("r6");
+      s32 cy;
+      {
+        u8* f0 = (u8*)p + 0xb9;
+        u8 fv = *f0;
+        asm volatile("add %0, %1, #0" : "=&l"(fp) : "l"(f0));
+        if (fv == 0) {
+          (p->s).coord.x += (p->s).d.x;
+        }
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0xE0 * 8) {
+        (p->s).d.y = 0xE0 * 8;
+      }
+      cy = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = cy;
+      if ((p->s).d.y > 0) {
+        r = PushoutToUp1((p->s).coord.x, cy);
+        if (r < 0) {
+          u32 at = (u16)GetMetatileAttr((p->s).coord.x, (p->s).coord.y);
+          asm("" : "+r"(at));
+          if ((at & 0x10) != 0) {
+            goto hit;
+          }
+          if (*fp != 0) {
+            goto hit;
+          }
+          (p->s).coord.y += r;
+          MaybeKillVolcaire(p);
+          return;
+        hit:
+          *fp = 1;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
