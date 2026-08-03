@@ -524,6 +524,61 @@ void anubisMode7(struct Boss* p) {
 
 INCASM("asm/boss/anubis_p2b.inc");
 
+// 0x08050F38
+void anubis_08050f38(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x53);
+      *((u8*)p + 0xcf) = 2;
+      *(u32*)((u8*)p + 0xc0) |= 0x100;
+      (p->s).work[2] = 0x1E;
+      SetMotion(&p->s, MOTION(0xAF, 0x03));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t <<= 24;
+      if (t == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      register u8* pc asm("r5");
+      s32 v;
+      {
+        register u8* pc0 asm("r0");
+        register u8 cv asm("r1");
+        pc0 = (u8*)p + 0xce;
+        cv = *pc0;
+        asm volatile("add %0, %1, #0" : "=&l"(pc) : "l"(pc0));
+        if (cv != 0) {
+          v = 0;
+        } else {
+          v = RANDOM(RNG_0202f388) % 3 + 1;
+        }
+      }
+      *pc = v;
+      FUN_08010188(*pc);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register u32 rv asm("r3");
+      rv = FUN_080101a8();
+      if (rv == 0) {
+        *(u32*)((u8*)p + 0xc0) &= ~0x100;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = rv;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
 
 // 0x08051018
