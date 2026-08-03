@@ -430,6 +430,70 @@ void FUN_080777cc(struct Enemy* p) {
   }
 }
 
+// 0x08077834
+void FUN_08077834(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, (const struct Collision*)0x083672D0);
+      (p->s).d.y = -0x800;
+      SetMotion(&p->s, MOTION(0x2E, 0x00));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 dy = (p->s).d.y + 0x40;
+      (p->s).d.y = dy;
+      (p->s).coord.y += dy;
+      if (dy > 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, MOTION(0x2E, 0x01));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register u8 st asm("r5");
+      UpdateMotionGraphic(&p->s);
+      st = *(u8*)((u8*)p + 0x73);
+      if (st != 3) {
+        break;
+      }
+      FUN_080771cc((struct Volcaire*)(p->s).unk_28, (p->s).coord.x, (p->s).coord.y, 0);
+      FUN_080771cc((struct Volcaire*)(p->s).unk_28, (p->s).coord.x, (p->s).coord.y, 1);
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        register s32 z asm("r2");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        z = 0;
+        h = 0xFD;
+        g &= h;
+        (p->s).flags = g;
+        {
+          u8* a = (u8*)p + 0x8c;
+          *(u32*)a = z;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *(u32*)a = z;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *a = z;
+        }
+      }
+      (p->s).flags &= 0xFB;
+      SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/volcaire_p2_pre_p2b.inc");
 
 void FUN_08077af8(struct Enemy* p) {
