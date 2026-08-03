@@ -615,6 +615,85 @@ void FUN_08081d2c(struct Enemy* p) {
 
 INCASM("asm/enemy/pantheon_aqua_mod_obj_p3_b2.inc");
 
+extern void __umodsi3();
+struct VFX* FUN_080ba9a0(struct Coord* c);
+
+// 0x080820B8
+void FUN_080820b8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r2");
+      (p->s).work[2] = 0;
+      (p->s).taskCol = 0x1B;
+      one = 1;
+      (p->s).flags |= X_FLIP;
+      ((p->s).spr).xflip = one;
+      {
+        register u8* oa asm("r3");
+        register s32 sh4 asm("r2");
+        s32 ov;
+        s32 m11;
+        oa = (u8*)p + 0x4a;
+        sh4 = 0x10;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      SetMotion(&p->s, MOTION(0x27, 0x0B));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 z asm("r5");
+      s32 t;
+      if ((p->s).work[2] == 0) {
+        struct Coord c;
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y;
+        FUN_080ba9a0(&c);
+      }
+      {
+        s32 w = (p->s).work[2] + 1;
+        z = 0;
+        (p->s).work[2] = w;
+      }
+      t = ((s32 (*)(s32, s32))__umodsi3)((p->s).work[2], 10);
+      (p->s).work[2] = t;
+      (p->s).coord.x += 0x240;
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x2000) {
+        {
+          register u8 g asm("r0");
+          register u8 h asm("r1");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xFE;
+          g &= h;
+          h = 0xFD;
+          g &= h;
+          (p->s).flags = g;
+        }
+        {
+          u8* a = (u8*)p + 0x8c;
+          *(u32*)a = z;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *(u32*)a = z;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *a = z;
+        }
+        (p->s).flags &= 0xFB;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
 void PantheonAquaModObj_Init(struct Enemy* p);
 void PantheonAquaModObj_Update(struct Enemy* p);
 void PantheonAquaModObj_Die(struct Enemy* p);
