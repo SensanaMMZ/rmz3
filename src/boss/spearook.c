@@ -649,6 +649,51 @@ void FUN_0806267c(struct Boss* p) {
   }
 }
 
+// 0x08062754
+void FUN_08062754(struct Boss* p) {
+  struct Entity* e = (p->s).unk_28;
+  (p->s).coord.x = (e->coord).x;
+  (p->s).coord.y = (e->coord).y - 0x1200;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&(p->s), 0xD605);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&(p->s));
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      u8 v;
+      (p->s).spr.xflip = (((p->s).flags >> 4) ^ 1) & 1;
+      v = (((p->s).flags >> 4) ^ 1) & 1;
+      (p->s).spr.oam.xflip = v;
+      if (v) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= ~0x10;
+      }
+      if ((p->s).flags & 0x10) {
+        *(u32*)((u8*)e + 0xbc) |= 8;
+      } else {
+        *(u32*)((u8*)e + 0xbc) &= ~8;
+      }
+      SetMotion(&(p->s), 0xD606);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      UpdateMotionGraphic(&(p->s));
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 INCASM("asm/boss/spearook_p1_post_p2_a1_c.inc");
 
 void FUN_0806293c(struct Boss* p) {
