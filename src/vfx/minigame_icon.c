@@ -298,7 +298,70 @@ void FUN_080c8684(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/minigame_icon_post_b.inc");
+// 0x080C8744
+void FUN_080c8744(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 w;
+      InitNonAffineMotion(&p->s);
+      {
+        register u8 fv asm("r1");
+        register u8 k asm("r0");
+        k = (p->s).flags;
+        fv = 1;
+        fv |= k;
+        k = 2;
+        fv |= k;
+        (p->s).flags = fv;
+      }
+      w = (p->s).work[1];
+      if (w == 0) {
+        SetMotion(&p->s, MOTION(0x9E, 0));
+      } else if (w == 2) {
+        SetMotion(&p->s, MOTION(0x9F, 0));
+      } else {
+        SetMotion(&p->s, MOTION(0xA1, 0));
+      }
+      (p->s).work[2] = 0;
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8* lim asm("r6");
+      register u8* cur asm("r5");
+      u8 w1;
+      lim = *(u8**)((u8*)p + 0x74);
+      w1 = (p->s).work[1];
+      cur = (u8*)p + 0x7c;
+      if (w1 == 3) {
+        u8* q = (u8*)(p->s).unk_2c + 0xDC4;
+        s32 t = (*cur << 12) + -0x6800;
+        s32 v = *(s32*)q - t;
+        struct Entity* e;
+        (p->s).coord.x = v + -0x800;
+        (p->s).coord.y = *(s32*)(q + 4) + 0x3800;
+        e = (p->s).unk_28;
+        if (*(s16*)((u8*)e + 4) == 1) {
+          s32 u = v + -0xA00;
+          u += *(s32*)((u8*)e + 0x34);
+          (p->s).coord.x = u;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*cur >= *lim) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      (p->s).mode[2] = 3;
+      FALLTHROUGH;
+    case 3:
+      SET_VFX_ROUTINE(p, 2);
+      break;
+  }
+}
 
 // --------------------------------------------
 
