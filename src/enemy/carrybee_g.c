@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "enemy.h"
 #include "global.h"
+#include "syssav.h"
+#include "entity_manager.h"
 #include "story.h"
 #include "overworld_terrain.h"
 
@@ -291,7 +293,83 @@ void FUN_0808af7c(struct Enemy* p) {
 
 bool8 FUN_0808b008(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/carrybee_g_p1_p3.inc");
+// 0x0808B00C
+void carrybeeg_0808b00c(struct Enemy* p) {
+  {
+    s32* dst = (s32*)((u8*)p + 0xb4);
+    struct Camera* cam = &gStageRun.vm.camera;
+    *dst = cam->viewport.y - 0x4000;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[3] = 0x40;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 w2 asm("r4");
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[2];
+        asm volatile("add %0, %1, #1" : "=&l"(w2) : "l"(t));
+      }
+      (p->s).work[2] = w2;
+      {
+        s32 tgt = *(s32*)((u8*)p + 0xb4);
+        s32 uy = (p->s).unk_coord.y;
+        uy += ((tgt - uy) << 3) >> 8;
+        (p->s).unk_coord.y = uy;
+        {
+          s32 sv = gSineTable[(p->s).work[2]];
+          (p->s).coord.y = uy + ((sv << 4) - sv);
+        }
+      }
+      if ((p->s).work[3] != 0) {
+        s32 nw = (p->s).work[3] - 1;
+        (p->s).work[3] = nw;
+        if ((u8)nw != 0) {
+          goto tick;
+        }
+      }
+      if (*(u32*)((u8*)p + 0xbc) != 0 && (p->s).unk_2c != NULL && (p->s).unk_28 != NULL) {
+        goto reset;
+      }
+      if (gEnemyHeaderPtr->length - gEnemyHeaderPtr->remaining > 5) {
+        goto reset;
+      }
+      if (gCurStory.s.gameflags[4] & 0x42) {
+        goto reset;
+      }
+      if (gCurStory.s.gameflags[0] & 0x10) {
+        u32 v = gSystemSavedataManager.mmbn4;
+        if (v != 0x32DA && v != 0) {
+          goto reset;
+        }
+      }
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+      goto upd;
+    reset:
+      (p->s).work[3] = 0x40;
+      goto upd;
+    tick:
+      {
+        register s32 c asm("r0");
+        c = w2 << 24;
+        c = (s32)((u32)c >> 24);
+        if (c != 0x40) {
+          goto upd;
+        }
+      }
+      {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 bool8 FUN_0808b108(struct Enemy* p) { return TRUE; }
 
