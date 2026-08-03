@@ -394,6 +394,152 @@ void deathtanzNeutral(struct Boss* p) {
 
 INCASM("asm/boss/deathtanz_pre_a2.inc");
 
+// 0x080495A4
+void deathtanzMode3(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 tx asm("r6");
+      register s32 sq asm("r4");
+      register s32 w asm("r0");
+      register s32* bp asm("r0");
+      register s32 bx asm("r2");
+      register s32 cx asm("r1");
+      SetDDP(&p->body, &sCollisions[12]);
+      w = *((u8*)p + 0xbc);
+      w <<= 5;
+      w += 0x10;
+      tx = w << 8;
+      asm volatile("add %0, %1, #0" : "=&l"(bp) : "l"(p));
+      bp = (s32*)((u8*)bp + 0xb4);
+      cx = (p->s).coord.x;
+      bx = *bp;
+      if (cx < bx) {
+        register s32 k asm("r1");
+        register s32 t1 asm("r0");
+        k = -0x7800;
+        asm("" : "+r"(k));
+        t1 = tx + k;
+        tx = bx - t1;
+      } else {
+        register s32 k2 asm("r1");
+        register s32 t2 asm("r0");
+        k2 = -0x7800;
+        asm("" : "+r"(k2));
+        t2 = tx + k2;
+        tx = bx + t2;
+      }
+      sq = 0xC3 * 8;
+      {
+        register s32 d asm("r1");
+        register s32 num asm("r0");
+        d = ((s32(*)(u32))Sqrt)(sq);
+        asm("" : "+r"(d));
+        num = tx - (p->s).coord.x;
+        d = (s32)(((u32)(d << 16)) >> 15);
+        (p->s).d.x = num / d;
+      }
+      {
+        u32 t = (u16)Sqrt(sq);
+        (p->s).d.y = -(s32)((((t * 4 + t) * 4 + t)) * 4) / 2;
+      }
+      SetMotion(&p->s, MOTION(0xA7, 0x0A));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x2A;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if ((p->s).d.y > 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      SetDDP(&p->body, &sCollisions[15]);
+      SetMotion(&p->s, MOTION(0xA7, 0x0B));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 cy, by;
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x2A;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      cy = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = cy;
+      by = *(s32*)((u8*)p + 0xb8);
+      if (cy > by) {
+        (p->s).coord.y = by;
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 4:
+      SetDDP(&p->body, &sCollisions[9]);
+      SetMotion(&p->s, MOTION(0xA7, 0x09));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        register s32 md asm("r0");
+        if (((p->s).flags & 0x10) == 0) {
+          register struct Zero* z1 asm("r0");
+          register s32 zx asm("r0");
+          register s32 cx1 asm("r1");
+          register s32 lim1 asm("r1");
+          register s32 d1 asm("r0");
+          z1 = pZero2;
+          asm("" : "+r"(z1));
+          zx = (z1->s).coord.x;
+          cx1 = (p->s).coord.x;
+          d1 = zx - cx1;
+          lim1 = 0x45FF;
+          asm("" : "+r"(lim1));
+          if ((u32)d1 <= (u32)lim1) {
+            goto four;
+          }
+          goto five;
+        } else {
+          register struct Zero* z2 asm("r1");
+          register s32 cx2 asm("r0");
+          register s32 zx2 asm("r1");
+          register s32 lim2 asm("r1");
+          register s32 d2 asm("r0");
+          z2 = pZero2;
+          asm("" : "+r"(z2));
+          cx2 = (p->s).coord.x;
+          zx2 = (z2->s).coord.x;
+          d2 = cx2 - zx2;
+          lim2 = 0x45FF;
+          asm("" : "+r"(lim2));
+          if ((u32)d2 > (u32)lim2) {
+            goto five;
+          }
+        }
+      four:
+        md = 4;
+        goto setm;
+      five:
+        md = 5;
+      setm:
+        (p->s).mode[1] = md;
+        {
+          register s32 z0 asm("r0");
+          z0 = 0;
+          (p->s).mode[2] = z0;
+        }
+      }
+      break;
+  }
+}
+
 void deathtanzMode4(struct Boss* p) {
   switch ((p->s).mode[2]) {
     case 0: {
