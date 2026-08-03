@@ -392,7 +392,92 @@ void FUN_0808f8e0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/seimeran_p2_p2.inc");
+// 0x0808F934
+void FUN_0808f934(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x103);
+      (p->s).work[2] = 0x1E;
+      SetMotion(&p->s, MOTION(0x77, 0x02));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t <<= 24;
+      if (t == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2: {
+      register s32 k asm("r4");
+      register void** b8 asm("r6");
+      void** bc;
+      b8 = (void**)((u8*)p + 0xb8);
+      if (*b8 != NULL) {
+        goto blast;
+      }
+      bc = (void**)((u8*)p + 0xbc);
+      if (*bc != NULL) {
+        goto blast;
+      }
+      if ((p->s).work[0] != 0) {
+        goto blast;
+      }
+      {
+        register s32 cx asm("r1");
+        register s32 cy asm("r2");
+        cx = (p->s).coord.x;
+        cy = (p->s).coord.y;
+        k = -0x1C00;
+        cy += k;
+        *b8 = (void*)FUN_0808f27c(&p->s, cx, cy, 0);
+      }
+      {
+        register s32 cx2 asm("r1");
+        register s32 cy2 asm("r2");
+        cx2 = (p->s).coord.x;
+        cy2 = (p->s).coord.y;
+        cy2 += k;
+        *bc = (void*)FUN_0808f27c(&p->s, cx2, cy2, 1);
+      }
+      goto after;
+    blast:
+      PlaySound(0x2D);
+      {
+        register s32 cx3 asm("r0");
+        register s32 cy3 asm("r1");
+        cx3 = (p->s).coord.x;
+        cy3 = (p->s).coord.y;
+        k = -0x1C00;
+        cy3 += k;
+        FUN_0808f2e4(cx3, cy3, 0);
+      }
+      {
+        register s32 cx4 asm("r0");
+        register s32 cy4 asm("r1");
+        cx4 = (p->s).coord.x;
+        cy4 = (p->s).coord.y;
+        cy4 += k;
+        FUN_0808f2e4(cx4, cy4, 1);
+      }
+    after:
+      SetMotion(&p->s, MOTION(0x77, 0x03));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 void FUN_0808fa24(struct Enemy* p) {
   switch ((p->s).mode[2]) {
