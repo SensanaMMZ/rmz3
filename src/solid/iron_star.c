@@ -43,7 +43,133 @@ static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struc
   return;
 }
 
-INCASM("asm/solid/iron_star_p1_a.inc");
+extern const struct Collision Collision_ARRAY_0836fe10[];
+
+// 0x080CBB28
+void initIronStar(struct Solid* p) {
+  register u32 tbl asm("r3");
+  register s32 one asm("r2");
+  register s32 n asm("r4");
+  register s32 w0 asm("r1");
+  tbl = (u32)gSolidFnTable;
+  {
+    register s32 idx asm("r0");
+    register EntityFunc** rt asm("r0");
+    idx = ((p->s).id) << 2;
+    asm volatile("add %0, %1, %2" : "=l"(rt) : "l"(idx), "l"(tbl));
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  {
+    s32 b = gCurStory.s.gameflags[5] << 24;
+    n = ((u32)b >> 25) & one;
+    n += ((u32)b >> 26) & one;
+    n += ((u32)b >> 27) & one;
+    n += ((u32)b >> 28) & one;
+  }
+  w0 = (p->s).work[0];
+  if ((u8)(w0 - 3) <= 1) {
+    if (n > 2) {
+      goto disable;
+    }
+  }
+  {
+    register s32 t5 asm("r0");
+    t5 = w0 - 5;
+    asm("" : "+r"(t5));
+    t5 <<= 24;
+    t5 = (u32)t5 >> 24;
+    if ((u32)t5 > 1) {
+      goto normal;
+    }
+  }
+  if (n > 2) {
+    goto normal;
+  }
+disable : {
+  {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    h = (p->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    one = 0;
+    h = 0xFD;
+    g &= h;
+    (p->s).flags = g;
+  }
+  {
+    u8* a = (u8*)p + 0x8c;
+    *(s32*)a = one;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *(s32*)a = one;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *a = one;
+  }
+  {
+    register u8 g2 asm("r0");
+    register u8 h2 asm("r1");
+    h2 = (p->s).flags;
+    asm("" : "+r"(h2));
+    g2 = 0xFB;
+    g2 &= h2;
+    (p->s).flags = g2;
+  }
+  {
+    register s32 idx2 asm("r0");
+    register EntityFunc** rt2 asm("r0");
+    register s32 three asm("r1");
+    idx2 = ((p->s).id) << 2;
+    asm volatile("add %0, %1, %2" : "=l"(rt2) : "l"(idx2), "l"(tbl));
+    three = 3;
+    *(u32*)((p->s).mode) = three;
+    (p->s).onUpdate = (void*)((*rt2)[3]);
+  }
+  return;
+}
+normal : {
+  u8 w = (p->s).work[0];
+  register u8 nm asm("r0");
+  if (w == 0 || w == 3 || w == 5) {
+    nm = 0;
+  } else {
+    nm = 1;
+  }
+  (p->s).mode[1] = nm;
+  {
+    register u8 fv asm("r0");
+    register u8 k asm("r1");
+    k = (p->s).flags;
+    fv = 2;
+    fv |= k;
+    k = 1;
+    fv |= k;
+    (p->s).flags = fv;
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fl asm("r1");
+    register u8 g3 asm("r0");
+    fl = (p->s).flags;
+    g3 = 4;
+    g3 |= fl;
+    (p->s).flags = g3;
+  }
+  {
+    struct Body* body = &p->body;
+    InitBody(body, Collision_ARRAY_0836fe10, &(p->s).coord, 1);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)onCollision;
+  }
+  ironStarAI(p);
+}
+}
 
 extern const SolidFunc PTR_ARRAY_0836fe00[2];
 extern const SolidFunc PTR_ARRAY_0836fe08[2];
