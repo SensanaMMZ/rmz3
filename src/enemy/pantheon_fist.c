@@ -7,6 +7,7 @@
 #include "physics.h"
 #include "story.h"
 #include "metatile.h"
+#include "stagerun.h"
 
 static const struct Collision sCollisions[];
 
@@ -509,7 +510,106 @@ void FUN_08095914(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_fist_post_p2_p2b.inc");
+void FUN_08095b70(struct Enemy* p);
+
+// 0x0809596C
+void FUN_0809596c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r1");
+      register s32 dy asm("r0");
+      register s32 q asm("r6");
+      struct Zero* z;
+      SetDDP(&p->body, &sCollisions[5]);
+      SetMotion(&p->s, MOTION(0xD4, 6));
+      UpdateMotionGraphic(&p->s);
+      z = pZero2;
+      dx = (p->s).coord.x;
+      dx -= (z->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y + -0x1800;
+      dy -= (z->s).coord.y;
+      (p->s).d.y = dy;
+      dx >>= 8;
+      q = dx * dx;
+      dy >>= 8;
+      {
+        s32 u = dy * dy;
+        q += u;
+      }
+      q = (u32)Sqrt(q) << 8;
+      if (q != 0) {
+        s32 a = ((p->s).d.x << 8) / q;
+        s32 b;
+        (p->s).d.x = a;
+        b = ((p->s).d.y << 8) / q;
+        (p->s).d.x = a * 6;
+        (p->s).d.y = b * 6;
+      } else {
+        (p->s).d.x = 0xC0 << 3;
+        (p->s).d.y = q;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32* st asm("r6");
+      register s32 zz asm("r4");
+      s32 v;
+      s32 pu;
+      UpdateMotionGraphic(&p->s);
+      if (((u8)FUN_08095014(p, (p->s).d.x) << 24) != 0) {
+        FUN_08095b70(p);
+        break;
+      }
+      st = (s32*)((u8*)p + 0x8c);
+      zz = *st;
+      zz &= 4;
+      if (zz != 0) {
+        FUN_08095b70(p);
+        break;
+      }
+      v = (p->s).d.y + 0x40;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      pu = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (pu < 0) {
+        (p->s).coord.y += pu;
+        FUN_08095b70(p);
+      }
+      if ((p->s).work[1] != 0) {
+        if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x6000) {
+          {
+            register u8 fl asm("r1");
+            register s32 g asm("r0");
+            fl = (p->s).flags;
+            g = 0xFE;
+            g &= fl;
+            fl = 0xFD;
+            g &= fl;
+            (p->s).flags = g;
+          }
+          *st = zz;
+          *(s32*)((u8*)p + 0x90) = zz;
+          *((u8*)p + 0x94) = zz;
+          {
+            register u8 fl2 asm("r1");
+            register s32 g2 asm("r0");
+            fl2 = (p->s).flags;
+            g2 = 0xFB;
+            g2 &= fl2;
+            (p->s).flags = g2;
+          }
+          SET_ENEMY_ROUTINE(p, 3);
+        }
+      }
+      break;
+    }
+  }
+}
 
 // 0x08095ac4
 void FUN_08095ac4(struct Enemy* p) {
