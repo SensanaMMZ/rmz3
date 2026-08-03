@@ -510,6 +510,112 @@ void FUN_08097904(struct Enemy* p) {
 
 INCASM("asm/enemy/cannon_hopper_post_pre_p3.inc");
 
+// 0x08097A14
+void cannonHopper_08097a14(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 fl asm("r1");
+      register s32 v asm("r2");
+      SetMotion(&p->s, MOTION(0xDC, 0x01));
+      (p->s).work[2] = 0x15;
+      {
+        register s32 k asm("r0");
+        register s32 t asm("r0");
+        k = -0x200;
+        (p->s).d.x = k;
+        asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(k));
+        fl = (p->s).flags;
+        t = 0x10;
+        t &= fl;
+        if (t != 0) {
+          v = 0x200;
+        }
+      }
+      (p->s).d.x = v;
+      {
+        register s32 k2 asm("r0");
+        register s32 t2 asm("r0");
+        k2 = -0x400;
+        (p->s).d.y = k2;
+        asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(k2));
+        t2 = 0x20;
+        t2 &= fl;
+        if (t2 != 0) {
+          v = 0x400;
+        }
+      }
+      (p->s).d.y = v;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        t <<= 24;
+        if (t == 0) {
+          SetDDP(&p->body, (const struct Collision*)0x0836A2B8);
+        }
+        break;
+      }
+      {
+        register s32 r asm("r1");
+        r = FUN_08097224(p, (p->s).d.x, (p->s).d.y);
+        r &= 2;
+        if (r != 0) {
+          register u8 fv asm("r2");
+          register s32 xf asm("r1");
+          register u8 g asm("r0");
+          fv = (p->s).flags;
+          {
+            register s32 sh asm("r0");
+            sh = fv >> 4;
+            xf = 1;
+            asm volatile("bic %0, %1" : "+l"(xf) : "l"(sh));
+          }
+          if (xf != 0) {
+            g = 0x10;
+            g |= fv;
+          } else {
+            g = 0xEF;
+            g &= fv;
+          }
+          (p->s).flags = g;
+          *((u8*)p + 0x4c) = xf;
+          {
+            register u8* oa asm("r3");
+            s32 sh4, ov, m11;
+            oa = (u8*)p + 0x4a;
+            sh4 = xf << 4;
+            ov = *oa;
+            m11 = -0x11;
+            m11 &= ov;
+            *oa = m11 | sh4;
+          }
+          (p->s).d.x = -(p->s).d.x;
+        }
+      }
+      {
+        register s32* c0 asm("r1");
+        register s32 n asm("r0");
+        c0 = (s32*)((u8*)p + 0xc0);
+        n = *c0;
+        n--;
+        *c0 = n;
+        if (n <= 9) {
+          (p->s).mode[1] = 2;
+          (p->s).mode[2] = 0;
+        }
+      }
+      break;
+    default:
+      return;
+  }
+  UpdateMotionGraphic(&p->s);
+}
+
+INCASM("asm/enemy/cannon_hopper_post_pre_p3b.inc");
+
 void FUN_08097cc8(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0:
