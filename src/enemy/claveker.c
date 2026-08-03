@@ -1,4 +1,7 @@
 #include "collision.h"
+#include "story.h"
+#include "syssav.h"
+#include "physics.h"
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
@@ -9,6 +12,7 @@ static const struct Collision sCollisions[3];
 
 void Claveker_Init(struct Enemy* p);
 void Claveker_Update(struct Enemy* p);
+void FUN_0808f234(struct Body* body, struct Coord* c);
 void Claveker_Die(struct Enemy* p);
 
 // clang-format off
@@ -36,7 +40,114 @@ struct Enemy* CreateClaveker(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/claveker_p1_a.inc");
+void Claveker_Update(struct Enemy* p);
+
+#ifdef NON_MATCHING
+// one-instruction placement tie: retail branches to a SHARED `bl InitBody`
+// from both hp arms (0xE / 0xA), duplicating only the r0-r2 argument setup.
+// agbcc either duplicates the `bl` as well (arm 1 ends `bl; b init`, so the
+// crossjumper finds no common tail) or, when the call is forced through a
+// zero-arg cast with the arguments pre-pinned, drops the setup entirely.
+// Instruction count and function length are exact; one branch offset differs.
+NON_MATCH // 0x0808E52C
+void Claveker_Init(struct Enemy* p) {
+  register u8 f asm("r2");
+  register s32 z5 asm("r5");
+  struct Body* body;
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fl asm("r1");
+    register s32 k asm("r0");
+    register s32 z3 asm("r3");
+    fl = (p->s).flags;
+    k = 1;
+    z3 = 0;
+    asm volatile("add %0, %1, #0" : "=&l"(f) : "l"(k));
+    f |= fl;
+    k = 2;
+    f |= k;
+    asm volatile("" : "+r"(z3));
+    f |= z3;
+    (p->s).flags = f;
+  }
+  if ((gSystemSavedataManager.mods[12] & 0x80) == 0) {
+    goto arm2;
+  }
+  {
+    register u8 gf asm("r1");
+    register s32 k asm("r0");
+    gf = gCurStory.s.gameflags[0];
+    k = 0x40;
+    k &= gf;
+    k <<= 24;
+    z5 = (u32)k >> 24;
+    asm volatile("" : "+r"(z5));
+    if (z5 != 0) {
+      goto arm2;
+    }
+  }
+  {
+    register s32 k2 asm("r0");
+    k2 = 4;
+    f |= k2;
+    (p->s).flags = f;
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x08369388, &(p->s).coord, 0xE);
+    goto init;
+  }
+arm2 : {
+    register u8 fl2 asm("r1");
+    register u8 g2 asm("r0");
+    fl2 = (p->s).flags;
+    g2 = 4;
+    z5 = 0;
+    g2 |= fl2;
+    (p->s).flags = g2;
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x08369388, &(p->s).coord, 0xA);
+  }
+init:
+  body->parent = (struct CollidableEntity*)p;
+  body->fn = (BodyFunc)z5;
+  body->fn = (BodyFunc)FUN_0808f234;
+  (p->s).coord.y = FUN_0800a134((p->s).coord.x, (p->s).coord.y);
+  {
+    register s32 z4 asm("r4");
+    register u8* b4 asm("r1");
+    b4 = (u8*)p + 0xb4;
+    *(s32*)b4 = (p->s).coord.x;
+    {
+      register u8* b8 asm("r0");
+      b8 = (u8*)p + 0xb8;
+      z4 = 0;
+      *b8 = z4;
+      asm("" : "+r"(b8));
+      b8 += 4;
+      asm("" : "+r"(b8));
+      *(s32*)b8 = z4;
+    }
+    {
+      u32 tbl = (u32)gEnemyFnTable;
+      EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+      *(u32*)((p->s).mode) = 1;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    (p->s).mode[1] = z4;
+    (p->s).mode[2] = z4;
+    (p->s).mode[3] = z4;
+    if (IsFrozen(&p->s)) {
+      SetMotion(&p->s, 0x7500);
+      UpdateMotionGraphic(&p->s);
+    }
+    *((u8*)p + 0xbb) = z4;
+  }
+  Claveker_Update(p);
+}
+#else
+NAKED void Claveker_Init(struct Enemy* p) {
+  INCCODE("asm/enemy/claveker_init.inc");
+}
+#endif
 
 extern const EnemyFunc sUpdates1[6];
 extern const EnemyFunc sUpdates2[6];
