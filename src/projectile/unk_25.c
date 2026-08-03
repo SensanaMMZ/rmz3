@@ -38,6 +38,87 @@ void Projectile25_Die(struct Projectile* p) {
 
 static const struct Collision sCollisions[6];
 
+void Projectile25_Update(struct Projectile* p);
+
+// 0x080A84C4
+void FUN_080a84c4(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 one asm("r4");
+  s32 z7;
+  register s32 xf asm("r2");
+  {
+    u32 tbl = (u32)gProjectileFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    fv = 1;
+    z7 = 0;
+    asm volatile("" ::"r"(z7));
+    fv |= fl;
+    fl = 2;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, 0x5D00);
+  {
+    register s32 qf asm("r0");
+    qf = q->flags;
+    xf = qf >> 4;
+  }
+  xf &= one;
+  if (xf != 0) {
+    (p->s).flags |= X_FLIP;
+  } else {
+    (p->s).flags &= ~X_FLIP;
+  }
+  {
+    register s32 v asm("r1");
+    u8* oa;
+    s32 sh4, ov, m11;
+    asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(xf));
+    (p->s).spr.xflip = v;
+    oa = (u8*)p + 0x4a;
+    sh4 = v << 4;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    *oa = m11 | sh4;
+  }
+  {
+    s32 dx;
+    if ((p->s).flags & X_FLIP) {
+      (p->s).coord.x += 0x1000;
+      dx = 0x400;
+    } else {
+      (p->s).coord.x -= 0x1000;
+      dx = -0x400;
+    }
+    (p->s).d.x = dx;
+  }
+  (p->s).coord.y -= 0x1800;
+  {
+    s32 z;
+    struct Body* body;
+    z = 0;
+    (p->s).d.y = z;
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x0836BF78, &(p->s).coord, 0x40);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)z;
+  }
+  asm volatile("" ::"r"(z7));
+  Projectile25_Update(p);
+}
+
 INCASM("asm/projectile/unk_25_post_p2.inc");
 
 void FUN_080a8684(struct Projectile* p) {
