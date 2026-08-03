@@ -8,6 +8,7 @@
 static const u8 sElements[4];
 static const motion_t sShieldFlyMotions[3][4];
 static const WeaponFunc sShieldFlyUpdates[5];
+extern const u8 u8_ARRAY_08361334[4];
 
 bool32 shield_0803a5fc(struct Weapon* w);
 static void onHit(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED);
@@ -129,6 +130,53 @@ static void ShieldFly_Die(struct Weapon* w) {
 static void onHit(struct Body* body, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {
   if ((body->hitboxFlags & BODY_STATUS_B2) && (gMission.weaponCount[WEAPON_SHIELD] < 0xFFFF)) {
     gMission.weaponCount[WEAPON_SHIELD]++;
+  }
+}
+
+// 0x08039D3C
+void shield_08039d3c(struct Weapon* w) {
+  struct Zero* z = (&PROP)->z;
+  register u8 v asm("r2");
+  u8 c;
+  v = z->unk_127;
+  c = v;
+  if (c == 0xff) {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    register s32 zr asm("r2");
+    u8* a;
+    h = (w->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    zr = 0;
+    h = 0xFD;
+    g &= h;
+    (w->s).flags = g;
+    a = (u8*)w + 0x8c;
+    *(s32*)a = zr;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *(s32*)a = zr;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *a = zr;
+    (w->s).flags &= ~4;
+    SET_WEAPON_ROUTINE(w, ENTITY_DISAPPEAR);
+    return;
+  }
+  if ((w->s).work[0] != c) {
+    (w->s).work[0] = v;
+    GotoMotion(&w->s, sShieldFlyMotions[(w->s).work[1]][(w->s).work[0]], (w->s).motion.cmdIdx, (w->s).motion.duration);
+  }
+  (w->s).coord.x = (z->s).coord.x;
+  (w->s).coord.y = (z->s).coord.y;
+  SET_XFLIP(w, ((z->s).flags >> 4) & 1);
+  if ((w->s).motion.state == 3) {
+    (w->s).mode[1] = u8_ARRAY_08361334[(w->s).work[1]];
+    (w->s).mode[2] = 0;
   }
 }
 
