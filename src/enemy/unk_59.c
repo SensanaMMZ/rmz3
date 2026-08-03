@@ -506,7 +506,78 @@ void FUN_08091ab0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/unk_59_post_a2.inc");
+// 0x08091B60
+void FUN_08091b60(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  struct Sprite* ps = &(p->s).spr;
+  struct Sprite* qs = &(q->spr);
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, (const struct Collision*)0x08369894);
+      InitScalerotSprite1(ps, qs->sprites, &(p->s).coord);
+      (p->s).flags |= 0x40;
+      (p->s).flags2 |= 1;
+      (p->s).angle = m;
+      (p->s).work[2] = m;
+      (p->s).work[3] = 0x20;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 a asm("r3");
+      register u32 b asm("r2");
+      {
+        u8 a0 = (p->s).work[2];
+        asm volatile("add %0, %1, #0" : "=&l"(a) : "l"(a0));
+      }
+      b = (p->s).work[3];
+      if (a == 0 && b <= 0x55) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= 0xFE;
+      }
+      {
+        s32 n;
+        asm volatile("add %0, %1, #1" : "=&l"(n) : "l"(a));
+        asm volatile("movs %0, #0" : "=l"(a));
+        (p->s).work[2] = n;
+        if ((u8)n == (u8)((b << 24) >> 28)) {
+          u32 nb;
+          asm volatile("add %0, %1, #3" : "=&l"(nb) : "l"(b));
+          (p->s).work[3] = nb;
+          (p->s).work[2] = a;
+        }
+      }
+      {
+        u16 v = *(u16*)((u8*)q + 0x52);
+        u16* dst = (u16*)((u8*)p + 0x52);
+        *dst = v;
+      }
+      if (*(u32*)((u8*)q + 0xc4) & 1) {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        u8* aa;
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        h = 0xFD;
+        g &= h;
+        (p->s).flags = g;
+        aa = (u8*)p + 0x8c;
+        *(s32*)aa = a;
+        asm("" : "+r"(aa));
+        aa += 4;
+        asm("" : "+r"(aa));
+        *(s32*)aa = a;
+        *((u8*)p + 0x94) = 0;
+        (p->s).flags &= ~4;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
 
 // 0x08091C54
 void FUN_08091c54(struct Enemy* p) {
