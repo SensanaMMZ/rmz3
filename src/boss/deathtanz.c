@@ -620,6 +620,137 @@ void deathtanzMode8(struct Boss* p) {
 
 INCASM("asm/boss/deathtanz_c2.inc");
 
+// 0x0804A0A8
+void deathtanzMode11(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 bx asm("r3");
+      register s32 v asm("r0");
+      register s32 tx asm("r2");
+      register s32 dx asm("r1");
+      s32 dy, dist, nx, ny;
+      SetDDP(&p->body, &sCollisions[12]);
+      bx = *(s32*)((u8*)p + 0xb4);
+      v = bx + -0x5400;
+      (p->s).d.x = v;
+      tx = v;
+      if ((p->s).flags & 0x10) {
+        tx = bx + 0x5400;
+      }
+      dx = tx - (p->s).coord.x;
+      (p->s).d.x = dx;
+      {
+        s32 by = *(s32*)((u8*)p + 0xb8);
+        s32 k = -0x6800;
+        asm("" : "+r"(k));
+        by += k;
+        dy = by - (p->s).coord.y;
+      }
+      (p->s).d.y = dy;
+      dx >>= 8;
+      dist = dx * dx;
+      dy >>= 8;
+      dist += dy * dy;
+      dist = Sqrt(dist) << 8;
+      nx = ((p->s).d.x << 8) / dist;
+      (p->s).d.x = nx;
+      ny = ((p->s).d.y << 8) / dist;
+      (p->s).d.x = nx << 3;
+      (p->s).d.y = ny << 3;
+      {
+        register s32 q asm("r0");
+        asm volatile("add %0, %1, #0" : "=&l"(q) : "l"(dist));
+        (p->s).work[2] = q >> 11;
+      }
+      SetMotion(&p->s, MOTION(0xA7, 0x0A));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      register s32 one asm("r2");
+      s32 bx;
+      SetDDP(&p->body, &sCollisions[35]);
+      {
+        register s32 xf0 asm("r0");
+        xf0 = (p->s).flags >> 4;
+        one = 1;
+        xf0 ^= one;
+        asm("" : "+r"(xf0));
+        xf0 &= one;
+        ((p->s).spr).xflip = xf0;
+      }
+      {
+        register s32 xf asm("r1");
+        register u8* oa asm("r4");
+        s32 sh4, ov, m11;
+        xf = (p->s).flags >> 4;
+        xf ^= one;
+        asm("" : "+r"(xf));
+        xf &= one;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+        if (xf != 0) {
+          (p->s).flags |= 0x10;
+        } else {
+          register u8 h asm("r1");
+          register u8 g asm("r0");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xEF;
+          g &= h;
+          (p->s).flags = g;
+        }
+      }
+      {
+        s32* bp = (s32*)((u8*)p + 0xb4);
+        s32 cx = (p->s).coord.x;
+        s32 nx;
+        bx = *bp;
+        if (cx < bx) {
+          nx = bx + -0x5400;
+        } else {
+          register s32 k2 asm("r2");
+          k2 = 0xA8 * 128;
+          asm("" : "+r"(k2));
+          nx = bx + k2;
+        }
+        (p->s).coord.x = nx;
+      }
+      SetMotion(&p->s, MOTION(0xA7, 0x0C));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        u8* q = (u8*)p + 0xbf;
+        s32 z0 = 0;
+        s32 one = 1;
+        *q = one;
+        (p->s).mode[1] = 0xA;
+        (p->s).mode[2] = z0;
+      }
+      break;
+  }
+}
+
 void deathtanz_080a0934(struct Entity* e, s32 x, s32 y, u8 a3, u8 a4);
 
 // 0x0804A234
