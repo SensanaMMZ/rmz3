@@ -984,7 +984,98 @@ void FUN_08062fe0(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/spearook_p1_post_p2_c.inc");
+// 0x08063074
+void FUN_08063074(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r2");
+      u8 n;
+      *(u32*)((u8*)p + 0xbc) |= 0x40;
+      dx = 0x300;
+      (p->s).d.x = dx;
+      n = *((u8*)p + 0xc0);
+      dx -= (n * 3) << 9;
+      (p->s).d.x = dx;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 nx asm("r0");
+      register s32 dx asm("r1");
+      register s32 ok asm("r5");
+      nx = (p->s).coord.x;
+      dx = (p->s).d.x;
+      nx += dx;
+      (p->s).coord.x = nx;
+      ok = 0;
+      if (dx >= 0) {
+        goto pos;
+      }
+      if ((u16)FUN_080098a4(nx - 0x1600, (p->s).coord.y + 0x400) == 0) {
+        goto adv;
+      }
+      goto push;
+    pos:
+      if ((u16)FUN_080098a4(nx + 0x1600, (p->s).coord.y + 0x400) == 0) {
+        goto setok;
+      }
+    push:
+      (p->s).coord.x += (p->s).d.x;
+      goto chk;
+    setok:
+      ok = 1;
+    chk:
+      if (ok == 0) {
+        goto upd;
+      }
+    adv:
+      (p->s).mode[2]++;
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      register s32 nd asm("r1");
+      register s32 v asm("r0");
+      v = (p->s).d.x;
+      nd = -v;
+      (p->s).d.x = nd;
+      v = -0x18;
+      (p->s).unk_coord.x = v;
+      asm("" ::: "memory");
+      if (nd < 0) {
+        v = 0x18;
+      }
+      (p->s).unk_coord.x = v;
+      v = (s32)((u32)nd >> 31);
+      (p->s).work[2] = v;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 nd;
+      u8 w;
+      (p->s).coord.x += (p->s).d.x;
+      nd = (p->s).d.x + (p->s).unk_coord.x;
+      (p->s).d.x = nd;
+      w = (p->s).work[2];
+      if (nd < 0) {
+        if (w != 1) {
+          goto reset;
+        }
+        break;
+      }
+      if (w == 0) {
+        break;
+      }
+    reset:
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+      break;
+    }
+  }
+  (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+}
 
 void nop_0806316c(struct Boss* p) {}
 
