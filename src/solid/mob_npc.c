@@ -529,7 +529,58 @@ void andrew_080d9cd8(struct Solid* p) {
   MobNPC_Update(p);
 }
 
-INCASM("asm/solid/mob_npc_pre_p1_1_1b.inc");
+// 0x080D9D8C
+TextID andrew_080d9d8c(struct Solid* p) {
+  if (gSystemSavedataManager.mods[5] & 0x10) {
+    if (FLAG(gCurStory.s.gameflags, 16)) {
+      if (gCurStory.s.counts[3] <= 3) {
+        gCurStory.s.counts[3] = 4;
+        return 0x2D1;
+      }
+      return 0x2D2;
+    }
+    if (FLAG(gCurStory.s.gameflags, 11)) {
+      if (((gStageDiskManager.disk[0x1A] & 0xF) >> 2) & 1) {
+        return 0x2D0;
+      }
+      return 0x2CF;
+    }
+    if (gCurStory.s.counts[3] == 0) {
+      gCurStory.s.counts[3] = 1;
+      return 0x2CC;
+    }
+    if (gCurStory.s.counts[3] == 1) {
+      gCurStory.s.counts[3] = 2;
+      return 0x2CD;
+    }
+    gCurStory.s.counts[3] = 3;
+    return 0x2CE;
+  }
+  if (FLAG(gCurStory.s.gameflags, 16)) {
+    if (gCurStory.s.counts[3] <= 3) {
+      gCurStory.s.counts[3] = 4;
+      return 0x242;
+    }
+    return 0x243;
+  }
+  if (FLAG(gCurStory.s.gameflags, 11)) {
+    if (((gStageDiskManager.disk[0x1A] & 0xF) >> 2) & 1) {
+      return 0x2D3;
+    }
+    return 0x241;
+  }
+  switch (gCurStory.s.counts[3]) {
+    case 0:
+      gCurStory.s.counts[3] = 1;
+      return 0x23D;
+    default:
+      gCurStory.s.counts[3] = 3;
+      return 0x23F;
+    case 1:
+      gCurStory.s.counts[3] = 2;
+      return 0x23E;
+  }
+}
 
 // 0x080D9EB8
 void alouette_080d9eb8(struct Solid* p) {
