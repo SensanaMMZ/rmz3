@@ -766,6 +766,76 @@ void childreMode18(struct Boss* p) {
   }
 }
 
+struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
+
+// 0x08042140
+void childre_08042140(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r5");
+      {
+        u8* a = (u8*)p + 0x8c;
+        s32 z = 0;
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= ~COLLIDABLE;
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      {
+        register u16 ms asm("r2");
+        register s32 t asm("r0");
+        ms = gStageRun.missionStatus;
+        one = 1;
+        asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one));
+        t &= ms;
+        if (t != 0) {
+          register u8 av asm("r1");
+          register s32 t2 asm("r0");
+          av = gStageRun.vm.active;
+          asm volatile("add %0, %1, #0" : "=&l"(t2) : "l"(one));
+          t2 &= av;
+          if (t2 == 0) {
+            gStageRun.missionStatus = (ms & 0xFFFE) | MISSION_SUCCESS;
+          }
+        }
+      }
+      (p->s).work[2] = 0x50;
+      SetMotion(&p->s, MOTION(0xA4, 0x1F));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if (((p->s).scriptEntity->flags & 0x80) == 0) {
+        break;
+      }
+      goto inc;
+    case 2:
+      (p->s).unk_2c = CreateBossExplosion(&p->s, (struct Coord*)0x0836207C);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      if (((p->s).unk_2c)->mode[0] <= 1) {
+        break;
+      }
+      gStageRun.vm.active |= 2;
+    inc:
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      break;
+  }
+}
+
 INCASM("asm/boss/childre_post_b.inc");
 
 // --------------------------------------------
