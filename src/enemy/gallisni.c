@@ -720,7 +720,64 @@ void FUN_08087988(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/gallisni_p2_post_c2.inc");
+void FUN_080878f0(struct Enemy* p);
+
+// 0x08087AB0
+void FUN_08087ab0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r1");
+      register s32 dy asm("r0");
+      register s32 q asm("r6");
+      struct Zero* z;
+      SetDDP(&p->body, &sCollisions[4]);
+      SetMotion(&p->s, MOTION(0x67, 3));
+      UpdateMotionGraphic(&p->s);
+      z = pZero2;
+      dx = (p->s).coord.x;
+      dx -= (z->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y + -0x1800;
+      dy -= (z->s).coord.y;
+      (p->s).d.y = dy;
+      dx >>= 8;
+      q = dx * dx;
+      dy >>= 8;
+      {
+        s32 u = dy * dy;
+        q += u;
+      }
+      q = (u32)Sqrt(q) << 8;
+      if (q != 0) {
+        s32 a = ((p->s).d.x << 8) / q;
+        s32 b;
+        (p->s).d.x = a;
+        b = ((p->s).d.y << 8) / q;
+        (p->s).d.x = a * 6;
+        (p->s).d.y = b * 6;
+      } else {
+        (p->s).d.x = 0xC0 << 3;
+        (p->s).d.y = q;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 v;
+      (p->s).coord.x += (p->s).d.x;
+      v = (p->s).d.y + 0x40;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) != 0 || (*(u32*)((u8*)p + 0x8c) & 4) != 0) {
+        FUN_080878f0(p);
+      }
+      break;
+    }
+  }
+}
 
 void Gallisni_Init(struct Enemy* p);
 void Gallisni_Update(struct Enemy* p);
