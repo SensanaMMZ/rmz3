@@ -65,7 +65,87 @@ static void Cat_Die(struct Solid* p) { SET_SOLID_ROUTINE(p, ENTITY_EXIT); }
 
 // --------------------------------------------
 
-INCASM("asm/solid/cat_a.inc");
+void Cat_Update(struct Solid* p);
+
+// 0x080DD4FC
+void FUN_080dd4fc(struct Solid* p) {
+  register s32 one asm("r6");
+  register s32 r asm("r5");
+  {
+    u32 tbl = (u32)gSolidFnTable;
+    EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    asm("" : "+r"(fl));
+    fv = 1;
+    fv |= fl;
+    fl = 2;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  {
+    register u32 t asm("r0");
+    t = RNG_0202f388 * 0x343FD + 0x269EC3;
+    t <<= 1;
+    RNG_0202f388 = t >> 1;
+    r = t >> 0x11;
+  }
+  r &= one;
+  if (r != 0) {
+    register s32 z asm("r2");
+    SetMotion(&p->s, MOTION(0xD8, 0x02));
+    z = 0;
+    (p->s).flags &= ~X_FLIP;
+    ((p->s).spr).xflip = z;
+    {
+      register u8* oa asm("r2");
+      s32 ov;
+      s32 m11;
+      oa = (u8*)p + 0x4a;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      *oa = m11;
+    }
+    (p->s).mode[1] = 2;
+    (p->s).work[3] = one;
+  } else {
+    SetMotion(&p->s, MOTION(0xD8, 0x03));
+    (p->s).flags &= ~X_FLIP;
+    ((p->s).spr).xflip = r;
+    {
+      register u8* oa2 asm("r2");
+      s32 ov2;
+      s32 m112;
+      oa2 = (u8*)p + 0x4a;
+      ov2 = *oa2;
+      m112 = -0x11;
+      m112 &= ov2;
+      *oa2 = m112;
+    }
+    (p->s).mode[1] = r;
+    (p->s).work[3] = r;
+  }
+  (p->s).taskCol = 0x1D;
+  (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) + 0x100;
+  {
+    register s32* b asm("r1");
+    b = (s32*)((u8*)p + 0xb4);
+    *b = (p->s).coord.x;
+    asm("" : "+r"(b));
+    b += 1;
+    asm("" : "+r"(b));
+    *b = (p->s).coord.y;
+  }
+  Cat_Update(p);
+}
 
 // 0x080DD5E0
 void FUN_080dd5e0(struct Solid* p) {
