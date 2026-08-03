@@ -1010,7 +1010,133 @@ snap:
   (p->s).work[2] = 0;
 }
 
-INCASM("asm/boss/phantom_p2_pre_pre_p4_p2_p2b.inc");
+// 0x0805FC7C
+void FUN_0805fc7c(struct Boss* p) {
+  register u32* c4 asm("r5");
+  register s32 v asm("r0");
+  {
+    register s32 t asm("r0");
+    register s32 k asm("r1");
+    t = (p->s).work[2];
+    t++;
+    (p->s).work[2] = t;
+    k = 3;
+    t &= k;
+    if (t != 0) {
+      register u8 g asm("r0");
+      register s32 one asm("r1");
+      g = (p->s).flags;
+      one = 1;
+      g |= one;
+      (p->s).flags = g;
+    } else {
+      register u8 fl asm("r1");
+      register u8 g2 asm("r0");
+      fl = (p->s).flags;
+      asm("" : "+r"(fl));
+      g2 = 0xFE;
+      g2 &= fl;
+      (p->s).flags = g2;
+    }
+  }
+  {
+    register u32* c40 asm("r0");
+    register s32 m asm("r1");
+    register s32 k2 asm("r2");
+    c40 = (u32*)((u8*)p + 0xc4);
+    m = *c40;
+    k2 = 0x10;
+    m &= k2;
+    asm volatile("add %0, %1, #0" : "=&l"(c4) : "l"(c40));
+    if (m != 0) {
+      *c4 = 1;
+      v = 5;
+      goto store;
+    }
+  }
+  if ((s32)(p->s).work[2] > (s32)((p->s).work[3] - 0x3C)) {
+    *c4 = 8;
+    SetDDP(&p->body, (const struct Collision*)0x08365380);
+    if (*(u32*)((u8*)p + 0x8c) & 1) {
+      register u8* c8 asm("r1");
+      register s32 t2 asm("r0");
+      c8 = (u8*)p + 0xc8;
+      t2 = *c8;
+      t2--;
+      *c8 = t2;
+      t2 <<= 24;
+      asm volatile("" ::: "cc");
+      if (t2 != 0) {
+        goto tick3;
+      }
+      v = 4;
+      asm volatile("" : "+r"(v));
+      goto store;
+    }
+  }
+  if ((p->s).work[2] <= (p->s).work[3]) {
+    return;
+  }
+  {
+    register s32 px asm("r1");
+    register s32 d asm("r2");
+    {
+      register s32 zx asm("r0");
+      zx = (pZero2->s).coord.x;
+      px = (p->s).coord.x;
+      d = zx - px;
+      if (d < 0) {
+        goto neg;
+      }
+      if (d <= 0x3FFF) {
+        goto ok;
+      }
+      goto tick;
+    neg:
+      px -= zx;
+      if (px > 0x3FFF) {
+        goto tick;
+      }
+    }
+  ok:
+    {
+      register u8 fl3 asm("r1");
+      register u8 g3 asm("r0");
+      register s32 z2 asm("r2");
+      fl3 = (p->s).flags;
+      g3 = 1;
+      z2 = 0;
+      g3 |= fl3;
+      (p->s).flags = g3;
+      {
+        register s32 one3 asm("r0");
+        one3 = 1;
+        *c4 = one3;
+        (p->s).mode[1] = one3;
+      }
+      *(u16*)&(p->s).mode[2] = z2;
+    }
+    return;
+  }
+tick : {
+  register u8* c82 asm("r1");
+  register s32 t3 asm("r0");
+  c82 = (u8*)p + 0xc8;
+  t3 = *c82;
+  t3--;
+  *c82 = t3;
+  t3 <<= 24;
+  asm volatile("" : "+r"(t3));
+  if (t3 == 0) {
+    v = 4;
+    goto store;
+  }
+}
+tick3:
+  v = 3;
+store:
+  *(u16*)&(p->s).mode[2] = v;
+}
 
 void FUN_0805fd5c(struct Boss* p) {
   (PTR_ARRAY_08365520[(p->s).mode[3]])(p);
