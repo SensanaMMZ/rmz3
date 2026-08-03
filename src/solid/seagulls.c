@@ -271,6 +271,71 @@ void FUN_080dced4(struct Solid* p) {
   Seagulls_Update(p);
 }
 
+// 0x080DD02C
+void FUN_080dd02c(struct Solid* p) {
+  struct Camera* cam = &gStageRun.vm.camera;
+  if ((p->s).coord.x < cam->viewport.x + -0x29400) {
+    {
+      register u8 g asm("r0");
+      register u8 h asm("r1");
+      register s32 z asm("r2");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xFE;
+      g &= h;
+      z = 0;
+      h = 0xFD;
+      g &= h;
+      (p->s).flags = g;
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+    }
+    {
+      register u8 g2 asm("r0");
+      register u8 h2 asm("r1");
+      h2 = (p->s).flags;
+      asm("" : "+r"(h2));
+      g2 = 0xFB;
+      g2 &= h2;
+      (p->s).flags = g2;
+    }
+    SET_SOLID_ROUTINE(p, 3);
+    return;
+  }
+  if ((p->s).unk_2c != NULL) {
+    if (((p->s).unk_2c)->mode[0] > 1) {
+      (p->s).unk_2c = NULL;
+      (p->s).work[3] = RANDOM(RNG_0202f388) & 0x3F;
+    }
+  } else {
+    s32 t = (p->s).work[3];
+    asm("" : "+r"(t));
+    (p->s).work[3] = t + 1;
+    if ((u8)t > 0x78) {
+      (p->s).unk_2c = (struct Entity*)CreateSeagulls(p, 1, 0);
+    }
+  }
+  {
+    s32 t2 = (p->s).work[2];
+    asm("" : "+r"(t2));
+    (p->s).work[2] = t2 + 1;
+    if ((u8)t2 > 0xF0) {
+      CreateSeagulls(p, 2, 0);
+      (p->s).work[2] = RANDOM(RNG_0202f388) & 0x3F;
+    }
+  }
+}
+
 INCASM("asm/solid/seagulls_p1b.inc");
 
 // 0x080DD364
