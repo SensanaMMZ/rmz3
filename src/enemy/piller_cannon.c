@@ -38,7 +38,125 @@ struct Enemy* CreatePillerCannon(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/piller_cannon_p1_a.inc");
+void FUN_08068f68(struct Body* body, struct Coord* c);
+
+// 0x0806832C
+void PillerCannon_Init(struct Enemy* p) {
+  register struct Body* b4 asm("r4");
+  register u8 f asm("r2");
+  register s32 g40 asm("r5");
+  register const struct Collision* coll asm("r1");
+  register struct Coord* co asm("r2");
+  register s32 hp asm("r3");
+  register struct Body* a0 asm("r0");
+  InitNonAffineMotion(&p->s);
+  {
+    register s32 one asm("r0");
+    register s32 z asm("r3");
+    u8 fl = (p->s).flags;
+    one = 1;
+    z = 0;
+    f = one;
+    f |= fl;
+    one = 2;
+    f |= one;
+    asm("" : "+r"(z));
+    f |= z;
+    (p->s).flags = f;
+  }
+  if ((gSystemSavedataManager.mods[13] & 0x10) == 0) {
+    goto elsearm;
+  }
+  {
+    register s32 t asm("r0");
+    register u8 sv asm("r1");
+    sv = gCurStory.s.gameflags[0];
+    t = 0x40;
+    t &= sv;
+    {
+      register u32 t2 asm("r0");
+      t2 = (u32)t << 24;
+      asm("" : "+r"(t2));
+      g40 = t2 >> 24;
+    }
+    if (g40 != 0) {
+      goto elsearm;
+    }
+  }
+  {
+    register s32 four asm("r0");
+    four = 4;
+    f |= four;
+    (p->s).flags = f;
+  }
+  b4 = &p->body;
+  coll = (const struct Collision*)0x0836609C;
+  co = &(p->s).coord;
+  asm volatile("add %0, %1, #0" : "=&l"(a0) : "l"(b4));
+  hp = 0xC;
+  goto docall;
+elsearm : {
+  register u8 fl2 asm("r1");
+  register s32 g asm("r0");
+  fl2 = (p->s).flags;
+  g = 4;
+  g40 = 0;
+  asm("" : "+r"(g40));
+  g |= fl2;
+  (p->s).flags = g;
+}
+  b4 = &p->body;
+  coll = (const struct Collision*)0x0836609C;
+  co = &(p->s).coord;
+  asm volatile("add %0, %1, #0" : "=&l"(a0) : "l"(b4));
+  hp = 8;
+docall:
+  ((void (*)(struct Body*, const struct Collision*, struct Coord*, s32))InitBody)(a0, coll, co, hp);
+
+  b4->parent = (struct CollidableEntity*)p;
+  b4->fn = (BodyFunc)g40;
+  asm volatile("" ::: "memory");
+  b4->fn = (BodyFunc)FUN_08068f68;
+  *(s32*)((u8*)p + 0xb4) = (p->s).coord.x;
+  (p->s).d = (p->s).coord;
+  {
+    u8* a = (u8*)p + 0xb8;
+    s32 zz = 0;
+    *a = zz;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *(u32*)a = zz;
+    asm("" : "+r"(a));
+    a -= 3;
+    asm("" : "+r"(a));
+    *a = zz;
+    asm("" : "+r"(a));
+    a += 2;
+    asm("" : "+r"(a));
+    *a = zz;
+    asm("" : "+r"(a));
+    a += 5;
+    asm("" : "+r"(a));
+    *a = zz;
+    (p->s).coord.x += 0x80 * 16;
+    if ((p->s).work[0] == 0) {
+      SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+      (p->s).mode[1] = 1;
+    } else {
+      SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+      (p->s).mode[1] = 2;
+    }
+    (p->s).mode[2] = zz;
+    (p->s).mode[3] = zz;
+  }
+  if (IsFrozen(&p->s)) {
+    SetMotion(&p->s, MOTION(0x08, 0x00));
+    UpdateMotionGraphic(&p->s);
+  }
+  PillerCannon_Update(p);
+}
+
 
 extern const EnemyFunc sUpdates1[9];
 extern const EnemyFunc sUpdates2[9];
