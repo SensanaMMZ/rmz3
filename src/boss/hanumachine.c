@@ -750,7 +750,83 @@ void FUN_0805c580(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p2_p1.inc");
+// 0x0805C670
+void hanu_0805c670(struct Boss* p) {
+  if ((p->s).mode[2] == 0) {
+    register s32 f asm("r3");
+    register struct Zero* z asm("r2");
+    SetMotion(&p->s, MOTION(0xB5, 6));
+    f = 0;
+    z = pZero2;
+    if ((p->s).coord.x < (z->s).coord.x) {
+      f = 1;
+    }
+    ((p->s).spr).xflip = f;
+    f = 0;
+    if ((p->s).coord.x < (z->s).coord.x) {
+      f = 1;
+    }
+    {
+      u8* a = (u8*)p + 0x4a;
+      s32 sh = f << 4;
+      u8 ov = *a;
+      s32 m = -0x11;
+      m &= ov;
+      m |= sh;
+      *a = m;
+    }
+    {
+      register u8 nf asm("r0");
+      if (f != 0) {
+        register u8 kk asm("r1");
+        nf = (p->s).flags;
+        kk = 0x10;
+        nf |= kk;
+      } else {
+        register u8 fl asm("r1");
+        fl = (p->s).flags;
+        asm("" : "+r"(fl));
+        nf = 0xEF;
+        nf &= fl;
+      }
+      (p->s).flags = nf;
+    }
+    {
+      s32 v;
+      register s32 k10 asm("r0");
+      register u8 fv2 asm("r1");
+      fv2 = *(volatile u8*)&(p->s).flags;
+      k10 = 0x10;
+      k10 &= fv2;
+      if (k10 != 0) {
+        (p->s).d.x = -0x180;
+        v = -0x1000;
+      } else {
+        (p->s).d.x = 0xC0 << 1;
+        v = 0x80 << 5;
+      }
+      (p->s).unk_coord.x = v;
+    }
+    (p->s).d.y = -0x3C0;
+    (p->s).work[2] = 0xE;
+    PlaySound(0x50);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  if (((u16)FUN_0805d594(p, (p->s).unk_coord.x, 0) << 16) == 0) {
+    (p->s).coord.x += (p->s).d.x;
+  }
+  {
+    s32 cy = (p->s).coord.y;
+    s32 dy = (p->s).d.y;
+    (p->s).coord.y = cy + dy;
+    (p->s).d.y = dy + 0x40;
+  }
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    (p->s).mode[1] = 0xE;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void FUN_0805c760(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
