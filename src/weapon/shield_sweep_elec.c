@@ -79,7 +79,41 @@ struct Weapon* CreateShieldSweepElec(struct Zero* z, s32 x, s32 y) {
   return w;
 }
 
-INCASM("asm/weapon/shield_sweep_elec_pre.inc");
+void incrementShieldHitCount(struct Body* body);
+
+// 0x0803CC98
+void ElecShieldSweep_Init(struct Weapon* w) {
+  struct Zero* z = (struct Zero*)(w->s).unk_28;
+  struct Body* body;
+  const struct Collision* coll;
+  s32 z5;
+  SET_WEAPON_ROUTINE(w, ENTITY_UPDATE);
+  InitNonAffineMotion(&w->s);
+  ResetDynamicMotion(&w->s);
+  (w->s).flags2 &= ~4;
+  (w->s).tileNum = 0;
+  (w->s).palID = 0;
+  z5 = 0;
+  (w->s).flags |= DISPLAY;
+  (w->s).flags |= FLIPABLE;
+  SetMotion(&w->s, MOTION(0x1A, 0x06));
+  (w->s).flags |= COLLIDABLE;
+  body = &w->body;
+  coll = (const struct Collision*)0x08361724;
+  InitBody(body, coll, &(w->s).coord, 1);
+  body->parent = (struct CollidableEntity*)w;
+  body->fn = (BodyFunc)z5;
+  InitWeaponBody(body, coll, (u8)(CalcShieldBonus(z) + 4), -1, -1, -1);
+  SET_XFLIP(&w->s, (w->s).work[0]);
+  (w->s).work[2] = 0x20;
+  {
+    void* h = (void*)incrementShieldHitCount;
+    struct Body* b = &w->body;
+    b->fn = h;
+  }
+  ElecShieldSweep_Update(w);
+}
+
 
 void ElecShieldSweep_Die(struct Weapon* p);
 
