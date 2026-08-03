@@ -694,7 +694,62 @@ void FUN_08062754(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/spearook_p1_post_p2_a1_c.inc");
+// 0x08062848
+void FUN_08062848(struct Boss* p) {
+  register struct Entity* q asm("r2");
+  register u8* ap asm("r3");
+  const s16* tb;
+  s32 x, y;
+  s32 a;
+  q = (struct Entity*)(p->s).unk_2c;
+  x = (q->coord).x;
+  (p->s).coord.x = x;
+  asm("" ::: "memory");
+  tb = gSineTable;
+  ap = (u8*)q + 0xb8;
+  x += 11 * tb[*(u16*)ap >> 8];
+  (p->s).coord.x = x;
+  y = (q->coord).y;
+  (p->s).coord.y = y;
+  asm("" : "+r"(ap));
+  a = (s8)(*(u16*)ap >> 8);
+  asm("" : "+r"(a));
+  y -= 11 * tb[(u8)(a + 0x40)];
+  (p->s).coord.y = y;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&(p->s), 0xD60E);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&(p->s));
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      u8 v;
+      (p->s).spr.xflip = (((p->s).flags >> 4) ^ 1) & 1;
+      v = (((p->s).flags >> 4) ^ 1) & 1;
+      (p->s).spr.oam.xflip = v;
+      if (v) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= ~0x10;
+      }
+      SetMotion(&(p->s), 0xD60F);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      UpdateMotionGraphic(&(p->s));
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 void FUN_0806293c(struct Boss* p) {
   switch ((p->s).mode[2]) {
