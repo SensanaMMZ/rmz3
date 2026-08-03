@@ -337,7 +337,111 @@ bool8 FUN_0808340c(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/omega_gold_hand_p3_post_a.inc");
+// 0x08083428
+void FUN_08083428(struct Enemy* p) {
+  s32 m;
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).flags2 |= 0x10;
+      (p->s).invincibleID = ((p->s).unk_28)->uniqueID;
+      SetMotion(&p->s, 0x900);
+      (p->s).flags &= ~X_FLIP;
+      ((p->s).spr).xflip = m;
+      {
+        u8* oa;
+        s32 ov;
+        s32 m11;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11;
+      }
+      SetDDP(&p->body, (const struct Collision*)0x08368220);
+      (p->s).d.y = m;
+      (p->s).d.x = m;
+      (p->s).work[2] = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      struct Entity* q;
+      s32 sv;
+      (p->s).work[2] += 2;
+      {
+        register const s16* tb asm("r1");
+        register u32 ix asm("r0");
+        tb = (const s16*)0x080FEA74;
+        asm volatile("" : "+r"(tb));
+        ix = (p->s).work[2];
+        ix <<= 1;
+        {
+          register const s16* e asm("r0");
+          asm volatile("add %0, %1, %2" : "=l"(e) : "l"(ix), "l"(tb));
+          sv = *e;
+        }
+      }
+      {
+        register s32* b8 asm("r0");
+        register struct Entity* qq asm("r2");
+        b8 = (s32*)((u8*)p + 0xb8);
+        qq = (p->s).unk_28;
+        q = qq;
+        {
+          register s32 v asm("r0");
+          v = *b8;
+          v += (qq->coord).y;
+          v += sv;
+          (p->s).coord.y = v;
+        }
+        {
+          register s32* b4 asm("r0");
+          b4 = (s32*)((u8*)p + 0xb4);
+          {
+            register s32 v2 asm("r0");
+            v2 = *b4;
+            v2 += (qq->coord).x;
+            (p->s).coord.x = v2;
+          }
+        }
+      }
+      if (q->mode[1] == 6) {
+        u8* c0;
+        u8 g;
+        c0 = (u8*)p + 0xc0;
+        if (*c0 != 0) {
+          SetDDP(&p->body, (const struct Collision*)0x08368220);
+        }
+        {
+          register s32 zz asm("r0");
+          zz = 0;
+          *c0 = zz;
+        }
+        {
+          register u8 h asm("r1");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xFE;
+          g &= h;
+        }
+        (p->s).flags = g;
+      } else {
+        register u8* c02 asm("r1");
+        register s32 one asm("r2");
+        register u8 g2 asm("r0");
+        c02 = (u8*)p + 0xc0;
+        one = 1;
+        g2 = 1;
+        *c02 = g2;
+        g2 = (p->s).flags;
+        g2 |= one;
+        (p->s).flags = g2;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_080834fc(struct Enemy* p) {
   switch ((p->s).mode[2]) {
