@@ -71,7 +71,83 @@ void Weapon16_Die(struct Weapon* w) {
   SET_WEAPON_ROUTINE(w, ENTITY_EXIT);
 }
 
-INCASM("asm/weapon/minigame_rod_p2.inc");
+// 0x0803CF84
+void weapon_0803cf84(struct Weapon* p) {
+  s32 z = (p->s).mode[2];
+  switch (z) {
+    case 0: {
+      register const u16* mt asm("r1");
+      mt = (const u16*)0x083618E8;
+      asm volatile("" : "+l"(mt));
+      SetMotion(&p->s, mt[(p->s).work[1]]);
+      (p->body).status = z;
+      (p->body).prevStatus = z;
+      (p->body).invincibleTime = z;
+      (p->s).flags &= ~COLLIDABLE;
+      (p->s).work[2] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      struct Entity* q = (p->s).unk_28;
+      (p->s).coord.x = q->coord.x;
+      (p->s).coord.y = q->coord.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[1] <= 5) {
+        if (*(s8*)((u8*)p + 0x71) != 1) {
+          goto b;
+        }
+      } else {
+        if (*(s8*)((u8*)p + 0x71) != 2) {
+          goto b;
+        }
+      }
+      {
+        register s32 w asm("r6");
+        register s32 t asm("r0");
+        t = (p->s).work[2];
+        asm volatile("add %0, %1, #0" : "=&l"(w) : "l"(t));
+        if (w != 0) {
+          goto b;
+        }
+        t += 1;
+        (p->s).work[2] = t;
+        (p->s).flags |= COLLIDABLE;
+        {
+          register const struct Collision** ct asm("r1");
+          struct Body* body = &p->body;
+          const struct Collision* coll;
+          ct = (const struct Collision**)0x083618FC;
+          asm volatile("" : "+l"(ct));
+          coll = ct[(p->s).work[1]];
+          InitBody(body, coll, &(p->s).coord, 1);
+          body->parent = (struct CollidableEntity*)p;
+          body->fn = (BodyFunc)w;
+        }
+      }
+    b:
+      if ((p->s).work[1] <= 5) {
+        if (*(s8*)((u8*)p + 0x71) != 4) {
+          goto d;
+        }
+      } else {
+        if (*(s8*)((u8*)p + 0x71) != 5) {
+          goto d;
+        }
+      }
+      if ((p->s).work[2] == 1) {
+        (p->s).work[2]++;
+        EXIT_BODY(p);
+      }
+    d:
+      if ((p->s).motion.state == 3) {
+        SET_WEAPON_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+    }
+  }
+}
+
 
 const struct Collision gWeapon16Collisions[15] = {
     [0] = {
