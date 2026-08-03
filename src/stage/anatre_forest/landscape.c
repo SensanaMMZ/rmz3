@@ -345,6 +345,62 @@ static void LayerExit_AnatreForest_5(struct StageLayer* l, const struct Stage* _
 
 INCASM("asm/stage_gfx/anatre_forest.inc");
 
+// 0x08010BE0
+void FUN_08010be0(struct StageLayer* l UNUSED, const struct Stage* stage UNUSED) {
+  s16 i;
+  gWindowRegBuffer.dispcnt &= ~DISPCNT_WIN1_ON;
+  gWindowRegBuffer.winin[2] |= 0xe;
+  {
+    register struct Solid** arr asm("r6");
+    i = 0;
+    arr = (struct Solid**)&gOverworld.work;
+    asm volatile("" : "+l"(arr));
+    do {
+      s32 iv = i;
+      s32 k;
+      struct Solid* p;
+      asm volatile("add %0, %1, #0" : "=&l"(k) : "l"(iv));
+      k += 0x11;
+      p = arr[k];
+      if (p != NULL) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      i++;
+    } while (i <= 3);
+  }
+  {
+    register struct Solid** arr asm("r6");
+    i = 0;
+    arr = (struct Solid**)&gOverworld.work;
+    asm volatile("" : "+l"(arr));
+    do {
+      s32 iv = i;
+      s32 k;
+      struct Solid* p;
+      asm volatile("add %0, %1, #0" : "=&l"(k) : "l"(iv));
+      k += 0x15;
+      p = arr[k];
+      if (p != NULL) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        EXIT_BODY(p);
+        SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      i++;
+    } while (i <= 9);
+  }
+  {
+    register s32 sid asm("r4");
+    sid = SE_UNK_10d;
+    if (isSoundPlaying(sid)) {
+      StopSound(sid);
+    }
+  }
+}
+
 struct MetatilePatch1x1 {
   struct MetatilePatch size;
   metatile_id_t data[1 * 1];
