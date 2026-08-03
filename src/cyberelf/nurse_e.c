@@ -155,7 +155,88 @@ void NurseE_Die(struct Elf* p) {
   SET_ELF_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/cyberelf/nurse_e_p2.inc");
+s32 CalcAngle(s32 x, s32 y);
+u32 FUN_080e964c(u32 a, s32 b, s32 c);
+extern const s16 gSineTable[256];
+
+// 0x080E3388
+void FUN_080e3388(struct Coord* self, struct Coord* target, s32* spd, u8* ang, s32 a5, s32 a6, s32 a7,
+                  s32 a8, s32 a9, s32 a10, s32 a11) {
+  register s32 na asm("r6");
+  register s32 sp0 asm("r4");
+  register s32 res asm("r3");
+  register s32 lim asm("r5");
+  na = CalcAngle(target->x - self->x, target->y - self->y);
+  sp0 = *spd;
+  res = na;
+  lim = a5;
+  if (sp0 > 0) {
+    res = *ang;
+    if (((na - res + 0x3F) & 0xFF) <= 0x7E) {
+      res = FUN_080e964c(na, res, a11);
+    }
+  }
+  *ang = res;
+  {
+    register s32 t asm("r0");
+    register s32 mk asm("r1");
+    t = na - res;
+    t += 0x3F;
+    mk = 0xFF;
+    t &= mk;
+    if (t > 0x7E) {
+      goto zero;
+    }
+    if (lim <= 0) {
+      lim = a6;
+    } else if (lim > a7) {
+      lim = a7;
+    }
+    goto done;
+  zero:
+    lim = 0;
+  done:;
+  }
+  if (sp0 != lim) {
+    if (sp0 < lim) {
+      sp0 += *(volatile s32*)&a9;
+      if (sp0 > lim) {
+        sp0 = lim;
+      }
+    } else {
+      s32 d;
+      register s32 v8 asm("r1");
+      v8 = a8;
+      if (v8 > 0) {
+        if (sp0 > v8) {
+          d = *(volatile s32*)&a10;
+          goto haved;
+        }
+      }
+      d = *(volatile s32*)&a9;
+    haved:
+      sp0 -= d;
+      if (sp0 < lim) {
+        sp0 = lim;
+      }
+    }
+    {
+      register s32* sp1 asm("r1");
+      sp1 = spd;
+      asm("" : "+r"(sp1));
+      *sp1 = sp0;
+    }
+  }
+  if (sp0 > 0) {
+    s32 c = gSineTable[(u8)(res + 0x40)];
+    self->x += (sp0 * c) >> 8;
+    {
+      s32 sv = gSineTable[(u8)res];
+      self->y += (sp0 * sv) >> 8;
+    }
+  }
+  asm volatile("" ::"r"(res));
+}
 
 void NurseE_Init(struct Elf* p);
 void NurseE_Update(struct Elf* p);
