@@ -1225,7 +1225,117 @@ bool8 batring_08068130(struct Enemy* p) {
   return TRUE;
 }
 
-INCASM("asm/enemy/batring_p7_b.inc");
+// 0x080681C4
+void batring_080681c4(struct Body* b, struct Coord* c) {
+  register struct Body* bb asm("r2");
+  register const struct Collision* pc asm("r3");
+  register struct Enemy* q asm("r4");
+  register struct Coord* cc asm("r5");
+  bb = b;
+  cc = c;
+  pc = (bb->enemy)->processing;
+  {
+    u8 t = pc->atkType;
+    if (t == 3 || t == 0xE || t == 0xF) {
+      q = (struct Enemy*)bb->parent;
+      if (*(u32*)((u8*)q + 0x8c) & 0x200) {
+        register u8* f asm("r1");
+        u8 v;
+        if ((q->s).coord.x < cc->x) {
+          f = (u8*)q;
+          asm volatile("add %0, #0xba" : "+r"(f));
+          v = 0xFF;
+        } else {
+          f = (u8*)q;
+          asm volatile("add %0, #0xba" : "+r"(f));
+          v = 0xFE;
+        }
+        *f = v;
+      }
+    }
+  }
+  {
+    register s32 msk asm("r1");
+    s32 av = *(u32*)&pc->atkType;
+    msk = 0x000200FF;
+    av &= msk;
+    asm volatile("sub %0, #0xfd" : "+l"(msk));
+    if (av != msk) {
+      return;
+    }
+  }
+  {
+    register s32 len asm("r5");
+    q = (struct Enemy*)bb->parent;
+    if ((q->s).mode[1] == 8) {
+      return;
+    }
+    if (*(u32*)((u8*)q + 0x8c) & 0x200) {
+      IsFrozen(&q->s);
+    }
+    {
+      register struct Zero** zp asm("r6");
+      register s32 dx asm("r0");
+      register s32 dy asm("r1");
+      zp = &pZero2;
+      {
+        register struct Zero* z asm("r2");
+        z = *zp;
+        dx = (q->s).coord.x;
+        dx -= (z->s).coord.x;
+        (q->s).unk_coord.x = dx;
+        dy = (q->s).coord.y;
+        {
+          register s32 k asm("r3");
+          k = 0x1000;
+          dy += k;
+        }
+        dy -= (z->s).coord.y;
+        (q->s).unk_coord.y = dy;
+      }
+      dx >>= 2;
+      {
+        s32 sx = dx * dx;
+        dy >>= 2;
+        {
+          s32 sy = dy * dy;
+          len = (u16)Sqrt(sx + sy) << 2;
+        }
+      }
+      if (len != 0) {
+        (q->s).unk_coord.x = ((q->s).unk_coord.x << 8) / len;
+        (q->s).unk_coord.y = ((q->s).unk_coord.y << 8) / len;
+      } else {
+        register s32 v asm("r0");
+        {
+          register s32 zx asm("r1");
+          struct Zero* z2 = *zp;
+          zx = (z2->s).coord.x;
+          if (zx <= (q->s).coord.x) {
+            goto pos;
+          }
+        }
+        v = -0x100;
+        goto setv;
+      pos:
+        v = 0x100;
+      setv:
+        (q->s).unk_coord.x = v;
+        (q->s).unk_coord.y = len;
+      }
+    }
+    {
+      s32 v = (q->s).unk_coord.x;
+      (q->s).d.x = ((v * 7) << 8) >> 8;
+    }
+    {
+      s32 v = (q->s).unk_coord.y;
+      (q->s).d.y = ((v * 7) << 8) >> 8;
+    }
+    (q->s).mode[1] = 8;
+    (q->s).mode[2] = 0;
+  }
+}
 
 static const struct Collision sCollisions[14] = {
     [0] = {
