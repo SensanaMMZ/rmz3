@@ -478,6 +478,86 @@ void FUN_08073004(struct Enemy* p) {
 
 bool8 FUN_080730cc(struct Enemy* p) { return TRUE; }
 
+void FUN_08073610(struct Enemy* p);
+
+// 0x080730D0
+void FUN_080730d0(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8 xf;
+      s32 v;
+      SetDDP(&p->body, &sCollisions[6]);
+      xf = ((pZero2->s).flags >> 4) & 1;
+      (p->s).mode[3] = xf;
+      if (xf == 0) {
+        (p->s).d.x = -0x280;
+        v = 0x80 << 1;
+      } else {
+        (p->s).d.x = 0xA0 << 2;
+        v = -0x100;
+      }
+      (p->s).unk_coord.x = v;
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 dx;
+      s32 nx;
+      s32 ny;
+      s32 gy;
+      {
+        register s32 att asm("r0");
+        register s32 mask asm("r1");
+        att = FUN_080098a4((p->s).coord.x + (p->s).d.x, (p->s).coord.y + (p->s).d.y);
+        att <<= 16;
+        mask = 0xF0000;
+        mask &= att;
+        mask = (u32)mask >> 16;
+        if (mask != 1) {
+          goto rest;
+        }
+      }
+      {
+        SET_ENEMY_ROUTINE(p, 2);
+        break;
+      }
+    rest:
+      nx = (p->s).coord.x;
+      dx = (p->s).d.x;
+      nx += dx;
+      (p->s).coord.x = nx;
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      {
+        s32 t = ((p->s).unk_coord.x - dx) << 3;
+        t >>= 8;
+        (p->s).d.x = dx + t;
+      }
+      gy = FUN_08009f6c(nx, ny + -0x2000);
+      if (gy - (p->s).coord.y <= 0x40) {
+        (p->s).coord.y = gy;
+      }
+      FUN_08073610(p);
+      {
+        u8 m3 = (p->s).mode[3];
+        if (m3 == 0) {
+          if ((p->s).d.x >= 0) {
+            (p->s).mode[1] = m3;
+            (p->s).mode[2] = m3;
+          }
+        } else {
+          if ((p->s).d.x <= 0) {
+            (p->s).mode[1] = 0;
+            (p->s).mode[2] = 0;
+          }
+        }
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/pantheon_aqua_p9.inc");
 
 s32 FUN_08073368(struct Enemy* p) { return TRUE; }
