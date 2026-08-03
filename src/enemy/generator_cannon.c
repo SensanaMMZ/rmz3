@@ -669,7 +669,63 @@ void FUN_0808cefc(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/generator_cannon_post_p2_p2c.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b84f4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_080b85fc(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame, u8 taskCol);
+
+// 0x0808CF94
+void FUN_0808cf94(struct Enemy* p) {
+  struct Coord c;
+  s32 z = (p->s).mode[2];
+  switch (z) {
+    case 0: {
+      s32 dir = 0;
+      s32 v;
+      if (pZero2->s.coord.x - (p->s).coord.x > 0) {
+        dir = 1;
+      }
+      v = dir << 8;
+      (p->s).coord.x -= v;
+      SetMotion(&p->s, MOTION(0x72, 0x02));
+      (p->body).status = z;
+      (p->body).prevStatus = z;
+      (p->body).invincibleTime = z;
+      (p->s).flags &= ~COLLIDABLE;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      ((void (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(0, &c, 0x200, dir);
+      c.x = 0x80 - v;
+      c.y = 0x60;
+      if (*((u8*)p + 0xb8) != 0) {
+        FUN_080b84f4(&p->s, &(p->s).coord, &c, 0x20, (motion_t*)0x08369130, 0x18);
+      } else {
+        FUN_080b85fc(&p->s, &(p->s).coord, &c, 0x20, (motion_t*)0x08369130, 0x18, 0x19);
+      }
+      (p->s).d.x = c.x / 2;
+      (p->s).d.y = 0;
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 vy;
+      (p->s).coord.x += (p->s).d.x;
+      vy = (p->s).d.y + 0x15;
+      (p->s).d.y = vy;
+      if (vy > 0xE0 * 8) {
+        (p->s).d.y = 0xE0 * 8;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if ((p->s).work[2] == 0 || ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+        FUN_0808cefc(p);
+      }
+      break;
+    }
+  }
+}
+
 
 void FUN_0808c760(struct Enemy* p);
 void FUN_0808c764(struct Enemy* p);
