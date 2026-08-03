@@ -3,6 +3,7 @@
 #include "collision.h"
 #include "global.h"
 #include "motion.h"
+#include "physics.h"
 #include "stagerun.h"
 #include "zero.h"
 
@@ -496,6 +497,118 @@ void childreMode6(struct Boss* p) {
 }
 
 INCASM("asm/boss/childre_pre_b3.inc");
+
+// 0x080415B8
+void childreMode8(struct Boss* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).flags |= 1;
+      SetMotion(&p->s, 0xA406);
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 push;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 dy = (p->s).d.y + 0x40;
+        (p->s).d.y = dy;
+        if (dy > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+      }
+      (p->s).coord.y += (p->s).d.y;
+      push = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (push < 0) {
+        (p->s).coord.y += push;
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      (p->s).d.y = -0x200;
+      SetMotion(&p->s, 0xA408);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 cy asm("r2");
+      {
+        s32 dy = (p->s).d.y + 0x40;
+        (p->s).d.y = dy;
+        if (dy > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+      }
+      {
+        register s32 cyv asm("r1");
+        register s32 dyv asm("r0");
+        cyv = (p->s).coord.y;
+        dyv = (p->s).d.y;
+        cy = cyv + dyv;
+      }
+      (p->s).coord.y = cy;
+      {
+        register s32 d asm("r1");
+        register s32 lim asm("r0");
+        lim = *(s32*)((u8*)p + 0xc0);
+        d = lim - cy;
+        if (d < 0) {
+          register s32 nv asm("r0");
+          nv = cy + d;
+          (p->s).coord.y = nv;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      SetMotion(&p->s, 0xA400);
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 one asm("r2");
+        register s32 xv asm("r1");
+        s32 t0;
+        t0 = (u32)(p->s).flags >> 4;
+        one = 1;
+        t0 ^= one;
+        asm("" : "+r"(t0));
+        t0 &= one;
+        ((p->s).spr).xflip = t0;
+        xv = (u32)(p->s).flags >> 4;
+        xv ^= one;
+        asm("" : "+r"(xv));
+        xv &= one;
+        {
+          register u8* oa asm("r5");
+          s32 sh4, ov, m11;
+          oa = (u8*)p + 0x4a;
+          sh4 = xv << 4;
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          m11 |= sh4;
+          *oa = m11;
+        }
+        if (xv != 0) {
+          (p->s).flags |= 0x10;
+        } else {
+          register u8 h asm("r1");
+          register u8 g asm("r0");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xEF;
+          g &= h;
+          (p->s).flags = g;
+        }
+      }
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+      break;
+    }
+  }
+}
 
 void CreateChildreScrewIce(s32 x, s32 y, u8 n);
 
