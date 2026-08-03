@@ -393,6 +393,87 @@ u32 FUN_08097224(struct Enemy* p, s32 a, s32 b) {
 
 INCASM("asm/enemy/cannon_hopper_pre_p1b.inc");
 
+void CannonHopper_Update(struct Enemy* p);
+
+// 0x0809751C
+void CannonHopper_Init(struct Enemy* p) {
+  register s32 z6 asm("r6");
+  s32 f;
+  {
+    u32 tbl = (u32)gEnemyFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    *(u32*)((p->s).mode) = 1;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  {
+    register const u8* tbl asm("r1");
+    register u32 idx asm("r0");
+    register const u8* e2 asm("r0");
+    tbl = (const u8*)0x0836A418;
+    asm volatile("" : "+r"(tbl));
+    idx = (p->s).work[0];
+    asm volatile("add %0, %1, %2" : "=l"(e2) : "l"(idx), "l"(tbl));
+    (p->s).mode[1] = *e2;
+  }
+  (p->s).flags |= FLIPABLE;
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register s32 k asm("r1");
+    fv = (p->s).flags;
+    k = 1;
+    z6 = 0;
+    asm volatile("" : "+r"(z6));
+    fv |= k;
+    k = 4;
+    fv |= k;
+    (p->s).flags = fv;
+  }
+  {
+    struct Body* body = &p->body;
+    InitBody(body, (const struct Collision*)0x0836A288, &(p->s).coord, 8);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)0x080978C9;
+  }
+  SetMotion(&p->s, 0xDC00);
+  (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) + 0x100;
+  f = 0;
+  if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+    f = 1;
+  }
+  if (f != 0) {
+    (p->s).flags |= X_FLIP;
+  } else {
+    (p->s).flags &= ~X_FLIP;
+  }
+  {
+    s32 v;
+    s32 z3;
+    u8* oa;
+    s32 sh4, ov, m11;
+    asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(f));
+    {
+      u8* xa = (u8*)p + 0x4c;
+      z3 = 0;
+      *xa = v;
+    }
+    oa = (u8*)p + 0x4a;
+    sh4 = v << 4;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    *oa = m11 | sh4;
+    *(s32*)((u8*)p + 0xb8) = z3;
+    (p->s).unk_28 = (struct Entity*)(p->s).coord.x;
+    *((u8*)p + 0xbf) = z3;
+  }
+  asm volatile("" ::"r"(z6));
+  CannonHopper_Update(p);
+}
+
+INCASM("asm/enemy/cannon_hopper_pre_p1c.inc");
+
 void CannonHopper_Die(struct Enemy* p) {
   if (gCurStory.s.gameflags[4] & 0x40) {
     (p->s).flags &= ~DISPLAY;
