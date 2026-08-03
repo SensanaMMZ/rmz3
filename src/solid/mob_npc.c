@@ -1235,7 +1235,136 @@ TextID kiss_080dac04(struct Solid* p) {
   return 0x2b7;
 }
 
-INCASM("asm/solid/mob_npc_pre_p2.inc");
+static const motion_t sMotions[27];
+void MobNPC_Update(struct Solid* p);
+
+// 0x080DAC28
+void FUN_080dac28(struct Solid* p) {
+  register s32 t2 asm("r2");
+  {
+    if (*(volatile u8*)&(p->s).work[0] == 0x16) {
+      register s32 tv asm("r0");
+      register u8 mv asm("r1");
+      mv = gSystemSavedataManager.mods[1];
+      tv = 0x40;
+      tv &= mv;
+      asm("" : "+r"(tv));
+      tv <<= 24;
+      t2 = (u32)tv >> 24;
+      if (t2 == 0) {
+        goto disable;
+      }
+    }
+  }
+  {
+    register s32 tv2 asm("r0");
+    register u8 mv2 asm("r1");
+    if (*(volatile u8*)&(p->s).work[0] != 0x19) {
+      goto normal;
+    }
+    mv2 = gSystemSavedataManager.mods[4];
+    tv2 = 0x40;
+    tv2 &= mv2;
+    asm("" : "+r"(tv2));
+    tv2 <<= 24;
+    t2 = (u32)tv2 >> 24;
+    if (t2 != 0) {
+      goto normal;
+    }
+  }
+disable : {
+  register u8 g asm("r0");
+  register u8 h asm("r1");
+  h = (p->s).flags;
+  asm("" : "+r"(h));
+  g = 0xFE;
+  g &= h;
+  h = 0xFD;
+  g &= h;
+  (p->s).flags = g;
+  {
+    u8* a = (u8*)p + 0x8c;
+    *(u32*)a = t2;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *(u32*)a = t2;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *a = t2;
+  }
+  {
+    register u8 g2 asm("r0");
+    register u8 h2 asm("r1");
+    h2 = (p->s).flags;
+    asm("" : "+r"(h2));
+    g2 = 0xFB;
+    g2 &= h2;
+    (p->s).flags = g2;
+  }
+  SET_SOLID_ROUTINE(p, 3);
+  return;
+}
+normal : {
+  register s32 z5 asm("r5");
+  register const motion_t* mb asm("r2");
+  register u16* d asm("r1");
+  mb = sMotions;
+  asm("" : "+r"(mb));
+  {
+    u16 v0 = mb[*(volatile u8*)&(p->s).work[0]];
+    d = (u16*)((u8*)p + 0xbe);
+    z5 = 0;
+    *d = v0;
+  }
+  {
+    u16 v1 = mb[*(volatile u8*)&(p->s).work[0]] + 2;
+    asm("" : "+r"(d));
+    d++;
+    asm("" : "+r"(d));
+    *d = v1;
+  }
+  {
+    u16 v2 = mb[*(volatile u8*)&(p->s).work[0]];
+    asm("" : "+r"(d));
+    d++;
+    asm("" : "+r"(d));
+    *d = v2;
+  }
+  {
+    register u8 fl asm("r1");
+    register u8 g3 asm("r0");
+    fl = (p->s).flags;
+    g3 = 4;
+    g3 |= fl;
+    (p->s).flags = g3;
+  }
+  {
+    struct Body* body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 1);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)z5;
+  }
+  {
+    register s32 one asm("r2");
+    register u8* b9 asm("r0");
+    register u8* b8 asm("r1");
+    b9 = (u8*)p + 0xb9;
+    one = 1;
+    *b9 = one;
+    b8 = (u8*)p + 0xb8;
+    asm("" : "+r"(b8));
+    *b8 = 0x30;
+    asm("" : "+r"(b8));
+    b8 += 4;
+    asm("" : "+r"(b8));
+    *(u16*)b8 = 0xC0;
+    (p->s).mode[1] = one;
+  }
+  MobNPC_Update(p);
+}
+}
 
 #ifdef NON_MATCHING
 // one-instruction tie: retail increments the loaded counter in place
