@@ -2,6 +2,7 @@
 #include "global.h"
 #include "projectile.h"
 #include "vfx.h"
+#include "physics.h"
 
 static const ProjectileFunc PTR_ARRAY_0836b434[5];
 static const ProjectileFunc PTR_ARRAY_0836b448[5];
@@ -88,6 +89,67 @@ void FUN_080a308c(struct Projectile* p) {}
 void FUN_080a3090(struct Projectile* p) {}
 
 INCASM("asm/projectile/unk_18_p2_p2_p2_p3_a.inc");
+
+// 0x080A31C0
+void FUN_080a31c0(struct Projectile* p) {
+  register u32* ps asm("r5");
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 cx asm("r3");
+      register s32 v asm("r0");
+      register s32 v2 asm("r2");
+      SetDDP(&p->body, (const struct Collision*)0x0836B48C);
+      cx = (p->s).coord.x;
+      v = cx - 0x800;
+      (p->s).coord.x = v;
+      asm volatile("add %0, %1, #0" : "=&l"(v2) : "l"(v));
+      if ((p->s).flags & 0x10) {
+        v2 = cx + 0x800;
+      }
+      (p->s).coord.x = v2;
+      (p->s).coord.y += 0x800;
+      SetMotion(&p->s, MOTION(0x46, 0x05));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 ny = (p->s).coord.y + 0x80;
+      s32 r;
+      (p->s).coord.y = ny;
+      r = PushoutToUp1((p->s).coord.x, ny);
+      if (r < 0) {
+        (p->s).coord.y += r;
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+  ps = (u32*)((u8*)p + 0x8c);
+  if (*ps & 4) {
+    s32 z2b;
+    FUN_080a2ea0();
+    FUN_080a2ee8((p->s).coord.x, (p->s).coord.y);
+    {
+      u32 fl = (p->s).flags & 0xFE;
+      z2b = 0;
+      fl &= 0xFD;
+      (p->s).flags = fl;
+    }
+    *ps = z2b;
+    {
+      u8* w = (u8*)p + 0x90;
+      *(u32*)w = z2b;
+      asm("" : "+r"(w));
+      w += 4;
+      asm("" : "+r"(w));
+      *(u8*)w = z2b;
+    }
+    (p->s).flags &= 0xFB;
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
 
 void FUN_080a3298(struct Projectile* p) {
   u32* ps;
