@@ -470,7 +470,69 @@ bool32 copyx_minigame_080fa62c(struct GameState* g) {
   return 1;
 }
 
-INCASM("asm/minigame/copy_x_b.inc");
+// 0x080FA764
+bool32 copyx_minigame_080fa764(struct GameState* g) {
+  struct MinigameState* s = &(g->sceneState).mg;
+  u8 b1[8];
+  u8 b2[12];
+  switch (s->unk_06) {
+    case 0:
+      *(u16*)s->unk_00 = 0x3c;
+      s->unk_06++;
+      /* fallthrough */
+    case 1: {
+      s32 raw = *(u16*)s->unk_00 - 1;
+      *(u16*)s->unk_00 = raw;
+      if ((u16)raw != 0) {
+        break;
+      }
+      goto inc;
+    }
+    case 2:
+      *(struct VFX**)s->unk_10 = CreateMissionAlert(4);
+      fadeoutBGM(0xb3);
+      s->unk_06++;
+      /* fallthrough */
+    case 3:
+      if (((*(struct VFX**)s->unk_10)->s).mode[0] <= 1) {
+        break;
+      }
+    inc:
+      s->unk_06++;
+      break;
+    case 4:
+      gGameState.frames = 0x40;
+      s->unk_06++;
+      /* fallthrough */
+    case 5:
+      if (gGameState.frames != 0x20) {
+        break;
+      }
+      {
+        s32 z = 0;
+        *(u16*)s->unk_00 = z;
+        s->unk_06 = z;
+        return z;
+      }
+  }
+  memcpy(b1, Unicode_SCORE_0810e25c, 6);
+  PrintUnicodeString(b1, 0x12, 0);
+  {
+    u32 score = *(u32*)s->unk_1c;
+    PrintMinigameNumber(score, 0x1b, 0);
+    if (score > (u32)s->unk_24) {
+      s->unk_24 = score;
+    }
+  }
+  memcpy(b2, Unicode_HI_SCORE_0810e264, 9);
+  PrintUnicodeString(b2, 0xf, 1);
+  {
+    register s32 hs asm("r4");
+    hs = s->unk_24;
+    PrintMinigameNumber(hs, 0x1b, 1);
+  }
+  return 1;
+}
 
 bool32 exitCopyXMinigame(struct GameState* g) {
   struct MinigameState* s = &(g->sceneState).mg;
