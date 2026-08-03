@@ -72,7 +72,133 @@ struct Projectile* FUN_080b19ec(struct Entity* e, struct Coord* c, u8 a2) {
   return p;
 }
 
-INCASM("asm/projectile/unk_45_p1_p5.inc");
+void FUN_080b1b28(struct Projectile* p);
+
+// 0x080B1A48
+void FUN_080b1a48(struct Projectile* p) {
+  register u8 fv asm("r1");
+  register s32 w asm("r5");
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 f0 asm("r0");
+    f0 = (p->s).flags;
+    fv = DISPLAY;
+    fv |= f0;
+    f0 = FLIPABLE;
+    fv |= f0;
+    (p->s).flags = fv;
+  }
+  w = (p->s).work[0];
+  if (w == 0) {
+    register s32 one asm("r2");
+    {
+      register u8 k asm("r0");
+      k = 0xEF;
+      fv &= k;
+      (p->s).flags = fv;
+    }
+    one = 1;
+    {
+      register u8* a asm("r0");
+      register u8* b asm("r3");
+      register s32 v asm("r1");
+      register s32 m asm("r0");
+      a = (u8*)p + 0x4c;
+      *a = w;
+      b = (u8*)p + 0x4a;
+      v = *b;
+      m = 0x11;
+      m = -m;
+      m &= v;
+      *b = m;
+    }
+    {
+      u32 tbl = (u32)gProjectileFnTable;
+      EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+      *(u32*)((p->s).mode) = one;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    (p->s).mode[1] = w;
+    (p->s).mode[2] = w;
+    (p->s).mode[3] = w;
+  } else if (w == 1) {
+    register s32 z asm("r2");
+    z = 0;
+    {
+      register u8 k asm("r0");
+      k = 0xEF;
+      fv &= k;
+      (p->s).flags = fv;
+    }
+    {
+      register u8* a asm("r0");
+      register u8* b asm("r3");
+      register s32 v asm("r1");
+      register s32 m asm("r0");
+      a = (u8*)p + 0x4c;
+      *a = z;
+      b = (u8*)p + 0x4a;
+      v = *b;
+      m = 0x11;
+      m = -m;
+      m &= v;
+      *b = m;
+    }
+    {
+      u32 tbl = (u32)gProjectileFnTable;
+      EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+      *(u32*)((p->s).mode) = w;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    (p->s).mode[1] = w;
+    (p->s).mode[2] = z;
+    (p->s).mode[3] = z;
+  } else {
+    register s32 z asm("r2");
+    register s32 one asm("r3");
+    if (w != 2) {
+      asm("" : "+r"(w));
+      if (w != 3) {
+        goto tail;
+      }
+    }
+    z = 0;
+    {
+      register u8 k asm("r0");
+      k = 0xEF;
+      fv &= k;
+      (p->s).flags = fv;
+    }
+    one = 1;
+    {
+      register u8* a asm("r0");
+      register u8* b;
+      register s32 v asm("r1");
+      register s32 m asm("r0");
+      a = (u8*)p + 0x4c;
+      *a = z;
+      b = (u8*)p + 0x4a;
+      v = *b;
+      m = 0x11;
+      m = -m;
+      m &= v;
+      *b = m;
+    }
+    {
+      u32 tbl = (u32)gProjectileFnTable;
+      EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+      *(u32*)((p->s).mode) = one;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    (p->s).mode[1] = w;
+    (p->s).mode[2] = z;
+    (p->s).mode[3] = z;
+  }
+tail:
+  (p->s).work[2] = 0xFF;
+  *((u8*)p + 0xbc) = 0;
+  FUN_080b1b28(p);
+}
 
 void FUN_080b1b28(struct Projectile* p) {
   (PTR_ARRAY_0836d7cc[(p->s).mode[1]])(p);
