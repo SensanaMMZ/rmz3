@@ -110,7 +110,57 @@ void FUN_080d9308(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/minigame_ninjastar_p2.inc");
+// 0x080D9368
+void FUN_080d9368(struct Solid* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 z = (p->s).mode[2];
+  switch (z) {
+    case 0:
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      (p->s).d.x = z;
+      (p->s).d.y = *(s16*)((u8*)q + 0x2c);
+      SetMotion(&p->s, MOTION(0x86, 0));
+      SET_XFLIP(&p->s, 1);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 cx asm("r3");
+      register s32 cy asm("r2");
+      const s16* tb;
+      s32 a;
+      s32 i;
+      cx = (p->s).unk_coord.x;
+      (p->s).coord.x = cx;
+      asm volatile("" ::: "memory");
+      tb = gSineTable;
+      a = (p->s).d.x;
+      i = a >> 8;
+      cx += tb[(u8)(i + 0x40)] * 48;
+      (p->s).coord.x = cx;
+      cy = (p->s).unk_coord.y;
+      (p->s).coord.y = cy;
+      asm volatile("" ::: "memory");
+      cy += tb[(u8)i] * 8;
+      (p->s).coord.y = cy;
+      if ((p->s).work[2] != 0) {
+        (p->s).d.x = a + (p->s).d.y;
+      } else {
+        (p->s).d.x = a - (p->s).d.y;
+      }
+      if ((*(struct Entity**)((u8*)q + 8))->coord.y < (p->s).coord.y - PIXEL(1)) {
+        (p->s).flags2 |= 8;
+        (p->s).size = &Rect_ARRAY_08371194[1];
+        (p->s).hazardAttr = 1;
+      } else {
+        (p->s).flags2 &= ~8;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 
 // --------------------------------------------
 
