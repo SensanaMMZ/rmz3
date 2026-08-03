@@ -403,7 +403,97 @@ void FUN_08090ee0(struct Enemy* p) {
 
 bool8 FUN_08091068(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/petatria_p1_pre_p3_p6.inc");
+// 0x0809106C
+void FUN_0809106c(struct Enemy* p) {
+  register s32 m2 asm("r6");
+  m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0: {
+      register s32 len asm("r5");
+      s32 dx;
+      s32 dy;
+      dx = (p->s).unk_coord.x - (p->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).unk_coord.y - (p->s).coord.y;
+      (p->s).d.y = dy;
+      dx >>= 2;
+      {
+        s32 a = dx * dx;
+        s32 b;
+        dy >>= 2;
+        b = dy * dy;
+        len = (u32)Sqrt(a + b) << 2;
+      }
+      if (len != 0) {
+        (p->s).d.x = ((p->s).d.x << 8) / len;
+        (p->s).d.y = ((p->s).d.y << 8) / len;
+      }
+      (p->s).d.x = ((p->s).d.x << 9) >> 8;
+      (p->s).d.y = ((p->s).d.y << 9) >> 8;
+      *(s32*)((u8*)p + 0xb4) = len;
+      if ((p->s).d.x > 0) {
+        register s32 one asm("r2");
+        register u8* a4c asm("r0");
+        register u8* a4a asm("r3");
+        register s32 k10 asm("r2");
+        register u8 ov asm("r1");
+        register s32 m asm("r0");
+        one = 1;
+        {
+          register u8 fl asm("r1");
+          register u8 g asm("r0");
+          fl = (p->s).flags;
+          g = 0x10;
+          g |= fl;
+          (p->s).flags = g;
+        }
+        a4c = (u8*)p + 0x4c;
+        *a4c = one;
+        a4a = (u8*)p + 0x4a;
+        k10 = 0x10;
+        ov = *a4a;
+        m = 0x11;
+        m = -m;
+        m &= ov;
+        m |= k10;
+        *a4a = m;
+      } else {
+        register u8* b4c asm("r0");
+        register u8* b4a asm("r2");
+        register u8 ov2 asm("r1");
+        register s32 m2b asm("r0");
+        {
+          register u8 fl2 asm("r1");
+          register u8 g2 asm("r0");
+          fl2 = (p->s).flags;
+          asm("" : "+r"(fl2));
+          g2 = 0xEF;
+          g2 &= fl2;
+          (p->s).flags = g2;
+        }
+        b4c = (u8*)p + 0x4c;
+        *b4c = m2;
+        b4a = (u8*)p + 0x4a;
+        ov2 = *b4a;
+        m2b = 0x11;
+        m2b = -m2b;
+        m2b &= ov2;
+        *b4a = m2b;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32* q;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      q = (s32*)((u8*)p + 0xb4);
+      *q += -0x200;
+      break;
+    }
+  }
+}
 
 bool8 FUN_08091150(struct Enemy* p) { return TRUE; }
 
