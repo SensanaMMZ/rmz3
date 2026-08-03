@@ -217,7 +217,81 @@ void FUN_080c2364(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_58_post_p2_a.inc");
+// 0x080C2390
+void FUN_080c2390(struct VFX* p) {
+  s32 msk;
+  register u32 k asm("r8");
+  {
+    u8 w;
+    s32 t0 = (p->s).work[2] - 1;
+    (p->s).work[2] = t0;
+    msk = 0xFF;
+    w = t0;
+    if (w == 0) {
+      (p->s).mode[1] = 6;
+      (p->s).mode[2] = w;
+      return;
+    }
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u32* rp asm("r6");
+      register u32 sv asm("r5");
+      register u32 t asm("r0");
+      u32 r;
+      u16* mp;
+      rp = &RNG_0202f388;
+      t = *rp;
+      k = 0x343FD;
+      {
+        register u32 m asm("r1");
+        m = k;
+        m *= t;
+        asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(m));
+      }
+      t += 0x269EC3;
+      t <<= 1;
+      sv = t >> 1;
+      *rp = sv;
+      r = (t >> 17) % 0xFF;
+      (p->s).work[3] = r;
+      (p->s).angle = r & msk;
+      *(u16*)((u8*)p + 0x50) = 0x80;
+      *(u16*)((u8*)p + 0x52) = 0x80;
+      mp = (u16*)((u8*)p + 0x80);
+      if (*mp == 0xC02) {
+        t = k;
+        t *= sv;
+        t += 0x269EC3;
+        t <<= 1;
+        *rp = t >> 1;
+        if ((t >> 17) & 1) {
+          SetMotion(&p->s, 0xC00);
+        } else {
+          SetMotion(&p->s, 0xC01);
+        }
+      } else {
+        SetMotion(&p->s, *mp);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 dx = (p->s).d.x;
+      dx += (-dx * 12) >> 8;
+      (p->s).d.x = dx;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+  asm volatile("" : "+l"(msk));
+}
 
 #include "motion.h"
 
