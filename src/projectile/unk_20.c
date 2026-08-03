@@ -74,6 +74,77 @@ void FUN_080a5148(struct Projectile* p) {
   }
 }
 
+// 0x080A51B4
+void FUN_080a51b4(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 xf asm("r2");
+      SetDDP(&p->body, (const struct Collision*)0x0836BAD0);
+      InitNonAffineMotion(&p->s);
+      {
+        register s32 qf asm("r0");
+        register s32 one asm("r0");
+        qf = q->flags;
+        xf = qf >> 4;
+        one = 1;
+        xf &= one;
+      }
+      if (xf != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+      {
+        register s32 v asm("r1");
+        u8* oa;
+        s32 sh4, ov, m11;
+        asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(xf));
+        ((p->s).spr).xflip = v;
+        oa = (u8*)p + 0x4a;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      SetMotion(&p->s, 0x4900);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      u32* w;
+      u8 z;
+      *(s32*)((u8*)p + 0xb8) += 0x200;
+      FUN_080a4fa4(p);
+      UpdateMotionGraphic(&p->s);
+      {
+        u8* tc = (u8*)p + 0x25;
+        z = 0;
+        *tc = 0x17;
+      }
+      w = (u32*)((u8*)q + 0xc0);
+      if (*w & 2) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = z;
+      }
+      if (*w & 8) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = z;
+      }
+      if (*w & 0x20) {
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = z;
+      }
+      if (*w & 0x80) {
+        (p->s).mode[1] = 9;
+        (p->s).mode[2] = z;
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/projectile/unk_20_post.inc");
 
 void FUN_080a53e8(struct Projectile* p) {
