@@ -494,6 +494,102 @@ void FUN_080894a4(struct Enemy* p) {
   FUN_08088bc8(p, FUN_0800a40c((p->s).coord.x, (p->s).coord.y + (0x80 << 3)), 0x80 << 4);
 }
 
+// 0x0808959C
+void FUN_0808959c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 v asm("r2");
+      register s32 f asm("r1");
+      register s32 w asm("r0");
+      {
+        register s32 c0 asm("r0");
+        c0 = -0x180;
+        (p->s).d.x = c0;
+        v = c0;
+      }
+      {
+        register s32 t asm("r0");
+        register s32 fv asm("r1");
+        fv = (p->s).flags;
+        t = 0x10;
+        t &= fv;
+        asm("" : "+r"(t));
+        t <<= 24;
+        f = (u32)t >> 24;
+      }
+      if (f != 0) {
+        v = 0xC0 << 1;
+      }
+      (p->s).d.x = v;
+      w = -0xA00;
+      (p->s).unk_coord.x = w;
+      if (f != 0) {
+        w = 0xA0 << 4;
+      }
+      (p->s).unk_coord.x = w;
+      SetDDP(&p->body, &sCollisions[2]);
+      SetMotion(&p->s, MOTION(0xDD, 5));
+      (p->s).work[2] = 0x5A;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 d asm("r3");
+      register s32 sign asm("r2");
+      s32 t2;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32* b8p = (s32*)((u8*)p + 0xb8);
+        register s32 b8 asm("r0");
+        register s32 cx asm("r1");
+        asm("" : "+r"(b8p));
+        cx = (p->s).coord.x;
+        b8 = *b8p;
+        d = cx - b8;
+      }
+      sign = (u32)d >> 31;
+      if (((p->s).flags & 0x10) == 0) {
+        goto neg;
+      }
+      if (sign == 0) {
+        goto chk;
+      }
+      goto tick;
+    neg:
+      if (sign == 0) {
+        goto tick;
+      }
+    chk : {
+        register s32 a asm("r1");
+        a = d;
+        if (a < 0) {
+          a = -a;
+        }
+        if (a > (0xA0 << 8)) {
+          (p->s).mode[1] = 2;
+          (p->s).mode[2] = 0;
+          break;
+        }
+      }
+    tick:
+      t2 = (p->s).work[2] - 1;
+      (p->s).work[2] = t2;
+      if ((t2 << 24) == 0) {
+        goto hit;
+      }
+      if (((u16)FUN_080098a4((p->s).coord.x + (p->s).unk_coord.x, (p->s).coord.y + -0x800) << 16) == 0) {
+        goto cont;
+      }
+    hit:
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = 0;
+    cont:
+      FUN_08088bc8(p, (p->s).d.x + FUN_0800a40c((p->s).coord.x, (p->s).coord.y + (0x80 << 3)), 0x80 << 4);
+      break;
+    }
+  }
+}
+
 INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p1b.inc");
 
 struct Projectile* CreateLemon(struct Coord* c, s32 r1, u8 r2);
