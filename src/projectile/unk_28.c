@@ -400,7 +400,120 @@ void FUN_080aa120(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_28_p2_p2.inc");
+// 0x080AA15C
+void FUN_080aa15c(struct Sprite* spr, struct DrawPivot* dp) {
+  register struct Coord* lt asm("r3");
+  struct Entity* e;
+  register s32 cx asm("r4");
+  register s32 ay asm("r6");
+  register u16 x1 asm("r5");
+  register u16 x2 asm("r2");
+  register u16 y1 asm("r6");
+  register u16 y2 asm("r4");
+  register s32 t asm("r0");
+  lt = &dp->lefttop;
+  e = (struct Entity*)spr->sprites;
+  if (e->mode[0] > 1) {
+    return;
+  }
+  t = e->coord.x;
+  t -= dp->lefttop.x;
+  asm("" : "+r"(t));
+  cx = t >> 8;
+  t = *(s32*)((u8*)e + 0xb8);
+  t -= lt->y;
+  asm("" : "+r"(t));
+  t >>= 8;
+  asm("" : "+r"(t));
+  ay = t;
+  ay -= 0x20;
+  if (((e->work[3]) & 3) > 1) {
+    PALETTE16(0) = 0x7FFF;
+  } else {
+    PALETTE16(0) = 0x3FF;
+  }
+  t = *(s32*)((u8*)e + 0xb4);
+  t -= lt->x;
+  t <<= 8;
+  x1 = ((u32)t) >> 16;
+  t = cx << 16;
+  asm("" : "+r"(t));
+  x2 = ((u32)t) >> 16;
+  {
+    s32 a = x1 << 16;
+    s32 b = x2 << 16;
+    if (a > b) {
+      x1 = ((u32)b) >> 16;
+      x2 = ((u32)a) >> 16;
+    }
+  }
+  {
+    s32 v = (s16)x1;
+    if (v < 0) {
+      x1 = 0;
+    } else if (v > 0xf0) {
+      x1 = 0xf0;
+    }
+  }
+  {
+    s32 v = (s16)x2;
+    if (v < 0) {
+      x2 = 0;
+    } else if (v > 0xf0) {
+      x2 = 0xf0;
+    }
+  }
+  {
+    register s32 c1 asm("r1");
+    register s32 c2 asm("r0");
+    c1 = ay - 8;
+    asm("" : "+r"(c1));
+    c1 <<= 16;
+    c2 = ay + 8;
+    asm("" : "+r"(c2));
+    c2 <<= 16;
+    y2 = ((u32)c2) >> 16;
+    y1 = ((u32)c1) >> 16;
+    c1 >>= 16;
+    if (c1 < 0) {
+      y1 = 0;
+    } else if (c1 > 0xa0) {
+      y1 = 0xa0;
+    }
+  }
+  {
+    s32 v = (s16)y2;
+    if (v < 0) {
+      y2 = 0;
+    } else if (v > 0xa0) {
+      y2 = 0xa0;
+    }
+  }
+  {
+    register struct WramWindowRegister* w asm("r3");
+    register s32 msk asm("r2");
+    w = &gWindowRegBuffer;
+    {
+      register s32 h asm("r1");
+      register s32 sh asm("r0");
+      h = (s16)x2;
+      msk = 0xff;
+      h &= msk;
+      sh = (s16)x1 << 8;
+      h |= sh;
+      w->winH.half[1] = h;
+    }
+    {
+      register s32 h2 asm("r0");
+      register s32 sh2 asm("r1");
+      h2 = (s16)y2;
+      h2 &= msk;
+      sh2 = (s16)y1 << 8;
+      h2 |= sh2;
+      w->winV.half[1] = h2;
+    }
+  }
+}
 
 // --------------------------------------------
 
