@@ -98,6 +98,127 @@ void nop_0807a6f8(struct Enemy* p) {}
 
 INCASM("asm/enemy/deathtanz_rock_p3.inc");
 
+// 0x0807A89C
+void FUN_0807a89c(struct Enemy* p) {
+  register struct Entity* q asm("r5");
+  q = (p->s).unk_28;
+  if (q->mode[0] > 1) {
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    (p->s).mode[1] = 0;
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 k10 asm("r3");
+      register s32 z asm("r1");
+      register s32 w2 asm("r2");
+      {
+        register u8 f2 asm("r0");
+        f2 = (p->s).flags2;
+        k10 = 0x10;
+        z = 0;
+        asm volatile("" : "+r"(z));
+        f2 |= k10;
+        (p->s).flags2 = f2;
+      }
+      (p->s).invincibleID = q->uniqueID;
+      w2 = (p->s).work[2];
+      if (w2 != 0) {
+        register u8 g asm("r0");
+        g = (p->s).flags;
+        g |= k10;
+        (p->s).flags = g;
+      } else {
+        register u8 fl asm("r1");
+        register u8 g2 asm("r0");
+        fl = (p->s).flags;
+        asm("" : "+r"(fl));
+        g2 = 0xEF;
+        g2 &= fl;
+        (p->s).flags = g2;
+      }
+      {
+        register s32 xf asm("r1");
+        u8* oa;
+        s32 sh4, ov, m11;
+        xf = 1;
+        xf &= w2;
+        *((u8*)p + 0x4c) = xf;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      {
+        register const u16* tb asm("r1");
+        register u32 ix asm("r0");
+        tb = (const u16*)0x08367748;
+        asm volatile("" : "+r"(tb));
+        ix = (p->s).work[3];
+        ix <<= 1;
+        {
+          register const u16* e asm("r0");
+          asm volatile("add %0, %1, %2" : "=l"(e) : "l"(ix), "l"(tb));
+          SetMotion(&p->s, *e);
+        }
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8* b4 asm("r3");
+      register u32 w3 asm("r2");
+      {
+        register u32 bv asm("r0");
+        b4 = (u8*)q + 0xb4;
+        bv = *b4;
+        w3 = (p->s).work[3];
+        if (bv == w3) {
+          (p->s).mode[1] = 2;
+          (p->s).mode[2] = 0;
+        }
+      }
+      {
+        register s32 tc asm("r0");
+        register u8* tp asm("r1");
+        register u32 bv2 asm("r3");
+        bv2 = *b4;
+        if (w3 >= bv2) {
+          tp = (u8*)p + 0x25;
+          tc = 0x17;
+        } else {
+          tp = (u8*)p + 0x25;
+          tc = 0x19;
+        }
+        *tp = tc;
+      }
+      {
+        register s32 cy asm("r1");
+        (p->s).coord.x = (q->coord).x;
+        cy = (q->coord).y;
+        (p->s).coord.y = cy;
+        {
+          register const s16* tb2 asm("r2");
+          register u32 ix2 asm("r0");
+          tb2 = (const s16*)0x0836774E;
+          ix2 = (p->s).work[3];
+          ix2 <<= 1;
+          {
+            register const s16* e2 asm("r0");
+            asm volatile("add %0, %1, %2" : "=l"(e2) : "l"(ix2), "l"(tb2));
+            cy += *e2;
+          }
+        }
+        (p->s).coord.y = cy;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 static const u16 u16_ARRAY_08367754[3];
 
 // 0x0807A97C
