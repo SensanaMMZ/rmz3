@@ -82,7 +82,76 @@ struct Elf* CreateBirdElf(struct Zero* z, u8 breed, u8 availability, u8 satelite
   return (struct Elf*)p;
 }
 
-INCASM("asm/cyberelf/bird_p1_b.inc");
+void BirdElf_Update(struct Elf* p);
+
+// 0x080E5998
+void BirdElf_Init(struct Elf* p) {
+  struct Zero* z = ((struct CyberElfBird*)p)->player;
+  struct Rect rr = gZeroRanges[*((u8*)z + 0x147)];
+  register s32 z8 asm("r8");
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  {
+    register s32 c1 asm("r0");
+    register s32 f1 asm("r1");
+    f1 = (p->s).flags;
+    c1 = 1;
+    {
+      register s32 t2 asm("r2");
+      t2 = 0;
+      z8 = t2;
+    }
+    c1 = c1 | f1;
+    c1 |= 2;
+    (p->s).flags = c1;
+  }
+  SetMotion(&p->s, GetElfMotion(1));
+  UpdateMotionGraphic(&p->s);
+  {
+    register u8* xa asm("r0");
+    register s32 xv asm("r1");
+    xa = (u8*)p + 0x4c;
+    xv = z8;
+    *xa = xv;
+  }
+  {
+    u8* oa = (u8*)&((p->s).spr).oam + 6;
+    s32 ov = *oa;
+    s32 m11 = -0x11;
+    asm("" : "+r"(m11));
+    *oa = m11 & ov;
+    (p->s).flags &= 0xEF;
+    {
+      s32 nx = (z->s).coord.x + rr.x;
+      (p->s).coord.x = nx;
+      (p->s).coord.y = (z->s).coord.y + rr.y;
+      *(s32*)&((struct CyberElfBird*)p)->unk_b8[0] = nx;
+      *(s32*)&((struct CyberElfBird*)p)->unk_b8[4] = (p->s).coord.y;
+    }
+    asm("" : "+r"(oa));
+    oa += 0x78;
+    asm("" : "+r"(oa));
+    {
+      s32 zz = 0;
+      asm volatile("" : "+r"(zz));
+      {
+        register s32 k2 asm("r0");
+        k2 = 0x200;
+        *(u16*)oa = k2;
+      }
+      ((struct CyberElfBird*)p)->unk_b8[8] = zz;
+    }
+  }
+  ((struct CyberElfBird*)p)->unk_b8[9] = 0x20;
+  {
+    register s32 u2 asm("r2");
+    u2 = z8;
+    (p->s).unk_2c = (struct Entity*)u2;
+  }
+  SET_ELF_ROUTINE(p, ENTITY_UPDATE);
+  BirdElf_Update(p);
+}
+
 
 struct Entity* FUN_080bfc94(struct Coord* c, u8 r1);
 
