@@ -1218,6 +1218,104 @@ void glacierle_080595ec(struct Boss* p) {
 
 INCASM("asm/boss/glacierle_c.inc");
 
+static const struct Coord sExplosionCoords[2];
+struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
+
+// 0x080597A0
+void glacierleDeath0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r5");
+      register struct StageRun* sr asm("r3");
+      register s32 v asm("r2");
+      {
+        u8* a = (u8*)p + 0x8c;
+        s32 z = 0;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFB;
+        g &= h;
+        (p->s).flags = g;
+      }
+      sr = &gStageRun;
+      v = sr->missionStatus;
+      one = 1;
+      {
+        s32 t = one;
+        t &= v;
+        if (t != 0) {
+          register s32 a2 asm("r1");
+          register s32 u asm("r0");
+          a2 = (sr->vm).active;
+          u = one;
+          u &= a2;
+          if (u == 0) {
+            s32 w = 0xFFFE;
+            s32 k;
+            w &= v;
+            k = 0x10;
+            w |= k;
+            sr->missionStatus = w;
+          }
+        }
+      }
+      (p->s).work[2] = 0x50;
+      if ((*(u32*)((u8*)p + 0xb4) & 1) != 0) {
+        SetMotion(&p->s, MOTION(0xB2, 4));
+      } else {
+        SetMotion(&p->s, MOTION(0xB2, 0x1D));
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if (((p->s).scriptEntity->flags & 0x80) == 0) {
+        break;
+      }
+      goto bump;
+    case 2:
+      (p->s).unk_2c = CreateBossExplosion(&p->s, (struct Coord*)sExplosionCoords);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      if (((struct Entity*)(p->s).unk_2c)->mode[0] <= 1) {
+        break;
+      }
+      {
+        register struct StageRun* sr2 asm("r2");
+        register u8 g3 asm("r0");
+        register u8 h3 asm("r1");
+        sr2 = &gStageRun;
+        h3 = (sr2->vm).active;
+        g3 = 2;
+        g3 |= h3;
+        (sr2->vm).active = g3;
+      }
+    bump:
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      break;
+  }
+}
+
+INCASM("asm/boss/glacierle_c2.inc");
+
 // --------------------------------------------
 
 // 0x08363dcc
