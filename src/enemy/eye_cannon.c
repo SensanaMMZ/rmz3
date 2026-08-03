@@ -13,6 +13,7 @@
 static const struct Collision sCollisions[3];
 
 void EyeCannon_Init(struct Enemy* p);
+s32 FUN_0800a134(s32 x, s32 y);
 void EyeCannon_Update(struct Enemy* p);
 void EyeCannon_Die(struct Enemy* p);
 
@@ -86,7 +87,113 @@ void FUN_080847b8(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/eye_cannon_pre_pre_p1_p2.inc");
+s32 FUN_0800a134(s32 x, s32 y);
+void EyeCannon_Update(struct Enemy* p);
+
+// 0x080847F0
+void EyeCannon_Init(struct Enemy* p) {
+  register s32 one asm("r3");
+  register s32 z asm("r4");
+  register u32 tbl asm("r5");
+  tbl = (u32)gEnemyFnTable;
+  {
+    EntityFunc** rt = (EntityFunc**)((((p->s).id) << 2) + tbl);
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  z = 0;
+  (p->s).mode[1] = one;
+  if ((p->s).work[0] != 0) {
+    register u8* gf asm("r1");
+    register u32 v asm("r2");
+    register s32 t asm("r0");
+    {
+      register const u8* tb asm("r2");
+      register u32 idx asm("r0");
+      gf = (u8*)&gCurStory;
+      tb = (const u8*)0x08368358;
+      asm volatile("" : "+r"(gf));
+      asm volatile("" : "+r"(tb));
+      idx = (p->s).work[0];
+      idx -= 1;
+      idx <<= 2;
+      {
+        register const u32* ta asm("r0");
+        asm volatile("add %0, %1, %2" : "=l"(ta) : "l"(idx), "l"(tb));
+        v = *ta;
+      }
+    }
+    t = v >> 3;
+    gf += 4;
+    {
+      register u8* ea asm("r0");
+      asm volatile("add %0, %1, %2" : "=l"(ea) : "l"(t), "l"(gf));
+      t = *ea;
+    }
+    {
+      register u32 sev asm("r1");
+      sev = 7;
+      v &= sev;
+    }
+    t >>= v;
+    t &= one;
+    if (t != 0) {
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        h = 0xFD;
+        g &= h;
+        (p->s).flags = g;
+      }
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= 0xFB;
+      {
+        EntityFunc** rt2 = (EntityFunc**)((((p->s).id) << 2) + tbl);
+        *(u32*)((p->s).mode) = 3;
+        (p->s).onUpdate = (void*)((*rt2)[3]);
+      }
+      return;
+    }
+  }
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    register s32 z5 asm("r5");
+    struct Body* body;
+    fl = (p->s).flags;
+    fv = FLIPABLE;
+    z5 = 0;
+    fv |= fl;
+    fl = DISPLAY;
+    fv |= fl;
+    (p->s).flags = fv;
+    InitNonAffineMotion(&p->s);
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x08368310, &(p->s).coord, 7);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)0x08084705;
+    *(u32*)((u8*)p + 0xb4) = z5;
+    (p->s).coord.y = FUN_0800a134((p->s).coord.x, (p->s).coord.y);
+    EyeCannon_Update(p);
+  }
+}
 
 void EyeCannon_Update(struct Enemy* p) {
   if (!FUN_08084708(p)) {
