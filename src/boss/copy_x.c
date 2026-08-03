@@ -723,7 +723,106 @@ void copyxMode6(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p1_post.inc");
+void createCopyXSonicBoom(struct Entity* e, u8 w0, u8 w1);
+
+// 0x08055CDC
+void copyxMode7(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    register s32 xf asm("r3");
+    register struct Zero* z asm("r2");
+    SetMotion(&p->s, 0xB30F);
+    xf = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      xf = 1;
+    }
+    ((p->s).spr).xflip = xf;
+    xf = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      xf = 1;
+    }
+    {
+      register u8* oa asm("ip");
+      s32 sh4, ov, m11;
+      oa = (u8*)p + 0x4a;
+      sh4 = xf << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+    if (xf != 0) {
+      (p->s).flags |= 0x10;
+    } else {
+      register u8 h asm("r1");
+      register u8 g asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xEF;
+      g &= h;
+      (p->s).flags = g;
+    }
+    (p->s).mode[2] = 0;
+    {
+      register s32 k10 asm("r2");
+      register u8 fl asm("r1");
+      register s32 t asm("r0");
+      fl = (p->s).flags;
+      k10 = 0x10;
+      t = k10;
+      t &= fl;
+      if (t != 0) {
+        register u16* h asm("r1");
+        register s32 vv asm("r0");
+        (p->s).d.x = 0x400;
+        h = (u16*)((u8*)p + 0xc8);
+        vv = 0xFFF0;
+        *h = vv;
+      } else {
+        register u16* h2 asm("r0");
+        (p->s).d.x = -0x400;
+        h2 = (u16*)((u8*)p + 0xc8);
+        *h2 = k10;
+      }
+    }
+    (p->s).work[2] = 0x28;
+    createCopyXSonicBoom(&p->s, 0, 0);
+    SetDDP(&p->body, &sCollisions[8]);
+    PlaySound(0x4C);
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 dx asm("r1");
+    {
+      register s32 cx asm("r0");
+      cx = (p->s).coord.x;
+      dx = (p->s).d.x;
+      cx += dx;
+      (p->s).coord.x = cx;
+    }
+    dx += *(s16*)((u8*)p + 0xc8);
+    (p->s).d.x = dx;
+    if (dx < 0) {
+      dx = -dx;
+    }
+    if (dx <= 0x2BF) {
+      if ((p->s).flags & 0x10) {
+        (p->s).d.x = 0x2C0;
+      } else {
+        (p->s).d.x = -0x2C0;
+      }
+    }
+  }
+  {
+    s32 t = (p->s).work[2] - 1;
+    (p->s).work[2] = t;
+    if ((u8)t == 0xFF) {
+      (p->s).mode[1] = 8;
+      (p->s).mode[2] = 1;
+    }
+  }
+}
 
 void copyxMode8(struct Boss* p) {
   if ((p->s).mode[2] != 0) {
