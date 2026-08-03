@@ -693,7 +693,165 @@ void FUN_0806f1dc(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/lemmingles_p2_p2_p2c.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b834c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_080b84f4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+
+// 0x0806F274
+// Blocker: agbcc emits the two-case dispatch as `cmp #1 / bne .+2 / b case1`
+// where retail has `cmp #1 / beq case1` -- a conditional-branch range
+// decision, not something the source controls. Instruction counts and the
+// ROM size otherwise match exactly. 8 lever rounds (switch vs if/else vs
+// goto; the if/else form drags in r8).
+NON_MATCH void FUN_0806f274(struct Enemy* p) {
+#if MODERN
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 f;
+      register s32 k asm("r6");
+      register s32 z5 asm("r5");
+      struct Coord c;
+      {
+        register s32 t3 asm("r3");
+        t3 = 0;
+        if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+          t3 = 1;
+        }
+        f = t3;
+        asm("" : "+l"(f));
+      }
+      k = 0;
+      {
+        u8 w0 = (p->s).work[0];
+        if (w0 == 1) {
+          goto setk;
+        }
+        if (w0 != 3) {
+          goto donek;
+        }
+      setk:
+        k = 1;
+      donek:;
+      }
+      {
+        register s32 mv asm("r1");
+        mv = MOTION(0x1D, 0x12);
+        if (k != 0) {
+          mv -= 2;
+        }
+        ((void (*)(struct Entity*, s32))SetMotion)(&p->s, mv);
+      }
+      {
+        u8* a = (u8*)p + 0x8c;
+        z5 = 0;
+        *(s32*)a = z5;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z5;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z5;
+      }
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFB;
+        g &= h;
+        (p->s).flags = g;
+      }
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      ((void (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(0, &c, 0x80 << 2, f);
+      c.x = (p->s).d.x / 4;
+      c.y = z5;
+      {
+        register s32 g0 asm("r0");
+        register s32 g1 asm("r1");
+        g0 = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+        g1 = g0;
+        asm("" : "+r"(g1));
+        g0 = (p->s).coord.y;
+        g0 = g1 - g0;
+        if (g0 <= 0x3FF) {
+          goto low;
+        }
+      }
+      {
+        (p->s).unk_coord.y = 0x20;
+        asm volatile("" ::: "memory");
+        {
+          register s32 idx asm("r0");
+          register const motion_t* base asm("r2");
+          register struct Coord* cp asm("r1");
+          register motion_t* mp asm("r0");
+          cp = &(p->s).coord;
+          asm("" : "+r"(cp));
+          idx = k << 1;
+          base = &sMotions[11];
+          asm volatile("add %0, %1, %2" : "=l"(mp) : "l"(idx), "l"(base));
+          ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b84f4)(&p->s, cp, &c, 0x15, mp, 0x18);
+        }
+        goto done0;
+      }
+    low : {
+        (p->s).unk_coord.y = z5;
+        asm volatile("" ::: "memory");
+        {
+          register s32 idx2 asm("r0");
+          register const motion_t* base2 asm("r2");
+          register struct Coord* cp2 asm("r1");
+          register motion_t* mp2 asm("r0");
+          cp2 = &(p->s).coord;
+          asm("" : "+r"(cp2));
+          idx2 = k << 1;
+          base2 = &sMotions[11];
+          asm volatile("add %0, %1, %2" : "=l"(mp2) : "l"(idx2), "l"(base2));
+          ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b834c)(&p->s, cp2, &c, 0, mp2, 0x18);
+        }
+      }
+    done0:
+      (p->s).d.x = (p->s).d.x / 10;
+      (p->s).d.y = 0;
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 uy;
+      UpdateMotionGraphic(&p->s);
+      uy = (p->s).unk_coord.y;
+      if (uy != 0) {
+        s32 v = (p->s).d.y + uy;
+        s32 r;
+        (p->s).d.y = v;
+        if (v > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        (p->s).coord.y += (p->s).d.y;
+        r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (r < 0) {
+          (p->s).coord.y += r;
+        }
+      }
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+          FUN_0806f1dc(p);
+        }
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/lemmingles_p2_p2_p2c.inc");
+#endif
+}
 
 // --------------------------------------------
 
