@@ -522,7 +522,75 @@ void FUN_0808fb10(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/seimeran_p2_p3b.inc");
+// 0x0808FC10
+void FUN_0808fc10(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 w asm("r2");
+      SetDDP(&p->body, (const struct Collision*)0x08369554);
+      w = (p->s).work[2];
+      if (w != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+      {
+        register s32 xf asm("r1");
+        u8* oa;
+        s32 sh4, ov, m11;
+        xf = 1;
+        xf &= w;
+        (p->s).spr.xflip = xf;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      {
+        register s32 wv asm("r1");
+        register s32 t asm("r0");
+        wv = (p->s).work[2];
+        t = wv << 1;
+        t += wv;
+        t <<= 8;
+        wv = -0x180;
+        asm("" : "+r"(wv));
+        t += wv;
+        (p->s).d.x = t;
+      }
+      (p->s).work[3] = Sqrt(0x200);
+      (p->s).d.y = -((p->s).work[3] << 6);
+      SetMotion(&p->s, MOTION(0x77, 0x0B));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 lim asm("r2");
+      register s32 ny asm("r1");
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x40;
+      lim = 0x700;
+      if ((p->s).d.y > lim) {
+        (p->s).d.y = lim;
+      }
+      {
+        register s32 dv asm("r0");
+        ny = (p->s).coord.y;
+        dv = (p->s).d.y;
+        ny += dv;
+        (p->s).coord.y = ny;
+      }
+      if (((bool16 (*)(s32, s32))FUN_080098a4)((p->s).coord.x, ny + lim)) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = 0;
+      }
+      break;
+    }
+  }
+}
 
 #include "mission.h"
 #include "vfx.h"
