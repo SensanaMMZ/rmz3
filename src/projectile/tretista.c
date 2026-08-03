@@ -65,7 +65,115 @@ struct Projectile* FUN_080a374c(struct Entity* e, struct Coord* c, u8 a2) {
   return p;
 }
 
-INCASM("asm/projectile/tretista_pre_p5.inc");
+void TretistaProjectile_Update(struct Projectile* p);
+
+// 0x080A37A4
+void TretistaProjectile_Init(struct Projectile* p) {
+  register s32 z5 asm("r5");
+  register struct Body* body asm("r4");
+  register const struct Collision* coll asm("r1");
+  register s32 hp asm("r3");
+  register struct Coord* co asm("r2");
+  register struct Body* b0 asm("r0");
+  z5 = (p->s).work[0];
+  if (z5 == 0) {
+    InitNonAffineMotion(&p->s);
+    {
+      register u8* a asm("r0");
+      register s32 k asm("r1");
+      a = (u8*)p + 0x24;
+      *a = z5;
+      asm("" : "+r"(a));
+      a += 0x2c;
+      asm("" : "+r"(a));
+      k = 0x100;
+      *(u16*)a = k;
+      asm("" : "+r"(a));
+      a += 2;
+      asm("" : "+r"(a));
+      *(u16*)a = k;
+    }
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    coll = (const struct Collision*)0x0836B4F4;
+    goto setup1;
+  }
+  if (z5 == 1) {
+    {
+      register u8* tc asm("r1");
+      register s32 v19 asm("r0");
+      tc = (u8*)p + 0x25;
+      z5 = 0;
+      v19 = 0x19;
+      *tc = v19;
+    }
+    InitNonAffineMotion(&p->s);
+    (p->s).flags |= COLLIDABLE;
+    body = &p->body;
+    coll = (const struct Collision*)0x0836B50C;
+    co = &(p->s).coord;
+    b0 = body;
+    hp = 0x20;
+    goto docall;
+  }
+  if (z5 == 2) {
+    InitNonAffineMotion(&p->s);
+    (p->s).unk_2c = NULL;
+    goto after;
+  }
+  if (z5 != 3) {
+    goto after;
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    asm("" : "+r"(fl));
+    fv = 4;
+    z5 = 0;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  body = &p->body;
+  coll = (const struct Collision*)0x0836B9A4;
+setup1:
+  co = &(p->s).coord;
+  b0 = body;
+  hp = 1;
+docall:
+  ((void (*)(struct Body*, const struct Collision*, struct Coord*, s32))InitBody)(b0, coll, co, hp);
+  body->parent = (struct CollidableEntity*)p;
+  body->fn = (BodyFunc)z5;
+after : {
+  register s32 z4 asm("r4");
+  {
+    register u8 fv2 asm("r0");
+    register u8 fl2 asm("r1");
+    fl2 = (p->s).flags;
+    asm("" : "+r"(fl2));
+    fv2 = 1;
+    z4 = 0;
+    fv2 |= fl2;
+    fl2 = 2;
+    fv2 |= fl2;
+    (p->s).flags = fv2;
+  }
+  ResetDynamicMotion(&p->s);
+  *(s32*)((u8*)p + 0xc0) = z4;
+  (p->s).work[2] = 0xFF;
+  {
+    u32 tbl = (u32)gProjectileFnTable;
+    EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+    *(u32*)((p->s).mode) = 1;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  (p->s).mode[1] = z4;
+  (p->s).mode[2] = z4;
+  (p->s).mode[3] = z4;
+}
+  TretistaProjectile_Update(p);
+}
 
 void TretistaProjectile_Update(struct Projectile* p) {
   (PTR_ARRAY_0836b4e4[(p->s).work[0]][(p->s).mode[1]])(p);
