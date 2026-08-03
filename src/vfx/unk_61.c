@@ -160,7 +160,83 @@ void VFX61_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_61_post.inc");
+// 0x080C3108
+void FUN_080c3108(struct VFX* p) {
+  register s32 z asm("r5");
+  if ((u8)--(p->s).work[2] == 0) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  z = (p->s).mode[2];
+  switch (z) {
+    case 0:
+      (p->s).taskCol = 0x17;
+      SetMotion(&p->s, 0x6B03);
+      (p->s).d.x = z;
+      (p->s).d.y = z;
+      (p->s).unk_coord.x = (s32)(RANDOM(RNG_0202f388) & 0x7F) - 0x40;
+      (p->s).work[2] = 0x32;
+      (p->s).work[3] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 w3 asm("r1");
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[3];
+        asm volatile("add %0, %1, #1" : "=&l"(w3) : "l"(t));
+      }
+      z = 0;
+      (p->s).work[3] = w3;
+      if ((p->s).work[2] > 0x14) {
+        w3 &= 1;
+        if (w3 == 0) {
+          goto clr;
+        }
+        (p->s).flags |= 1;
+        goto done;
+      }
+      if ((u8)((p->s).work[3] % 3) != 0) {
+        goto clr;
+      }
+      (p->s).flags |= 1;
+      goto done;
+    clr:
+      (p->s).flags &= 0xFE;
+    done:
+      {
+        register s32 tgt asm("r1");
+        tgt = (p->s).unk_coord.x;
+        if (tgt > 0) {
+          s32 dx = (p->s).d.x + 8;
+          (p->s).d.x = dx;
+          if (dx > tgt) {
+            (p->s).d.x = tgt;
+          }
+        } else {
+          s32 dx = (p->s).d.x;
+          dx -= 8;
+          dx += tgt;
+          (p->s).d.x = dx;
+          if (dx < tgt) {
+            (p->s).d.x = tgt;
+          }
+        }
+      }
+      {
+        s32 dy = (p->s).d.y + 8;
+        (p->s).d.y = dy;
+        if (dy > 0x100) {
+          (p->s).d.y = 0x100;
+        }
+      }
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_080c3214(struct VFX* p) {
   s32 t = (p->s).work[2] - 1;
