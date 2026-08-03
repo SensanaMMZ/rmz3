@@ -580,7 +580,84 @@ void copyxMode4(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p1.inc");
+struct Entity* CreateVFX52(struct Entity* e);
+static const struct Collision sCollisions[];
+
+// 0x08055B2C
+void copyxMode5(struct Boss* p) {
+  if ((p->s).mode[2] != 0) {
+    register s32 f asm("r3");
+    register struct Zero* z asm("r2");
+    SetMotion(&p->s, MOTION(0xB3, 0));
+    (p->s).mode[2] = 0;
+    f = 0;
+    z = pZero2;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      f = 1;
+    }
+    ((p->s).spr).xflip = f;
+    f = 0;
+    if ((z->s).coord.x > (p->s).coord.x) {
+      f = 1;
+    }
+    {
+      u8* a = (u8*)p + 0x4a;
+      s32 sh = f << 4;
+      u8 ov = *a;
+      s32 m = -0x11;
+      m &= ov;
+      m |= sh;
+      *a = m;
+    }
+    {
+      register u8 nf asm("r0");
+      if (f != 0) {
+        register u8 kk asm("r1");
+        nf = (p->s).flags;
+        kk = 0x10;
+        nf |= kk;
+      } else {
+        register u8 fl asm("r1");
+        fl = (p->s).flags;
+        asm("" : "+r"(fl));
+        nf = 0xEF;
+        nf &= fl;
+      }
+      (p->s).flags = nf;
+    }
+    (p->s).work[2] = 0x20;
+    (p->s).unk_2c = CreateVFX52(&p->s);
+    SetDDP(&p->body, &sCollisions[4]);
+    PlaySound(0x45);
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((u8)--(p->s).work[2] == 0xFF) {
+    register s32 one asm("r1");
+    struct Entity* q = (p->s).unk_2c;
+    s16 hp;
+    one = 1;
+    *((u8*)q + 0x11) = one;
+    (p->s).unk_2c = NULL;
+    {
+      u8 mv = (p->s).mode[3];
+      u8* c5 = (u8*)p + 0xc5;
+      *c5 = mv;
+    }
+    (p->s).mode[1] = 3;
+    (p->s).mode[2] = one;
+    one = 2;
+    (p->s).mode[3] = one;
+    hp = *(s16*)((u8*)p + 0xa4);
+    if (hp <= 0x1F) {
+      (p->s).work[2] = 8;
+    } else if (hp <= 0x2F) {
+      (p->s).work[2] = 4;
+    } else {
+      (p->s).work[2] = one;
+    }
+    SetDDP(&p->body, sCollisions);
+  }
+}
 
 // 0x08055C18
 void copyxMode6(struct Boss* p) {
