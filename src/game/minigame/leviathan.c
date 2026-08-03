@@ -165,18 +165,79 @@ bool32 leviathan_minigame_080fbc30(struct GameState* g) {
   return 1;
 }
 
-INCASM("asm/minigame/leviathan_b.inc");
+// 0x080FBCDC
+bool32 leviathan_minigame_080fbcdc(struct GameState* g) {
+  register u8* mg asm("r4");
+  register s32 z asm("r5");
+  mg = (u8*)g + 0xDCC;
+  z = 0;
+  *(u16*)(mg + 0x10) = z;
+  *(u16*)(mg + 0x12) = z;
+  {
+    u8* t = (u8*)g + 0xDFD;
+    if (*t != 0) {
+      *t = *t - 1;
+    }
+  }
+  leviathan_minigame_080fb5dc(g);
+  if (*(s32*)(mg + 0x20) > 0x2A30) {
+    *(s32*)(mg + 0x20) = 0x2A30;
+  }
+  if (*(s32*)(mg + 0x20) <= 0) {
+    *(s32*)(mg + 0x20) = z;
+  }
+  switch (mg[1]) {
+    case 0:
+      fadeoutBGM(0xB6);
+      PlaySound(0xF6);
+      *(mg + 0x33) = 0x3C;
+      mg[1]++;
+      FALLTHROUGH;
+    case 1: {
+      u8* c = mg + 0x33;
+      s32 t = *c - 1;
+      *c = t;
+      t <<= 24;
+      if (t != 0) {
+        break;
+      }
+      goto inc;
+    }
+    case 2:
+      *(void**)(mg + 8) = (void*)CreateMissionAlert(4);
+      mg[1]++;
+      FALLTHROUGH;
+    case 3:
+      if ((*(struct Entity**)(mg + 8))->mode[0] <= 1) {
+        break;
+      }
+    inc:
+      mg[1]++;
+      break;
+    case 4:
+      gGameState.frames = 0x40;
+      mg[1]++;
+      FALLTHROUGH;
+    case 5:
+      if (gGameState.frames != 0x20) {
+        break;
+      }
+      StopSound(0x32);
+      return 0;
+  }
+  return 1;
+}
 
 
 
 bool32 leviathan_minigame_080fbba0(struct GameState* g);
 bool32 leviathan_minigame_080fbc30(struct GameState* g);
-void leviathan_minigame_080fbcdc(struct GameState* g);
+bool32 leviathan_minigame_080fbcdc(struct GameState* g);
 
 const GameLoopFunc LeviathanMinigameLoops[3] = {
     (GameLoopFunc)leviathan_minigame_080fbba0,
     (GameLoopFunc)leviathan_minigame_080fbc30,
-    leviathan_minigame_080fbcdc,
+    (GameLoopFunc)leviathan_minigame_080fbcdc,
 };
 
 const u8 u8_ARRAY_08386bb0[16] = {
