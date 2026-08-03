@@ -1,4 +1,6 @@
 #include "collision.h"
+#include "zero.h"
+#include "trig.h"
 #include "element.h"
 #include "enemy.h"
 #include "global.h"
@@ -284,7 +286,121 @@ void FUN_08078624(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/tile_cannon_p3_post_post.inc");
+extern void __divsi3();
+
+// 0x08078664
+void FUN_08078664(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 m asm("r4");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      InitRotatableMotion(&p->s);
+      SetMotion(&p->s, MOTION(0x2F, 0x06));
+      (p->s).angle = m;
+      (p->s).work[2] = 0x78;
+      (p->s).d.x = m;
+      (p->s).d.y = 0x100;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 dx asm("r4");
+      s32 dy;
+      register s32 h asm("r6");
+      if (IsFrozen(q)) {
+        break;
+      }
+      {
+        register struct Zero* z asm("r1");
+        register s32 cy asm("r0");
+        register s32 k asm("r2");
+        z = pZero2;
+        dx = (z->s).coord.x;
+        dx -= (p->s).coord.x;
+        cy = (p->s).coord.y;
+        k = 0xC0 << 5;
+        cy += k;
+        dy = (z->s).coord.y - cy;
+      }
+      {
+        register s32 a asm("r0");
+        register s32 b asm("r1");
+        a = dx >> 8;
+        asm volatile("add %0, %1, #0" : "=&l"(h) : "l"(a));
+        h *= a;
+        a = dy >> 8;
+        asm volatile("add %0, %1, #0" : "=&l"(b) : "l"(a));
+        b *= a;
+        {
+          register s32 cc asm("r0");
+          asm volatile("add %0, %1, #0" : "=&l"(cc) : "l"(b));
+          h += cc;
+        }
+      }
+      h = (u32)((u16)Sqrt(h) << 16) >> 8;
+      {
+        register s32 ax asm("r0");
+        dx <<= 8;
+        asm volatile("add %0, %1, #0" : "=&l"(ax) : "l"(dx));
+        dx = ((s32 (*)(s32, s32))__divsi3)(ax, h);
+      }
+      dy = ((s32 (*)(s32, s32))__divsi3)(dy << 8, h);
+      {
+        register s32 v asm("r1");
+        register s32 t asm("r0");
+        v = (p->s).d.x;
+        t = dx - v;
+        t /= 8;
+        dx = v + t;
+        (p->s).d.x = dx;
+      }
+      {
+        register s32 w asm("r2");
+        register s32 t2 asm("r0");
+        register s32 nd asm("r1");
+        w = (p->s).d.y;
+        t2 = dy - w;
+        if (t2 < 0) {
+          t2 += 7;
+        }
+        nd = t2 >> 3;
+        asm volatile("add %0, %1, %0" : "+l"(nd) : "l"(w));
+        (p->s).d.y = nd;
+        {
+          register s32 a1 asm("r0");
+          register s32 a2 asm("r1");
+          s32 rr;
+          a1 = dx << 16;
+          a1 >>= 16;
+          a2 = nd << 16;
+          a2 >>= 16;
+          rr = ((s32 (*)(s32, s32))ArcTan2)(a1, a2);
+          rr <<= 16;
+          rr = (u32)rr >> 24;
+          rr -= 0x40;
+          (p->s).angle = rr;
+        }
+      }
+      {
+        register s32 t asm("r1");
+        register s32 u asm("r0");
+        u = (p->s).work[2];
+        u--;
+        (p->s).work[2] = u;
+        u <<= 24;
+        t = (u32)u >> 24;
+        if (t == 0) {
+          (p->s).mode[1] = 6;
+          (p->s).mode[2] = t;
+        }
+      }
+      break;
+    }
+    default:
+      return;
+  }
+  UpdateMotionGraphic(&p->s);
+}
 
 // 0x0807874c -- parked (truncation-idiom basin): retail truncates the
 // work[2] decrement with lsls/lsrs #24 into r1; agbcc emits movs #0xFF +
