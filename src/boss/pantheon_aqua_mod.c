@@ -169,6 +169,69 @@ void paquam_08051b8c(struct Boss* p) {
   }
 }
 
+// 0x08051CDC
+void FUN_08051cdc(struct Boss* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u8* pb asm("r6");
+      ((p->s).spr).xflip = m;
+      {
+        u8* oa = (u8*)&((p->s).spr).oam + 6;
+        s32 ov = *oa;
+        s32 m11 = -0x11;
+        asm("" : "+r"(m11));
+        *oa = m11 & ov;
+      }
+      (p->s).flags &= 0xEF;
+      SetMotion(&p->s, MOTION(0x4D, 0x01));
+      pb = (u8*)p + 0xb8;
+      if (*pb != 0) {
+        RemovePaletteAnimation(*pb);
+        *pb = m;
+      }
+      {
+        u32 g0 = GetEntityPalID(&p->s);
+        u32 g = (u8)g0 << 5;
+        StartPaletteAnimation(0x54, g | 0x200);
+      }
+      *pb = 0x54;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if ((p->s).scriptEntity->flags & 1) {
+        (p->s).mode[2]++;
+      }
+      paquam_080512f8(p);
+      StepPaletteAnimation(*(u8*)((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      (p->s).mode[2] = 3;
+      FALLTHROUGH;
+    case 3: {
+      register s32 av asm("r0");
+      register s32 one asm("r2");
+      register s32 t asm("r1");
+      av = gStageRun.vm.active;
+      one = 1;
+      asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one));
+      t &= av;
+      if (t == 0) {
+        (p->s).mode[1] = t;
+        (p->s).mode[2] = one;
+        (p->s).work[2] = 0x46;
+      }
+      paquam_080512f8(p);
+      StepPaletteAnimation(*(u8*)((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/boss/pantheon_aqua_mod_p2b.inc");
 
 void nop_08051620(struct Boss* p);
