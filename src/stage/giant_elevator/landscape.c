@@ -299,7 +299,45 @@ NON_MATCH void gelevator_08014678(struct StageLayer* l, const struct Stage* stag
 #endif
 }
 
-INCASM("asm/stage_gfx/giant_elevator_p1_a_b.inc");
+// 0x0801478C
+void FUN_0801478c(struct StageLayer* l, const struct Stage* stage) {
+  u16 b = l->bgIdx;
+  switch (l->phase) {
+    case 0:
+      BGCNT16(b >> 4) = l->prio | l->screenBase | 0x44;
+      LoadBgMap(b, gBgMapOffsets, 0x5e, 0, 0);
+      l->unk_10 = 0;
+      l->phase++;
+      FALLTHROUGH;
+    case 1: {
+      const struct TerrainHeader* terrain;
+      if (gOverworld.state[0] <= 9) {
+        break;
+      }
+      terrain = stage->terrainHdr;
+      BGCNT16(b >> 4) = l->screenBase | 0x4046;
+      {
+        Metatile* tiles = (Metatile*)(terrain->tiles + PTR_U32(&terrain->tiles));
+        Screen* screens = (Screen*)(terrain->screens + PTR_U32(&terrain->tiles));
+        ResetLayerGraphic(&l->gfx, &l->viewportCenterPixel, (u16*)(((BGCNT16(l->bgIdx >> 4) & 0x1F00) << 3) + 0x06000000), tiles, screens,
+                          stage->maps[l->type]);
+      }
+      l->prevViewportCenterPixel.y = 0x80000001;
+      l->prevViewportCenterPixel.x = 0x80000001;
+      l->phase++;
+      FALLTHROUGH;
+    }
+    case 2:
+      {
+        u8* ow = (u8*)&gOverworld;
+        s32 k = 0x2D03C;
+        asm("" : "+r"(ow));
+        asm("" : "+r"(k));
+        l->scroll.x = *(s32*)(ow + k) >> 8;
+      }
+      break;
+  }
+}
 
 void giantElevator_08014880(struct StageLayer* p, const struct Stage* _) {
   if (gOverworld.state[0] <= 9) {
