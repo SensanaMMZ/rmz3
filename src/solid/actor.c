@@ -1623,7 +1623,121 @@ NON_MATCH void Actor26_Update(struct Solid* p) {
 #endif
 }
 
-INCASM("asm/solid/actor_p1_p2_a3.inc");
+// 0x080D36B8
+void Actor27_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register u16* g asm("r2");
+      register u16* pl asm("r1");
+      register s32 ix asm("r3");
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      g = wDynamicGraphicTilenums;
+      ix = 0xA4 * 2;
+      asm volatile("add %0, %0, %1" : "+l"(g) : "l"(ix));
+      (p->s).unk_coord.x = *g;
+      pl = wDynamicMotionPalIDs;
+      asm volatile("add %0, %0, %1" : "+l"(pl) : "l"(ix));
+      (p->s).unk_coord.y = *pl;
+      {
+        register s32 t305 asm("r0");
+        t305 = 0x305;
+        *g = t305;
+      }
+      *pl = 9;
+      SetMotion(&p->s, MOTION(0xA4, 0x00));
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        goto upd;
+      }
+      goto setm;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        goto tramp;
+      }
+      break;
+    tramp:
+      asm volatile("");
+      goto inc;
+    case 3:
+      SetMotion(&p->s, MOTION(0xA4, 0x00));
+      SET_XFLIP(&p->s, 0);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 4:
+      if (((p->s).scriptEntity->flags & 1) != 0) {
+        goto upd;
+      }
+    setm:
+      SetMotion(&p->s, MOTION(0xA4, 0x08));
+      (p->s).mode[1]++;
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      goto inc;
+    case 6:
+      SetMotion(&p->s, MOTION(0xA4, 0x00));
+      SET_XFLIP(&p->s, 1);
+      (p->s).work[2] = 0x10;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if ((p->s).work[2] != 0) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xA4, 0x05));
+      (p->s).d.y = -0x500;
+      (p->s).d.x = (p->s).coord.y;
+      goto inc;
+    case 8: {
+      s32 vy;
+      (p->s).coord.x += 0xB8 * 2;
+      (p->s).coord.y += (p->s).d.y;
+      vy = (p->s).d.y + 0x40;
+      (p->s).d.y = vy;
+      if (vy > 0) {
+        if (MOTION_VALUE(p) != MOTION(0xA4, 0x06)) {
+          SetMotion(&p->s, MOTION(0xA4, 0x06));
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+      register s32 kk asm("r1");
+      kk = 0xD0 * 64;
+      if ((p->s).d.x + kk < (p->s).coord.y) {
+        register u16* g2 asm("r0");
+        register s32 ix2 asm("r2");
+        g2 = wDynamicGraphicTilenums;
+        ix2 = 0xA4 * 2;
+        asm volatile("add %0, %0, %1" : "+l"(g2) : "l"(ix2));
+        *g2 = (p->s).unk_coord.x;
+        g2 = wDynamicMotionPalIDs;
+        asm volatile("add %0, %0, %1" : "+l"(g2) : "l"(ix2));
+        *g2 = (p->s).unk_coord.y;
+        (p->s).flags &= ~DISPLAY;
+        goto inc;
+      }
+      }
+      break;
+    }
+    case 9:
+      break;
+  }
+  return;
+inc:
+  (p->s).mode[1]++;
+}
+
 
 // 0x080d38a4
 void initActor28(struct Solid* p) {
