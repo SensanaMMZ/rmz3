@@ -889,7 +889,101 @@ void FUN_08095b70(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, 4);
 }
 
-INCASM("asm/enemy/pantheon_fist_post_p2_p2b_b.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b834c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_080b83d4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_080b84f4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_080b857c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+static const motion_t sMotions[];
+
+// 0x08095C20
+void FUN_08095c20(struct Enemy* p) {
+  register s32 m2 asm("r5");
+  m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0: {
+      register s32 f asm("r6");
+      struct Coord c;
+      f = 0;
+      if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+        f = 1;
+      }
+      SetMotion(&p->s, MOTION(0xD4, 8));
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(s32*)a = m2;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = m2;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = m2;
+      }
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFB;
+        g &= h;
+        (p->s).flags = g;
+      }
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      ((void (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(0, &c, 0x80 << 2, f);
+      {
+        register s32 k60 asm("r1");
+        k60 = 0x60;
+        c.x = k60 - (((f << 1) + f) << 6);
+        c.y = k60;
+      }
+      if (((u8)FUN_08094fe0(p, 1) << 24) == 0) {
+        (p->s).unk_coord.y = 0x20;
+        if ((p->s).work[1] == 0) {
+          ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b84f4)(&p->s, &(p->s).coord, &c, 0x15, (motion_t*)&sMotions[3], 0x18);
+        } else {
+          ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b857c)(&p->s, &(p->s).coord, &c, 0x15, (motion_t*)&sMotions[3], 0x18);
+        }
+      } else {
+        (p->s).unk_coord.y = m2;
+        if ((p->s).work[1] == 0) {
+          ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b834c)(&p->s, &(p->s).coord, &c, 0, (motion_t*)&sMotions[3], 0x18);
+        } else {
+          ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b83d4)(&p->s, &(p->s).coord, &c, 0, (motion_t*)&sMotions[3], 0x18);
+        }
+      }
+      (p->s).d.x = c.x / 4;
+      (p->s).d.y = 0;
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 uy;
+      UpdateMotionGraphic(&p->s);
+      uy = (p->s).unk_coord.y;
+      if (uy != 0) {
+        s32 v = (p->s).d.y + uy;
+        (p->s).d.y = v;
+        if (v > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+        FUN_08094fe0(p, (p->s).d.y);
+      }
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+          FUN_08095b70(p);
+        }
+      }
+      break;
+    }
+  }
+}
 
 void PantheonFist_Init(struct Enemy* p);
 void PantheonFist_Update(struct Enemy* p);
