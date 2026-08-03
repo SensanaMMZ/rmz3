@@ -391,7 +391,122 @@ u32 FUN_08097224(struct Enemy* p, s32 a, s32 b) {
   return hit;
 }
 
-INCASM("asm/enemy/cannon_hopper_pre_p1b.inc");
+// 0x08097428
+bool8 FUN_08097428(struct Enemy* p) {
+  u8 hit[2];
+  register s32 y asm("r4");
+  register s32 x0 asm("r2");
+  {
+    register u8* q2 asm("r2");
+    register u8* q1 asm("r1");
+    q2 = hit;
+    asm("" : "+r"(q2));
+    q1 = hit;
+    asm("" : "+r"(q1));
+    q1[1] = 0;
+    q2[0] = 0;
+  }
+  {
+    register s32 cx asm("r0");
+    register s32 kk asm("r1");
+    cx = (p->s).coord.x;
+    kk = -0x700;
+    x0 = cx + kk;
+  }
+  y = (p->s).coord.y;
+  if (((p->s).flags & 0x20) != 0) {
+    register s32 k1 asm("r0");
+    k1 = 0xB8 << 6;
+    y += k1;
+    asm volatile("" ::: "cc");
+  } else {
+    register s32 k2 asm("r1");
+    k2 = -0x2E00;
+    y = y + k2;
+    asm volatile("" : "+r"(y));
+  }
+  if (PushoutToDown1(x0, y) > 0) {
+    hit[0] = 1;
+  }
+  {
+    register s32 xm asm("r2");
+    xm = (p->s).coord.x;
+    asm("" : "+r"(xm));
+    if (PushoutToDown1(xm, y) > 0) {
+      hit[0] = 1;
+    }
+  }
+  {
+    register s32 xp asm("r2");
+    register s32 cx2 asm("r0");
+    register s32 kp asm("r1");
+    cx2 = (p->s).coord.x;
+    kp = 0xE0 << 3;
+    xp = cx2 + kp;
+    asm("" : "+r"(xp));
+    if (PushoutToDown1(xp, y) > 0) {
+      hit[0] = 1;
+    }
+  }
+  {
+    register s32 cx asm("r0");
+    register s32 kk asm("r1");
+    cx = (p->s).coord.x;
+    kk = -0x700;
+    x0 = cx + kk;
+  }
+  y = (p->s).coord.y;
+  if (((p->s).flags & 0x20) != 0) {
+    register s32 k3 asm("r0");
+    k3 = 0x80 << 1;
+    y += k3;
+    asm volatile("" ::: "cc");
+  } else {
+    register s32 k4 asm("r1");
+    k4 = -0x100;
+    y = y + k4;
+    asm volatile("" : "+r"(y));
+  }
+  if (PushoutToUp1(x0, y) < 0) {
+    hit[1] = 1;
+  }
+  {
+    register s32 xm asm("r2");
+    xm = (p->s).coord.x;
+    asm("" : "+r"(xm));
+    if (PushoutToUp1(xm, y) < 0) {
+      hit[1] = 1;
+    }
+  }
+  {
+    register s32 xp asm("r2");
+    register s32 cx2 asm("r0");
+    register s32 kp asm("r1");
+    cx2 = (p->s).coord.x;
+    kp = 0xE0 << 3;
+    xp = cx2 + kp;
+    asm("" : "+r"(xp));
+    if (PushoutToUp1(xp, y) < 0) {
+      hit[1] = 1;
+    }
+  }
+  {
+    register u8* r0p asm("r0");
+    register u8* r1p asm("r1");
+    r0p = hit;
+    asm("" : "+r"(r0p));
+    r1p = hit;
+    asm("" : "+r"(r1p));
+    {
+      register s32 v0 asm("r0");
+      register s32 v1 asm("r1");
+      v0 = *r0p;
+      v1 = r1p[1];
+      v0 &= v1;
+      return v0;
+    }
+  }
+}
 
 void CannonHopper_Update(struct Enemy* p);
 
