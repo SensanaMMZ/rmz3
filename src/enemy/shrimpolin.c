@@ -811,7 +811,71 @@ void explodeShrimpolin(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, 4);
 }
 
-INCASM("asm/enemy/shrimpolin_c.inc");
+struct Entity* FUN_080b2b40(u8 kind, struct Coord* c, u16 r2, bool16 isDirRight);
+void FUN_080b869c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame, u8 taskCol, u8 palID);
+
+// 0x0806A40C
+void slashShrimporin(struct Enemy* p) {
+  register s32 z asm("r6");
+  z = (p->s).mode[2];
+  switch (z) {
+    case 0: {
+      register s32 dir asm("r4");
+      struct Coord c;
+      dir = 0;
+      if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+        dir = 1;
+      }
+      SetMotion(&p->s, MOTION(0x0D, 0x04));
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= ~COLLIDABLE;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      ((struct Entity* (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(0, &c, 0x200, dir);
+      {
+        register s32 k asm("r1");
+        k = 0x60;
+        c.x = k - ((dir * 3) << 6);
+        c.y = k;
+      }
+      FUN_080b869c(&p->s, &(p->s).coord, &c, 0x40, (motion_t*)&sMotions[3], 0x18, 1, (p->s).work[1]);
+      (p->s).work[2] = 0x18;
+      (p->s).d.y = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t;
+      (p->s).d.y += 0x30;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t <<= 24;
+      if (t != 0) {
+        if ((u16)GetGroundMetatileAttr((p->s).coord.x, (p->s).coord.y) == 0) {
+          break;
+        }
+      }
+      explodeShrimpolin(p);
+      break;
+    }
+  }
+}
 
 
 
