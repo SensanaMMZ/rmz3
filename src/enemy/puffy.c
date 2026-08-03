@@ -1,6 +1,8 @@
 #include "collision.h"
 #include "element.h"
 #include "enemy.h"
+#include "trig.h"
+#include "zero.h"
 #include "global.h"
 #include "overworld.h"
 #include "overworld_terrain.h"
@@ -155,7 +157,110 @@ INCASM("asm/enemy/puffy_p1_p2_c.inc");
 
 bool8 nop_0807c968(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/puffy_p2.inc");
+int dragInSea(struct Entity* p);
+struct Projectile* FUN_080a2838(struct Entity* e, struct Coord* c1, struct Coord* c2, u8 a3);
+
+// 0x0807C96C
+void FUN_0807c96c(struct Enemy* p) {
+  struct Coord c;
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetMotion(&p->s, 0x4100);
+      (p->s).work[2] = 0xC4;
+      (p->s).d.x = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 uy;
+      {
+        s32 tgt = *(s32*)((u8*)p + 0xb4);
+        uy = (p->s).unk_coord.y;
+        uy += ((tgt - uy) << 4) >> 8;
+        (p->s).unk_coord.y = uy;
+      }
+      {
+        s32 n = (p->s).d.x + 1;
+        s32 sv;
+        (p->s).d.x = n;
+        sv = gSineTable[(u8)n];
+        (p->s).coord.y = uy + ((sv * 3) << 3);
+      }
+      dragInSea(&p->s);
+      {
+        register u8 fl asm("r2");
+        register s32 nf asm("r1");
+        if ((pZero2->s).coord.x > (p->s).coord.x) {
+          fl = (p->s).flags;
+          if (fl & 0x10) {
+            goto skipflip;
+          }
+          {
+            register s32 sh asm("r0");
+            sh = (u32)fl >> 4;
+            nf = 1;
+            nf &= ~sh;
+          }
+          if (nf != 0) {
+            (p->s).flags = fl | 0x10;
+          } else {
+            (p->s).flags = fl & 0xEF;
+          }
+        } else {
+          fl = (p->s).flags;
+          if ((fl & 0x10) == 0) {
+            goto skipflip;
+          }
+          {
+            register s32 sh2 asm("r0");
+            sh2 = (u32)fl >> 4;
+            nf = 1;
+            nf &= ~sh2;
+          }
+          if (nf != 0) {
+            (p->s).flags = fl | 0x10;
+          } else {
+            (p->s).flags = fl & 0xEF;
+          }
+        }
+        {
+          register u8* oa asm("r3");
+          s32 sh4, ov, m11;
+          *((u8*)p + 0x4c) = nf;
+          oa = (u8*)p + 0x4a;
+          sh4 = nf << 4;
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          *oa = m11 | sh4;
+        }
+      }
+    skipflip:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((u8)t != 0) {
+          break;
+        }
+      }
+      {
+        register u8 fl2 asm("r1");
+        fl2 = (p->s).flags;
+        if ((fl2 & 0x10) == 0) {
+          c.x = (p->s).coord.x - 0x1600;
+        } else {
+          c.x = (p->s).coord.x + 0x1600;
+        }
+        c.y = (p->s).coord.y - 0x400;
+        FUN_080a2838(&p->s, &c, &c, (u8)((((u32)fl2 << 24) >> 28) & 1));
+        PlaySound(0);
+        (p->s).work[2] = 0xC4;
+      }
+      break;
+    }
+  }
+}
 
 bool8 nop_0807ca98(struct Enemy* p) { return TRUE; }
 
