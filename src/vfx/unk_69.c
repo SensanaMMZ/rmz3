@@ -246,7 +246,121 @@ void FUN_080c5144(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_69_p1_post_post.inc");
+// 0x080C521C
+void FUN_080c521c(struct VFX* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 sc asm("r4");
+  if (q->mode[0] > 1) {
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      InitScalerotMotion1(&p->s);
+      {
+        u16* h = (u16*)((u8*)p + 0x50);
+        register s32 zero asm("r1");
+        zero = 0;
+        sc = 0x80 * 2;
+        *h = sc;
+        h++;
+        *h = sc;
+        *((u8*)h - 0x2e) = zero;
+      }
+      ResetDynamicMotion(&p->s);
+      {
+        register u8 fv asm("r0");
+        register s32 k asm("r1");
+        fv = (p->s).flags;
+        k = 2;
+        fv |= k;
+        k = 1;
+        fv |= k;
+        (p->s).flags = fv;
+      }
+      SetMotion(&p->s, MOTION(0xB8, 0x01));
+      (p->s).work[2] = 0x10;
+      (p->s).d.x = sc;
+      {
+        struct Entity* r = (p->s).unk_28;
+        s32 ox, oy;
+        ox = (p->s).unk_coord.x + 0xE0 * 16;
+        (p->s).coord.x = r->coord.x + ox;
+        oy = (p->s).unk_coord.y + 0xE0 * 8;
+        (p->s).coord.y = r->coord.y + oy;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 tx asm("r6");
+      s32 ty;
+      struct Entity* r = (p->s).unk_28;
+      s32 v;
+      {
+        register s32 t0 asm("r0");
+        t0 = r->coord.x;
+        tx = t0 + 0xE0 * 16;
+        t0 = r->coord.y;
+        ty = t0 + 0xE0 * 8;
+      }
+      {
+        register s32 c asm("r1");
+        register s32 d asm("r0");
+        c = (p->s).coord.x;
+        d = tx - c;
+        d <<= 5;
+        d >>= 8;
+        c += d;
+        (p->s).coord.x = c;
+      }
+      {
+        register s32 c2 asm("r1");
+        register s32 d2 asm("r0");
+        c2 = (p->s).coord.y;
+        d2 = ty - c2;
+        d2 <<= 5;
+        d2 >>= 8;
+        c2 += d2;
+        (p->s).coord.y = c2;
+      }
+      {
+        register s32 dd asm("r1");
+        register s32 e asm("r0");
+        dd = (p->s).d.x;
+        e = 0x20;
+        e -= dd;
+        e <<= 4;
+        e >>= 8;
+        dd += e;
+        (p->s).d.x = dd;
+        v = dd;
+      }
+      *(u16*)((u8*)p + 0x50) = v;
+      asm volatile("" ::: "memory");
+      {
+        register s32 d3 asm("r0");
+        u16* h2;
+        d3 = (p->s).d.x;
+        h2 = (u16*)((u8*)p + 0x52);
+        *h2 = d3;
+      }
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((u8)t != 0) {
+          goto upd;
+        }
+      }
+      SET_VFX_ROUTINE(p, ENTITY_DIE);
+    upd:
+      UpdateMotionGraphic(&p->s);
+      asm volatile("" ::"r"(sc), "r"(ty), "r"(tx));
+      break;
+    }
+  }
+}
+
 
 void FUN_080c5328(struct VFX* p) {
   u8 md;
