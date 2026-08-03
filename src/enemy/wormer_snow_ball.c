@@ -118,7 +118,57 @@ void FUN_0807b30c(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/wormer_snow_ball_p3_p2_p1.inc");
+// 0x0807B328
+void FUN_0807b328(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, (const struct Collision*)0x0836782C);
+      (p->s).d.y = -0x500;
+      (p->s).d.x = -(s32)(RANDOM(RNG_0202f388) % 0x300);
+      SetMotion(&p->s, 0x4000);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).coord.x += (p->s).d.x;
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x400) {
+        {
+          register u8 g asm("r0");
+          register u8 h asm("r1");
+          register s32 z asm("r2");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xFE;
+          g &= h;
+          z = 0;
+          h = 0xFD;
+          g &= h;
+          (p->s).flags = g;
+          {
+            u8* a = (u8*)p + 0x8c;
+            *(u32*)a = z;
+            asm("" : "+r"(a));
+            a += 4;
+            asm("" : "+r"(a));
+            *(u32*)a = z;
+            asm("" : "+r"(a));
+            a += 4;
+            asm("" : "+r"(a));
+            *a = z;
+          }
+        }
+        (p->s).flags &= 0xFB;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+        break;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 // 0x0807B408
 void FUN_0807b408(struct Enemy* p) {
