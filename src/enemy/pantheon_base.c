@@ -4,6 +4,8 @@
 #include "global.h"
 #include "motion.h"
 #include "story.h"
+#include "zero.h"
+#include "metatile.h"
 
 static const struct Collision sCollisions[25];
 
@@ -286,7 +288,95 @@ void pBase_0808a514(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, 4);
 }
 
-INCASM("asm/enemy/pantheon_base_p3_post.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b834c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void pBase_0808a514(struct Enemy* p);
+static const motion_t sMotions[];
+
+// 0x0808A5C8
+void FUN_0808a5c8(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 m2 asm("r6");
+  m2 = (p->s).mode[2];
+  switch (m2) {
+    case 0: {
+      register s32 f asm("r4");
+      struct Coord c;
+      {
+        register s32 cx asm("r1");
+        s32 zx;
+        f = 0;
+        zx = (pZero2->s).coord.x;
+        cx = (p->s).coord.x;
+        if (zx - cx > 0) {
+          f = 1;
+        }
+        {
+          register s32 nx asm("r0");
+          nx = cx - (f << 8);
+          (p->s).coord.x = nx;
+        }
+      }
+      SetMotion(&p->s, MOTION(0x6D, 1));
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(s32*)a = m2;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = m2;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = m2;
+      }
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFB;
+        g &= h;
+        (p->s).flags = g;
+      }
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      ((void (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(0, &c, 0x80 << 2, f);
+      c.x = q->d.x / 2;
+      c.y = 0x60;
+      ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b834c)(&p->s, &(p->s).coord, &c, 0x40, (motion_t*)&sMotions[9], 0x18);
+      (p->s).work[2] = 0x18;
+      (p->s).d.x = q->d.x;
+      (p->s).d.y = m2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 v;
+      (p->s).coord.x += (p->s).d.x;
+      v = (p->s).d.y + 0x20;
+      (p->s).d.y = v;
+      if (v > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+          goto hit;
+        }
+      }
+      if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y + -0x1000) << 16) == 0) {
+        break;
+      }
+    hit:
+      pBase_0808a514(p);
+      break;
+    }
+  }
+}
 
 void PantheonBase_Init(struct Enemy* p);
 void PantheonBase_Update(struct Enemy* p);
