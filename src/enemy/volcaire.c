@@ -249,7 +249,114 @@ void FUN_08077388(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/volcaire_p1_a_b.inc");
+static const u8 sInitModes[];
+static const struct Collision sCollisions[];
+static void onCollision(struct Body* body, struct Coord* r1, struct Coord* r2);
+
+// 0x080773DC
+// Blocker: retail shares only the `bl InitBody` between the two InitBody
+// arms -- arm 1 branches to the `bl` that physically ends arm 2, so the
+// 6-instruction argument setup is duplicated. Writing the call in both arms
+// leaves each with its own `bl` (+4 bytes); hoisting to one call with an
+// `hp` variable also merges the argument setup (-12 bytes). 11 lever rounds.
+NON_MATCH void Volcaire_Init(struct Enemy* p) {
+#if MODERN
+  register s32 z2 asm("r2");
+  s32 w;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  {
+    u8 v = sInitModes[(p->s).work[0]];
+    z2 = 0;
+    (p->s).mode[1] = v;
+  }
+  {
+    register u8 fv asm("r0");
+    register u8 k asm("r1");
+    fv = (p->s).flags;
+    k = 2;
+    fv |= k;
+    (p->s).flags = fv;
+  }
+  w = (p->s).work[0];
+  asm("" : "+r"(w));
+  if (w == 0) {
+    *((u8*)p + 0xb8) = z2;
+    {
+      register u8 g asm("r0");
+      register u8 h asm("r1");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xFE;
+      g &= h;
+      (p->s).flags = g;
+    }
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) + (0xC0 << 5);
+  } else if (w < 0) {
+    goto done;
+  } else if (w > 2) {
+    goto done;
+  } else {
+    register s32 z5 asm("r5");
+    register struct Body* b asm("r4");
+    s32 hp;
+    *((u8*)p + 0xb9) = z2;
+    {
+      register u8 fv2 asm("r0");
+      register u8 k2 asm("r1");
+      fv2 = (p->s).flags;
+      k2 = 1;
+      fv2 |= k2;
+      (p->s).flags = fv2;
+    }
+    InitNonAffineMotion(&p->s);
+    if ((gSystemSavedataManager.mods[13] & 0x20) != 0) {
+      register s32 t asm("r0");
+      register u8 gf asm("r1");
+      gf = gCurStory.s.gameflags[0];
+      t = 0x40;
+      t &= gf;
+      asm("" : "+r"(t));
+      t <<= 24;
+      asm("" : "+r"(t));
+      z5 = (u32)t >> 24;
+      if (z5 != 0) {
+        goto armB;
+      }
+      {
+        register u8 g3 asm("r0");
+        register u8 h3 asm("r1");
+        g3 = (p->s).flags;
+        h3 = 4;
+        g3 |= h3;
+        (p->s).flags = g3;
+      }
+      b = &p->body;
+      InitBody(b, &sCollisions[0], &(p->s).coord, 0xA);
+    } else {
+    armB : {
+      register u8 h4 asm("r1");
+      register u8 g4 asm("r0");
+      h4 = (p->s).flags;
+      g4 = 4;
+      z5 = 0;
+      g4 |= h4;
+      (p->s).flags = g4;
+    }
+    b = &p->body;
+    InitBody(b, &sCollisions[0], &(p->s).coord, 6);
+    }
+    b->parent = (struct CollidableEntity*)p;
+    b->fn = (void*)z5;
+    asm volatile("" ::: "memory");
+    b->fn = (void*)onCollision;
+    *(s32*)((u8*)p + 0xb4) = 0;
+  }
+done:;
+  Volcaire_Update(p);
+#else
+  INCCODE("asm/enemy/volcaire_p1_a_b.inc");
+#endif
+}
 
 static const EnemyFunc sUpdates1[8];
 static const EnemyFunc sUpdates2[8];

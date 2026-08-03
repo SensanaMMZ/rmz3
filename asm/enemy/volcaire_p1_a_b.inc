@@ -4,8 +4,6 @@
 	
 	.text
 
-	thumb_func_start Volcaire_Init
-Volcaire_Init: @ 0x080773DC
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	ldr r1, _0807742C @ =gEnemyFnTable
