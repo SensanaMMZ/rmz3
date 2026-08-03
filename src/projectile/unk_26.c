@@ -229,7 +229,100 @@ void FUN_080a8b50(struct Projectile* p) {
   Projectile26_Update(p);
 }
 
-INCASM("asm/projectile/unk_26_post_a2.inc");
+// 0x080A8C74
+void FUN_080a8c74(struct Projectile* p) {
+  struct Entity* e = (p->s).unk_28;
+  u8 xf;
+  s32 z;
+  s32 one;
+  s32 z7;
+  {
+    const ProjectileRoutine* const* base = gProjectileFnTable;
+    const ProjectileRoutine* const* rowp = base + (p->s).id;
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(**rowp)[ENTITY_UPDATE];
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 f0 asm("r1");
+    register s32 d0 asm("r0");
+    f0 = (p->s).flags;
+    d0 = DISPLAY;
+    z7 = 0;
+    d0 |= f0;
+    d0 |= FLIPABLE;
+    (p->s).flags = d0;
+  }
+  SetMotion(&p->s, MOTION(0x5B, 0x00));
+  xf = (e->flags >> 4) & one;
+  if (xf != 0) {
+    (p->s).flags |= 0x10;
+  } else {
+    (p->s).flags &= 0xEF;
+  }
+  {
+    u32 xf2;
+    asm volatile("add %0, %1, #0" : "=&l"(xf2) : "l"(xf));
+    ((p->s).spr).xflip = xf2;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      u32 sh4 = xf2 << 4;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      m11 |= sh4;
+      *oa = m11;
+    }
+  }
+  p->soundID = 0xFFFF;
+  {
+    register u8* w asm("r1");
+    register u8* r asm("r0");
+    u16 v;
+    s32 x;
+    r = (u8*)e + 0xb4;
+    x = *(s32*)r;
+    (p->s).coord.x = x;
+    asm volatile("add %0, #4" : "+r"(r));
+    (p->s).coord.y = *(s32*)r;
+    r = (u8*)p + 0xb4;
+    *(s32*)r = x;
+    w = (u8*)p + 0xb8;
+    *(s32*)w = (p->s).coord.y;
+    if ((p->s).work[0] == 2) {
+      (p->s).d.x = *(s32*)((u8*)e + 0x5c);
+      (p->s).d.y = 0;
+      asm volatile("add %0, #4" : "+r"(w));
+      v = 0xFFF0;
+    } else {
+      (p->s).d.x = *(s32*)((u8*)e + 0x5c);
+      (p->s).d.y = 0x380;
+      w = (u8*)p + 0xbc;
+      v = 0xFFE8;
+    }
+    *(u16*)w = v;
+  }
+  {
+    register u8 f2 asm("r1");
+    register s32 c2 asm("r0");
+    f2 = (p->s).flags;
+    c2 = COLLIDABLE;
+    z = 0;
+    c2 |= f2;
+    (p->s).flags = c2;
+  }
+  {
+    struct Body* body;
+    body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 0x40);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)z;
+  }
+  (p->s).work[2] = 2;
+  asm volatile("" : "+l"(z7));
+  Projectile26_Update(p);
+}
 
 static const s16 s16_ARRAY_0836c0ac[8];
 
