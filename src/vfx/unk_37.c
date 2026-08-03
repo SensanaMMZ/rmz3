@@ -207,7 +207,128 @@ void FUN_080bc8c0(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_37_post.inc");
+extern void __umodsi3();
+
+// 0x080BC974
+void FUN_080bc974(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register const u16* tb asm("r4");
+      {
+        register u8* a asm("r1");
+        register s32 v asm("r0");
+        a = (u8*)p + 0x25;
+        v = 0x19;
+        *a = v;
+        v = (p->s).work[2];
+        asm("" : "+r"(a));
+        a -= 3;
+        asm("" : "+r"(a));
+        *a = v;
+      }
+      tb = (const u16*)0x0836EDF8;
+      {
+        register s32 r asm("r0");
+        r = ((s32 (*)(s32, s32))__umodsi3)(RANDOM(RNG_0202f388), 3);
+        r <<= 1;
+        {
+          register const u16* e asm("r0");
+          asm volatile("add %0, %0, %1" : "+l"(r) : "l"(tb));
+          e = (const u16*)r;
+          SetMotion(&p->s, *e);
+        }
+      }
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 t asm("r1");
+      register s32 z asm("r2");
+      register u32 u asm("r0");
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).d.x;
+      {
+        register s32 dy asm("r1");
+        dy = (p->s).d.y;
+        dy += 0xC;
+        (p->s).d.y = dy;
+        (p->s).coord.y += dy;
+      }
+      u = (p->s).work[2];
+      t = u - 1;
+      z = 0;
+      asm volatile("" : "+r"(z));
+      (p->s).work[2] = t;
+      u = t << 24;
+      u = (u32)u >> 24;
+      if (u <= 7) {
+        register s32 k asm("r0");
+        k = 2;
+        t &= k;
+        asm volatile("" ::: "cc");
+        if (t != 0) {
+          goto clr;
+        }
+        {
+          register u8 g0 asm("r0");
+          register s32 one0 asm("r1");
+          g0 = (p->s).flags;
+          one0 = 1;
+          g0 |= one0;
+          asm volatile("" : "+r"(g0));
+          (p->s).flags = g0;
+          goto after;
+        }
+      }
+      if (u > 0xF) {
+        goto after;
+      }
+      {
+        register s32 k2 asm("r0");
+        k2 = 1;
+        t &= k2;
+        if (t != 0) {
+          goto clr;
+        }
+      }
+    set : {
+      register u8 g asm("r0");
+      register s32 one asm("r1");
+      g = (p->s).flags;
+      one = 1;
+      g |= one;
+      (p->s).flags = g;
+      goto after;
+    }
+    clr : {
+      register u8 h asm("r1");
+      register u8 g2 asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g2 = 0xFE;
+      g2 &= h;
+      (p->s).flags = g2;
+    }
+    after:
+      if ((p->s).work[2] == 0) {
+        {
+          register u8 g3 asm("r0");
+          register u8 h3 asm("r1");
+          h3 = (p->s).flags;
+          asm("" : "+r"(h3));
+          g3 = 0xFE;
+          g3 &= h3;
+          h3 = 0xFD;
+          g3 &= h3;
+          (p->s).flags = g3;
+        }
+        SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
 
 extern const s16 s16_ARRAY_0836edfe[6];
 
