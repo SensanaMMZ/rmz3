@@ -202,7 +202,118 @@ void FUN_08093be0(struct ShotloidObject* p) {
   }
 }
 
-INCASM("asm/enemy/shotloid_pre_p2_a_b.inc");
+static const u8 sInitModes[2];
+void Shotloid_Update(struct Enemy* p);
+
+// 0x08093C2C
+void Shotloid_Init(struct Enemy* p) {
+  s32 z7;
+  register s32 w0 asm("r6");
+  {
+    register u8 nm asm("r0");
+    if ((p->s).work[0] == 2) {
+      (p->s).work[0] = 0;
+      nm = 1;
+    } else {
+      nm = 0;
+    }
+    (p->s).work[1] = nm;
+  }
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  (p->s).mode[1] = sInitModes[(p->s).work[0]];
+  {
+    register u8 fv asm("r0");
+    register u8 k asm("r1");
+    fv = (p->s).flags;
+    k = 2;
+    fv |= k;
+    k = 1;
+    z7 = 0;
+    asm volatile("" : "+l"(z7));
+    fv |= k;
+    (p->s).flags = fv;
+  }
+  InitNonAffineMotion(&p->s);
+  w0 = (p->s).work[0];
+  if (w0 == 0) {
+    register s32 f asm("r2");
+    {
+      register u8 fl asm("r1");
+      register u8 g asm("r0");
+      g = (p->s).flags;
+      fl = 4;
+      g |= fl;
+      (p->s).flags = g;
+    }
+    {
+      struct Body* body = &p->body;
+      InitBody(body, &sCollisions[0], &(p->s).coord, 6);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)nop_08093af8;
+    }
+    {
+      u8* a = (u8*)p + 0xb4;
+      *(s32*)a = w0;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *(s32*)a = w0;
+    }
+    f = 0;
+    if ((p->s).coord.x < (pZero2->s).coord.x) {
+      f = 1;
+    }
+    {
+      register u8 nf asm("r0");
+      if (f != 0) {
+        register u8 kk asm("r1");
+        nf = (p->s).flags;
+        kk = 0x10;
+        nf |= kk;
+      } else {
+        register u8 fl2 asm("r1");
+        fl2 = (p->s).flags;
+        asm("" : "+r"(fl2));
+        nf = 0xEF;
+        nf &= fl2;
+      }
+      (p->s).flags = nf;
+    }
+    {
+      register s32 x asm("r1");
+      u8* a2;
+      s32 sh;
+      u8 ov;
+      s32 m;
+      x = f;
+      ((p->s).spr).xflip = x;
+      a2 = (u8*)p + 0x4a;
+      sh = x << 4;
+      ov = *a2;
+      m = -0x11;
+      m &= ov;
+      m |= sh;
+      *a2 = m;
+    }
+    FUN_08093994(p);
+    {
+      register u8* bc asm("r1");
+      register u8 v asm("r0");
+      if ((p->s).work[1] != 0) {
+        bc = (u8*)p + 0xbc;
+        v = 0;
+        asm volatile("" ::: "cc");
+      } else {
+        bc = (u8*)p + 0xbc;
+        v = 3;
+        asm volatile("" ::: "memory");
+      }
+      *bc = v;
+    }
+  }
+  Shotloid_Update(p);
+  asm volatile("" ::"l"(z7));
+}
 
 
 void Shotloid_Update(struct Enemy* p) {
