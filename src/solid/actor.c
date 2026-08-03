@@ -2353,6 +2353,121 @@ void FUN_080d5c5c(struct Solid* p) {
   }
 }
 
+// 0x080D5D20
+void FUN_080d5d20(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 ix asm("r2");
+      {
+        register u16* g asm("r0");
+        register s32 v asm("r1");
+        g = wDynamicGraphicTilenums;
+        asm volatile("" : "+r"(g));
+        ix = 0xC5 * 2;
+        asm volatile("add %0, %0, %1" : "+l"(g) : "l"(ix));
+        v = 0x300;
+        *g = v;
+      }
+      {
+        register u16* g2 asm("r0");
+        register s32 v2 asm("r1");
+        g2 = wDynamicMotionPalIDs;
+        asm volatile("add %0, %0, %1" : "+l"(g2) : "l"(ix));
+        v2 = 6;
+        *g2 = v2;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if (FUN_080d0aa0(&p->s, MOTION(0xC5, 0x01), 1) != 0) {
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2: {
+      register u8* st asm("r5");
+      register s32 one asm("r6");
+      UpdateMotionGraphic(&p->s);
+      {
+        register u8 ms asm("r0");
+        ms = (p->s).motion.state;
+        st = (u8*)p + 0x70;
+        asm volatile("" : "+r"(st));
+        if (ms != 3) {
+          goto after;
+        }
+      }
+      {
+        register s32 mv asm("r0");
+        register u8 sv asm("r1");
+        register s32 k asm("r1");
+        mv = (p->s).motionID;
+        mv <<= 8;
+        sv = *st;
+        mv |= sv;
+        k = 0xC502;
+        asm volatile("" : "+r"(k));
+        if (mv == k) {
+          ((void (*)(struct Entity*, s32))SetMotion)(&p->s, k + 1);
+        } else {
+          SetMotion(&p->s, 0xC501);
+        }
+      }
+    after:
+      {
+        register u8 sf asm("r1");
+        register s32 t asm("r0");
+        sf = (p->s).scriptEntity->flags;
+        one = 1;
+        asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one));
+        t &= sf;
+        if (t == 0) {
+          goto last;
+        }
+      }
+      {
+        register s32 mv2 asm("r0");
+        register u8 sv2 asm("r1");
+        register s32 k2 asm("r1");
+        mv2 = (p->s).motionID;
+        mv2 <<= 8;
+        sv2 = *st;
+        mv2 |= sv2;
+        k2 = 0xC501;
+        asm volatile("" : "+r"(k2));
+        if (mv2 == k2) {
+          ((void (*)(struct Entity*, s32))SetMotion)(&p->s, k2 + 1);
+        }
+        {
+          register u8 sf2 asm("r1");
+          register s32 t2 asm("r0");
+          sf2 = (p->s).scriptEntity->flags;
+          asm volatile("add %0, %1, #0" : "=&l"(t2) : "l"(one));
+          t2 &= sf2;
+          if (t2 != 0) {
+            break;
+          }
+        }
+      }
+    last : {
+        register s32 mv3 asm("r0");
+        register u8 sv3 asm("r1");
+        register s32 k3 asm("r1");
+        mv3 = (p->s).motionID;
+        mv3 <<= 8;
+        sv3 = *st;
+        mv3 |= sv3;
+        k3 = 0xC503;
+        asm volatile("" : "+r"(k3));
+        if (mv3 == k3) {
+          ((void (*)(struct Entity*, s32))SetMotion)(&p->s, k3 + 1);
+        }
+      }
+      break;
+    }
+  }
+}
+
 INCASM("asm/solid/actor_p2.inc");
 
 struct VFX* FUN_080c5628(u8 r0, u8 r1, s32 x, s32 y);
