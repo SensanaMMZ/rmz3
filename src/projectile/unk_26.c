@@ -231,6 +231,113 @@ void FUN_080a8b50(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_26_post_a2.inc");
 
+static const s16 s16_ARRAY_0836c0ac[8];
+
+// 0x080A8D70
+void FUN_080a8d70(struct Projectile* p) {
+  struct Entity* o = (p->s).unk_28;
+  register s32 one asm("r4");
+  s32 xf;
+  s32 z7;
+  {
+    u32 tbl = (u32)gProjectileFnTable;
+    EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  InitRotatableMotion(&p->s);
+  {
+    register u8 fl asm("r1");
+    register u8 fv asm("r0");
+    fl = (p->s).flags;
+    fv = 1;
+    z7 = 0;
+    asm volatile("" : "+l"(z7));
+    fv |= fl;
+    fl = 2;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0x5B, 1));
+  {
+    u32 t = o->flags;
+    xf = t >> 4;
+    xf &= one;
+  }
+  {
+    register u8 nf asm("r0");
+    if (xf != 0) {
+      register u8 k asm("r1");
+      nf = (p->s).flags;
+      k = 0x10;
+      nf |= k;
+    } else {
+      register u8 fl2 asm("r1");
+      fl2 = (p->s).flags;
+      asm("" : "+r"(fl2));
+      nf = 0xEF;
+      nf &= fl2;
+    }
+    (p->s).flags = nf;
+  }
+  {
+    register s32 x asm("r1");
+    u8* a;
+    s32 sh;
+    u8 ov;
+    s32 m;
+    x = xf;
+    ((p->s).spr).xflip = x;
+    a = (u8*)p + 0x4a;
+    sh = x << 4;
+    ov = *a;
+    m = -0x11;
+    m &= ov;
+    m |= sh;
+    *a = m;
+  }
+  {
+    u8* a0 = (u8*)p + 0xc0;
+    register s32 hv asm("r0");
+    hv = 0xFFFF;
+    *(u16*)a0 = hv;
+  }
+  {
+    s32 nx;
+    s32 k;
+    if (((p->s).flags & 0x10) != 0) {
+      nx = (p->s).coord.x;
+      k = -0x500;
+    } else {
+      nx = (p->s).coord.x;
+      k = 0xA0 << 3;
+    }
+    (p->s).coord.x = nx + k;
+  }
+  (p->s).coord.y += -0x2800;
+  (p->s).d.x = s16_ARRAY_0836c0ac[(p->s).work[1]];
+  (p->s).d.y = -0x600;
+  {
+    register u8 fl3 asm("r1");
+    register u8 g3 asm("r0");
+    register s32 z5 asm("r5");
+    fl3 = (p->s).flags;
+    g3 = 4;
+    z5 = 0;
+    g3 |= fl3;
+    (p->s).flags = g3;
+    {
+      struct Body* body = &p->body;
+      InitBody(body, &sCollisions[0], &(p->s).coord, 0x40);
+      body->parent = (struct CollidableEntity*)p;
+      body->fn = (void*)z5;
+    }
+  }
+  Projectile26_Update(p);
+  asm volatile("" ::"l"(z7));
+}
+
 // 0x080A8E64
 void FUN_080a8e64(struct Projectile* p) {
   struct Entity* o = (p->s).unk_28;
