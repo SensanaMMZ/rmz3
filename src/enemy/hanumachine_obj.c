@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "global.h"
 #include "vfx.h"
+#include "motion.h"
 
 void FUN_080866a4(struct Entity* e, u8 mode, u8 xflip) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -19,7 +20,73 @@ void FUN_080866a4(struct Entity* e, u8 mode, u8 xflip) {
   }
 }
 
-INCASM("asm/enemy/hanumachine_obj_pre_p2_a.inc");
+extern const struct Collision sCollisions[6];
+void HanumachineObj_Update(struct Enemy* p);
+
+// 0x08086740
+void HanumachineObj_Init(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 z asm("r5");
+  s32 dx;
+  SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+  InitScalerotMotion2(&p->s);
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    fv = DISPLAY;
+    z = 0;
+    fv |= fl;
+    fl = FLIPABLE;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, MOTION(0x6a, 0x03));
+  (p->s).flags |= COLLIDABLE;
+  {
+    struct Body* body = &p->body;
+    InitBody(body, sCollisions, &(p->s).coord, 8);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (void*)z;
+  }
+  if ((p->s).flags & X_FLIP) {
+    (p->s).coord.x = (q->coord).x + 0x1600;
+    dx = 0x400;
+  } else {
+    (p->s).coord.x = (q->coord).x - 0x1600;
+    dx = -0x400;
+  }
+  (p->s).d.x = dx;
+  (p->s).coord.y = (q->coord).y - 0xF00;
+  {
+    register u8* a asm("r1");
+    register s32 t2 asm("r2");
+    register s32 t3 asm("r3");
+    register s32 kk asm("r0");
+    a = (u8*)p + 0xc0;
+    t2 = 0;
+    t3 = 0;
+    kk = 0x258;
+    *(u16*)a = kk;
+    {
+      register u8* b asm("r0");
+      register s32 f asm("r1");
+      b = (u8*)p + 0xbd;
+      *b = t2;
+      (p->s).d.y = t3;
+      asm("" : "+r"(b));
+      b -= 0x6d;
+      asm("" : "+r"(b));
+      f = 0x40;
+      *(u16*)b = f;
+      asm("" : "+r"(b));
+      b += 2;
+      asm("" : "+r"(b));
+      *(u16*)b = f;
+    }
+  }
+  HanumachineObj_Update(p);
+}
 
 extern const EnemyFunc sUpdates[8];
 extern const struct Collision sCollisions[6];

@@ -81,6 +81,7 @@ void ResetDynamicMotion(struct Entity* p);
 void UpdateMotionGraphic(struct Entity* p);
 void InitMotionLocation(void);
 void InitScalerotMotion1(struct Entity* p);
+void InitScalerotMotion2(struct Entity* p);
 void UpdateMotionState(struct Motion* p);
 void ForceEntityPalette(struct Entity* p, u8 palID);
 
