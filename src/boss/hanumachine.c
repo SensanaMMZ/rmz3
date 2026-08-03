@@ -447,7 +447,97 @@ void hanu_0805c0d0(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p1_b_p2_p2b_post.inc");
+// 0x0805C198
+void hanu_0805c198(struct Boss* p) {
+  register s32 m asm("r1");
+  m = (p->s).mode[2];
+  if (m == 0) {
+    (p->s).angle = m;
+    InitNonAffineMotion(&p->s);
+    ResetDynamicMotion(&p->s);
+    SetMotion(&p->s, 0xB506);
+    SetDDP(&p->body, &sCollisions[6]);
+    {
+      register s32 one asm("r2");
+      register s32 xv asm("r1");
+      register s32 t0 asm("r0");
+      t0 = (u32)(p->s).flags >> 4;
+      one = 1;
+      t0 ^= one;
+      asm("" : "+r"(t0));
+      t0 &= one;
+      ((p->s).spr).xflip = t0;
+      xv = (u32)(p->s).flags >> 4;
+      xv ^= one;
+      asm("" : "+r"(xv));
+      xv &= one;
+      {
+        register u8* oa asm("ip");
+        s32 sh4, ov, m11;
+        oa = (u8*)p + 0x4a;
+        sh4 = xv << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      if (xv != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        register u8 h asm("r1");
+        register u8 g asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xEF;
+        g &= h;
+        (p->s).flags = g;
+      }
+    }
+    {
+      s32 dx;
+      if ((p->s).flags & 0x10) {
+        register s32 k asm("r1");
+        s32 cx = (p->s).coord.x;
+        k = 0xA00;
+        (p->s).coord.x = cx + k;
+        (p->s).unk_coord.x = k;
+        dx = 0x200;
+      } else {
+        register s32 k2 asm("r1");
+        s32 cx2 = (p->s).coord.x;
+        k2 = -0xA00;
+        (p->s).coord.x = cx2 + k2;
+        (p->s).unk_coord.x = k2;
+        dx = -0x200;
+      }
+      (p->s).d.x = dx;
+    }
+    (p->s).d.y = -0x300;
+    (p->s).coord.y += 0x1600;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x += (p->s).d.x;
+  {
+    register s32 dy asm("r1");
+    {
+      s32 cy = (p->s).coord.y;
+      dy = (p->s).d.y;
+      (p->s).coord.y = cy + dy;
+    }
+    dy += 0x40;
+    (p->s).d.y = dy;
+    if (dy > 0x700) {
+      (p->s).d.y = 0x700;
+    }
+  }
+  if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+    (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).mode[1] = 7;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void hanu_0805c2a4(struct Boss* p) {
   if ((p->s).mode[2] == 0) {
