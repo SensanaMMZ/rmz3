@@ -94,7 +94,85 @@ void Ghost22_Die(struct VFX* p) {
 
 void nop_080b7d48(struct VFX* p) {}
 
-INCASM("asm/vfx/unk_22_p2.inc");
+// 0x080B7D4C
+void FUN_080b7d4c(struct VFX* p) {
+  s32 t = (p->s).work[2] - 1;
+  (p->s).work[2] = t;
+  t <<= 24;
+  if (t == 0) {
+    register s32 r asm("r4");
+    struct Coord c;
+    CreateSmoke(2, &(p->s).coord);
+    {
+      register u32 rv asm("r1");
+      register u32 ka asm("r0");
+      rv = RNG_0202f388;
+      ka = 0x343FD;
+      asm volatile("add %0, %1, #0" : "=&l"(r) : "l"(rv));
+      r *= ka;
+      ka = 0x269EC3;
+      r += ka;
+      r <<= 1;
+      RNG_0202f388 = (u32)r >> 1;
+      r = (u32)r >> 0x11;
+      ka = 3;
+      r &= ka;
+    }
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    {
+      register u8 w0 asm("r1");
+      register s32 m4 asm("r2");
+      register struct Coord* cp asm("r0");
+      w0 = (p->s).work[0];
+      m4 = 0x1804;
+      cp = &c;
+      ((struct VFX* (*)(struct Coord*, s32, s32, s32))FUN_080b7b8c)(cp, w0, m4, r);
+    }
+    {
+      register s32 m5 asm("r5");
+      {
+        register u8 w1 asm("r1");
+        register s32 m2 asm("r2");
+        register struct Coord* cp1 asm("r0");
+        w1 = (p->s).work[0];
+        m5 = 0x1805;
+        cp1 = &c;
+        asm volatile("add %0, %1, #0" : "=&l"(m2) : "l"(m5));
+        ((struct VFX* (*)(struct Coord*, s32, s32, s32))FUN_080b7b8c)(cp1, w1, m2, r);
+      }
+      {
+        register u8 w2 asm("r1");
+        register s32 m3 asm("r2");
+        register struct Coord* cp2 asm("r0");
+        w2 = (p->s).work[0];
+        cp2 = &c;
+        asm volatile("add %0, %1, #0" : "=&l"(m3) : "l"(m5));
+        ((struct VFX* (*)(struct Coord*, s32, s32, s32))FUN_080b7b8c)(cp2, w2, m3, r);
+      }
+    }
+    PlaySound(0x31);
+    SET_VFX_ROUTINE(p, ENTITY_DIE);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x32;
+      (p->s).d.y = -0x100;
+      SetMotion(&p->s, MOTION(0x18, 0x02));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).d.y += 0x10;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 extern const s32* const PTR_ARRAY_0836ea50[3];
 
