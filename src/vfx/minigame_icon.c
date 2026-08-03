@@ -100,7 +100,91 @@ struct VFX* FUN_080c82b8(struct Entity* e, struct Coord* c, u8 a2, u32 a3, u8 a4
   return p;
 }
 
-INCASM("asm/vfx/minigame_icon_pre_pre_p4_p2.inc");
+void Ghost77_Update(struct VFX* p);
+
+// 0x080C8330
+void Ghost77_Init(struct VFX* p0) {
+  struct VFX* p = p0;
+  register s32 w asm("r5");
+  register s32 z asm("r2");
+  w = (p->s).work[0];
+  if (w == 0) {
+    register s32 one asm("r2");
+    (p->s).flags &= ~X_FLIP;
+    one = 1;
+    ((p->s).spr).xflip = w;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      *oa = m11;
+    }
+    {
+      u32 tbl = (u32)gVFXFnTable;
+      EntityFunc** rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+      *(u32*)((p->s).mode) = one;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+    }
+    (p->s).mode[1] = w;
+    (p->s).mode[2] = w;
+    (p->s).mode[3] = w;
+  } else if (w == 1) {
+    u32 tbl;
+    EntityFunc** rt;
+    z = 0;
+    (p->s).flags &= ~X_FLIP;
+    ((p->s).spr).xflip = z;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      *oa = m11;
+    }
+    tbl = (u32)gVFXFnTable;
+    rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+    *(u32*)((p->s).mode) = w;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+    (p->s).mode[1] = w;
+    (p->s).mode[2] = z;
+    (p->s).mode[3] = z;
+  } else {
+    u32 tbl;
+    EntityFunc** rt;
+    register s32 one2 asm("r3");
+    if (w == 2) {
+      goto arm3;
+    }
+    if (w == 3) {
+      goto arm3;
+    }
+    if (w != 4) {
+      goto done;
+    }
+  arm3:
+    z = 0;
+    (p->s).flags &= ~X_FLIP;
+    one2 = 1;
+    ((p->s).spr).xflip = z;
+    {
+      u8* oa = (u8*)p + 0x4a;
+      s32 ov = *oa;
+      s32 m11 = -0x11;
+      m11 &= ov;
+      *oa = m11;
+    }
+    tbl = (u32)gVFXFnTable;
+    rt = (EntityFunc**)(tbl + (((p->s).id) << 2));
+    *(u32*)((p->s).mode) = one2;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+    (p->s).mode[1] = w;
+    (p->s).mode[2] = z;
+    (p->s).mode[3] = z;
+  }
+done:
+  Ghost77_Update(p);
+}
 
 void Ghost77_Update(struct VFX* p) {
   (sUpdates[(p->s).mode[1]])(p);
