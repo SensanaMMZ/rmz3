@@ -3,6 +3,8 @@
 #include "global.h"
 #include "vfx.h"
 #include "motion.h"
+#include "zero.h"
+#include "metatile.h"
 
 void FUN_080866a4(struct Entity* e, u8 mode, u8 xflip) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -271,7 +273,124 @@ void FUN_08086dcc(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/hanumachine_obj_post_b.inc");
+// 0x08086E34
+void FUN_08086e34(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    register s32 dx asm("r1");
+    register s32 dy asm("r0");
+    register s32 len asm("r5");
+    struct Zero* z;
+    SetMotion(&p->s, MOTION(0x6A, 3));
+    z = pZero2;
+    dx = (p->s).coord.x;
+    dx -= (z->s).coord.x;
+    (p->s).d.x = dx;
+    dy = (p->s).coord.y;
+    dy -= (z->s).coord.y;
+    dy += -0x1800;
+    (p->s).d.y = dy;
+    dx >>= 8;
+    len = dx * dx;
+    dy >>= 8;
+    {
+      s32 u = dy * dy;
+      len += u;
+    }
+    len = (u16)Sqrt(len);
+    if (len != 0) {
+      s32 a = (p->s).d.x / len;
+      s32 b;
+      (p->s).d.x = a;
+      b = (p->s).d.y / len;
+      (p->s).d.x = a * 6;
+      (p->s).d.y = b * 6;
+    } else {
+      register s32 nv asm("r0");
+      register s32 zy asm("r0");
+      if (((pZero2->s).flags & 0x10) != 0) {
+        nv = 0xC0 << 3;
+      } else {
+        nv = -0x600;
+      }
+      (p->s).d.x = nv;
+      zy = 0;
+      asm volatile("" : "+r"(zy));
+      (p->s).d.y = zy;
+    }
+    if ((p->s).d.x > 0) {
+      register s32 zc asm("r2");
+      register u8* a4c asm("r0");
+      register u8* a4a asm("r2");
+      register u8 ov asm("r1");
+      register s32 m asm("r0");
+      zc = 0;
+      {
+        register u8 fl asm("r1");
+        register s32 g asm("r0");
+        fl = (p->s).flags;
+        g = 0xEF;
+        g &= fl;
+        (p->s).flags = g;
+      }
+      a4c = (u8*)p + 0x4c;
+      *a4c = zc;
+      a4a = (u8*)p + 0x4a;
+      ov = *a4a;
+      m = 0x11;
+      m = -m;
+      m &= ov;
+      *a4a = m;
+    } else {
+      register s32 one asm("r2");
+      register u8* b4c asm("r0");
+      register u8* b4a asm("r3");
+      register s32 k10 asm("r2");
+      register u8 ov2 asm("r1");
+      register s32 m2 asm("r0");
+      one = 1;
+      {
+        register u8 fl2 asm("r1");
+        register s32 g2 asm("r0");
+        fl2 = (p->s).flags;
+        g2 = 0x10;
+        g2 |= fl2;
+        (p->s).flags = g2;
+      }
+      b4c = (u8*)p + 0x4c;
+      *b4c = one;
+      b4a = (u8*)p + 0x4a;
+      k10 = 0x10;
+      ov2 = *b4a;
+      m2 = 0x11;
+      m2 = -m2;
+      m2 &= ov2;
+      m2 |= k10;
+      *b4a = m2;
+    }
+    *((u8*)p + 0xbd) = 1;
+    SetDDP(&p->body, &sCollisions[4]);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    s32 cx = (p->s).coord.x;
+    s32 vx = (p->s).d.x;
+    s32 nx = cx + vx;
+    s32 cy;
+    s32 vy;
+    s32 ny;
+    (p->s).coord.x = nx;
+    cy = (p->s).coord.y;
+    vy = (p->s).d.y;
+    ny = cy + vy;
+    (p->s).coord.y = ny;
+    (p->s).d.y = vy + 0x40;
+    if ((*(u32*)((u8*)p + 0x8c) & 4) != 0 || ((u16)FUN_080098a4(nx + vx, ny) << 16) != 0 ||
+        ((u16)FUN_080098a4((p->s).coord.x + (p->s).d.x, (p->s).coord.y + -0x1000) << 16) != 0) {
+      *(u16*)((u8*)p + 0xc0) = 0;
+    }
+  }
+}
 
 void HanumachineObj_Init(struct Enemy* p);
 void HanumachineObj_Update(struct Enemy* p);
