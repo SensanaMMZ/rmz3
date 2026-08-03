@@ -499,7 +499,94 @@ void FUN_08076220(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/purple_nerple_p2_p2_p4.inc");
+// 0x080762EC
+void FUN_080762ec(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 xf asm("r2");
+      SetDDP(&p->body, &sCollisions[1]);
+      xf = 0;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        xf = 1;
+      }
+      if (xf != 0) {
+        (p->s).flags |= 0x10;
+      } else {
+        (p->s).flags &= 0xEF;
+      }
+      {
+        register s32 xv asm("r1");
+        register u8* oa asm("r3");
+        s32 sh4, ov, m11;
+        xv = xf;
+        *((u8*)p + 0x4c) = xv;
+        oa = (u8*)p + 0x4a;
+        sh4 = xv << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      SetMotion(&p->s, 0x2A02);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register struct Camera* cam asm("r1");
+      register s32 cx asm("r3");
+      register s32 vx asm("r2");
+      cam = &gStageRun.vm.camera;
+      (p->s).coord.y = cam->viewport.y - 0x7000;
+      cx = (p->s).coord.x;
+      {
+        register s32 t asm("r0");
+        register s32 lim asm("r1");
+        t = cx + 0x7800;
+        vx = cam->viewport.x;
+        t -= vx;
+        lim = 0x2000;
+        if (t > lim) {
+          register s32 t2 asm("r0");
+          register s32 lim2 asm("r1");
+          t2 = cx + -0x77FF;
+          t2 -= vx;
+          lim2 = -0x2000;
+          if (t2 < lim2) {
+            goto adv;
+          }
+        }
+      }
+      if (*((u8*)p + 0xb9) == 0) {
+        goto skip;
+      }
+    adv:
+      (p->s).mode[2]++;
+    skip:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      (p->s).d.y = 0x300;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 cy asm("r1");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 dy asm("r0");
+        cy = (p->s).coord.y;
+        dy = (p->s).d.y;
+        cy += dy;
+      }
+      (p->s).coord.y = cy;
+      if (cy > (pZero2->s).coord.y) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
 
 void FUN_080763f8(struct Enemy* p) {
   register s32 m asm("r4");
