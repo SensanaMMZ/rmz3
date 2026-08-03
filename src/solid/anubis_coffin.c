@@ -199,7 +199,87 @@ void coffin_080ce0d4(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/anubis_coffin_post_p2_b.inc");
+void FUN_080bf438(s32 x, s32 y, u8 n);
+
+// 0x080CE204
+void coffin_080ce204(struct Solid* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      RemovePaletteAnimation(0x47);
+      StartPaletteAnimation(0x46, ((u32)GetEntityPalID(&p->s) << 5) | 0x200);
+      (p->s).work[3] = m;
+      (p->s).d.y = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 z asm("r6");
+      register s32* b4 asm("r5");
+      register s32 ny asm("r1");
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[3];
+        t++;
+        z = 0;
+        (p->s).work[3] = t;
+        t <<= 24;
+        t = (u32)t >> 24;
+        b4 = (s32*)((u8*)p + 0xb4);
+        if (t == 4) {
+          FUN_080bf438((p->s).coord.x, *b4, 0);
+        }
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      {
+        register s32 dv asm("r0");
+        ny = (p->s).coord.y;
+        dv = (p->s).d.y;
+        ny += dv;
+        (p->s).coord.y = ny;
+      }
+      if (ny > *b4 + 0x2000) {
+        (p->s).flags2 &= ~8;
+        {
+          register u8 g asm("r0");
+          register u8 h asm("r1");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xFE;
+          g &= h;
+          h = 0xFD;
+          g &= h;
+          (p->s).flags = g;
+        }
+        {
+          u8* a = (u8*)p + 0x8c;
+          *(u32*)a = z;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *(u32*)a = z;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *a = z;
+        }
+        (p->s).flags &= 0xFB;
+        SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+        RemovePaletteAnimation(0x46);
+        return;
+      }
+      StepPaletteAnimation(0x46);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+  if ((p->s).work[3] == 0) {
+    FUN_080cdd64(p);
+  }
+}
 
 
 // --------------------------------------------
