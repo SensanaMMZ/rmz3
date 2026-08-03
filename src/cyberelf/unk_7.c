@@ -264,7 +264,62 @@ void FUN_080e3f54(struct Elf* p) {
   }
 }
 
-INCASM("asm/cyberelf/unk_7_p2.inc");
+// 0x080E3F70
+void FUN_080e3f70(struct Elf* p) {
+  register struct Zero* z asm("r5") = ((struct CyberElf7*)p)->player;
+  const struct Rect* zr;
+  const struct Rect* rp;
+  s32 w0, w1;
+  register s32 rx asm("r0");
+  s32 dx, dy, ox, oy, f, k, v;
+  zr = gZeroRanges;
+  asm("" : "+r"(zr));
+  {
+    register s32 idx asm("r0");
+    register const struct Rect* base asm("r1");
+    register const struct Rect* res asm("r0");
+    base = zr;
+    asm volatile("" : "+r"(base));
+    idx = *((u8*)z + 0x147) * 8;
+    asm volatile("add %0, %1, %2" : "=l"(res) : "l"(idx), "l"(base));
+    rp = res;
+  }
+  w0 = ((const s32*)rp)[0];
+  w1 = ((const s32*)rp)[1];
+  v = *(s32*)((u8*)p + 0xc0) - 0x60;
+  *(s32*)((u8*)p + 0xc0) = v;
+  if (v <= 0xC00) {
+    *(s32*)((u8*)p + 0xc0) = 0xC00;
+    SET_ELF_ROUTINE(p, 2);
+  }
+  if (((struct CyberElf7*)p)->unk_b8[2] == 0) {
+    asm volatile("lsl %0, %1, #16
+	asr %0, %0, #16" : "=l"(rx) : "l"(w0));
+    dx = (z->s).coord.x + rx;
+    dy = (z->s).coord.y + (w0 >> 16) - 0x200;
+  } else if (((struct CyberElf7*)p)->unk_b8[2] == 1) {
+    asm volatile("lsl %0, %1, #16
+	asr %0, %0, #16" : "=l"(rx) : "l"(w0));
+    dx = (z->s).coord.x + rx;
+    dy = (z->s).coord.y;
+  } else {
+    asm volatile("lsl %0, %1, #16
+	asr %0, %0, #16" : "=l"(rx) : "l"(w0));
+    dx = (z->s).coord.x + rx;
+    dy = (z->s).coord.y - (w1 >> 16);
+  }
+  ox = (p->s).coord.x;
+  dx -= ox;
+  oy = (p->s).coord.y;
+  dy -= oy;
+  f = *(s32*)((u8*)p + 0xc0);
+  k = 0xA0 << 6;
+  f = k - f;
+  dx = dx * f / k;
+  dy = dy * f / k;
+  (p->s).coord.x = ox + dx;
+  (p->s).coord.y = oy + dy;
+}
 
 void FUN_080e3f24(struct Elf* p);
 void FUN_080e3f54(struct Elf* p);
