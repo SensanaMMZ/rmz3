@@ -542,6 +542,92 @@ void FUN_0808da24(struct Enemy* p) {
 
 INCASM("asm/enemy/deathlock_post_p2b.inc");
 
+// 0x0808DD7C
+void FUN_0808dd7c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x18;
+      SetMotion(&p->s, 0x7402);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0) {
+        FUN_0808d10c(&p->s);
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, 0x7403);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        u8* a = (u8*)p + 0xba;
+        s32 z = 0;
+        s32 k = 0x20;
+        *a = k;
+        k = 1;
+        (p->s).mode[1] = k;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+  {
+    s32 hit = FUN_0800a40c((p->s).coord.x - 0x1200, (p->s).coord.y + 0x400);
+    if (hit == 0) {
+      hit = FUN_0800a40c((p->s).coord.x + 0x1200, (p->s).coord.y + 0x400);
+      if (hit == 0) {
+        goto skip;
+      }
+    }
+    if ((u8)FUN_0808d160(p, hit) != 0) {
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+    }
+  }
+skip:
+  {
+    u8 r = (u8)FUN_0808d268(p, 1);
+    if (r == 0) {
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = r;
+    }
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x6000) {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    register s32 zr asm("r2");
+    u8* a;
+    h = (p->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    zr = 0;
+    h = 0xFD;
+    g &= h;
+    (p->s).flags = g;
+    a = (u8*)p + 0x8c;
+    *(s32*)a = zr;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *(s32*)a = zr;
+    asm("" : "+r"(a));
+    a += 4;
+    asm("" : "+r"(a));
+    *a = zr;
+    (p->s).flags &= ~4;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
+
+INCASM("asm/enemy/deathlock_post_p2b2.inc");
+
 #include "zero.h"
 
 // 0x0808e18c
