@@ -576,7 +576,42 @@ void FUN_0807336c(struct Body* body, struct Coord* c) {
   }
 }
 
-INCASM("asm/enemy/pantheon_aqua_p10.inc");
+struct VFX* FUN_080ba888(struct Coord* c, struct Coord* d, u8 n);
+
+// 0x080733B4
+void FUN_080733b4(struct Enemy* p, s32 r1) {
+  struct Coord c;
+  struct Coord d;
+  if (((p->s).flags & 0x10) == 0) {
+    {
+      s32 v;
+      asm volatile("mov %0, #0x98\n\tlsl %0, %0, #5" : "=l"(v));
+      c.x = v;
+    }
+    d.x = (RANDOM(RNG_0202f388) & 0x1F) + 0x168;
+  } else {
+    c.x = -0x1300;
+    d.x = -0x168 - (s32)(RANDOM(RNG_0202f388) & 0x1F);
+  }
+  c.x += (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1800;
+  d.y = 0x168;
+  FUN_080ba888(&c, &d, 0);
+  if (((p->s).flags & 0x10) == 0) {
+    c.x = -0x400;
+  } else {
+    c.x = 0x400;
+  }
+  c.x += (p->s).coord.x;
+  c.y = (p->s).coord.y - 0x1800;
+  if (((p->s).flags & 0x10) == 0) {
+    d.x = (RANDOM(RNG_0202f388) & 0x1F) + 0x148;
+  } else {
+    d.x = -0x148 - (s32)(RANDOM(RNG_0202f388) & 0x1F);
+  }
+  d.y = 0x188;
+  FUN_080ba888(&c, &d, 1);
+}
 
 u8 FUN_08073500(struct Enemy* p) {
   register struct Zero* z asm("r3");
