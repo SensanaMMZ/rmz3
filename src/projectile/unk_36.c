@@ -51,7 +51,72 @@ void Projectile36_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_36_pre_post_p2_p1.inc");
+extern const s16 gSineTable[256];
+
+// 0x080AD698
+void FUN_080ad698(struct Projectile* p) {
+  register s32 z asm("r5");
+  register const s16* tb asm("r4");
+  s32 dx;
+  s32 dy;
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fv asm("r0");
+    register u8 fl asm("r1");
+    fl = (p->s).flags;
+    fv = 1;
+    z = 0;
+    fv |= fl;
+    fl = 2;
+    fv |= fl;
+    (p->s).flags = fv;
+  }
+  SetMotion(&p->s, 0x6A00);
+  (p->s).flags |= COLLIDABLE;
+  {
+    struct Body* body = &p->body;
+    InitBody(body, (const struct Collision*)0x0836C8E0, &(p->s).coord, 1);
+    body->parent = (struct CollidableEntity*)p;
+    body->fn = (BodyFunc)z;
+  }
+  tb = gSineTable;
+  {
+    register s32 a2 asm("r3");
+    u8 a = (p->s).work[1];
+    s32 s1;
+    a2 = a;
+    a2 += 0xC0;
+    s1 = tb[a];
+    dx = ((s1 * 8 - s1) << 7) / 256;
+    (p->s).d.x = dx;
+    {
+      register s32 ix asm("r0");
+      s32 s2;
+      asm volatile("lsl %0, %1, #0x18
+	lsr %0, %0, #0x17" : "=l"(ix) : "l"(a2));
+      {
+        register const s16* e asm("r0");
+        asm volatile("add %0, %1, %2" : "=l"(e) : "l"(ix), "l"(tb));
+        s2 = *e;
+      }
+      dy = ((s2 * 8 - s2) << 7) / 256;
+      (p->s).d.y = dy;
+    }
+  }
+  {
+    register s32 nx asm("r2");
+    nx = (p->s).coord.x + (dx << 3);
+    (p->s).coord.x = nx;
+    (p->s).coord.y += (dy << 3);
+    *(s32*)((u8*)p + 0xb4) = nx;
+    *(s32*)((u8*)p + 0xb8) = (p->s).coord.y;
+  }
+  FUN_080ad5f0(&p->s, 1, 3);
+  FUN_080ad5f0(&p->s, 1, 6);
+  FUN_080ad5f0(&p->s, 1, 9);
+  SET_PROJECTILE_ROUTINE(p, ENTITY_UPDATE);
+  Projectile36_Update(p);
+}
 
 void FUN_080ad778(struct Projectile* p) {
   UpdateMotionGraphic(&p->s);
