@@ -858,7 +858,229 @@ void volteelMode11(struct Boss* p) {
 
 bool8 FUN_08045610(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p14_p1.inc");
+s32 PushoutToUp2(s32 x, s32 y);
+s32 PushoutToLeft2(s32 x, s32 y);
+s32 PushoutToRight2(s32 x, s32 y);
+
+// 0x08045614
+void volteelKnockBackDamage(struct Boss* p) {
+  register s32 z asm("r5");
+  z = (p->s).mode[2];
+  switch (z) {
+    case 0: {
+      register u8* oa asm("r2");
+      PlaySound(0x81);
+      SetMotion(&p->s, 0xA504);
+      if (isSoundPlaying(0x7f)) {
+        StopSound(0x7f);
+      }
+      if ((pZero2->s).coord.x > (p->s).coord.x) {
+        register s32 g asm("r0");
+        register s32 k asm("r1");
+        (p->s).d.x = -0x200;
+        *((u8*)p + 0x4c) = 1;
+        oa = (u8*)p + 0x4a;
+        g = *oa;
+        k = 0x10;
+        g |= k;
+        *oa = g;
+        {
+          register s32 fv asm("r0");
+          fv = (p->s).flags;
+          k |= fv;
+          (p->s).flags = k;
+        }
+      } else {
+        register s32 ov asm("r1");
+        register s32 m asm("r0");
+        (p->s).d.x = 0x80 << 2;
+        *((u8*)p + 0x4c) = z;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        m = -0x11;
+        m &= ov;
+        *oa = m;
+        {
+          register u8 h asm("r1");
+          register u8 g2 asm("r0");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g2 = 0xEF;
+          g2 &= h;
+          (p->s).flags = g2;
+        }
+      }
+      {
+        register u8* oa2 asm("r5");
+        register s32 zr asm("r3");
+        oa2 = oa;
+        {
+          register s32* cp asm("r0");
+          cp = (s32*)((u8*)p + 0xc0);
+          zr = 0;
+          *cp = zr;
+        }
+        {
+          register u8* gw asm("r2");
+          register s32 off asm("r1");
+          register u8* dst asm("r0");
+          gw = (u8*)&gOverworld;
+          off = 0xe8 << 1;
+          if ((*(u16*)(gw + off) & 0x7f) == 0xd) {
+            off = 0x0002D024;
+          } else {
+            off = 0x0002D026;
+          }
+          dst = gw + off;
+          *dst = zr;
+        }
+        {
+          register s32 g3 asm("r0");
+          register s32 h3 asm("r1");
+          register s32 z2 asm("r2");
+          h3 = (p->s).flags;
+          asm("" : "+r"(h3));
+          g3 = 1;
+          z2 = 0;
+          g3 |= h3;
+          (p->s).flags = g3;
+          {
+            register u8* q asm("r3");
+            register s32 ov2 asm("r1");
+            register s32 m2 asm("r0");
+            register s32 k8 asm("r1");
+            q = (u8*)p + 0x49;
+            ov2 = *q;
+            m2 = 0xd;
+            m2 = -m2;
+            m2 &= ov2;
+            k8 = 8;
+            m2 |= k8;
+            *q = m2;
+          }
+          {
+            register u8* a2 asm("r0");
+            a2 = (u8*)p + 0x24;
+            *a2 = z2;
+            a2 += 0x29;
+            asm("" : "+r"(a2));
+            *a2 = z2;
+          }
+        }
+        {
+          register s32 ov3 asm("r1");
+          register s32 m3 asm("r0");
+          ov3 = *oa2;
+          m3 = -0x21;
+          m3 &= ov3;
+          *oa2 = m3;
+        }
+        {
+          register u8 h4 asm("r1");
+          register u8 g4 asm("r0");
+          h4 = (p->s).flags;
+          asm("" : "+r"(h4));
+          g4 = 0xDF;
+          g4 &= h4;
+          (p->s).flags = g4;
+        }
+      }
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 dx asm("r1");
+      register s32 cy asm("r2");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 v asm("r0");
+        v = (p->s).d.x;
+        dx = -v;
+        dx <<= 3;
+        dx >>= 8;
+        v += dx;
+        (p->s).d.x = v;
+      }
+      {
+        register s32 v2 asm("r0");
+        register s32 lim asm("r1");
+        v2 = (p->s).d.y;
+        v2 += 0x20;
+        (p->s).d.y = v2;
+        lim = 0xe0 << 3;
+        if (v2 > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      {
+        register s32 yv asm("r1");
+        register s32 dyv asm("r0");
+        yv = (p->s).coord.y;
+        dyv = (p->s).d.y;
+        cy = yv + dyv;
+        (p->s).coord.y = cy;
+      }
+      {
+        register s32 cx asm("r0");
+        cx = (p->s).coord.x;
+        dx = (p->s).d.x;
+        cx += dx;
+        (p->s).coord.x = cx;
+        if (dx > 0) {
+          register s32 k3 asm("r3");
+          register s32 yy asm("r1");
+          k3 = 0x90 << 5;
+          cx += k3;
+          k3 = -0x800;
+          yy = cy + k3;
+          yy = PushoutToLeft2(cx, yy);
+          if (yy != 0) {
+            (p->s).coord.x += yy;
+          }
+        }
+      }
+      if ((p->s).d.x < 0) {
+        register s32 xx asm("r0");
+        register s32 k4 asm("r1");
+        register s32 k5 asm("r2");
+        xx = (p->s).coord.x;
+        k4 = -0x1200;
+        xx += k4;
+        k4 = (p->s).coord.y;
+        k5 = -0x800;
+        k4 += k5;
+        k4 = PushoutToRight2(xx, k4);
+        if (k4 != 0) {
+          (p->s).coord.x += k4;
+        }
+      }
+      {
+        register s32 pu asm("r1");
+        pu = PushoutToUp2((p->s).coord.x, (p->s).coord.y);
+        if (pu != 0) {
+          (p->s).coord.y += pu;
+        }
+      }
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      {
+        register s32 z3 asm("r0");
+        register s32 three asm("r1");
+        z3 = 0;
+        three = 3;
+        (p->s).mode[1] = three;
+        (p->s).mode[2] = z3;
+        (p->s).mode[3] = 0xff;
+      }
+      break;
+    }
+  }
+}
+
 
 #include "element.h"
 
