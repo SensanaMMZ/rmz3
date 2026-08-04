@@ -1863,6 +1863,124 @@ void deathtanzMode19(struct Boss* p) {
   }
 }
 
+static const struct Coord sExplosionCoords[2];
+void FUN_080bdb44(s32 x, s32 y);
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
+
+// 0x0804AC44
+void FUN_0804ac44(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 hit asm("r5");
+      register u8* f asm("r6");
+      struct Coord c;
+      hit = 0;
+      {
+        register u8* t asm("r2");
+        register s32 b1 asm("r0");
+        t = (u8*)p + 0xc1;
+        {
+          register s32 tv asm("r1");
+          tv = *t;
+          b1 = 1;
+          b1 &= tv;
+        }
+        f = t;
+        if (b1 == 0) {
+          goto skip1;
+        }
+      }
+      {
+        register s32 cx asm("r3");
+        register s32 v0 asm("r0");
+        register s32 v asm("r2");
+        hit = 1;
+        cx = (p->s).coord.x;
+        v0 = cx + 0xFFFFD600;
+        c.x = v0;
+        v = v0;
+        if (((p->s).flags & 0x10) != 0) {
+          register s32 k asm("r0");
+          k = 0xb0 << 6;
+          v = cx + k;
+        }
+        c.x = v;
+        c.y = (p->s).coord.y + 0xFFFFE700;
+        CreateSmoke(1, &c);
+        FUN_080bdb44(c.x, c.y);
+      }
+    skip1:
+      if ((*f & 2) != 0) {
+        hit = 1;
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y + 0xFFFFB400;
+        CreateSmoke(1, &c);
+        FUN_080bdb44(c.x, c.y);
+      }
+      if (hit != 0) {
+        PlaySound(0x2A);
+      }
+      {
+        u8* a = (u8*)p + 0x8c;
+        s32 z = 0;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= 0xFB;
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      {
+        register u16 ms asm("r2");
+        ms = gStageRun.missionStatus;
+        hit = 1;
+        if ((hit & ms) != 0) {
+          register s32 av asm("r1");
+          register s32 t2 asm("r0");
+          av = gStageRun.vm.active;
+          t2 = hit;
+          t2 &= av;
+          if (t2 == 0) {
+            gStageRun.missionStatus = (ms & 0xFFFE) | 0x10;
+          }
+        }
+      }
+      (p->s).work[2] = 0x50;
+      SetMotion(&p->s, 0xA737);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2] = (p->s).work[2] - 1;
+      if (((p->s).scriptEntity->flags & 0x80) == 0) {
+        break;
+      }
+      goto adv;
+    case 2:
+      (p->s).unk_2c = CreateBossExplosion(&p->s, (struct Coord*)sExplosionCoords);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      if (((struct Entity*)(p->s).unk_2c)->mode[0] <= 1) {
+        break;
+      }
+      gStageRun.vm.active |= 2;
+    adv:
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      break;
+  }
+}
+
 INCASM("asm/boss/deathtanz_c3b.inc");
 
 // --------------------------------------------
