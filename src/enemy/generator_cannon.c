@@ -541,7 +541,148 @@ void generatorcannon_0808cad8(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/generator_cannon_post_p2_p2_b.inc");
+// 0x0808CC08
+void generatorcannon_0808cc08(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r5");
+      register s32 dy asm("r6");
+      register s32 dist asm("r4");
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0x3FFF) {
+        PlaySound(0x85 * 2);
+      }
+      {
+        register u8* a asm("r1");
+        register s32 v asm("r0");
+        a = (u8*)p + 0xb8;
+        v = 1;
+        *a = v;
+        asm("" : "+r"(a));
+        a -= 0x93;
+        asm("" : "+r"(a));
+        v = 0x18;
+        *a = v;
+      }
+      SetDDP(&p->body, (const struct Collision*)0x08368F70);
+      {
+        register struct Zero* z asm("r1");
+        register s32 t asm("r0");
+        z = pZero2;
+        dx = (z->s).coord.x;
+        t = (p->s).coord.x;
+        dx -= t;
+        t = (p->s).coord.y;
+        {
+          register s32 k asm("r2");
+          k = 0xC0 * 32;
+          t += k;
+        }
+        dy = (z->s).coord.y;
+        dy -= t;
+      }
+      {
+        register s32 a asm("r0");
+        register s32 t1 asm("r1");
+        register s32 b asm("r1");
+        register s32 t2 asm("r2");
+        register s32 sq asm("r0");
+        a = dx >> 8;
+        asm volatile("add %0, %1, #0" : "=&l"(t1) : "l"(a));
+        t1 *= a;
+        asm volatile("add %0, %1, #0" : "=&l"(a) : "l"(t1));
+        b = dy >> 8;
+        asm volatile("add %0, %1, #0" : "=&l"(t2) : "l"(b));
+        t2 *= b;
+        asm volatile("add %0, %1, #0" : "=&l"(b) : "l"(t2));
+        a += b;
+        sq = ((s32(*)(u32))Sqrt)(a);
+        asm volatile("add %0, %1, #0" : "=&l"(dist) : "l"(sq));
+      }
+      dist <<= 16;
+      dist = (s32)(((u32)dist) >> 8);
+      dx <<= 8;
+      dx /= dist;
+      dy <<= 8;
+      dy /= dist;
+      dx <<= 2;
+      (p->s).d.x = dx;
+      {
+        register s32 ty asm("r0");
+        ty = dy << 2;
+        (p->s).d.y = ty;
+      }
+      {
+        register s32 xf asm("r1");
+        xf = 0;
+        if (dx > 0) {
+          xf = 1;
+        }
+        {
+          register s32 xf2 asm("r2");
+          xf2 = xf;
+          if (xf2 != 0) {
+            register u8 fl asm("r0");
+            register s32 k asm("r1");
+            fl = (p->s).flags;
+            k = 0x10;
+            fl |= k;
+            (p->s).flags = fl;
+          } else {
+            register u8 h asm("r1");
+            register u8 g asm("r0");
+            h = (p->s).flags;
+            asm("" : "+r"(h));
+            g = 0xEF;
+            g &= h;
+            (p->s).flags = g;
+          }
+          {
+            register s32 v asm("r1");
+            register u8* oa asm("r3");
+            s32 sh4, ov, m11;
+            v = xf2;
+            *((u8*)p + 0x4c) = v;
+            oa = (u8*)p + 0x4a;
+            sh4 = v << 4;
+            ov = *oa;
+            m11 = -0x11;
+            m11 &= ov;
+            m11 |= sh4;
+            *oa = m11;
+          }
+        }
+      }
+      SetMotion(&p->s, MOTION(0x72, 0x01));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x80 * 128) {
+        register s32 zz asm("r2");
+        u8* a;
+        (p->s).flags &= ~DISPLAY;
+        zz = 0;
+        (p->s).flags &= ~FLIPABLE;
+        a = (u8*)p + 0x8c;
+        *(u32*)a = zz;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = zz;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = zz;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+  }
+}
+
 
 void FUN_0808cefc(struct Enemy* p);
 
