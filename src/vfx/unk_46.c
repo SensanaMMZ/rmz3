@@ -165,7 +165,144 @@ void VFX46_Die(struct VFX* vfx) {
   SET_VFX_ROUTINE(vfx, ENTITY_EXIT);
 }
 
-INCASM("asm/vfx/unk_46_post.inc");
+// 0x080BEF44
+void FUN_080bef44(struct VFX46* p) {
+  register s32 md asm("r6");
+  {
+    s32 t = (p->s).work[2] - 1;
+    (p->s).work[2] = t;
+    if ((t << 24) != 0) {
+      register u32 r asm("r1");
+      r = (u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+      if (r == 0) {
+        goto sw;
+      }
+      if ((r & (0x80 << 8)) != 0) {
+        goto sw;
+      }
+      if ((p->s).d.y <= 0) {
+        goto sw;
+      }
+    }
+  }
+  CreateSmoke(2, &(p->s).coord);
+  {
+    u32 tbl = (u32)gVFXFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    register u32 two asm("r1");
+    two = 2;
+    *(u32*)((p->s).mode) = two;
+    (p->s).onUpdate = (void*)((*rt)[2]);
+  }
+  return;
+sw:
+  md = (p->s).mode[2];
+  switch (md) {
+    case 0: {
+      register u32* rp asm("r4");
+      register u32 K asm("sb");
+      register u32 C asm("r5");
+      register motion_t* mp asm("r8");
+      register const s32* ent asm("r2");
+      u32 st;
+      {
+        register const u32* tb asm("r4");
+        register u32 ix asm("r0");
+        u32 base;
+        tb = (const u32*)0x0836F0CC;
+        asm("" : "+r"(tb));
+        mp = &p->unk_74;
+        ix = *mp % 5;
+        ix = (u32)(u16)ix << 2;
+        ix += (u32)tb;
+        base = *(const u32*)ix;
+        ent = (const s32*)(p->unk_78 << 3);
+        ent = (const s32*)((u32)ent + base);
+      }
+      rp = &RNG_0202f388;
+      {
+        register u32 raw asm("r1");
+        register u32 s0 asm("r0");
+        s0 = *rp;
+        K = 0x343FD;
+        raw = s0 * K;
+        C = 0x269EC3;
+        raw += C;
+        raw <<= 1;
+        st = raw >> 1;
+        *rp = st;
+        raw >>= 0x11;
+        {
+          register u32 m asm("r0");
+          m = 0xff;
+          raw &= m;
+        }
+        (p->s).d.y = ent[1] - raw;
+      }
+      {
+        register s32 v asm("r2");
+        register u32 raw2 asm("r0");
+        v = ent[0];
+        v += 0xFFFFFE80;
+        raw2 = st * K;
+        raw2 += C;
+        raw2 <<= 1;
+        *rp = raw2 >> 1;
+        raw2 <<= 6;
+        v += raw2 >> 0x17;
+        (p->s).d.x = v;
+      }
+      SetMotion(&p->s, *mp);
+      (p->s).work[2] = 0x5a;
+      (p->s).work[3] = md;
+      {
+        register u32 raw3 asm("r0");
+        register u32 t3 asm("r1");
+        t3 = *rp * K;
+        raw3 = t3;
+        raw3 += C;
+        raw3 <<= 1;
+        *rp = raw3 >> 1;
+        raw3 >>= 0x11;
+        raw3 &= 7;
+        (p->s).unk_coord.x = raw3 + 0x1e;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 w3 asm("r1");
+      (p->s).work[3] = (p->s).work[3] + 1;
+      w3 = (p->s).work[3];
+      if (w3 > (p->s).unk_coord.x) {
+        register s32 one asm("r0");
+        one = 1;
+        w3 &= one;
+        if (w3 != 0) {
+          (p->s).flags |= 1;
+        } else {
+          (p->s).flags &= 0xFE;
+        }
+      }
+      {
+        register s32 dy asm("r0");
+        register s32 lim asm("r1");
+        dy = (p->s).d.y + 0x20;
+        (p->s).d.y = dy;
+        lim = 0xe0 << 3;
+        if (dy > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 
 // 0x080BF0A0
 void FUN_080bf0a0(struct VFX* p) {
@@ -366,13 +503,13 @@ void FUN_080bf2f0(struct VFX* p) {
   }
 }
 
-void FUN_080bef44(struct VFX* vfx);
+void FUN_080bef44(struct VFX46* vfx);
 void FUN_080bf0a0(struct VFX* vfx);
 void FUN_080bf17c(struct VFX* vfx);
 void FUN_080bf2f0(struct VFX* vfx);
 
 static const VFXFunc sUpdates[4] = {
-    FUN_080bef44,
+    (VFXFunc)FUN_080bef44,
     FUN_080bf0a0,
     FUN_080bf17c,
     FUN_080bf2f0,
