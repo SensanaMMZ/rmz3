@@ -1,12 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-
-	.text
-
-
-	thumb_func_start FUN_080401d4
-FUN_080401d4: @ 0x080401D4
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, sb

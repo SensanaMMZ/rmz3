@@ -1178,7 +1178,73 @@ bool8 createBlazinEXFireBall(struct Boss* p, u8 a1, u8 a2, s32 a3) {
   return 1;
 }
 
-INCASM("asm/boss/blazin_p12_p2_p1c.inc");
+// 0x080401D4
+// PARKED: agbcc keeps the loop counter in r7 instead of spilling it to r2, so
+// `p` never gets a stack home; retail frame is 0x10 with p at sp+0xc (mine 0x8).
+NON_MATCH s32 FUN_080401d4(struct Boss* p, u8 a) {
+#if MODERN
+  register s32 best asm("sl");
+  register s32 bestDist asm("sb");
+  register const s16* st asm("r8");
+  s32 i;
+  register s32 sn asm("r6");
+  s32 cs;
+  register s32 dx asm("r4");
+  register s32 dy asm("r5");
+  s32 base;
+  best = 0;
+  bestDist = 0x7FFFFFFF;
+  i = 0;
+  base = 0xd * a;
+  st = gSineTable;
+  asm("" : "+r"(st));
+  do {
+    u8 ang;
+    s32 v1;
+    s32 v2;
+    s32 t;
+    ang = ((const u8*)0x080FEE2C)[i] + base;
+    v1 = st[ang];
+    sn = v1;
+    v2 = -st[(u8)(ang + 0x40)];
+    cs = v2;
+    dy = 0xFFFFE400;
+    t = ((v1 << 1) + sn) << 0xb;
+    asm("" : "+r"(t));
+    dx = t >> 8;
+    t = ((v2 << 1) + cs) << 0xb;
+    asm("" : "+r"(t));
+    dy += t >> 8;
+    dx += (p->s).coord.x;
+    dy += (p->s).coord.y;
+    {
+      struct Zero* z = pZero2;
+      sn = (z->s).coord.x - dx;
+      cs = (z->s).coord.y - dy;
+    }
+    {
+      s32 vx = sn >> 2;
+      s32 vy;
+      s32 d;
+      vx = vx * vx;
+      asm("" : "+r"(vx));
+      vy = cs >> 2;
+      vy = vy * vy;
+      d = (s32)(u16)Sqrt(vx + vy) << 2;
+      asm("" : "+r"(cs));
+      if (d < bestDist) {
+        bestDist = d;
+        best = i;
+      }
+    }
+    i++;
+  } while (i <= 4);
+  return best;
+#else
+  INCCODE("asm/boss/FUN_080401d4.inc");
+#endif
+}
+
 
 struct Projectile* blazin_0809e620(struct Entity* e, struct Coord* c, struct Coord* d);
 
