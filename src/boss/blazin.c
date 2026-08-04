@@ -917,7 +917,118 @@ void blazinMode5(struct Boss* p) {
 
 bool8 nop_0803f538(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p7.inc");
+bool8 blazin_08040044(struct Boss* p, u8 a1, u8 a2);
+
+// 0x0803f53c
+void blazinMode6(struct Boss* p) {
+  register u16* t asm("r4");
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, (motion_t)((*(u16*)((u8*)p + 0xc8) + 0xA) | 0xA200));
+      SetDDP(&p->body, &gBlazinCollisions[1]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      SetDDP(&p->body, (const struct Collision*)0x08361D70);
+      (p->s).work[3] = 0;
+      t = (u16*)0x080FED98;
+      SetMotion(&p->s, (motion_t)((t[(p->s).work[3] * 2] + *(u16*)((u8*)p + 0xc8)) | 0xA200));
+      {
+        register s32 idx asm("r0");
+        idx = (p->s).work[3] * 4;
+        t += 1;
+        (p->s).work[2] = *(u16*)(idx + (s32)t);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      if ((p->s).work[2] != 0) {
+        s32 w = (p->s).work[2] - 1;
+        (p->s).work[2] = w;
+        if ((w << 24) != 0) {
+          goto upd;
+        }
+      }
+      {
+        s32 n = (p->s).work[3] + 1;
+        (p->s).work[3] = n;
+        if ((u8)n > 3) {
+          goto adv;
+        }
+      }
+      t = (u16*)0x080FED98;
+      goto setm;
+    case 4:
+      (p->s).mode[3] = 0;
+      (p->s).work[3] = 0;
+      t = (u16*)0x080FED64;
+      SetMotion(&p->s, (motion_t)((t[(p->s).work[3] * 2] + *(u16*)((u8*)p + 0xc8)) | 0xA200));
+      {
+        register s32 idx asm("r0");
+        idx = (p->s).work[3] * 4;
+        t += 1;
+        (p->s).work[2] = *(u16*)(idx + (s32)t);
+      }
+      PlaySound(0x48);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      {
+        register s32 md3 asm("r0");
+        register s32 m3 asm("r1");
+        md3 = (p->s).mode[3];
+        m3 = 3;
+        md3 &= m3;
+        if (md3 == 0) {
+          blazin_08040044(p, (p->s).work[2], (p->s).work[3]);
+        }
+      }
+      (p->s).mode[3]++;
+      if ((p->s).work[2] != 0) {
+        s32 w = (p->s).work[2] - 1;
+        (p->s).work[2] = w;
+        if ((w << 24) != 0) {
+          goto upd;
+        }
+      }
+      {
+        s32 n = (p->s).work[3] + 1;
+        (p->s).work[3] = n;
+        if ((u8)n > 0xC) {
+        adv:
+          (p->s).mode[2]++;
+          goto upd;
+        }
+      }
+      t = (u16*)0x080FED64;
+    setm:
+      SetMotion(&p->s, (motion_t)((t[(p->s).work[3] * 2] + *(u16*)((u8*)p + 0xc8)) | 0xA200));
+      {
+        register s32 idx asm("r0");
+        idx = (p->s).work[3] * 4;
+        t += 1;
+        (p->s).work[2] = *(u16*)(idx + (s32)t);
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 6:
+      StopSound(0x48);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7:
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
+
 
 bool8 nop_0803f710(struct Boss* _) { return TRUE; }
 
