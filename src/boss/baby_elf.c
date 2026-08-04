@@ -615,6 +615,99 @@ void FUN_080478b8(struct Boss* p) {
 }
 INCASM("asm/boss/baby_elf_p2_p1b.inc");
 
+// 0x08047e30
+void babyelf_08047e30(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 z asm("r1");
+      if ((RANDOM(RNG_0202f388) & 1) != 0) {
+        PlaySound(0x8a << 1);
+      } else {
+        PlaySound(0x115);
+      }
+      z = 0;
+      (p->s).work[3] = 0x30;
+      (p->s).d.x = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 v asm("r1");
+      v = (p->s).d.x - 0x10;
+      (p->s).d.x = v;
+      v += *((u8*)p + 0xc7) << 5;
+      (p->s).d.x = v;
+      (p->s).coord.x = (p->s).coord.x + v;
+      {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      (p->s).work[2]++;
+      if ((u8)((p->s).work[2] % 7) == 0) {
+        register u32* rp asm("r5");
+        register u32 a asm("r0");
+        register u32 k1 asm("r4");
+        register u32 r1v asm("r1");
+        register u32 k2 asm("r3");
+        register u32 s1 asm("r2");
+        register s32 x asm("r0");
+        register s32 y asm("r1");
+        rp = &RNG_0202f388;
+        a = *rp;
+        asm("" : "+r"(a));
+        k1 = 0x343FD;
+        r1v = a;
+        r1v *= k1;
+        k2 = 0x269EC3;
+        r1v += k2;
+        r1v <<= 1;
+        s1 = r1v >> 1;
+        r1v = (r1v << 4) >> 21;
+        r1v += (u32)-0x400;
+        x = (p->s).coord.x + (s32)r1v;
+        s1 *= k1;
+        s1 += k2;
+        s1 <<= 1;
+        *rp = s1 >> 1;
+        s1 = (s1 << 5) >> 22;
+        {
+          register s32 k8 asm("r1");
+          k8 = 0x80 << 4;
+          asm volatile("add %0, %0, %1" : "+l"(s1) : "l"(k8));
+        }
+        y = (p->s).coord.y + (s32)s1;
+        FUN_080bc594(x, y, 0, 0, (p->s).work[0]);
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetDDP(&p->body, sCollisions);
+      (p->s).coord.y = *(s32*)((u8*)p + 0xb8) + -0x2000;
+      (p->s).work[3] = 0x30;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register u32 u asm("r1");
+      register s32 t asm("r0");
+      t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      u = (u8)t;
+      if (u == 0) {
+        (p->s).mode[1] = 0xE;
+        (p->s).mode[2] = u;
+      }
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/baby_elf_p2_p1b_post7e30.inc");
+
 void FUN_0809f8ac(struct Entity* e);
 
 void FUN_0804839c(struct Boss* p) {
