@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-	thumb_func_start giantElevator_080148d8
-giantElevator_080148d8: @ 0x080148D8
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -170,4 +162,3 @@ _08014A1E:
 	.align 2, 0
 _08014A2C: .4byte 0x000016FF
 _08014A30: .4byte gBgMapOffsets
-

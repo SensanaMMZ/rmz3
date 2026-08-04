@@ -349,7 +349,59 @@ void giantElevator_08014880(struct StageLayer* p, const struct Stage* _) {
   }
 }
 
-INCASM("asm/stage_gfx/giant_elevator_p1_a2.inc");
+// 0x080148D8
+// PARKED: agbcc hoists the shared `0` argument out of the three phase arms
+// and duplicates the (u8)phase truncation; retail rematerialises both inside
+// each arm and cross-jumps `movs r3, #0 / bl LoadBgMap` between arms 1 and 3.
+// Every barrier tried either kept the hoist or added an s8 sign-extension.
+NON_MATCH void giantElevator_080148d8(struct StageLayer* l, const struct Stage* _ UNUSED) {
+#if MODERN
+  u16 b = l->bgIdx;
+  u8 ph = l->phase;
+  if (ph == 0) {
+    BGCNT16(b >> 4) = l->prio | l->screenBase | 0x8044;
+    RESET_BGOFS(b >> 4);
+    LoadBgMap((u8)b, gBgMapOffsets, 0x5a, 0, 0);
+    loadBgMap_08004248((u16*)(((BGCNT16(b >> 4) & 0x1F00) << 3) + 0x06000800), gBgMapOffsets, 0x5a, 0, 0);
+    l->unk_10 = 0;
+    l->unk_12 = 0;
+    l->phase++;
+  }
+  if (gOverworld.state[1] != 0) {
+    u16 t = l->unk_12;
+    if (t <= 0x7FF) {
+      l->unk_12 = t + 8;
+    }
+  }
+  {
+    s32 nv = (l->unk_12 >> 8) + l->unk_10;
+    u8 ph2;
+    l->unk_10 = nv;
+    ph2 = l->phase;
+    if (ph2 == 1) {
+      if ((u32)(nv << 16) <= 0x14FF0000) {
+        return;
+      }
+      LoadBgMap((u8)b, gBgMapOffsets, 0x5b, 0, 0);
+    } else if (ph2 == 2) {
+      if (l->unk_10 <= 0x15FF) {
+        return;
+      }
+      loadBgMap_08004248((u16*)(((BGCNT16(b >> 4) & 0x1F00) << 3) + 0x06000800), gBgMapOffsets, 0x5d, 0, 0);
+    } else if (ph2 == 3) {
+      if (l->unk_10 <= 0x16FF) {
+        return;
+      }
+      LoadBgMap((u8)b, gBgMapOffsets, 0x5d, 0, 0);
+    } else {
+      return;
+    }
+    l->phase++;
+  }
+#else
+  INCCODE("asm/stage_gfx/giantElevator_080148d8.inc");
+#endif
+}
 
 // 0x08014a34
 void giantElevator_08014a34(struct StageLayer* l, const struct Stage* _ UNUSED) {
