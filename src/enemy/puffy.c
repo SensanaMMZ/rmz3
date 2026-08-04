@@ -6,6 +6,8 @@
 #include "global.h"
 #include "overworld.h"
 #include "overworld_terrain.h"
+#include "mission.h"
+#include "vfx.h"
 
 struct Enemy* CreatePuffy(struct Coord* c, u8 mode) {
   struct Enemy* p = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -153,7 +155,155 @@ void Puffy_Update(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/puffy_p1_p2_c.inc");
+struct Entity* createGhost44(struct Coord* c, u8 kind);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x0807C774
+void Puffy_Die(struct Enemy* p) {
+  register struct Coord* c asm("r5");
+  register struct Enemy* pp asm("r0");
+  register struct Coord* arg asm("r1");
+  if (gStageRun.vm.entities[1].entity != NULL) {
+    c = &(p->s).coord;
+    TryDropItem(5, c);
+    PlaySound(0);
+    if (gMission.enemyCount <= 0x270E) {
+      gMission.enemyCount++;
+    }
+    pp = p;
+    arg = c;
+    asm volatile("");
+    goto dropdisk;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      struct Coord cc;
+      register u8* d asm("r0");
+      SetMotion(&p->s, 0x4101);
+      {
+        register u8* a asm("r0");
+        register s32 z asm("r1");
+        a = (u8*)p + 0x8c;
+        z = 0;
+        asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+        {
+          register u8 fv asm("r2");
+          register s32 m asm("r0");
+          fv = (p->s).flags;
+          m = 0xfb;
+          m &= fv;
+          (p->s).flags = m;
+        }
+        d = (u8*)p + 0x5c;
+        *(s32*)(d + 4) = z;
+        (p->s).d.x = z;
+      }
+      if (*(d + 0x64) != 0) {
+        cc.x = (p->s).coord.x;
+        cc.y = (p->s).coord.y + -0x600;
+        createGhost44(&cc, ((p->s).flags >> 4) & 1);
+        TryDropItem(5, &(p->s).coord);
+        (p->s).work[2] = 0xa;
+        (p->s).mode[2]++;
+        goto tick;
+      }
+      cc.x = (p->s).coord.x;
+      cc.y = (p->s).coord.y + -0x600;
+      CreateSmoke(1, &cc);
+      PlaySound(0x2A);
+      c = &(p->s).coord;
+      TryDropItem(5, c);
+      if (gMission.enemyCount <= 0x270E) {
+        gMission.enemyCount++;
+      }
+      pp = p;
+      arg = c;
+      goto dropdisk;
+    }
+    case 1:
+    tick:
+      UpdateMotionGraphic(&p->s);
+      if ((((u8)--(p->s).work[2]) & 2) != 0) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        register u8 h asm("r1");
+        register u8 g asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        (p->s).flags = g;
+      }
+      if ((p->s).work[2] != 0) {
+        break;
+      }
+      goto bump;
+    case 2:
+      PaintEntityWhite(&p->s);
+      (p->s).work[2] = 0xa;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      if ((((u8)--(p->s).work[2]) & 2) != 0) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        register u8 h asm("r1");
+        register u8 g asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFE;
+        g &= h;
+        (p->s).flags = g;
+      }
+      if ((p->s).work[2] != 0) {
+        break;
+      }
+      {
+        register u8 h2 asm("r1");
+        register u8 g3 asm("r0");
+        h2 = (p->s).flags;
+        asm("" : "+r"(h2));
+        g3 = 0xFE;
+        g3 &= h2;
+        (p->s).flags = g3;
+      }
+      (p->s).work[2] = 0x3c;
+    bump:
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      PlaySound(0);
+      if (gMission.enemyCount <= 0x270E) {
+        gMission.enemyCount++;
+      }
+      arg = &(p->s).coord;
+      pp = p;
+    dropdisk:
+      TryDropZakoDisk(pp, arg);
+      {
+        register u8 h3 asm("r1");
+        register u8 g4 asm("r0");
+        h3 = (p->s).flags;
+        asm("" : "+r"(h3));
+        g4 = 0xFE;
+        g4 &= h3;
+        (p->s).flags = g4;
+      }
+      SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      break;
+  }
+}
 
 bool8 nop_0807c968(struct Enemy* p) { return TRUE; }
 
