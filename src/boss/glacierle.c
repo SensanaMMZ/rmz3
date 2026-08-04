@@ -1282,6 +1282,96 @@ void glacierleIceRainJump(struct Boss* p) {
   }
 }
 
+static const u8 u8_ARRAY_08364ad3[5];
+struct Enemy* createGlacierleSucker(struct Entity* e, struct Entity* parent);
+void FUN_0808288c(struct Enemy* p, u8 a);
+
+// 0x080589D4
+void glacierleIceRain1(struct Boss* p) {
+  struct Enemy* q;
+  struct Enemy* j;
+  struct Enemy* sk;
+  s32 c, c2, v, y;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x93);
+      SetMotion(&p->s, MOTION(0xB2, 0x0B));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364ad3[(s8) * (u8*)((u8*)p + 0x71)]]);
+      if ((*(u32*)((u8*)p + 0x70) & 0xFFFF00) == 0x10200) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2:
+      *(u32*)((u8*)p + 0xb4) &= ~1;
+      q = createGlacierleAtkHand(&p->s);
+      (p->s).unk_2c = &q->s;
+      if (q != NULL) {
+        j = createGlacierleJoint(&q->s, &p->s);
+        createGlacierleJoint(&q->s, &p->s);
+        createGlacierleJoint(&q->s, &p->s);
+        createGlacierleJoint(&q->s, &p->s);
+        if (j != NULL) {
+          sk = createGlacierleSucker(&j->s, &p->s);
+          (p->s).unk_28 = &sk->s;
+          c = (p->s).coord.x;
+          (sk->s).coord.x = c + 0xA00;
+          v = (sk->s).coord.x;
+          if ((p->s).flags & X_FLIP) {
+            v = c - 0xA00;
+          }
+          (sk->s).coord.x = v;
+          (sk->s).coord.y = (p->s).coord.y - 0x2D00;
+        }
+        c2 = (p->s).coord.x;
+        (q->s).coord.x = c2 + 0xA00;
+        v = (q->s).coord.x;
+        if ((p->s).flags & X_FLIP) {
+          v = c2 - 0xA00;
+        }
+        (q->s).coord.x = v;
+        y = (p->s).coord.y;
+        (q->s).coord.y = y - 0x200;
+        FUN_08082484(q, v, y - 0x1E00);
+        *((u8*)q + 0xb5) = 0;
+        (q->s).unk_coord.x = 0x700;
+      }
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      sk = (struct Enemy*)(p->s).unk_28;
+      FUN_0808288c(sk, 0x40);
+      q = (struct Enemy*)(p->s).unk_2c;
+      glacierle_08082598(q, 0);
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364ad3[(s8) * (u8*)((u8*)p + 0x71)]]);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 4:
+      PlaySound(0x92);
+      SetMotion(&p->s, MOTION(0xB2, 0x0C));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 5:
+      sk = (struct Enemy*)(p->s).unk_28;
+      FUN_0808288c(sk, 0x40);
+      q = (struct Enemy*)(p->s).unk_2c;
+      glacierle_08082598(q, 0);
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0xD;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 INCASM("asm/boss/glacierle_b_post2.inc");
 
 static const u8 u8_ARRAY_08364b22[4];
