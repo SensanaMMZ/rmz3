@@ -525,7 +525,102 @@ void FUN_08068adc(struct Enemy* p) {
 
 bool8 FUN_08068c84(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/piller_cannon_p7.inc");
+static const s32 s32_ARRAY_08366204[7];
+
+void FUN_08068c88(struct Enemy* p) {
+  struct Entity** slot;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      if (*((u8*)p + 0xb8) == 0) {
+        (p->s).work[3] = *((u8*)p + 0xbb);
+        (p->s).mode[2] = 1;
+      } else {
+        (p->s).work[3] = *((u8*)p + 0xbb);
+        (p->s).mode[2] = 2;
+      }
+      SetMotion(&p->s, sMotions[(p->s).work[3]]);
+      (p->s).work[2] = 6;
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 1:
+      if ((p->s).work[2] == 0) {
+        UpdateMotionGraphic(&p->s);
+        break;
+      }
+      if ((u8)--(p->s).work[2] != 0) {
+        UpdateMotionGraphic(&p->s);
+        break;
+      }
+      if ((p->s).work[3] > 5) {
+        goto ten;
+      }
+      (p->s).work[3]++;
+      if ((p->s).work[3] == 3) {
+        SET_XFLIP(p, TRUE);
+      }
+      SetMotion(&p->s, sMotions[(p->s).work[3]]);
+      (p->s).work[2] = 6;
+      SetDDP(&p->body, &sCollisions[s32_ARRAY_08366204[(p->s).work[3]]]);
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      if ((p->s).work[2] == 0) {
+        UpdateMotionGraphic(&p->s);
+        break;
+      }
+      if ((u8)--(p->s).work[2] != 0) {
+        UpdateMotionGraphic(&p->s);
+        break;
+      }
+      if ((p->s).work[3] == 0) {
+      ten:
+        (p->s).mode[2] = 10;
+        UpdateMotionGraphic(&p->s);
+        break;
+      }
+      (p->s).work[3]--;
+      if ((p->s).work[3] == 3) {
+        SET_XFLIP(p, FALSE);
+      }
+      SetMotion(&p->s, sMotions[(p->s).work[3]]);
+      (p->s).work[2] = 6;
+      SetDDP(&p->body, &sCollisions[s32_ARRAY_08366204[(p->s).work[3]]]);
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 10:
+      SetMotion(&p->s, MOTION(0x08, 0x00));
+      SetDDP(&p->body, &sCollisions[0]);
+      slot = (struct Entity**)((u8*)p + 0xbc);
+      if (*slot != NULL) {
+        struct Entity* q;
+        (*slot)->flags &= ~DISPLAY;
+        q = *slot;
+        q->flags &= ~DISPLAY;
+        q->flags &= ~FLIPABLE;
+        SET_VFX_ROUTINE(q, ENTITY_DISAPPEAR);
+      }
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 11:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        break;
+      }
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      {
+        register u8 t asm("r0");
+        t = (p->s).work[0];
+        asm volatile("" : "+r"(t));
+      }
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 0;
+      break;
+  }
+}
 
 bool8 FUN_08068e60(struct Enemy* p) { return TRUE; }
 
