@@ -2768,7 +2768,78 @@ void Actor36_Update(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/actor_p1_p2_b_c.inc");
+// 0x080D444C
+void Actor37_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      if ((p->s).work[1] == 0) {
+        s32 n;
+        n = SM130_PROLOGUE_RESISTANCE;
+        wStaticGraphicTilenums[n] = 0x98 << 2;
+        wStaticMotionPalIDs[n] = 6;
+        LOAD_STATIC_GRAPHIC(n);
+        SetMotion(&p->s, MOTION(SM130_PROLOGUE_RESISTANCE, 0));
+      } else {
+        s32 n;
+        n = SM140_RESISTANCE_MOB;
+        wStaticGraphicTilenums[n] = 0x296;
+        wStaticMotionPalIDs[n] = 6;
+        LOAD_STATIC_GRAPHIC(n);
+        SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 5));
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) != 0) {
+        register s32 z asm("r2");
+        z = 0;
+        (p->s).flags &= ~X_FLIP;
+        *((u8*)p + 0x4c) = z;
+        {
+          register u8* oa asm("r2");
+          s32 ov, m11;
+          oa = (u8*)p + 0x4a;
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+        (p->s).work[2] = 8;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0) {
+        SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 7));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 3: {
+      register s32 cx asm("r1");
+      register struct Camera* cam asm("r0");
+      UpdateMotionGraphic(&p->s);
+      cx = (p->s).coord.x + -0x100;
+      (p->s).coord.x = cx;
+      cam = &gStageRun.vm.camera;
+      if (cx < cam->viewport.x + -0x9000) {
+        register s32 fv asm("r0");
+        register s32 mk asm("r1");
+        fv = (p->s).flags;
+        mk = 0xFE;
+        mk &= fv;
+        (p->s).flags = mk;
+        (p->s).mode[1]++;
+      }
+      break;
+    }
+    case 4:
+      break;
+  }
+}
+
 
 // 0x080D45F8
 void Actor38_Update(struct Solid* p) {
