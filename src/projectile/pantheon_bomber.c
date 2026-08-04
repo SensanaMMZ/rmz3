@@ -143,7 +143,135 @@ void PantheonBombProjectile_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/pantheon_bomber_p3_p2.inc");
+#include "physics.h"
+void CreateSmoke(u8 n, struct Coord* c);
+
+// 0x080ad240
+void _pantheonBombAI(struct Projectile* p) {
+  {
+    register s32* st asm("r2");
+    st = (s32*)((u8*)p + 0x8c);
+    if ((*st & 0x200) != 0) {
+      register s32 z asm("r1");
+      z = 0;
+      *st = z;
+      {
+        u8* a = (u8*)p + 0x90;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= 0xFB;
+      CreateSmoke(2, (struct Coord*)((u8*)p + 0x54));
+      goto die;
+    }
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x690B);
+      if ((p->s).work[0] == 0) {
+        (p->s).d.x = -0x180;
+      } else {
+        (p->s).d.x = 0x180;
+      }
+      (p->s).d.y = 0x100;
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 cx, cy, r;
+      {
+        s32 v = (p->s).d.y + 0x40;
+        (p->s).d.y = v;
+        if (v > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+      }
+      cx = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = cx;
+      cy = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = cy;
+      r = PushoutToUp1(cx, cy + 0x500);
+      if (r != 0) {
+        (p->s).coord.y += r;
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      return;
+    }
+    case 2:
+      SetMotion(&p->s, 0x690C);
+      (p->s).work[3] = 0x30;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        return;
+      }
+      goto adv;
+    case 4:
+      SetMotion(&p->s, 0x690D);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[3] != 0) {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) != 0) {
+          return;
+        }
+      }
+    adv:
+      (p->s).mode[2]++;
+      return;
+    case 6: {
+      register struct Coord* c asm("r4");
+      (p->s).flags &= 0xFE;
+      SetDDP(&p->body, (const struct Collision*)0x0836C87C);
+      (p->s).work[3] = 0x14;
+      c = (struct Coord*)((u8*)p + 0x54);
+      CreateSmoke(1, c);
+      PlaySound(0x35);
+      createPantheonBombBlast(c, 0);
+      createPantheonBombBlast(c, 1);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 7:
+      if ((p->s).work[3] != 0) {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) != 0) {
+          return;
+        }
+      }
+      {
+        register s32 z asm("r1");
+        u8* a = (u8*)p + 0x8c;
+        z = 0;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      (p->s).flags &= 0xFB;
+      break;
+    default:
+      return;
+  }
+die:
+  SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+}
+
 
 static const struct Collision sCollisions[4];
 
