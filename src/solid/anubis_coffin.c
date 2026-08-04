@@ -116,7 +116,128 @@ void AnubisCoffin_Die(struct Solid* p) {
 
 void FUN_080cdf34(struct Solid* p) {}
 
-INCASM("asm/solid/anubis_coffin_post_p2.inc");
+u8 GetEntityPalID(struct Entity* p);
+void FUN_080bf438(s32 x, s32 y, u8 n);
+
+// 0x080CDF38
+void coffin_080cdf38(struct Solid* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32* src;
+      (p->s).flags2 |= 8;
+      (p->s).size = (struct Rect*)&Rect_08370238;
+      (p->s).hazardAttr = 1;
+      if ((p->s).work[3] != 0) {
+        register s32* a asm("r1");
+        register s32 v asm("r0");
+        register s32 k asm("r2");
+        if ((p->s).work[2] == 0) {
+          SetMotion(&p->s, 0x96 << 7);
+          a = (s32*)((u8*)q + 0xb8);
+          v = *a;
+          k = -0x8800;
+        } else {
+          SetMotion(&p->s, 0x4B01);
+          a = (s32*)((u8*)q + 0xb8);
+          v = *a;
+          k = 0x88 << 8;
+        }
+        v += k;
+        (p->s).coord.x = v;
+        src = a;
+        *(s32*)((u8*)p + 0xb8) = *src;
+      } else {
+        register s32 v asm("r1");
+        register s32 k asm("r2");
+        (p->s).coord.x = (pZero2->s).coord.x;
+        if ((p->s).work[2] == 0) {
+          SetMotion(&p->s, 0x96 << 7);
+          v = (p->s).coord.x;
+          k = -0x3000;
+        } else {
+          SetMotion(&p->s, 0x4B01);
+          v = (p->s).coord.x;
+          k = 0xc0 << 6;
+        }
+        {
+          register s32 r asm("r0");
+          r = v + k;
+          (p->s).coord.x = r;
+        }
+        *(s32*)((u8*)p + 0xb8) = v;
+        src = (s32*)((u8*)q + 0xb8);
+      }
+      (p->s).work[3] = 0xc;
+      (p->s).coord.y = FUN_08009f6c(*src, *(s32*)((u8*)q + 0xbc));
+      *(s32*)((u8*)p + 0xb4) = (p->s).coord.y;
+      FUN_080bf438((p->s).coord.x, (p->s).coord.y, 0);
+      (p->s).coord.y += 0x80 << 6;
+      (p->s).flags &= ~DISPLAY;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if ((u8)--(p->s).work[3] == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      {
+        u32 v = GetEntityPalID(&p->s);
+        u32 sv = ((u32)(u8)v) << 5;
+        u32 k = 0x200;
+        u32 kc;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0x46, sv | kc);
+      }
+      {
+        register s32 tv asm("r0");
+        register u8* tp asm("r1");
+        tv = (p->s).work[2];
+        tv <<= 2;
+        tv += 0x16;
+        asm("" : "+r"(tv));
+        tp = (u8*)p + 0x25;
+        *tp = tv;
+      }
+      (p->s).flags |= DISPLAY;
+      (p->s).d.y = -0x300;
+      {
+        register u8* o asm("r2");
+        register s32 ov asm("r0");
+        register s32 k asm("r1");
+        o = (u8*)p + 0x49;
+        ov = *o;
+        k = 0xc;
+        ov |= k;
+        *o = ov;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32 cy asm("r1");
+      register s32 lim asm("r0");
+      cy = (p->s).coord.y;
+      cy += (p->s).d.y;
+      (p->s).coord.y = cy;
+      lim = *(s32*)((u8*)p + 0xb4);
+      lim += -0x1C00;
+      if (cy < lim) {
+        register s32 z asm("r1");
+        (p->s).coord.y = lim;
+        z = 0;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = z;
+      }
+      StepPaletteAnimation(0x46);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 
 void FUN_080bf390(struct Entity* e);
 u8 GetEntityPalID(struct Entity* p);
