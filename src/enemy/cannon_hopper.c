@@ -1010,6 +1010,137 @@ NON_MATCH void FUN_08097f3c(struct Enemy* p) {
 
 INCASM("asm/enemy/cannon_hopper_post_post_b.inc");
 
+// 0x08098414
+// 4 instructions off, all the same nit as its sibling FUN_08097f3c (§6.171):
+// `(p->s).flags = Y_FLIP | fl;` in the two yflip-toggle arms lands the result in
+// `fl`'s register (`orrs r1, r0 / strb r1`) where retail lands it in the
+// constant's (`orrs r0, r1 / strb r0`).  Size is exactly retail's 504 bytes and
+// nothing else differs.  A keep-alive on `fl` after the update -- the lever that
+// fixed the analogous case in shrimporinBurrowSnow -- costs 32 bytes here.
+// Note this function does NOT need the §6.177 barrier: retail's shift here is a
+// plain `lsrs r0, r1, #5`, unlike FUN_08097f3c's `lsls #24 / lsrs #29`.
+NON_MATCH void FUN_08098414(struct Enemy* p) {
+#if MODERN
+  s32 t;
+  struct Coord c;
+
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 d = 0;
+      u32 fl;
+      switch (*((u8*)p + 0xbe)) {
+        case 1:
+          d = -0x1200;
+          if ((p->s).flags & Y_FLIP) {
+            d = 0x1200;
+          }
+          break;
+        case 2:
+          d = -0x1800;
+          if ((p->s).flags & Y_FLIP) {
+            d = 0x1800;
+          }
+          break;
+        case 3:
+          d = -0x2300;
+          fl = (p->s).flags;
+          if (fl & Y_FLIP) {
+            d = 0x2300;
+          }
+          {
+            u32 sh = fl >> 5;
+            u32 yf = 1;
+            yf &= ~sh;
+            if (yf) {
+              (p->s).flags = Y_FLIP | fl;
+            } else {
+              (p->s).flags = 0xDF & fl;
+            }
+            (p->s).spr.yflip = yf & 1;
+            (p->s).spr.oam.yflip = yf;
+          }
+          break;
+        case 4:
+          d = -0x2B00;
+          fl = (p->s).flags;
+          if (fl & Y_FLIP) {
+            d = 0x2B00;
+          }
+          {
+            u32 sh = fl >> 5;
+            u32 yf = 1;
+            yf &= ~sh;
+            if (yf) {
+              (p->s).flags = Y_FLIP | fl;
+            } else {
+              (p->s).flags = 0xDF & fl;
+            }
+            (p->s).spr.yflip = yf & 1;
+            (p->s).spr.oam.yflip = yf;
+          }
+          break;
+      }
+      FUN_08097224(p, 0, d);
+      (p->body).status = 0;
+      (p->body).prevStatus = 0;
+      (p->body).invincibleTime = 0;
+      (p->s).flags &= ~COLLIDABLE;
+      {
+        s32 k = 0;
+        if (*(s32*)((u8*)p + 0xb4) > 0) {
+          k = 1;
+        }
+        (p->s).d.x = 0x280 - ((k * 5) << 8);
+      }
+      (p->s).d.y = -0x480;
+      (p->s).work[2] = 0x14;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) == 0) {
+          break;
+        }
+      }
+      (p->s).flags &= ~DISPLAY;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y + 0x100;
+      CreateSmoke(1, &c);
+      FUN_080c6e70(&p->s, &c);
+      PlaySound(0x2A);
+      TryDropItem(1, &(p->s).coord);
+      if (gMission.enemyCount <= 0x270E) {
+        gMission.enemyCount++;
+      }
+      TryDropZakoDisk(p, &(p->s).coord);
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      (p->s).flags &= ~DISPLAY;
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+        break;
+      }
+      SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      break;
+  }
+#else
+  INCCODE("asm/enemy/cannon_hopper_98414.inc");
+#endif
+}
+
+INCASM("asm/enemy/cannon_hopper_post_post_c.inc");
+
 void CannonHopper_Init(struct Enemy* p);
 void CannonHopper_Update(struct Enemy* p);
 void CannonHopper_Die(struct Enemy* p);
