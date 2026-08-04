@@ -173,7 +173,97 @@ void pantheon_bomber_080863a4(struct Enemy* p) {
 
 bool8 nop_08086414(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_bomber_p4.inc");
+struct Projectile* createPantheonBomb(struct Coord* a, struct Coord* b, u8 n);
+
+// 0x08086418
+void pantheon_bomber_08086418(struct Enemy* p) {
+  register s32 w asm("r0");
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x6903);
+      *((u8*)p + 0xb9) = 0;
+      SetDDP(&p->body, (const struct Collision*)0x08368534);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 m asm("r0");
+        register s32 k asm("r1");
+        m = *(s32*)((u8*)p + 0x70);
+        k = 0x00FFFF00;
+        m &= k;
+        k = 0x81 << 9;
+        if (m == k) {
+          SetDDP(&p->body, (const struct Collision*)0x0836854C);
+        }
+      }
+    state3:
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      goto tramp;
+    case 2:
+      SetMotion(&p->s, 0xd2 << 7);
+      *((u8*)p + 0xb9) = 1;
+      w = 0x10;
+      goto setw;
+    case 4:
+      SetMotion(&p->s, 0x6905);
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      struct Coord c;
+      UpdateMotionGraphic(&p->s);
+      if ((s8)*((u8*)p + 0x71) != 3) {
+        goto state3;
+      }
+      if ((p->s).work[2] != 0) {
+        goto state3;
+      }
+      c.x = (p->s).coord.x + -0x800;
+      c.y = (p->s).coord.y + -0xE00;
+      createPantheonBomb(&c, &c, RANDOM(RNG_0202f388) & 1);
+      (p->s).work[2] = 1;
+      goto state3;
+    }
+    case 6:
+      w = 0x12;
+      goto setw;
+    case 8:
+      if ((RANDOM(RNG_0202f388) & 1) != 0) {
+        SetMotion(&p->s, 0x6901);
+      } else {
+        SetMotion(&p->s, 0x6902);
+      }
+      w = 0x40;
+    setw:
+      (p->s).work[2] = w;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+    case 7:
+    case 9:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+    tramp:
+      (p->s).mode[2]++;
+      break;
+    case 10: {
+      register s32 z asm("r1");
+      z = 0;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
+
 
 bool8 nop_080865d0(struct Enemy* p) { return TRUE; }
 
