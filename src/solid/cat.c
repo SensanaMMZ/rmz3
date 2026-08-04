@@ -177,7 +177,73 @@ void FUN_080dd5e0(struct Solid* p) {
   Cat_Update(p);
 }
 
-INCASM("asm/solid/cat_a_post.inc");
+void FUN_080dd69c(struct Solid* p) {
+  u32 t;
+  u8 st;
+
+  UpdateMotionGraphic(&p->s);
+  switch ((p->s).mode[1]) {
+    case 0:
+      st = (p->s).motion.state;
+      if (st != 3) {
+        return;
+      }
+      if ((p->s).work[3] == 0 && (RANDOM(RNG_0202f388) & 1)) {
+        SetMotion(&p->s, MOTION(0xD8, 0x01));
+        (p->s).work[3]++;
+        (p->s).mode[1] = st;
+      } else {
+        SetMotion(&p->s, MOTION(0xD8, 0x00));
+        (p->s).work[3] = 0;
+        (p->s).mode[1]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      t = RNG_0202f388 * 0x343FD + 0x269EC3;
+      asm("" : "+l"(t));
+      t <<= 1;
+      RNG_0202f388 = t >> 1;
+      (p->s).work[2] = ((t >> 17) & 0x3F) + 0x28;
+      break;
+    case 1:
+      (p->s).coord.x += 0xC0;
+      (p->s).work[2]--;
+      if ((p->s).work[2] != 0xFF && (p->s).coord.x <= *(s32*)((u8*)p + 0xb4) + 0x4000 &&
+          FUN_080098a4((p->s).coord.x + 0xC00, (p->s).coord.y - 0x800) == 0) {
+        return;
+      }
+      SetMotion(&p->s, MOTION(0xD8, 0x02));
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1]++;
+      break;
+    case 2:
+      if ((p->s).motion.state != 3) {
+        return;
+      }
+      if ((p->s).work[3] == 0 && (RANDOM(RNG_0202f388) & 1)) {
+        SetMotion(&p->s, MOTION(0xD8, 0x00));
+        (p->s).mode[1] = 1;
+        (p->s).work[3]++;
+      } else {
+        SetMotion(&p->s, MOTION(0xD8, 0x01));
+        (p->s).work[3] = 0;
+        (p->s).mode[1]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2] = (RANDOM(RNG_0202f388) & 0x3F) + 0x28;
+      break;
+    case 3:
+      (p->s).coord.x -= 0xC0;
+      (p->s).work[2]--;
+      if ((p->s).work[2] != 0xFF && (p->s).coord.x >= *(s32*)((u8*)p + 0xb4) - 0x4000 &&
+          FUN_080098a4((p->s).coord.x - 0xC00, (p->s).coord.y - 0x800) == 0) {
+        return;
+      }
+      SetMotion(&p->s, MOTION(0xD8, 0x03));
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] = 0;
+      break;
+  }
+}
 
 #include "motion.h"
 
