@@ -1067,7 +1067,99 @@ void glacierleHammerPunch1(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/glacierle_b_post.inc");
+
+struct Enemy* createGlacierleAtkHand(struct Entity* e);
+struct Enemy* createGlacierleJoint(struct Entity* e, struct Entity* parent);
+void FUN_080823a4(struct Entity* e, struct Entity* parent, s32 x, s32 y);
+void FUN_08082484(struct Enemy* p, s32 dx, s32 dy);
+
+// 0x08058554
+void glacierleHammerPunch2(struct Boss* p) {
+  struct Enemy* q;
+  u32* st;
+  s32* cp;
+  s32 v;
+  s32 px;
+  s32 hx, hy;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x8E);
+      SetDDP(&p->body, &sCollisions[126]);
+      st = (u32*)((u8*)p + 0xb4);
+      *st &= ~1;
+      q = createGlacierleAtkHand(&p->s);
+      (p->s).unk_28 = &createGlacierleJoint(&q->s, &p->s)->s;
+      (p->s).unk_2c = &q->s;
+      px = (p->s).coord.x;
+      (q->s).coord.x = px - 0x2F00;
+      v = (q->s).coord.x;
+      if ((p->s).flags & X_FLIP) {
+        v = px + 0x2F00;
+      }
+      (q->s).coord.x = v;
+      (q->s).coord.y = (p->s).coord.y - 0x2900;
+      (p->s).d.x = -0x300;
+      v = (p->s).d.x;
+      if ((p->s).flags & X_FLIP) {
+        v = 0x300;
+      }
+      (p->s).d.x = v;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      q = (struct Enemy*)(p->s).unk_2c;
+      (q->s).coord.x += (p->s).d.x;
+      if ((*(u32*)((u8*)pZero2 + 0xc) & 0xFFFF00) == 0x400 && ((q->body).status & 4)) {
+        PlaySound(0x52);
+      }
+      if ((u32)((q->s).coord.x - (p->s).coord.x + 0x8000) > 0x10000) {
+        (p->s).mode[2]++;
+      } else if (((p->s).flags & X_FLIP) == 0) {
+        if ((q->s).coord.x - 0x1A00 < *(s32*)((u8*)p + 0xbc) - 0xAC00) {
+          *(u32*)((u8*)p + 0xb4) |= 2;
+          cp = (s32*)((u8*)p + 0xc4);
+          *cp = *(s32*)((u8*)p + 0xbc) - 0xAC00;
+          AppendQuake(3, (struct Coord*)((u8*)cp - 0x70));
+          (p->s).mode[2]++;
+        }
+      } else {
+        if ((q->s).coord.x + 0x1A00 > *(s32*)((u8*)p + 0xbc) + 0xAC00) {
+          *(u32*)((u8*)p + 0xb4) |= 2;
+          cp = (s32*)((u8*)p + 0xc4);
+          *cp = *(s32*)((u8*)p + 0xbc) + 0xAC00;
+          AppendQuake(3, (struct Coord*)((u8*)cp - 0x70));
+          (p->s).mode[2]++;
+        }
+      }
+      hx = (p->s).coord.x;
+      hx -= 0x1700;
+      asm("" : "+l"(hx));
+      if ((p->s).flags & X_FLIP) {
+        hx += 0x2E00;
+      }
+      hy = (p->s).coord.y;
+      hy -= 0x2900;
+      FUN_080823a4(&q->s, &p->s, hx, hy);
+      FUN_08082484(q, hx, hy);
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      (p->s).work[2] = 0x20;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      if ((p->s).work[2] == 0x10) {
+        *(u32*)((u8*)p + 0xb4) &= ~2;
+      }
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[1] = 0xA;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 static const struct Coord16 ALIGNED(2) Coord16_ARRAY_08364ac6[2];
 u32 FUN_080823ec(struct Enemy* p);
