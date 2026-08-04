@@ -234,6 +234,115 @@ void FUN_08051cdc(struct Boss* p) {
 
 INCASM("asm/boss/pantheon_aqua_mod_p2b.inc");
 
+extern struct Zero* pZero2;
+
+void FUN_08080858(struct Entity* e);
+void createStretchedGrabArm(struct Entity* e, u8 n);
+
+// 0x08051F44
+void paquam_08051f44(struct Boss* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      PlaySound(0xE4);
+      {
+        register s32* w asm("r2");
+        register s32 v asm("r0");
+        register s32 msk asm("r1");
+        w = (s32*)((u8*)p + 0xb4);
+        v = *w;
+        msk = 0x20;
+        v |= msk;
+        msk -= 0x61;
+        v &= msk;
+        *w = v;
+      }
+      if ((pZero2->s).coord.x < (p->s).coord.x) {
+        SetDDP(&p->body, (const struct Collision*)0x083637E4);
+        (p->s).work[3] = m;
+        SetMotion(&p->s, 0x4D02);
+      } else {
+        SetDDP(&p->body, (const struct Collision*)0x0836385C);
+        (p->s).work[3] = 1;
+        SetMotion(&p->s, 0x4D07);
+      }
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t = (p->s).work[2];
+      t -= 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      StepPaletteAnimation(*((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      if ((p->s).work[3] == 0) {
+        register s32* w asm("r2");
+        w = (s32*)((u8*)p + 0xb4);
+        *w |= 0x80;
+        SetDDP(&p->body, (const struct Collision*)0x08363724);
+        SetMotion(&p->s, 0x4D03);
+      } else {
+        register s32* w asm("r2");
+        SetDDP(&p->body, (const struct Collision*)0x08363784);
+        w = (s32*)((u8*)p + 0xb4);
+        *w |= 0x80 << 1;
+        SetMotion(&p->s, 0x4D08);
+      }
+      createStretchedGrabArm(&p->s, (p->s).work[3]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32* w asm("r6");
+      w = (s32*)((u8*)p + 0xb4);
+      {
+        register s32 v asm("r1");
+        v = *w;
+        if ((v & 0x40) != 0) {
+          register s32 msk asm("r0");
+          msk = 0x41;
+          msk = -msk;
+          v &= msk;
+          *w = v;
+          FUN_08080858(&p->s);
+        }
+      }
+      {
+        register s32 v2 asm("r5");
+        v2 = *w;
+        v2 &= 0xc0 << 1;
+        if (v2 == 0) {
+          register s32 msk2 asm("r1");
+          register s32 vv asm("r0");
+          SetMotion(&p->s, 0x4D01);
+          vv = *w;
+          msk2 = 0x21;
+          msk2 = -msk2;
+          vv &= msk2;
+          *w = vv;
+          (p->s).mode[1] = v2;
+          (p->s).mode[2] = 1;
+          (p->s).work[2] = 0x46;
+        }
+      }
+      StepPaletteAnimation(*((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/pantheon_aqua_mod_p2b2.inc");
+
+
 void nop_08051620(struct Boss* p);
 
 // clang-format off
