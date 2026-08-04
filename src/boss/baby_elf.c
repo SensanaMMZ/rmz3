@@ -416,6 +416,94 @@ void babyelf_080477b8(struct Boss* p) {
   }
 }
 
+// 0x080478B8
+void FUN_080478b8(struct Boss* p) {
+  register struct Entity* q asm("r6");
+  register s32 z4 asm("r4");
+  s32 z7;
+  q = (p->s).unk_2c;
+  z4 = (p->s).mode[2];
+  switch (z4) {
+    case 0: {
+      register u8* pa asm("r6");
+      pa = (u8*)p + 0xc6;
+      if (*pa != 0) {
+        RemovePaletteAnimation(*pa);
+        *pa = z4;
+      }
+      {
+        u32 v = GetEntityPalID(&p->s);
+        u32 sv = ((u32)(u8)v) << 5;
+        u32 k = 0x200;
+        u32 kc;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0x1F, sv | kc);
+      }
+      *pa = 0x1F;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if ((u8)StepPaletteAnimation(*((u8*)p + 0xc6)) == 3) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2: {
+      register s32 mo asm("r4");
+      register u8* pa2 asm("r4");
+      SetDDP(&p->body, (const struct Collision*)0x08362674);
+      {
+        u8* pp = (u8*)q + 0x22;
+        z7 = 0;
+        *pp = z7;
+      }
+      mo = MOTION(0x33, 0x0A);
+      ((void (*)(struct Entity*, s32))SetMotion)(q, mo);
+      ((void (*)(struct Entity*, s32))SetMotion)(&p->s, mo);
+      pa2 = (u8*)p + 0xc6;
+      if (*pa2 != 0) {
+        RemovePaletteAnimation(*pa2);
+        *pa2 = z7;
+      }
+      {
+        u32 v = GetEntityPalID(&p->s);
+        u32 sv = ((u32)(u8)v) << 5;
+        u32 k = 0x200;
+        u32 kc;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0x1C, sv | kc);
+      }
+      *pa2 = 0x1C;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register u8* pa3 asm("r4");
+      pa3 = (u8*)p + 0xc6;
+      if ((u8)StepPaletteAnimation(*pa3) == 3) {
+        register s32 z2 asm("r2");
+        register s32 mv asm("r1");
+        if (*pa3 != 0) {
+          RemovePaletteAnimation(*pa3);
+          *pa3 = 0;
+        }
+        z2 = 0;
+        mv = 0xB;
+        q->mode[1] = mv;
+        q->mode[2] = z2;
+        q->coord.x = (p->s).coord.x;
+        q->coord.y = (p->s).coord.y;
+        (p->s).mode[1] = mv;
+        (p->s).mode[2] = z2;
+      }
+      UpdateMotionGraphic(&p->s);
+      UpdateMotionGraphic(q);
+      break;
+    }
+  }
+  asm volatile("" ::"l"(z7));
+}
 INCASM("asm/boss/baby_elf_p2_p1b.inc");
 
 u16 FUN_080d08d0(struct Boss* p, motion_t m);
