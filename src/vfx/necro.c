@@ -520,7 +520,120 @@ void FUN_080b8984(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/necro.inc");
+// 0x080B8AF8
+void FUN_080b8af8(struct VFX* p) {
+  u32 pf = (u32)(((p->s).unk_28)->flags) << 24;
+  u32 xf = (pf >> 0x1c) & 1;
+  u32 yf = (pf >> 0x1d) & 1;
+  u32 w1 = (p->s).work[1];
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u32 xfc asm("r1");
+      u32 yfc;
+      u8* oa;
+      {
+        u32 fl = (p->s).flags;
+        register u32 t asm("r0");
+        register u32 z asm("r3");
+        u32 v;
+        t = 1;
+        asm volatile("" : "+r"(t));
+        z = 0;
+        asm volatile("" :: "r"(z));
+        v = t;
+        asm volatile("" : "+r"(v));
+        v |= fl;
+        (p->s).flags = v;
+        xfc = xf;
+        if (xf != 0) {
+          v |= 0x10;
+        } else {
+          v &= 0xEF;
+        }
+        (p->s).flags = v;
+      }
+      *((u8*)p + 0x4c) = xfc;
+      {
+        u8* oa0 = (u8*)p + 0x4a;
+        u32 sh4 = xfc << 4;
+        s32 ov, m11;
+        ov = *oa0;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa0 = m11;
+        yfc = yf;
+        oa = oa0;
+      }
+      if (yf != 0) {
+        (p->s).flags |= 0x20;
+      } else {
+        (p->s).flags &= 0xDF;
+      }
+      {
+        register u32 yfc2 asm("r1");
+        yfc2 = yfc;
+        asm volatile("" : "+r"(yfc2));
+        {
+          register u8* a4d asm("r2");
+          a4d = (u8*)p + 0x4d;
+          *a4d = yfc2;
+        }
+        {
+        u32 sh5 = yfc2 << 5;
+        s32 ov2, m21;
+        ov2 = *oa;
+        m21 = -0x21;
+        m21 &= ov2;
+        m21 |= sh5;
+        *oa = m21;
+        }
+      }
+      SetMotion(&p->s, ((p->props).necro.motions)[w1]);
+      if (xf != 0) {
+        w1 = 2 - w1;
+      }
+      {
+        s32 b8 = (w1 - 1) << 8;
+        (p->s).d.x = b8 + (RANDOM(RNG_0202f388) & 0x1FF) - 0x100;
+        (p->s).d.y = -0x200 - (RANDOM(RNG_0202f388) & 0x100);
+      }
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      s32 t = (p->s).work[2] + 1;
+      (p->s).work[2] = t;
+      if (t & 1) {
+        (p->s).flags |= DISPLAY;
+      } else {
+        (p->s).flags &= ~DISPLAY;
+      }
+      ((p->s).coord).x += ((p->s).d).x;
+      {
+        register s32 cy asm("r0");
+        register s32 dy asm("r1");
+        cy = ((p->s).coord).y;
+        dy = ((p->s).d).y;
+        cy += dy;
+        ((p->s).coord).y = cy;
+        dy += 0x40;
+        ((p->s).d).y = dy;
+      }
+      FUN_0801779c(&p->s);
+      if ((p->s).work[2] > 0x18 && FUN_080098a4(((p->s).coord).x, ((p->s).coord).y)) {
+        if ((p->props).necro.unk_05 == 0) {
+          CreateSmoke(3, &(p->s).coord);
+        } else {
+          CreateSmoke(2, &(p->s).coord);
+        }
+        SET_VFX_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+    }
+  }
+}
 
 // 0x080B8C74
 void FUN_080b8c74(struct VFX* p) {
