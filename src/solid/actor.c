@@ -1364,6 +1364,127 @@ void ActorOperator_Update(struct Solid* p) {
   }
 }
 
+static const struct Collision sCollisions_08370B58[11];
+
+// 0x080D29D0
+void Actor17_Update(struct Solid* p) {
+  s32 md;
+  md = (p->s).mode[1];
+  switch (md) {
+    case 0: {
+      register struct Body* b asm("r4");
+      if (((p->s).work[1] & 0x10) != 0) {
+        PlaySound(0x2B);
+        wStaticGraphicTilenums[SM236_SPARK] = 0xe0 << 2;
+        wStaticMotionPalIDs[SM236_SPARK] = 8;
+      }
+      {
+        const struct Graphic* g;
+        const struct Palette* pal;
+        register u32 ofs asm("r4");
+        register void* pb asm("r3");
+        ofs = (sizeof(struct ColorGraphic) * SM236_SPARK);
+        g = gStaticGraphic(ofs);
+        LoadGraphic((void*)g, (void*)((wStaticGraphicTilenums[SM236_SPARK] - g->ofs) * 32 + 0x10000));
+        pb = STATIC_PALETTES;
+        asm volatile("add %0, %0, %1" : "+l"(ofs) : "l"(pb));
+        pal = (const struct Palette*)ofs;
+        {
+          register s32 t asm("r1");
+          register s32 k asm("r0");
+          t = (wStaticMotionPalIDs[SM236_SPARK] - pal->dst) * 32;
+          asm volatile("mov %0, #0x80\n\tlsl %0, %0, #0x2" : "=l"(k));
+          t += k;
+          LoadPalette(pal, t);
+        }
+      }
+      InitNonAffineMotion(&p->s);
+      SetMotion(&p->s, 0xEC01);
+      {
+        u8* q = (u8*)p + 0x45;
+        register s32 msk asm("r1");
+        register s32 v asm("r0");
+        register s32 four asm("r2");
+        {
+          register s32 t asm("r2");
+          t = *q;
+          msk = 0xD;
+          msk = -msk;
+          v = msk;
+          v &= t;
+        }
+        four = 4;
+        v |= four;
+        *q = v;
+        q += 4;
+        v = *q;
+        msk &= v;
+        msk |= four;
+        *q = msk;
+        four |= (p->s).flags;
+        (p->s).flags = four;
+      }
+      b = &p->body;
+      {
+        register s32 ix asm("r0");
+        register s32 off asm("r1");
+        off = (p->s).work[1];
+        ix = 0xf;
+        ix &= off;
+        off = ix << 1;
+        off += ix;
+        off <<= 3;
+        InitBody(b, (const struct Collision*)(off + (u32)&sCollisions_08370B58[2]), &(p->s).coord, 9);
+      }
+      *(struct Solid**)((u8*)b + 0x2c) = p;
+      *(s32*)((u8*)b + 0x24) = md;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) + 0xFFFFB000;
+      gBlendRegBuffer.bldclt = 0xfd << 6;
+      (p->s).work[2] = 8;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register struct WramBlendRegister* bb asm("r2");
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] > 6) {
+        register struct WramBlendRegister* b1 asm("r1");
+        b1 = &gBlendRegBuffer;
+        b1->bldalpha = 0x1010;
+        bb = b1;
+      } else {
+        register s32 v asm("r0");
+        register s32 k asm("r1");
+        bb = &gBlendRegBuffer;
+        k = (p->s).work[2];
+        v = k << 1;
+        v += k;
+        k = 0x1f;
+        v &= k;
+        asm volatile("mov r3, #0x80\n\tlsl r3, r3, #0x5\n\tadd %0, r3, #0" : "=l"(k) :: "r3");
+        v |= k;
+        bb->bldalpha = v;
+      }
+      {
+        register u32 t asm("r3");
+        register s32 t0 asm("r0");
+        t0 = (p->s).work[2] - 1;
+        (p->s).work[2] = t0;
+        t = (u32)(t0 << 24) >> 24;
+        if (t == 0) {
+          (p->s).flags &= 0xFE;
+          bb->bldclt = t;
+          (p->s).mode[1]++;
+        }
+      }
+      break;
+    }
+    case 2:
+      break;
+  }
+}
+
+
 INCASM("asm/solid/actor_b_a.inc");
 
 // 0x080D2D50
