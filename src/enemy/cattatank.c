@@ -23,7 +23,169 @@ struct Enemy* FUN_08098838(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/cattatank_p1_p2_a.inc");
+void FUN_08099eb4(struct Body* body0, struct Coord* c0);
+void Cattatank_Update(struct Enemy* p);
+
+// 0x0809889C
+void Cattatank_Init(struct Enemy* p) {
+  register u8* xf asm("r4");
+  register u8* oa asm("r3");
+  u8* b8;
+  register s32 z asm("r8");
+  register s32 v asm("r5");
+  register s32 zr0 asm("r0");
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    h = (p->s).flags;
+    g = 1;
+    v = 0;
+    g |= h;
+    h = 2;
+    g |= h;
+    {
+      register s32 zt asm("r1");
+      zt = 0;
+      asm volatile("mov %0, %1" : "=r"(z) : "l"(zt));
+    }
+    h = 4;
+    g |= h;
+    (p->s).flags = g;
+  }
+  {
+    register struct Body* bd asm("r4");
+    bd = &p->body;
+    InitBody(bd, (const struct Collision*)0x0836A4D8, &(p->s).coord, 8);
+    *(struct Enemy**)((u8*)bd + 0x2c) = p;
+    *(void**)((u8*)bd + 0x24) = (void*)FUN_08099eb4;
+    b8 = (u8*)p + 0xb8;
+    *b8 = v;
+    *(s32*)((u8*)p + 0xbc) = v;
+    if ((p->s).work[0] == 0) {
+      register u8* o2 asm("r2");
+      register s32 k asm("r3");
+      v = 1;
+      (p->s).flags |= 0x10;
+      xf = (u8*)bd - 0x28;
+      *xf = v;
+      o2 = (u8*)p + 0x4a;
+      k = 0x10;
+      {
+        register s32 m asm("r0");
+        register s32 ov asm("r1");
+        ov = *o2;
+        m = 0x11;
+        m = -m;
+        m &= ov;
+        m |= k;
+        *o2 = m;
+      }
+      *b8 = v;
+      oa = o2;
+    } else {
+      register u8* o3 asm("r1");
+      (p->s).flags &= 0xEF;
+      oa = (u8*)p + 0x4c;
+      *oa = v;
+      o3 = (u8*)p + 0x4a;
+      {
+        register s32 m2 asm("r0");
+        register s32 ov2 asm("r2");
+        ov2 = *o3;
+        m2 = 0x11;
+        m2 = -m2;
+        m2 &= ov2;
+        *o3 = m2;
+      }
+      *b8 = v;
+      xf = oa;
+      oa = o3;
+    }
+  }
+  v = (p->s).work[1];
+  if (v == 1) {
+    if ((pZero2->s).coord.x < (p->s).coord.x) {
+      register s32 zr asm("r2");
+      zr = 0;
+      (p->s).flags &= 0xEF;
+      *xf = zr;
+      {
+        register s32 m3 asm("r0");
+        register s32 ov3 asm("r1");
+        ov3 = *oa;
+        m3 = 0x11;
+        m3 = -m3;
+        m3 &= ov3;
+        *oa = m3;
+      }
+      *b8 = zr;
+    } else {
+      register s32 k2 asm("r2");
+      (p->s).flags |= 0x10;
+      *xf = v;
+      k2 = 0x10;
+      {
+        register s32 m4 asm("r0");
+        register s32 ov4 asm("r1");
+        ov4 = *oa;
+        m4 = 0x11;
+        m4 = -m4;
+        m4 &= ov4;
+        m4 |= k2;
+        *oa = m4;
+      }
+      *b8 = v;
+    }
+    {
+      register u32 tbl asm("r1");
+      register s32 one asm("r1");
+      EntityFunc** rt;
+      tbl = (u32)gEnemyFnTable;
+      rt = (EntityFunc**)((((p->s).id) << 2) + tbl);
+      one = 1;
+      *(u32*)((p->s).mode) = one;
+      (p->s).onUpdate = (void*)((*rt)[1]);
+      zr0 = 0;
+      asm volatile("strb %0, [%1, #0xd]" :: "l"(zr0), "l"(p) : "memory");
+    }
+  } else {
+    register u32 tbl2 asm("r1");
+    register s32 one2 asm("r1");
+    EntityFunc** rt2;
+    tbl2 = (u32)gEnemyFnTable;
+    rt2 = (EntityFunc**)((((p->s).id) << 2) + tbl2);
+    one2 = 1;
+    *(u32*)((p->s).mode) = one2;
+    (p->s).onUpdate = (void*)((*rt2)[1]);
+    zr0 = 0;
+    (p->s).mode[1] = one2;
+  }
+  (p->s).mode[2] = zr0;
+  (p->s).mode[3] = zr0;
+  {
+    register s32 zz asm("r4");
+    zz = 0;
+    (p->s).d.y = zz;
+    (p->s).d.x = zz;
+    *((u8*)p + 0xbb) = zz;
+    (p->s).d.x = zz;
+    if (IsFrozen(&p->s) != 0) {
+      SetMotion(&p->s, 0xD503);
+      UpdateMotionGraphic(&p->s);
+    }
+    {
+      u8* q = (u8*)p + 0xc0;
+      *q = zz;
+      asm("" : "+r"(q));
+      q -= 6;
+      asm("" : "+r"(q));
+      *q = zz;
+    }
+  }
+  Cattatank_Update(p);
+}
+
 
 extern const EnemyFunc sUpdates1[10];
 extern const EnemyFunc sUpdates2[10];
