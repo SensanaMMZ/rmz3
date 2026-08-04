@@ -2252,7 +2252,215 @@ void FUN_0804ac44(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/deathtanz_c3b.inc");
+struct Entity* FUN_080b2b40(u8 kind, struct Coord* c, s32 r2, u8 r3);
+void FUN_080bdb44(s32 x, s32 y);
+
+// 0x0804ADB0
+void deathtanz_0804adb0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dir asm("r6");
+      register s32 snd asm("r6");
+      u8* c1;
+      struct Coord c;
+      struct Entity* e;
+      snd = 0;
+      {
+        register u8* a asm("r2");
+        u8 f;
+        a = (u8*)p + 0xc1;
+        f = *a & 1;
+        asm volatile("add %0, %1, #0" : "=&l"(c1) : "l"(a));
+        if (f != 0) {
+          s32 bx;
+          s32 x0;
+          s32 x;
+          snd = 1;
+          bx = (p->s).coord.x;
+          x0 = bx - 0x2A00;
+          c.x = x0;
+          asm volatile("add %0, %1, #0" : "=&l"(x) : "l"(x0));
+          if (((p->s).flags & X_FLIP) != 0) {
+            x = bx + (0xb0 << 6);
+          }
+          c.x = x;
+          c.y = (p->s).coord.y - 0x1900;
+          CreateSmoke(1, &c);
+          FUN_080bdb44(c.x, c.y);
+        }
+      }
+      if ((*c1 & 2) != 0) {
+        snd = 1;
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y - 0x4C00;
+        CreateSmoke(1, &c);
+        FUN_080bdb44(c.x, c.y);
+      }
+      if (snd != 0) {
+        PlaySound(0x2a);
+      }
+      PlaySound(0x2f);
+      dir = *((u8*)p + 0xc2);
+      e = AllocEntityFirst(gBossHeaderPtr);
+      if (e != NULL) {
+        register s32 z asm("r2");
+        register s32 z0 asm("r0");
+        {
+          register u8* tc asm("r1");
+          tc = (u8*)e + 0x25;
+          z = 0;
+          z0 = 0x18;
+          *tc = z0;
+        }
+        {
+          register const BossFunc** tb asm("r1");
+          tb = (const BossFunc**)gBossFnTable;
+          e->id = 7;
+          e->onUpdate = (void*)tb[7][0];
+        }
+        z0 = 0;
+        *(u16*)((u8*)e + 0x20) = z;
+        *((u8*)e + 0x22) = z0;
+        {
+          register s32 h asm("r1");
+          register s32 g asm("r0");
+          h = e->flags2;
+          asm("" : "+r"(h));
+          g = 0x10;
+          g |= h;
+          e->flags2 = g;
+        }
+        *((u8*)e + 0x1d) = *((u8*)e + 0x1c);
+        e->coord.x = (p->s).coord.x;
+        e->coord.y = (p->s).coord.y;
+        {
+          register s32 v asm("r0");
+          register s32 sh asm("r1");
+          v = 0x80 << 1;
+          sh = dir << 9;
+          v -= sh;
+          e->d.x = v;
+        }
+        e->unk_28 = &p->s;
+        {
+          register s32 one asm("r1");
+          register s32 fv asm("r0");
+          one = 1;
+          *((u8*)e + 0x10) = one;
+          fv = (u32)(p->s).flags >> 4;
+          fv &= one;
+          fv ^= dir;
+          *((u8*)e + 0x13) = fv;
+        }
+      }
+      SetMotion(&p->s, MOTION(0xA7, 0x38));
+      {
+        register u8* a asm("r0");
+        register s32 z1 asm("r1");
+        a = (u8*)p + 0x8c;
+        z1 = 0;
+        asm volatile("str %0, [%1]" ::"l"(z1), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("str %0, [%1]" ::"l"(z1), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z1;
+      }
+      {
+        register u8 h2 asm("r1");
+        register u8 g2 asm("r0");
+        h2 = (p->s).flags;
+        asm("" : "+r"(h2));
+        g2 = 0xFB;
+        g2 &= h2;
+        (p->s).flags = g2;
+      }
+      if ((gStageRun.missionStatus & 1) != 0) {
+        if ((*((u8*)&gStageRun + 0x12) & 1) == 0) {
+          gStageRun.missionStatus = (gStageRun.missionStatus & 0xFFFE) | 0x10;
+        }
+      }
+      {
+        register s32 v2 asm("r0");
+        register s32 sh2 asm("r1");
+        v2 = 0x80 << 1;
+        sh2 = dir << 9;
+        v2 -= sh2;
+        (p->s).d.x = v2;
+      }
+      {
+        c.x = (p->s).coord.x;
+        c.y = (p->s).coord.y - 0x2000;
+        ((void (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(0, &c, 0x80 << 2, dir);
+      }
+      (p->s).work[2] = 0x32;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 dv asm("r2");
+      register s32 dir2 asm("r3");
+      (p->s).coord.x += (p->s).d.x;
+      dv = (p->s).d.x;
+      dir2 = *((u8*)p + 0xc2);
+      {
+        register s32 m asm("r0");
+        if (((p->s).flags & 0x10) != 0) {
+          if (dir2 != 1) {
+            goto fast;
+          }
+          goto slow;
+        } else {
+          if (dir2 == 0) {
+            goto slow;
+          }
+        fast:
+          m = 0xfa;
+          goto mul;
+        }
+      slow:
+        m = 0xf6;
+      mul:
+        m = dv * m;
+        if (m < 0) {
+          m += 0xff;
+        }
+        (p->s).d.x = m >> 8;
+      }
+      (p->s).work[2]--;
+      if (((p->s).scriptEntity->flags & 0x80) != 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      (p->s).unk_2c = CreateBossExplosion(&p->s, (struct Coord*)&sExplosionCoords[1]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      if (((struct Entity*)(p->s).unk_2c)->mode[0] <= 1) {
+        break;
+      }
+      {
+        register struct StageRun* sr2 asm("r2");
+        register s32 g3 asm("r0");
+        register s32 h3 asm("r1");
+        sr2 = &gStageRun;
+        h3 = *((u8*)sr2 + 0x12);
+        asm("" : "+r"(h3));
+        g3 = 2;
+        g3 |= h3;
+        *((u8*)sr2 + 0x12) = g3;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      break;
+  }
+}
+
 
 // --------------------------------------------
 
