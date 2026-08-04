@@ -432,7 +432,172 @@ void MaybeKillCrossbyne(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/crossbyne_p3_post_postc.inc");
+extern struct Zero* pZero2;
+
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b83d4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+
+// 0x0807D478
+void FUN_0807d478(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 f;
+      register s32 z asm("r4");
+      register u8* mt asm("r5");
+      struct Coord c;
+      {
+        register s32 t asm("r2");
+        t = 0;
+        if ((pZero2->s).coord.x - (p->s).coord.x > 0) {
+          t = 1;
+        }
+        f = t;
+      }
+      {
+        register s32 w asm("r0");
+        w = (p->s).work[0];
+        if (w == 1) {
+          w = w ^ f;
+        } else {
+          w = (u8)f;
+        }
+        f = w;
+      }
+      {
+        register s32 xf asm("r2");
+        xf = f;
+        if (f != 0) {
+          (p->s).flags |= X_FLIP;
+        } else {
+          (p->s).flags &= ~X_FLIP;
+        }
+        {
+          u8 v;
+          u8* xp;
+          v = xf & 1;
+          xp = (u8*)p + 0x4c;
+          z = 0;
+          *xp = v;
+        }
+        ((p->s).spr).oam.xflip = xf;
+      }
+      (p->s).coord.x -= f << 8;
+      {
+        register const u16* tb asm("r1");
+        register s32 i asm("r0");
+        tb = (const u16*)0x08367C56;
+        asm("" : "+r"(tb));
+        i = (p->s).work[0];
+        mt = (u8*)p + 0xb8;
+        i <<= 1;
+        i += *mt;
+        SetMotion(&p->s, tb[i]);
+      }
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = z;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z;
+      }
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFB;
+        g &= h;
+        (p->s).flags = g;
+      }
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      {
+        register s32 ang asm("r3");
+        register s32 w2 asm("r0");
+        w2 = (p->s).work[0];
+        if (w2 == 1) {
+          ang = f;
+          ang ^= w2;
+          ang &= 0xFF;
+        } else {
+          ang = 0xFF;
+          ang &= f;
+        }
+        {
+          register s32 kind asm("r0");
+          register struct Coord* cp asm("r1");
+          register s32 amt asm("r2");
+          kind = 0;
+          cp = &c;
+          amt = 0x80 << 2;
+          ((void (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(kind, cp, amt, ang);
+        }
+      }
+      {
+        register s32 k60 asm("r1");
+        register s32 cv asm("r0");
+        k60 = 0x60;
+        c.x = k60;
+        {
+          register s32 w3 asm("r0");
+          w3 = (p->s).work[0];
+          if (w3 == 1) {
+            register s32 pr asm("r1");
+            w3 ^= f;
+            pr = w3 << 1;
+            pr += w3;
+            pr <<= 6;
+            cv = 0x60;
+            cv -= pr;
+          } else {
+            register s32 pr2 asm("r0");
+            pr2 = f << 1;
+            pr2 += f;
+            pr2 <<= 6;
+            cv = k60 - pr2;
+          }
+        }
+        c.x = cv;
+      }
+      c.y = 0x60;
+      {
+        register struct Coord* cc asm("r1");
+        register const u16* tb2 asm("r2");
+        register s32 j asm("r0");
+        motion_t* mp;
+        cc = &(p->s).coord;
+        j = (p->s).work[0];
+        j <<= 1;
+        j += *mt;
+        j <<= 1;
+        tb2 = (const u16*)0x08367C5E;
+        asm("" : "+r"(tb2));
+        mp = (motion_t*)(j + (u32)tb2);
+        ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b83d4)(
+            &p->s, cc, &c, 0, mp, 0x18);
+      }
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        MaybeKillCrossbyne(p);
+      }
+      break;
+    }
+  }
+}
+
 
 // 0x0807D5C4
 void FUN_0807d5c4(struct Enemy* p) {
