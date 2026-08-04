@@ -1097,7 +1097,94 @@ INCASM("asm/boss/hellbat_p3.inc");
 
 bool8 FUN_0804bcf4(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/hellbat_p4.inc");
+struct Projectile* createBat(struct Entity* e, struct Coord* c, u8 a2, u8 a3);
+
+// 0x0804BCF8
+void hellbatBatShower(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0x28;
+      (p->s).work[3] = 0;
+      (p->s).unk_coord.y = (p->s).coord.y + 0x3000;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      (p->s).coord.y += (((p->s).unk_coord.y - (p->s).coord.y) << 4) >> 8;
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      PlaySound(0x85);
+      SetMotion(&p->s, 0xA811);
+      (p->s).work[2] = 0x14;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      (p->s).coord.y += (((p->s).unk_coord.y - (p->s).coord.y) << 4) >> 8;
+      UpdateMotionGraphic(&p->s);
+      if ((s8) * (u8*)((u8*)p + 0x71) == 3 && (p->s).work[3] == 0) {
+        (p->s).work[3] = 1;
+        SetDDP(&p->body, &sCollisions[6]);
+      }
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      (p->s).work[2] = 6;
+      (p->s).work[3] = 0x10;
+      (p->s).mode[2]++;
+      break;
+    case 4: {
+      struct Coord cc;
+      s32 px;
+      (p->s).coord.y += (((p->s).unk_coord.y - (p->s).coord.y) << 4) >> 8;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      px = (p->s).coord.x;
+      cc.x = px;
+      cc.y = (p->s).coord.y;
+      if (((p->s).flags & X_FLIP) == 0) {
+        cc.x = px + -0x1800;
+      } else {
+        cc.x = px + 0x1800;
+      }
+      cc.y -= 0x2000;
+      createBat(&p->s, &cc, RANDOM(RNG_0202f388) & 3, RANDOM(RNG_0202f388) & 3);
+      (p->s).work[2] = 6;
+      if ((u8)--(p->s).work[3] != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 5:
+      SetMotion(&p->s, 0xA812);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 
 bool8 FUN_0804bee0(struct Boss* p) { return TRUE; }
 
