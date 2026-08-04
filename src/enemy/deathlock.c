@@ -626,6 +626,136 @@ skip:
   }
 }
 
+extern struct Zero* pZero2;
+
+// 0x0808DEB8
+void FUN_0808deb8(struct Enemy* p) {
+  register struct Entity* q asm("r5");
+  q = (p->s).unk_28;
+  if (q != NULL) {
+    if (q->mode[0] > 1) {
+      q = NULL;
+      (p->s).unk_28 = q;
+    }
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x83 * 2);
+      SetDDP(&p->body, (const struct Collision*)0x083691B0);
+      {
+        register u8* a asm("r1");
+        register s32 v asm("r0");
+        a = (u8*)p + 0x25;
+        v = 0x19;
+        *a = v;
+      }
+      (p->s).unk_coord.y = -0x1C00;
+      (p->s).work[2] = 0x20;
+      SetMotion(&p->s, MOTION(0x74, 0x10));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t;
+      {
+        register s32 cx asm("r2");
+        register u32* rp asm("r3");
+        register u32 rnd asm("r1");
+        register u32 acc asm("r0");
+        u32 rv;
+        cx = q->coord.x + -0x200;
+        rp = &RNG_0202f388;
+        asm("" : "+r"(rp));
+        rnd = *rp;
+        acc = 0x343FD;
+        acc *= rnd;
+        acc += 0x269EC3;
+        rv = acc << 1;
+        asm("" : "+r"(rv));
+        *rp = rv >> 1;
+        rv <<= 5;
+        rv >>= 0x16;
+        cx += rv;
+        (p->s).coord.x = cx;
+      }
+      {
+        register s32 uy asm("r1");
+        register s32 qy asm("r0");
+        qy = q->coord.y;
+        uy = (p->s).unk_coord.y;
+        qy += uy;
+        (p->s).coord.y = qy;
+        uy -= 0x80;
+        (p->s).unk_coord.y = uy;
+      }
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0) {
+        goto adv;
+      }
+      if (q != NULL) {
+        goto upd;
+      }
+    adv:
+      (p->s).mode[2]++;
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      register s32 dx asm("r2");
+      SetDDP(&p->body, sCollisions);
+      {
+        register s32 k asm("r0");
+        k = -0x200;
+        (p->s).d.x = k;
+        dx = k;
+        if ((p->s).coord.x < pZero2->s.coord.x) {
+          dx = 0x80 * 4;
+        }
+        (p->s).d.x = dx;
+      }
+      {
+        register s32 sq asm("r0");
+        sq = ((s32(*)(u32))Sqrt)(0xC0 * 2);
+        (p->s).work[2] = sq;
+      }
+      (p->s).d.y = -((p->s).work[2] << 6);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0xE0 * 8) {
+        (p->s).d.y = 0xE0 * 8;
+      }
+      {
+        register s32 cy asm("r1");
+        register s32 dyv asm("r0");
+        cy = (p->s).coord.y;
+        dyv = (p->s).d.y;
+        cy += dyv;
+        (p->s).coord.y = cy;
+        if (((u16)FUN_080098a4((p->s).coord.x, cy) << 16) == 0) {
+          break;
+        }
+      }
+      {
+        register u8* a2 asm("r1");
+        register s32 zz asm("r2");
+        register s32 one asm("r0");
+        a2 = (u8*)p + 0xbc;
+        zz = 0;
+        one = 1;
+        *a2 = one;
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = zz;
+      }
+      break;
+  }
+}
+
 INCASM("asm/enemy/deathlock_post_p2b2.inc");
 
 #include "zero.h"
