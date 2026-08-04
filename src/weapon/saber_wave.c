@@ -228,7 +228,219 @@ struct Weapon* CreateSaberWave(struct Zero* z, struct Weapon* saber, bool8 isPro
   return (struct Weapon*)w;
 }
 
-INCASM("asm/weapon/saber_wave_p1_p1a.inc");
+static void hitZSaber(struct Body* body);
+
+// 0x0803A758
+void Weapon5_Init(struct Weapon* w) {
+  register struct Entity* e asm("r8");
+  register struct Zero* z asm("sb");
+  register s32 one asm("r4");
+  register s32 zr asm("r5");
+  {
+    u8* q = (u8*)w + 0xb4;
+    z = *(struct Zero**)(q + 4);
+    e = *(struct Entity**)q;
+  }
+  {
+    u32 tbl = (u32)gWeaponFnTable;
+    EntityFunc** rt = (EntityFunc**)((((w->s).id) << 2) + tbl);
+    one = 1;
+    *(u32*)((w->s).mode) = one;
+    (w->s).onUpdate = (void*)((*rt)[1]);
+  }
+  InitScalerotMotion1(&w->s);
+  {
+    register u8 g asm("r0");
+    register s32 h asm("r1");
+    h = (w->s).flags2;
+    asm("" : "+r"(h));
+    g = 0xFB;
+    g &= h;
+    h = 0;
+    (w->s).flags2 = g;
+    {
+      register s32 z0 asm("r0");
+      z0 = 0;
+      asm volatile("strh %0, [%1, #0x20]" :: "l"(h), "l"(w) : "memory");
+      *((u8*)w + 0x22) = z0;
+    }
+  }
+  {
+    register u8 g2 asm("r0");
+    register s32 k asm("r1");
+    g2 = (w->s).flags;
+    k = 1;
+    zr = 0;
+    asm volatile("" : "+r"(zr));
+    g2 |= k;
+    k = 2;
+    g2 |= k;
+    (w->s).flags = g2;
+  }
+  SetMotion(&w->s, 0x1c);
+  {
+    register s32 v asm("r2");
+    register s32 g3 asm("r0");
+    {
+      register struct Entity* ee asm("r1");
+      ee = e;
+      g3 = ee->flags;
+    }
+    v = (u32)g3 >> 4;
+    v &= one;
+    if (v != 0) {
+      register s32 k10 asm("r1");
+      g3 = (w->s).flags;
+      k10 = 0x10;
+      g3 |= k10;
+    } else {
+      register s32 h3 asm("r1");
+      h3 = (w->s).flags;
+      asm("" : "+r"(h3));
+      g3 = 0xEF;
+      g3 &= h3;
+    }
+    (w->s).flags = g3;
+    {
+      register s32 sh asm("r1");
+      register u8* oa asm("r2");
+      asm volatile("add %0, %1, #0" : "=l"(sh) : "l"(v));
+      *((u8*)w + 0x4c) = sh;
+      oa = (u8*)w + 0x4a;
+      sh <<= 4;
+      {
+        register s32 ov asm("r3");
+        register s32 m11 asm("r0");
+        ov = *oa;
+        m11 = 0x11;
+        m11 = -m11;
+        m11 &= ov;
+        m11 |= sh;
+        *oa = m11;
+      }
+      {
+        register s32 w0 asm("r3");
+        register u8* oa2 asm("r4");
+        register s32 g4 asm("r0");
+        w0 = (w->s).work[0];
+        oa2 = oa;
+        if (w0 != 0) {
+          register s32 k20 asm("r1");
+          g4 = (w->s).flags;
+          k20 = 0x20;
+          g4 |= k20;
+        } else {
+          register s32 h4 asm("r1");
+          h4 = (w->s).flags;
+          asm("" : "+r"(h4));
+          g4 = 0xDF;
+          g4 &= h4;
+        }
+        (w->s).flags = g4;
+        {
+          register s32 v2 asm("r0");
+          v2 = 1;
+          asm volatile("and %0, %1" : "+l"(v2) : "l"(w0));
+          *((u8*)w + 0x4d) = v2;
+          v2 <<= 5;
+          {
+            register s32 ov2 asm("r2");
+            register s32 m21 asm("r1");
+            ov2 = *oa2;
+            m21 = 0x21;
+            m21 = -m21;
+            m21 &= ov2;
+            m21 |= v2;
+            *oa2 = m21;
+          }
+        }
+      }
+    }
+  }
+  {
+    s32 w1;
+    register struct Body* bd asm("r4");
+    register const struct Collision* col asm("r5");
+    w1 = (w->s).work[0];
+    if (w1 != 0) {
+      goto upd;
+    }
+    {
+      register u8 g5 asm("r0");
+      register s32 k4 asm("r1");
+      g5 = (w->s).flags;
+      k4 = 4;
+      g5 |= k4;
+      (w->s).flags = g5;
+    }
+    bd = &w->body;
+    col = (const struct Collision*)0x08361338;
+    InitBody(bd, col, &(w->s).coord, 1);
+    *(struct Weapon**)((u8*)bd + 0x2c) = w;
+    *(s32*)((u8*)bd + 0x24) = w1;
+    {
+      register s32 atk asm("r2");
+      register s32 m1 asm("r3");
+      {
+        register s32 rv asm("r0");
+        rv = ((s32 (*)(struct Zero*))CalcSaberBonus)(z);
+        asm volatile("add %0, %1, #0" : "=l"(atk) : "l"(rv));
+      }
+      atk += 8;
+      atk = (u32)(atk << 24) >> 24;
+      m1 = 1;
+      m1 = -m1;
+      ((void (*)(struct Body*, const struct Collision*, s32, s32, s32, s32))InitWeaponBody)(bd, col, atk, m1, m1, m1);
+    }
+    {
+      register s32 uv asm("r0");
+      if (((w->s).flags & 0x10) != 0) {
+        register s32 k5 asm("r1");
+        {
+          register struct Entity* e2 asm("r1");
+          e2 = e;
+          uv = (e2->coord).x;
+        }
+        k5 = 0x88 << 6;
+        uv += k5;
+        (w->s).coord.x = uv;
+        (w->s).d.x = 0x80 << 3;
+        uv = 0x55;
+        uv = -uv;
+      } else {
+        register s32 k6 asm("r1");
+        {
+          register struct Entity* e3 asm("r1");
+          e3 = e;
+          uv = (e3->coord).x;
+        }
+        k6 = 0xFFFFDE00;
+        uv += k6;
+        (w->s).coord.x = uv;
+        (w->s).d.x = 0xFFFFFC00;
+        uv = 0x55;
+      }
+      (w->s).unk_coord.x = uv;
+    }
+    {
+      register s32 cy asm("r0");
+      register s32 k7 asm("r1");
+      {
+        register struct Entity* e4 asm("r1");
+        e4 = e;
+        cy = (e4->coord).y;
+      }
+      k7 = 0xFFFFEC00;
+      cy += k7;
+      (w->s).coord.y = cy;
+    }
+    (w->s).work[2] = 0x12;
+    *(void**)((u8*)bd + 0x24) = (void*)hitZSaber;
+  }
+upd:
+  Weapon5_Update(w);
+}
+
 
 void Weapon5_Update(struct Weapon* w) {
   u8* pp = (u8*)w + 0xb4;
