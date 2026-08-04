@@ -421,7 +421,80 @@ void FUN_080a569c(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_20_post_d.inc");
+void FUN_080a57ac(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 a, b, dy, v;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).d.y = 0x2C0;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      (p->s).coord.y += (p->s).d.y;
+      if ((p->s).d.y > 0) {
+        a = PushoutToUp1((p->s).coord.x - 0x1000, (p->s).coord.y + 0x1000);
+        b = PushoutToUp1((p->s).coord.x + 0x1000, (p->s).coord.y + 0x1000);
+        if (a != 0 || b != 0) {
+          (p->s).mode[2]++;
+        }
+      } else {
+        if ((p->s).flags & X_FLIP) {
+          a = PushoutToLeft1((p->s).coord.x + 0x1000, (p->s).coord.y + 0x1000);
+        } else {
+          a = PushoutToRight1((p->s).coord.x - 0x1000, (p->s).coord.y + 0x1000);
+        }
+        if (a == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      (p->s).work[2] += 0x10;
+      (p->s).angle = (p->s).work[2];
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      (p->s).d.x = -0x2C0;
+      v = (p->s).d.x;
+      if ((p->s).flags & X_FLIP) {
+        v = 0x2C0;
+      }
+      (p->s).d.x = v;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      (p->s).coord.x += (p->s).d.x;
+      if ((p->s).flags & X_FLIP) {
+        a = FUN_08009f6c((p->s).coord.x + 0x1000, (p->s).coord.y + 0x1000);
+        b = FUN_08009f6c((p->s).coord.x - 0x1000, (p->s).coord.y + 0x1000);
+      } else {
+        a = FUN_08009f6c((p->s).coord.x - 0x1000, (p->s).coord.y + 0x1000);
+        b = FUN_08009f6c((p->s).coord.x + 0x1000, (p->s).coord.y + 0x1000);
+      }
+      dy = a - (p->s).coord.y;
+      if (dy < -0x1800) {
+        (p->s).d.y = -0x2C0;
+        (p->s).mode[2] = 1;
+      } else if (dy > 0x1800 && b - (p->s).coord.y > 0x1800) {
+        (p->s).d.y = 0x2C0;
+        (p->s).mode[2] = 1;
+      } else {
+        a = FUN_08009f6c((p->s).coord.x, (p->s).coord.y + 0x1000);
+        if (a - (p->s).coord.y <= 0x17FF) {
+          (p->s).coord.y = a - 0x1000;
+        }
+      }
+      (p->s).work[2] += 0x10;
+      (p->s).angle = (p->s).work[2];
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+  v = (p->s).coord.x - *(s32*)((u8*)q + 0xb8);
+  if ((v < -0x5800 && !((p->s).flags & X_FLIP)) || (v > 0x5800 && ((p->s).flags & X_FLIP))) {
+    (p->s).mode[1] = 4;
+    (p->s).mode[2] = 0;
+  }
+}
 
 void FUN_080a4f3c(struct Projectile* p);
 
