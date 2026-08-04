@@ -35,7 +35,104 @@ static bool8 tryKillBeeServer(struct Boss* p) {
 
 static const BossFunc sDeads[1];
 
-INCASM("asm/boss/bee_server_p1_pre.inc");
+// 0x0804CE68
+// PARKED: every instruction matches except the register agbcc picks for the
+// gStaticMotionGraphics base in the first LOAD_STATIC_GRAPHIC (r0; retail r1).
+// Pinning it to r1 makes agbcc drop the `mov r8, r1` reuse that the second
+// macro depends on, costing 3 instructions.
+NON_MATCH void BeeServer_Init(struct Boss* p) {
+#if MODERN
+  {
+    u32 tbl = (u32)gBossFnTable;
+    u32 id = ((p->s).id) << 2;
+    EntityFunc** rt = (EntityFunc**)(tbl + id);
+    register u32 one asm("r1");
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)((*rt)[1]);
+  }
+  {
+    register const u8* tb asm("r1");
+    tb = (const u8*)0x08363318;
+    asm("" : "+r"(tb));
+    {
+      register u32 idx asm("r0");
+      idx = (p->s).work[0];
+      idx += (u32)tb;
+      (p->s).mode[1] = *(const u8*)idx;
+    }
+  }
+  {
+    u32 fl = (p->s).flags;
+    fl |= 2;
+    asm("" : "+r"(fl));
+    fl |= 1;
+    (p->s).flags = fl;
+  }
+  InitNonAffineMotion(&p->s);
+  if ((gSystemSavedataManager.mods[15] & 0x20) != 0) {
+    ResetBossBody(p, sCollisions, 0x30);
+  } else {
+    ResetBossBody(p, sCollisions, 0x20);
+  }
+  {
+    void* f = (void*)onCollision;
+    u8* b = (u8*)p + 0x74;
+    *(void**)(b + 0x24) = f;
+    asm("" : "+r"(b));
+    b += 0x40;
+    asm("" : "+r"(b));
+    {
+      register s32 z asm("r1");
+      z = 0;
+      *(u32*)b = z;
+    }
+  }
+  {
+    s32 cx = (p->s).coord.x >> 8;
+    s32 q;
+    (p->s).coord.x = cx;
+    q = cx / 0xF0;
+    {
+      register s32 v asm("r1");
+      register s32 k asm("r2");
+      v = ((q << 4) - q) << 12;
+      asm volatile("mov %0, #0xf0\n\tlsl %0, %0, #0x7" : "=l"(k));
+      v += k;
+      (p->s).coord.x = v;
+    }
+  }
+  {
+    s32 cy = (p->s).coord.y >> 8;
+    s32 q2;
+    (p->s).coord.y = cy;
+    q2 = cy / 0xA0;
+    {
+      register s32 v2 asm("r1");
+      register s32 k2 asm("r0");
+      v2 = ((q2 << 2) + q2) << 13;
+      asm volatile("mov %0, #0xe0\n\tlsl %0, %0, #0x6" : "=l"(k2));
+      v2 += k2;
+      (p->s).coord.y = v2;
+    }
+  }
+  LOAD_STATIC_GRAPHIC(SM070_BEESERVER);
+  LOAD_STATIC_GRAPHIC(SM071_MELLNET);
+  *(s32*)((u8*)p + 0xbc) = (p->s).coord.x;
+  {
+    u16* w = (u16*)((u8*)p + 0xb8);
+    u16 z = 0;
+    *w = z;
+    asm("" : "+r"(w));
+    w += 1;
+    *w = z;
+  }
+  BeeServer_Update(p);
+#else
+  INCCODE("asm/boss/BeeServer_Init.inc");
+#endif
+}
+
 
 static const BossFunc sUpdates1[4];
 static const BossFunc sUpdates2[4];

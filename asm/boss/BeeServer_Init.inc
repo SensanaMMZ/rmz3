@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-	thumb_func_start BeeServer_Init
-BeeServer_Init: @ 0x0804CE68
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, sb
