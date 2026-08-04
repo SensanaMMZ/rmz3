@@ -1570,7 +1570,174 @@ NON_MATCH void initActor21(struct Solid* p) {
 #endif
 }
 
-INCASM("asm/solid/actor_b_b.inc");
+// 0x080D2EDC
+void Actor21_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 z asm("r1");
+      z = 0;
+      (p->s).coord.x = z;
+      (p->s).coord.y = 0x93 << 8;
+      (p->s).work[3] = z;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 i asm("r1");
+      {
+        register const s16* tb asm("r2");
+        register s32 o asm("r0");
+        tb = gSineTable;
+        i = (p->s).work[3];
+        o = (u32)(i << 0x19) >> 0x17;
+        o += (s32)tb;
+        {
+          register s32 v asm("r2");
+          register s32 k asm("r3");
+          k = 0;
+          v = *(const s16*)(o + k);
+          o = v << 1;
+          o += v;
+          o <<= 4;
+          (p->s).coord.x = o;
+        }
+      }
+      i += 1;
+      (p->s).work[3] = i;
+      if ((u32)(i << 24) >> 24 <= 0x1f) {
+        break;
+      }
+      (p->s).mode[1]++;
+      (p->s).work[3] = 0x10;
+      break;
+    }
+    case 2: {
+      register s32 t asm("r0");
+      t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((t << 24) == 0) {
+        break;
+      }
+      (p->s).work[3] = 4;
+      goto adv;
+    }
+    case 3: {
+      register s32 t2 asm("r0");
+      (p->s).coord.x = (p->s).coord.x + (0x80 << 2);
+      t2 = (p->s).work[3] - 1;
+      (p->s).work[3] = t2;
+      if ((t2 << 24) == 0) {
+        break;
+      }
+      (p->s).work[3] = 8;
+      goto adv;
+    }
+    case 4: {
+      register s32 j asm("r1");
+      j = (p->s).work[3] - 1;
+      (p->s).work[3] = j;
+      {
+        register const s16* tb2 asm("r2");
+        register s32 o2 asm("r0");
+        tb2 = gSineTable;
+        o2 = (u32)(j << 0x1b) >> 0x17;
+        o2 += (s32)tb2;
+        {
+          register s32 v2 asm("r2");
+          register s32 k2 asm("r3");
+          k2 = 0;
+          v2 = *(const s16*)(o2 + k2);
+          o2 = v2 << 1;
+          o2 += v2;
+          o2 <<= 4;
+          v2 = 0x80 << 4;
+          o2 += v2;
+          (p->s).coord.x = o2;
+        }
+      }
+      if ((j << 24) != 0) {
+        break;
+      }
+      (p->s).mode[1]++;
+      PlaySound(0x97 << 1);
+      break;
+    }
+    case 5: {
+      register s32 y asm("r0");
+      {
+        register s32 x asm("r1");
+        x = (p->s).coord.x;
+        y = x << 1;
+        y += x;
+        y >>= 2;
+        (p->s).coord.x = y;
+      }
+      {
+        register s32 y2 asm("r1");
+        register s32 lim asm("r1");
+        y2 = (p->s).coord.y;
+        y = y2 << 1;
+        y += y2;
+        y >>= 2;
+        (p->s).coord.y = y;
+        lim = 0x80 << 3;
+        if (y > lim) {
+          break;
+        }
+      }
+      gWindowRegBuffer.dispcnt &= 0xBFFF;
+    adv:
+      (p->s).mode[1]++;
+      break;
+    }
+    case 6:
+      break;
+  }
+  {
+    register s32 w asm("r0");
+    register struct WramWindowRegister* wb asm("r5");
+    register s32 b asm("r3");
+    register s32 ff asm("r4");
+    w = (p->s).work[2] + 1;
+    (p->s).work[2] = w;
+    wb = &gWindowRegBuffer;
+    {
+      register s32 cx asm("r2");
+      register s32 t3 asm("r1");
+      cx = (p->s).coord.x >> 8;
+      b = 1;
+      b &= w;
+      w = b << 3;
+      cx += w;
+      t3 = cx + 0xbc;
+      ff = 0xff;
+      t3 &= ff;
+      w = 0xbc;
+      w -= cx;
+      w <<= 8;
+      t3 |= w;
+      (wb->winH).half[1] = t3;
+    }
+    {
+      register s32 cy asm("r0");
+      cy = (p->s).coord.y >> 8;
+      b <<= 2;
+      cy += b;
+      cy &= ff;
+      (wb->winV).half[1] = cy;
+    }
+    {
+      register u16* pm asm("r1");
+      register s32 k3 asm("r3");
+      register s32 k4 asm("r0");
+      pm = (u16*)&gPaletteManager;
+      k3 = 0x7FFF;
+      asm volatile("add %0, %1, #0" : "=l"(k4) : "l"(k3));
+      *pm = k4;
+    }
+  }
+}
+
 
 // 0x080D303C
 void Actor22_Update(struct Solid* p) {
