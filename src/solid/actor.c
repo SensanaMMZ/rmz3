@@ -1641,7 +1641,122 @@ void Actor17_Update(struct Solid* p) {
 }
 
 
-INCASM("asm/solid/actor_b_a.inc");
+
+// 0x080D2B40
+// 8 bytes short.  The three sine-interpolation cases (5/6/7) come out with the
+// running value in r3 where retail uses r1/r2, and two of the four
+// `str`s that retail keeps separate get merged.  Reusing one local for both the
+// unk_coord and the new coord.y (retail shares r1) fixes the shape but not the
+// register numbering; block-scoping the locals per case is the obvious next
+// experiment.  Everything outside cases 5-7 is identical, including the shared
+// `lsls r0,#0x10 / cmp / bump` tail that cases 1, 8 and 9 cross-jump into.
+NON_MATCH void Actor18_Update(struct Solid* p) {
+#if MODERN
+  s32 y, uy;
+
+  switch ((p->s).mode[1]) {
+    case 0:
+      wDynamicGraphicTilenums[0xbe] = 0x3C0;
+      wDynamicMotionPalIDs[0xbe] = 9;
+      (p->s).mode[1]++;
+      /* fallthrough */
+    case 1:
+      if (((u16)FUN_080d0aa0(&p->s, MOTION(0xBE, 0x00), 1) << 16) == 0) {
+        break;
+      }
+      goto bump;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xBE, 0x01));
+      (p->s).work[2] = 8;
+      goto bump;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if (((p->s).work[2] << 24) == 0) {
+        PlaySound(0x101);
+      }
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xBE, 0x02));
+      goto bump;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xBE, 0x03));
+      (p->s).work[2] = 0x40;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      goto bump;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      uy = (p->s).unk_coord.y - gSineTable[(p->s).work[2]];
+      (p->s).unk_coord.y = uy;
+      y = (p->s).coord.y;
+      uy = (((y << 3) - y) + uy) >> 3;
+      (p->s).coord.y = uy;
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] != 0) {
+        break;
+      }
+      (p->s).work[2] = 0;
+      (p->s).d.y = uy;
+      goto bump;
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]++;
+      uy = (p->s).d.y + (gSineTable[(p->s).work[2]] << 2);
+      (p->s).unk_coord.y = uy;
+      y = (p->s).coord.y;
+      uy = (((y << 3) - y) + uy) >> 3;
+      (p->s).coord.y = uy;
+      if (((p->s).scriptEntity->flags & 2) == 0) {
+        break;
+      }
+      (p->s).work[2] = 0x40;
+      (p->s).unk_coord.y = uy;
+      goto bump;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      uy = (p->s).unk_coord.y + 0x100;
+      uy += gSineTable[(p->s).work[2]];
+      (p->s).unk_coord.y = uy;
+      y = (p->s).coord.y;
+      (p->s).coord.y = (((y << 3) - y) + uy) >> 3;
+      if (PushoutToUp2((p->s).coord.x, (p->s).coord.y) == 0) {
+        break;
+      }
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      SetMotion(&p->s, MOTION(0xBE, 0x0E));
+      goto bump;
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      if (((p->s).scriptEntity->flags & 4) == 0) {
+        break;
+      }
+      goto bump;
+    case 9:
+      if (((u16)FUN_080d0934(&p->s, MOTION(0xBE, 0x0E), 1) << 16) == 0) {
+        break;
+      }
+    bump:
+      (p->s).mode[1]++;
+      break;
+    case 10:
+      break;
+  }
+#else
+  INCCODE("asm/solid/actor_18.inc");
+#endif
+}
 
 // 0x080D2D50
 void Actor19_Update(struct Solid* p) {

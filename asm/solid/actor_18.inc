@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-	thumb_func_start Actor18_Update
-Actor18_Update: @ 0x080D2B40
 	push {r4, lr}
 	adds r4, r0, #0
 	ldrb r0, [r4, #0xd]
