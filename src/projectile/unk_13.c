@@ -395,6 +395,205 @@ void FUN_080a03ac(struct Projectile* p) {
 
 INCASM("asm/projectile/unk_13_p3_b.inc");
 
+extern struct Zero* pZero2;
+
+// 0x080A06C0
+void FUN_080a06c0(struct Projectile* p) {
+  register struct Entity* par asm("sl");
+  register u8* b8c asm("r6");
+  register u32* b90 asm("r8");
+  register u8* b94 asm("r9");
+  register u32 ang asm("r5");
+  register s32 i asm("r4");
+  par = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0:
+      {
+        register const s16* tb asm("r1");
+        register s32 v asm("r0");
+        const s16* bp;
+        tb = (const s16*)0x0836B0D6;
+        asm("" : "+r"(tb));
+        bp = (const s16*)(((p->s).work[2] << 1) + (u32)tb);
+        asm volatile("mov r1, #0\n\tldrsh %0, [%1, r1]" : "=l"(v) : "l"(bp) : "r1");
+        (p->s).unk_coord.x = v;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).unk_coord.x - 1;
+      (p->s).unk_coord.x = t;
+      if (t == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      register s32 dx asm("r5");
+      register s32 dy asm("r6");
+      register s32 dist asm("r4");
+      PlaySound(0x8C * 2);
+      {
+        register struct Zero* z asm("r1");
+        register s32 cy asm("r0");
+        z = pZero2;
+        dx = (z->s).coord.x;
+        dx -= (p->s).coord.x;
+        cy = (p->s).coord.y;
+        {
+          register s32 k asm("r2");
+          k = 0xC0 * 32;
+          cy += k;
+        }
+        dy = (z->s).coord.y;
+        dy -= cy;
+      }
+      {
+        register s32 a asm("r0");
+        register s32 t1 asm("r1");
+        register s32 b asm("r1");
+        register s32 t2 asm("r2");
+        a = dx >> 8;
+        asm volatile("add %0, %1, #0" : "=&l"(t1) : "l"(a));
+        t1 *= a;
+        asm volatile("add %0, %1, #0" : "=&l"(a) : "l"(t1));
+        b = dy >> 8;
+        asm volatile("add %0, %1, #0" : "=&l"(t2) : "l"(b));
+        t2 *= b;
+        asm volatile("add %0, %1, #0" : "=&l"(b) : "l"(t2));
+        a += b;
+        {
+          register s32 sq asm("r0");
+          sq = ((s32(*)(u32))Sqrt)(a);
+          asm volatile("add %0, %1, #0" : "=&l"(dist) : "l"(sq));
+        }
+      }
+      dist <<= 16;
+      dist = (s32)(((u32)dist) >> 8);
+      dx <<= 8;
+      {
+        register s32 q asm("r1");
+        register s32 r asm("r0");
+        r = dx / dist;
+        q = (r << 2) + r;
+        (p->s).d.x = q;
+      }
+      dy <<= 8;
+      {
+        register s32 q2 asm("r1");
+        register s32 r2 asm("r0");
+        r2 = dy / dist;
+        q2 = (r2 << 2) + r2;
+        (p->s).d.y = q2;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32 cx asm("r0");
+      register s32 cy2 asm("r1");
+      asm volatile("ldr %0, [%2, #0x54]\n\tldr %1, [%2, #0x5c]\n\tadd %0, %0, %1\n\tstr %0, [%2, #0x54]\n\tldr %1, [%2, #0x58]\n\tldr r2, [%2, #0x60]\n\tadd %1, %1, r2\n\tstr %1, [%2, #0x58]" : "=&l"(cx), "=&l"(cy2) : "l"(p) : "r2", "memory");
+      if (((u16)FUN_080098a4(cx, cy2) << 16) == 0) {
+        goto upd;
+      }
+      b8c = (u8*)p + 0x8c;
+      {
+        register u32 t0 asm("r0");
+        register u32 t1 asm("r1");
+        asm volatile("mov %0, #0x90\n\tadd %0, %0, %1" : "=&l"(t0) : "l"(p));
+        b90 = (u32*)t0;
+        asm volatile("mov %0, #0x94\n\tadd %0, %0, %1" : "=&l"(t1) : "l"(p));
+        b94 = (u8*)t1;
+      }
+      ang = 0x80 << 0x16;
+      i = 2;
+      do {
+        register u32 st asm("r2");
+        ((void (*)(struct Entity*, s32, s32, s32, s32))FUN_080bc6ac)(par, (p->s).coord.x, (p->s).coord.y, 0x80 * 2, ang >> 0x18);
+        asm volatile("mov %0, #0x80\n\tlsl %0, %0, #0x16" : "=l"(st));
+        ang += st;
+        i--;
+      } while (i >= 0);
+      i = 3;
+      {
+        register u32 f asm("r0");
+        register s32 z2 asm("r2");
+        {
+          register u32 fl asm("r1");
+          fl = (p->s).flags;
+          f = 0xFE;
+          f &= fl;
+        }
+        z2 = 0;
+        asm("" : "+r"(f));
+        f &= 0xFD;
+        (p->s).flags = f;
+        *(u32*)b8c = z2;
+        *b90 = z2;
+        asm volatile("mov r1, r9\n\tstrb %0, [r1]" :: "l"(z2), "r"(b94) : "r1", "memory");
+      }
+      (p->s).flags &= 0xFB;
+      {
+        register u32 tbl asm("r1");
+        EntityFunc** rt;
+        tbl = (u32)gProjectileFnTable;
+        asm("" : "+r"(tbl));
+        rt = (EntityFunc**)((((p->s).id) << 2) + tbl);
+        *(u32*)((p->s).mode) = i;
+        (p->s).onUpdate = (void*)(*rt)[3];
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+  {
+    register u32 md asm("r0");
+    asm volatile("mov r2, r10\n\tldrb %0, [r2, #0xc]" : "=l"(md) : "r"(par) : "r2");
+    if (md <= 1) {
+      return;
+    }
+  }
+  b8c = (u8*)p + 0x8c;
+  {
+    register u32 u0 asm("r0");
+    register u32 u1 asm("r1");
+    asm volatile("mov %0, #0x90\n\tadd %0, %0, %1" : "=&l"(u0) : "l"(p));
+    b90 = (u32*)u0;
+    asm volatile("mov %0, #0x94\n\tadd %0, %0, %1" : "=&l"(u1) : "l"(p));
+    b94 = (u8*)u1;
+  }
+  ang = 0x80 << 0x16;
+  i = 3;
+  do {
+    register u32 st2 asm("r2");
+    ((void (*)(struct Entity*, s32, s32, s32, s32))FUN_080bc6ac)(par, (p->s).coord.x, (p->s).coord.y, 0x80 * 2, ang >> 0x18);
+    asm volatile("mov %0, #0x80\n\tlsl %0, %0, #0x17" : "=l"(st2));
+    ang += st2;
+    i--;
+  } while (i >= 0);
+  {
+    register u32 f2 asm("r0");
+    register s32 z3 asm("r2");
+    {
+      register u32 fl2 asm("r1");
+      fl2 = (p->s).flags;
+      f2 = 0xFE;
+      f2 &= fl2;
+    }
+    z3 = 0;
+    asm("" : "+r"(f2));
+    f2 &= 0xFD;
+    (p->s).flags = f2;
+    *(u32*)b8c = z3;
+    *b90 = z3;
+    asm volatile("mov r1, r9\n\tstrb %0, [r1]" :: "l"(z3), "r"(b94) : "r1", "memory");
+  }
+  (p->s).flags &= 0xFB;
+  SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+}
+
 
 void Projectile13_Init(struct Projectile* p);
 void Projectile13_Update(struct Projectile* p);
