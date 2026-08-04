@@ -812,7 +812,144 @@ void babyelf_08047e30(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/baby_elf_p2_p1b_post7e30.inc");
+// 0x08047F84
+void FUN_08047f84(struct Boss* p) {
+  register u8* q asm("r4");
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 v = 0xc0 << 2;
+      u8 n;
+      (p->s).d.x = v;
+      q = (u8*)p + 0xc7;
+      n = *q;
+      v -= (n * 2 + n) << 9;
+      (p->s).d.x = v;
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 nx = (p->s).coord.x + (p->s).d.x;
+      q = (u8*)p + 0xc7;
+      (p->s).coord.x = nx;
+      if (*q == 0) {
+        s32 lim = *(s32*)((u8*)p + 0xb4) - 0x5000;
+        if (nx > lim) {
+          (p->s).coord.x = lim;
+          (p->s).mode[2]++;
+        }
+      }
+      if (*q != 1) {
+        break;
+      }
+      {
+        s32 lim = *(s32*)((u8*)p + 0xb4) + (0xa0 << 7);
+        if ((p->s).coord.x < lim) {
+          (p->s).coord.x = lim;
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    }
+    case 2:
+      (p->s).work[3] = 0x40;
+      (p->s).unk_coord.x = 0x2a;
+      {
+        *(s32*)((u8*)p + 0xbc) = (p->s).coord.x;
+        *(s32*)((u8*)p + 0xc0) = (p->s).coord.y - 0x1000;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 t = (p->s).unk_coord.x - 1;
+      (p->s).unk_coord.x = t;
+      if (t == 0) {
+        (p->s).mode[2]++;
+      }
+      if (*((u8*)p + 0xc7) == 0) {
+        (p->s).work[3] = (p->s).work[3] - 6;
+      } else {
+        (p->s).work[3] = (p->s).work[3] + 6;
+      }
+      {
+        s32 bx = *(s32*)((u8*)p + 0xbc);
+        (p->s).coord.x = bx;
+        (p->s).coord.x = bx + gSineTable[(u8)((p->s).work[3] + 0x40)] * 16;
+      }
+      {
+        s32 by = *(s32*)((u8*)p + 0xc0);
+        (p->s).coord.y = by;
+        (p->s).coord.y = by + gSineTable[(p->s).work[3]] * 16;
+      }
+      break;
+    }
+    case 4:
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      s32 nx = (p->s).coord.x + (p->s).d.x;
+      u8* a;
+      u8 n;
+      (p->s).coord.x = nx;
+      a = (u8*)p + 0xc7;
+      n = *a;
+      asm volatile("add %0, %1, #0" : "=&l"(q) : "l"(a));
+      if (n == 0) {
+        s32 lim = *(s32*)((u8*)a - 19) - 0x1000;
+        if (nx > lim) {
+          (p->s).coord.x = lim;
+          (p->s).mode[1] = 0xf;
+          (p->s).mode[2] = n;
+        }
+      }
+      if (*q != 1) {
+        break;
+      }
+      {
+        register s32 base asm("r0");
+        register s32 kc asm("r2");
+        register s32 lim asm("r1");
+        base = *(s32*)((u8*)p + 0xb4);
+        kc = 0x80 << 5;
+        asm volatile("" : "+l"(kc));
+        lim = base + kc;
+        asm volatile("" : : "l"(kc));
+        if ((p->s).coord.x < lim) {
+          s32 z;
+          (p->s).coord.x = lim;
+          z = 0;
+          (p->s).mode[1] = 0xf;
+          (p->s).mode[2] = z;
+        }
+      }
+      break;
+    }
+  }
+  (p->s).work[2]++;
+  if ((u8)((p->s).work[2] % 7) == 0) {
+    u32 a = RNG_0202f388;
+    u32 r1v = (a * 0x343FD + 0x269EC3) << 1;
+    u32 s1;
+    s32 x;
+    s32 y;
+    u32 r2v;
+    s32 rx;
+    s32 ry;
+    asm("" : "+r"(r1v));
+    s1 = r1v >> 1;
+    rx = (s32)((r1v << 4) >> 21) + -0x400;
+    x = (p->s).coord.x + rx;
+    r2v = (s1 * 0x343FD + 0x269EC3) << 1;
+    asm("" : "+r"(r2v));
+    RNG_0202f388 = r2v >> 1;
+    ry = (s32)((r2v << 5) >> 22) + 0x800;
+    y = (p->s).coord.y + ry;
+    FUN_080bc594(x, y, 0, 0, (p->s).work[0]);
+  }
+  StepPaletteAnimation(*((u8*)p + 0xc6));
+  UpdateMotionGraphic(&p->s);
+}
+
 
 // 0x08048190
 void FUN_08048190(struct Boss* p) {
