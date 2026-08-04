@@ -1061,7 +1061,190 @@ NON_MATCH void childreScrewIce(struct Boss* p) {
 #endif
 }
 
-INCASM("asm/boss/childre_pre_b4.inc");
+void CreateChildreMissile(s32 x, s32 y, u8 n);
+
+// 0x08041984
+void childreMissile(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 neg asm("r2");
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0;
+      {
+        register s32 d asm("r1");
+        register s32 cx asm("r0");
+        d = (pZero2->s).coord.x;
+        cx = (p->s).coord.x;
+        neg = d - cx;
+        neg = (u32)neg >> 31;
+      }
+      if (((p->s).flags & 0x10) == 0) {
+        goto clear;
+      }
+      if (neg == 0) {
+        goto skip2;
+      }
+      goto motion;
+    clear:
+      if (neg == 0) {
+        goto motion;
+      }
+    skip2:
+      (p->s).mode[2] = (p->s).mode[2] + 2;
+      break;
+    motion:
+      SetMotion(&p->s, 0xA408);
+      (p->s).d.y = 0xFFFFFE00;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 ny asm("r1");
+      {
+        register s32 dy asm("r0");
+        register s32 lim asm("r1");
+        dy = (p->s).d.y + 0x40;
+        (p->s).d.y = dy;
+        lim = 0xe0 << 3;
+        if (dy > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      {
+        register s32 dv asm("r0");
+        ny = (p->s).coord.y;
+        dv = (p->s).d.y;
+        ny += dv;
+        (p->s).coord.y = ny;
+      }
+      {
+        register s32 d2 asm("r0");
+        d2 = *(s32*)((u8*)p + 0xc0) - ny;
+        if (d2 < 0) {
+          (p->s).coord.y = ny + d2;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      (p->s).work[2] = 1;
+      (p->s).mode[2] = (p->s).mode[2] + 1;
+      break;
+    }
+    case 2: {
+      PlaySound(0x69);
+      if ((p->s).work[2] != 0) {
+        register s32 v asm("r1");
+        register s32 one asm("r2");
+        register u8* oa asm("ip");
+        s32 v0 = (p->s).flags >> 4;
+        one = 1;
+        v0 ^= one;
+        asm("" : "+r"(v0));
+        v0 &= one;
+        *((u8*)p + 0x4c) = v0;
+        v = (p->s).flags >> 4;
+        v ^= one;
+        asm("" : "+r"(v));
+        v &= one;
+        {
+          register u8* o0 asm("r0");
+          register s32 k asm("r0");
+          k = 0x4a;
+          asm volatile("add %0, %0, %1" : "+l"(k) : "l"(p));
+          o0 = (u8*)k;
+          oa = o0;
+          {
+            register s32 sh asm("r3");
+            register s32 ov asm("r2");
+            register s32 m11 asm("r0");
+            sh = v << 4;
+            ov = *o0;
+            m11 = 0x11;
+            m11 = -m11;
+            m11 &= ov;
+            m11 |= sh;
+            {
+              register u8* o1 asm("r2");
+              o1 = oa;
+              *o1 = m11;
+            }
+          }
+        }
+        if (v != 0) {
+          register u8 g asm("r0");
+          register s32 k10 asm("r1");
+          g = (p->s).flags;
+          k10 = 0x10;
+          g |= k10;
+          (p->s).flags = g;
+        } else {
+          register u8 g2 asm("r0");
+          register u8 h2 asm("r1");
+          h2 = (p->s).flags;
+          asm("" : "+r"(h2));
+          g2 = 0xEF;
+          g2 &= h2;
+          (p->s).flags = g2;
+        }
+      }
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32 t asm("r0");
+      {
+        register u16* tbl asm("r1");
+        tbl = (u16*)0x0836206E;
+        asm("" : "+r"(tbl));
+        SetMotion(&p->s, tbl[(p->s).work[2]]);
+      }
+      t = (p->s).work[2] - 1;
+      if ((u8)t <= 3) {
+        PlaySound(0x64);
+        CreateChildreMissile((p->s).coord.x, (p->s).coord.y - 0x1A00, ((p->s).flags >> 4) & 1);
+      }
+      (p->s).work[3] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 4: {
+      register s32 w asm("r1");
+      register s32 st asm("r2");
+      register s32 v asm("r0");
+      UpdateMotionGraphic(&p->s);
+      w = (p->s).work[2];
+      v = w;
+      if (v == 0 || v == 5) {
+        st = *((u8*)p + 0x73);
+        if (st != 3) {
+          break;
+        }
+        v = w + 1;
+        w = 0;
+        (p->s).work[2] = v;
+        if ((u8)v == 6) {
+          (p->s).mode[1] = w;
+          (p->s).mode[2] = w;
+        } else {
+          (p->s).mode[2] = st;
+        }
+      } else {
+        s32 t2 = (p->s).work[3] - 1;
+        (p->s).work[3] = t2;
+        if ((t2 << 24) == 0) {
+          v = w + 1;
+          (p->s).work[2] = v;
+          (p->s).mode[2] = 3;
+        }
+      }
+      break;
+    }
+  }
+}
+
 // 0x08041B40
 void childreStartEarShot(struct Boss* p) {
   switch ((p->s).mode[2]) {
