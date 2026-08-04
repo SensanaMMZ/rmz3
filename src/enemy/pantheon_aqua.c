@@ -281,7 +281,160 @@ void FUN_080726ac(struct Enemy* p) {
 
 bool8 FUN_08072800(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/pantheon_aqua_p3.inc");
+
+// 0x08072804
+// Two instructions off: retail's SECOND xflip block loads flags into r1 and the
+// 0x10 constant into r0 (`ldrb r1,[r7,#0xa] / movs r0,#0x10 / orrs r0,r1`);
+// ours swaps the pair.  The FIRST xflip block, from identical source text,
+// comes out right.  The r2 pin that fixes the if-arm's hoisted `movs r2,#0`
+// is what displaces the else-arm pair, and agbcc ignores `register ... asm("r0")`
+// / `asm("r1")` here (r2 pins are honoured), so the else arm cannot be steered:
+// |=, `0x10 | flags`, a u8/s32 temp, pinned pairs with and without barriers, and
+// an `o` pin all leave the swap in place.  Everything else is byte-identical.
+NON_MATCH void FUN_08072804(struct Enemy* p) {
+#if MODERN
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register s32 dx asm("r5");
+      register s32 dy asm("r6");
+      s32 d, cy, ax, ay;
+      SetMotion(&p->s, 0x2701);
+      (p->s).work[2] = 0x40;
+      (p->s).work[3] = m;
+      SetDDP(&p->body, sCollisions);
+      ax = (pZero2->s).coord.x - (p->s).coord.x;
+      dx = ax;
+      cy = (p->s).coord.y - 0x600;
+      ay = (pZero2->s).coord.y - cy;
+      dy = ay;
+      if (ax != 0 || ay != 0) {
+        s32 qx, qy, sx, sy;
+        qx = dx >> 2;
+        sx = qx * qx;
+        qy = dy >> 2;
+        sy = qy * qy;
+        d = (u16)Sqrt(sx + sy) << 2;
+        dx = (dx << 8) / d;
+        dy = (dy << 8) / d;
+      } else {
+        dx = 0x100;
+      }
+      (p->s).unk_coord.x = (dx * 0xC0) >> 8;
+      (p->s).unk_coord.y = (dy * 0xC0) >> 8;
+      if ((p->s).coord.x > (pZero2->s).coord.x) {
+        s32 z = 0;
+        (p->s).flags &= 0xEF;
+        (p->s).spr.xflip = z;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+      } else {
+        s32 o = 1;
+        (p->s).flags |= 0x10;
+        (p->s).spr.xflip = o;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 c16 = 0x10;
+          s32 ov, m11;
+          asm("" : "+r"(c16));
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          *oa = m11 | c16;
+        }
+      }
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      (p->s).d.x += (((p->s).unk_coord.x - (p->s).d.x) << 5) >> 8;
+      (p->s).d.y += (((p->s).unk_coord.y - (p->s).d.y) << 5) >> 8;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      FUN_08073610(p);
+      {
+        s32 t = (p->s).work[3];
+        s32 n = t + 1;
+        u32 t2;
+        (p->s).work[3] = n;
+        t2 = (u32)t << 24;
+        asm("" : "+r"(t2));
+        t2 >>= 24;
+        if ((s32)((t2 % 0xC) << 24) == 0) {
+          FUN_080733b4(p, 0);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        u8* cb = (u8*)p + 0xba;
+        if (*cb != 0) {
+          *cb = *cb - 1;
+          if ((u8)*cb != 0) {
+            goto skip;
+          }
+        }
+        if (FUN_080735ac(p) != 2) {
+          goto skip;
+        }
+      }
+      if ((p->s).coord.x > (pZero2->s).coord.x) {
+        register s32 z asm("r2");
+        z = 0;
+        asm("" : "+r"(z));
+        (p->s).flags &= 0xEF;
+        (p->s).spr.xflip = z;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+      } else {
+        s32 o = 1;
+        (p->s).flags |= 0x10;
+        (p->s).spr.xflip = o;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 c16 = 0x10;
+          s32 ov, m11;
+          asm("" : "+r"(c16));
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          *oa = m11 | c16;
+        }
+      }
+      {
+        s32 z2 = 0;
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = z2;
+      }
+      goto check;
+    skip:
+      if ((p->s).work[2] == 0) {
+        goto zero;
+      }
+      (p->s).work[2]--;
+    check:
+      if ((p->s).work[2] != 0) {
+        break;
+      }
+    zero:
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/pantheon_aqua_p3.inc");
+#endif
+}
 
 bool8 FUN_080729e8(struct Enemy* p) { return TRUE; }
 

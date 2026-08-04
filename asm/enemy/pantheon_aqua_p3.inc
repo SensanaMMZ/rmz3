@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-
-	.text
-
-	thumb_func_start FUN_08072804
-FUN_08072804: @ 0x08072804
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
 	ldrb r4, [r7, #0xe]
