@@ -73,7 +73,162 @@ static void Harpuia_Init(struct Zero* z) {
   Harpuia_Update(z);
 }
 
-INCASM("asm/player/harpuia_p1_p1.inc");
+extern const ZeroFunc sHarpuiaUpdates1[5];
+extern const ZeroFunc sHarpuiaUpdates2[5];
+void harpuia_08035684(struct Zero* z);
+
+// 0x08035118
+void Harpuia_Update(struct Zero* z) {
+  register struct MinigameState* mg asm("r5");
+  u32* st;
+
+  mg = (struct MinigameState*)(z->s).unk_28;
+  if (mg->unk_04 != 2) {
+    register s32* xp asm("r2");
+    register s32 k asm("r6");
+    s32 nx;
+    s32 lim;
+    nx = (z->s).coord.x + mg->unk_34;
+    (z->s).coord.x = nx;
+    k = 0x27c;
+    asm("" : "+l"(k));
+    xp = (s32*)((u8*)z + k);
+    lim = *xp + *(s32*)mg->unk_30;
+    if (nx != lim) {
+      s32 t, d, nx2, lim2, a;
+      k = -0x800;
+      asm("" : "+l"(k));
+      t = nx + k;
+      asm("" : : "l"(k));
+      d = lim - t;
+      nx2 = nx + (((d * 3) << 2) >> 8);
+      (z->s).coord.x = nx2;
+      a = *xp;
+      lim2 = a + *(s32*)mg->unk_30;
+      asm("" : : "l"(a));
+      if (nx2 >= lim2) {
+        (z->s).coord.x = lim2;
+      }
+    }
+  }
+
+  {
+    register s32 c6 asm("r6");
+    register s32 o1 asm("r1");
+    struct MinigameState* m1;
+    s32 e;
+    o1 = 0x27c;
+    asm("" : "+l"(o1));
+    e = (s32)((u8*)z + o1);
+    asm("" : : "l"(o1));
+    m1 = (struct MinigameState*)(z->s).unk_28;
+    e = *(s32*)e;
+    e += *(s32*)m1->unk_30;
+    c6 = -0x6400;
+    asm("" : "+l"(c6));
+    e += c6;
+    if ((z->s).coord.x < e) {
+      goto dead;
+    }
+  }
+
+  if (((struct MinigameState*)(z->s).unk_28)->unk_04 != 2) {
+    sHarpuiaUpdates1[(z->s).mode[1]](z);
+    sHarpuiaUpdates2[(z->s).mode[1]](z);
+    harpuia_08035684(z);
+  } else if (((struct MinigameState*)(z->s).unk_28)->unk_0c == 0) {
+    sHarpuiaUpdates1[(z->s).mode[1]](z);
+    sHarpuiaUpdates2[(z->s).mode[1]](z);
+  }
+
+  {
+    u32* q = (u32*)((u8*)z + 0x8c);
+    u32 f = *q & 4;
+    asm volatile("add %0, %1, #0" : "=&l"(st) : "l"(q));
+    if (f != 0) {
+      struct MinigameState* m2 = (struct MinigameState*)(z->s).unk_28;
+      if (m2->unk_04 != 2) {
+        *(u16*)m2->unk_38 = *(u16*)m2->unk_38 + 1;
+        PlaySound(0x137);
+      }
+    }
+  }
+  if ((*st & 1) != 0) {
+    struct MinigameState* m2 = (struct MinigameState*)(z->s).unk_28;
+    if (m2->unk_0c == 0) {
+      goto tick;
+    }
+    m2->unk_0c--;
+    PlaySound(0xf8);
+    PlaySound(4);
+    {
+      register s32 o6 asm("r6");
+      u8* q6;
+      o6 = 0x287;
+      asm("" : "+l"(o6));
+      q6 = (u8*)z + o6;
+      asm("" : : "l"(o6));
+      *q6 = 0x5a;
+    }
+    {
+      struct MinigameState* m3 = (struct MinigameState*)(z->s).unk_28;
+      u8 n = m3->unk_0c;
+      if (n != 0) {
+        goto after;
+      }
+      (z->s).mode[1] = 4;
+      (z->s).mode[2] = n;
+    }
+  }
+  if (((struct MinigameState*)(z->s).unk_28)->unk_0c != 0) {
+    goto after;
+  }
+tick : {
+  u8* t = &(z->mg).harpuia.unk_b;
+  if (*t != 0) {
+    *t = *t - 1;
+  }
+  if (*t != 1) {
+    goto after;
+  }
+  {
+    s32 zr = 0;
+    *st = zr;
+    *(s32*)((u8*)z + 0x90) = zr;
+    *((u8*)z + 0x94) = zr;
+  }
+  (z->s).flags &= 0xfb;
+}
+after:
+  ((z->mg).harpuia.enemy->s).coord.x = (z->s).coord.x;
+  ((z->mg).harpuia.enemy->s).coord.y = (z->s).coord.y;
+  if (((z->mg).harpuia.enemy->s).unk_2c != NULL) {
+    (((z->mg).harpuia.enemy->s).unk_2c)->coord.x = (z->s).coord.x;
+    (((z->mg).harpuia.enemy->s).unk_2c)->coord.y = (z->s).coord.y;
+  }
+  {
+    register s32 c2 asm("r2");
+    register s32 hi asm("r1");
+    s32 y;
+    y = (z->s).coord.y;
+    c2 = -0x6400;
+    asm("" : "+l"(c2));
+    y += c2;
+    hi = 0x14000;
+    asm("" : "+l"(hi));
+    if (y <= hi) {
+      return;
+    }
+  }
+dead:
+  PlaySound(0xf8);
+  PlaySound(4);
+  ((struct MinigameState*)(z->s).unk_28)->unk_0c = 0;
+  SET_PLAYER_ROUTINE(z, 2);
+  (z->s).mode[1] = 0;
+  (z->s).mode[2] = 0;
+  (z->s).mode[3] = 0;
+}
 
 void Harpuia_Die(struct Zero* z) {
   (z->s).flags &= ~DISPLAY;
