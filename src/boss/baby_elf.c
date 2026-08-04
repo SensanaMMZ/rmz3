@@ -814,6 +814,117 @@ void babyelf_08047e30(struct Boss* p) {
 
 INCASM("asm/boss/baby_elf_p2_p1b_post7e30.inc");
 
+// 0x08048190
+void FUN_08048190(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      (p->s).work[3] = 0x40;
+      (p->s).unk_coord.x = 0xa;
+      *(s32*)((u8*)p + 0xbc) = (p->s).coord.x;
+      *(s32*)((u8*)p + 0xc0) = (p->s).coord.y - 0x1000;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t = (p->s).unk_coord.x - 1;
+      (p->s).unk_coord.x = t;
+      if (t == 0) {
+        (p->s).mode[2]++;
+      }
+      if (*((u8*)p + 0xc7) == 0) {
+        (p->s).work[3] = (p->s).work[3] - 6;
+      } else {
+        (p->s).work[3] = (p->s).work[3] + 6;
+      }
+      {
+        s32 bx = *(s32*)((u8*)p + 0xbc);
+        (p->s).coord.x = bx;
+        (p->s).coord.x = bx + gSineTable[(u8)((p->s).work[3] + 0x40)] * 16;
+      }
+      {
+        s32 by = *(s32*)((u8*)p + 0xc0);
+        (p->s).coord.y = by;
+        (p->s).coord.y = by + gSineTable[(p->s).work[3]] * 16;
+      }
+      break;
+    }
+    case 2: {
+      s32 ny = (p->s).coord.y - 0x300;
+      (p->s).coord.y = ny;
+      if (ny >= *(s32*)((u8*)p + 0xb8) - 0x5000) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 3: {
+      u8* q = (u8*)p + 0xc7;
+      s32* b;
+      s32 v;
+      u8 n;
+      (p->s).work[3] = *q << 7;
+      (p->s).unk_coord.x = 0x2a;
+      b = (s32*)((u8*)p + 0xbc);
+      v = (p->s).coord.x - 0x2C00;
+      *b = v;
+      n = *q;
+      v += ((n * 2 + n) * 4 - n) << 11;
+      *b = v;
+      *(s32*)((u8*)p + 0xc0) = (p->s).coord.y;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 4: {
+      s32 t = (p->s).unk_coord.x - 1;
+      (p->s).unk_coord.x = t;
+      if (t == 0) {
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = t;
+      }
+      if (*((u8*)p + 0xc7) == 0) {
+        (p->s).work[3] = (p->s).work[3] - 3;
+      } else {
+        (p->s).work[3] = (p->s).work[3] + 3;
+      }
+      {
+        s32 bx = *(s32*)((u8*)p + 0xbc);
+        (p->s).coord.x = bx;
+        (p->s).coord.x = bx + gSineTable[(u8)((p->s).work[3] + 0x40)] * 0x2c;
+      }
+      {
+        s32 by = *(s32*)((u8*)p + 0xc0);
+        (p->s).coord.y = by;
+        (p->s).coord.y = by + gSineTable[(p->s).work[3]] * 0x1D55 / 256;
+      }
+      break;
+    }
+  }
+  (p->s).work[2]++;
+  if ((u8)((p->s).work[2] % 7) == 0) {
+    u32 a = RNG_0202f388;
+    u32 r1v = (a * 0x343FD + 0x269EC3) << 1;
+    u32 s1;
+    s32 x;
+    s32 y;
+    u32 r2v;
+    s32 rx;
+    s32 ry;
+    asm("" : "+r"(r1v));
+    s1 = r1v >> 1;
+    rx = (s32)((r1v << 4) >> 21) + -0x400;
+    x = (p->s).coord.x + rx;
+    r2v = (s1 * 0x343FD + 0x269EC3) << 1;
+    asm("" : "+r"(r2v));
+    RNG_0202f388 = r2v >> 1;
+    ry = (s32)((r2v << 5) >> 22) + 0x800;
+    y = (p->s).coord.y + ry;
+    FUN_080bc594(x, y, 0, 0, (p->s).work[0]);
+  }
+  StepPaletteAnimation(*((u8*)p + 0xc6));
+  UpdateMotionGraphic(&p->s);
+}
+
+
 void FUN_0809f8ac(struct Entity* e);
 
 void FUN_0804839c(struct Boss* p) {
