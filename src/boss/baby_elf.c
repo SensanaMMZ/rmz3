@@ -476,6 +476,112 @@ NON_MATCH void FUN_08046ccc(struct Boss* p) {
 
 INCASM("asm/boss/baby_elf_p2_p1_post.inc");
 
+void babyelf_0809f9f0(struct Entity* parent, s32 x, s32 y, u8 n);
+
+// 0x08047184
+// Exactly retail's 436 bytes; ~12 instructions differ, all register-number ties
+// clustered on the `0xc4`/`0xc7` props pointers and the `ldrsh` index register.
+// The two things that DID have to be right: the pointers must be block-scoped
+// per case (hoisting them to function scope costs 16 bytes), and the `0xFFFD`
+// addend is CSE'd between case 0 and case 2 where retail loads it from two pool
+// entries -- §6.178.  Making case 2's copy opaque fixes the size but rotates
+// r2/r3 to r3/r4; making case 0's copy opaque instead rotates a different pair.
+// The RNG/FUN_080bc594 tail and the `(*pc7 * 6) + 0xFFFD + *pc4` idiom are taken
+// verbatim from the matched sibling babyelf_0804662c above -- reuse them.
+NON_MATCH void babyelf_08047184(struct Boss* p) {
+#if MODERN
+  struct Entity* q = (p->s).unk_28;
+
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u16* c4;
+      u32 kfd = 0xFFFD;
+      *((u8*)p + 0xc9) = 0;
+      c4 = (u16*)((u8*)p + 0xc4);
+      asm("" : "+l"(kfd));
+      *c4 = (*((u8*)p + 0xc7) * 6) + kfd + *c4;
+      if (*((u8*)q + 0xc9) != 0) {
+        (p->s).mode[2]++;
+      }
+      babyelf_08045c84(p);
+      goto tail;
+    }
+    case 1: {
+      u16* c4 = (u16*)((u8*)p + 0xc4);
+      s32 a = *(s16*)c4;
+      *c4 = a % 512;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 2: {
+      u16* pc4 = (u16*)((u8*)p + 0xc4);
+      u8* pc7 = (u8*)p + 0xc7;
+      s32 d4;
+      u16 dd;
+      d4 = (*pc7 * 6) + 0xFFFD + *pc4;
+      *pc4 = d4;
+      dd = (u16)d4;
+      if ((dd <= 0xFE7F && *pc7 == 0) || (dd > 0x80 && *pc7 == 1)) {
+        (p->s).mode[2]++;
+      }
+      babyelf_08045c84(p);
+      goto tail;
+    }
+    case 3:
+      PlaySound(0x114);
+      (p->s).unk_coord.x = 0;
+      (p->s).work[3] = 8;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 4:
+      (p->s).work[3]--;
+      if (((p->s).work[3] << 24) != 0) {
+        goto tail;
+      }
+      babyelf_0809f9f0(q, (p->s).coord.x, (p->s).coord.y, *((u8*)p + 0xc7));
+      (p->s).work[3] = 8;
+      (p->s).unk_coord.x++;
+      if ((p->s).unk_coord.x <= 3) {
+        goto tail;
+      }
+      *((u8*)p + 0xc9) = 1;
+      (p->s).mode[2]++;
+      break;
+    case 5:
+      if (q->mode[1] == 5) {
+        goto tail;
+      }
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = 1;
+      break;
+  }
+tail:
+  (p->s).work[2]++;
+  if ((u8)((p->s).work[2] % 7) == 0) {
+    u32 a = RNG_0202f388;
+    u32 r1v = (a * 0x343FD + 0x269EC3) << 1;
+    u32 s1;
+    s32 x;
+    s32 y;
+    u32 r2v;
+    asm("" : "+r"(r1v));
+    s1 = r1v >> 1;
+    x = (p->s).coord.x + (s32)((r1v << 4) >> 21) + -0x400;
+    r2v = (s1 * 0x343FD + 0x269EC3) << 1;
+    asm("" : "+r"(r2v));
+    RNG_0202f388 = r2v >> 1;
+    y = (p->s).coord.y + (s32)((r2v << 5) >> 22) + 0x800;
+    FUN_080bc594(x, y, 0, 0, (p->s).work[0]);
+  }
+  StepPaletteAnimation(*((u8*)p + 0xc6));
+  UpdateMotionGraphic(&p->s);
+#else
+  INCCODE("asm/boss/baby_elf_47184.inc");
+#endif
+}
+
+INCASM("asm/boss/baby_elf_p2_p1_post_b.inc");
+
 void FUN_0809fa44(struct Entity* parent, s32 x, s32 y, u8 n);
 
 // 0x080477b8
