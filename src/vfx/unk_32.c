@@ -519,7 +519,64 @@ void FUN_080bb048(struct VFX* p) {
 }
 
 
-INCASM("asm/vfx/unk_32_post_b.inc");
+// 0x080BB17C
+void FUN_080bb17c(struct VFX* p) {
+  if ((u8)--(p->s).work[2] == 0) {
+    SET_VFX_ROUTINE(p, 2);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[0] == 0) {
+        (p->s).work[2] = RANDOM(RNG_0202f388) % 10 + 0x1a;
+        SetMotion(&(p->s), 0x270C);
+      } else {
+        (p->s).work[2] = (RANDOM(RNG_0202f388) & 7) + 0x14;
+        SetMotion(&(p->s), 0x270D);
+        (p->s).taskCol = 0x19;
+      }
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 sc, dx, dy;
+      if ((++(p->s).work[3] & 0xff) & 1) {
+        (p->s).flags |= 1;
+      } else {
+        (p->s).flags &= ~1;
+      }
+      sc = *(s32*)((u8*)p + 0x7c);
+      sc += ((0x180 - sc) * 40) >> 8;
+      *(s32*)((u8*)p + 0x7c) = sc;
+      *(u16*)((u8*)p + 0x50) = sc;
+      asm("" ::: "memory");
+      {
+        s32 t = *(s32*)((u8*)p + 0x7c);
+        u16* h = (u16*)((u8*)p + 0x52);
+        *h = t;
+      }
+      {
+        register u32 rv asm("r0");
+        register u8* q asm("r1");
+        rv = RANDOM(RNG_0202f388);
+        asm("" : "+r"(rv));
+        q = (u8*)p + 0x24;
+        *q = rv;
+      }
+      dx = (p->s).d.x;
+      dx += ((-dx) * 18) >> 8;
+      (p->s).d.x = dx;
+      dy = (p->s).d.y;
+      dy += ((-dy) * 18) >> 8;
+      (p->s).d.y = dy;
+      (p->s).coord.y += dy;
+      (p->s).coord.x += dx;
+      UpdateMotionGraphic(&(p->s));
+      break;
+    }
+  }
+}
+
 
 // 0x080BB2D8
 void FUN_080bb2d8(struct VFX* p) {
