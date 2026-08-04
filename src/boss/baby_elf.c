@@ -383,6 +383,188 @@ c1:
 
 INCASM("asm/boss/baby_elf_67c4.inc");
 
+void FUN_080bc5fc(struct Entity* e, u8 n);
+void FUN_080bc660(s32 x, s32 y);
+void FUN_0809f8fc(s32 x, s32 y, u8 n);
+u8 GetEntityPalID(struct Entity* p);
+
+// 0x08046A7C
+void babyelf_08046a7c(struct Boss* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register u8* q asm("r6");
+      u32 v, sv, k, kc;
+      s32 n;
+      q = (u8*)p + 0xc6;
+      if (*q != 0) {
+        RemovePaletteAnimation(*q);
+        *q = m;
+      }
+      if ((p->s).work[0] == 0) {
+        {
+          register s32 rv asm("r0");
+          rv = ((s32 (*)(struct Entity*))GetEntityPalID)(&p->s);
+          asm volatile("add %0, %1, #0" : "=l"(v) : "l"(rv));
+        }
+        v <<= 24;
+        sv = (u32)v >> 0x13;
+        k = 0x80 << 2;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0x15, sv | kc);
+        n = 0x15;
+      } else {
+        {
+          register s32 rv asm("r0");
+          rv = ((s32 (*)(struct Entity*))GetEntityPalID)(&p->s);
+          asm volatile("add %0, %1, #0" : "=l"(v) : "l"(rv));
+        }
+        v <<= 24;
+        sv = (u32)v >> 0x13;
+        k = 0x80 << 2;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0x10, sv | kc);
+        n = 0x10;
+      }
+      *q = n;
+      *(u16*)((u8*)p + 0xc4) = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u16* acc asm("r2");
+      register u8* dir asm("r3");
+      u32 nv;
+      acc = (u16*)((u8*)p + 0xc4);
+      dir = (u8*)p + 0xc7;
+      {
+        register u32 d asm("r1");
+        register s32 step asm("r0");
+        u32 t;
+        d = *dir;
+        step = (s32)((d * 2 + d) * 2) + 0xFFFD;
+        t = step + *acc;
+        *acc = t;
+        nv = (u16)t;
+      }
+      if (nv <= 0xFF7F) {
+        if (*dir == 0) {
+          goto inc;
+        }
+      }
+      if (nv > 0x80) {
+        if (*dir == 1) {
+        inc:
+          (p->s).mode[2]++;
+        }
+      }
+      babyelf_08045c84(p);
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      register u8* q asm("r5");
+      register s32 z asm("r6");
+      u32 v, sv, k, kc;
+      s32 sx;
+      s32 sy;
+      PlaySound(0x8b << 1);
+      {
+        u8* c8 = (u8*)p + 0xc8;
+        z = 0;
+        *c8 = z;
+      }
+      FUN_080bc5fc(&p->s, 0);
+      q = (u8*)p + 0xc6;
+      if (*q != 0) {
+        RemovePaletteAnimation(*q);
+        *q = z;
+      }
+      *((u8*)p + 0x22) = z;
+      SetMotion(&p->s, 0x3301);
+      z = (p->s).work[0];
+      if (z == 0) {
+        {
+          register s32 rv asm("r0");
+          rv = ((s32 (*)(struct Entity*))GetEntityPalID)(&p->s);
+          asm volatile("add %0, %1, #0" : "=l"(v) : "l"(rv));
+        }
+        v <<= 24;
+        sv = (u32)v >> 0x13;
+        k = 0x80 << 2;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0x18, sv | kc);
+        {
+          u8 pa = 0x18;
+          *q = pa;
+          StepPaletteAnimation(pa);
+        }
+        if (*q != 0) {
+          RemovePaletteAnimation(*q);
+          *q = z;
+        }
+      }
+      if (*((u8*)p + 0xc7) == 0) {
+        (p->s).d.x = ((gSineTable[0x50] * 7) << 7) / 256;
+        sy = gSineTable[0x10];
+      } else {
+        (p->s).d.x = ((gSineTable[0xd8] * 7) << 7) / 256;
+        sy = gSineTable[0x98];
+      }
+      (p->s).d.y = -(((sy * 7) << 7) / 256);
+      (p->s).work[2] = 0xa;
+      (p->s).work[3] = 0x1a;
+      (p->s).unk_coord.x = 0x5a;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 t = (p->s).unk_coord.x - 1;
+      (p->s).unk_coord.x = t;
+      if (t == 0) {
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = t;
+      }
+      if ((p->s).work[0] == 0) {
+        if ((p->s).work[2] != 0) {
+          s32 a = (p->s).work[2] - 1;
+          (p->s).work[2] = a;
+          if ((a << 24) == 0) {
+            FUN_080bc660(*(s32*)((u8*)p + 0xb4), *(s32*)((u8*)p + 0xb8) - 0x5000);
+          }
+        }
+        if ((p->s).work[3] != 0) {
+          s32 b = (p->s).work[3] - 1;
+          (p->s).work[3] = b;
+          if ((b << 24) == 0) {
+            register s32 i asm("r5");
+            s32* xp;
+            s32* yp;
+            i = 0;
+            xp = (s32*)((u8*)p + 0xb4);
+            yp = (s32*)((u8*)p + 0xb8);
+            do {
+              {
+                s32 xv = *xp;
+                s32 yv = *yp - 0x5000;
+                ((void (*)(s32, s32, s32))FUN_0809f8fc)(xv, yv, (s32)((u32)(i << 29) >> 24));
+              }
+              i++;
+            } while (i <= 7);
+          }
+        }
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+
 u8 GetEntityPalID(struct Entity* p);
 
 // 0x08046ccc -- baby elf: fly to the anchor point, then glow (palette anim
