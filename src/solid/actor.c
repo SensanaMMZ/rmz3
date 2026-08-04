@@ -3682,6 +3682,124 @@ void FUN_080d5d20(struct Solid* p) {
   }
 }
 
+// 0x080D5E08
+void FUN_080d5e08(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 g asm("r1");
+      register s32 k asm("r0");
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      g = (p->s).flags;
+      asm("" : "+r"(g));
+      k = 1;
+      k |= g;
+      (p->s).flags = k;
+      SetMotion(&p->s, 0x3503);
+      *((u8*)p + 0x25) = 8;
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 2) == 0) {
+        break;
+      }
+      SetMotion(&p->s, 0xc0 << 2);
+      {
+        register struct Coord* cp asm("r0");
+        register u32 xf asm("r2");
+        register u32 one asm("r1");
+        cp = &(p->s).coord;
+        asm("" : "+r"(cp));
+        xf = (u32)(p->s).flags >> 4;
+        one = 1;
+        xf &= one;
+        ((void (*)(struct Coord*, u32, u32))CreateParticle)(cp, 0, xf);
+      }
+      PlaySound(8);
+      (p->s).unk_2c = NULL;
+      (p->s).work[2] = 0x20;
+      goto bump;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).unk_2c == NULL) {
+        (p->s).unk_2c = (struct Entity*)CreateAfterImages(&p->s);
+      }
+      (p->s).coord.x += 0x380;
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      {
+        register struct Entity* ai asm("r1");
+        ai = (p->s).unk_2c;
+        if (ai != NULL) {
+          *((u8*)ai + 0x11) = 1;
+        }
+      }
+      SetMotion(&p->s, 0x301);
+      asm volatile("");
+      goto bump;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) == 3) {
+        break;
+      }
+      SetMotion(&p->s, 0x80 << 1);
+      asm volatile("");
+      goto bump;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 4) == 0) {
+        break;
+      }
+      SetMotion(&p->s, 0xcc << 6);
+      (p->s).work[2] = 0x2a;
+      goto bump;
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      if (*((u8*)p + 0x73) != 4) {
+        break;
+      }
+      SetMotion(&p->s, 0xd0 << 6);
+      asm volatile("");
+      goto bump;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      PlaySound(0x9a);
+      SetMotion(&p->s, 0x3401);
+      goto bump;
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+    bump:
+      (p->s).mode[1]++;
+      break;
+    case 9: {
+      register u8 h asm("r1");
+      register u8 g2 asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g2 = 0xFE;
+      g2 &= h;
+      (p->s).flags = g2;
+      break;
+    }
+  }
+}
+
 INCASM("asm/solid/actor_p2.inc");
 
 struct VFX* FUN_080c5628(u8 r0, u8 r1, s32 x, s32 y);
