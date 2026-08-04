@@ -619,7 +619,166 @@ void FUN_08077af8(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/volcaire_p2_post.inc");
+// 0x08077B38
+void FUN_08077b38(struct Enemy* p) {
+  register struct Entity* e asm("r6");
+  register s32 k10 asm("r5");
+  register u32 fl asm("r2");
+  register s32 v asm("r1");
+  register u8 g asm("r0");
+  e = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dx asm("r2");
+      SetDDP(&p->body, (const struct Collision*)0x08367390);
+      SetMotion(&p->s, 0x2E06);
+      {
+        register s32 k asm("r0");
+        k = 0xFFFFFE80;
+        (p->s).d.x = k;
+        dx = k;
+        if (((p->s).flags & 0x10) != 0) {
+          dx = 0xc0 << 1;
+        }
+        (p->s).d.x = dx;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 y asm("r2");
+      (p->s).coord.x = (p->s).coord.x + (p->s).d.x;
+      y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      {
+        register s32 d asm("r0");
+        register s32 lim asm("r1");
+        d = y - (p->s).coord.y;
+        lim = 0x80 << 4;
+        if (d <= lim) {
+          goto ok;
+        }
+      }
+      {
+        (p->s).mode[1] = 6;
+        (p->s).mode[2] = 0;
+        goto cam;
+      }
+    ok:
+      (p->s).coord.y = y;
+      {
+        register u32 f0 asm("r1");
+        register s32 t asm("r0");
+        f0 = (p->s).flags;
+        k10 = 0x10;
+        t = 0x10;
+        t &= f0;
+        if (t != 0) {
+          goto left;
+        }
+      }
+      {
+        if (PushoutToRight1((p->s).coord.x + 0xFFFFF600, y + 0xFFFFF800) <= 0) {
+          goto cam;
+        }
+        (p->s).d.x = -(p->s).d.x;
+        fl = (p->s).flags;
+        {
+          register s32 t2 asm("r0");
+          t2 = fl >> 4;
+          v = 1;
+          v &= ~t2;
+        }
+        if (v == 0) {
+          goto neg;
+        }
+        g = k10;
+        g |= fl;
+        goto join;
+      }
+    left:
+      {
+        if (PushoutToLeft1((p->s).coord.x + (0xa0 << 4), y + 0xFFFFF800) >= 0) {
+          goto cam;
+        }
+        (p->s).d.x = -(p->s).d.x;
+        fl = (p->s).flags;
+        {
+          register s32 t2 asm("r0");
+          t2 = fl >> 4;
+          v = 1;
+          v &= ~t2;
+        }
+        if (v == 0) {
+          goto neg;
+        }
+        g = fl;
+        g |= k10;
+        goto join;
+      neg:
+        g = 0xEF;
+        g &= fl;
+      }
+    join:
+      (p->s).flags = g;
+      *((u8*)p + 0x4c) = v;
+      {
+        register u8* oa asm("r3");
+        register s32 sh asm("r1");
+        oa = (u8*)p + 0x4a;
+        sh = v << 4;
+        {
+          register s32 ov asm("r2");
+          register s32 m11 asm("r0");
+          ov = *oa;
+          m11 = 0x11;
+          m11 = -m11;
+          m11 &= ov;
+          m11 |= sh;
+          *oa = m11;
+        }
+      }
+    cam:
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > (0xc0 << 7)) {
+        if (e != NULL) {
+          register u8* c asm("r1");
+          c = (u8*)e;
+          c += 0xb8;
+          *c = *c - 1;
+        }
+        {
+          register u8 g2 asm("r0");
+          register u8 h2 asm("r1");
+          register s32 z asm("r2");
+          h2 = (p->s).flags;
+          asm("" : "+r"(h2));
+          g2 = 0xFE;
+          g2 &= h2;
+          z = 0;
+          h2 = 0xFD;
+          g2 &= h2;
+          (p->s).flags = g2;
+          {
+            u8* a = (u8*)p + 0x8c;
+            *(u32*)a = z;
+            asm("" : "+r"(a));
+            a += 4;
+            asm("" : "+r"(a));
+            *(u32*)a = z;
+            asm("" : "+r"(a));
+            a += 4;
+            asm("" : "+r"(a));
+            *a = z;
+          }
+        }
+        (p->s).flags &= 0xFB;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 // 0x08077CA4
 void FUN_08077ca4(struct Enemy* p) {
   struct Entity* q = (p->s).unk_28;
