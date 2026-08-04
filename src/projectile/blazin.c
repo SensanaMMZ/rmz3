@@ -482,7 +482,148 @@ void FUN_0809ec18(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/blazin_pre_p4.inc");
+
+// 0x0809EC24
+// Four instructions off, all the same nit: the metatile-attribute bit test
+// `at & 0x8000` puts the AND result in `at`'s register (`ands r1, r0`) where
+// retail puts it in the constant's (`ands r0, r1`).  Both operand registers
+// already match; only the destination differs, at the two identical test sites.
+// agbcc ignores r0/r1 pins (§6.169), and every spelling that moves the
+// destination also swaps the two operand registers: `0x8000 & at`, a `mask`
+// variable, `mask &= at`, a `masked` temp, an `(s32)` cast, and a keep-alive on
+// `at` (which additionally re-expands the u16 cast and overflows the ROM).
+// Everything else is byte-identical and the function is exactly 472 bytes.
+NON_MATCH void FUN_0809ec24(struct Projectile* p) {
+#if MODERN
+  s32* cp;
+  s32* sp;
+  u32* bs;
+  s32 s, v, t, z, masked;
+  u16 at;
+
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u16* r;
+      s32* sp0;
+      InitRotatableMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      r = (u16*)((u8*)p + 0x50);
+      v = 0x100;
+      *r = v;
+      r++;
+      *r = v;
+      (p->s).angle = *((u8*)p + 0xb4);
+      SetMotion(&p->s, 0xA301);
+      sp0 = (s32*)((u8*)p + 0xb8);
+      *sp0 = v;
+      (p->s).unk_coord.x = ((p->s).d.x * v) >> 8;
+      (p->s).unk_coord.y = ((p->s).d.y * *sp0) >> 8;
+      (p->s).work[2] = 6;
+      (p->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1:
+      cp = (s32*)((u8*)p + 0xbc);
+      if (*cp > 0) {
+        (*cp)--;
+        if (*cp > 0) {
+          goto tick1;
+        }
+      }
+      sp = (s32*)((u8*)p + 0xb8);
+      s = *sp;
+      s += ((-s) * 36) >> 8;
+      *sp = s;
+      (p->s).unk_coord.x = ((p->s).d.x * s) >> 8;
+      (p->s).unk_coord.y = ((p->s).d.y * *sp) >> 8;
+      (p->s).coord.x += (p->s).unk_coord.x;
+      (p->s).coord.y += (p->s).unk_coord.y;
+    tick1:
+      if ((p->s).work[2] != 0) {
+        t = (p->s).work[2] - 1;
+        z = 0;
+        (p->s).work[2] = t;
+        if ((u32)(t << 24) != 0) {
+          goto chk1;
+        }
+      }
+      (p->s).work[2] = 0xFF;
+      (p->s).mode[2]++;
+      goto upd;
+    chk1:
+      bs = (u32*)((u8*)p + 0x8c);
+      if (*bs & 4) {
+        *bs = z;
+        *(u32*)((u8*)p + 0x90) = z;
+        *((u8*)p + 0x94) = z;
+        (p->s).flags &= ~4;
+        goto die;
+      }
+      at = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+      if (at == 0) {
+        goto upd;
+      }
+      masked = 0x8000 & (s32)at;
+      if (masked == 0) {
+        goto smoke;
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      cp = (s32*)((u8*)p + 0xbc);
+      if (*cp > 0) {
+        (*cp)--;
+        if (*cp > 0) {
+          goto tick2;
+        }
+      }
+      sp = (s32*)((u8*)p + 0xb8);
+      s = *sp;
+      s += ((0x300 - s) * 48) >> 8;
+      *sp = s;
+      (p->s).unk_coord.x = ((p->s).d.x * s) >> 8;
+      (p->s).unk_coord.y = ((p->s).d.y * *sp) >> 8;
+      (p->s).coord.x += (p->s).unk_coord.x;
+      (p->s).coord.y += (p->s).unk_coord.y;
+    tick2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        goto die;
+      }
+      t = (p->s).work[2] - 1;
+      z = 0;
+      (p->s).work[2] = t;
+      if ((u32)(t << 24) == 0) {
+        goto die;
+      }
+      bs = (u32*)((u8*)p + 0x8c);
+      if (*bs & 4) {
+        *bs = z;
+        *(u32*)((u8*)p + 0x90) = z;
+        *((u8*)p + 0x94) = z;
+        (p->s).flags &= ~4;
+        asm volatile("");
+        goto die;
+      }
+      at = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+      if (at == 0) {
+        break;
+      }
+      masked = 0x8000 & (s32)at;
+      if (masked != 0) {
+        break;
+      }
+    smoke:
+      CreateSmoke(2, &(p->s).coord);
+    die:
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      break;
+  }
+#else
+  INCCODE("asm/projectile/blazin_pre_p4.inc");
+#endif
+}
 
 void FUN_0809edfc(struct Projectile* p) {
   (p->s).mode[1] = 1;
