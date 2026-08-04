@@ -2377,6 +2377,163 @@ void Actor36_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p2_b_c.inc");
 
+// 0x080D45F8
+void Actor38_Update(struct Solid* p) {
+  register const s16* tb asm("r5");
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 z6 asm("r6");
+      register u16* gt asm("r0");
+      register u16* pt asm("r5");
+      register u32 ofs asm("r4");
+      const struct Graphic* g;
+      (p->s).d.x = (p->s).coord.x;
+      (p->s).d.y = (p->s).coord.y;
+      (p->s).unk_coord.y = (p->s).coord.y + -0x5000;
+      gt = wStaticGraphicTilenums;
+      asm("" : "+r"(gt));
+      gt += SM081_DARK_ELF;
+      z6 = 0;
+      {
+        register s32 v asm("r1");
+        register s32 sev asm("r0");
+        v = 0xE0 * 4;
+        *gt = v;
+        pt = wStaticMotionPalIDs;
+        asm("" : "+r"(pt));
+        pt += SM081_DARK_ELF;
+        sev = 7;
+        *pt = sev;
+        ofs = (sizeof(struct ColorGraphic) * SM081_DARK_ELF);
+        g = gStaticGraphic(ofs);
+        v -= g->ofs;
+        v *= 32;
+        asm volatile("mov r3, #0x80\n\tlsl r3, r3, #9\n\tadd %0, %0, r3" : "+l"(v) :: "r3");
+        LoadGraphic((void*)g, (void*)v);
+      }
+      {
+        register const struct Palette* pal2 asm("r4");
+        register u32 pb asm("r0");
+        register s32 sv asm("r1");
+        register s32 dv asm("r0");
+        pb = (u32)STATIC_PALETTES;
+        asm("" : "+r"(pb));
+        pal2 = (const struct Palette*)(ofs + pb);
+        sv = *pt;
+        dv = pal2->dst;
+        asm volatile("sub %0, %0, %1" : "+l"(sv) : "l"(dv));
+        sv *= 32;
+        asm volatile("mov r2, #0x80\n\tlsl r2, r2, #2\n\tadd %0, %0, r2" : "+l"(sv) :: "r2");
+        LoadPalette(pal2, sv);
+      }
+      {
+        register u8* pp asm("r1");
+        register s32 one asm("r0");
+        pp = (u8*)p + 0x22;
+        one = 1;
+        *pp = one;
+      }
+      SetMotion(&p->s, 0xA2 * 128);
+      (p->s).work[2] = z6;
+      (p->s).work[3] = z6;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 t2 asm("r2");
+      register s32 cx asm("r4");
+      register s32 cy asm("r3");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[2];
+        t2 = t + 1;
+        (p->s).work[2] = t2;
+        tb = gSineTable;
+        t += 0x41;
+        {
+          register s32 sv asm("r0");
+          register s32 dxv asm("r1");
+          const s16* bp = (const s16*)(((((u32)t) << 24) >> 23) + (u32)tb);
+          asm volatile("mov r3, #0\n\tldrsh %0, [%1, r3]" : "=l"(sv) : "l"(bp) : "r3");
+          sv <<= 1;
+          dxv = (p->s).d.x;
+          cx = dxv + sv;
+          (p->s).coord.x = cx;
+        }
+      }
+      {
+        register s32 sy asm("r0");
+        const s16* bp2 = (const s16*)(((((u32)t2) << 25) >> 23) + (u32)tb);
+        asm volatile("mov r1, #0\n\tldrsh %0, [%1, r1]" : "=l"(sy) : "l"(bp2) : "r1");
+        sy <<= 2;
+        {
+          register s32 uy0 asm("r1");
+          uy0 = (p->s).unk_coord.y;
+          cy = uy0 + sy;
+        }
+        (p->s).coord.y = cy;
+      }
+      {
+        register s32 k asm("r0");
+        k = 0xF;
+        t2 &= k;
+        if (t2 == 0) {
+          ((void (*)(s32, s32, s32, s32))FUN_080c5628)(3, 0, cx, cy);
+        }
+      }
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        goto slide;
+      }
+      {
+        register s32 w asm("r1");
+        register s32 dx asm("r2");
+        register s32 sv2 asm("r1");
+        w = (p->s).work[3] + 1;
+        (p->s).work[3] = w;
+        dx = (p->s).d.x;
+        asm volatile("mov r3, #0x80\n\tlsl r3, r3, #1\n\tadd %0, %0, r3" : "+l"(dx) :: "r3");
+        w = (((u32)w) << 24) >> 26;
+        {
+          register s32 q asm("r0");
+          const s16* bp3;
+          q = 0x40 - w;
+          bp3 = (const s16*)(((((u32)q) << 24) >> 23) + (u32)tb);
+          asm volatile("mov r3, #0\n\tldrsh %0, [%1, r3]" : "=l"(sv2) : "l"(bp3) : "r3");
+        }
+        dx -= sv2;
+        (p->s).d.x = dx;
+        {
+          register s32 uy asm("r0");
+          uy = (p->s).unk_coord.y + -0x100;
+          uy += sv2;
+          (p->s).unk_coord.y = uy;
+        }
+      }
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x80 * 64) {
+        (p->s).flags &= ~DISPLAY;
+        (p->s).mode[1]++;
+      }
+      break;
+    slide : {
+      register s32 u asm("r0");
+      register s32 uu asm("r1");
+      u = (p->s).unk_coord.y;
+      uu = u << 7;
+      uu -= u;
+      uu += (p->s).d.y;
+      uu >>= 7;
+      (p->s).unk_coord.y = uu;
+      break;
+    }
+    }
+    case 2:
+      break;
+  }
+}
+
+INCASM("asm/solid/actor_p1_p2_b_c2.inc");
+
 // 0x080D5444
 void ActorLastFefnir_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
