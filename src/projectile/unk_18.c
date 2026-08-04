@@ -389,7 +389,203 @@ void FUN_080a3418(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_18_p2_p2_p2_p3_b.inc");
+// 0x080A34A0
+void FUN_080a34a0(struct Projectile* p) {
+  register struct Zero** zp asm("r4");
+  register struct Zero* z asm("r3");
+  register s32 g asm("r0");
+  register s32 rem asm("r2");
+  {
+    register struct Zero** z0 asm("r0");
+    register s32 m0 asm("r1");
+    z0 = &pZero2;
+    z = *z0;
+    m0 = z->s.mode[0];
+    zp = z0;
+    if ((u32)m0 <= 1) {
+      goto sw;
+    }
+  }
+  {
+    register s32 h asm("r1");
+    h = (p->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    rem = 0;
+    goto fin;
+  }
+sw:
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8* cnt asm("r1");
+      cnt = (u8*)z + (0x8c << 2);
+      *cnt = *cnt + 1;
+      (p->s).d.x = 0x10;
+      (p->s).work[3] = 0x80;
+      {
+        register u32 raw asm("r0");
+        register u32 sd asm("r1");
+        s32 k;
+        zp = (struct Zero**)&RNG_0202f388;
+        raw = *(u32*)zp;
+        z = (struct Zero*)0x343FD;
+        raw *= (u32)z;
+        rem = 0x269EC3;
+        raw += (u32)rem;
+        raw <<= 1;
+        sd = raw >> 1;
+        raw <<= 3;
+        raw >>= 0x14;
+        k = 0xFFFFF800;
+        (p->s).unk_coord.x = raw + k;
+        raw = sd * (u32)z;
+        raw += (u32)rem;
+        raw <<= 1;
+        sd = raw >> 1;
+        *(u32*)zp = sd;
+        {
+          register s32 lim asm("r1");
+          register s32 v asm("r0");
+          v = raw >> 0x11;
+          lim = 0xc0 << 5;
+          v = ((u32)v) % ((u32)lim);
+          (p->s).unk_coord.y = -v;
+        }
+      }
+      SetMotion(&p->s, 0x4608);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 d asm("r1");
+      zp = &pZero2;
+      {
+        register s32 c0 asm("r0");
+        c0 = (u8)CountButtonMashing(*zp);
+        d = (p->s).d.x;
+        d -= c0;
+        (p->s).d.x = d;
+      }
+      if (((u8)--(p->s).work[3]) != 0) {
+        if (d >= 0) {
+          register struct Zero* z2 asm("r2");
+          z2 = *zp;
+          if ((*(s32*)((u8*)z2 + 0x8c) & (0x80 << 2)) == 0) {
+            register s16* hp asm("r0");
+            hp = (s16*)((u8*)z2 + 0xa4);
+            if (*hp != 0) {
+              goto follow;
+            }
+          }
+        }
+      }
+      (p->s).mode[2]++;
+    follow: {
+      register struct Zero* z3 asm("r2");
+      z3 = pZero2;
+      (p->s).coord.x = (z3->s).coord.x + (p->s).unk_coord.x;
+      (p->s).coord.y = (z3->s).coord.y + (p->s).unk_coord.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    }
+    case 2: {
+      register u8* cnt asm("r1");
+      s32 k;
+      k = 0x8c << 2;
+      cnt = (u8*)z + k;
+      {
+        register s32 v asm("r0");
+        v = *cnt;
+        v -= 1;
+        rem = 0;
+        *cnt = v;
+      }
+      (p->s).work[2] = 0x1e;
+      (p->s).work[3] = rem;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register struct Zero* z4 asm("r2");
+      z4 = *zp;
+      (p->s).coord.x = (z4->s).coord.x + (p->s).unk_coord.x;
+      (p->s).coord.y = (z4->s).coord.y + (p->s).unk_coord.y;
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 w asm("r1");
+        register s32 b asm("r0");
+        w = (p->s).work[2];
+        b = 2;
+        b &= w;
+        if (b != 0) {
+          register s32 h2 asm("r1");
+          register s32 g2 asm("r0");
+          h2 = (p->s).flags;
+          asm("" : "+r"(h2));
+          g2 = 1;
+          g2 |= h2;
+          (p->s).flags = g2;
+        } else {
+          register u8 h3 asm("r1");
+          register u8 g3 asm("r0");
+          h3 = (p->s).flags;
+          asm("" : "+r"(h3));
+          g3 = 0xFE;
+          g3 &= h3;
+          (p->s).flags = g3;
+        }
+      }
+      {
+        register s32 v asm("r0");
+        v = (p->s).work[2];
+        v -= 1;
+        (p->s).work[2] = v;
+        rem = (u8)v;
+        if (rem != 0) {
+          break;
+        }
+      }
+      {
+        register s32 h4 asm("r1");
+        h4 = (p->s).flags;
+        asm("" : "+r"(h4));
+        g = 0xFE;
+        g &= h4;
+      }
+    fin: {
+      register s32 m asm("r1");
+      m = 0xFD;
+      g &= m;
+      (p->s).flags = g;
+      {
+        register u8* a asm("r0");
+        a = (u8*)p + 0x8c;
+        asm volatile("str %0, [%1]" ::"l"(rem), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("str %0, [%1]" ::"l"(rem), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        *a = rem;
+      }
+      {
+        register u8 h5 asm("r1");
+        register u8 g5 asm("r0");
+        h5 = (p->s).flags;
+        asm("" : "+r"(h5));
+        g5 = 0xFB;
+        g5 &= h5;
+        (p->s).flags = g5;
+      }
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+      break;
+    }
+    }
+  }
+}
+
 
 static const struct Collision sCollisions[4];
 static const u8 sInitModes[4];
