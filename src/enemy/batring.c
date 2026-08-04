@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "enemy.h"
+#include "physics.h"
 #include "global.h"
 #include "vfx.h"
 #include "zero.h"
@@ -1043,7 +1044,102 @@ INCASM("asm/enemy/batring_p1.inc");
 
 bool8 FUN_08067a60(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/batring_p2.inc");
+void FUN_08067a64(struct Enemy* p) {
+  s32 y;
+  s32 ny;
+  s32 c;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).d.x = 0;
+      (p->s).d.y = 0;
+      (p->s).work[2] = 30;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 1:
+      if ((p->s).work[2] & 1) {
+        UpdateMotionGraphic(&p->s);
+      }
+      if ((p->s).work[2] == 0) {
+        return;
+      }
+      if (--(p->s).work[2] != 0) {
+        return;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      SetMotion(&p->s, 0x601);
+      (p->s).d.x = 0;
+      (p->s).d.y = 0;
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 3:
+      if ((p->s).work[2]++ & 1) {
+        UpdateMotionGraphic(&p->s);
+      }
+      if ((p->s).motion.state != 3) {
+        return;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      p->props[5] = 0;
+      SetDDP(&p->body, &sCollisions[6]);
+      p->props[7] = 1;
+      (p->s).d.x = 0;
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 5:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      UpdateMotionGraphic(&p->s);
+      ny = (p->s).coord.y + (p->s).d.y + 0xE00;
+      y = PushoutToUp1((p->s).coord.x, ny);
+      if (y != 0) {
+        (p->s).d.y = 0;
+        (p->s).coord.y += y;
+        (p->s).mode[2]++;
+        break;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      return;
+    case 6:
+      PlaySound(0x104);
+      if (pZero2->s.coord.x < (p->s).coord.x) {
+        SetMotion(&p->s, 0x603);
+      } else {
+        SetMotion(&p->s, 0x605);
+      }
+      (p->s).d.y = -0x180;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      c = (p->s).motion.cmdIdx;
+      if ((u8)(c - 2) <= 2 || (u8)(c - 8) <= 2) {
+        SetDDP(&p->body, &sCollisions[10]);
+      } else {
+        SetDDP(&p->body, &sCollisions[8]);
+      }
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      y = PushoutToUp1((p->s).coord.x, (p->s).coord.y + 0xE00);
+      if (y != 0) {
+        (p->s).coord.y += y;
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 FUN_08067c48(struct Enemy* p) { return TRUE; }
 
