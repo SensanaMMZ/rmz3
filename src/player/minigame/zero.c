@@ -250,7 +250,130 @@ NON_MATCH bool8 FUN_080365d8(struct Zero* z) {
 }
 #endif
 
-INCASM("asm/player/zero_minigame_p1.inc");
+struct VFX* FUN_080c825c(struct Entity* e, struct Coord* c, u8 n);
+
+// 0x080366FC
+void FUN_080366fc(struct Zero* z) {
+  u8 m;
+  m = (z->s).mode[2];
+  switch (m) {
+    case 0: {
+      register s32 off asm("r1");
+      register u8* pp asm("r0");
+      off = 0x9f << 2;
+      pp = (u8*)z + off;
+      *pp = m;
+      asm volatile("add %0, #0x1" : "+l"(off));
+      pp = (u8*)z + off;
+      *pp = m;
+      SetMotion(&z->s, 0);
+      SetDDP(&z->body, sCollisions);
+      *(u16*)((u8*)z + 0x288) = m;
+      (z->s).mode[2]++;
+    }
+      /* fallthrough */
+    case 1: {
+      register u16* cnt asm("r3");
+      s32 zero;
+      register s32 one asm("r6");
+      cnt = (u16*)((u8*)z + 0x288);
+      {
+        u16 v = *cnt + 1;
+        zero = 0;
+        asm("" : "+r"(zero));
+        *cnt = v;
+      }
+      one = *(s16*)((u8*)(z->s).unk_28 + 4);
+      if (one != 1) {
+        goto tail;
+      }
+      {
+        register u32 h asm("r4");
+        {
+          register struct KeyState* jp asm("r4");
+          register u32 h1 asm("r1");
+          jp = gJoypad;
+          h1 = jp[0].input;
+          if (h1 & 0x20) {
+            u8* q;
+            register s32 k asm("r0");
+            register s32 v asm("r1");
+            *((u8*)z + 0x4c) = zero;
+            q = (u8*)z + 0x4a;
+            v = *q;
+            k = 0x11;
+            k = -k;
+            asm("" : "+r"(k));
+            k &= v;
+            *q = k;
+            v = (z->s).flags;
+            k = 0xEF;
+            k &= v;
+            (z->s).flags = k;
+          }
+          h = jp[0].input;
+        }
+        if (h & 0x10) {
+          u8* q2;
+          register s32 k2 asm("r1");
+          register s32 v2 asm("r0");
+          *((u8*)z + 0x4c) = one;
+          q2 = (u8*)z + 0x4a;
+          v2 = *q2;
+          k2 = 0x10;
+          v2 |= k2;
+          *q2 = v2;
+          v2 = (z->s).flags;
+          k2 |= v2;
+          (z->s).flags = k2;
+        }
+        if (h & 2) {
+          if (*((u8*)z + 0x27C) <= 0x27) {
+            if ((u16)(*cnt % 0x14) == 0) {
+              PlaySound(0x17);
+            }
+          } else {
+            if ((u16)(*cnt % 0x14) == 0) {
+              PlaySound(0x18);
+            }
+          }
+          {
+            register u8* g asm("r6");
+            g = (u8*)z + 0x27C;
+            if (*g == 0xa) {
+              register struct Coord* c2 asm("r4");
+              c2 = &(z->s).coord;
+              FUN_080c825c(&z->s, c2, 0);
+              FUN_080c825c(&z->s, c2, 1);
+            }
+            {
+              u8 gv = *g;
+              if (gv <= 0xc7) {
+                *g = gv + 1;
+              }
+            }
+          }
+        } else {
+          register s32 off2 asm("r1");
+          register u8* pp2 asm("r0");
+          off2 = 0x9f << 2;
+          pp2 = (u8*)z + off2;
+          *pp2 = zero;
+          asm volatile("add %0, #0x1" : "+l"(off2));
+          pp2 = (u8*)z + off2;
+          *pp2 = zero;
+        }
+      }
+    tail:
+      if (*((u8*)z + 0x27C) > 0x28) {
+        *((u8*)z + 0x27D) = 1;
+      }
+      UpdateMotionGraphic(&z->s);
+      break;
+    }
+  }
+}
+
 
 bool8 FUN_08036848(struct Zero* z) {
   if ((z->s).mode[2] > 1 && (gJoypad[0].pressed & B_BUTTON)) {
