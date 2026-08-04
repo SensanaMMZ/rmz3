@@ -288,6 +288,121 @@ void FUN_080a0b70(struct Projectile* p) {
   }
 }
 
+
+// 0x080A0DC0
+// 8 bytes short: agbcc hoists the shared `-0x800` (case 4) and `+0x1000`
+// (case 5) pool constants into a register above the if/else, where retail loads
+// each from its own pool entry inside each arm.  Writing the offset as an
+// in-place two-statement accumulation (`k = v << 11; k -= 0x800;`) gets retail's
+// `adds r0, r0, r1` shape but not the per-arm pool load; folding it back into one
+// expression re-associates the constant into the comparison instead (476 bytes).
+// A barrier on the temp does not inhibit the hoist.  Everything else, including
+// the whole 8-case dispatch and the shared `bump:`/`str r0,[r4,#0x14]` tails,
+// is identical.
+NON_MATCH void FUN_080a0dc0(struct Projectile* p) {
+#if MODERN
+  struct Entity* q = (p->s).unk_28;
+  s32 lim, k, z;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).unk_coord.y = (p->s).coord.y;
+      SetDDP(&p->body, sCollisions);
+      (p->s).d.x = 0x80;
+      SetMotion(&p->s, 0x3701);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((p->s).work[2] != 0) {
+        (p->s).coord.x += (p->s).d.x;
+        if ((p->s).coord.x > *(s32*)((u8*)p + 0xb4) + 0x6800) {
+          goto bump;
+        }
+      } else {
+        (p->s).coord.x -= (p->s).d.x;
+        if ((p->s).coord.x < *(s32*)((u8*)p + 0xb4) - 0x6800) {
+          goto bump;
+        }
+      }
+      break;
+    case 2:
+      (p->s).coord.y -= (p->s).d.x;
+      lim = *(s32*)((u8*)p + 0xb8) - 0x9000;
+      if ((p->s).coord.y >= lim) {
+        break;
+      }
+      (p->s).coord.y = lim;
+      goto bump;
+    case 3:
+      (p->s).work[2] ^= 1;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 4:
+      if ((p->s).work[2] != 0) {
+        (p->s).coord.x += (p->s).d.x;
+        k = *((u8*)p + 0xbc) << 11;
+        k -= 0x800;
+        lim = (q->coord).x - k;
+        if ((p->s).coord.x <= lim) {
+          break;
+        }
+      } else {
+        (p->s).coord.x -= (p->s).d.x;
+        k = *((u8*)p + 0xbc) << 11;
+        k -= 0x800;
+        lim = (q->coord).x + k;
+        if ((p->s).coord.x >= lim) {
+          break;
+        }
+      }
+      (p->s).coord.x = lim;
+    bump:
+      (p->s).mode[2]++;
+      break;
+    case 5:
+      (p->s).coord.y += (p->s).d.x;
+      k = *((u8*)p + 0xbc);
+      k = k * 3 << 11;
+      k += 0x1000;
+      lim = (p->s).unk_coord.y - k;
+      if ((p->s).coord.y > lim) {
+        (p->s).mode[2]++;
+        *((u8*)q + 0xbe) = 1;
+      }
+      break;
+    case 6:
+      (p->s).work[2] = 2;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 7:
+      lim = (p->s).work[2] - 1;
+      (p->s).work[2] = lim;
+      z = (u8)lim;
+      if (z != 0) {
+        break;
+      }
+      (p->s).flags &= ~DISPLAY;
+      (p->s).flags &= ~FLIPABLE;
+      (p->body).status = z;
+      (p->body).prevStatus = z;
+      (p->body).invincibleTime = z;
+      (p->s).flags &= ~COLLIDABLE;
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+      return;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).d.x += 0x30;
+  if ((p->s).d.x > 0xA00) {
+    (p->s).d.x = 0xA00;
+  }
+  if (q->mode[0] > 1) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+#else
+  INCCODE("asm/projectile/unk_14_a0dc0.inc");
+#endif
+}
+
 INCASM("asm/projectile/unk_14_p2.inc");
 
 void CreateDeathtanzRock(struct Entity* e, s32 x, s32 y, u8 n);
