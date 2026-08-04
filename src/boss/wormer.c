@@ -85,7 +85,169 @@ after:
   }
 }
 
-INCASM("asm/boss/wormer_p1b.inc");
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+
+// 0x08042724
+void Wormer_Die(struct Boss* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 one asm("r4");
+      {
+        register u16 ms asm("r2");
+        ms = gStageRun.missionStatus;
+        one = 1;
+        if ((one & ms) != 0) {
+          register s32 av asm("r1");
+          register s32 t2 asm("r0");
+          av = gStageRun.vm.active;
+          t2 = one;
+          t2 &= av;
+          if (t2 == 0) {
+            gStageRun.missionStatus = (ms & 0xFFFE) | 0x10;
+          }
+        }
+      }
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 1;
+        one = 0;
+        g |= h;
+        (p->s).flags = g;
+      }
+      SetMotion(&p->s, 0x2B08);
+      (p->s).work[2] = 0xff;
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(s32*)a = one;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = one;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = one;
+      }
+      (p->s).flags &= 0xFB;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8 w2 asm("r2");
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2] = (p->s).work[2] - 1;
+      asm volatile("" ::: "memory");
+      {
+        register s32 wv asm("r0");
+        register s32 sev asm("r1");
+        wv = (p->s).work[2];
+        sev = 7;
+        wv &= sev;
+        if (wv != 0) {
+          goto snd;
+        }
+      }
+      {
+        register s32 cx asm("r4");
+        register u32* rp asm("r5");
+        register u32 K asm("sb");
+        register u32 C asm("r8");
+        register u32 st asm("r6");
+        struct Coord c;
+        cx = (p->s).coord.x + 0xFFFFEC00;
+        c.x = cx;
+        rp = &RNG_0202f388;
+        {
+          register u32 raw asm("r0");
+          register u32 t asm("r1");
+          raw = *rp;
+          {
+            register u32 k1 asm("r1");
+            k1 = 0x343FD;
+            asm volatile("mov %0, %1" : "=r"(K) : "l"(k1));
+          }
+          t = K;
+          t *= raw;
+          raw = t;
+          {
+            register u32 c1 asm("r1");
+            c1 = 0x269EC3;
+            asm volatile("mov %0, %1" : "=r"(C) : "l"(c1));
+          }
+          raw += C;
+          raw <<= 1;
+          st = raw >> 1;
+          *rp = st;
+          raw >>= 0x11;
+          c.x = raw % (0xc0 << 6) + cx;
+        }
+        {
+          register s32 cy asm("r2");
+          register u32 raw2 asm("r0");
+          cy = (p->s).coord.y;
+          raw2 = st * K;
+          raw2 += C;
+          raw2 <<= 1;
+          *rp = raw2 >> 1;
+          raw2 <<= 1;
+          cy -= raw2 >> 0x12;
+          c.y = cy;
+        }
+        CreateSmoke(1, &c);
+      }
+    snd:
+      if (((u8)((p->s).work[2] % 0xc) << 24) == 0) {
+        PlaySound(0x2A);
+      }
+      {
+        register s32 sv asm("r0");
+        asm volatile("mov r0, #0x12\n\tldrsb %0, [%1, r0]" : "=l"(sv) : "l"(p) : "r0");
+        w2 = (p->s).work[2];
+        if (sv < 0) {
+          goto skip;
+        }
+      }
+      {
+        register u8 g2 asm("r0");
+        if ((w2 & 2) != 0) {
+          register s32 k1 asm("r1");
+          g2 = (p->s).flags;
+          k1 = 1;
+          g2 |= k1;
+        } else {
+          register u8 h2 asm("r1");
+          h2 = (p->s).flags;
+          asm("" : "+r"(h2));
+          g2 = 0xFE;
+          g2 &= h2;
+        }
+        (p->s).flags = g2;
+      }
+    skip:
+      {
+        register s32 t3 asm("r0");
+        t3 = w2 << 24;
+        if (t3 != 0) {
+          break;
+        }
+      }
+      if ((p->s).work[0] == 0) {
+        TryDropItem(0xa, &(p->s).coord);
+      } else {
+        TryDropItem(0xb, &(p->s).coord);
+      }
+      gStageRun.vm.active |= 2;
+      (p->s).mode[1]++;
+      break;
+    }
+    case 2:
+      break;
+  }
+}
+
 
 void nop_08042890(struct Boss* p) {}
 
