@@ -1,11 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-	
-	.text
-
-	thumb_func_start glacierleDeath1
-glacierleDeath1: @ 0x08059894
 	push {r4, r5, r6, lr}
 	sub sp, #8
 	adds r5, r0, #0
