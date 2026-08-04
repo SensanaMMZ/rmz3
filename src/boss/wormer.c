@@ -308,7 +308,169 @@ void FUN_08042914(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/wormer_p2_p1_p2b.inc");
+s32 FUN_08009f6c(s32 x, s32 y);
+void CreateGhost35(s32 x, s32 y, u8 r2);
+
+// 0x08042984
+void FUN_08042984(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 w0 asm("r4");
+      w0 = (p->s).work[0];
+      if (w0 == 1) {
+        PlaySound(0x55);
+        (p->s).coord.x = *(s32*)((u8*)p + 0xc4);
+        {
+          register s32 f asm("r1");
+          register s32 cx asm("r0");
+          register s32 k asm("r1");
+          f = *((u8*)p + 0xc0);
+          if (f != 0) {
+            register u8* oa asm("r2");
+            *((u8*)p + 0x4c) = w0;
+            oa = (u8*)p + 0x4a;
+            *oa = *oa | 0x10;
+            (p->s).flags = 0x10 | (p->s).flags;
+            asm volatile("ldr %0, [%1, #0x54]" : "=l"(cx) : "l"(p));
+            k = -0x6000;
+          } else {
+            register u8* oa2 asm("r2");
+            register s32 m11 asm("r0");
+            register s32 ov asm("r1");
+            *((u8*)p + 0x4c) = f;
+            oa2 = (u8*)p + 0x4a;
+            ov = *oa2;
+            m11 = 0x11;
+            m11 = -m11;
+            m11 &= ov;
+            *oa2 = m11;
+            {
+              register u8 g asm("r0");
+              register u8 h asm("r1");
+              h = (p->s).flags;
+              asm("" : "+r"(h));
+              g = 0xEF;
+              g &= h;
+              (p->s).flags = g;
+            }
+            asm volatile("ldr %0, [%1, #0x54]" : "=l"(cx) : "l"(p));
+            k = 0x6000;
+          }
+          (p->s).coord.x = cx + k;
+        }
+        {
+          register s32 xx asm("r0");
+          asm volatile("ldr %0, [%1, #0x54]" : "=l"(xx) : "l"(p));
+          *(s32*)((u8*)p + 0xb4) = FUN_08009f6c(xx, (p->s).coord.y);
+        }
+      } else {
+        PlaySound(0x55);
+      }
+      {
+        register s32 z asm("r4");
+        register u8* qb asm("r1");
+        u8 v = *((u8*)p + 0xba);
+        qb = (u8*)p + 0xbb;
+        z = 0;
+        *qb = v;
+        SetDDP(&p->body, (const struct Collision*)(0x08362110 + (p->s).work[0] * 0xa8));
+        (p->s).flags |= 1;
+        {
+          register s32 base asm("r0");
+          register s32 off asm("r1");
+          base = *(s32*)((u8*)p + 0xb4);
+          off = 0x5400;
+          (p->s).coord.y = base + off;
+        }
+        (p->s).d.y = -0x150;
+        SetMotion(&p->s, 0xac << 6);
+        (p->s).work[2] = z;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32* pb;
+      (p->s).work[2] = (p->s).work[2] + 1;
+      {
+        register u32 wv asm("r0");
+        register u32 c1w asm("r1");
+        wv = *(volatile u8*)&(p->s).work[2];
+        c1w = 1;
+        wv &= c1w;
+        pb = (s32*)((u8*)p + 0xb4);
+        if (wv == 0) {
+          register s32 t asm("r0");
+          register s32 c2 asm("r1");
+          t = RANDOM(RNG_0202f388) % 0x1800;
+          c2 = -0xC00;
+          asm("" : "+r"(c2));
+          t += c2;
+          CreateGhost35((p->s).coord.x + t, *pb, (p->s).palID);
+        }
+      }
+      {
+        register s32 ny asm("r0");
+        register s32 dy asm("r1");
+        ny = (p->s).coord.y;
+        dy = (p->s).d.y;
+        ny += dy;
+        (p->s).coord.y = ny;
+        if (ny < *pb) {
+          (p->s).coord.y = *pb;
+          (p->s).mode[2]++;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      SetMotion(&p->s, 0x2B01);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 st asm("r1");
+      {
+        register struct Body* bd asm("r0");
+        register u8* tbl asm("r2");
+        register u8* q asm("r1");
+        register s32 w0 asm("r3");
+        register s32 k asm("r2");
+        bd = &p->body;
+        tbl = (u8*)0x0836226C;
+        asm("" : "+r"(tbl));
+        {
+          register s32 idx asm("r1");
+          idx = *((u8*)p + 0x71);
+          asm("" : "+r"(idx));
+          idx = (idx << 24) >> 24;
+          q = (u8*)(idx + (s32)tbl);
+        }
+        w0 = (p->s).work[0];
+        k = w0 * 8 - w0;
+        k += *q;
+        {
+          register s32 o asm("r1");
+          register s32 cb asm("r2");
+          o = k * 2;
+          o += k;
+          o <<= 3;
+          cb = (s32)sCollisions;
+          o += cb;
+          SetDDP(bd, (const struct Collision*)o);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      st = *((u8*)p + 0x73);
+      if (st == 3) {
+        (p->s).mode[1] = st;
+        (p->s).mode[2] = 0;
+      }
+      break;
+    }
+  }
+}
+
 
 // 0x08042B48
 void FUN_08042b48(struct Boss* p) {
