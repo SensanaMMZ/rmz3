@@ -6,6 +6,7 @@ static const EnemyFunc sDeads[1];
 static const s16 s16_ARRAY_0836773c[3];
 
 #include "entity/macros.h"
+#include "quake.h"
 
 void CreateDeathtanzRock(struct Entity* e, s32 x, s32 y, u8 n) {
   struct Enemy* rock = (struct Enemy*)AllocEntityFirst(gEnemyHeaderPtr);
@@ -96,7 +97,204 @@ void DeathtanzRock_Die(struct Enemy* p) {
 
 void nop_0807a6f8(struct Enemy* p) {}
 
-INCASM("asm/enemy/deathtanz_rock_p3.inc");
+// 0x0807A6FC
+void FUN_0807a6fc(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  register u8* bp asm("r1");
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 xf asm("r2");
+      *((u8*)p + 0x25) = 0x19;
+      SetDDP(&p->body, (const struct Collision*)0x0836767C);
+      xf = (p->s).work[2];
+      if (xf != 0) {
+        register s32 g asm("r0");
+        register s32 k asm("r1");
+        g = (p->s).flags;
+        asm("" : "+r"(g));
+        k = 0x10;
+        g |= k;
+        (p->s).flags = g;
+      } else {
+        register u8 h asm("r1");
+        register u8 g2 asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g2 = 0xEF;
+        g2 &= h;
+        (p->s).flags = g2;
+      }
+      {
+        register s32 v asm("r1");
+        register s32 z asm("r3");
+        v = 1;
+        v &= xf;
+        {
+          register u8* xp asm("r0");
+          xp = (u8*)p + 0x4c;
+          z = 0;
+          *xp = v;
+        }
+        {
+          register u8* oa asm("ip");
+          register s32 ov asm("r2");
+          register s32 m11 asm("r0");
+          oa = (u8*)p + 0x4a;
+          v <<= 4;
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          m11 |= v;
+          *oa = m11;
+        }
+        (p->s).d.y = z;
+        (p->s).work[3] = z;
+      }
+      SetMotion(&p->s, 0x3603);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 hp asm("r0");
+      register s32* lim asm("r5");
+      hp = *((u8*)q + 0xc0);
+      bp = (u8*)p + 0xb4;
+      *bp = hp;
+      asm("" : "+r"(hp));
+      if ((hp << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      {
+        register struct Body* bd asm("r0");
+        register const u8* tb asm("r2");
+        register s32 i asm("r1");
+        bd = &p->body;
+        asm("" : "+r"(bd));
+        tb = (const u8*)0x08367744;
+        asm("" : "+r"(tb));
+        i = *bp;
+        i += (s32)tb;
+        {
+          register s32 kk asm("r2");
+          kk = *(const u8*)i;
+          i = kk << 1;
+          i += kk;
+          i <<= 3;
+          kk = 0x08367664;
+          i += kk;
+        }
+        SetDDP(bd, (const struct Collision*)i);
+      }
+      {
+        register s32 dy asm("r0");
+        register s32 mx asm("r1");
+        dy = (p->s).d.y;
+        dy += 0x40;
+        (p->s).d.y = dy;
+        mx = 0xe0 << 3;
+        if (dy > mx) {
+          (p->s).d.y = mx;
+        }
+      }
+      {
+        register s32 cy asm("r0");
+        cy = (p->s).coord.y;
+        cy += (p->s).d.y;
+        (p->s).coord.y = cy;
+        lim = (s32*)((u8*)q + 0xb8);
+        if (cy <= *lim) {
+          goto upd;
+        }
+      }
+      if ((p->s).work[3] == 0) {
+        PlaySound(0x41);
+        (p->s).work[3] = 1;
+        AppendQuake(4, &(p->s).coord);
+      }
+      (p->s).coord.y = *lim;
+      if (q->mode[0] <= 1) {
+        goto upd;
+      }
+      SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      (p->s).mode[1] = 0;
+      break;
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      register u8* a asm("r0");
+      register s32 z asm("r1");
+      a = (u8*)p + 0x8c;
+      z = 0;
+      asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+      a += 4;
+      asm("" : "+r"(a));
+      asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+      a += 4;
+      asm("" : "+r"(a));
+      *a = z;
+      {
+        register u8 h asm("r1");
+        register u8 g asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xFB;
+        g &= h;
+        (p->s).flags = g;
+      }
+      (p->s).work[2] = 0x3c;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32 t asm("r2");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 v asm("r0");
+        v = (p->s).work[2];
+        v -= 1;
+        (p->s).work[2] = v;
+        t = (u8)v;
+      }
+      if (t == 0) {
+        SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+        (p->s).mode[1] = t;
+      }
+      {
+        register s32 w asm("r1");
+        w = (p->s).work[2];
+        if ((u32)w > 0x1d) {
+          break;
+        }
+        {
+          register s32 b asm("r0");
+          b = 1;
+          b &= w;
+          if (b != 0) {
+            register s32 g asm("r0");
+            register s32 k asm("r1");
+            g = (p->s).flags;
+            asm("" : "+r"(g));
+            k = 1;
+            g |= k;
+            (p->s).flags = g;
+          } else {
+            register u8 h asm("r1");
+            register u8 g2 asm("r0");
+            h = (p->s).flags;
+            asm("" : "+r"(h));
+            g2 = 0xFE;
+            g2 &= h;
+            (p->s).flags = g2;
+          }
+        }
+      }
+      break;
+    }
+  }
+}
+
 
 // 0x0807A89C
 void FUN_0807a89c(struct Enemy* p) {
