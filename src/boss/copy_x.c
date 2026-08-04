@@ -1844,7 +1844,155 @@ void copyxKnockBackDamage(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/copy_x_p2_p3_p1_p2_p2_b1.inc");
+void copyx_080577c8(struct Boss* p);
+
+// 0x08056D58
+void FUN_08056d58(struct Boss* p) {
+  register s32 dd asm("r8");
+  register u32 rnd4 asm("r5");
+  s32 k;
+  register s32* bp asm("r6");
+  register s32 cx asm("r6");
+  s32 md;
+  bp = (s32*)((u8*)p + 0xb4);
+  {
+    register s32 t asm("r0");
+    register s32 t1 asm("r1");
+    t = (p->s).coord.x;
+    k = -0xA800;
+    t += k;
+    t1 = *bp;
+    asm volatile("sub %0, %0, %1" : "+l"(t1) : "l"(t));
+    dd = t1;
+  }
+  {
+    register u32 rnd asm("r1");
+    register u32 acc asm("r0");
+    u32 rv;
+    rnd = RNG_0202f388;
+    acc = 0x343FD;
+    acc *= rnd;
+    acc += 0x269EC3;
+    rv = acc << 1;
+    asm("" : "+r"(rv));
+    RNG_0202f388 = rv >> 1;
+    rnd4 = rv >> 0x11;
+    rnd4 &= 0xF;
+  }
+  if ((p->s).mode[2] != 0) {
+    SetMotion(&p->s, MOTION(0xB3, 0x05));
+    (p->s).mode[2] = 0;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    u8* cp = (u8*)p + 0xce;
+    s32 hp = *cp;
+    if (hp > *(s16*)((u8*)p + 0xa4)) {
+      (p->s).mode[1] = 0x23;
+      (p->s).mode[2] = 1;
+      *cp = 0;
+      return;
+    }
+  }
+  {
+    register s32 t3 asm("r3");
+    register s32 d2 asm("r2");
+    register s32 bv asm("r1");
+    s32 c0 = (p->s).coord.x;
+    t3 = c0 + k;
+    bv = *bp;
+    d2 = bv - t3;
+    cx = c0;
+    if (d2 < 0) {
+      goto negarm;
+    }
+    if (d2 > 0xC8 * 256) {
+      goto rngpick;
+    }
+    goto pick;
+  negarm:
+    bv = t3 - bv;
+    if (bv <= 0xC8 * 256) {
+      goto pick;
+    }
+  }
+rngpick : {
+  register u32 rnd2 asm("r1");
+  register u32 acc2 asm("r0");
+  u32 rv2;
+  rnd2 = RNG_0202f388;
+  acc2 = 0x343FD;
+  acc2 *= rnd2;
+  acc2 += 0x269EC3;
+  rv2 = acc2 << 1;
+  asm("" : "+r"(rv2));
+  RNG_0202f388 = rv2 >> 1;
+  {
+    register u32 b2 asm("r0");
+    register s32 one asm("r1");
+    b2 = rv2 >> 0x11;
+    one = 1;
+    b2 &= one;
+    if (b2 == 0) {
+      goto jump9;
+    }
+  }
+  md = 6;
+  asm volatile("");
+  goto stored;
+}
+pick:
+  if (rnd4 > 4) {
+    asm volatile("");
+    goto p9;
+  }
+  md = 6;
+  goto stored;
+p9:
+  if (rnd4 > 9) {
+    goto p10;
+  }
+  copyx_080577c8(p);
+  goto setmode2;
+p10:
+  {
+    register s32 t4 asm("r1");
+    register s32 d3 asm("r2");
+    register s32 k2 asm("r2");
+    s32* bp2 = (s32*)((u8*)p + 0xb4);
+    s32 bv2;
+    k2 = -0xA800;
+    asm("" : "+r"(k2));
+    t4 = cx + k2;
+    bv2 = *bp2;
+    d3 = bv2 - t4;
+    if (d3 < 0) {
+      goto neg2;
+    }
+    if (d3 > 0xA0 * 256) {
+      goto jump9;
+    }
+    goto md10;
+  neg2:
+    t4 -= bv2;
+    if (t4 <= 0xA0 * 256) {
+      goto md10;
+    }
+  }
+jump9:
+  (p->s).mode[1] = 9;
+  *((u8*)p + 0xf) = 0xB;
+  (p->s).d.x = dd / 0x28;
+  (p->s).d.y = -0x500;
+  goto setmode2;
+md10:
+  md = 0x10;
+stored:
+  (p->s).mode[1] = md;
+setmode2:
+  (p->s).mode[2] = 1;
+}
+
 
 struct Entity* CreateVFX52(struct Entity* e);
 
