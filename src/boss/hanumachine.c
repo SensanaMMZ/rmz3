@@ -1061,7 +1061,187 @@ void FUN_0805c87c(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p2_p1b2.inc");
+// 0x0805C98C
+void hanu_0805c98c(struct Boss* p) {
+  register s32 z asm("r5");
+  z = (p->s).mode[2];
+  if (z == 0) {
+    InitRotatableMotion(&p->s);
+    ResetDynamicMotion(&p->s);
+    SetMotion(&p->s, 0xB50D);
+    (p->s).angle = 0x60;
+    (p->s).d.x = -(p->s).d.x;
+    (p->s).d.y = 0xFFFFFC00;
+    (p->s).mode[3] = z;
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  (p->s).coord.x = (p->s).coord.x + (p->s).d.x;
+  if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+    if (((u16)FUN_08010d70((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+      FUN_08010dd8((p->s).coord.x, (p->s).coord.y);
+    }
+    PlaySound(0x52);
+    AppendQuake(5, &(p->s).coord);
+    {
+      register s32 v asm("r1");
+      register s32 one asm("r2");
+      register u8* oa asm("ip");
+      s32 v0 = (p->s).flags >> 4;
+      one = 1;
+      v0 ^= one;
+      asm("" : "+r"(v0));
+      v0 &= one;
+      *((u8*)p + 0x4c) = v0;
+      v = (p->s).flags >> 4;
+      v ^= one;
+      asm("" : "+r"(v));
+      v &= one;
+      {
+        register u8* o0 asm("r0");
+        register s32 k asm("r0");
+        k = 0x4a;
+        asm volatile("add %0, %0, %1" : "+l"(k) : "l"(p));
+        o0 = (u8*)k;
+        oa = o0;
+        {
+          register s32 sh asm("r3");
+          register s32 ov asm("r2");
+          register s32 m11 asm("r0");
+          sh = v << 4;
+          ov = *o0;
+          m11 = 0x11;
+          m11 = -m11;
+          m11 &= ov;
+          m11 |= sh;
+          {
+            register u8* o1 asm("r2");
+            o1 = oa;
+            *o1 = m11;
+          }
+        }
+      }
+      if (v != 0) {
+        register u8 g asm("r0");
+        register s32 k10 asm("r1");
+        g = (p->s).flags;
+        k10 = 0x10;
+        g |= k10;
+        (p->s).flags = g;
+      } else {
+        register u8 g2 asm("r0");
+        register u8 h2 asm("r1");
+        h2 = (p->s).flags;
+        asm("" : "+r"(h2));
+        g2 = 0xEF;
+        g2 &= h2;
+        (p->s).flags = g2;
+      }
+    }
+    {
+      register s32 cx asm("r0");
+      register s32 dx asm("r1");
+      cx = (p->s).coord.x;
+      dx = (p->s).d.x;
+      cx -= dx;
+      (p->s).coord.x = cx;
+      dx = -dx;
+      (p->s).d.x = dx;
+    }
+  }
+  {
+    register s32 cy asm("r1");
+    register s32 dy asm("r0");
+    cy = (p->s).coord.y;
+    dy = (p->s).d.y;
+    cy += dy;
+    (p->s).coord.y = cy;
+  }
+  if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) == 0) {
+    goto done;
+  }
+  if (((u16)FUN_08010d70((p->s).coord.x, (p->s).coord.y) << 16) != 0) {
+    FUN_08010dd8((p->s).coord.x, (p->s).coord.y);
+  }
+  PlaySound(0x52);
+  AppendQuake(5, &(p->s).coord);
+  {
+    register s32 v2 asm("r1");
+    register s32 one2 asm("r2");
+    register u8* ob asm("ip");
+    s32 v3 = (p->s).flags >> 5;
+    one2 = 1;
+    v3 ^= one2;
+    asm("" : "+r"(v3));
+    v3 &= one2;
+    *((u8*)p + 0x4d) = v3;
+    v2 = (p->s).flags >> 5;
+    v2 ^= one2;
+    asm("" : "+r"(v2));
+    v2 &= one2;
+    {
+      register u8* o0 asm("r0");
+      register s32 k2 asm("r0");
+      k2 = 0x4a;
+      asm volatile("add %0, %0, %1" : "+l"(k2) : "l"(p));
+      o0 = (u8*)k2;
+      ob = o0;
+      {
+        register s32 sh2 asm("r3");
+        register s32 ov2 asm("r2");
+        register s32 m21 asm("r0");
+        sh2 = v2 << 5;
+        ov2 = *o0;
+        m21 = 0x21;
+        m21 = -m21;
+        m21 &= ov2;
+        m21 |= sh2;
+        {
+          register u8* o1 asm("r2");
+          o1 = ob;
+          *o1 = m21;
+        }
+      }
+    }
+    if (v2 != 0) {
+      register u8 g3 asm("r0");
+      register s32 k20 asm("r1");
+      g3 = (p->s).flags;
+      k20 = 0x20;
+      g3 |= k20;
+      (p->s).flags = g3;
+    } else {
+      register u8 g4 asm("r0");
+      register u8 h4 asm("r1");
+      h4 = (p->s).flags;
+      asm("" : "+r"(h4));
+      g4 = 0xDF;
+      g4 &= h4;
+      (p->s).flags = g4;
+    }
+  }
+  {
+    register s32 cy2 asm("r0");
+    register s32 dy2 asm("r1");
+    cy2 = (p->s).coord.y;
+    dy2 = (p->s).d.y;
+    cy2 -= dy2;
+    (p->s).coord.y = cy2;
+    dy2 = -dy2;
+    (p->s).d.y = dy2;
+    if (dy2 < 0) {
+      (p->s).mode[3]++;
+    }
+  }
+done:
+  if ((p->s).mode[3] > 1) {
+    register s32 zr asm("r1");
+    zr = 0;
+    (p->s).mode[1] = 0x12;
+    (p->s).mode[2] = zr;
+  }
+}
+
 
 // 0x0805CB00
 void FUN_0805cb00(struct Boss* p) {
