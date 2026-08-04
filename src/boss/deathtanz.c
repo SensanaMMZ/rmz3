@@ -1571,6 +1571,114 @@ void deathtanzMode16(struct Boss* p) {
 
 INCASM("asm/boss/deathtanz_c3.inc");
 
+void FUN_080a0888(s32 x, s32 y, u8 a2, u8 a3);
+
+// 0x0804A8BC
+void deathtanzEX2(struct Boss* p) {
+  register s32 one asm("r4");
+  register s32 ax asm("r0");
+  register s32 ay asm("r1");
+  register s32 k asm("r2");
+  register s32 fl asm("r3");
+  register s32 k2 asm("r2");
+  register s32 fl2 asm("r3");
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, MOTION(0xA7, 0x2B));
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if ((s8)(p->s).motion.cmdIdx != 4) {
+        goto stchk;
+      }
+      if ((p->s).work[2] != 0) {
+        goto stchk;
+      }
+      PlaySound(0x5D);
+      {
+        register u8* a asm("r1");
+        register s32 v asm("r0");
+        a = (u8*)p + 0xc0;
+        v = 2;
+        *a = v;
+      }
+      goto shot0;
+    case 2:
+      SetMotion(&p->s, MOTION(0xA7, 0x2D));
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      UpdateMotionGraphic(&p->s);
+      if ((s8)(p->s).motion.cmdIdx != 4) {
+        goto stchk;
+      }
+      if ((p->s).work[2] != 0) {
+        goto stchk;
+      }
+      {
+        u8* a3 = (u8*)p + 0xc0;
+        one = 1;
+        *a3 = one;
+      }
+      PlaySound(0x5D);
+      ax = (p->s).coord.x;
+      ay = (p->s).coord.y;
+      fl = (p->s).flags >> 4;
+      fl &= one;
+      k = 1;
+      goto docall;
+    }
+    case 4:
+      SetMotion(&p->s, MOTION(0xA7, 0x2F));
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      register s32 w asm("r1");
+      UpdateMotionGraphic(&p->s);
+      if ((s8)(p->s).motion.cmdIdx != 4) {
+        goto stchk;
+      }
+      w = (p->s).work[2];
+      if (w != 0) {
+        goto stchk;
+      }
+      *((u8*)p + 0xc0) = w;
+      PlaySound(0x5D);
+    shot0:
+      ax = (p->s).coord.x;
+      ay = (p->s).coord.y;
+      fl2 = (p->s).flags >> 4;
+      k2 = 1;
+      fl2 &= k2;
+      k2 = 0;
+    docall:
+      ((void (*)(s32, s32, s32, s32))FUN_080a0888)(ax, ay, k2, fl2);
+    stchk:
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 6:
+      SetMotion(&p->s, MOTION(0xA7, 0x31));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        s32 z0 = 0;
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = z0;
+      }
+      break;
+  }
+}
+
 s32 PushoutToUp1(s32 x, s32 y);
 s32 PushoutToDown1(s32 x, s32 y);
 
