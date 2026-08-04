@@ -578,7 +578,113 @@ void anubisMode7(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/anubis_p2b.inc");
+void createPantheonZombie(struct Boss* anubis, s32 x, s32 y);
+
+// 0x08050CFC
+void anubisMode8(struct Boss* p) {
+  register u32* fp asm("r8");
+  s32 off;
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x53);
+      (p->s).work[2] = 0x3C;
+      SetMotion(&p->s, MOTION(0xAF, 0x03));
+      *(u32*)((u8*)p + 0xc0) |= 0x80;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t = (p->s).work[2];
+      fp = (u32*)((u8*)p + 0xc0);
+      if (t == 0) {
+        goto upd;
+      }
+      t--;
+      (p->s).work[2] = t;
+      if ((u8)t != 0) {
+        goto upd;
+      }
+      LOAD_STATIC_GRAPHIC(SM076_PANTHEON_ZOMBIE);
+      {
+        register s32 cnt asm("r6");
+        register u32 rnd asm("r1");
+        register u32 acc asm("r0");
+        u32 rv;
+        rnd = RNG_0202f388;
+        acc = 0x343FD;
+        acc *= rnd;
+        acc += 0x269EC3;
+        rv = acc << 1;
+        asm("" : "+r"(rv));
+        RNG_0202f388 = rv >> 1;
+        {
+          register u32 b1 asm("r1");
+          register s32 n1 asm("r0");
+          b1 = rv >> 0x11;
+          n1 = 1;
+          b1 &= n1;
+          n1 = b1 + 1;
+          if (n1 == 0) {
+            goto snd;
+          }
+          off = 0;
+          cnt = n1;
+        }
+        do {
+          register s32 x asm("r4");
+          register s32 b asm("r0");
+          s32 y;
+          {
+            register struct Zero* z asm("r0");
+            z = pZero2;
+            x = (z->s).coord.x;
+          }
+          x += -0x3200;
+          x += off;
+          {
+            register u8* bp asm("r0");
+            bp = (u8*)p;
+            asm("" : "+r"(bp));
+            bp += 0xb8;
+            b = *(s32*)bp;
+          }
+          {
+            register s32 lo asm("r1");
+            lo = b + -0x7000;
+            if (x < lo) {
+              x = lo;
+            }
+          }
+          b += 0xE0 * 128;
+          if (x > b) {
+            x = b;
+          }
+          y = FUN_08009f6c(x, (p->s).coord.y);
+          createPantheonZombie(p, x, y);
+          off += 0xC8 * 128;
+          cnt--;
+        } while (cnt != 0);
+      }
+    snd:
+      PlaySound(0x55);
+    upd:
+      UpdateMotionGraphic(&p->s);
+      asm volatile("" ::"r"(off));
+      {
+        register s32 f asm("r1");
+        register s32 k asm("r0");
+        f = *fp;
+        k = 0x80;
+        f &= k;
+        if (f == 0) {
+          (p->s).mode[1] = 1;
+          (p->s).mode[2] = f;
+        }
+      }
+      break;
+    }
+  }
+}
+
 
 // 0x08050E44
 void FUN_08050e44(struct Boss* p) {
