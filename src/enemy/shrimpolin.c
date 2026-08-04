@@ -895,7 +895,192 @@ void shrimporin_0806a4ec(struct Enemy* p) {
   shrimporinIceCrash((p->s).coord.x, (p->s).coord.y, (p->s).work[1]);
 }
 
-INCASM("asm/enemy/shrimpolin_b.inc");
+// 0x0806A544
+void shrimporin_0806a544(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 d asm("r6");
+      GotoMotion(&p->s, 0x0D03, 6, 1);
+      UpdateMotionGraphic(&p->s);
+      {
+        register struct Zero* z asm("r2");
+        register s32 dx asm("r1");
+        register s32 dy asm("r0");
+        register s32 t asm("r4");
+        z = pZero2;
+        {
+          register s32 zx asm("r0");
+          dx = (p->s).coord.x;
+          zx = (z->s).coord.x;
+          dx -= zx;
+        }
+        (p->s).d.x = dx;
+        dy = (p->s).coord.y;
+        {
+          register s32 k asm("r3");
+          k = 0xc0 << 5;
+          dy += k;
+        }
+        dy -= (z->s).coord.y;
+        (p->s).d.y = dy;
+        dx >>= 8;
+        d = dx * dx;
+        dy >>= 8;
+        t = dy * dy;
+        {
+          register s32 t2 asm("r0");
+          t2 = t;
+          d += t2;
+        }
+      }
+      d = (u16)Sqrt(d) << 8;
+      if (d != 0) {
+        register s32 q asm("r4");
+        q = ((p->s).d.x << 8) / d;
+        (p->s).d.x = q;
+        {
+          register s32 q2 asm("r0");
+          q2 = ((p->s).d.y << 8) / d;
+          (p->s).d.x = q << 2;
+          (p->s).d.y = q2 << 2;
+        }
+      } else {
+        (p->s).d.x = 0x80 << 3;
+        (p->s).d.y = d;
+      }
+      SetDDP(&p->body, &sCollisions[5]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 dx2 asm("r2");
+      register s32 ny asm("r1");
+      {
+        register s32 nx asm("r0");
+        nx = (p->s).coord.x;
+        dx2 = (p->s).d.x;
+        nx += dx2;
+        (p->s).coord.x = nx;
+      }
+      {
+        register s32 dy2 asm("r0");
+        register s32 lim asm("r1");
+        dy2 = (p->s).d.y + 0x40;
+        (p->s).d.y = dy2;
+        lim = 0xe0 << 3;
+        if (dy2 > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      {
+        register s32 dv asm("r0");
+        ny = (p->s).coord.y;
+        dv = (p->s).d.y;
+        ny += dv;
+        (p->s).coord.y = ny;
+      }
+      if (dx2 == 0) {
+        goto chk;
+      }
+      if (dx2 <= 0) {
+        goto neg;
+      }
+      {
+        register s32 r asm("r2");
+        register s32 xx2 asm("r0");
+        register s32 k6 asm("r2");
+        xx2 = (p->s).coord.x;
+        k6 = 0xc0 << 4;
+        xx2 += k6;
+        {
+          register s32 k7 asm("r3");
+          k7 = 0xFFFFF800;
+          ny += k7;
+        }
+        r = PushoutToLeft2(xx2, ny);
+        if (r >= 0) {
+          goto chk;
+        }
+        {
+          register s32 nx3 asm("r0");
+          nx3 = (p->s).coord.x;
+          nx3 += r;
+          asm volatile("str %0, [%1, #0x54]" :: "l"(nx3), "l"(p) : "memory");
+        }
+        goto boom;
+      }
+    neg:
+      {
+        register s32 r2 asm("r2");
+        register s32 xx asm("r0");
+        register s32 k4 asm("r4");
+        xx = (p->s).coord.x;
+        k4 = 0xFFFFF400;
+        xx += k4;
+        {
+          register s32 k5 asm("r2");
+          k5 = 0xFFFFF800;
+          ny += k5;
+        }
+        r2 = PushoutToRight2(xx, ny);
+        if (r2 <= 0) {
+          goto chk;
+        }
+        (p->s).coord.x = (p->s).coord.x + r2;
+        goto boom;
+      }
+    chk:
+      if ((*(s32*)((u8*)p + 0x8c) & 4) == 0) {
+        goto down;
+      }
+    boom:
+      explodeShrimpolin(p);
+      break;
+    down: {
+      register s32 r3 asm("r2");
+      r3 = PushoutToUp2((p->s).coord.x, (p->s).coord.y);
+      if (r3 >= 0) {
+        break;
+      }
+      if ((p->s).d.x != 0) {
+        register s32* q3 asm("r3");
+        register s32 cx asm("r1");
+        register s32 base asm("r0");
+        register s32 k8 asm("r4");
+        q3 = (s32*)((u8*)p + 0xb8);
+        cx = (p->s).coord.x;
+        base = *q3;
+        if (cx > base) {
+          k8 = 0xb4 << 9;
+          base += k8;
+          if (cx <= base) {
+            goto skip;
+          }
+          k8 = 0xFFFE9800;
+        } else {
+          k8 = 0xFFFE9800;
+          base += k8;
+          if (cx >= base) {
+            goto skip;
+          }
+          k8 = 0xb4 << 9;
+        }
+        {
+          register s32 nv asm("r0");
+          nv = cx + k8;
+          *q3 = nv;
+        }
+      }
+    skip:
+      (p->s).coord.y = (p->s).coord.y + r3;
+      createShrimporinIce((p->s).coord.x, (p->s).coord.y, (p->s).work[1]);
+      explodeShrimpolin(p);
+      break;
+    }
+    }
+  }
+}
+
 
 // --------------------------------------------
 
