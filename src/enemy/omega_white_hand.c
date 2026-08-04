@@ -449,16 +449,17 @@ NON_MATCH void FUN_0806aaa0(struct Enemy* p) {
 
 
 // 0x0806AC98
-// Twin of FUN_0806aaa0 (same 2 bytes short, same two register-number ties:
-// parent entity r2/r1 in case 2, cached work[2] r4/r3 in case 4).  Differences
-// from its twin: motion 0x0901, the FUN_08009f6c probe is 0x1000 above instead
-// of 0x400, the drift is `(RANDOM & 7) - 4` instead of `RANDOM % 6 - 3`, and the
-// else arm does NOT re-zero work[3].
+// Twin of FUN_0806aaa0 and blocked identically: instruction stream the same
+// length as retail with every opcode matching, 2 bytes off from the same three
+// register-number ties (§6.169).  Differences from the twin: motion 0x0901, the
+// FUN_08009f6c probe is 0x1000 above instead of 0x400, the drift is
+// `(RANDOM & 7) - 4`, and the else arm does not re-zero work[3].
 NON_MATCH void FUN_0806ac98(struct Enemy* p) {
 #if MODERN
   struct Entity* q;
   s32 z, nx, ny;
-  u32 w2;
+  s32* pb;
+  u32 w2, one, num;
 
   switch ((p->s).mode[2]) {
     case 0:
@@ -517,8 +518,9 @@ NON_MATCH void FUN_0806ac98(struct Enemy* p) {
     case 3:
       UpdateMotionGraphic(&p->s);
       (p->s).work[3]++;
+      num = (p->s).work[3];
       w2 = (p->s).work[2];
-      if ((u8)((u32)(p->s).work[3] % w2) == 0) {
+      if ((u8)((u32)num % w2) == 0) {
         (p->s).work[2] = w2 - 10;
         (p->s).coord.x += ((s32)(RANDOM(RNG_0202f388) & 7) - 4) << 8;
       }
@@ -531,12 +533,16 @@ NON_MATCH void FUN_0806ac98(struct Enemy* p) {
     case 4:
       w2 = (p->s).work[2];
       asm("" : "+l"(w2));
-      if (w2 & 1) {
+      one = 1;
+      asm("" : "+l"(one));
+      if (w2 & one) {
+        pb = (s32*)((u8*)p + 0xb4);
         q = (p->s).unk_28;
-        nx = *(s32*)((u8*)p + 0xb4) + (q->coord).x + ((w2 >> 3) << 8);
+        nx = *pb + (q->coord).x + ((w2 >> 3) << 8);
       } else {
+        pb = (s32*)((u8*)p + 0xb4);
         q = (p->s).unk_28;
-        nx = *(s32*)((u8*)p + 0xb4) + (q->coord).x - (((w2 << 24) >> 27) << 8);
+        nx = *pb + (q->coord).x - (((w2 << 24) >> 27) << 8);
       }
       (p->s).coord.x = nx;
       ny = *(s32*)((u8*)p + 0xb8) + (q->coord).y;
