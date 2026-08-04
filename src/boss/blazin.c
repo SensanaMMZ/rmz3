@@ -2,6 +2,7 @@
 #include "collision.h"
 #include "gfx.h"
 #include "global.h"
+#include "physics.h"
 #include "motion.h"
 #include "overworld.h"
 #include "script.h"
@@ -1014,7 +1015,174 @@ void blazinMode10(struct Boss* p) {
 
 bool8 FUN_0803fd58(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p12_p1.inc");
+// 0x0803FD5C
+void blazinKnockBackDamage(struct Boss* p) {
+  register s32 z asm("r6");
+  z = (p->s).mode[2];
+  switch (z) {
+    case 0: {
+      PlaySound(0x74);
+      {
+        register u8* fl asm("r1");
+        fl = (u8*)p + 0xd0;
+        if (*fl == 1) {
+          register struct Projectile** slot asm("r4");
+          *fl = z;
+          slot = (struct Projectile**)((u8*)p + 0xc4);
+          *slot = (struct Projectile*)z;
+          *slot = createBlazinTail(&p->s, 2);
+          *(u16*)((u8*)p + 0xc8) = z;
+        }
+      }
+      if (*(s32*)((u8*)p + 0xcc) == 0) {
+        register s32 mm asm("r1");
+        register s32 k asm("r0");
+        register s32 k2 asm("r2");
+        mm = *(u16*)((u8*)p + 0xc8);
+        mm += 3;
+        k2 = 0xFFFFA200;
+        asm volatile("add %0, %1, #0" : "=l"(k) : "l"(k2));
+        mm |= k;
+        SetMotion(&p->s, mm);
+      }
+      if (isSoundPlaying(0x48)) {
+        StopSound(0x48);
+      }
+      if (isSoundPlaying(0x72)) {
+        StopSound(0x72);
+      }
+      {
+        register s32 dv asm("r0");
+        if ((pZero2->s).coord.x > (p->s).coord.x) {
+          dv = 0xFFFFFE00;
+        } else {
+          dv = 0x80 << 2;
+        }
+        (p->s).d.x = dv;
+      }
+      *(s32*)((u8*)p + 0xc0) = 0;
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 v asm("r0");
+        register s32 t asm("r1");
+        v = (p->s).d.x;
+        t = -v;
+        t <<= 3;
+        t >>= 8;
+        v += t;
+        (p->s).d.x = v;
+      }
+      {
+        register s32 dy asm("r0");
+        register s32 lim asm("r1");
+        dy = (p->s).d.y + 0x40;
+        (p->s).d.y = dy;
+        lim = 0xe0 << 3;
+        if (dy > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      {
+        register s32 ny asm("r2");
+        register s32 nx asm("r0");
+        register s32 dx asm("r1");
+        {
+          register s32 cy asm("r1");
+          register s32 dyv asm("r0");
+          cy = (p->s).coord.y;
+          dyv = (p->s).d.y;
+          ny = cy + dyv;
+          (p->s).coord.y = ny;
+        }
+        nx = (p->s).coord.x;
+        dx = (p->s).d.x;
+        nx += dx;
+        (p->s).coord.x = nx;
+        if (dx > 0) {
+          register s32 k3 asm("r3");
+          register s32 r asm("r1");
+          asm volatile("mov %0, #0x80\n\tlsl %0, %0, #0x6" : "=l"(k3));
+          asm volatile("add %0, %0, %1" : "+l"(nx) : "l"(k3));
+          k3 = 0xFFFFF800;
+          r = ny + k3;
+          r = PushoutToLeft1(nx, r);
+          if (r != 0) {
+            (p->s).coord.x = (p->s).coord.x + r;
+          }
+        }
+      }
+      if ((p->s).d.x < 0) {
+        register s32 r2 asm("r1");
+        register s32 xx asm("r0");
+        register s32 k4 asm("r1");
+        xx = (p->s).coord.x;
+        k4 = 0xFFFFE000;
+        xx += k4;
+        {
+          register s32 yy asm("r1");
+          register s32 k5 asm("r2");
+          yy = (p->s).coord.y;
+          k5 = 0xFFFFF800;
+          yy += k5;
+          r2 = PushoutToRight1(xx, yy);
+        }
+        if (r2 != 0) {
+          (p->s).coord.x = (p->s).coord.x + r2;
+        }
+      }
+      {
+        register s32 r3 asm("r1");
+        r3 = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (r3 != 0) {
+          (p->s).coord.y = (p->s).coord.y + r3;
+        }
+      }
+      {
+        register s32 w asm("r0");
+        w = (p->s).work[2];
+        if (w != 0) {
+          w -= 1;
+          (p->s).work[2] = w;
+          if ((w << 24) != 0) {
+            break;
+          }
+        }
+      }
+      {
+        register s32* slot2 asm("r2");
+        register struct Entity* e asm("r1");
+        slot2 = (s32*)((u8*)p + 0xcc);
+        e = (struct Entity*)*slot2;
+        if (e == NULL) {
+          goto isnull;
+        }
+        {
+          register s32 zz asm("r0");
+          if (e->mode[0] <= 1) {
+            break;
+          }
+          zz = 0;
+          *slot2 = zz;
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = zz;
+          goto setf;
+        }
+      isnull:
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = (u8)(s32)e;
+      }
+    setf:
+      (p->s).mode[3] = 0xff;
+      break;
+    }
+  }
+}
+
 
 #include "element.h"
 #include "vfx.h"
