@@ -1196,7 +1196,132 @@ void FUN_08076b30(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, 4);
 }
 
-INCASM("asm/enemy/purple_nerple_p2_p2_p4_b2.inc");
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+void FUN_080b84f4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_080b857c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_08076b30(struct Enemy* p);
+
+// 0x08076BE4
+void FUN_08076be4(struct Enemy* p) {
+  struct Coord c;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 dir asm("r6");
+      register s32 z4 asm("r4");
+      {
+        register s32 d3 asm("r3");
+        d3 = 0;
+        if (pZero2->s.coord.x - (p->s).coord.x > 0) {
+          d3 = 1;
+        }
+        dir = d3;
+      }
+      {
+        register s32 xf asm("r2");
+        xf = dir;
+        if (dir != 0) {
+          register u8 fl asm("r1");
+          register s32 f asm("r0");
+          fl = (p->s).flags;
+          f = 0x10;
+          f |= fl;
+          (p->s).flags = f;
+        } else {
+          register u8 h asm("r1");
+          register u8 g asm("r0");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xEF;
+          g &= h;
+          (p->s).flags = g;
+        }
+        {
+          register s32 v asm("r1");
+          register u8* oa asm("r3");
+          s32 sh4, ov, m11;
+          u8* xp;
+          v = xf;
+          xp = (u8*)p + 0x4c;
+          z4 = 0;
+          *xp = v;
+          oa = (u8*)p + 0x4a;
+          sh4 = v << 4;
+          ov = *oa;
+          m11 = -0x11;
+          m11 &= ov;
+          m11 |= sh4;
+          *oa = m11;
+        }
+      }
+      (p->s).coord.x -= dir << 8;
+      SetMotion(&p->s, MOTION(0x2A, 0x0C));
+      {
+        u8* a = (u8*)p + 0x8c;
+        *(u32*)a = z4;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = z4;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = z4;
+      }
+      (p->s).flags &= ~COLLIDABLE;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      ((void (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(0, &c, 0x80 * 4, dir);
+      {
+        register s32 k asm("r1");
+        register s32 t asm("r0");
+        k = 0x60;
+        t = dir * 2 + dir;
+        t <<= 6;
+        t = k - t;
+        c.x = t;
+        c.y = k;
+        (p->s).d.x = t >> 1;
+      }
+      if (*((u8*)p + 0xb9) != 0) {
+        FUN_080b857c(&p->s, &(p->s).coord, &c, 0x40, (motion_t*)0x083671F2, 0x18);
+      } else {
+        FUN_080b84f4(&p->s, &(p->s).coord, &c, 0x40, (motion_t*)0x083671F2, 0x18);
+      }
+      {
+        register s32 zz asm("r1");
+        register s32 w asm("r0");
+        zz = 0;
+        w = 0x18;
+        (p->s).work[2] = w;
+        (p->s).d.y = zz;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t;
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0xE0 * 8) {
+        (p->s).d.y = 0xE0 * 8;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t == 0) {
+        goto hit;
+      }
+      if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) << 16) == 0) {
+        break;
+      }
+    hit:
+      FUN_08076b30(p);
+      break;
+    }
+  }
+}
+
 
 extern const motion_t sMotions[9];
 struct Entity* FUN_080b7f70(struct Entity* e, struct Coord* c, motion_t* motions, u8 len);
