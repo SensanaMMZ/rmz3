@@ -433,7 +433,188 @@ bool8 FUN_08036904(struct Zero* z) {
   return TRUE;
 }
 
-INCASM("asm/player/zero_minigame_p2_p2.inc");
+extern const motion_t sZeroMiniMotions[10];
+struct Weapon* CreateWeaponMinigameRod(struct Entity* p, u8 r1, u8 r2);
+
+// 0x08036938
+void recoil_minigame_08036938(struct Zero* z) {
+  switch ((z->s).mode[2]) {
+    case 0: {
+      register u8* n asm("r4");
+      n = (u8*)z + 0x287;
+      {
+        u32 dir;
+        u8 idx = *n;
+        dir = ((z->s).flags >> 4) & 1;
+        CreateWeaponMinigameRod(&z->s, idx, dir);
+      }
+      SetMotion(&z->s, sZeroMiniMotions[*n]);
+      if (*n <= 5) {
+        PlaySound(0x36);
+        (z->s).mode[3] = 0;
+      } else {
+        PlaySound(0x37);
+        (z->s).mode[3] = 2;
+      }
+      (z->s).d.y = 0;
+      if (*((u8*)z + 0x287) == 8) {
+        (z->s).d.y = -0x580;
+        UpdateMotionGraphic(&z->s);
+        (z->s).mode[2] = 0xa;
+        break;
+      }
+      (z->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&z->s);
+      if ((z->s).mode[3] == 1) {
+        if (*(s8*)((u8*)z + 0x71) > 4) {
+          (z->s).mode[2]++;
+        }
+      }
+      if (*(u8*)((u8*)z + 0x73) != 3) {
+        break;
+      }
+      if ((z->s).mode[3] != 1) {
+        goto land;
+      }
+      (z->s).mode[2]++;
+      break;
+    case 2: {
+      register struct KeyState* jp asm("r3");
+      register u8* n asm("r4");
+      jp = gJoypad;
+      if ((jp->input & 0x20) != 0) {
+        s32 c;
+        u8* oa;
+        u32 ov;
+        u8* xf = (u8*)z + 0x4c;
+        c = 0;
+        *xf = c;
+        oa = (u8*)z + 0x4a;
+        ov = *oa;
+        c -= 0x11;
+        c &= ov;
+        *oa = c;
+        {
+          u32 fl = (z->s).flags;
+          u32 f = 0xef;
+          f &= fl;
+          (z->s).flags = f;
+        }
+      }
+      if ((jp->input & 0x10) != 0) {
+        register u32 m asm("r1");
+        u8* oa;
+        *((u8*)z + 0x4c) = 1;
+        oa = (u8*)z + 0x4a;
+        {
+          u32 ov2 = *oa;
+          m = 0x10;
+          *oa = ov2 | m;
+        }
+        m |= (z->s).flags;
+        (z->s).flags = m;
+      }
+      n = (u8*)z + 0x287;
+      {
+        u32 dir;
+        u8 idx = *n + 1;
+        dir = ((z->s).flags >> 4) & 1;
+        CreateWeaponMinigameRod(&z->s, idx, dir);
+      }
+      SetMotion(&z->s, sZeroMiniMotions[*n + 1]);
+      PlaySound(0x36);
+      (z->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      UpdateMotionGraphic(&z->s);
+      if (*(u8*)((u8*)z + 0x73) != 3) {
+        break;
+      }
+      goto land;
+    case 10: {
+      s32 dy;
+      s32 r;
+      (z->s).d.y += 0x40;
+      if ((z->s).d.y > 0x700) {
+        (z->s).d.y = 0x700;
+      }
+      {
+        s32 cy = (z->s).coord.y;
+        dy = (z->s).d.y;
+        (z->s).coord.y = cy + dy;
+      }
+      if (*(u8*)((u8*)z + 0x73) == 3) {
+        if (dy < 0) {
+          SetMotion(&z->s, 0x403);
+        } else {
+          SetMotion(&z->s, 0x404);
+        }
+      }
+      if ((z->s).d.y > 0) {
+        register struct KeyState* jp asm("r3");
+        jp = gJoypad;
+        if ((jp->input & 0x20) != 0) {
+          s32 c;
+          u8* oa;
+          u32 ov;
+          u8* xf = (u8*)z + 0x4c;
+          c = 0;
+          *xf = c;
+          oa = (u8*)z + 0x4a;
+          ov = *oa;
+          c -= 0x11;
+          c &= ov;
+          *oa = c;
+          {
+            u32 fl = (z->s).flags;
+            u32 f = 0xef;
+            f &= fl;
+            (z->s).flags = f;
+          }
+        }
+        if ((jp->input & 0x10) != 0) {
+          register u32 m asm("r1");
+          u8* oa;
+          *((u8*)z + 0x4c) = 1;
+          oa = (u8*)z + 0x4a;
+          {
+            u32 ov2 = *oa;
+            m = 0x10;
+            *oa = ov2 | m;
+          }
+          m |= (z->s).flags;
+          (z->s).flags = m;
+        }
+      }
+      UpdateMotionGraphic(&z->s);
+      r = PushoutToUp2((z->s).coord.x, (z->s).coord.y);
+      if (r == 0) {
+        break;
+      }
+      (z->s).coord.y += r;
+    land: {
+      s32 zz = 0;
+      (z->s).d.y = zz;
+      (z->s).mode[1] = 1;
+      (z->s).mode[2] = zz;
+    }
+      break;
+    }
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 11:
+      break;
+  }
+}
+
 
 // 0x08036b94
 static bool32 FUN_08036b94(struct Zero* z) { return TRUE; }
