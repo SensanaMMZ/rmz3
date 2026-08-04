@@ -615,6 +615,144 @@ void FUN_080478b8(struct Boss* p) {
 }
 INCASM("asm/boss/baby_elf_p2_p1b.inc");
 
+void FUN_0809f8ac(struct Entity* e);
+
+void FUN_0804839c(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[3] = 0x1E;
+      *((u8*)p + 0xce) = 0;
+      FUN_0809f8ac(&p->s);
+      (p->s).mode[2]++;
+    /* fallthrough */
+    case 1: {
+      s32 t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+    }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      {
+        s32 v = (p->s).coord.x + -0x180;
+        s32 l;
+        (p->s).coord.x = v;
+        l = *(s32*)((u8*)p + 0xb4) + -0x5000;
+        if (v < l) {
+          (p->s).coord.x = l;
+          (p->s).mode[2]++;
+        }
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 3:
+      {
+        s32 v = (p->s).coord.y + -0x180;
+        s32 l;
+        (p->s).coord.y = v;
+        l = *(s32*)((u8*)p + 0xb8) + -0x7800;
+        if (v < l) {
+          (p->s).coord.y = l;
+          (p->s).mode[2]++;
+        }
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 4:
+      {
+        s32 v = (p->s).coord.x + 0x180;
+        s32 l;
+        (p->s).coord.x = v;
+        l = *(s32*)((u8*)p + 0xb4) + 0x5000;
+        if (v > l) {
+          (p->s).coord.x = l;
+          (p->s).mode[2]++;
+        }
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 5:
+      {
+        s32 v = (p->s).coord.y + 0x180;
+        s32 l;
+        (p->s).coord.y = v;
+        l = *(s32*)((u8*)p + 0xb8) + -0x3700;
+        if (v > l) {
+          (p->s).coord.y = l;
+          (p->s).mode[2]++;
+        }
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 6:
+      {
+        s32 v = (p->s).coord.x + -0x180;
+        s32 l;
+        (p->s).coord.x = v;
+        l = *(s32*)((u8*)p + 0xb4) + -0x5000;
+        if (v < l) {
+          (p->s).coord.x = l;
+          (p->s).mode[2]++;
+        }
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 7:
+      {
+        s32 v = (p->s).coord.y + -0x180;
+        s32 l;
+        (p->s).coord.y = v;
+        l = *(s32*)((u8*)p + 0xb8) + -0x7800;
+        if (v < l) {
+          (p->s).coord.y = l;
+          (p->s).mode[2]++;
+        }
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 8: {
+      s32* pb;
+      s32 v = (p->s).coord.x + 0x180;
+      (p->s).coord.x = v;
+      pb = (s32*)((u8*)p + 0xb4);
+      if (v > *pb) {
+        *((u8*)p + 0xce) = 1;
+        (p->s).coord.x = *pb;
+        (p->s).mode[2]++;
+      }
+    }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 9:
+      (p->s).unk_coord.x = 0x12C;
+      (p->s).mode[2]++;
+    /* fallthrough */
+    case 10: {
+      s32 t = (p->s).unk_coord.x - 1;
+      (p->s).unk_coord.x = t;
+      if (t == 0) {
+        (p->s).mode[1] = 0xA;
+        (p->s).mode[2] = t;
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+INCASM("asm/boss/baby_elf_p2_p1b_post839c.inc");
+
 u16 FUN_080d08d0(struct Boss* p, motion_t m);
 
 void FUN_0804874c(struct Boss* p) {
