@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "physics.h"
 #include "global.h"
 #include "solid.h"
 #include "stagerun.h"
@@ -65,7 +66,148 @@ NON_MATCH static void IceBlock_Init(struct Solid* p) {
 #endif
 }
 
-INCASM("asm/solid/ice_block.inc");
+// 0x080D8CA0
+void IceBlock_Update(struct Solid* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[1];
+  switch (m) {
+    case 0: {
+      register struct Camera* cam asm("r3");
+      register s32 cx asm("r2");
+      register s32 vx asm("r1");
+      UpdateMotionGraphic(&p->s);
+      cam = &gStageRun.vm.camera;
+      vx = *(s32*)((u8*)cam + 0x38);
+      cx = (p->s).coord.x;
+      {
+        register s32 hi asm("r0");
+        register s32 k asm("r2");
+        k = 0x000077FF;
+        hi = vx + k;
+        cx = (p->s).coord.x;
+        if (cx > hi) {
+          break;
+        }
+      }
+      {
+        register s32 lo asm("r0");
+        m = 0xFFFF8800;
+        lo = vx + m;
+        if (cx < lo) {
+          break;
+        }
+      }
+      {
+        register s32 cy asm("r3");
+        register s32 t asm("r0");
+        register s32 k2 asm("r1");
+        t = *(s32*)((u8*)cam + 0x3c);
+        k2 = 0xFFFF6800;
+        t += k2;
+        cy = (p->s).coord.y;
+        if (cy < t) {
+          break;
+        }
+        (p->s).flags2 |= 8;
+        (p->s).size = &sSize;
+        (p->s).hazardAttr = 0x3801;
+        FUN_0800bd78(cx, cy);
+      }
+      (p->s).work[0] = 1;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 dy asm("r1");
+      UpdateMotionGraphic(&p->s);
+      dy = (p->s).d.y;
+      if (dy <= 0x6FF) {
+        register s32 nv asm("r0");
+        nv = dy;
+        nv += 0x40;
+        (p->s).d.y = nv;
+      }
+      {
+        register s32 ny asm("r1");
+        register s32 dv asm("r0");
+        ny = (p->s).coord.y;
+        dv = (p->s).d.y;
+        ny += dv;
+        (p->s).coord.y = ny;
+        (p->s).unk_coord.y = ny;
+        if (PushoutToUp1((p->s).coord.x, ny) == 0) {
+          break;
+        }
+      }
+      {
+        register s32 v asm("r1");
+        register s32 lim asm("r0");
+        v = (p->s).d.y;
+        lim = 0x80 << 2;
+        if (v > lim) {
+          lim -= 0xe3;
+          ((void (*)(s32))PlaySound)(lim);
+          AppendQuake(4, &(p->s).coord);
+        }
+      }
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      (p->s).d.y = 0;
+      SetDDP(&p->body, &sCollisions[1]);
+      SetMotion(&p->s, 0xCB01);
+      (p->s).work[0] = 2;
+      (p->s).mode[1]++;
+      break;
+    }
+    case 2: {
+      register s32* st asm("r2");
+      UpdateMotionGraphic(&p->s);
+      if (PushoutToUp1((p->s).coord.x, (p->s).coord.y + 1) == 0) {
+        SetDDP(&p->body, sCollisions);
+        (p->s).work[0] = 1;
+        (p->s).mode[1] = 1;
+      }
+      st = (s32*)((u8*)p + 0x8c);
+      if ((*st & 1) == 0) {
+        break;
+      }
+      {
+        register s32 mid asm("r0");
+        register s32 k3 asm("r1");
+        mid = (p->s).motionID << 8;
+        mid |= *(u8*)((u8*)p + 0x70);
+        k3 = 0xCB01;
+        if (mid == k3) {
+          k3 += 1;
+          ((void (*)(struct Entity*, s32))SetMotion)(&p->s, k3);
+          break;
+        }
+      }
+      {
+        register s32 z asm("r1");
+        z = 0;
+        *st = z;
+        {
+          u8* a = (u8*)p + 0x90;
+          *(s32*)a = z;
+          asm("" : "+r"(a));
+          a += 4;
+          asm("" : "+r"(a));
+          *a = z;
+        }
+      }
+      (p->s).flags &= 0xFB;
+      (p->s).flags2 &= 0xF7;
+      {
+        u32 tbl = (u32)gSolidFnTable;
+        EntityFunc** rt = (EntityFunc**)((((p->s).id) << 2) + tbl);
+        *(u32*)((p->s).mode) = m;
+        (p->s).onUpdate = (void*)((*rt)[2]);
+      }
+      break;
+    }
+  }
+}
+
 
 // 0x080D8E2C
 void IceBlock_Die(struct Solid* p) {
