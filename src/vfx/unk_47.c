@@ -186,7 +186,153 @@ void FUN_080bf634(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_47_a.inc");
+// 0x080bf6d8
+void FUN_080bf6d8(struct VFX* p) {
+  register struct Entity* e2 asm("r3");
+  e2 = (struct Entity*)(p->s).unk_2c;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      PlaySound(0x80);
+      RemovePaletteAnimation(0x46);
+      {
+        u32 g0 = GetEntityPalID(&p->s);
+        u32 g = (u8)g0 << 5;
+        StartPaletteAnimation(0x47, g | 0x200);
+      }
+      {
+        s32 v = (p->s).coord.x + -0xA00;
+        v += (p->s).work[2] * 0x1400;
+        (p->s).coord.x = v;
+      }
+      (p->s).work[3] = 6;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      if ((p->s).work[2] != 0) {
+        {
+          register s32 w3 asm("r0");
+          register s32 m3 asm("r1");
+          w3 = (p->s).work[3];
+          m3 = 3;
+          w3 &= m3;
+          if (w3 == 0) {
+            FUN_080bf390(&p->s);
+          }
+        }
+      }
+      goto pal;
+    }
+    case 2:
+      (p->s).d.x = ((p->s).work[2] << 7) - 0x40;
+      (p->s).work[3] = 0x30;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      if ((p->s).work[2] == 0) {
+        goto addx;
+      }
+      {
+        register s32 w3 asm("r0");
+        register s32 m3 asm("r1");
+        w3 = (p->s).work[3];
+        m3 = 3;
+        w3 &= m3;
+        if (w3 != 0) {
+          goto addx;
+        }
+      }
+      goto call;
+    case 4:
+      (p->s).work[3] = 0x50;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      if ((p->s).work[2] != 0) {
+        {
+          register s32 w3 asm("r0");
+          register s32 m3 asm("r1");
+          w3 = (p->s).work[3];
+          m3 = 3;
+          w3 &= m3;
+          if (w3 == 0) {
+            FUN_080bf390(&p->s);
+          }
+        }
+      }
+      (p->s).coord.y -= 0xC0;
+      goto dec;
+    case 6:
+      {
+        register s32 base asm("r1");
+        register s32 w asm("r2");
+        register s32 k asm("r0");
+        base = 0x75;
+        w = (p->s).work[2];
+        k = 0xEA;
+        k = k * w;
+        base -= k;
+        (p->s).d.x = base;
+      }
+      (p->s).work[3] = 0x30;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7:
+      if ((p->s).work[2] != 0) {
+        {
+          register s32 w3 asm("r0");
+          register s32 m3 asm("r1");
+          w3 = (p->s).work[3];
+          m3 = 3;
+          w3 &= m3;
+          if (w3 == 0) {
+            if ((p->s).coord.x - e2->coord.x > 0x2000) {
+            call:
+              FUN_080bf390(&p->s);
+            }
+          }
+        }
+      }
+    addx:
+      (p->s).coord.x += (p->s).d.x;
+    dec: {
+      s32 t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+    }
+    pal:
+      StepPaletteAnimation(0x47);
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 8:
+      (p->s).work[3] = 0x50;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 9: {
+      s32 t;
+      StepPaletteAnimation(0x47);
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.y -= 0xC0;
+      t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((t << 24) == 0) {
+        RemovePaletteAnimation(0x47);
+        (p->s).flags &= ~1;
+        (p->s).flags &= ~2;
+        SET_VFX_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
 
 void FUN_080bf890(struct VFX* p) {
   struct Entity* e1 = (struct Entity*)(p->s).unk_28;
