@@ -7,6 +7,7 @@
 #include "metatile.h"
 #include "motion.h"
 #include "vfx.h"
+#include "mission.h"
 
 struct PantheonHunterObject {
   OBJECT_HDR;
@@ -1037,6 +1038,153 @@ void phunter_080652e8(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/pantheon_hunter_p3_b_2_y_q.inc");
+
+struct VFX* CreateGhost18(struct Coord* c, u8 r1, bool8 isRight, u8 r3);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x08065528
+void slashPHunter(struct Enemy* p) {
+  register u8* rp asm("r4");
+  if ((p->s).mode[3] == 0) {
+    SetMotion(&p->s, 0x1304);
+    if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y + (0x80 << 4))) {
+      register struct Coord* c0 asm("r0");
+      register u32 xf asm("r2");
+      register u32 one asm("r1");
+      c0 = &(p->s).coord;
+      asm("" : "+r"(c0));
+      xf = (u32)(p->s).flags >> 4;
+      one = 1;
+      xf &= one;
+      rp = (u8*)p + 0xbc;
+      ((void (*)(struct Coord*, u8, u32, u8))CreateGhost18)(c0, 0, xf, *rp);
+    } else {
+      register struct Coord* c1 asm("r0");
+      register const struct SlashedEnemy* t3 asm("r1");
+      register s32 k asm("r3");
+      register s32 fl asm("r2");
+      c1 = &(p->s).coord;
+      asm("" : "+r"(c1));
+      t3 = &sSlashedEnemies[3];
+      fl = (p->s).flags;
+      k = 0x10;
+      k &= fl;
+      ((struct VFX* (*)())CreateSlashedEnemy)(c1, t3, 0, (u8)k);
+      rp = (u8*)p + 0xbc;
+    }
+    (p->s).coord.y += -0x2000;
+    if (*rp != 0) {
+      (p->s).d.x = -0x80;
+    } else {
+      (p->s).d.x = 0x80;
+    }
+    (p->s).d.y = -0x100;
+    (p->s).mode[3]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 dy asm("r0");
+    register s32 lim asm("r1");
+    dy = (p->s).d.y;
+    dy += 0x40;
+    (p->s).d.y = dy;
+    lim = 0xe0 << 3;
+    if (dy > lim) {
+      (p->s).d.y = lim;
+    }
+  }
+  (p->s).coord.x += (p->s).d.x;
+  {
+    register s32 cy asm("r1");
+    cy = (p->s).coord.y;
+    cy += (p->s).d.y;
+    (p->s).coord.y = cy;
+    if ((u16)FUN_080098a4((p->s).coord.x, cy + (0x80 << 4))) {
+      register struct Coord* c asm("r8");
+      register const struct SlashedEnemy* t asm("ip");
+      register u8* fp asm("r4");
+      register s32 pal asm("r6");
+      register u8* fp2 asm("r2");
+      struct Coord* c0;
+      c0 = &(p->s).coord;
+      t = sSlashedEnemies;
+      fp2 = (u8*)p + 0xbc;
+      pal = *fp2;
+      {
+        register s32 k asm("r3");
+        register s32 kk asm("r0");
+        register u8 fl asm("r1");
+        fl = (p->s).flags;
+        k = 0x10;
+        kk = k;
+        kk &= fl;
+        c = c0;
+        fp = fp2;
+        if (kk != 0) {
+          k |= pal;
+        } else {
+          k = pal;
+        }
+        ((struct VFX* (*)())CreateSlashedEnemy)(c0, t, 0, k);
+      }
+      {
+        register struct Coord* cp asm("r6");
+        register const struct SlashedEnemy* t1 asm("r7");
+        register s32 pal2 asm("r2");
+        register s32 k2 asm("r3");
+        register s32 kk2 asm("r0");
+        register u8 fl2 asm("r1");
+        cp = c;
+        t1 = &sSlashedEnemies[1];
+        pal2 = *fp;
+        fl2 = (p->s).flags;
+        k2 = 0x10;
+        kk2 = k2;
+        kk2 &= fl2;
+        if (kk2 != 0) {
+          k2 |= pal2;
+        } else {
+          k2 = pal2;
+        }
+        ((struct VFX* (*)())CreateSlashedEnemy)(cp, t1, 0, k2);
+      }
+      {
+        register struct Coord* cp2 asm("r6");
+        register const struct SlashedEnemy* t2 asm("r7");
+        register s32 pal3 asm("r2");
+        register s32 k3 asm("r3");
+        register s32 kk3 asm("r0");
+        register u8 fl3 asm("r1");
+        cp2 = c;
+        t2 = &sSlashedEnemies[2];
+        pal3 = *fp;
+        fl3 = (p->s).flags;
+        k3 = 0x10;
+        kk3 = k3;
+        kk3 &= fl3;
+        if (kk3 != 0) {
+          k3 |= pal3;
+        } else {
+          k3 = pal3;
+        }
+        ((struct VFX* (*)())CreateSlashedEnemy)(cp2, t2, 0, k3);
+      }
+      {
+        register struct Coord* cp4 asm("r4");
+        cp4 = c;
+        CreateSmoke(1, cp4);
+        PlaySound(0x2a);
+        TryDropItem(4, cp4);
+        if (gMission.enemyCount <= 0x270E) {
+          gMission.enemyCount++;
+        }
+        TryDropZakoDisk(p, c);
+      }
+      SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+    }
+  }
+}
+
 
 // 0x080656cc
 static void FUN_080656cc(struct Entity* p) {
