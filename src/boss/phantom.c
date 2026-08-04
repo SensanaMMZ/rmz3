@@ -60,191 +60,191 @@ static const BossFunc PTR_ARRAY_08365544[5];
 static const BossFunc PTR_ARRAY_08365558[4];
 
 NAKED void Phantom_Init(struct Boss* p) {
-  asm(".syntax unified
-\n	push {r4, r5, r6, r7, lr}
-\n	mov r7, sl
-\n	mov r6, sb
-\n	mov r5, r8
-\n	push {r5, r6, r7}
-\n	adds r7, r0, #0
-\n	ldr r1, _0805EEAC @ =gBossFnTable
-\n	ldrb r0, [r7, #9]
-\n	lsls r0, r0, #2
-\n	adds r0, r0, r1
-\n	movs r1, #1
-\n	str r1, [r7, #0xc]
-\n	ldr r0, [r0]
-\n	ldr r0, [r0, #4]
-\n	str r0, [r7, #0x14]
-\n	movs r0, #5
-\n	strb r0, [r7, #0xd]
-\n	movs r0, #0
-\n	strh r0, [r7, #0xe]
-\n	movs r1, #0
-\n	strb r1, [r7, #0x10]
-\n	adds r0, r7, #0
-\n	bl InitNonAffineMotion
-\n	adds r0, r7, #0
-\n	bl ResetDynamicMotion
-\n	ldrb r0, [r7, #0xa]
-\n	movs r1, #1
-\n	orrs r0, r1
-\n	movs r1, #2
-\n	orrs r0, r1
-\n	strb r0, [r7, #0xa]
-\n	ldr r4, [r7, #0x54]
-\n	ldr r1, [r7, #0x58]
-\n	adds r0, r4, #0
-\n	bl FUN_08009f6c
-\n	adds r1, r0, #0
-\n	str r1, [r7, #0x58]
-\n	movs r1, #0xf0
-\n	lsls r1, r1, #8
-\n	adds r0, r4, #0
-\n	bl __divsi3
-\n	lsls r1, r0, #4
-\n	subs r1, r1, r0
-\n	lsls r1, r1, #0xc
-\n	ldr r0, _0805EEB0 @ =0xFFFF9000
-\n	adds r2, r1, r0
-\n	movs r0, #0xe0
-\n	lsls r0, r0, #7
-\n	adds r1, r1, r0
-\n	adds r0, r7, #0
-\n	adds r0, #0xd4
-\n	str r2, [r0]
-\n	adds r0, #4
-\n	str r1, [r0]
-\n	subs r1, r1, r2
-\n	adds r0, #4
-\n	str r1, [r0]
-\n	adds r0, #4
-\n	asrs r1, r1, #1
-\n	adds r2, r2, r1
-\n	str r2, [r0]
-\n	subs r0, #0x1c
-\n	movs r1, #0
-\n	str r1, [r0]
-\n	ldr r5, _0805EEB4 @ =0x00000A78
-\n	ldr r2, _0805EEB8 @ =gStaticMotionGraphics
-\n	mov r8, r2
-\n	adds r0, r5, r2
-\n	ldr r1, _0805EEBC @ =wStaticGraphicTilenums
-\n	mov sb, r1
-\n	movs r4, #0x86
-\n	lsls r4, r4, #1
-\n	adds r1, r1, r4
-\n	ldrh r1, [r1]
-\n	ldrh r2, [r0, #6]
-\n	lsrs r2, r2, #6
-\n	subs r1, r1, r2
-\n	lsls r1, r1, #5
-\n	movs r2, #0x80
-\n	lsls r2, r2, #9
-\n	adds r1, r1, r2
-\n	bl LoadGraphic
-\n	ldr r0, _0805EEC0 @ =gStaticMotionGraphics+12
-\n	adds r5, r5, r0
-\n	ldr r6, _0805EEC4 @ =wStaticMotionPalIDs
-\n	adds r4, r6, r4
-\n	ldrh r1, [r4]
-\n	ldrb r0, [r5, #7]
-\n	subs r1, r1, r0
-\n	lsls r1, r1, #5
-\n	movs r2, #0x80
-\n	lsls r2, r2, #2
-\n	mov sl, r2
-\n	add r1, sl
-\n	adds r0, r5, #0
-\n	bl LoadPalette
-\n	ldr r5, _0805EEC8 @ =0x00000A8C
-\n	mov r1, r8
-\n	adds r0, r5, r1
-\n	movs r4, #0x87
-\n	lsls r4, r4, #1
-\n	mov r2, sb
-\n	adds r1, r2, r4
-\n	ldrh r1, [r1]
-\n	ldrh r2, [r0, #6]
-\n	lsrs r2, r2, #6
-\n	subs r1, r1, r2
-\n	lsls r1, r1, #5
-\n	movs r2, #0x80
-\n	lsls r2, r2, #9
-\n	adds r1, r1, r2
-\n	bl LoadGraphic
-\n	ldr r0, _0805EEC0 @ =gStaticMotionGraphics+12
-\n	adds r5, r5, r0
-\n	adds r4, r6, r4
-\n	ldrh r1, [r4]
-\n	ldrb r0, [r5, #7]
-\n	subs r1, r1, r0
-\n	lsls r1, r1, #5
-\n	add r1, sl
-\n	adds r0, r5, #0
-\n	bl LoadPalette
-\n	movs r4, #0xaa
-\n	lsls r4, r4, #4
-\n	add r8, r4
-\n	movs r5, #0x88
-\n	lsls r5, r5, #1
-\n	add sb, r5
-\n	mov r2, sb
-\n	ldrh r1, [r2]
-\n	mov r2, r8
-\n	ldrh r0, [r2, #6]
-\n	lsrs r0, r0, #6
-\n	subs r1, r1, r0
-\n	lsls r1, r1, #5
-\n	movs r0, #0x80
-\n	lsls r0, r0, #9
-\n	adds r1, r1, r0
-\n	mov r0, r8
-\n	bl LoadGraphic
-\n	ldr r1, _0805EEC0 @ =gStaticMotionGraphics+12
-\n	adds r4, r4, r1
-\n	adds r6, r6, r5
-\n	ldrh r1, [r6]
-\n	ldrb r0, [r4, #7]
-\n	subs r1, r1, r0
-\n	lsls r1, r1, #5
-\n	add r1, sl
-\n	adds r0, r4, #0
-\n	bl LoadPalette
-\n	ldr r1, _0805EECC @ =sCollisions
-\n	adds r0, r7, #0
-\n	movs r2, #0x60
-\n	bl ResetBossBody
-\n	ldr r1, _0805EED0 @ =phantom_0805eed4
-\n	adds r0, r7, #0
-\n	adds r0, #0x74
-\n	str r1, [r0, #0x24]
-\n	adds r0, #0x5c
-\n	movs r2, #0
-\n	str r2, [r0]
-\n	movs r0, #0
-\n	strb r0, [r7, #0x10]
-\n	adds r0, r7, #0
-\n	bl Phantom_Update
-\n	pop {r3, r4, r5}
-\n	mov r8, r3
-\n	mov sb, r4
-\n	mov sl, r5
-\n	pop {r4, r5, r6, r7}
-\n	pop {r0}
-\n	bx r0
-\n	.align 2, 0
-\n_0805EEAC: .4byte gBossFnTable
-\n_0805EEB0: .4byte 0xFFFF9000
-\n_0805EEB4: .4byte 0x00000A78
-\n_0805EEB8: .4byte gStaticMotionGraphics
-\n_0805EEBC: .4byte wStaticGraphicTilenums
-\n_0805EEC0: .4byte gStaticMotionGraphics+12
-\n_0805EEC4: .4byte wStaticMotionPalIDs
-\n_0805EEC8: .4byte 0x00000A8C
-\n_0805EECC: .4byte sCollisions
-\n_0805EED0: .4byte phantom_0805eed4
-\n .syntax divided
+  asm(".syntax unified\
+\n	push {r4, r5, r6, r7, lr}\
+\n	mov r7, sl\
+\n	mov r6, sb\
+\n	mov r5, r8\
+\n	push {r5, r6, r7}\
+\n	adds r7, r0, #0\
+\n	ldr r1, _0805EEAC @ =gBossFnTable\
+\n	ldrb r0, [r7, #9]\
+\n	lsls r0, r0, #2\
+\n	adds r0, r0, r1\
+\n	movs r1, #1\
+\n	str r1, [r7, #0xc]\
+\n	ldr r0, [r0]\
+\n	ldr r0, [r0, #4]\
+\n	str r0, [r7, #0x14]\
+\n	movs r0, #5\
+\n	strb r0, [r7, #0xd]\
+\n	movs r0, #0\
+\n	strh r0, [r7, #0xe]\
+\n	movs r1, #0\
+\n	strb r1, [r7, #0x10]\
+\n	adds r0, r7, #0\
+\n	bl InitNonAffineMotion\
+\n	adds r0, r7, #0\
+\n	bl ResetDynamicMotion\
+\n	ldrb r0, [r7, #0xa]\
+\n	movs r1, #1\
+\n	orrs r0, r1\
+\n	movs r1, #2\
+\n	orrs r0, r1\
+\n	strb r0, [r7, #0xa]\
+\n	ldr r4, [r7, #0x54]\
+\n	ldr r1, [r7, #0x58]\
+\n	adds r0, r4, #0\
+\n	bl FUN_08009f6c\
+\n	adds r1, r0, #0\
+\n	str r1, [r7, #0x58]\
+\n	movs r1, #0xf0\
+\n	lsls r1, r1, #8\
+\n	adds r0, r4, #0\
+\n	bl __divsi3\
+\n	lsls r1, r0, #4\
+\n	subs r1, r1, r0\
+\n	lsls r1, r1, #0xc\
+\n	ldr r0, _0805EEB0 @ =0xFFFF9000\
+\n	adds r2, r1, r0\
+\n	movs r0, #0xe0\
+\n	lsls r0, r0, #7\
+\n	adds r1, r1, r0\
+\n	adds r0, r7, #0\
+\n	adds r0, #0xd4\
+\n	str r2, [r0]\
+\n	adds r0, #4\
+\n	str r1, [r0]\
+\n	subs r1, r1, r2\
+\n	adds r0, #4\
+\n	str r1, [r0]\
+\n	adds r0, #4\
+\n	asrs r1, r1, #1\
+\n	adds r2, r2, r1\
+\n	str r2, [r0]\
+\n	subs r0, #0x1c\
+\n	movs r1, #0\
+\n	str r1, [r0]\
+\n	ldr r5, _0805EEB4 @ =0x00000A78\
+\n	ldr r2, _0805EEB8 @ =gStaticMotionGraphics\
+\n	mov r8, r2\
+\n	adds r0, r5, r2\
+\n	ldr r1, _0805EEBC @ =wStaticGraphicTilenums\
+\n	mov sb, r1\
+\n	movs r4, #0x86\
+\n	lsls r4, r4, #1\
+\n	adds r1, r1, r4\
+\n	ldrh r1, [r1]\
+\n	ldrh r2, [r0, #6]\
+\n	lsrs r2, r2, #6\
+\n	subs r1, r1, r2\
+\n	lsls r1, r1, #5\
+\n	movs r2, #0x80\
+\n	lsls r2, r2, #9\
+\n	adds r1, r1, r2\
+\n	bl LoadGraphic\
+\n	ldr r0, _0805EEC0 @ =gStaticMotionGraphics+12\
+\n	adds r5, r5, r0\
+\n	ldr r6, _0805EEC4 @ =wStaticMotionPalIDs\
+\n	adds r4, r6, r4\
+\n	ldrh r1, [r4]\
+\n	ldrb r0, [r5, #7]\
+\n	subs r1, r1, r0\
+\n	lsls r1, r1, #5\
+\n	movs r2, #0x80\
+\n	lsls r2, r2, #2\
+\n	mov sl, r2\
+\n	add r1, sl\
+\n	adds r0, r5, #0\
+\n	bl LoadPalette\
+\n	ldr r5, _0805EEC8 @ =0x00000A8C\
+\n	mov r1, r8\
+\n	adds r0, r5, r1\
+\n	movs r4, #0x87\
+\n	lsls r4, r4, #1\
+\n	mov r2, sb\
+\n	adds r1, r2, r4\
+\n	ldrh r1, [r1]\
+\n	ldrh r2, [r0, #6]\
+\n	lsrs r2, r2, #6\
+\n	subs r1, r1, r2\
+\n	lsls r1, r1, #5\
+\n	movs r2, #0x80\
+\n	lsls r2, r2, #9\
+\n	adds r1, r1, r2\
+\n	bl LoadGraphic\
+\n	ldr r0, _0805EEC0 @ =gStaticMotionGraphics+12\
+\n	adds r5, r5, r0\
+\n	adds r4, r6, r4\
+\n	ldrh r1, [r4]\
+\n	ldrb r0, [r5, #7]\
+\n	subs r1, r1, r0\
+\n	lsls r1, r1, #5\
+\n	add r1, sl\
+\n	adds r0, r5, #0\
+\n	bl LoadPalette\
+\n	movs r4, #0xaa\
+\n	lsls r4, r4, #4\
+\n	add r8, r4\
+\n	movs r5, #0x88\
+\n	lsls r5, r5, #1\
+\n	add sb, r5\
+\n	mov r2, sb\
+\n	ldrh r1, [r2]\
+\n	mov r2, r8\
+\n	ldrh r0, [r2, #6]\
+\n	lsrs r0, r0, #6\
+\n	subs r1, r1, r0\
+\n	lsls r1, r1, #5\
+\n	movs r0, #0x80\
+\n	lsls r0, r0, #9\
+\n	adds r1, r1, r0\
+\n	mov r0, r8\
+\n	bl LoadGraphic\
+\n	ldr r1, _0805EEC0 @ =gStaticMotionGraphics+12\
+\n	adds r4, r4, r1\
+\n	adds r6, r6, r5\
+\n	ldrh r1, [r6]\
+\n	ldrb r0, [r4, #7]\
+\n	subs r1, r1, r0\
+\n	lsls r1, r1, #5\
+\n	add r1, sl\
+\n	adds r0, r4, #0\
+\n	bl LoadPalette\
+\n	ldr r1, _0805EECC @ =sCollisions\
+\n	adds r0, r7, #0\
+\n	movs r2, #0x60\
+\n	bl ResetBossBody\
+\n	ldr r1, _0805EED0 @ =phantom_0805eed4\
+\n	adds r0, r7, #0\
+\n	adds r0, #0x74\
+\n	str r1, [r0, #0x24]\
+\n	adds r0, #0x5c\
+\n	movs r2, #0\
+\n	str r2, [r0]\
+\n	movs r0, #0\
+\n	strb r0, [r7, #0x10]\
+\n	adds r0, r7, #0\
+\n	bl Phantom_Update\
+\n	pop {r3, r4, r5}\
+\n	mov r8, r3\
+\n	mov sb, r4\
+\n	mov sl, r5\
+\n	pop {r4, r5, r6, r7}\
+\n	pop {r0}\
+\n	bx r0\
+\n	.align 2, 0\
+\n_0805EEAC: .4byte gBossFnTable\
+\n_0805EEB0: .4byte 0xFFFF9000\
+\n_0805EEB4: .4byte 0x00000A78\
+\n_0805EEB8: .4byte gStaticMotionGraphics\
+\n_0805EEBC: .4byte wStaticGraphicTilenums\
+\n_0805EEC0: .4byte gStaticMotionGraphics+12\
+\n_0805EEC4: .4byte wStaticMotionPalIDs\
+\n_0805EEC8: .4byte 0x00000A8C\
+\n_0805EECC: .4byte sCollisions\
+\n_0805EED0: .4byte phantom_0805eed4\
+\n .syntax divided\
 ");
 }
 
