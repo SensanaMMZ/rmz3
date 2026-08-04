@@ -33,7 +33,197 @@ struct Enemy* CreateCapsuleCannon(struct Coord* c, u8 n) {
   return p;
 }
 
-INCASM("asm/enemy/capsule_cannon_pre_p1_p1_a.inc");
+#include "mod.h"
+#include "syssav.h"
+#include "constants/flag.h"
+
+void FUN_08085cc4(struct Body* body, struct Coord* c);
+s32 FUN_0800a22c(s32 x, s32 y);
+s32 FUN_0800a31c(s32 x, s32 y);
+
+// 0x080855f0
+void CapsuleCannon_Init(struct Enemy* p) {
+  s32 z;
+  u8* pb8;
+  register s32 r5v asm("r5");
+  struct Body* body;
+  InitNonAffineMotion(&p->s);
+  {
+    register s32 fl asm("r1");
+    register s32 acc asm("r0");
+    register s32 z2 asm("r2");
+    fl = (p->s).flags;
+    acc = DISPLAY;
+    z = 0;
+    asm("" : "+l"(z));
+    z2 = 0;
+    acc |= fl;
+    fl = FLIPABLE;
+    acc |= fl;
+    (p->s).flags = acc;
+    {
+      register struct Body* b0 asm("r0");
+      register void* fp asm("r1");
+      fp = (void*)FUN_08085cc4;
+      b0 = &p->body;
+      b0->fn = fp;
+    }
+    {
+      register s32* pb4 asm("r1");
+      pb4 = (s32*)((u8*)p + 0xb4);
+      *pb4 = (p->s).coord.x;
+    }
+    {
+      register s32 cx asm("r0");
+      register s32 cy asm("r1");
+      cx = (p->s).coord.x;
+      cy = (p->s).coord.y;
+      (p->s).d.x = cx;
+      (p->s).d.y = cy;
+    }
+    pb8 = (u8*)p + 0xb8;
+    *pb8 = z2;
+    {
+      u8* a = (u8*)p + 0xbc;
+      *(s32*)a = z2;
+      asm("" : "+r"(a));
+      a -= 3;
+      *a = z2;
+    }
+  }
+  {
+    register s32 w0 asm("r4");
+    w0 = (p->s).work[0];
+    if (w0 == 0) {
+      register u8* oa asm("r2");
+      register s32 m11 asm("r0");
+      register s32 ov asm("r1");
+      (p->s).coord.x = FUN_0800a22c((p->s).coord.x + -0xA00, (p->s).coord.y);
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xEF;
+        g &= h;
+        (p->s).flags = g;
+      }
+      *((u8*)p + 0x4c) = w0;
+      oa = (u8*)p + 0x4a;
+      ov = *oa;
+      m11 = 0x11;
+      m11 = -m11;
+      m11 &= ov;
+      *oa = m11;
+      *pb8 = w0;
+    } else {
+      register s32 one asm("r3");
+      register u8* oa2 asm("r4");
+      register s32 bit asm("r2");
+      register s32 ov2 asm("r1");
+      register s32 m12 asm("r0");
+      (p->s).coord.x = FUN_0800a31c((p->s).coord.x + 0xA00, (p->s).coord.y);
+      one = 1;
+      (p->s).flags = 0x10 | (p->s).flags;
+      *((u8*)p + 0x4c) = one;
+      oa2 = (u8*)p + 0x4a;
+      bit = 0x10;
+      ov2 = *oa2;
+      m12 = 0x11;
+      m12 = -m12;
+      m12 &= ov2;
+      m12 |= bit;
+      *oa2 = m12;
+      *pb8 = one;
+    }
+  }
+  {
+    register s32 one2 asm("r1");
+    register s32 zz asm("r0");
+    register s32 z4 asm("r4");
+    SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+    one2 = 1;
+    z4 = 0;
+    zz = 0;
+    asm("" ::"r"(z4));
+    (p->s).mode[1] = one2;
+    (p->s).mode[2] = zz;
+    (p->s).mode[3] = zz;
+  }
+  if (IsFrozen(&p->s)) {
+    if (MOD_ENABLED(gSystemSavedataManager.mods, MOD_117)) {
+      {
+        register s32 fv asm("r1");
+        register s32 fk asm("r0");
+        fv = gCurStory.s.gameflags[DEMO_PLAY >> 3];
+        fk = 1 << (DEMO_PLAY & 7);
+        fk &= fv;
+        r5v = (u8)fk;
+      }
+      if (r5v == 0) {
+        (p->s).flags |= COLLIDABLE;
+        body = &p->body;
+        InitBody(body, (const struct Collision*)0x083684B8, &(p->s).coord, 0xA);
+        body->parent = (void*)p;
+        body->fn = (void*)r5v;
+        goto motion;
+      }
+    }
+    {
+      register s32 fl2 asm("r1");
+      register s32 c4 asm("r0");
+      fl2 = (p->s).flags;
+      c4 = COLLIDABLE;
+      r5v = 0;
+      c4 |= fl2;
+      (p->s).flags = c4;
+    }
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x083684B8, &(p->s).coord, 6);
+    body->parent = (void*)p;
+    body->fn = (void*)r5v;
+  motion:
+    SetMotion(&p->s, 0x6801);
+    UpdateMotionGraphic(&p->s);
+  } else {
+    if (MOD_ENABLED(gSystemSavedataManager.mods, MOD_117)) {
+      {
+        register s32 fv asm("r1");
+        register s32 fk asm("r0");
+        fv = gCurStory.s.gameflags[DEMO_PLAY >> 3];
+        fk = 1 << (DEMO_PLAY & 7);
+        fk &= fv;
+        r5v = (u8)fk;
+      }
+      if (r5v == 0) {
+        (p->s).flags |= COLLIDABLE;
+        body = &p->body;
+        InitBody(body, (const struct Collision*)0x08368488, &(p->s).coord, 0xA);
+        body->parent = (void*)p;
+        body->fn = (void*)r5v;
+        goto done;
+      }
+    }
+    {
+      register s32 fl2 asm("r1");
+      register s32 c4 asm("r0");
+      fl2 = (p->s).flags;
+      c4 = COLLIDABLE;
+      r5v = 0;
+      c4 |= fl2;
+      (p->s).flags = c4;
+    }
+    body = &p->body;
+    InitBody(body, (const struct Collision*)0x08368488, &(p->s).coord, 6);
+    body->parent = (void*)p;
+    body->fn = (void*)r5v;
+  }
+done:
+  *((u8*)p + 0xba) = 0;
+  asm("" ::"l"(z));
+  CapsuleCannon_Update(p);
+}
+
 
 extern const EnemyFunc sUpdates1[6];
 extern const EnemyFunc sUpdates2[6];
