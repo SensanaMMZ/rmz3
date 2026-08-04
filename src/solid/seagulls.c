@@ -336,7 +336,171 @@ void FUN_080dd02c(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/seagulls_p1b.inc");
+// 0x080DD11C
+void FUN_080dd11c(struct Solid* p) {
+  register s32 m asm("r4");
+  {
+    s32 m2 = (p->s).mode[2];
+    if (m2 == 0) {
+      if (((p->s).unk_28)->mode[0] > 1) {
+        asm("" : "+l"(m2));
+        (p->s).mode[2] = m2 + 1;
+      }
+    } else {
+      (p->s).work[2] = 0xf;
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  m = (p->s).mode[1];
+  switch (m) {
+    case 0: {
+      register s32 cx asm("r6");
+      s32 cx0 = (p->s).coord.x;
+      s32 dx = (p->s).d.x;
+      (p->s).coord.x = cx0 + dx;
+      if (((p->s).flags & X_FLIP) != 0) {
+        if (dx <= 0x1BF) {
+          (p->s).d.x = dx + 4;
+        } else {
+          if ((p->s).motion.cmdIdx == 3) {
+            GotoMotion(&p->s, MOTION(0xDA, 0x00), 3, 4);
+          }
+        }
+        {
+          s32 w0;
+          w0 = (p->s).work[2];
+          asm("" : "+l"(w0));
+          cx = (p->s).coord.x;
+          asm volatile("add %0, %1, #0" : "=&l"(m) : "l"(w0));
+        }
+        if (m != 0xf) {
+          if (*(s32*)((u8*)p + 0xb8) >= cx) {
+            goto after;
+          }
+          goto divmode;
+        }
+      } else {
+        if (dx > -0x1C0) {
+          (p->s).d.x = dx - 4;
+        } else {
+          if ((p->s).motion.cmdIdx == 3) {
+            GotoMotion(&p->s, MOTION(0xDA, 0x00), 3, 4);
+          }
+        }
+        {
+          s32 w0;
+          w0 = (p->s).work[2];
+          asm("" : "+l"(w0));
+          cx = (p->s).coord.x;
+          asm volatile("add %0, %1, #0" : "=&l"(m) : "l"(w0));
+        }
+        if (m != 0xf) {
+          if (*(s32*)((u8*)p + 0xb8) <= cx) {
+            goto after;
+          }
+        divmode:
+          (p->s).unk_coord.x = (p->s).d.x / 0x18;
+          (p->s).mode[1]++;
+        }
+      }
+    after:
+      if (m != 0xf) {
+        break;
+      }
+      if (((p->s).flags & X_FLIP) != 0) {
+        if (cx > (0x8a << 0xb)) {
+          SET_SOLID_ROUTINE(p, 2);
+          break;
+        }
+        if (cx > (&gStageRun.vm.camera)->viewport.x + 0x97FF) {
+          SET_SOLID_ROUTINE(p, 2);
+        }
+        break;
+      }
+      if (cx < (&gStageRun.vm.camera)->viewport.x - 0x9800) {
+        SET_SOLID_ROUTINE(p, 2);
+      }
+      break;
+    }
+    case 1: {
+      u32 f;
+      u32 nv;
+      SetMotion(&p->s, MOTION(0xDA, 0x01));
+      f = (p->s).flags;
+      nv = m;
+      nv &= ~(f >> 4);
+      if (nv != 0) {
+        u32 t = 0x10;
+        t |= f;
+        (p->s).flags = t;
+      } else {
+        u32 t = 0xef;
+        t &= f;
+        (p->s).flags = t;
+      }
+      {
+        u32 one = 1;
+        u32 v = one & nv;
+        register u8* oa asm("r3");
+        s32 sh4;
+        s32 ov;
+        s32 m11;
+        *((u8*)p + 0x4c) = v;
+        oa = (u8*)p + 0x4a;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]++;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 2: {
+      s32 dx;
+      (p->s).coord.x += (p->s).d.x;
+      dx = (p->s).d.x;
+      (p->s).d.x = dx - (p->s).unk_coord.x;
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xDA, 0x00));
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).flags & X_FLIP) != 0) {
+        register s32* dst asm("r4");
+        register s32* src asm("r3");
+        u32 r;
+        s32 o;
+        dst = (s32*)((u8*)p + 0xb8);
+        src = (s32*)((u8*)p + 0xb4);
+        r = RNG_0202f388 * 0x343FD + 0x269EC3;
+        r <<= 1;
+        RNG_0202f388 = r >> 1;
+        o = ((r >> 0x11) & 0x3f) << 8;
+        o += 0x80 << 6;
+        *dst = *src + o;
+      } else {
+        register s32* dst asm("r4");
+        register s32* src asm("r3");
+        u32 r;
+        s32 o;
+        dst = (s32*)((u8*)p + 0xb8);
+        src = (s32*)((u8*)p + 0xb4);
+        r = RNG_0202f388 * 0x343FD + 0x269EC3;
+        r <<= 1;
+        RNG_0202f388 = r >> 1;
+        o = ((r >> 0x11) & 0x3f) << 8;
+        o += 0x80 << 6;
+        *dst = *src - o;
+      }
+      (p->s).mode[1] = 0;
+      break;
+    }
+  }
+}
+
 
 // 0x080DD364
 NON_MATCH void FUN_080dd364(struct Solid* p) {
