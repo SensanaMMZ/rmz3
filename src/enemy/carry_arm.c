@@ -411,7 +411,180 @@ void FUN_08071964(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/carry_arm_p3_p1_c_b.inc");
+// 0x08071A28
+void FUN_08071a28(struct Enemy* p) {
+  register struct Entity* q asm("r5");
+  q = (p->s).unk_2c;
+  if (q != NULL && q->mode[0] > 1) {
+    {
+      register u8 g asm("r0");
+      register u8 h asm("r1");
+      register s32 zr asm("r2");
+      u8* a;
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xFE;
+      g &= h;
+      zr = 0;
+      h = 0xFD;
+      g &= h;
+      (p->s).flags = g;
+      a = (u8*)p + 0x8c;
+      *(s32*)a = zr;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *(s32*)a = zr;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = zr;
+    }
+    (p->s).flags &= 0xFB;
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x34);
+      if (q != NULL) {
+        if ((q->unk_28) == NULL && q->coord.y - (p->s).coord.y <= 0x27FF) {
+          q->unk_28 = (void*)p;
+          SetMotion(&p->s, 0x88 << 6);
+        } else {
+          q = NULL;
+          (p->s).unk_2c = q;
+        }
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      (p->s).coord.y = (p->s).coord.y + 0xFFFFFEC0;
+      {
+        register s32 cx asm("r1");
+        register s32 lim asm("r0");
+        cx = (p->s).coord.x;
+        lim = 0x00267FFF;
+        if (cx <= lim) {
+          lim += 1;
+          (p->s).coord.x = lim;
+        }
+      }
+      {
+        register s32 cx2 asm("r0");
+        register s32 lim2 asm("r1");
+        cx2 = (p->s).coord.x;
+        lim2 = 0x00275000;
+        if (cx2 > lim2) {
+          (p->s).coord.x = lim2;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (q != NULL) {
+        q->coord.x = (p->s).coord.x;
+        q->coord.y = (p->s).coord.y + (0x88 << 6);
+      }
+      if ((p->s).coord.y > 0x00019FFF) {
+        break;
+      }
+      {
+        register s32 m1 asm("r8");
+        s32 m3;
+        s32 m2;
+        register s32 zr asm("r2");
+        register u32 tbl asm("ip");
+        register s32 three asm("r3");
+        u8* a;
+        {
+          register u8 g asm("r0");
+          register u8 h asm("r1");
+          h = (p->s).flags;
+          asm("" : "+r"(h));
+          g = 0xFE;
+          asm volatile("mov %0, %1" : "=r"(m1) : "l"(g));
+          g &= h;
+          zr = 0;
+          m2 = 0xFD;
+          asm("" : "+r"(m2));
+          g &= m2;
+          (p->s).flags = g;
+        }
+        a = (u8*)p + 0x8c;
+        *(s32*)a = zr;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = zr;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = zr;
+        {
+          register u8 g2 asm("r0");
+          register u8 h2 asm("r1");
+          h2 = (p->s).flags;
+          asm("" : "+r"(h2));
+          m3 = 0xFB;
+          asm("" : "+r"(m3));
+          g2 = m3;
+          g2 &= h2;
+          (p->s).flags = g2;
+        }
+        {
+          register u32 t1 asm("r1");
+          t1 = (u32)gEnemyFnTable;
+          asm volatile("mov %0, %1" : "=r"(tbl) : "l"(t1));
+        }
+        {
+          EntityFunc** rt = (EntityFunc**)((((p->s).id) << 2) + tbl);
+          three = 3;
+          *(u32*)((p->s).mode) = three;
+          (p->s).onUpdate = (void*)((*rt)[3]);
+        }
+        if (q == NULL) {
+          break;
+        }
+        {
+          register u8 g3 asm("r0");
+          register u8 h3 asm("r1");
+          h3 = q->flags;
+          asm("" : "+r"(h3));
+          g3 = m1;
+          g3 &= h3;
+          g3 &= m2;
+          q->flags = g3;
+        }
+        a = (u8*)q + 0x8c;
+        *(s32*)a = zr;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(s32*)a = zr;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = zr;
+        {
+          register u8 g4 asm("r0");
+          register u8 h4 asm("r1");
+          h4 = q->flags;
+          asm("" : "+r"(h4));
+          g4 = m3;
+          g4 &= h4;
+          q->flags = g4;
+        }
+        asm("" :: "l"(m2));
+        {
+          EntityFunc** rt2 = (EntityFunc**)(((q->id) << 2) + tbl);
+          *(u32*)(q->mode) = three;
+          q->onUpdate = (void*)((*rt2)[3]);
+        }
+      }
+      break;
+    }
+  }
+}
+
 
 void FUN_08071b88(struct Enemy* p) {
   (p->s).d.y -= 0x10;
