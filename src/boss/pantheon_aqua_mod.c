@@ -241,7 +241,127 @@ void paquamNeutral(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/pantheon_aqua_mod_p2a.inc");
+void FUN_08080908(struct Entity* e);
+void FUN_08080964(struct Entity* e);
+void FUN_08080c64(s32 x, s32 y);
+
+// 0x080517AC
+void paquam_080517ac(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8* tc = (u8*)p + 0x25;
+      u8 z = 0;
+      *tc = 0x1a;
+      FUN_08080908(&p->s);
+      FUN_08080964(&p->s);
+      (p->s).spr.xflip = 1;
+      {
+        register u8* oa asm("r2");
+        register u32 m asm("r1");
+        u32 v;
+        oa = (u8*)p + 0x4a;
+        v = *oa;
+        m = X_FLIP;
+        *oa = v | m;
+        m |= (p->s).flags;
+        (p->s).flags = m;
+      }
+      SetMotion(&p->s, MOTION(0x27, 0x00));
+      (p->s).work[2] = z;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      (p->s).work[2]++;
+      if ((p->s).scriptEntity->flags & 2) {
+        (p->s).mode[2]++;
+      }
+      (p->s).coord.y = (p->s).unk_coord.y;
+      (p->s).coord.y = (p->s).unk_coord.y + gSineTable[(p->s).work[2]] * 4;
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 2:
+      *(u32*)((u8*)p + 0xb4) |= 0x1000;
+      SetMotion(&p->s, MOTION(0x27, 0x02));
+      (p->s).mode[2]++;
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) != 3) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      (p->s).work[3] = 0x20;
+      SetMotion(&p->s, MOTION(0x27, 0x04));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[3]--;
+      if ((p->s).scriptEntity->flags & 4) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 6:
+      PlaySound(0x63);
+      FUN_08080c64((p->s).coord.x + 0x1E00, (p->s).coord.y - 0x1D00);
+      SetMotion(&p->s, MOTION(0x27, 0x06));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) != 3) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 8:
+      (p->s).work[3] = 0x20;
+      SetMotion(&p->s, MOTION(0x27, 0x07));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 9:
+      if (*(u32*)((u8*)p + 0xb4) & 1) {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) != 3) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0x27, 0x00));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 10:
+      (p->s).work[2] = 0xc8;
+      (p->s).unk_coord.x = (p->s).coord.x;
+      SetMotion(&p->s, MOTION(0x27, 0x08));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 11: {
+      s32 t;
+      u32 r;
+      (p->s).work[2]--;
+      if ((p->s).scriptEntity->flags & 8) {
+        (p->s).mode[1] = 2;
+        (p->s).mode[2] = 0;
+      }
+      t = (p->s).unk_coord.x - 0x200;
+      r = RNG_0202f388 * 0x343FD + 0x269EC3;
+      r <<= 1;
+      RNG_0202f388 = r >> 1;
+      t += (r << 5) >> 0x16;
+      (p->s).coord.x = t;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 struct Entity* CreateVFX39(struct Coord* c, u8 r1, u8 r2);
 
