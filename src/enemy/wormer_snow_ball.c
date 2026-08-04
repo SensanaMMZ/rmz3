@@ -267,7 +267,108 @@ void FUN_0807b494(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/wormer_snow_ball_p3_p2_p1_b.inc");
+s32 PushoutToUp1(s32 x, s32 y);
+
+// 0x0807B5B8
+void FUN_0807b5b8(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, MOTION(0x40, 0x04));
+      (p->s).unk_coord.y = 0x600;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register s32 v asm("r2");
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      v = PushoutToUp1((p->s).coord.x, (p->s).coord.y + (p->s).unk_coord.y);
+      if (v < 0) {
+        (p->s).d.y = 0;
+        (p->s).coord.y += v;
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      InitScalerotMotion1(&p->s);
+      (p->s).work[2] = 0x80;
+      (p->s).unk_coord.x = 0;
+      SetMotion(&p->s, MOTION(0x40, 0x05));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      struct Body* b = &p->body;
+      register s32 v asm("r2");
+      s32 w;
+      s32 c;
+      SetDDP(b, &sCollisions[3 + (((p->s).work[2] - 0x80) / 21) * 2]);
+      w = (p->s).work[2];
+      asm volatile("add %0, %1, #0" : "=&l"(c) : "l"(w));
+      if (c != 0xff) {
+        (p->s).work[2] = w + 1;
+      }
+      (p->s).spr.mag.x = (p->s).work[2];
+      (p->s).spr.mag.y = (p->s).work[2];
+      (p->s).unk_coord.y = (p->s).work[2] * 12;
+      (p->s).unk_coord.x += (p->s).d.x;
+      (p->s).angle = ((p->s).unk_coord.x >> 8) << 1;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).d.y += 0x30;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      v = PushoutToUp1((p->s).coord.x, (p->s).coord.y + (p->s).unk_coord.y);
+      if (v < 0) {
+        s32 ny;
+        s32 t;
+        (p->s).d.y = 0;
+        ny = (p->s).coord.y + v;
+        (p->s).coord.y = ny;
+        if ((p->s).d.x < 0) {
+          t = FUN_08009f6c((p->s).coord.x - 0x30, ny + (p->s).unk_coord.y);
+          t -= (p->s).coord.y + (p->s).unk_coord.y;
+          if (t < 0) {
+            t /= 4;
+          }
+          (p->s).d.x = (p->s).d.x - t;
+        } else {
+          t = FUN_08009f6c((p->s).coord.x + 0x30, ny + (p->s).unk_coord.y);
+          t -= (p->s).coord.y + (p->s).unk_coord.y;
+          if (t < 0) {
+            t /= 4;
+          }
+          (p->s).d.x = (p->s).d.x + t;
+        }
+        if ((p->s).d.x < -0x200) {
+          (p->s).d.x = -0x200;
+        }
+        if ((p->s).d.x > 0x200) {
+          (p->s).d.x = 0x200;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > 0x2000) {
+        u32 z;
+        (p->s).flags &= ~DISPLAY;
+        z = 0;
+        (p->s).flags &= ~FLIPABLE;
+        (p->body).status = z;
+        (p->body).prevStatus = z;
+        (p->body).invincibleTime = z;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
 
 void CreateIceballParticle2(s32 x, s32 y);
 
