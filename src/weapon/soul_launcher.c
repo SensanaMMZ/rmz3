@@ -52,6 +52,124 @@ struct Weapon* CreateSoulLauncher(struct Zero* z, u8 r1, u8 r2) {
   return w;
 }
 
+void FUN_0803b4b0(struct Body* body);
+void SoulLauncher_Update(struct Weapon* w);
+
+// 0x0803B14C
+void SoulLauncher_Init(struct Weapon* p) {
+  struct Zero* z;
+  register struct Body* b asm("r4");
+  register const struct Collision* coll asm("r8");
+  register s32 z5 asm("r5");
+  z = (struct Zero*)(p->s).unk_28;
+  SET_WEAPON_ROUTINE(p, ENTITY_UPDATE);
+  InitNonAffineMotion(&p->s);
+  ResetDynamicMotion(&p->s);
+  {
+    register u8 fl asm("r1");
+    register s32 f asm("r0");
+    fl = (p->s).flags;
+    f = 1;
+    f |= fl;
+    {
+      register s32 k asm("r1");
+      k = 2;
+      f |= k;
+    }
+    (p->s).flags = f;
+  }
+  if ((p->s).work[1] == 1) {
+    SetMotion(&p->s, 0xCE * 128);
+  } else {
+    SetMotion(&p->s, MOTION(0x67, 0x03));
+  }
+  {
+    register s32 zz asm("r2");
+    u8* oa;
+    s32 m11, ov;
+    zz = 0;
+    {
+      register u8 h asm("r1");
+      register u8 g asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xEF;
+      g &= h;
+      (p->s).flags = g;
+    }
+    *((u8*)p + 0x4c) = zz;
+    oa = (u8*)p + 0x4a;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    *oa = m11;
+  }
+  {
+    register s32 dx asm("r1");
+    register s32 cx asm("r0");
+    if (((z->s).flags & 0x10) != 0) {
+      cx = (z->s).coord.x;
+      dx = 0xB0 * 16;
+    } else {
+      cx = (z->s).coord.x;
+      dx = -0xB00;
+    }
+    (p->s).coord.x = cx + dx;
+  }
+  (p->s).coord.y = (z->s).coord.y + -0x4800;
+  {
+    register const s32* tb asm("r1");
+    tb = (const s32*)0x0836159C;
+    asm("" : "+r"(tb));
+    (p->s).d.x = tb[(p->s).work[0]];
+  }
+  (p->s).d.y = -0x700;
+  z5 = 0;
+  (p->s).mode[1] = 5;
+  (p->s).work[2] = 0x40;
+  {
+    u8* a = (u8*)p + 0xb4;
+    a[0xc] = z5;
+  }
+  {
+    register u8 fl4 asm("r1");
+    register s32 f4 asm("r0");
+    fl4 = (p->s).flags;
+    f4 = 4;
+    f4 |= fl4;
+    (p->s).flags = f4;
+  }
+  b = &p->body;
+  coll = (const struct Collision*)0x08361558;
+  ((void (*)(struct Body*, const struct Collision*, struct Coord*, s32))InitBody)(b, coll, &(p->s).coord, 1);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = (BodyFunc)z5;
+  if ((p->s).work[1] == 0) {
+    {
+      register s32 bo asm("r0");
+      register u32 bv asm("r2");
+      bo = ((s32(*)(struct Zero*))CalcRodBonus)(z);
+      bo += 8;
+      bo <<= 24;
+      bv = (u32)bo >> 24;
+      ((void (*)(struct Body*, const struct Collision*, s32, s32, s32, s32))InitWeaponBody)(b, coll, bv, 0, -1, -1);
+    }
+  } else {
+    {
+      register s32 bo2 asm("r0");
+      register u32 bv2 asm("r2");
+      bo2 = ((s32(*)(struct Zero*))CalcRodBonus)(z);
+      bo2 += 0xA;
+      bo2 <<= 24;
+      bv2 = (u32)bo2 >> 24;
+      ((void (*)(struct Body*, const struct Collision*, s32, s32, s32, s32))InitWeaponBody)(b, coll, bv2, 2, -1, -1);
+    }
+  }
+  b->fn = (BodyFunc)FUN_0803b4b0;
+  SoulLauncher_Update(p);
+  asm volatile("" ::"l"(z));
+}
+
 INCASM("asm/weapon/soul_launcher_pre.inc");
 
 void SoulLauncher_Die(struct Weapon* p) {
