@@ -243,6 +243,187 @@ void paquamNeutral(struct Boss* p) {
 
 INCASM("asm/boss/pantheon_aqua_mod_p2a.inc");
 
+struct Entity* CreateVFX39(struct Coord* c, u8 r1, u8 r2);
+
+// 0x080519d0
+void paquam_080519d0(struct Boss* p) {
+  register struct Entity* q asm("r3");
+  register s32 dx asm("r5");
+  switch ((p->s).mode[2]) {
+    case 0: {
+      struct Coord c;
+      PlaySound(0x8d << 1);
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y + -0x1000;
+      q = CreateVFX39(&c, 1, 0);
+      (p->s).unk_2c = q;
+      if (q != NULL) {
+        register s32 z asm("r1");
+        u8* a = (u8*)q + 0x7c;
+        z = 0;
+        *a = z;
+        a -= 8;
+        *a = z;
+        a += 1;
+        *a = z;
+        a += 1;
+        *a = z;
+        *(s32*)((u8*)q + 0x78) = z;
+      }
+      {
+        register s32 z2 asm("r1");
+        z2 = 0;
+        (p->s).work[2] = 0x32;
+        (p->s).d.x = z2;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 v asm("r1");
+      register s32 d asm("r0");
+      v = (p->s).d.x;
+      d = 0x5800 - v;
+      d = d / 32;
+      dx = v + d;
+      (p->s).d.x = dx;
+      q = (struct Entity*)(p->s).unk_2c;
+      if (q == NULL) {
+        goto dec;
+      }
+      goto upd78;
+    }
+    case 2: {
+      register s32 z3 asm("r0");
+      register u8* oa asm("r2");
+      register s32 ov asm("r1");
+      {
+        register u8* xp asm("r1");
+        xp = (u8*)p + 0x4c;
+        z3 = 0;
+        *xp = z3;
+      }
+      oa = (u8*)p + 0x4a;
+      ov = *oa;
+      z3 -= 0x11;
+      z3 &= ov;
+      *oa = z3;
+      {
+        register u8 g asm("r0");
+        register u8 h asm("r1");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xEF;
+        g &= h;
+        (p->s).flags = g;
+      }
+      (p->s).coord.y = *(s32*)((u8*)p + 0xbc);
+      SetMotion(&p->s, 0x9a << 7);
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      q = (struct Entity*)(p->s).unk_2c;
+      if (q == NULL) {
+        goto dec;
+      }
+      dx = (p->s).d.x;
+    upd78: {
+      register s32 h8 asm("r2");
+      register s32 m asm("r0");
+      register s32 w8 asm("r1");
+      h8 = dx;
+      if (dx < 0) {
+        h8 = dx + 7;
+      }
+      h8 >>= 3;
+      w8 = (p->s).work[2];
+      m = 1;
+      m &= w8;
+      m = h8 * m;
+      *(s32*)((u8*)q + 0x78) = dx + m;
+    }
+    dec: {
+      s32 t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+    }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 4: {
+      u32 g0 = GetEntityPalID(&p->s);
+      u32 g = (u8)g0 << 5;
+      StartPaletteAnimation(0x52, g | 0x200);
+      {
+        register u8* pb8 asm("r1");
+        register s32 pa asm("r0");
+        pb8 = (u8*)p + 0xb8;
+        pa = 0x52;
+        *pb8 = pa;
+        StepPaletteAnimation(pa);
+      }
+      (p->s).work[2] = 0x60;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5: {
+      s32 t;
+      {
+        s32 v2 = (p->s).d.x - 0xA0;
+        (p->s).d.x = v2;
+        if (v2 < 0) {
+          (p->s).d.x = 0;
+        }
+      }
+      q = (struct Entity*)(p->s).unk_2c;
+      if (q != NULL) {
+        register s32 h8b asm("r2");
+        register s32 mb asm("r0");
+        register s32 w8b asm("r1");
+        dx = (p->s).d.x;
+        h8b = dx;
+        if (dx < 0) {
+          h8b = dx + 7;
+        }
+        h8b >>= 3;
+        w8b = (p->s).work[2];
+        mb = 1;
+        mb &= w8b;
+        mb = h8b * mb;
+        *(s32*)((u8*)q + 0x78) = dx + mb;
+      }
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 6:
+      q = (struct Entity*)(p->s).unk_2c;
+      {
+        register u8* w7 asm("r1");
+        w7 = (u8*)q + 0x77;
+        *w7 = 1;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7: {
+      register u32 r asm("r1");
+      r = (u8)StepPaletteAnimation(*((u8*)p + 0xb8));
+      if (r == 3) {
+        (p->s).mode[1] = r;
+        (p->s).mode[2] = 0;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 #include "palette_animation.h"
 
 u8 GetEntityPalID(struct Entity* p);
