@@ -1,5 +1,10 @@
 #include "boss.h"
 #include "collision.h"
+#include "element.h"
+#include "palette_animation.h"
+
+extern struct Zero* pZero2;
+#include "gfx.h"
 #include "global.h"
 #include "overworld.h"
 
@@ -59,6 +64,182 @@ void PantheonAquaMod_Die(struct Boss* p) {
 }
 
 void nop_08051620(struct Boss* p) {}
+
+u8 GetEntityPalID(struct Entity* p);
+void paquam_080512f8(struct Boss* p);
+
+// 0x08051624
+void paquamNeutral(struct Boss* p) {
+  register s32 z asm("r5");
+  register u8* pb asm("r6");
+  register struct Body* bd asm("r8");
+  z = (p->s).mode[2];
+  switch (z) {
+    case 0: {
+      SetMotion(&p->s, 0x4D01);
+      (p->s).work[2] = 0x46;
+      {
+        register u8* q asm("r0");
+        register s32 v asm("r1");
+        q = (u8*)p + 0xb8;
+        v = *q;
+        pb = q;
+        if (v != 0) {
+          RemovePaletteAnimation(*pb);
+          *pb = z;
+        }
+      }
+      {
+        register s32 g asm("r1");
+        register s32 k asm("r2");
+        {
+          register s32 rv asm("r0");
+          rv = ((s32 (*)(struct Entity*))GetEntityPalID)(&p->s);
+          asm volatile("add %0, %1, #0" : "=l"(g) : "l"(rv));
+        }
+        g <<= 24;
+        g = (u32)g >> 0x13;
+        k = 0x80 << 2;
+        {
+          register s32 k2 asm("r0");
+          asm volatile("add %0, %1, #0" : "=l"(k2) : "l"(k));
+          g |= k2;
+        }
+        ((void (*)(s32, s32))StartPaletteAnimation)(0x54, g);
+      }
+      *pb = 0x54;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8* fr asm("r1");
+      register s32 fv asm("r0");
+      fr = (u8*)p + 0xb9;
+      fv = *fr;
+      if (fv != 0) {
+        goto frozen;
+      }
+      {
+        register s32* ef asm("r5");
+        register s32 v2 asm("r1");
+        register u8* q2 asm("r0");
+        q2 = (u8*)p + 0xc0;
+        v2 = *(s32*)q2;
+        ef = (s32*)q2;
+        if (v2 != 0) {
+          goto tick;
+        }
+        q2 -= 0x34;
+        if ((*(s32*)q2 & 1) == 0) {
+          goto tick;
+        }
+        {
+          register s32 st asm("r1");
+          register s32 e0 asm("r0");
+          e0 = *((u8*)p + 0x97);
+          st = 0xf0;
+          st &= e0;
+          if (st != 0x10 && st != 0x20 && st != 0x30) {
+            goto tick;
+          }
+        }
+        *ef = (s32)ApplyElementEffect(0x15, &p->s, (const struct Coord*)0x08363950);
+        pb = (u8*)p + 0xb8;
+        {
+          register s32 k3 asm("r7");
+          k3 = 0x74;
+          asm volatile("add %0, %0, %1" : "+l"(k3) : "l"(p));
+          bd = (struct Body*)k3;
+        }
+        goto upd;
+      }
+    tick: {
+      register s32 t asm("r0");
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      t <<= 24;
+      pb = (u8*)p + 0xb8;
+      {
+        register s32 k4 asm("r1");
+        k4 = 0x74;
+        k4 += (s32)p;
+        bd = (struct Body*)k4;
+      }
+      if (t != 0) {
+        goto upd;
+      }
+    }
+      {
+        register struct Zero* zz asm("r2");
+        zz = pZero2;
+        if ((*(s32*)((u8*)zz + 0x8c) & (0x80 << 2)) != 0) {
+          goto upd;
+        }
+        {
+          register s32 sv asm("r0");
+          register u8* q3 asm("r0");
+          q3 = (u8*)zz;
+          q3 += 0xa4;
+          asm volatile("mov r2, #0\n\tldrsh %0, [%1, r2]" : "=l"(sv) : "l"(q3) : "r2");
+          if (sv == 0) {
+            goto upd;
+          }
+        }
+      }
+      {
+        register u32* rp asm("r2");
+        register const u8* tb asm("r5");
+        register u8* cur asm("r3");
+        register u32 ix asm("r1");
+        rp = &RNG_0202f388;
+        tb = (const u8*)0x08363958;
+        cur = (u8*)p + 0xc4;
+        do {
+          register u32 raw asm("r0");
+          raw = *rp * 0x343FD;
+          raw += 0x269EC3;
+          raw <<= 1;
+          *rp = raw >> 1;
+          ix = raw >> 0x11;
+          ix &= 3;
+        } while (*(const u8*)(ix + (u32)tb) == *cur && *((u8*)p + 0xc5) > 1);
+        {
+          register const u8* sel asm("r2");
+          sel = (const u8*)(ix + (u32)tb);
+          if (*sel == *cur) {
+            register u8* cnt asm("r1");
+            register s32 cv asm("r0");
+            cnt = (u8*)p + 0xc5;
+            cv = *cnt;
+            cv += 1;
+            *cnt = cv;
+          }
+          {
+            register s32 v3 asm("r0");
+            register s32 zr asm("r1");
+            v3 = *sel;
+            zr = 0;
+            *cur = v3;
+            (p->s).mode[1] = *sel;
+            (p->s).mode[2] = zr;
+          }
+        }
+      }
+    upd:
+      paquam_080512f8(p);
+      StepPaletteAnimation(*pb);
+      UpdateMotionGraphic(&p->s);
+      goto ddp;
+    frozen:
+      fv -= 1;
+      *fr = fv;
+      bd = (struct Body*)((u8*)p + 0x74);
+    ddp:
+      SetDDP(bd, (const struct Collision*)0x08363664);
+      break;
+    }
+  }
+}
 
 INCASM("asm/boss/pantheon_aqua_mod_p2a.inc");
 
@@ -234,7 +415,6 @@ void FUN_08051cdc(struct Boss* p) {
 
 INCASM("asm/boss/pantheon_aqua_mod_p2b.inc");
 
-extern struct Zero* pZero2;
 
 void FUN_08080858(struct Entity* e);
 void createStretchedGrabArm(struct Entity* e, u8 n);
