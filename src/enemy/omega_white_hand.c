@@ -316,6 +316,127 @@ void FUN_0806aa54(struct Enemy* p) {
 
 bool8 FUN_0806aa9c(struct Enemy* p) { return TRUE; }
 
+
+// 0x0806AAA0
+// 2 bytes short.  Everything matches except two register-number ties -- the
+// parent entity lands in r2 (retail r1) in case 2, and the cached work[2] lands
+// in r4 (retail r3) in case 4 -- plus one instruction still missing in case 2's
+// coord setup.  Levers already applied and needed: `u32 w2` + a `asm("" : "+l")`
+// barrier so `(w2 << 24) >> 27` survives in the else arm while `w2 >> 3` stays a
+// bare `lsrs` in the if arm (§6.177); unsigned `%` so the modulos are
+// `__umodsi3`; the `u8* d = p + 0x5c; *(s32*)(d + 4) = z;` pointer form for the
+// d.y store; and `q = (p->s).unk_28;` written inside both arms of case 4.
+NON_MATCH void FUN_0806aaa0(struct Enemy* p) {
+#if MODERN
+  struct Entity* q;
+  s32 z, nx, ny;
+  u32 w2;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if ((*(s32*)((u8*)(p->s).unk_28 + 0xd4) & 1) == 0) {
+        break;
+      }
+      goto bump;
+    case 2:
+      (p->s).flags |= DISPLAY;
+      z = 0;
+      q = (p->s).unk_28;
+      (p->s).coord.y = (q->coord).y - 0x1800;
+      (p->s).coord.x = (q->coord).x;
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4) + (q->coord).x;
+      SetMotion(&p->s, MOTION(0x09, 0x00));
+      {
+        u8* d = (u8*)p + 0x5c;
+        *(s32*)(d + 4) = z;
+      }
+      (p->s).d.x = z;
+      (p->s).unk_coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y - 0x400);
+      (p->s).coord.y = (p->s).unk_coord.y - 0x1800;
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).d.x = 0x2000;
+      if ((p->s).mode[3] == 1) {
+        (p->s).work[2] = 0x80;
+        (p->s).work[3] = z;
+        (p->s).flags &= 0xEF;
+        (p->s).spr.xflip = z;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+        (p->s).mode[2] += 2;
+      } else {
+        (p->s).work[2] = 0x3C;
+        (p->s).work[3] = RANDOM(RNG_0202f388) % 20;
+        (p->s).flags &= 0xEF;
+        (p->s).spr.xflip = z;
+        {
+          u8* oa = (u8*)p + 0x4a;
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+        (p->s).work[3] = z;
+        (p->s).mode[2]++;
+      }
+      /* fallthrough */
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[3]++;
+      w2 = (p->s).work[2];
+      if ((u8)((u32)(p->s).work[3] % w2) == 0) {
+        (p->s).work[2] = w2 - 10;
+        (p->s).coord.x += ((s32)(RANDOM(RNG_0202f388) % 6) - 3) << 8;
+      }
+      if ((p->s).work[2] == 0) {
+        (p->s).work[2] = 0x80;
+        (p->s).work[3] = 0;
+        goto bump;
+      }
+      break;
+    case 4:
+      w2 = (p->s).work[2];
+      asm("" : "+l"(w2));
+      if (w2 & 1) {
+        q = (p->s).unk_28;
+        nx = *(s32*)((u8*)p + 0xb4) + (q->coord).x + ((w2 >> 3) << 8);
+      } else {
+        q = (p->s).unk_28;
+        nx = *(s32*)((u8*)p + 0xb4) + (q->coord).x - (((w2 << 24) >> 27) << 8);
+      }
+      (p->s).coord.x = nx;
+      ny = *(s32*)((u8*)p + 0xb8) + (q->coord).y;
+      (p->s).coord.y += ((ny - (p->s).coord.y) << 3) >> 8;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+    bump:
+      (p->s).mode[2]++;
+      break;
+    case 5: {
+      s32 z2;
+      (p->s).flags |= DISPLAY;
+      z2 = 0;
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = z2;
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/omega_white_hand_6aaa0.inc");
+#endif
+}
+
 INCASM("asm/enemy/omega_white_hand_p2.inc");
 
 bool8 FUN_0806ae90(struct Enemy* p) { return TRUE; }
