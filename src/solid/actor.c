@@ -2318,7 +2318,6 @@ NON_MATCH void Actor34_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
     case 0: {
       const struct Graphic* g;
-      const struct Palette* pal;
       u32 ofs;
       (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - 0x1800;
       wStaticGraphicTilenums[0xB8] = 0x385;
@@ -2377,6 +2376,119 @@ void Actor36_Update(struct Solid* p) {
 }
 
 INCASM("asm/solid/actor_p1_p2_b_c.inc");
+
+// 0x080D5444
+void ActorLastFefnir_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 ix asm("r2");
+      {
+        register u16* g asm("r0");
+        register s32 v asm("r1");
+        g = wDynamicGraphicTilenums;
+        ix = 0xA1 * 2;
+        asm volatile("add %0, %0, %1" : "+l"(g) : "l"(ix));
+        v = 0xD0 * 4;
+        *g = v;
+      }
+      {
+        register u16* g2 asm("r0");
+        register s32 v2 asm("r1");
+        g2 = wDynamicMotionPalIDs;
+        asm volatile("add %0, %0, %1" : "+l"(g2) : "l"(ix));
+        v2 = 8;
+        *g2 = v2;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u16* gt asm("r1");
+      register u16* pt asm("r5");
+      register u32 ofs asm("r4");
+      register s32 kk asm("r2");
+      const struct Graphic* g;
+      if (((u16)FUN_080d0aa0(&p->s, MOTION(0xA1, 0x00), 1) << 16) == 0) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xA1, 0x09));
+      gt = wStaticGraphicTilenums;
+      asm("" : "+r"(gt));
+      gt += SM033_FEFNIR_FIREBALL;
+      {
+        register s32 v3 asm("r0");
+        v3 = 0x327;
+        *gt = v3;
+      }
+      pt = wStaticMotionPalIDs;
+      asm("" : "+r"(pt));
+      pt += SM033_FEFNIR_FIREBALL;
+      *pt = 7;
+      ofs = (sizeof(struct ColorGraphic) * SM033_FEFNIR_FIREBALL);
+      g = gStaticGraphic(ofs);
+      {
+        register s32 sv0 asm("r1");
+        sv0 = (*gt - g->ofs) * 32;
+        kk = 0x80 * 512;
+        sv0 += kk;
+        LoadGraphic((void*)g, (void*)sv0);
+      }
+      {
+        register const struct Palette* pal2 asm("r4");
+        register u32 pb asm("r0");
+        pb = (u32)STATIC_PALETTES;
+        asm("" : "+r"(pb));
+        pal2 = (const struct Palette*)(ofs + pb);
+        {
+          register s32 sv asm("r1");
+          register s32 dv asm("r0");
+          sv = *pt;
+          dv = pal2->dst;
+          asm volatile("sub %0, %0, %1" : "+l"(sv) : "l"(dv));
+          sv *= 32;
+          asm volatile("mov r2, #0x80\n\tlsl r2, r2, #2\n\tadd %0, %0, r2" : "+l"(sv) :: "r2");
+          LoadPalette(pal2, sv);
+        }
+      }
+      goto inc;
+    }
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 4) {
+        break;
+      }
+      goto inc;
+    case 3:
+    case 5:
+    case 7: {
+      struct Solid* q;
+      UpdateMotionGraphic(&p->s);
+      SetMotion(&p->s, MOTION(0xA1, 0x0B));
+      q = CreateScriptActor(p, 0x2C);
+      (q->s).work[1] = ((p->s).mode[1] - 3) / 2;
+      PlaySound(0xF5);
+      AppendQuake(2, &(p->s).coord);
+      goto inc;
+    }
+    case 4:
+    case 6:
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    inc:
+      (p->s).mode[1]++;
+      break;
+    case 9:
+      SetMotion(&p->s, MOTION(0xA1, 0x00));
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 10:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 static const struct Collision sCollisions_08370C68[16];
 
