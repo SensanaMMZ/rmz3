@@ -1,5 +1,7 @@
+#include "gfx.h"
 #include "global.h"
 #include "overworld.h"
+#include "system.h"
 
 extern const struct Coord gSnowyPlainMetatileShift1;
 extern const struct Coord gSnowyPlainMetatileShift2;
@@ -141,7 +143,206 @@ void snowyplains_0801320c(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
-INCASM("asm/stage_gfx/snowy_plains_c_a.inc");
+// 0x0801326C
+void snowyplains_0801326c(struct StageLayer* l, const struct Stage* stage UNUSED) {
+  register struct StageLayer* lv asm("r8");
+  register s32 i asm("r4");
+  register u32 hi asm("r5");
+  register u32 cu asm("ip");
+  u32* q;
+  s32 base;
+  lv = l;
+  i = 0x9f;
+  q = Malloc(0xA0 * 4);
+  if (q == NULL) {
+    return;
+  }
+  gIntrManager.reservedDma0[0] = (u32)q;
+  gIntrManager.reservedDma0[1] = 0x0400001C;
+  gIntrManager.reservedDma0[2] = 0xA6600001;
+  {
+    register struct StageLayer* lp asm("r1");
+    register s32 t asm("r0");
+    u32 tt;
+    lp = lv;
+    t = lp->viewportCenterPixel.x;
+    hi = (u32)(t << 0xe) >> 0x10;
+    t = lp->viewportCenterPixel.y;
+    {
+      register s32 k asm("r2");
+      k = 0xFFFFFCE0;
+      asm("" : "+r"(k));
+      t += k;
+    }
+    t >>= 5;
+    t -= 0x20;
+    tt = (u32)t << 16;
+    cu = tt >> 16;
+    {
+      register s32 b0 asm("r1");
+      b0 = (s32)tt >> 16;
+      if (b0 + 0x9f > 0x4f) {
+      register s32 bc asm("r3");
+      register u32 val asm("r2");
+      register u32* p asm("r1");
+      s32 st;
+      bc = b0;
+      val = 0xFFB00000;
+      p = (u32*)((u32)q + 0x9f * 4);
+      st = 0x80 << 9;
+      do {
+        *p = val;
+        val += st;
+        p--;
+        i--;
+        if (i < 0) {
+          goto b2;
+        }
+      } while (bc + i > 0x4f);
+      }
+    }
+  }
+  if (i < 0) {
+    goto b2;
+  }
+  {
+    register s32 b asm("r2");
+    {
+      register u32 tv asm("r0");
+      asm volatile("mov r1, %1\n\tlsl %0, r1, #0x10" : "=l"(tv) : "r"(cu) : "r1");
+      b = (s32)tv >> 16;
+    }
+    if (b + i > 0x2f) {
+      register u32* p asm("r1");
+      register s32 bc asm("r3");
+      register u32 val asm("r2");
+      {
+        register u32 o asm("r0");
+        o = i << 2;
+        p = (u32*)(o + (u32)q);
+      }
+      bc = b;
+      val = (u32)bc << 16;
+      val |= hi;
+      do {
+        *p = val;
+        p--;
+        i--;
+        if (i < 0) {
+          goto b2;
+        }
+      } while (bc + i > 0x2f);
+    }
+  }
+b2:
+  {
+    register struct StageLayer* lp2 asm("r2");
+    register u32 tx asm("r0");
+    lp2 = lv;
+    tx = lp2->viewportCenterPixel.x;
+    tx <<= 0xd;
+    hi = tx >> 0x10;
+  }
+  if (i < 0) {
+    goto b3;
+  }
+  {
+    register s32 b asm("r2");
+    {
+      register u32 tv asm("r0");
+      asm volatile("mov r1, %1\n\tlsl %0, r1, #0x10" : "=l"(tv) : "r"(cu) : "r1");
+      b = (s32)tv >> 16;
+    }
+    if (b + i > 0x27) {
+      register u32* p asm("r1");
+      register s32 bc asm("r3");
+      register u32 val asm("r2");
+      {
+        register u32 o asm("r0");
+        o = i << 2;
+        p = (u32*)(o + (u32)q);
+      }
+      bc = b;
+      val = (u32)bc << 16;
+      val |= hi;
+      do {
+        *p = val;
+        p--;
+        i--;
+        if (i < 0) {
+          goto b3;
+        }
+      } while (bc + i > 0x27);
+    }
+  }
+b3:
+  {
+    register struct StageLayer* lp2 asm("r2");
+    register u32 tx asm("r0");
+    lp2 = lv;
+    tx = lp2->viewportCenterPixel.x;
+    tx <<= 0xc;
+    hi = tx >> 0x10;
+  }
+  if (i < 0) {
+    return;
+  }
+  {
+    register s32 b asm("r2");
+    {
+      register u32 tv asm("r0");
+      asm volatile("mov r1, %1\n\tlsl %0, r1, #0x10" : "=l"(tv) : "r"(cu) : "r1");
+      b = (s32)tv >> 16;
+    }
+    if (b + i > 0x1f) {
+      register u32* p asm("r1");
+      register s32 bc asm("r3");
+      register u32 val asm("r2");
+      {
+        register u32 o asm("r0");
+        o = i << 2;
+        p = (u32*)(o + (u32)q);
+      }
+      bc = b;
+      val = (u32)bc << 16;
+      val |= hi;
+      do {
+        *p = val;
+        p--;
+        i--;
+        if (i < 0) {
+          return;
+        }
+      } while (bc + i > 0x1f);
+    }
+  }
+  if (i < 0) {
+    return;
+  }
+  {
+    register u32 val asm("r1");
+    u32* p;
+    s32 st;
+    {
+      register u32 nv asm("r0");
+      register u32 kk asm("r2");
+      nv = (u32)i << 16;
+      nv = -nv;
+      asm("" : "+r"(nv));
+      kk = 0x80 << 0xd;
+      val = nv + kk;
+    }
+    p = (u32*)((i << 2) + (u32)q);
+    st = 0x80 << 9;
+    do {
+      *p = val;
+      val += st;
+      p--;
+      i--;
+    } while (i >= 0);
+  }
+}
+
 
 // 0x080133b4
 void snowyplains_080133b4(struct StageLayer* l, const struct Stage* _ UNUSED) {
