@@ -24,7 +24,174 @@ struct Enemy* CreatePetatria(struct Coord* c, u8 mode) {
   return p;
 }
 
-INCASM("asm/enemy/petatria_p1_pre_p1_p2_a.inc");
+void nop_0809127c(struct Enemy* p);
+void Petatria_Update(struct Enemy* p);
+s32 FUN_08009f6c(s32 x, s32 y);
+s32 FUN_0800a22c(s32 x, s32 y);
+s32 FUN_0800a31c(s32 x, s32 y);
+
+// 0x0808fed4
+void Petatria_Init(struct Enemy* p) {
+  register s32 z asm("r3");
+  register s32 z2 asm("r2");
+  register s32 m asm("r5");
+  register struct Body* body asm("r4");
+  const struct Collision* col;
+  InitNonAffineMotion(&p->s);
+  {
+    register s32 fl asm("r1");
+    register s32 acc asm("r0");
+    fl = (p->s).flags;
+    acc = DISPLAY;
+    z = 0;
+    asm volatile("" : "+l"(z));
+    z2 = 0;
+    acc |= fl;
+    fl = FLIPABLE;
+    acc |= fl;
+    (p->s).flags = acc;
+  }
+  {
+    register void* fp asm("r1");
+    register u8* b0 asm("r0");
+    fp = (void*)nop_0809127c;
+    b0 = (u8*)p + 0x74;
+    *(void**)(b0 + 0x24) = fp;
+    b0 += 0x4c;
+    *(s32*)b0 = z2;
+    b0 -= 7;
+    *b0 = z2;
+  }
+  if ((p->s).work[0] == 2) {
+    register s32 cx asm("r2");
+    register s32 px asm("r0");
+    px = (pZero2->s).coord.x;
+    cx = (p->s).coord.x;
+    if (cx > px) {
+      px = -0xCC;
+    } else {
+      px = 0xCC;
+    }
+    (p->s).d.x = px;
+    (p->s).coord.y = FUN_08009f6c(cx, (p->s).coord.y);
+    {
+      register u8* pb8 asm("r0");
+      register s32 zz asm("r2");
+      pb8 = (u8*)p + 0xb8;
+      zz = 0;
+      *pb8 = zz;
+      SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+      (p->s).mode[1] = zz;
+      (p->s).mode[2] = zz;
+      (p->s).mode[3] = zz;
+    }
+  } else {
+    register s32 nx asm("r0");
+    register s32 off asm("r1");
+    if ((p->s).work[0] == 0) {
+      *((u8*)p + 0xb8) = 1;
+      nx = FUN_0800a22c((p->s).coord.x + -0xA00, (p->s).coord.y);
+      off = -0x2000;
+    } else {
+      register s32 one asm("r2");
+      register u8* oa asm("r3");
+      register s32 bit asm("r2");
+      register s32 ov asm("r1");
+      register s32 m12 asm("r0");
+      *((u8*)p + 0xb8) = z2;
+      one = 1;
+      (p->s).flags = 0x10 | (p->s).flags;
+      *((u8*)p + 0x4c) = one;
+      oa = (u8*)p + 0x4a;
+      bit = 0x10;
+      ov = *oa;
+      m12 = 0x11;
+      m12 = -m12;
+      m12 &= ov;
+      m12 |= bit;
+      *oa = m12;
+      nx = FUN_0800a31c((p->s).coord.x + 0xA00, (p->s).coord.y);
+      off = 0x2000;
+    }
+    (p->s).coord.x = nx + off;
+    {
+      register struct Entity* zp asm("r0");
+      register s32 cy asm("r1");
+      register s32 py asm("r0");
+      zp = &pZero2->s;
+      cy = (p->s).coord.y;
+      py = zp->coord.y;
+      if (cy > py) {
+        py = -0xCC;
+      } else {
+        py = 0xCC;
+      }
+      (p->s).d.y = py;
+    }
+    {
+      register s32 one2 asm("r1");
+      register s32 zz2 asm("r0");
+      SET_ENEMY_ROUTINE(p, ENTITY_UPDATE);
+      one2 = 1;
+      zz2 = 0;
+      (p->s).mode[1] = one2;
+      (p->s).mode[2] = zz2;
+      (p->s).mode[3] = zz2;
+    }
+  }
+  m = IsFrozen(&p->s);
+  if (m != 0) {
+    if ((p->s).work[0] == 2) {
+      {
+        register s32 fl2 asm("r1");
+        register s32 c4 asm("r0");
+        fl2 = (p->s).flags;
+        c4 = COLLIDABLE;
+        m = 0;
+        c4 |= fl2;
+        (p->s).flags = c4;
+      }
+      body = &p->body;
+      col = (const struct Collision*)0x08369608;
+    } else {
+      {
+        register s32 fl2 asm("r1");
+        register s32 c4 asm("r0");
+        fl2 = (p->s).flags;
+        c4 = COLLIDABLE;
+        m = 0;
+        c4 |= fl2;
+        (p->s).flags = c4;
+      }
+      body = &p->body;
+      col = (const struct Collision*)0x08369638;
+    }
+    InitBody(body, col, &(p->s).coord, 6);
+    body->parent = (void*)p;
+    body->fn = (void*)m;
+    if ((p->s).work[0] == 2) {
+      SetMotion(&p->s, 0xfc << 7);
+    } else {
+      SetMotion(&p->s, 0x7E06);
+    }
+    UpdateMotionGraphic(&p->s);
+  } else {
+    if ((p->s).work[0] == 2) {
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      col = (const struct Collision*)0x08369608;
+    } else {
+      (p->s).flags |= COLLIDABLE;
+      body = &p->body;
+      col = (const struct Collision*)0x08369638;
+    }
+    InitBody(body, col, &(p->s).coord, 6);
+    body->parent = (void*)p;
+    body->fn = (void*)m;
+  }
+  Petatria_Update(p);
+}
+
 
 extern const EnemyFunc sUpdates1[10];
 extern const EnemyFunc sUpdates2[10];
