@@ -830,7 +830,232 @@ void FUN_08064e38(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/pantheon_hunter_p3_b_1.inc");
+extern const struct Coord Coord_08365c8c;
+
+// 0x08064E7C
+void FUN_08064e7c(struct Enemy* p) {
+  register s32 md asm("r0");
+  register s32 zz asm("r1");
+  register s32 cx asm("r2");
+  if ((p->s).work[0] == 1) {
+    (p->s).mode[1] = 0xb;
+    phunter_08065218(p);
+    return;
+  }
+  if ((p->s).mode[2] == 0) {
+    register u8* fp asm("r2");
+    register s32 v asm("r1");
+    SetMotion(&p->s, 0x1309);
+    {
+      register u8* q asm("r0");
+      q = (u8*)p + 0xbd;
+      v = *q;
+      fp = q;
+      if (v != 0) {
+        md = 0x80;
+      } else {
+        md = 0x80;
+        md = -md;
+      }
+      (p->s).d.x = md;
+    }
+    {
+      register s32 f2 asm("r2");
+      f2 = *fp;
+      if (f2 != 0) {
+        register s32 h asm("r1");
+        register s32 g asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0x10;
+        g |= h;
+        (p->s).flags = g;
+      } else {
+        register u8 h2 asm("r1");
+        register u8 g2 asm("r0");
+        h2 = (p->s).flags;
+        asm("" : "+r"(h2));
+        g2 = 0xEF;
+        g2 &= h2;
+        (p->s).flags = g2;
+      }
+      {
+        register s32 xv asm("r1");
+        register u8* oa asm("r3");
+        s32 sh4, ov, m11;
+        xv = 1;
+        xv &= f2;
+        *((u8*)p + 0x4c) = xv;
+        oa = (u8*)p + 0x4a;
+        sh4 = xv << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+    }
+    (p->s).mode[2]++;
+  } else {
+    (p->s).coord.x += (p->s).d.x;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 h1 asm("r0");
+    h1 = (u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y + (0x80 << 4));
+    if (h1 == 0) {
+      (p->s).mode[1] = h1;
+      (p->s).mode[2] = h1;
+      return;
+    }
+  }
+  {
+    register s32 tx asm("r5");
+    register s32 ty asm("r6");
+    register s32 g asm("r0");
+    s32 r7v;
+    g = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+    (p->s).coord.y = g;
+    {
+      register const s32* tb asm("r2");
+      register s32 o asm("r1");
+      tb = (const s32*)&Coord_08365c8c;
+      asm("" : "+r"(tb));
+      o = *((u8*)p + 0xbd);
+      o <<= 2;
+      o += (s32)tb;
+      {
+        register s32 cx2 asm("r2");
+        cx2 = (p->s).coord.x;
+        o = *(const s32*)o;
+        tx = cx2 + o;
+      }
+      {
+        register s32 lo asm("r1");
+        register s32 k3 asm("r3");
+        register s32 hi asm("r2");
+        k3 = -0x800;
+        asm("" : "+r"(k3));
+        lo = g + k3;
+        hi = 0xa0 << 4;
+        ty = g + hi;
+        r7v = (u16)FUN_080098a4(tx, lo);
+        if (r7v == 0) {
+          if ((u16)FUN_080098a4(tx, ty) != 0) {
+            goto ok;
+          }
+        }
+      }
+    }
+    zz = 0;
+    md = 9;
+    goto setmode;
+  ok:
+    {
+      s32 fl;
+      /* cx below is shared with the pZero2 block */
+      {
+        register s32 fv2 asm("r1");
+        register s32 k16 asm("r0");
+        fv2 = (p->s).flags;
+        k16 = 0x10;
+        k16 &= fv2;
+        fl = (u8)k16;
+      }
+      if (fl != 0) {
+        register s32 lim asm("r0");
+        register s32 k asm("r3");
+        lim = *(s32*)((u8*)p + 0xb4);
+        k = 0xa0 << 6;
+        asm("" : "+r"(k));
+        lim += k;
+        cx = (p->s).coord.x;
+        if (cx > lim) {
+          (p->s).mode[1] = 9;
+          (p->s).mode[2] = r7v;
+          return;
+        }
+      } else {
+        register s32 lim2 asm("r0");
+        lim2 = *(s32*)((u8*)p + 0xb4) + -0x2800;
+        cx = (p->s).coord.x;
+        if (cx < lim2) {
+          (p->s).mode[1] = 9;
+          (p->s).mode[2] = fl;
+          return;
+        }
+      }
+    }
+  }
+  {
+    register struct EntityHeader* hp asm("r0");
+    register s32 idx asm("r3");
+    s32 rem;
+    hp = gProjectileHeaderPtr;
+    idx = 0xa;
+    asm volatile("ldrsh %0, [%1, %2]" : "=l"(rem) : "l"(hp), "l"(idx));
+    if (rem <= 6) {
+      return;
+    }
+  }
+  {
+    register s32 sgn asm("r6");
+    register struct Zero* z asm("r5");
+    register s32 zx asm("r3");
+    sgn = 0;
+    z = pZero2;
+    zx = (z->s).coord.x;
+    if (zx <= cx) {
+      sgn = 1;
+    }
+    {
+      register s32 fv asm("r0");
+      register s32 one asm("r1");
+      {
+        register s32 fl0 asm("r1");
+        fl0 = (p->s).flags;
+        asm("" : "+r"(fl0));
+        fv = fl0 << 24;
+      }
+      fv = (u32)fv >> 28;
+      one = 1;
+      fv &= one;
+      if (sgn == fv) {
+        return;
+      }
+    }
+    {
+      register s32 d asm("r0");
+      register s32 lim asm("r1");
+      d = zx - cx;
+      lim = 0xdc << 7;
+      d += lim;
+      lim = 0xdc << 8;
+      if ((u32)d > (u32)lim) {
+        return;
+      }
+      d = (z->s).coord.y;
+      lim = (p->s).coord.y;
+      d -= lim;
+      lim = 0xa0 << 7;
+      d += lim;
+      lim = 0xa0 << 8;
+      if ((u32)d > (u32)lim) {
+        return;
+      }
+    }
+  }
+  {
+    register s32 mv asm("r0");
+    mv = (p->s).mode[1];
+    zz = 0;
+    (p->s).mode[3] = mv;
+  }
+  md = 7;
+setmode:
+  (p->s).mode[1] = md;
+  (p->s).mode[2] = zz;
+}
+
 
 // 0x08065018
 void phunterRaiseArm(struct Enemy* p) {
