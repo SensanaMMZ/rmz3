@@ -355,7 +355,196 @@ void FUN_080a53e8(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_20_post_c.inc");
+void FUN_080a4fa4(struct Projectile* p);
+
+// 0x080A54F8
+void FUN_080a54f8(struct Projectile* p) {
+  register struct Entity* e asm("r5");
+  e = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 k asm("r6");
+      s32 arg;
+      s32 dxv;
+      SetDDP(&p->body, (const struct Collision*)0x0836BAB8);
+      {
+        u32 fv = *(u32*)((u8*)e + 0xc0);
+        k = 0x10;
+        if ((fv & k) != 0) {
+        register s32 dy asm("r3");
+        register u32 t asm("r3");
+        register s32 ex asm("r5");
+        register s32 v asm("r2");
+        {
+          register s32 py asm("r3");
+          register s32 ey asm("r0");
+          py = (p->s).coord.y;
+          ey = e->coord.y;
+          dy = py - ey;
+        }
+        {
+          s32 dq = dy;
+          if (dy < 0) {
+            dq = dy + 7;
+          }
+          dq >>= 3;
+          t = (u16)Sqrt(dq);
+        }
+        (p->s).d.y = -(s32)(t << 4);
+        (p->s).unk_coord.y = k;
+        (p->s).work[3] = t;
+        ex = e->coord.x;
+        {
+          s32 v0 = ex - 0x1800;
+          u32 tf;
+          u32 fl;
+          (p->s).d.x = v0;
+          asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(v0));
+          fl = (p->s).flags;
+          asm volatile("add %0, %1, #0" : "=&l"(tf) : "l"(k));
+          tf &= fl;
+          if (tf != 0) {
+            v = ex + (0xc0 << 5);
+          }
+        }
+        {
+          register s32 cxx asm("r0");
+          cxx = (p->s).coord.x;
+          asm volatile("sub %0, %1, %0" : "+l"(cxx) : "l"(v));
+          (p->s).d.x = cxx;
+          dxv = cxx;
+        }
+        arg = t;
+      } else {
+        register s32 dy asm("r3");
+        register u32 t asm("r3");
+        register s32 bx asm("r2");
+        register s32 v asm("r3");
+        {
+          register s32 py asm("r3");
+          register s32 ey asm("r0");
+          py = (p->s).coord.y;
+          ey = e->coord.y;
+          dy = py - ey;
+        }
+        {
+          s32 dq = dy;
+          if (dy < 0) {
+            dq = dy + 7;
+          }
+          dq >>= 3;
+          t = (u16)Sqrt(dq);
+        }
+        (p->s).d.y = -(s32)(t << 4);
+        (p->s).unk_coord.y = k;
+        (p->s).work[3] = t;
+        bx = *(s32*)((u8*)e + 0xb8);
+        asm volatile("" : : "l"(e));
+        {
+          s32 v0 = bx - 0x4C00;
+          u32 tf;
+          u32 fl;
+          (p->s).d.x = v0;
+          asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(v0));
+          fl = (p->s).flags;
+          asm volatile("add %0, %1, #0" : "=&l"(tf) : "l"(k));
+          tf &= fl;
+          if (tf != 0) {
+            v = bx + (0x98 << 7);
+          }
+        }
+        {
+          register s32 cxx asm("r0");
+          cxx = (p->s).coord.x;
+          asm volatile("sub %0, %1, %0" : "+l"(cxx) : "l"(v));
+          (p->s).d.x = cxx;
+          dxv = cxx;
+        }
+        arg = (p->s).work[3];
+      }
+      }
+      (p->s).d.x = dxv / arg;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t = (p->s).work[3] - 1;
+      s32 w2;
+      (p->s).work[3] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      w2 = (p->s).work[2] + 0x10;
+      (p->s).work[2] = w2;
+      (p->s).angle = w2;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += (p->s).unk_coord.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      register s32 d asm("r3");
+      {
+        register s32* q asm("r1");
+        register s32 val asm("r0");
+        q = (s32*)((u8*)p + 0xb8);
+        val = 0;
+        *q = val;
+        q = (s32*)((u8*)q - 4);
+        val = 0x80 << 7;
+        *q = val;
+      }
+      {
+        register s32 dyv asm("r0");
+        register s32 kk asm("r1");
+        dyv = (p->s).work[2] << 8;
+        (p->s).d.y = dyv;
+        kk = 0x80 << 10;
+        d = kk - dyv;
+      }
+      {
+        register s32 dq2 asm("r0");
+        asm volatile("add %0, %1, #0" : "=&l"(dq2) : "l"(d));
+        if (d < 0) {
+          dq2 += 63;
+        }
+        dq2 >>= 6;
+        (p->s).d.x = (u32)((u32)Sqrt(dq2) << 16) >> 9;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 v;
+      (p->s).d.y += (p->s).d.x;
+      v = (p->s).d.x - 0x80;
+      (p->s).d.x = v;
+      if (v < 0) {
+        register s32 c asm("r1");
+        register u32* f asm("r2");
+        u32 fv;
+        c = 0;
+        (p->s).d.y = c;
+        (p->s).mode[1] = 1;
+        (p->s).mode[2] = c;
+        f = (u32*)((u8*)e + 0xc0);
+        asm volatile("" : : "l"(e));
+        fv = *f;
+        c -= 5;
+        fv &= c;
+        c -= 12;
+        fv &= c;
+        *f = fv;
+      }
+      (p->s).angle = (p->s).d.y >> 8;
+      FUN_080a4fa4(p);
+      (p->s).taskCol = 23;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_080a569c(struct Projectile* p) {
   struct Entity* q = (p->s).unk_28;
