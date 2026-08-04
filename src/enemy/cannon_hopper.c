@@ -5,6 +5,8 @@
 #include "motion.h"
 #include "story.h"
 #include "zero.h"
+#include "mission.h"
+#include "vfx.h"
 
 extern const EnemyFunc sDeads[4];
 
@@ -879,6 +881,134 @@ void FUN_08097cc8(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/cannon_hopper_post_post.inc");
+
+void FUN_080c6e70(struct Entity* e, struct Coord* c);
+void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
+
+// 0x08097F3C
+// 4 instructions off, all the same nit and all in the two SET_YFLIP arms:
+// `(p->s).flags = Y_FLIP | fl;` puts the result in `fl`'s register
+// (`orrs r1, r0 / strb r1`) where retail puts it in the constant's
+// (`orrs r0, r1 / strb r0`).  Same for the `& 0xDF` arm.  This is the
+// destination-vs-operand tie of §6.171: r0/r1 pins are ignored, a `t = 0x20;
+// t |= fl;` temp loses 4 bytes elsewhere, and a pinned temp overflows the ROM.
+// The size is exactly retail's 468 bytes and everything else matches, including
+// the barrier-opaque `fl` cache that is needed to keep agbcc from narrowing
+// `(fl << 24) >> 29` to a plain `lsrs #5` (see below).
+NON_MATCH void FUN_08097f3c(struct Enemy* p) {
+#if MODERN
+  s32 y0, v, up, dn;
+  u32 fl;
+  struct Coord c;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      switch (*((u8*)p + 0xbe)) {
+        case 1:
+          y0 = (p->s).coord.y;
+          (p->s).coord.y = y0 - 0x1200;
+          v = (p->s).coord.y;
+          if ((p->s).flags & Y_FLIP) {
+            v = y0 + 0x1200;
+          }
+          (p->s).coord.y = v;
+          break;
+        case 2:
+          y0 = (p->s).coord.y;
+          (p->s).coord.y = y0 - 0x1800;
+          v = (p->s).coord.y;
+          if ((p->s).flags & Y_FLIP) {
+            v = y0 + 0x1800;
+          }
+          (p->s).coord.y = v;
+          break;
+        case 3:
+          y0 = (p->s).coord.y;
+          (p->s).coord.y = y0 - 0x2300;
+          v = (p->s).coord.y;
+          fl = (p->s).flags;
+          asm("" : "+l"(fl));
+          if (fl & Y_FLIP) {
+            v = y0 + 0x2300;
+          }
+          (p->s).coord.y = v;
+          {
+            u32 sh = (fl << 24) >> 29;
+            u32 yf = 1;
+            yf &= ~sh;
+            if (yf) {
+              (p->s).flags = Y_FLIP | fl;
+            } else {
+              (p->s).flags = 0xDF & fl;
+            }
+            (p->s).spr.yflip = yf & 1;
+            (p->s).spr.oam.yflip = yf;
+          }
+          break;
+        case 4:
+          y0 = (p->s).coord.y;
+          (p->s).coord.y = y0 - 0x2B00;
+          v = (p->s).coord.y;
+          fl = (p->s).flags;
+          asm("" : "+l"(fl));
+          if (fl & Y_FLIP) {
+            v = y0 + 0x2B00;
+          }
+          (p->s).coord.y = v;
+          {
+            u32 sh = (fl << 24) >> 29;
+            u32 yf = 1;
+            yf &= ~sh;
+            if (yf) {
+              (p->s).flags = Y_FLIP | fl;
+            } else {
+              (p->s).flags = 0xDF & fl;
+            }
+            (p->s).spr.yflip = yf & 1;
+            (p->s).spr.oam.yflip = yf;
+          }
+          break;
+      }
+      (p->s).flags &= ~DISPLAY;
+      (p->body).status = 0;
+      (p->body).prevStatus = 0;
+      (p->body).invincibleTime = 0;
+      (p->s).flags &= ~COLLIDABLE;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y - 0x800;
+      CreateSmoke(1, &c);
+      FUN_080c6e70(&p->s, &c);
+      PlaySound(0x2A);
+      if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+        up = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        dn = PushoutToDown1((p->s).coord.x, (p->s).coord.y);
+        if (up > 0) {
+          (p->s).coord.y += dn;
+        } else if (dn < 0) {
+          (p->s).coord.y += up;
+        } else if (-up < dn) {
+          (p->s).coord.y += up;
+        } else {
+          (p->s).coord.y += dn;
+        }
+      }
+      TryDropItem(1, &(p->s).coord);
+      if (gMission.enemyCount <= 0x270E) {
+        gMission.enemyCount++;
+      }
+      TryDropZakoDisk(p, &(p->s).coord);
+      SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
+      break;
+  }
+#else
+  INCCODE("asm/enemy/cannon_hopper_97f3c.inc");
+#endif
+}
+
+INCASM("asm/enemy/cannon_hopper_post_post_b.inc");
 
 void CannonHopper_Init(struct Enemy* p);
 void CannonHopper_Update(struct Enemy* p);
