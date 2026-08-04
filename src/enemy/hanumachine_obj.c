@@ -319,7 +319,173 @@ void FUN_08086a50(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/hanumachine_obj_post.inc");
+// 0x08086B6C
+void FUN_08086b6c(struct Enemy* p) {
+  register s32 z asm("r4");
+  z = (p->s).mode[2];
+  if (z == 0) {
+    SetMotion(&p->s, 0x6A04);
+    {
+      register u8* q asm("r2");
+      register s32 ov asm("r1");
+      register s32 m asm("r0");
+      register s32 four asm("r1");
+      q = (u8*)p + 0x49;
+      ov = *q;
+      m = 0xd;
+      m = -m;
+      m &= ov;
+      four = 4;
+      m |= four;
+      *q = m;
+      (p->s).work[2] = z;
+      q += 0x6b;
+      asm("" : "+r"(q));
+      {
+        register struct Zero* zz asm("r3");
+        register s32 a asm("r0");
+        register s32 b asm("r1");
+        zz = pZero2;
+        a = (p->s).coord.x;
+        b = (zz->s).coord.x;
+        a -= b;
+        *(s32*)q = a;
+        {
+          register s32 rv asm("r0");
+          register s32 lim asm("r1");
+          z = (s32)((u8*)p + 0xb8);
+          rv = RANDOM(RNG_0202f388) & 0x7FF;
+          lim = 0xFFFFF800;
+          lim -= rv;
+          *(s32*)z = lim;
+        }
+        {
+          register s32 f asm("r0");
+          register s32 one asm("r1");
+          register u8* d asm("r1");
+          f = (zz->s).flags;
+          f = (u32)f >> 4;
+          one = 1;
+          f &= one;
+          d = (u8*)p + 0xbc;
+          *d = f;
+          d += 4;
+          asm("" : "+r"(d));
+          f = 0x3c;
+          *(u16*)d = f;
+        }
+      }
+    }
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 cur asm("r2");
+    register struct Zero* zz asm("r3");
+    register s32 fl asm("r0");
+    register s32 nx asm("r1");
+    cur = *((u8*)p + 0xbc);
+    zz = pZero2;
+    fl = (zz->s).flags;
+    fl = (u32)fl >> 4;
+    {
+      register s32 one asm("r1");
+      one = 1;
+      fl &= one;
+    }
+    if (cur == fl) {
+      register s32* o asm("r0");
+      o = (s32*)((u8*)p + 0xb4);
+      asm("" : "+r"(o));
+      nx = (zz->s).coord.x;
+      nx += *o;
+    } else {
+      register s32* o2 asm("r0");
+      o2 = (s32*)((u8*)p + 0xb4);
+      asm("" : "+r"(o2));
+      nx = (zz->s).coord.x;
+      nx -= *o2;
+    }
+    (p->s).coord.x = nx;
+  }
+  {
+    register struct Zero* zz asm("r2");
+    register s32 xf asm("r2");
+    zz = pZero2;
+    {
+      register s32 cy asm("r0");
+      register s32 oy asm("r1");
+      oy = (s32)((u8*)p + 0xb8);
+      cy = (zz->s).coord.y;
+      oy = *(s32*)oy;
+      cy += oy;
+      (p->s).coord.y = cy;
+    }
+    {
+      register s32 f asm("r4");
+      f = 0;
+      if ((p->s).coord.x < (zz->s).coord.x) {
+        f = 1;
+      }
+      xf = f;
+    }
+    if (xf != 0) {
+      register u8 h asm("r1");
+      register u8 g asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0x10;
+      g |= h;
+      (p->s).flags = g;
+    } else {
+      register u8 h asm("r1");
+      register u8 g asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xEF;
+      g &= h;
+      (p->s).flags = g;
+    }
+    {
+      register s32 xv asm("r1");
+      register u8* oa asm("r3");
+      s32 sh4, ov, m11;
+      xv = xf;
+      *((u8*)p + 0x4c) = xv;
+      oa = (u8*)p + 0x4a;
+      sh4 = xv << 4;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      *oa = m11 | sh4;
+    }
+  }
+  {
+    register s32 r asm("r1");
+    r = (s32)pZero2;
+    if (r != 0) {
+      register s32 v asm("r0");
+      v = ((s32 (*)(s32))CountButtonMashing)(r);
+      v += (p->s).work[2];
+      (p->s).work[2] = v;
+      if ((u8)v <= 0x18) {
+        register struct Zero* z2 asm("r3");
+        z2 = pZero2;
+        if ((*(s32*)((u8*)z2 + 0x8c) & (0x80 << 2)) == 0) {
+          register s16* hp asm("r0");
+          hp = (s16*)((u8*)z2 + 0xa4);
+          if (*hp != 0) {
+            return;
+          }
+        }
+      }
+      r = 0;
+    }
+    (p->s).mode[1] = 5;
+    (p->s).mode[2] = r;
+  }
+}
+
 
 void FUN_08086cbc(struct Enemy* p) {
   if ((p->s).mode[2] == 0) {
