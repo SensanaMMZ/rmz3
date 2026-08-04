@@ -860,7 +860,133 @@ void cannonHopper_08097a14(struct Enemy* p) {
   UpdateMotionGraphic(&p->s);
 }
 
-INCASM("asm/enemy/cannon_hopper_post_pre_p3b.inc");
+static const u8 u8_ARRAY_0836a424[14];
+
+// 0x08097AF8
+void cannonHopper_08097af8(struct Enemy* p) {
+  register struct Body* bd asm("r5");
+  u8* mp;
+  u8 m2 = (p->s).mode[2];
+
+  switch (m2) {
+    case 0:
+      *((u8*)p + 0xbe) = m2;
+      SetMotion(&p->s, MOTION(0xDC, 0x02));
+      (p->s).work[2] = m2;
+      (p->s).work[3] = m2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      break;
+    default:
+      return;
+  }
+
+  if ((p->s).work[3] > 8) {
+    struct Body* b2 = &p->body;
+    SetDDP(b2, (const struct Collision*)0x0836A348);
+    *((u8*)p + 0xbe) = 4;
+    mp = (u8*)p + 0xbe;
+    asm volatile("add %0, %1, #0" : "=&l"(bd) : "l"(b2));
+  } else {
+    u8 v;
+    bd = &p->body;
+    SetDDP(bd, (const struct Collision*)0x0836A288 + u8_ARRAY_0836a424[(p->s).work[3]] * 2);
+    v = u8_ARRAY_0836a424[(p->s).work[3]];
+    *((u8*)p + 0xbe) = v;
+    mp = (u8*)p + 0xbe;
+    asm volatile("");
+  }
+  (p->s).work[3]++;
+  {
+    u32 one;
+    u8 r = FUN_08097224(p, (p->s).d.x, (p->s).d.y);
+    one = 1;
+    if (r & one) {
+      (p->s).d.x = 0;
+      (p->s).d.y = 0;
+      (p->s).work[2] = one;
+    }
+    if (r & 2) {
+      register u32 fv asm("r2");
+      u32 sh;
+      fv = (p->s).flags;
+      sh = fv >> 4;
+      one &= ~sh;
+      if (one) {
+        u32 t = X_FLIP;
+        t |= fv;
+        (p->s).flags = t;
+      } else {
+        u32 t = 0xEF;
+        t &= fv;
+        (p->s).flags = t;
+      }
+      (p->s).spr.xflip = one;
+      {
+        register u8* oa asm("r3");
+        register s32 ov asm("r2");
+        s32 sh4, m11;
+        oa = (u8*)p + 0x4a;
+        sh4 = one << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      (p->s).d.x = -(p->s).d.x;
+    }
+  }
+  if ((p->s).work[2] != 0 && (p->s).motion.state == 3) {
+    u32 fl, flt, m, tst;
+    (p->s).mode[1] = 0;
+    (p->s).mode[2] = 0;
+    flt = (p->s).flags;
+    m = Y_FLIP;
+    asm("" : "+l"(m));
+    tst = flt & m;
+    asm volatile("add %0, %1, #0" : "=&l"(fl) : "l"(flt));
+    if (tst) {
+      (p->s).coord.y += 0x2F00;
+    } else {
+      (p->s).coord.y -= 0x2F00;
+    }
+    {
+      u32 sh = (fl << 24) >> 29;
+      u32 yf = 1;
+      yf &= ~sh;
+      if (yf) {
+        u32 t = Y_FLIP;
+        t |= fl;
+        (p->s).flags = t;
+      } else {
+        u32 t = 0xDF;
+        t &= fl;
+        (p->s).flags = t;
+      }
+      (p->s).spr.yflip = yf & 1;
+      (p->s).spr.oam.yflip = yf;
+    }
+    SetDDP(bd, (const struct Collision*)0x0836A288);
+    SetMotion(&p->s, MOTION(0xDC, 0x00));
+    *mp = 0;
+    UpdateMotionGraphic(&p->s);
+  } else {
+    s32 v;
+    if ((p->s).flags & Y_FLIP) {
+      v = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      v -= (p->s).coord.y;
+    } else {
+      v = FUN_0800a134((p->s).coord.x, (p->s).coord.y);
+      v = (p->s).coord.y - v;
+    }
+    if (v <= 0x1FFF) {
+      (p->s).d.x = (p->s).d.x * 240 / 256;
+      (p->s).d.y = (p->s).d.y * 240 / 256;
+    }
+    UpdateMotionGraphic(&p->s);
+  }
+}
 
 void FUN_08097cc8(struct Enemy* p) {
   switch ((p->s).mode[2]) {
