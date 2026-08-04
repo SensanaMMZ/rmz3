@@ -4,6 +4,7 @@
 #include "trig.h"
 #include "projectile.h"
 #include "vfx.h"
+#include "zero.h"
 
 static const struct Collision sCollisions[3];
 static const u8 sInitModes[4];
@@ -145,7 +146,163 @@ void FUN_080a51b4(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_20_post.inc");
+// 0x080A5290
+void FUN_080a5290(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 xf asm("r2");
+      register s32 z asm("r4");
+      SetDDP(&p->body, &sCollisions[1]);
+      {
+        u8* tc = (u8*)p + 0x25;
+        *tc = 0x17;
+      }
+      InitRotatableMotion(&p->s);
+      {
+        register s32 qf asm("r0");
+        register s32 one asm("r0");
+        qf = q->flags;
+        xf = qf >> 4;
+        one = 1;
+        xf &= one;
+      }
+      if (xf != 0) {
+        register s32 g asm("r0");
+        register s32 k asm("r1");
+        g = (p->s).flags;
+        asm("" : "+r"(g));
+        k = 0x10;
+        g |= k;
+        (p->s).flags = g;
+      } else {
+        (p->s).flags &= ~X_FLIP;
+      }
+      {
+        register s32 v asm("r1");
+        register u8* xp asm("r0");
+        u8* oa;
+        s32 sh4, ov, m11;
+        asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(xf));
+        xp = (u8*)p + 0x4c;
+        z = 0;
+        *xp = v;
+        oa = (u8*)p + 0x4a;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      SetMotion(&p->s, 0x4901);
+      (p->s).work[2] = z;
+      (p->s).work[3] = 0x10;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 dx asm("r6");
+      register s32 dy asm("r5");
+      register s32 cx asm("r4");
+      register s32 cy asm("r8");
+      s32 sp;
+      if ((u8)--(p->s).work[3] == 0) {
+        (p->s).mode[2]++;
+      }
+      {
+        register s32 t asm("r0");
+        t = (q->coord).x;
+        cx = (p->s).coord.x;
+        dx = t - cx;
+        t = (q->coord).y;
+        {
+          register s32 u asm("r1");
+          u = (p->s).coord.y;
+          cy = u;
+          dy = t - u;
+        }
+      }
+      {
+        register s32 num asm("r0");
+        num = dx << 8;
+        sp = 0xe0 << 1;
+        cx += num / sp;
+        (p->s).coord.x = cx;
+        num = dy << 8;
+        (p->s).coord.y = (num / sp) + cy;
+      }
+      {
+        register s32 a asm("r0");
+        a = (p->s).work[2];
+        a += 0x10;
+        (p->s).work[2] = a;
+        {
+          register u8* ap asm("r1");
+          ap = (u8*)p + 0x24;
+          *ap = a;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      register s32 dx asm("r6");
+      register s32 dy asm("r5");
+      register s32 a asm("r2");
+      {
+        register s32 zx asm("r0");
+        register s32 t asm("r1");
+        zx = (pZero2->s).coord.x;
+        t = (p->s).coord.x;
+        dx = zx - t;
+        t = (p->s).coord.y;
+        dy = FUN_08009f6c(zx, t);
+        t = (p->s).coord.y;
+        dy -= t;
+      }
+      {
+        register s32 t asm("r0");
+        t = ArcTan2(dx >> 8, dy >> 8) >> 8;
+        asm("" : "+r"(t));
+        a = t;
+      }
+      a += 0x40;
+      (p->s).work[2] = a;
+      if (((p->s).flags & X_FLIP) != 0) {
+        register s32 n asm("r0");
+        n = -a;
+        (p->s).work[2] = n;
+      }
+      {
+        register s32 av asm("r1");
+        register u8* ap asm("r0");
+        av = (p->s).work[2];
+        ap = (u8*)p + 0x24;
+        *ap = av;
+      }
+      (p->s).work[3] = 20;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32 r asm("r1");
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[3];
+        t -= 1;
+        (p->s).work[3] = t;
+        r = (u8)t;
+      }
+      if (r == 0) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = r;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 
 void FUN_080a53e8(struct Projectile* p) {
   struct Entity* q = (p->s).unk_28;
