@@ -340,7 +340,150 @@ void paquam_08051f44(struct Boss* p) {
   }
 }
 
+void createStretchedArms(struct Boss* p);
+void createPAquaModRubble(s32 x);
+
+// 0x080520B8
+void paquqmRubble(struct Boss* p) {
+  register s32 m asm("r5");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      register s32* w asm("r2");
+      PlaySound(0xE3);
+      SetDDP(&p->body, (const struct Collision*)0x083636DC);
+      (p->s).unk_coord.x = (p->s).coord.x;
+      w = (s32*)((u8*)p + 0xb4);
+      {
+        register s32 v asm("r0");
+        register s32 k asm("r1");
+        v = *w;
+        k = 0xFFFFFDFF;
+        v &= k;
+        k = 0xFFFFFBFF;
+        v &= k;
+        k = 0x80;
+        v |= k;
+        k += 0x80;
+        v |= k;
+        *w = v;
+      }
+      SetMotion(&p->s, 0x4D0E);
+      createStretchedArms(p);
+      asm volatile("strb %0, [%1, #0x12]" :: "l"(m), "l"(p) : "memory");
+      asm volatile("strb %0, [%1, #0x13]" :: "l"(m), "l"(p) : "memory");
+      (p->s).unk_coord.y = m;
+      (p->s).d.x = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32* w2;
+      w2 = (s32*)((u8*)p + 0xb4);
+      if ((*w2 & (0x80 << 2)) == 0) {
+        goto tail1;
+      }
+      if ((p->s).unk_coord.y == 0) {
+        PlaySound(0x10D);
+        (p->s).unk_coord.y = 1;
+      }
+      if ((p->s).d.x % 0x38 == 0) {
+        register u32* rp asm("r2");
+        register u32 raw asm("r0");
+        rp = &RNG_0202f388;
+        {
+          register u32 st asm("r1");
+          st = *rp;
+          raw = st * 0x343FD;
+          raw += 0x269EC3;
+          raw <<= 1;
+          *rp = raw >> 1;
+        }
+        raw >>= 0x11;
+        raw &= 3;
+        {
+          register s32 o asm("r1");
+          register s32 k2 asm("r2");
+          o = raw << 1;
+          o += raw;
+          o <<= 0xc;
+          k2 = 0xFFFFB800;
+          o += k2;
+          createPAquaModRubble((p->s).coord.x + o);
+        }
+      }
+      (p->s).d.x = (p->s).d.x + 1;
+      AppendQuake(3, &(p->s).coord);
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[2] + 8;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          goto upd;
+        }
+      }
+      {
+        register s32 t2 asm("r0");
+        t2 = (p->s).work[3] + 1;
+        (p->s).work[3] = t2;
+        if ((u32)(t2 << 24) >> 24 <= 6) {
+          goto upd;
+        }
+      }
+      StopSound(0x10D);
+      *w2 |= 0x80 << 3;
+      (p->s).mode[2]++;
+    upd:
+      {
+        register s32 bx asm("r1");
+        register const s16* tb asm("r2");
+        bx = (p->s).unk_coord.x;
+        (p->s).coord.x = bx;
+        asm volatile("" ::: "memory");
+        tb = gSineTable;
+        {
+          register s32 o2 asm("r0");
+          o2 = (p->s).work[2] << 1;
+          o2 += (s32)tb;
+          {
+            register s32 z asm("r2");
+            register s32 v2 asm("r0");
+            z = 0;
+            v2 = *(const s16*)(o2 + z);
+            v2 <<= 3;
+            bx += v2;
+            (p->s).coord.x = bx;
+          }
+        }
+      }
+    tail1:
+      StepPaletteAnimation(*((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      return;
+    }
+    case 2: {
+      register s32 v3 asm("r5");
+      {
+        register s32* w3 asm("r0");
+        w3 = (s32*)((u8*)p + 0xb4);
+        v3 = *w3;
+      }
+      v3 &= 0xc0 << 1;
+      if (v3 == 0) {
+        SetMotion(&p->s, 0x4D01);
+        (p->s).mode[1] = v3;
+        (p->s).mode[2] = 1;
+        (p->s).work[2] = 0x46;
+      }
+      StepPaletteAnimation(*((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/boss/pantheon_aqua_mod_p2b2.inc");
+
 
 
 void nop_08051620(struct Boss* p);
