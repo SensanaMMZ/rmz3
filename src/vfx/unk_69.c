@@ -400,7 +400,228 @@ void FUN_080c5328(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/unk_69_p1_post_post_b.inc");
+// 0x080C53B8
+void FUN_080c53b8(struct VFX* p) {
+  if (((p->s).unk_28)->mode[0] > 1) {
+    u32 tbl = (u32)gVFXFnTable;
+    EntityFunc** rt = (EntityFunc**)((((p->s).id) << 2) + tbl);
+    register u32 two asm("r1");
+    two = 2;
+    *(u32*)((p->s).mode) = two;
+    (p->s).onUpdate = (void*)((*rt)[2]);
+    return;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 k asm("r4");
+      InitScalerotMotion1(&p->s);
+      {
+        register u8* q asm("r0");
+        register s32 zr asm("r1");
+        q = (u8*)p + 0x50;
+        zr = 0;
+        k = 0x80 << 1;
+        *(u16*)q = k;
+        q += 2;
+        *(u16*)q = k;
+        q -= 0x2e;
+        *q = zr;
+      }
+      ResetDynamicMotion(&p->s);
+      {
+        register u8 g asm("r0");
+        register s32 kk asm("r1");
+        g = (p->s).flags;
+        kk = 2;
+        g |= kk;
+        kk = 1;
+        g |= kk;
+        (p->s).flags = g;
+      }
+      SetMotion(&p->s, 0xB801);
+      (p->s).work[2] = 0x10;
+      (p->s).d.x = k;
+      {
+        register s32 base asm("r1");
+        register struct Entity* e asm("r2");
+        register s32 t asm("r0");
+        base = 0xFFFFCA00;
+        (p->s).unk_coord.y = base;
+        e = (p->s).unk_28;
+        t = (e->coord).x + base;
+        (p->s).unk_coord.x = t;
+        base = *(s32*)((u8*)p + 0x74);
+        t += base;
+        (p->s).coord.x = t;
+        base = *(s32*)((u8*)p + 0x78);
+        {
+          register s32 k2 asm("r0");
+          k2 = 0xe0 << 3;
+          base += k2;
+        }
+        t = (e->coord).y + base;
+        (p->s).coord.y = t;
+      }
+      {
+        register s32 a asm("r0");
+        register s32 w1 asm("r1");
+        w1 = (p->s).work[1];
+        a = 0x2a;
+        a = w1 * a;
+        w1 = 0xff;
+        a &= w1;
+        (p->s).d.y = a;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register struct Entity* e2 asm("ip");
+      register s32 uy asm("r1");
+      s32 sy;
+      {
+        register s32 t2 asm("r0");
+        uy = (p->s).unk_coord.y;
+        t2 = 0xe0 << 4;
+        t2 -= uy;
+        t2 <<= 5;
+        t2 >>= 8;
+        uy += t2;
+        (p->s).unk_coord.y = uy;
+      }
+      {
+        register struct Entity* e3 asm("r2");
+        register s32 t3 asm("r0");
+        e3 = (p->s).unk_28;
+        e2 = e3;
+        t3 = (e3->coord).x;
+        uy += t3;
+        (p->s).unk_coord.x = uy;
+      }
+      {
+        register s32 cy asm("r2");
+        register s32 n asm("r1");
+        register s32 t4 asm("r0");
+        cy = *(s32*)((u8*)p + 0x78);
+        n = -cy;
+        t4 = n << 2;
+        t4 += n;
+        t4 <<= 2;
+        t4 >>= 8;
+        cy += t4;
+        *(s32*)((u8*)p + 0x78) = cy;
+      }
+      {
+        register s32 dy asm("r1");
+        register s32 nd asm("r0");
+        dy = (p->s).d.y;
+        nd = dy + 0xa;
+        (p->s).d.y = nd;
+        if (nd > 0xff) {
+          nd -= 0xff;
+          (p->s).d.y = nd;
+        }
+      }
+      {
+        register s32 amp asm("r2");
+        register const s16* tb asm("r3");
+        register s32 ang asm("r1");
+        register s32 sx asm("r6");
+        amp = *(s32*)((u8*)p + 0x78);
+        sy = amp;
+        asm volatile("" : "+r"(sy));
+        tb = gSineTable;
+        ang = (p->s).d.y;
+        {
+          register s32 o asm("r0");
+          register s32 z4 asm("r4");
+          o = (u32)(ang << 0x18) >> 0x17;
+          o += (s32)tb;
+          asm volatile("mov %0, #0" : "=l"(z4));
+          asm volatile("ldrsh %0, [%1, %2]" : "=l"(o) : "l"(o), "l"(z4));
+          o = amp * o;
+          o >>= 8;
+          sx = o;
+          ang += 0x40;
+          {
+            register s32 o2 asm("r1");
+            register s32 z5 asm("r3");
+            o2 = (u32)(ang << 0x18) >> 0x17;
+            o2 += (s32)tb;
+            asm volatile("mov %0, #0" : "=l"(z5));
+            asm volatile("ldrsh %0, [%1, %2]" : "=l"(o2) : "l"(o2), "l"(z5));
+            o2 = amp * o2;
+            sy = o2 >> 8;
+          }
+          o <<= 3;
+          o -= sx;
+          o <<= 4;
+          sx = o >> 8;
+        }
+        asm("" :: "l"(sy));
+        (p->s).coord.x = (p->s).unk_coord.x + sx;
+        {
+          register s32 k3 asm("r4");
+          register s32 t5 asm("r1");
+          asm volatile("mov %0, #0xe0\n\tlsl %0, %0, #0x3" : "=l"(k3));
+          t5 = sy + k3;
+          {
+            register struct Entity* e4 asm("r2");
+            register s32 yy asm("r0");
+            e4 = e2;
+            yy = (e4->coord).y;
+            yy += t5;
+            (p->s).coord.y = yy;
+          }
+        }
+      }
+      {
+        register s32 dx asm("r1");
+        register s32 t6 asm("r0");
+        dx = (p->s).d.x;
+        t6 = 0x20;
+        t6 -= dx;
+        t6 <<= 4;
+        t6 >>= 8;
+        dx += t6;
+        (p->s).d.x = dx;
+        *(u16*)((u8*)p + 0x50) = dx;
+      }
+      {
+        register s32 dv asm("r0");
+        register u8* q2 asm("r1");
+        asm volatile("" ::: "memory");
+        dv = (p->s).d.x;
+        q2 = (u8*)p + 0x52;
+        *(u16*)q2 = dv;
+      }
+      {
+        register s32 w2 asm("r0");
+        w2 = (p->s).work[2];
+        if (w2 != 0) {
+          w2 -= 1;
+          (p->s).work[2] = w2;
+          if ((w2 << 24) != 0) {
+            goto upd;
+          }
+        }
+      }
+      {
+        u32 tbl2 = (u32)gVFXFnTable;
+        EntityFunc** rt2 = (EntityFunc**)((((p->s).id) << 2) + tbl2);
+        register u32 two2 asm("r1");
+        two2 = 2;
+        *(u32*)((p->s).mode) = two2;
+        (p->s).onUpdate = (void*)((*rt2)[2]);
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      asm("" :: "l"(sy));
+      break;
+    }
+  }
+}
+
 
 void nop_080c552c(struct VFX* p) {}
 
