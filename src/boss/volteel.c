@@ -608,7 +608,111 @@ NON_MATCH void volteelElectricCage(struct Boss* p) {
 
 bool8 FUN_08044f00(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p10.inc");
+// 0x08044F04
+void volteelMode8(struct Boss* p) {
+  register s32 nm asm("r0");
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x1e;
+      SetMotion(&p->s, 0xA50C);
+      SetDDP(&p->body, &sCollisions[1]);
+      PlaySound(0x7b);
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[3] = 0xb;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      if ((p->s).work[3] != 0) {
+        if ((u8)--(p->s).work[3] != 0) {
+          break;
+        }
+      }
+      (p->s).work[3] = 0;
+      nm = (p->s).mode[2] + 1;
+      asm volatile("");
+      goto setm;
+    case 2:
+      if ((p->s).work[3] == 0) {
+        if ((s8)*((u8*)p + 0x71) == 4) {
+          SetDDP(&p->body, (const struct Collision*)0x08362528);
+          (p->s).work[3] = 1;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      nm = (p->s).mode[2] + 1;
+      asm volatile("");
+      goto setm;
+    case 3:
+      SetMotion(&p->s, 0xA50D);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      nm = (p->s).mode[2] + 1;
+      asm volatile("");
+      goto setm;
+    case 5: {
+      register s32 z asm("r4");
+      z = 0;
+      (p->s).work[2] = 0x1e;
+      SetMotion(&p->s, 0xA50B);
+      SetDDP(&p->body, &sCollisions[1]);
+      PlaySound(0x7b);
+      (p->s).work[3] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 6:
+      if ((p->s).work[3] == 0) {
+        if ((s8)*((u8*)p + 0x71) == 4) {
+          register s32 one asm("r0");
+          SetDDP(&p->body, (const struct Collision*)0x08362528);
+          one = 1;
+          asm volatile("strb %0, [%1, #0x13]" ::"l"(one), "l"(p) : "memory");
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      asm volatile("");
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      asm volatile("");
+      nm = (p->s).mode[2] + 1;
+      asm volatile("");
+      goto setm;
+    case 7:
+      SetMotion(&p->s, 0xA50D);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      asm volatile("");
+      FALLTHROUGH;
+    case 8: {
+      register s32 st asm("r1");
+      UpdateMotionGraphic(&p->s);
+      st = *((u8*)p + 0x73);
+      if (st != 3) {
+        break;
+      }
+      nm = 0;
+      (p->s).mode[1] = st;
+    setm:
+      (p->s).mode[2] = nm;
+      break;
+    }
+  }
+}
+
 
 bool8 FUN_080450bc(struct Boss* p) { return TRUE; }
 
