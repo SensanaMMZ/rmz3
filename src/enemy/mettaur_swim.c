@@ -983,7 +983,117 @@ void FUN_08089b48(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mettaur_swim_p2_pre_p2_p2.inc");
+// 0x08089c94
+void FUN_08089c94(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, (const struct Collision*)0x08368844);
+      (p->s).d.x = 0;
+      (p->s).d.y = 0;
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      u32 s2 = 0;
+      if (pZero2->s.coord.x - (p->s).coord.x > 0) {
+        s2 = 1;
+      }
+      SET_XFLIP(p, s2);
+      FUN_08088c4c(p, 0, (p->s).d.y);
+      {
+        s32 v = (p->s).d.y + 0x10;
+        (p->s).d.y = v;
+        if (v > 0x1C0) {
+          (p->s).d.y = 0x1C0;
+        }
+      }
+      {
+        register u32 u asm("r1");
+        register s32 t asm("r0");
+        t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        u = (u8)t;
+        if (u == 0) {
+          (p->s).mode[1] = 9;
+          (p->s).mode[2] = u;
+        }
+      }
+      goto upd;
+    }
+    case 2:
+      SetMotion(&p->s, 0xDD0A);
+      (p->s).mode[2]++;
+      goto common;
+    case 4:
+      SetMotion(&p->s, 0xDD0B);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      FUN_08088bc8(p, 0, (p->s).d.y);
+      {
+        s32 v = (p->s).d.y + 0x40;
+        (p->s).d.y = v;
+        if (v > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+      }
+      if ((u8)FUN_08088ba8(p) != 0) {
+        (p->s).mode[2]++;
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 6:
+      SetDDP(&p->body, (const struct Collision*)0x08368814);
+      SetMotion(&p->s, 0xDD0F);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+    case 7:
+    common:
+      FUN_08088c4c(p, 0, (p->s).d.y);
+      {
+        s32 v = (p->s).d.y + 0x10;
+        (p->s).d.y = v;
+        if (v > 0x1C0) {
+          (p->s).d.y = 0x1C0;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 8:
+      SetMotion(&p->s, 0xDD0B);
+      (p->s).work[2] = 0x1E;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 9:
+      FUN_08088c4c(p, 0, (p->s).d.y);
+      {
+        s32 v = (p->s).d.y + 0x10;
+        (p->s).d.y = v;
+        if (v > 0x1C0) {
+          (p->s).d.y = 0x1C0;
+        }
+      }
+      {
+        register u32 u asm("r1");
+        register s32 t asm("r0");
+        t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        u = (u8)t;
+        if (u == 0) {
+          (p->s).mode[1] = 0xB;
+          (p->s).mode[2] = u;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 
 
 void FUN_08089e60(struct Enemy* p) {
