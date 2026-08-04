@@ -167,7 +167,117 @@ void HellBouncer_Init(struct Enemy* p) {
   asm volatile("" ::"l"(z5), "l"(z7));
 }
 
-INCASM("asm/enemy/hell_bouncer_p1_p2_p1.inc");
+static const EnemyFunc sUpdates1[3];
+static const EnemyFunc sUpdates2[3];
+struct Entity* FUN_080becf8(struct Coord* c, u8 kind, motion_t m, u32 n);
+void HellBouncer_Die(struct Enemy* p);
+
+// 0x0807E400
+void HellBouncer_Update(struct Enemy* p) {
+  register s32* st asm("r4");
+  register s32* a asm("r0");
+  *((u8*)p + 0xbb) = 0;
+  {
+    register u32* wp asm("r3");
+    struct Entity* q;
+    wp = gWhitePaintFlags;
+    asm("" : "+r"(wp));
+    q = (p->s).unk_28;
+    if (wp[q->invincibleID >> 5] & (1 << (q->invincibleID & 0x1F))) {
+      PaintEntityWhite(&p->s);
+    } else {
+      UpdateEntityPaletteID(&p->s);
+    }
+  }
+  if (*((u8*)(p->s).unk_28 + 0x94) != 0) {
+    *((u8*)p + 0x94) = 0x80;
+  } else {
+    register u8* ip asm("r2");
+    register s32 v asm("r1");
+    register s32 m asm("r0");
+    ip = (u8*)p + 0x94;
+    v = *ip;
+    m = 0x7f;
+    m &= v;
+    *ip = m;
+  }
+  {
+    register s32 v0 asm("r1");
+    register s32 one asm("r2");
+    a = (s32*)((u8*)p + 0x8c);
+    v0 = *a;
+    one = 1;
+    v0 &= one;
+    st = a;
+    if (v0 == 0) {
+      goto nohit;
+    }
+  }
+  {
+    register u8* hp asm("r2");
+    register s32 v asm("r1");
+    s32 d;
+    hp = (u8*)p + 0xb4;
+    a = (s32*)((u8*)a + 0x18);
+    asm("" : "+r"(a));
+    v = *(s16*)a;
+    d = *(s32*)hp;
+    d -= v;
+    hp += 7;
+    asm("" : "+r"(hp));
+    *hp = d;
+    {
+      struct Entity* q = (p->s).unk_28;
+      if (*((u8*)q + 0x94) == 0) {
+        CalcPutitedSpikeDamage((struct Body*)((u8*)q + 0x74), *hp);
+      }
+    }
+  }
+nohit:
+  {
+    register u8* c2 asm("r2");
+    register s32 cv asm("r0");
+    c2 = (u8*)p + 0xc2;
+    cv = *c2;
+    if (cv == 0) {
+      if (*st & 4) {
+        *c2 = 0x3c;
+        PlaySound(0x52);
+      }
+    } else {
+      cv -= 1;
+      *c2 = cv;
+    }
+  }
+  if (((p->s).unk_28)->mode[0] > 1) {
+    register u32 r asm("r4");
+    register u8* kp asm("r5");
+    struct Coord c;
+    SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+    r = RANDOM(RNG_0202f388) & 3;
+    c.x = (p->s).coord.x;
+    c.y = (p->s).coord.y;
+    kp = (u8*)p + 0xb8;
+    FUN_080becf8(&c, *kp, 0xAB28, r);
+    FUN_080becf8(&c, *kp, 0xAB29, r);
+    FUN_080becf8(&c, *kp, 0xAB2A, r);
+    FUN_080becf8(&c, *kp, 0xAB2B, r);
+    HellBouncer_Die(p);
+  } else {
+    sUpdates1[(p->s).mode[1]](p);
+    if (IsFrozen(&p->s)) {
+      register s32 mv asm("r1");
+      register u8* dp asm("r0");
+      mv = (p->s).mode[1];
+      dp = (u8*)p + 0xba;
+      *dp = mv;
+    } else {
+      sUpdates2[(p->s).mode[1]](p);
+      *(s32*)((u8*)p + 0xb4) = *(s16*)((u8*)p + 0xa4);
+    }
+  }
+}
+
 
 void HellBouncer_Die(struct Enemy* p) {
   if (gMission.enemyCount <= 0x270E) {
