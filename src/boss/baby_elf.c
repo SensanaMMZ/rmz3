@@ -582,6 +582,136 @@ tail:
 
 INCASM("asm/boss/baby_elf_p2_p1_post_b.inc");
 
+void FUN_080bc6ac(struct Entity* e, s32 x, s32 y, s32 speed, u8 angle);
+
+// 0x080475A0
+void babyelf_080475a0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 v, sv, k, kc;
+      SetDDP(&p->body, (const struct Collision*)0x083626A4);
+      (p->s).taskCol = 0x18;
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4);
+      (p->s).coord.y = *(s32*)((u8*)p + 0xb8) - 0x5000;
+      SetMotion(&p->s, 0x3309);
+      if (*((u8*)p + 0xc6) != 0) {
+        RemovePaletteAnimation(*((u8*)p + 0xc6));
+        *((u8*)p + 0xc6) = 0;
+      }
+      v = GetEntityPalID(&p->s);
+      sv = ((u32)(u8)v) << 5;
+      k = 0x200;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(27, sv | kc);
+      *((u8*)p + 0xc6) = 27;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      u32 v, sv, k, kc;
+      SetMotion(&p->s, 0xd0 << 6);
+      if (*((u8*)p + 0xc6) != 0) {
+        RemovePaletteAnimation(*((u8*)p + 0xc6));
+        *((u8*)p + 0xc6) = 0;
+      }
+      v = GetEntityPalID(&p->s);
+      sv = ((u32)(u8)v) << 5;
+      k = 0x200;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(29, sv | kc);
+      *((u8*)p + 0xc6) = 29;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      if ((u8)StepPaletteAnimation(*((u8*)p + 0xc6)) == 3) {
+        (p->s).mode[2]++;
+      }
+      goto upd;
+    case 4: {
+      u32 v, sv, k, kc;
+      s32 i;
+      (p->s).work[3] = 0x10;
+      i = 0;
+      do {
+        ((void (*)(struct Entity*, s32, s32, s32, s32))FUN_080bc6ac)(
+            &p->s, (p->s).coord.x, (p->s).coord.y, 0xe0 << 1, (s32)((u32)(i << 29) >> 24));
+        i++;
+      } while (i <= 7);
+      if (*((u8*)p + 0xc6) != 0) {
+        RemovePaletteAnimation(*((u8*)p + 0xc6));
+        *((u8*)p + 0xc6) = 0;
+      }
+      v = GetEntityPalID(&p->s);
+      sv = ((u32)(u8)v) << 5;
+      k = 0x200;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(30, sv | kc);
+      *((u8*)p + 0xc6) = 30;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5: {
+      s32 t;
+      u8 tb;
+      t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      tb = t;
+      if (tb == 0) {
+        if ((p->s).work[1] == 1) {
+          (p->s).mode[1] = 0x10;
+          (p->s).mode[2] = tb;
+        } else {
+          (p->s).mode[2]++;
+        }
+      }
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 6: {
+      s32 z = 0;
+      (p->s).work[3] = 0x34;
+      (p->s).d.y = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 7: {
+      s32 t;
+      u8 tb;
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      {
+        u32 w3 = (p->s).work[3];
+        if (w3 > 26) {
+          (p->s).d.y -= 13;
+        } else {
+          (p->s).d.y += 13;
+        }
+      }
+      t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      tb = t;
+      if (tb == 0) {
+        (p->s).mode[1] = 9;
+        (p->s).mode[2] = tb;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      StepPaletteAnimation(*((u8*)p + 0xc6));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 void FUN_0809fa44(struct Entity* parent, s32 x, s32 y, u8 n);
 
 // 0x080477b8
