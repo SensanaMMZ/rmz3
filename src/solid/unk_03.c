@@ -2,6 +2,7 @@
 #include "global.h"
 #include "solid.h"
 #include "vfx.h"
+#include "stagerun.h"
 
 /*
   旧居住区などの蔦の燃える判定(グラフィックは別)
@@ -211,7 +212,116 @@ void Solid3_Init(struct Solid* p) {
   Solid3_Update(p);
 }
 
-INCASM("asm/solid/unk_03_p1c.inc");
+// 0x080CB7C8
+void Solid3_Update(struct Solid* p) {
+  s32 x0;
+  register s32 y0 asm("r5");
+  register s32 dx asm("sl");
+  register s32 dy asm("r8");
+  register s32 xr asm("r6");
+  register s32 yd asm("sb");
+  if ((p->s).work[1] == 0) {
+    {
+      register struct Camera* cam asm("r1");
+      cam = &gStageRun.vm.camera;
+      (p->s).coord.x = cam->viewport.x;
+      (p->s).coord.y = cam->viewport.y;
+    }
+    if ((p->s).mode[1] == 0) {
+      return;
+    }
+    x0 = (p->s).unk_coord.x;
+    y0 = (p->s).unk_coord.y;
+    dx = (p->s).d.x;
+    dy = (p->s).d.y;
+    if ((p->s).work[0] == 0) {
+      if ((u16)FUN_0800e284(x0, y0)) {
+        FUN_080cb3b8(&p->s, x0, y0);
+      }
+      xr = x0 + dx;
+      yd = y0 + dy;
+      if ((u16)FUN_0800e284(xr, yd)) {
+        FUN_080cb3b8(&p->s, xr, yd);
+      }
+      dy = y0 - dy;
+      if ((u16)FUN_0800e284(xr, dy)) {
+        FUN_080cb3b8(&p->s, xr, dy);
+      }
+      y0 = x0 - dx;
+      if ((u16)FUN_0800e284(y0, yd)) {
+        FUN_080cb3b8(&p->s, y0, yd);
+      }
+      if ((u16)FUN_0800e284(y0, dy)) {
+        FUN_080cb3b8(&p->s, y0, dy);
+      }
+    } else {
+      if ((u16)FUN_08010cd0(x0, y0)) {
+        FUN_080cb3b8(&p->s, x0, y0);
+      }
+      xr = x0 + dx;
+      yd = y0 + dy;
+      if ((u16)FUN_08010cd0(xr, yd)) {
+        FUN_080cb3b8(&p->s, xr, yd);
+      }
+      dy = y0 - dy;
+      if ((u16)FUN_08010cd0(xr, dy)) {
+        FUN_080cb3b8(&p->s, xr, dy);
+      }
+      y0 = x0 - dx;
+      if ((u16)FUN_08010cd0(y0, yd)) {
+        FUN_080cb3b8(&p->s, y0, yd);
+      }
+      if ((u16)FUN_08010cd0(y0, dy)) {
+        FUN_080cb3b8(&p->s, y0, dy);
+      }
+    }
+    (p->s).mode[1] = 0;
+    return;
+  }
+  {
+    register s32 r asm("r2");
+    r = (s16)FUN_080cb528(&p->s);
+    if (r != 0) {
+      return;
+    }
+    {
+      register s32 h asm("r1");
+      register s32 g asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xFE;
+      g &= h;
+      {
+        register s32 m asm("r1");
+        m = 0xFD;
+        g &= m;
+      }
+      (p->s).flags = g;
+    }
+    {
+      register u8* a asm("r0");
+      a = (u8*)p + 0x8c;
+      asm volatile("str %0, [%1]" ::"l"(r), "l"(a) : "memory");
+      a += 4;
+      asm("" : "+r"(a));
+      asm volatile("str %0, [%1]" ::"l"(r), "l"(a) : "memory");
+      a += 4;
+      asm("" : "+r"(a));
+      *a = r;
+    }
+    {
+      register s32 h2 asm("r1");
+      register s32 g2 asm("r0");
+      h2 = (p->s).flags;
+      asm("" : "+r"(h2));
+      g2 = 0xFB;
+      g2 &= h2;
+      (p->s).flags = g2;
+    }
+    SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
+
 
 void Solid3_Die(struct Solid* p) {}
 
