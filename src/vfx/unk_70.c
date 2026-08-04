@@ -145,6 +145,110 @@ void FUN_080c57a4(struct VFX* p) {
   }
 }
 
+// 0x080C5860
+void FUN_080c5860(struct VFX* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 spd asm("r4");
+      register const s16* tb asm("r6");
+      register s32 ang asm("r5");
+      InitScalerotMotion2(&p->s);
+      SetMotion(&p->s, 6);
+      spd = (p->s).d.x;
+      (p->s).coord.y -= spd << 7;
+      tb = gSineTable;
+      ang = (p->s).work[1];
+      asm("" : "+r"(ang));
+      {
+        register s32 sv asm("r0");
+        sv = tb[(u8)(ang + 0x40)];
+        sv = spd * sv;
+        (p->s).unk_coord.x = sv / 6;
+      }
+      {
+        register s32 v asm("r2");
+        register s32 t asm("r0");
+        register u32 rnd asm("r1");
+        register u32 acc asm("r0");
+        u32 rv;
+        t = tb[(p->s).work[1]];
+        asm volatile("add %0, %1, #0" : "=&l"(v) : "l"(t));
+        v = spd * v;
+        v >>= 7;
+        rnd = RNG_0202f388;
+        acc = 0x343FD;
+        acc *= rnd;
+        acc += 0x269EC3;
+        rv = acc << 1;
+        asm("" : "+r"(rv));
+        RNG_0202f388 = rv >> 1;
+        v += (rv << 5) >> 0x16;
+        v += -0x1FF;
+        (p->s).unk_coord.y = v;
+      }
+      if ((s8)ang < 0) {
+        goto neg;
+      }
+      {
+        register u8* a asm("r1");
+        register s32 vv asm("r0");
+        a = (u8*)p + 0x25;
+        vv = 0x10;
+        *a = vv;
+        goto stored;
+      }
+    neg : {
+      register u8* a2 asm("r1");
+      register s32 vv2 asm("r0");
+      a2 = (u8*)p + 0x25;
+      vv2 = 0x20;
+      *a2 = vv2;
+    }
+    stored:
+      (p->s).work[2] = 0x2D;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 ux, uy, t;
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).unk_coord.x;
+      (p->s).coord.y += (p->s).unk_coord.y;
+      ux = (p->s).unk_coord.x;
+      (p->s).unk_coord.x = ((ux << 3) - ux) >> 3;
+      uy = (p->s).unk_coord.y;
+      (p->s).unk_coord.y = ((uy << 3) - uy) >> 3;
+      {
+        register u32 w asm("r0");
+        w = (p->s).work[2];
+        if (w <= 0x1F) {
+          register u16* h asm("r1");
+          w <<= 3;
+          h = (u16*)((u8*)p + 0x50);
+          *h = w;
+          w = (p->s).work[2] << 3;
+          asm("" : "+r"(h));
+          h++;
+          asm("" : "+r"(h));
+          *h = w;
+        }
+      }
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((u8)t <= 0xE) {
+        if ((t & 2) != 0) {
+          (p->s).flags |= 1;
+        } else {
+          (p->s).flags &= 0xFE;
+        }
+      }
+      if ((p->s).work[2] == 0) {
+        SET_VFX_ROUTINE(p, ENTITY_DIE);
+      }
+      break;
+    }
+  }
+}
 INCASM("asm/vfx/unk_70_p3_p3.inc");
 
 void FUN_080c5b30(struct VFX* p) {
