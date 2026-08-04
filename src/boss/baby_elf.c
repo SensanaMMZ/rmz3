@@ -36,7 +36,116 @@ void FUN_08045b68(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/baby_elf_p1_pre_p1.inc");
+// 0x08045BC4
+void babyelf_08045bc4(struct Boss* p0) {
+  register struct Boss* p asm("ip");
+  register u32* rp asm("r6");
+  register const u8* tbl asm("r8");
+  register u8* c5 asm("r5");
+  register u8* c4 asm("r4");
+  s32 idx;
+  register struct Boss* pt asm("sb");
+  register u32 b asm("r3");
+  register s32 sh asm("r2");
+  register const u8* q asm("r0");
+  register u8 v asm("r1");
+  p = p0;
+  pt = *(struct Boss**)((u8*)p + 0x2c);
+  idx = 0;
+  if (*(s16*)((u8*)p + 0xa4) <= 0x2f) {
+    idx = 1;
+  }
+  {
+    register struct Boss* pp asm("r2");
+    pp = p;
+    idx += (pp->s).work[1] * 2;
+  }
+  c4 = (u8*)p + 0xcd;
+  rp = &RNG_0202f388;
+  asm("" : "+r"(rp));
+  c5 = (u8*)p + 0xcc;
+  tbl = (const u8*)0x083626D4;
+  asm("" : "+r"(tbl));
+  do {
+    u32 rv;
+    {
+      register u32 rnd asm("r1");
+      register u32 acc asm("r0");
+      rnd = *rp;
+      acc = 0x343FD;
+      acc *= rnd;
+      acc += 0x269EC3;
+      rv = acc << 1;
+      asm("" : "+r"(rv));
+      *rp = rv >> 1;
+    }
+    {
+      register s32 m asm("r0");
+      b = rv >> 0x11;
+      m = 0xF;
+      b &= m;
+    }
+    asm("" : "+r"(idx));
+    sh = idx << 4;
+    q = (const u8*)(b + sh);
+    asm volatile("add %0, %1" : "+l"(q) : "r"(tbl));
+  } while (*c5 == *q && *c4 > 1);
+  asm("" : "+r"(b), "+r"(sh));
+  q = (const u8*)(b + sh);
+  asm volatile("add %0, %1" : "+l"(q) : "r"(tbl));
+  v = *q;
+  if (*c5 == v) {
+    *c4 = *c4 + 1;
+  } else {
+    register s32 zz asm("r0");
+    zz = 0;
+    *c5 = v;
+    *c4 = zz;
+  }
+  asm("" : "+r"(b), "+r"(sh));
+  q = (const u8*)(b + sh);
+  asm volatile("add %0, %1" : "+l"(q) : "r"(tbl));
+  v = *q;
+  if (v == 1) {
+    return;
+  }
+  {
+    register struct Boss* pp asm("r2");
+    pp = p;
+    (pp->s).mode[1] = v;
+  }
+  {
+    u8 w;
+    w = *q;
+    if (w == 5) {
+      u8 six;
+      register struct Boss* pr asm("r1");
+      asm volatile("");
+      six = 6;
+      pr = pt;
+      (pr->s).mode[1] = six;
+    } else {
+      register struct Boss* pq asm("r2");
+      pq = pt;
+      (pq->s).mode[1] = w;
+    }
+  }
+  {
+    register s32 z asm("r0");
+    z = 0;
+    {
+      register struct Boss* pa asm("r1");
+      pa = p;
+      (pa->s).mode[2] = z;
+    }
+    {
+      register struct Boss* pb asm("r2");
+      pb = pt;
+      (pb->s).mode[2] = z;
+    }
+  }
+}
+
 
 // 0x08045C84
 NON_MATCH void babyelf_08045c84(struct Boss* p0) {
