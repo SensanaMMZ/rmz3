@@ -662,6 +662,97 @@ void paquqmRubble(struct Boss* p) {
   }
 }
 
+struct Entity* FUN_080a5bb4(s32 x, s32 y);
+void FUN_080c0340(struct Boss* p);
+
+// 0x08052240
+void paqua_mod_08052240(struct Boss* p) {
+  register s32 md asm("r0");
+  md = (p->s).mode[2];
+  switch (md) {
+    case 0: {
+      register s32* w asm("r2");
+      register s32 v asm("r0");
+      register s32 k asm("r1");
+      SetDDP(&p->body, (const struct Collision*)0x083638D4);
+      w = (s32*)((u8*)p + 0xb4);
+      v = *w;
+      k = 0x80 << 4;
+      v |= k;
+      *w = v;
+      SetMotion(&p->s, 0x4D0F);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      StepPaletteAnimation(*((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      PlaySound(0xE5);
+      (p->s).work[2] = 0x28;
+      FUN_080c0340(p);
+      if (*((u8*)p + 0xb8) != 0) {
+        RemovePaletteAnimation(*((u8*)p + 0xb8));
+        *((u8*)p + 0xb8) = 0;
+      }
+      {
+        u32 g0 = GetEntityPalID(&p->s);
+        u32 g = (u8)g0 << 5;
+        StartPaletteAnimation(0x58, g | 0x200);
+      }
+      *((u8*)p + 0xb8) = 0x58;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      StepPaletteAnimation(*((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 4: {
+      register s32* w asm("r2");
+      register s32 v asm("r0");
+      register s32 k asm("r1");
+      PlaySound(0x2C);
+      FUN_080a5bb4((p->s).coord.x, (p->s).coord.y);
+      w = (s32*)((u8*)p + 0xb4);
+      v = *w;
+      k = ~0x800;
+      v &= k;
+      *w = v;
+      if (*((u8*)p + 0xb8) != 0) {
+        RemovePaletteAnimation(*((u8*)p + 0xb8));
+        *((u8*)p + 0xb8) = 0;
+      }
+      {
+        u32 g0 = GetEntityPalID(&p->s);
+        u32 g = (u8)g0 << 5;
+        StartPaletteAnimation(0x59, g | 0x200);
+      }
+      *((u8*)p + 0xb8) = 0x59;
+      SetMotion(&p->s, 0x4D11);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5:
+      StepPaletteAnimation(*((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) == 3) {
+        register s32 z asm("r0");
+        z = 0;
+        (p->s).mode[1] = z;
+        (p->s).mode[2] = z;
+      }
+      break;
+  }
+}
+
 INCASM("asm/boss/pantheon_aqua_mod_p2b2.inc");
 
 
