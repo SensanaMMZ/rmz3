@@ -287,7 +287,167 @@ void FUN_080b1b7c(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_45_p2_p1b.inc");
+void FUN_080b21c0(struct Body* body);
+void FUN_080bdb44(s32 x, s32 y);
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+s32 PushoutToUp1(s32 x, s32 y);
+
+// 0x080B1CBC
+void FUN_080b1cbc(struct Projectile* p) {
+  register s32 z asm("r6");
+  struct Coord c;
+  u8* pb = (u8*)p + 0xbc;
+  z = *pb;
+  if (z != 0) {
+    {
+      register u8* a asm("r0");
+      register s32 z1 asm("r1");
+      a = pb - 0x30;
+      z1 = 0;
+      asm volatile("str %0, [%1]" ::"l"(z1), "l"(a) : "memory");
+      a += 4;
+      asm("" : "+r"(a));
+      asm volatile("str %0, [%1]" ::"l"(z1), "l"(a) : "memory");
+      a += 4;
+      asm("" : "+r"(a));
+      *a = z1;
+    }
+    (p->s).flags &= ~COLLIDABLE;
+    {
+      s32 cx = (p->s).coord.x;
+      s32 cy = (p->s).coord.y;
+      s32 k;
+      c.x = cx;
+      c.y = cy;
+      k = 0x80 << 4;
+      *(volatile s32*)&c.x = *(volatile s32*)&c.x + k;
+      *(volatile s32*)&c.y = *(volatile s32*)&c.y + k;
+    }
+    {
+      struct Entity* q = (p->s).unk_28;
+      if (*(s16*)((u8*)q + 4) != 2) {
+        *(s32*)((u8*)q + 0x1c) += 1;
+        PlaySound(0x137);
+      }
+    }
+    PlaySound(0x2a);
+    CreateSmoke(1, &c);
+    goto exit;
+  }
+  {
+    s32 t = (p->s).work[2] - 1;
+    (p->s).work[2] = t;
+    if ((t << 24) == 0) {
+      goto dec;
+    }
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register struct Body* b asm("r4");
+      InitNonAffineMotion(&p->s);
+      {
+        register u8* a asm("r0");
+        register s32 mg asm("r1");
+        a = (u8*)p + 0x24;
+        *a = z;
+        a += 0x2c;
+        asm("" : "+r"(a));
+        mg = 0x80 << 1;
+        *(u16*)a = mg;
+        a += 2;
+        asm("" : "+r"(a));
+        *(u16*)a = mg;
+      }
+      if ((p->s).work[1] == 0) {
+        (p->s).flags |= COLLIDABLE;
+        b = &p->body;
+        InitBody(b, (const struct Collision*)0x0836D824, &(p->s).coord, 1);
+        b->parent = (void*)p;
+        b->fn = (void*)z;
+        SetMotion(&p->s, 0x0E08);
+      } else if ((p->s).work[1] == 1) {
+        (p->s).flags |= COLLIDABLE;
+        b = &p->body;
+        InitBody(b, (const struct Collision*)0x0836D83C, &(p->s).coord, 1);
+        b->parent = (void*)p;
+        b->fn = (void*)z;
+        SetMotion(&p->s, 0x0E07);
+      } else {
+        b = &p->body;
+        if ((p->s).work[1] == 2) {
+          (p->s).flags |= COLLIDABLE;
+          InitBody(b, (const struct Collision*)0x0836D854, &(p->s).coord, 1);
+          b->parent = (void*)p;
+          b->fn = (void*)z;
+          SetMotion(&p->s, 0x0E09);
+        }
+      }
+      b->fn = (void*)FUN_080b21c0;
+      {
+        register s32 dz asm("r0");
+        dz = 0;
+        (p->s).d.y = dz;
+        dz -= 0xa8;
+        (p->s).d.x = dz;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 r;
+      (p->s).d.y += 0x10;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      r = PushoutToUp1((p->s).coord.x - 0x800, (p->s).coord.y + (0xb0 << 4));
+      if (r == 0) {
+        break;
+      }
+      (p->s).coord.y += r;
+      goto adv;
+    }
+    case 2:
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      if (FUN_08009f6c((p->s).coord.x + (0xc0 << 4), (p->s).coord.y - 0x1000) ==
+          (p->s).coord.y + (0xb0 << 4)) {
+        break;
+      }
+      (p->s).d.y = z;
+      (p->s).d.x = -0x80;
+      (p->s).work[3] = 0x28;
+    adv:
+      (p->s).mode[2]++;
+      break;
+    case 3:
+      (p->s).d.y += 0x20;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).coord.x += (p->s).d.x;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[3] != 0) {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+    dec: {
+      struct Entity* q = (p->s).unk_28;
+      if (q->mode[0] != 0) {
+        q->mode[0]--;
+      }
+    }
+    exit:
+      SET_PROJECTILE_ROUTINE(p, 2);
+      break;
+  }
+}
+
 
 static const struct Collision Collision_ARRAY_0836d7dc[8];
 
