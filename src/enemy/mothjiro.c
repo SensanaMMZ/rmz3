@@ -241,7 +241,146 @@ INCASM("asm/enemy/mothjiro_p4.inc");
 
 bool8 nop_0808889c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/mothjiro_p5.inc");
+// 0x080888A0 -- rush toward unk_coord, then re-target when close enough.
+// Body is instruction-exact (176/179 lines; the 3 extra retail lines are the
+// wider prologue/epilogue). Blocker: retail gives the parameter r4 and lands
+// the tail's `dy` in r7, so the frame saves r4-r7 and uses r7 as the r8
+// shuttle. agbcc here allocates the parameter LAST among the callee-saved
+// registers (r6 with three values, r7 with four), and a `register ... asm("r7")`
+// pin on `dy` is honoured for the value but never added to the save list, so
+// the push/pop lists come out one register short. Aliasing the parameter to r4
+// pulls in r9 instead. Everything from the SetMotion through the final
+// mode[1]/mode[2] stores matches byte-for-byte.
+NON_MATCH void mothjiro_080888a0(struct Enemy* p) {
+#if MODERN
+  register s32 m asm("r8");
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0: {
+      SetMotion(&p->s, 0x6B00);
+      {
+        register s32 dist asm("r5");
+        s32 dx = (p->s).unk_coord.x - (p->s).coord.x;
+        s32 dy, q1, q2, sq1, sq2;
+        (p->s).d.x = dx;
+        dy = (p->s).unk_coord.y - (p->s).coord.y;
+        (p->s).d.y = dy;
+        q1 = dx >> 2;
+        sq1 = q1;
+        sq1 = sq1 * q1;
+        q2 = dy >> 2;
+        sq2 = q2;
+        sq2 = sq2 * q2;
+        dist = (u16)Sqrt(sq1 + sq2) << 2;
+        if (dist != 0) {
+          (p->s).d.x = ((p->s).d.x << 8) / dist;
+          (p->s).d.y = ((p->s).d.y << 8) / dist;
+        }
+        (p->s).d.x = ((p->s).d.x << 9) >> 8;
+        (p->s).d.y = ((p->s).d.y << 9) >> 8;
+        *(s32*)((u8*)p + 0xb4) = dist;
+        if ((p->s).d.x > 0) {
+          s32 o = 1;
+          (p->s).flags |= 0x10;
+          (p->s).spr.xflip = o;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            s32 c16 = 0x10;
+            s32 ov, m11;
+            asm("" : "+r"(c16));
+            ov = *oa;
+            m11 = -0x11;
+            m11 &= ov;
+            *oa = m11 | c16;
+          }
+        } else {
+          (p->s).flags &= 0xEF;
+          (p->s).spr.xflip = m;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            s32 ov = *oa;
+            s32 m11 = -0x11;
+            m11 &= ov;
+            *oa = m11;
+          }
+        }
+      }
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 t asm("r0");
+        t = (p->s).mode[3];
+        t += 1;
+        m = 0;
+        (p->s).mode[3] = t;
+        if ((u8)t % 0xC == 0) {
+          FUN_080c2f3c(&(p->s).coord, ((p->s).flags >> 4) & 1);
+        }
+      }
+      {
+        s32* q;
+        s32 v;
+        q = (s32*)((u8*)p + 0xb4);
+        v = *q + -0x200;
+        *q = v;
+        if (v <= 0) {
+          register s32 zz asm("r2");
+          zz = m;
+          (p->s).mode[1] = zz;
+          (p->s).mode[2] = zz;
+        }
+        if (FUN_08088ae0(p) != 0) {
+          s32 dx;
+          s32 dy;
+          s32 dist;
+          {
+            register s32 u asm("r1");
+            register s32 w asm("r0");
+            u = *(s32*)((u8*)p + 0xb8);
+            w = (p->s).coord.x;
+            dx = u - w;
+            u = *(s32*)((u8*)p + 0xbc);
+            w = (p->s).coord.y;
+            dy = u - w;
+          }
+          {
+            register s32 a0 asm("r0");
+            register s32 a1 asm("r1");
+            register s32 a2 asm("r2");
+            a0 = dx >> 2;
+            asm volatile("add %0, %1, #0" : "=&l"(a1) : "l"(a0));
+            a1 = a1 * a0;
+            asm volatile("add %0, %1, #0" : "=&l"(a0) : "l"(a1));
+            a1 = dy >> 2;
+            asm volatile("add %0, %1, #0" : "=&l"(a2) : "l"(a1));
+            a2 = a2 * a1;
+            asm volatile("add %0, %1, #0" : "=&l"(a1) : "l"(a2));
+            a0 += a1;
+            dist = (u16)Sqrt(a0) << 2;
+          }
+          asm("" ::"r"(dy));
+          if (dist <= 0x77FF) {
+            register s32 zr asm("r0");
+            *q = dist;
+            (p->s).mode[1] = 1;
+            zr = m;
+            (p->s).mode[2] = zr;
+          }
+        }
+      }
+      break;
+    }
+  }
+#else
+  INCCODE("asm/enemy/mothjiro_888a0.inc");
+#endif
+}
+
 
 bool8 nop_08088a1c(struct Enemy* p) { return TRUE; }
 
