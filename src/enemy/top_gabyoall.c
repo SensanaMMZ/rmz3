@@ -437,7 +437,166 @@ void FUN_0806f89c(struct Enemy* p) {
   Enemy14_Update(p);
 }
 
-INCASM("asm/enemy/top_gabyoall_p2_b.inc");
+s32 FUN_0800a05c(s32 x, s32 y);
+
+// 0x0806F964
+void FUN_0806f964(struct Enemy* p) {
+  register s32 z asm("r1");
+  switch ((p->s).mode[1]) {
+    case 0:
+      if ((p->s).mode[2] == 0) {
+        SetMotion(&p->s, 0xa8 << 5);
+        if ((p->s).d.x > 0) {
+          (p->s).d.x = 0x80;
+        } else {
+          (p->s).d.x = -0x80;
+        }
+        (p->s).mode[2]++;
+      }
+      if (((p->s).coord.y >> 8) != ((pZero2->s).coord.y >> 8)) {
+        break;
+      }
+      z = 0;
+      {
+        register s32 one asm("r0");
+        one = 1;
+        asm volatile("strb %0, [%1, #0xd]" ::"l"(one), "l"(p) : "memory");
+      }
+      goto zmode;
+    case 1:
+      if ((p->s).mode[2] == 0) {
+        SetMotion(&p->s, 0x1501);
+        if ((p->s).d.x > 0) {
+          (p->s).d.x = 0xa0 << 2;
+        } else {
+          (p->s).d.x = -0x280;
+        }
+        (p->s).mode[2]++;
+      }
+      if (((p->s).coord.y >> 8) == ((pZero2->s).coord.y >> 8)) {
+        break;
+      }
+      {
+        register s32 z2 asm("r0");
+        z2 = 0;
+        (p->s).mode[1] = z2;
+        (p->s).mode[2] = z2;
+      }
+      break;
+    case 2: {
+      register s32 t asm("r0");
+      if ((p->s).mode[2] == 0) {
+        SetMotion(&p->s, 0x1503);
+        (p->s).work[2] = 0x40;
+        (p->s).mode[2]++;
+      }
+      t = (p->s).work[2];
+      t -= 1;
+      z = 0;
+      (p->s).work[2] = t;
+      if ((u8)t != 0xff) {
+        break;
+      }
+      asm volatile("strb %0, [%1, #0xd]" ::"l"(z), "l"(p) : "memory");
+    zmode:
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+  if ((p->s).mode[1] == 2) {
+    return;
+  }
+  {
+    register s32 nx asm("r2");
+    register s32 g asm("r0");
+    register s32 cy asm("r1");
+    {
+      register s32 cx asm("r0");
+      register s32 dx0 asm("r1");
+      cx = (p->s).coord.x;
+      dx0 = (p->s).d.x;
+      nx = cx + dx0;
+    }
+    (p->s).coord.x = nx;
+    if ((p->s).work[1] == 2) {
+      cy = FUN_0800a05c(nx, (p->s).coord.y);
+      (p->s).coord.y = cy;
+      if ((p->s).d.x > 0) {
+        g = FUN_0800a05c((p->s).coord.x + (0xa0 << 4), cy);
+      } else {
+        register s32 k2 asm("r2");
+        register s32 xx asm("r0");
+        xx = (p->s).coord.x;
+        k2 = -0xa00;
+        asm volatile("add %0, %0, %1" : "+l"(xx) : "l"(k2));
+        g = FUN_0800a05c(xx, cy);
+      }
+    } else {
+      register s32 k3 asm("r2");
+      register s32 x3 asm("r0");
+      cy = FUN_08009f6c(nx, (p->s).coord.y);
+      (p->s).coord.y = cy;
+      if ((p->s).d.x > 0) {
+        x3 = (p->s).coord.x;
+        k3 = 0xa0 << 4;
+      } else {
+        x3 = (p->s).coord.x;
+        k3 = -0xa00;
+      }
+      x3 += k3;
+      g = FUN_08009f6c(x3, cy);
+    }
+    {
+      register s32 d asm("r1");
+      d = (p->s).coord.y;
+      d -= g;
+      if (d < 0) {
+        d = -d;
+      }
+      {
+        register s32 lim asm("r0");
+        lim = 0x80 << 4;
+        if (d > lim) {
+          register s32 nv asm("r0");
+          nv = -(p->s).d.x;
+          (p->s).d.x = nv;
+          return;
+        }
+      }
+    }
+    if ((p->s).work[1] != 1) {
+      return;
+    }
+    {
+      register s32 dx asm("r2");
+      register s32 v asm("r0");
+      dx = (p->s).d.x;
+      if (dx > 0) {
+        register s32 w asm("r1");
+        v = *(s32*)((u8*)p + 0xb4);
+        w = (p->s).coord.x;
+        v -= w;
+        if (v >= -0x3000) {
+          return;
+        }
+        goto neg;
+      } else {
+        register s32 w2 asm("r1");
+        v = *(s32*)((u8*)p + 0xb4);
+        w2 = (p->s).coord.x;
+        v -= w2;
+        if (v <= (0xc0 << 6)) {
+          return;
+        }
+      neg:
+        v = -dx;
+      }
+      (p->s).d.x = v;
+    }
+  }
+}
+
 // 0x0806FB08
 void FUN_0806fb08(struct Enemy* p) {
   register s32 dy asm("r5");
