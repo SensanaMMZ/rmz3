@@ -859,7 +859,102 @@ void glacierle_08058168(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/glacierle_mid.inc");
+static const u8 u8_ARRAY_08364abc[3];
+
+// 0x080581D8
+void glacierle_080581d8(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 d asm("r4");
+      SetMotion(&p->s, MOTION(0xb2, 0x07));
+      {
+        register s32 k asm("r4");
+        k = 0x80 << 3;
+        (p->s).work[2] = Sqrt(k);
+        (p->s).d.y = -((u16)Sqrt(k) << 5);
+      }
+      {
+        register s32 u asm("r1");
+        register s32 w asm("r0");
+        u = (pZero2->s).coord.x;
+        w = (p->s).coord.x;
+        d = u - w;
+      }
+      if (((p->s).flags & 0x10) == 0) {
+        if (d < -0x8000) {
+          d = -0x8000;
+        }
+        if (d > -0x2000) {
+          d = -0x2000;
+        }
+      } else {
+        if (d > (0x80 << 8)) {
+          d = 0x80 << 8;
+        }
+        if (d <= 0x1FFF) {
+          d = 0x80 << 6;
+        }
+      }
+      (p->s).d.x = d / (u16)Sqrt(0x80 << 3);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      if ((u8)--(p->s).work[2] == 0) {
+        (p->s).mode[2]++;
+      }
+      {
+        register s32 t asm("r2");
+        register s32 cx asm("r1");
+        cx = (p->s).coord.x;
+        t = cx + -0x1A00;
+        if ((p->s).d.x > 0) {
+          t = cx + (0xd0 << 5);
+        }
+        if ((u16)FUN_080098a4(t, (p->s).coord.y + -0x1000) == 0) {
+          (p->s).coord.x += (p->s).d.x;
+        }
+      }
+      {
+        register s32 dy asm("r0");
+        register s32 lim asm("r1");
+        dy = (p->s).d.y;
+        dy += 0x20;
+        (p->s).d.y = dy;
+        lim = 0xe0 << 3;
+        if (dy > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364abc[(p->s).motion.cmdIdx]]);
+      break;
+    }
+    case 2:
+      (p->s).work[2] = 0xc;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 r asm("r1");
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[2];
+        t -= 1;
+        (p->s).work[2] = t;
+        r = (u8)t;
+      }
+      if (r == 0) {
+        (p->s).mode[1] = 6;
+        (p->s).mode[2] = r;
+      }
+      UpdateMotionGraphic(&p->s);
+      SetDDP(&p->body, &sCollisions[u8_ARRAY_08364abc[(p->s).motion.cmdIdx]]);
+      break;
+    }
+  }
+}
+
 
 void glacierle_0805836c(struct Boss* p) {
   switch ((p->s).mode[2]) {
