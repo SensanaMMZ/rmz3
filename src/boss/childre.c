@@ -463,7 +463,182 @@ void childreMode2(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/childre_pre_b1b.inc");
+void childreStartRising(struct Boss* p);
+
+// 0x08040e60
+void childreMode3(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 4;
+      SetMotion(&p->s, 0xA404);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2] = (p->s).mode[2] + 1;
+      break;
+    }
+    case 2: {
+      register s32 d asm("r2");
+      PlaySound(0x67);
+      {
+        register s32 a asm("r1");
+        register s32 b asm("r0");
+        a = *(s32*)((u8*)p + 0xbc);
+        b = (p->s).coord.x;
+        d = a - b;
+      }
+      if ((u32)(d + 0x3000) > 0x6000) {
+        register s32 g asm("r3");
+        g = 0;
+        if (d > 0) {
+          g = 1;
+        }
+        if (((p->s).flags & 0x10) == 0) {
+          goto elsearm3;
+        }
+        if (g == 0) {
+          goto rise;
+        }
+        goto motion3;
+      elsearm3:
+        if (g == 0) {
+          goto motion3;
+        }
+      rise: {
+        register s32 z asm("r1");
+        z = 0;
+        (p->s).mode[1] = 4;
+        (p->s).mode[2] = z;
+      }
+        childreStartRising(p);
+        return;
+      }
+    motion3:
+      SetMotion(&p->s, 0xA405);
+      {
+        register s32 c0 asm("r0");
+        register s32 dx asm("r2");
+        c0 = -0x300;
+        (p->s).d.x = c0;
+        dx = c0;
+        if (((p->s).flags & 0x10) != 0) {
+          dx = 0x300;
+        }
+        (p->s).d.x = dx;
+      }
+      (p->s).d.y = -0x400;
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32 dx2 asm("r5");
+      register s32 nx asm("r3");
+      {
+        register s32 cx3 asm("r0");
+        cx3 = (p->s).coord.x;
+        dx2 = (p->s).d.x;
+        nx = cx3 + dx2;
+      }
+      (p->s).coord.x = nx;
+      {
+        register s32 d2 asm("r2");
+        register u32 sum asm("r1");
+        register s32 k1 asm("r0");
+        k1 = *(s32*)((u8*)p + 0xbc);
+        d2 = k1 - nx;
+        k1 = 0x6000;
+        sum = d2 + k1;
+        k1 = 0xC000;
+        if (sum > (u32)k1) {
+          k1 = nx - dx2;
+          (p->s).coord.x = k1;
+        }
+      }
+      {
+        s32 v = (p->s).d.y + 0x40;
+        (p->s).d.y = v;
+        if (v > 0x700) {
+          (p->s).d.y = 0x700;
+        }
+      }
+      if ((p->s).work[2] == 0) {
+        if ((p->s).d.y > 0) {
+          SetMotion(&p->s, 0xA406);
+          (p->s).work[2] = 1;
+        }
+      }
+      {
+        register s32 ny asm("r1");
+        register s32 r asm("r2");
+        {
+          register s32 dy3 asm("r0");
+          ny = (p->s).coord.y;
+          dy3 = (p->s).d.y;
+          ny += dy3;
+        }
+        (p->s).coord.y = ny;
+        {
+          register s32 px asm("r0");
+          asm volatile("ldr %0, [%1, #0x54]" : "=l"(px) : "l"(p));
+          r = PushoutToUp1(px, ny);
+        }
+        if (r < 0) {
+          (p->s).coord.y = (p->s).coord.y + r;
+          (p->s).mode[2]++;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 4:
+      (p->s).work[2] = 4;
+      SetMotion(&p->s, 0xA407);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      s32 t;
+      register s32 g2 asm("r2");
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      g2 = 0;
+      if (*(s32*)((u8*)p + 0xb8) - (p->s).coord.x > 0) {
+        g2 = 1;
+      }
+      if (((p->s).flags & 0x10) == 0) {
+        goto elsearm5;
+      }
+      if (g2 == 0) {
+        goto zero5;
+      }
+      goto two5;
+    elsearm5:
+      if (g2 == 0) {
+        goto two5;
+      }
+    zero5:
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+      break;
+    two5:
+      (p->s).mode[2] = 2;
+      break;
+    }
+  }
+}
+
 
 // 0x0804102C
 void childreStartRising(struct Boss* p) {
