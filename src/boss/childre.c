@@ -626,7 +626,120 @@ void childreMode6(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/childre_pre_b3.inc");
+void CreateSplitMineBomb(s32 x, s32 y);
+
+// 0x08041440
+void childreMode7(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 4;
+      (p->s).work[3] = 3;
+      SetMotion(&p->s, 0xA404);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2] = (p->s).mode[2] + 1;
+      break;
+    }
+    case 2: {
+      register s32 v asm("r2");
+      CreateSplitMineBomb((p->s).coord.x, (p->s).coord.y);
+      SetMotion(&p->s, 0xA405);
+      {
+        register s32 k asm("r0");
+        k = 0xFFFFFE00;
+        (p->s).d.x = k;
+        v = k;
+        if (((p->s).flags & 0x10) != 0) {
+          v = 0x80 << 2;
+        }
+        (p->s).d.x = v;
+      }
+      (p->s).d.y = 0xFFFFFA00;
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32 dy asm("r2");
+      (p->s).coord.x = (p->s).coord.x + (p->s).d.x;
+      {
+        register s32 t asm("r0");
+        register s32 lim asm("r1");
+        t = (p->s).d.y + 0x80;
+        (p->s).d.y = t;
+        lim = 0xe0 << 3;
+        if (t > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      if ((p->s).work[2] == 0 && (p->s).d.y > 0) {
+        SetMotion(&p->s, 0xA406);
+        (p->s).work[2] = 1;
+      }
+      {
+        register s32 y asm("r1");
+        {
+          register s32 t0 asm("r0");
+          t0 = (p->s).coord.y;
+          dy = (p->s).d.y;
+          y = t0 + dy;
+        }
+        (p->s).coord.y = y;
+        {
+          register s32 d asm("r0");
+          d = gOverworld.sea - y;
+          if (d < 0 && dy > 0) {
+            (p->s).coord.y = y + d;
+            (p->s).mode[2]++;
+          }
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 4: {
+      register u32 n asm("r5");
+      (p->s).work[2] = 4;
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        n = (u32)(t << 24) >> 24;
+      }
+      if (n == 0) {
+        CreateSplitMineBomb((p->s).coord.x, (p->s).coord.y);
+        (p->s).mode[1] = 8;
+        (p->s).mode[2] = n;
+        childreMode8(p);
+        break;
+      }
+      SetMotion(&p->s, 0xA407);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5: {
+      s32 t2;
+      UpdateMotionGraphic(&p->s);
+      t2 = (p->s).work[2] - 1;
+      (p->s).work[2] = t2;
+      if ((t2 << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2] = 2;
+      break;
+    }
+  }
+}
+
 
 // 0x080415B8
 void childreMode8(struct Boss* p) {
