@@ -1019,9 +1019,9 @@ INCASM("asm/enemy/cannon_hopper_post_post_b.inc");
 // fixed the analogous case in shrimporinBurrowSnow -- costs 32 bytes here.
 // Note this function does NOT need the §6.177 barrier: retail's shift here is a
 // plain `lsrs r0, r1, #5`, unlike FUN_08097f3c's `lsls #24 / lsrs #29`.
-NON_MATCH void FUN_08098414(struct Enemy* p) {
-#if MODERN
+void FUN_08098414(struct Enemy* p) {
   s32 t;
+  u32 m;
   struct Coord c;
 
   switch ((p->s).mode[2]) {
@@ -1044,7 +1044,9 @@ NON_MATCH void FUN_08098414(struct Enemy* p) {
         case 3:
           d = -0x2300;
           fl = (p->s).flags;
-          if (fl & Y_FLIP) {
+          m = Y_FLIP;
+          asm("" : "+l"(m));
+          if (fl & m) {
             d = 0x2300;
           }
           {
@@ -1052,9 +1054,13 @@ NON_MATCH void FUN_08098414(struct Enemy* p) {
             u32 yf = 1;
             yf &= ~sh;
             if (yf) {
-              (p->s).flags = Y_FLIP | fl;
+              u32 t = Y_FLIP;
+              t |= fl;
+              (p->s).flags = t;
             } else {
-              (p->s).flags = 0xDF & fl;
+              u32 t = 0xDF;
+              t &= fl;
+              (p->s).flags = t;
             }
             (p->s).spr.yflip = yf & 1;
             (p->s).spr.oam.yflip = yf;
@@ -1063,7 +1069,9 @@ NON_MATCH void FUN_08098414(struct Enemy* p) {
         case 4:
           d = -0x2B00;
           fl = (p->s).flags;
-          if (fl & Y_FLIP) {
+          m = Y_FLIP;
+          asm("" : "+l"(m));
+          if (fl & m) {
             d = 0x2B00;
           }
           {
@@ -1071,9 +1079,13 @@ NON_MATCH void FUN_08098414(struct Enemy* p) {
             u32 yf = 1;
             yf &= ~sh;
             if (yf) {
-              (p->s).flags = Y_FLIP | fl;
+              u32 t = Y_FLIP;
+              t |= fl;
+              (p->s).flags = t;
             } else {
-              (p->s).flags = 0xDF & fl;
+              u32 t = 0xDF;
+              t &= fl;
+              (p->s).flags = t;
             }
             (p->s).spr.yflip = yf & 1;
             (p->s).spr.oam.yflip = yf;
@@ -1134,9 +1146,6 @@ NON_MATCH void FUN_08098414(struct Enemy* p) {
       SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
       break;
   }
-#else
-  INCCODE("asm/enemy/cannon_hopper_98414.inc");
-#endif
 }
 
 INCASM("asm/enemy/cannon_hopper_post_post_c.inc");
