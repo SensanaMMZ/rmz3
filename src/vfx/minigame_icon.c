@@ -220,7 +220,202 @@ void FUN_080c843c(struct VFX* p) {
   }
 }
 
-INCASM("asm/vfx/minigame_icon_post.inc");
+// 0x080C8488
+void FUN_080c8488(struct VFX* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 z asm("r4");
+      register s32 w1 asm("r1");
+      register s32 cx asm("r2");
+      register s32 cy asm("r3");
+      InitScalerotMotion1(&p->s);
+      {
+        u8* a;
+        register s32 v asm("r0");
+        a = (u8*)p + 0x24;
+        v = 0;
+        *a = v;
+        a += 0x2c;
+        z = 0;
+        v = 0x80 << 1;
+        *(u16*)a = v;
+        a += 2;
+        asm("" : "+r"(a));
+        *(u16*)a = v;
+      }
+      {
+        register s32 g asm("r0");
+        s32 k;
+        g = (p->s).flags;
+        asm("" : "+r"(g));
+        k = 1;
+        g |= k;
+        k = 2;
+        g |= k;
+        (p->s).flags = g;
+      }
+      {
+        register u8* b asm("r0");
+        b = (u8*)p + 0x74;
+        *b = z;
+      }
+      cx = 0xf0 << 8;
+      (p->s).coord.x = cx;
+      cy = 0xa0 << 8;
+      (p->s).coord.y = cy;
+      w1 = (p->s).work[1];
+      {
+        register s32 nx asm("r0");
+        if (w1 != 0) {
+          goto nz;
+        }
+        (p->s).coord.x = 0x88 << 9;
+        (p->s).coord.y = 0xa8 << 8;
+        (p->s).work[3] = z;
+        goto setm;
+      nz:
+        if (w1 != 1) {
+          goto n1;
+        }
+        nx = 0x80 << 4;
+        asm("" : "+r"(nx));
+        nx = cx + nx;
+        goto store;
+      n1:
+        if (w1 != 2) {
+          goto setm;
+        }
+        z = 0xe0 << 6;
+        nx = cx + z;
+      store:
+        (p->s).coord.x = nx;
+        nx = 0xc0 << 4;
+        asm("" : "+r"(nx));
+        nx = cy + nx;
+        (p->s).coord.y = nx;
+        (p->s).work[3] = w1;
+      }
+    setm: {
+      const u16* tb;
+      register s32 i asm("r0");
+      tb = (const u16*)0x0836F998;
+      asm("" : "+r"(tb));
+      i = (p->s).work[3];
+      i <<= 1;
+      i += (s32)tb;
+      SetMotion(&p->s, *(const u16*)i);
+    }
+      (p->s).d.y = 0x80 << 1;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if (*((u8*)p + 0x74) == 0) {
+        goto upd;
+      }
+      (p->s).work[2] = 5;
+      goto bump;
+    case 2: {
+      register u16* sp asm("r1");
+      {
+        register s32 v asm("r0");
+        v = (p->s).d.y;
+        v -= 0x33;
+        (p->s).d.y = v;
+        if (v < 0) {
+          (p->s).d.y = 0;
+        }
+      }
+      {
+        register s32 v2 asm("r0");
+        v2 = (p->s).d.y;
+        sp = (u16*)((u8*)p + 0x50);
+        *sp = v2;
+      }
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          goto upd;
+        }
+      }
+      *sp = 0;
+    bump:
+      (p->s).mode[2]++;
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 3: {
+      register s32 nv asm("r0");
+      if (*((u8*)p + 0x74) == 1) {
+        nv = (p->s).work[3];
+        if (nv != 0) {
+          nv -= 1;
+        } else {
+          nv = 2;
+        }
+      } else {
+        nv = (p->s).work[3];
+        if ((u32)nv <= 1) {
+          nv += 1;
+        } else {
+          nv = 0;
+        }
+      }
+      (p->s).work[3] = nv;
+      {
+        register const u16* tb asm("r4");
+        tb = (const u16*)0x0836F998;
+      asm("" : "+r"(tb));
+        nv = ((u32)(p->s).work[3]) % 3;
+        nv = ((u32)(u8)nv) << 1;
+        nv += (s32)tb;
+        SetMotion(&p->s, *(const u16*)nv);
+      }
+      nv = 0;
+      (p->s).d.y = nv;
+      (p->s).work[2] = 5;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 4: {
+      register s32 lim asm("r4");
+      register u16* sp2 asm("r6");
+      {
+        register s32 v asm("r0");
+        v = (p->s).d.y;
+        v += 0x33;
+        (p->s).d.y = v;
+        lim = 0x80 << 1;
+        if (v > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      {
+        register s32 v2 asm("r0");
+        v2 = (p->s).d.y;
+        sp2 = (u16*)((u8*)p + 0x50);
+        *sp2 = v2;
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      {
+        register u8* b2 asm("r0");
+        register s32 z2 asm("r1");
+        b2 = (u8*)p + 0x74;
+        z2 = 0;
+        *b2 = z2;
+      }
+      *sp2 = lim;
+      (p->s).mode[2] = 1;
+      break;
+    }
+  }
+}
+
 
 // 0x080c8628
 void FUN_080c8628(struct VFX* p) {
