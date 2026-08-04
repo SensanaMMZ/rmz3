@@ -178,7 +178,156 @@ void nop_080aaed0(struct Projectile* p) {}
 
 void nop_080aaed4(struct Projectile* p) {}
 
-INCASM("asm/projectile/unk_32_p4_p1.inc");
+// 0x080AAED8
+void FUN_080aaed8(struct Projectile* p0) {
+  struct Projectile* p;
+  register struct Entity* q asm("r6");
+  register struct Body* b asm("r4");
+  register s32 one asm("r9");
+  s32 zero;
+  register s32 z5 asm("r5");
+  register s32 xf0 asm("r2");
+  p = p0;
+  q = (p->s).unk_28;
+  {
+    register u32 tbl asm("r1");
+    EntityFunc** rt;
+    tbl = (u32)gProjectileFnTable;
+    asm("" : "+r"(tbl));
+    rt = (EntityFunc**)((((p->s).id) << 2) + tbl);
+    one = 1;
+    *(u32*)((p->s).mode) = one;
+    (p->s).onUpdate = (void*)(*rt)[1];
+  }
+  InitNonAffineMotion(&p->s);
+  {
+    register u8 fl asm("r1");
+    register s32 k asm("r0");
+    fl = (p->s).flags;
+    k = 1;
+    z5 = 0;
+    asm("" : "+r"(z5));
+    zero = 0;
+    asm("" : "+r"(zero));
+    k |= fl;
+    {
+      register s32 k2 asm("r1");
+      k2 = 2;
+      k |= k2;
+    }
+    (p->s).flags = k;
+  }
+  SetMotion(&p->s, MOTION(0x62, 0x08));
+  {
+    register u8 fv2 asm("r0");
+    register s32 k2 asm("r1");
+    fv2 = (p->s).flags;
+    k2 = 4;
+    fv2 |= k2;
+    (p->s).flags = fv2;
+  }
+  b = &p->body;
+  ((void (*)(struct Body*, const struct Collision*, struct Coord*, s32))InitBody)(b, (const struct Collision*)0x0836C42C, &(p->s).coord, 0x40);
+  b->parent = (struct CollidableEntity*)p;
+  b->fn = (BodyFunc)zero;
+  {
+    register s32 t0 asm("r0");
+    t0 = q->flags;
+    xf0 = t0 >> 4;
+    xf0 &= one;
+    if (xf0 != 0) {
+      register u8 fv3 asm("r0");
+      register s32 k3 asm("r1");
+      fv3 = (p->s).flags;
+      k3 = 0x10;
+      fv3 |= k3;
+      (p->s).flags = fv3;
+    } else {
+      register u8 h asm("r1");
+      register u8 g asm("r0");
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xEF;
+      g &= h;
+      (p->s).flags = g;
+    }
+  }
+  {
+    register s32 v asm("r1");
+    register u8* oa asm("r3");
+    s32 sh4, ov, m11;
+    v = xf0;
+    *((u8*)p + 0x4c) = v;
+    oa = (u8*)p + 0x4a;
+    sh4 = v << 4;
+    ov = *oa;
+    m11 = -0x11;
+    m11 &= ov;
+    m11 |= sh4;
+    *oa = m11;
+  }
+  (p->s).coord.x = q->coord.x;
+  (p->s).coord.y = q->coord.y + -0x1000;
+  {
+    register u8* qq asm("r0");
+    s32* dst = (s32*)((u8*)p + 0xb8);
+    asm volatile("add %0, %1, #0" : "=&l"(qq) : "l"(q));
+    *dst = *(s32*)(qq + 0xbc);
+  }
+  if (((p->s).flags & 0x10) == 0) {
+    goto notflip;
+  }
+  {
+    u8 w = (p->s).work[1];
+    if (w > 0x80) {
+      goto set80;
+    }
+    if (w > 0x4F) {
+      goto done;
+    }
+    (p->s).work[1] = 0x50;
+    goto done;
+  }
+notflip : {
+  register u32 sh asm("r1");
+  register u32 w2 asm("r0");
+  w2 = (p->s).work[1];
+  sh = w2 << 24;
+  asm("" : "+r"(sh));
+  w2 = sh >> 24;
+  if (w2 > 0xC0) {
+    (p->s).work[1] = 0xC0;
+    goto done;
+  }
+  if ((s32)sh < 0) {
+    goto done;
+  }
+}
+set80:
+  (p->s).work[1] = 0x80;
+done : {
+  register const s16* tb asm("r3");
+  register s32 w3 asm("r0");
+  register s32 w4 asm("r1");
+  tb = gSineTable;
+  w3 = (p->s).work[1];
+  asm volatile("add %0, %1, #0" : "=&l"(w4) : "l"(w3));
+  w4 += 0xC0;
+  {
+    register s32 sv asm("r2");
+    sv = tb[w3];
+    (p->s).d.x = sv * 4 + sv;
+  }
+  {
+    register s32 sv2 asm("r1");
+    sv2 = tb[(u8)w4];
+    (p->s).d.y = sv2 * 4 + sv2;
+  }
+}
+  Projectile32_Update(p);
+  asm volatile("" ::"r"(z5), "r"(one), "r"(zero));
+}
+
 
 void CreateVFX57(struct Coord* c, u8 a1, u8 a2, s16 dx, s16 dy);
 
