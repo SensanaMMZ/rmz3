@@ -1130,7 +1130,146 @@ void FUN_08066b3c(struct Enemy* p) {
 
 bool8 FUN_08066bdc(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shotcounter_p8.inc");
+// 0x08066BE0
+void shotcounter_08066be0(struct Enemy* p) {
+  u16 v;
+  s32 t, sl;
+  u8 w;
+  struct Entity** slot;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetDDP(&p->body, &sCollisions[10]);
+      (p->s).mode[3] = ((pZero2->s).flags >> 4) & 1;
+      (p->s).work[2] = 0x1a;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      break;
+    default:
+      return;
+  }
+
+  {
+    register s32 k asm("r3");
+    s32 x, y;
+    x = (p->s).coord.x + (p->s).d.x;
+    k = 0x1000;
+    asm("" : "+l"(k));
+    x += k;
+    y = (p->s).coord.y + (p->s).d.y + k;
+    v = FUN_080098a4(x, y);
+  }
+  if (v != 0 && (v & 0x8000) == 0) {
+    goto blocked;
+  }
+  {
+    register s32 k asm("r2");
+    s32 x, y, n;
+    x = (p->s).coord.x - (p->s).d.x;
+    n = -0x1000;
+    asm("" : "+l"(n));
+    x += n;
+    y = (p->s).coord.y + (p->s).d.y;
+    k = 0x1000;
+    asm("" : "+l"(k));
+    y += k;
+    v = FUN_080098a4(x, y);
+  }
+  if (v != 0 && (v & 0x8000) == 0) {
+    goto blocked;
+  }
+  {
+    register s32 k asm("r3");
+    register s32 n asm("r2");
+    s32 x, y;
+    x = (p->s).coord.x + (p->s).d.x;
+    k = 0x1000;
+    asm("" : "+l"(k));
+    x += k;
+    y = (p->s).coord.y + (p->s).d.y;
+    n = -0x1000;
+    asm("" : "+l"(n));
+    y += n;
+    v = FUN_080098a4(x, y);
+  }
+  if (v != 0 && (v & 0x8000) == 0) {
+    goto blocked;
+  }
+  {
+    register s32 n asm("r3");
+    s32 x, y;
+    x = (p->s).coord.x - (p->s).d.x;
+    n = -0x1000;
+    asm("" : "+l"(n));
+    x += n;
+    y = (p->s).coord.y + (p->s).d.y + n;
+    v = FUN_080098a4(x, y);
+  }
+  if (v != 0 && (v & 0x8000) == 0) {
+    goto blocked;
+  }
+
+  (p->s).coord.x += (p->s).d.x;
+  (p->s).coord.y += (p->s).d.y;
+  (p->s).d.x += ((p->s).d.x - ((p->s).d.x << 4)) >> 8;
+  (p->s).d.y += ((p->s).d.y - ((p->s).d.y << 4)) >> 8;
+
+  slot = (struct Entity**)((u8*)p + 0xc0);
+  if (isKilled(*slot)) {
+    u8* q = (u8*)p + 0xbf;
+    s32 z = 0;
+    *q = z;
+    *slot = (struct Entity*)z;
+  }
+
+  t = (p->s).work[2] - 1;
+  (p->s).work[2] = t;
+  w = t;
+  if (w != 0) {
+    return;
+  }
+  *(s32*)((u8*)p + 0xb8) = w;
+  sl = (s32)*slot;
+  {
+    if (sl != 0) {
+      u8 f = *((u8*)p + 0xbf);
+      if (f == 1) {
+        if (*(s16*)((u8*)p + 0xa4) <= 1) {
+          goto blocked;
+        }
+        asm("" : : "l"(f));
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = w;
+        return;
+      }
+      if (f == 2) {
+        if (*(s16*)((u8*)p + 0xa4) <= 1) {
+          SET_ENEMY_ROUTINE(p, f);
+          return;
+        }
+        (p->s).mode[1] = 7;
+        (p->s).mode[2] = w;
+        return;
+      }
+      if (*(s16*)((u8*)p + 0xa4) <= 1) {
+        goto blocked;
+      }
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = w;
+      return;
+    }
+    if (*(s16*)((u8*)p + 0xa4) > 1) {
+      goto setmode1;
+    }
+  }
+blocked:
+  SET_ENEMY_ROUTINE(p, 2);
+  return;
+setmode1:
+  (p->s).mode[1] = 1;
+  (p->s).mode[2] = sl;
+}
 
 #include "element.h"
 #include "vfx.h"
