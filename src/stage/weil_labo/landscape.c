@@ -559,7 +559,145 @@ NON_MATCH void FUN_08015cf0(struct StageLayer* l, const struct Stage* stage) {
 #endif
 }
 
-INCASM("asm/stage_gfx/weil_labo_p1_p2_a2.inc");
+struct Entity* FUN_080d8f7c(u8 a0);
+
+// 0x08015E34
+void weillabo_08015e34(struct StageLayer* l0, const struct Stage* _ UNUSED) {
+  register struct StageLayer* l asm("r6");
+  register struct Overworld* ow asm("r5");
+  register s32 ph asm("r0");
+  l = l0;
+  ph = l->phase;
+  ow = &gOverworld;
+  if (ph == 0) {
+    register u32 n asm("r0");
+    register u16* bg asm("r4");
+    register s32 zero asm("r3");
+    s32* q;
+    n = (u16)l->bgIdx;
+    bg = (u16*)&gVideoRegBuffer.bgcnt[0];
+    zero = 0;
+    q = (s32*)((u8*)l + 0xc);
+    do {
+      *(s32*)((u8*)q + 0x68) = zero;
+      q--;
+    } while ((s32)q >= (s32)l);
+    {
+      register u32 ix asm("r2");
+      register u16* bp asm("r2");
+      register s32 v asm("r0");
+      register s32 k asm("r1");
+      ix = n >> 4;
+      ix <<= 1;
+      bp = (u16*)(ix + (u32)bg);
+      k = *bp;
+      v = 0xFFFC;
+      v &= k;
+      k = 2;
+      v |= k;
+      *bp = v;
+    }
+    l->unk_10 = 0;
+    l->phase++;
+  }
+  {
+    register s32 so asm("r1");
+    register u8* sp2 asm("r0");
+    so = 0x2D026;
+    asm("" : "+r"(so));
+    sp2 = (u8*)ow + so;
+    if (*sp2 == 0) {
+      goto stopall;
+    }
+  }
+  {
+    struct Solid** arr = (struct Solid**)l->work.raw;
+    register s32 one2 asm("r3");
+    s32 i;
+    l->unk_10++;
+    for (i = 0; i <= 3; i++) {
+      if (arr[i] == NULL) {
+        arr[i] = (struct Solid*)FUN_080d8f7c((u8)i);
+      }
+    }
+    if (!isSoundPlaying(0x92 * 2)) {
+      PlaySound(0x92 * 2);
+    }
+    {
+      register s32 t asm("r0");
+      u16 uv = l->unk_10;
+      one2 = 1;
+      asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(one2));
+      t &= uv;
+      if (t == 0) {
+        goto out;
+      }
+    }
+    {
+      register u32* rp asm("r2");
+      register u32 rnd asm("r1");
+      register u32 acc asm("r0");
+      u32 rv;
+      rp = &RNG_0202f388;
+      asm("" : "+r"(rp));
+      rnd = *rp;
+      acc = 0x343FD;
+      acc *= rnd;
+      acc += 0x269EC3;
+      rv = acc << 1;
+      asm("" : "+r"(rv));
+      *rp = rv >> 1;
+      if (((rv >> 0x11) & one2) != 0) {
+        gBlendRegBuffer.bldalpha = 0xC0A;
+        return;
+      }
+    }
+    goto out;
+    goto out;
+  }
+stopall : {
+    register s32 zero asm("r4");
+    u32 tbl;
+    register struct Solid** q asm("r3");
+    register s32 i asm("r5");
+    zero = 0;
+    tbl = (u32)gSolidFnTable;
+    q = (struct Solid**)l->work.raw;
+    i = 3;
+    do {
+      struct Solid* e = *q;
+      if (e != NULL) {
+        u8* a;
+        EntityFunc** routine_table;
+        (e->s).flags &= ~DISPLAY;
+        (e->s).flags &= ~FLIPABLE;
+        a = (u8*)e + 0x8c;
+        *(u32*)a = zero;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = zero;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = zero;
+        (e->s).flags &= ~COLLIDABLE;
+        routine_table = (EntityFunc**)((((e->s).id) << 2) + tbl);
+        *(u32*)((e->s).mode) = 3;
+        (e->s).onUpdate = (void*)(*routine_table)[3];
+        *q = (struct Solid*)zero;
+      }
+      q++;
+      i--;
+    } while (i >= 0);
+    if (isSoundPlaying(0x92 * 2)) {
+      StopSound(0x92 * 2);
+    }
+  }
+out:
+  gBlendRegBuffer.bldalpha = 0xC04;
+}
+
 
 // 0x08015F7C
 void FUN_08015f7c(struct StageLayer* l, const struct Stage* stage) {
