@@ -601,7 +601,80 @@ void FUN_08077834(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/volcaire_p2_pre_p2b.inc");
+// 0x08077910
+void FUN_08077910(struct Enemy* p) {
+  struct Entity* e = (p->s).unk_28;
+  s32 hit;
+  u8* flag9;
+
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[2] == 0) {
+        SetMotion(&p->s, MOTION(0x2E, 0x02));
+        SetDDP(&p->body, &sCollisions[3]);
+      } else {
+        SetMotion(&p->s, MOTION(0x2E, 0x03));
+        SetDDP(&p->body, &sCollisions[5]);
+      }
+      (p->s).work[3] = 8;
+      (p->s).d.x = ((p->s).work[2] << 15) - 0x4000;
+      (p->s).d.x = (p->s).d.x / 32;
+      (p->s).d.y = 0;
+      goto inc;
+    case 2:
+      (p->s).work[3] = 8;
+      SetDDP(&p->body, &sCollisions[7]);
+      SetMotion(&p->s, MOTION(0x2E, 0x04));
+      SET_XFLIP(p, (p->s).work[2]);
+    inc:
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+    case 3:
+      if ((u8)--(p->s).work[3] == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 4:
+      SetMotion(&p->s, MOTION(0x2E, 0x05));
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[2]++;
+      break;
+    case 5:
+      break;
+  }
+  (p->s).d.y += 0x40;
+  if ((p->s).d.y > 0x700) {
+    (p->s).d.y = 0x700;
+  }
+  (p->s).coord.y += (p->s).d.y;
+  hit = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+  flag9 = (u8*)p + 0xb9;
+  if (hit < 0) {
+    u16 at = GetMetatileAttr((p->s).coord.x, (p->s).coord.y);
+    if ((at & 0x10) == 0 && *flag9 == 0) {
+      (p->s).coord.y += hit;
+      (p->s).mode[1] = 4;
+      (p->s).mode[2] = 0;
+    } else {
+      *flag9 = 1;
+    }
+  }
+  if (*flag9 == 0) {
+    FUN_08077110(p, (p->s).d.x);
+  }
+  if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > (0xc0 << 7)) {
+    if (e != NULL) {
+      *((u8*)e + 0xb8) -= 1;
+    }
+    (p->s).flags &= ~DISPLAY;
+    (p->s).flags &= ~FLIPABLE;
+    EXIT_BODY(p);
+    SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  }
+}
+
 
 void FUN_08077af8(struct Enemy* p) {
   switch ((p->s).mode[2]) {
