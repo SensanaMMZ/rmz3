@@ -203,7 +203,197 @@ void FUN_0804d418(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/bee_server_p2b_b.inc");
+struct Entity* CreateSmoke(u8 kind, struct Coord* c);
+
+// 0x0804D494
+void FUN_0804d494(struct Boss* p) {
+  struct Coord c;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r4");
+      RemovePaletteAnimation(0x45);
+      {
+        register struct StageRun* sr asm("r3");
+        register u16 ms asm("r2");
+        sr = &gStageRun;
+        ms = sr->missionStatus;
+        one = 1;
+        {
+          register s32 t asm("r0");
+          t = one;
+          t &= ms;
+          if (t == 0) {
+            goto skip;
+          }
+        }
+        {
+          register u8 av asm("r1");
+          register s32 t2 asm("r0");
+          av = (sr->vm).active;
+          t2 = one;
+          t2 &= av;
+          if (t2 != 0) {
+            goto skip;
+          }
+        }
+        {
+          register s32 nv asm("r0");
+          register s32 k asm("r1");
+          nv = 0xFFFE;
+          nv &= ms;
+          k = 0x10;
+          nv |= k;
+          sr->missionStatus = nv;
+        }
+      }
+    skip : {
+      register u8 f2 asm("r2");
+      register s32 f asm("r0");
+      register s32 zz asm("r1");
+      u8* a;
+      f2 = (p->s).flags;
+      f = 1;
+      zz = 0;
+      f |= f2;
+      (p->s).flags = f;
+      (p->s).work[2] = 0xFF;
+      a = (u8*)p + 0x8c;
+      *(u32*)a = zz;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *(u32*)a = zz;
+      asm("" : "+r"(a));
+      a += 4;
+      asm("" : "+r"(a));
+      *a = zz;
+      (p->s).flags &= ~COLLIDABLE;
+    }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 w asm("r2");
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2]--;
+      {
+        register s32 w7 asm("r0");
+        register s32 k7 asm("r1");
+        w7 = (p->s).work[2];
+        asm("" : "+r"(w7));
+        k7 = 7;
+        w7 &= k7;
+        if (w7 != 0) {
+          goto nosmoke;
+        }
+      }
+      {
+        register u32* rp asm("r6");
+        register u32 mul asm("r5");
+        register u32 add asm("r2");
+        register u32 s1 asm("r3");
+        register s32 cy asm("r4");
+        register u32 v asm("r0");
+        {
+          register s32 cx asm("r1");
+          cx = (p->s).coord.x + -0x2000;
+          rp = &RNG_0202f388;
+          asm("" : "+r"(rp));
+          v = *rp;
+          mul = 0x343FD;
+          v *= mul;
+          add = 0x269EC3;
+          v += add;
+          v <<= 1;
+          asm("" : "+r"(v));
+          s1 = v >> 1;
+          v <<= 1;
+          v >>= 0x12;
+          c.x = v + cx;
+        }
+        cy = (p->s).coord.y + -0x2E00;
+        c.y = cy;
+        asm volatile("" ::: "memory");
+        {
+          register u32 v2 asm("r0");
+          register u32 d2 asm("r1");
+          asm volatile("add %0, %1, #0" : "=&l"(v2) : "l"(s1));
+          v2 *= mul;
+          v2 += add;
+          v2 <<= 1;
+          asm("" : "+r"(v2));
+          *rp = v2 >> 1;
+          v2 >>= 0x11;
+          d2 = 0xB8 * 128;
+          c.y = v2 % d2 + cy;
+        }
+        ((struct Entity * (*)(s32, struct Coord*)) CreateSmoke)(1, &c);
+      }
+    nosmoke:;
+      {
+        register u32 t3 asm("r0");
+        register u32 d3 asm("r1");
+        t3 = (p->s).work[2];
+        d3 = 0x14;
+        if ((u8)(t3 % d3) == 0) {
+          PlaySound(0x2A);
+        }
+      }
+      {
+        register s32 sw asm("r0");
+        sw = *(s8*)((u8*)p + 0x12);
+        w = (p->s).work[2];
+        if (sw >= 0) {
+          register s32 t4 asm("r0");
+          t4 = 2;
+          t4 &= w;
+          if (t4 != 0) {
+            register u8 fv asm("r0");
+            register s32 k1 asm("r1");
+            fv = (p->s).flags;
+            k1 = 1;
+            fv |= k1;
+            (p->s).flags = fv;
+          } else {
+            register u8 h asm("r1");
+            register u8 g asm("r0");
+            h = (p->s).flags;
+            asm("" : "+r"(h));
+            g = 0xFE;
+            g &= h;
+            (p->s).flags = g;
+          }
+        }
+      }
+      {
+        register s32 t8 asm("r0");
+        t8 = w << 24;
+        asm("" : "+r"(t8));
+        if (t8 != 0) {
+          break;
+        }
+      }
+      {
+        register struct StageRun* sr2 asm("r2");
+        TryDropItem(0xC, &(p->s).coord);
+        sr2 = &gStageRun;
+        {
+          register u8 av2 asm("r1");
+          register s32 k2 asm("r0");
+          av2 = (sr2->vm).active;
+          k2 = 2;
+          k2 |= av2;
+          (sr2->vm).active = k2;
+        }
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 2:
+      break;
+  }
+}
+
 
 // --------------------------------------------
 
