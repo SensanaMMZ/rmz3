@@ -75,6 +75,7 @@ void nop_080cbea4(struct Solid* p) {}
 INCASM("asm/solid/heavy_cannon_post_pre.inc");
 
 #include "story.h"
+#include "zero.h"
 
 extern const SolidFunc gHeavyCannonUpdates1[3];
 extern const SolidFunc gHeavyCannonUpdates2[3];
@@ -235,7 +236,171 @@ void FUN_080cc2d4(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/heavy_cannon_post_post_p2_p1.inc");
+extern const struct Rect Rect_ARRAY_0836ff30[2];
+struct Projectile* CreateHeavyCannonBall(s32 x, s32 y, u8 f);
+void FUN_080cbe38(struct Solid* p);
+
+// 0x080CC320
+void FUN_080cc320(struct Solid* p) {
+  register s32 nm asm("r0");
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 g asm("r1");
+      register s32 k asm("r0");
+      register const struct Rect* rc asm("r1");
+      (p->s).work[2] = 0x30;
+      g = (p->s).flags2;
+      asm("" : "+r"(g));
+      k = 8;
+      k |= g;
+      (p->s).flags2 = k;
+      rc = Rect_ARRAY_0836ff30;
+      asm("" : "+r"(rc));
+      if ((p->s).work[0] == 3) {
+        rc = (const struct Rect*)((u8*)rc + 8);
+      }
+      (p->s).size = (struct Rect*)rc;
+      (p->s).hazardAttr = 0x801;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      SetDDP(&p->body, &sCollisions[3]);
+      SetMotion(&p->s, 0x3801);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 2: {
+      register s32 f asm("r2");
+      (p->s).work[2]--;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        (p->s).mode[2] = 5;
+        return;
+      }
+      f = 0;
+      if ((p->s).coord.x < (pZero2->s).coord.x) {
+        f = 1;
+      }
+      if (((p->s).flags & 0x10) != 0) {
+        if (f == 0) {
+          goto adv;
+        }
+        break;
+      }
+      if (f == 0) {
+        break;
+      }
+    adv:
+      nm = (p->s).mode[2] + 1;
+      goto setmode;
+    }
+    case 3:
+      SetMotion(&p->s, 0x3803);
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4: {
+      register s32 xf asm("r1");
+      register s32 fl asm("r2");
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      if ((p->s).work[3] == 1) {
+        (p->s).mode[2] = 0;
+        return;
+      }
+      {
+        register s32 sh asm("r0");
+        fl = (p->s).flags;
+        sh = (u32)fl >> 4;
+        xf = 1;
+        xf &= ~sh;
+        if (xf != 0) {
+          register s32 g2 asm("r0");
+          g2 = 0x10;
+          g2 |= fl;
+          (p->s).flags = g2;
+        } else {
+          register s32 g3 asm("r0");
+          g3 = 0xEF;
+          g3 &= fl;
+          (p->s).flags = g3;
+        }
+      }
+      {
+        register u8* oa asm("r3");
+        s32 sh4, ov, m11;
+        *((u8*)p + 0x4c) = xf;
+        oa = (u8*)p + 0x4a;
+        sh4 = xf << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      (p->s).work[3]++;
+      SetMotion(&p->s, 0x3808);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 5: {
+      register s32 bx asm("r5");
+      register s32 fl2 asm("r2");
+      {
+        register s32 cx asm("r1");
+        register s32 k2 asm("r0");
+        cx = (p->s).coord.x;
+        k2 = -0x1800;
+        bx = cx + k2;
+        fl2 = (p->s).flags;
+        k2 = 0x10;
+        k2 &= fl2;
+        if (k2 != 0) {
+          k2 = 0xc0 << 5;
+          bx = cx + k2;
+        }
+      }
+      {
+        register s32 cy asm("r3");
+        register s32 by asm("r1");
+        register s32 k3 asm("r0");
+        cy = (p->s).coord.y;
+        k3 = -0x900;
+        by = cy + k3;
+        k3 = 0x20;
+        k3 &= fl2;
+        if (k3 != 0) {
+          k3 = 0x90 << 4;
+          by = cy + k3;
+        }
+        {
+          register s32 xf2 asm("r2");
+          register s32 one asm("r0");
+          xf2 = (u32)fl2 >> 4;
+          one = 1;
+          xf2 &= one;
+          ((void (*)(s32, s32, s32))CreateHeavyCannonBall)(bx, by, xf2);
+        }
+      }
+      SetMotion(&p->s, 0x3802);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      (p->s).work[2] = 0x70;
+      nm = 1;
+    setmode:
+      (p->s).mode[2] = nm;
+      break;
+  }
+  FUN_080cbe38(p);
+}
+
 
 void FUN_080cc4dc(struct Solid* p) {
   switch ((p->s).mode[2]) {
