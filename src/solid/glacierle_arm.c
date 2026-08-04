@@ -278,7 +278,109 @@ void FUN_080ceb2c(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/glacierle_arm_post_b.inc");
+// 0x080CEC74
+void FUN_080cec74(struct Solid* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 v asm("r0");
+      if ((p->s).work[0] != 0) {
+        goto one;
+      }
+      if (*((u8*)p + 0xbd) == 0) {
+        goto one;
+      }
+      {
+        register s32 d asm("r0");
+        u8* bp = (u8*)(p->s).unk_28 + 0xc4;
+        d = (p->s).coord.x - *(s32*)bp;
+        (p->s).unk_coord.x = d;
+        if (d < 0) {
+          (p->s).unk_coord.x = -d;
+        }
+      }
+      {
+        register s32 q asm("r0");
+        register s32 dv asm("r1");
+        q = (p->s).unk_coord.x << 3;
+        (p->s).unk_coord.x = q;
+        dv = 0xC0 * 64;
+        v = q / dv;
+        v += 1;
+      }
+      goto stv;
+    one:
+      v = 1;
+    stv:
+      (p->s).unk_coord.x = v;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 t = (p->s).unk_coord.x - 1;
+      (p->s).unk_coord.x = t;
+      if (t == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2:
+      (p->s).work[3] = 0x18;
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).unk_coord.y = 0x80 * 4;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 uy asm("r2");
+      register s32 ux asm("r0");
+      s32 t;
+      ux = (p->s).unk_coord.x;
+      uy = (p->s).unk_coord.y;
+      ux += uy;
+      (p->s).coord.x = ux;
+      if (((p->s).work[3] & 1) != 0) {
+        register s32 nv asm("r0");
+        nv = -uy;
+        (p->s).unk_coord.y = nv;
+      }
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[3] - 1;
+      (p->s).work[3] = t;
+      if ((u8)t == 0) {
+        (p->s).mode[2]++;
+      }
+      break;
+    }
+    case 4:
+      (p->s).d.y = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0xE0 * 8) {
+        (p->s).d.y = 0xE0 * 8;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if (((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0xB8 * 32) << 16) != 0) {
+        goto die;
+      }
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0xC0 * 128) {
+        break;
+      }
+    die : {
+      register u8* a asm("r1");
+      register s32 one2 asm("r0");
+      a = (u8*)p + 0xbc;
+      one2 = 1;
+      *a = one2;
+    }
+      SET_SOLID_ROUTINE(p, ENTITY_DIE);
+      GlacierleArm_Die(p);
+      break;
+  }
+}
+
 
 // --------------------------------------------
 void FUN_080ceb2c(struct Solid* p);
