@@ -953,6 +953,169 @@ void FUN_08062bb4(struct Boss* p) {
 
 INCASM("asm/boss/spearook_p1_post_p2_b.inc");
 
+void FUN_08061b68(struct Boss* p, s32 a, s32 b);
+struct Entity* FUN_080b1698(s32 x, s32 y, u8 f);
+
+// 0x08062E30
+void FUN_08062e30(struct Boss* p) {
+  register s32 m asm("r1");
+  {
+    register struct Entity* q asm("r1");
+    register s32 k asm("r1");
+    register s32 v asm("r0");
+    q = (p->s).unk_28;
+    (p->s).coord.x = q->coord.x;
+    v = q->coord.y;
+    k = -0x1200;
+    v += k;
+    (p->s).coord.y = v;
+  }
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 c asm("r0");
+      if ((p->s).work[3] == 1) {
+        c = (p->s).unk_coord.x + 1;
+      } else {
+        c = 0;
+      }
+      (p->s).unk_coord.x = c;
+      (p->s).work[3] = 1;
+      m = 0xD60A;
+      goto setm;
+    }
+    case 2: {
+      register s32 amp asm("r5");
+      register s32 dx asm("r6");
+      FUN_08061b68(p, 0xa0 << 5, -0x4500);
+      amp = -0xB00;
+      if (((p->s).flags & 0x10) != 0) {
+        amp = 0xb0 << 4;
+      }
+      {
+        register const s16* tb asm("r3");
+        register s32 a asm("r1");
+        register s32 sn asm("r2");
+        register s32 t asm("r0");
+        tb = gSineTable;
+        t = *(u16*)((u8*)p + 0xb8);
+        t <<= 16;
+        a = t >> 24;
+        t = a + 0x40;
+        t <<= 24;
+        t = ((u32)t) >> 23;
+        t += (s32)tb;
+        {
+          register s32 zi asm("r6");
+          zi = 0;
+          sn = *(const s16*)(t + zi);
+        }
+        t = amp;
+        t = t * sn;
+        if (t < 0) {
+          t += 0xff;
+        }
+        dx = t >> 8;
+        t = ((u32)(a << 24)) >> 23;
+        t += (s32)tb;
+        {
+          register s32 zi2 asm("r1");
+          register s32 cs asm("r3");
+          zi2 = 0;
+          cs = *(const s16*)(t + zi2);
+          zi2 = -cs;
+          t = zi2 << 2;
+          t += zi2;
+          t <<= 2;
+          t += zi2;
+          t <<= 8;
+          t = -t;
+          if (t < 0) {
+            t += 0xff;
+          }
+          t >>= 8;
+          dx += t;
+          t = amp;
+          t = t * cs;
+          if (t < 0) {
+            t += 0xff;
+          }
+          amp = t >> 8;
+          t = sn << 2;
+          t += sn;
+          t <<= 2;
+          t += sn;
+          t <<= 8;
+          t = -t;
+          if (t < 0) {
+            t += 0xff;
+          }
+          t >>= 8;
+          amp += t;
+        }
+      }
+      PlaySound(0x12F);
+      {
+        register s32 x asm("r0");
+        register s32 y asm("r1");
+        register u32 xf asm("r2");
+        register u32 one asm("r3");
+        x = (p->s).coord.x + dx;
+        y = (p->s).coord.y + amp;
+        xf = (u32)(p->s).flags >> 4;
+        one = 1;
+        xf &= one;
+        ((void (*)(s32, s32, u32))FUN_080b1698)(x, y, xf);
+      }
+      m = 0xD60C;
+    setm:
+      ((void (*)(struct Entity*, s32))SetMotion)(&p->s, m);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 4:
+      (p->s).unk_coord.y = 0x2d;
+      GotoMotion(&p->s, 0xD603, 0xa, 1);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      register s32 t asm("r3");
+      {
+        register s32 v asm("r0");
+        v = (p->s).unk_coord.y;
+        t = v - 1;
+      }
+      (p->s).unk_coord.y = t;
+      if (t == 0) {
+        register s32 nm asm("r0");
+        if ((u8)--(p->s).work[2] == 0) {
+          nm = 0xd;
+          goto setmode;
+        }
+        if ((p->s).unk_coord.x > 0) {
+          goto set11;
+        }
+        if ((RANDOM(RNG_0202f388) & 0xf) <= 4) {
+        set11:
+          nm = 0xb;
+        setmode:
+          (p->s).mode[1] = nm;
+        }
+        (p->s).mode[2] = t;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 void FUN_08061b68(struct Boss* p, s32 dx, s32 dy);
 
 // 0x08062fe0
