@@ -895,10 +895,9 @@ void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 // The size is exactly retail's 468 bytes and everything else matches, including
 // the barrier-opaque `fl` cache that is needed to keep agbcc from narrowing
 // `(fl << 24) >> 29` to a plain `lsrs #5` (see below).
-NON_MATCH void FUN_08097f3c(struct Enemy* p) {
-#if MODERN
+void FUN_08097f3c(struct Enemy* p) {
   s32 y0, v, up, dn;
-  u32 fl;
+  u32 fl, m;
   struct Coord c;
 
   switch ((p->s).mode[2]) {
@@ -928,7 +927,9 @@ NON_MATCH void FUN_08097f3c(struct Enemy* p) {
           v = (p->s).coord.y;
           fl = (p->s).flags;
           asm("" : "+l"(fl));
-          if (fl & Y_FLIP) {
+          m = Y_FLIP;
+          asm("" : "+l"(m));
+          if (fl & m) {
             v = y0 + 0x2300;
           }
           (p->s).coord.y = v;
@@ -937,9 +938,13 @@ NON_MATCH void FUN_08097f3c(struct Enemy* p) {
             u32 yf = 1;
             yf &= ~sh;
             if (yf) {
-              (p->s).flags = Y_FLIP | fl;
+              u32 t = Y_FLIP;
+              t |= fl;
+              (p->s).flags = t;
             } else {
-              (p->s).flags = 0xDF & fl;
+              u32 t = 0xDF;
+              t &= fl;
+              (p->s).flags = t;
             }
             (p->s).spr.yflip = yf & 1;
             (p->s).spr.oam.yflip = yf;
@@ -951,7 +956,9 @@ NON_MATCH void FUN_08097f3c(struct Enemy* p) {
           v = (p->s).coord.y;
           fl = (p->s).flags;
           asm("" : "+l"(fl));
-          if (fl & Y_FLIP) {
+          m = Y_FLIP;
+          asm("" : "+l"(m));
+          if (fl & m) {
             v = y0 + 0x2B00;
           }
           (p->s).coord.y = v;
@@ -960,9 +967,13 @@ NON_MATCH void FUN_08097f3c(struct Enemy* p) {
             u32 yf = 1;
             yf &= ~sh;
             if (yf) {
-              (p->s).flags = Y_FLIP | fl;
+              u32 t = Y_FLIP;
+              t |= fl;
+              (p->s).flags = t;
             } else {
-              (p->s).flags = 0xDF & fl;
+              u32 t = 0xDF;
+              t &= fl;
+              (p->s).flags = t;
             }
             (p->s).spr.yflip = yf & 1;
             (p->s).spr.oam.yflip = yf;
@@ -1003,9 +1014,6 @@ NON_MATCH void FUN_08097f3c(struct Enemy* p) {
       SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
       break;
   }
-#else
-  INCCODE("asm/enemy/cannon_hopper_97f3c.inc");
-#endif
 }
 
 INCASM("asm/enemy/cannon_hopper_post_post_b.inc");
