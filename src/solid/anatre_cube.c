@@ -1,6 +1,9 @@
 #include "collision.h"
 #include "global.h"
 #include "solid.h"
+#include "stagerun.h"
+#include "overworld.h"
+#include "physics.h"
 
 static void Solid47_Init(struct Solid* p);
 static void Solid47_Update(struct Solid* p);
@@ -116,7 +119,249 @@ void FUN_080def4c(struct Solid* p) {
   SET_SOLID_ROUTINE(p, ENTITY_UPDATE);
 }
 
-INCASM("asm/solid/anatre_cube_b.inc");
+// 0x080DEFA8
+void FUN_080defa8(struct Solid* p) {
+  register s32 z asm("r6");
+  struct Coord* cp;
+  register s32* st asm("r4");
+  z = (p->s).mode[1];
+  switch (z) {
+    case 0: {
+      register struct Body* b asm("r4");
+      {
+        register struct Camera* cam asm("r0");
+        cam = &gStageRun.vm.camera;
+        asm("" : "+r"(cam));
+        cp = &(p->s).coord;
+        if (CalcFromCamera(cam, cp) > (u32)(0x80 << 5)) {
+          break;
+        }
+      }
+      {
+        register s32 g asm("r1");
+        register s32 k asm("r0");
+        g = (p->s).flags;
+        asm("" : "+r"(g));
+        k = 1;
+        k |= g;
+        (p->s).flags = k;
+      }
+      InitNonAffineMotion(&p->s);
+      {
+        register s32 mv asm("r1");
+        register u8* gw asm("r3");
+        register s32 i asm("r2");
+        mv = (p->s).unk_coord.x;
+        gw = (u8*)&gOverworld;
+        {
+          register s32 w1 asm("r0");
+          w1 = (p->s).work[1];
+          i = 3;
+          i &= w1;
+          w1 = ((u32)w1) >> 2;
+          w1 += 4;
+          w1 <<= 2;
+          asm volatile("add %0, %0, %1" : "+l"(i) : "l"(w1));
+          w1 = 0x0002D028;
+          gw += w1;
+          i += (s32)gw;
+          w1 = *(u8*)i;
+          w1 <<= 1;
+          mv += w1;
+        }
+        SetMotion(&p->s, mv);
+      }
+      {
+        register s32 g2 asm("r1");
+        register s32 k2 asm("r0");
+        g2 = (p->s).flags;
+        asm("" : "+r"(g2));
+        k2 = 4;
+        k2 |= g2;
+        (p->s).flags = k2;
+      }
+      b = &p->body;
+      ((void (*)(struct Body*, const struct Collision*, struct Coord*, s32))InitBody)(b, (const struct Collision*)0x08371804, cp, 0);
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (BodyFunc)z;
+      {
+        register u8 h asm("r1");
+        register u8 g3 asm("r0");
+        h = (p->s).flags2;
+        asm("" : "+r"(h));
+        g3 = 0xEF;
+        g3 &= h;
+        (p->s).flags2 = g3;
+      }
+      *((u8*)p + 0x1d) = *((u8*)p + 0x1c);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8* gwp asm("r2");
+      register u8* fp asm("r1");
+      register s32 v asm("r0");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32* a0 asm("r0");
+        register s32 v0 asm("r1");
+        register s32 k0 asm("r2");
+        a0 = (s32*)((u8*)p + 0x8c);
+        v0 = *a0;
+        k0 = 4;
+        v0 &= k0;
+        st = a0;
+        if (v0 != 0) {
+          goto on;
+        }
+      }
+      if (PushoutToUp1((p->s).coord.x + -0x400, (p->s).coord.y) != 0) {
+        goto on;
+      }
+      if ((p->s).work[1] == 4) {
+        goto off;
+      }
+      if (PushoutToUp1((p->s).coord.x + (0x80 << 3), (p->s).coord.y) == 0) {
+        goto off;
+      }
+    on:
+      gwp = (u8*)&gOverworld;
+      {
+        register s32 i asm("r1");
+        register s32 w1 asm("r0");
+        w1 = (p->s).work[1];
+        i = 3;
+        i &= w1;
+        w1 = ((u32)w1) >> 2;
+        w1 += 4;
+        w1 <<= 2;
+        asm volatile("add %0, %0, %1" : "+l"(i) : "l"(w1));
+        w1 = 0x0002D028;
+        w1 += (s32)gwp;
+        asm volatile("add %0, %0, %1" : "+l"(i) : "l"(w1));
+        fp = (u8*)i;
+      }
+      v = 1;
+      goto setflag;
+    off:
+      gwp = (u8*)&gOverworld;
+      {
+        register s32 i2 asm("r1");
+        register s32 w2 asm("r0");
+        w2 = (p->s).work[1];
+        i2 = 3;
+        i2 &= w2;
+        w2 = ((u32)w2) >> 2;
+        w2 += 4;
+        w2 <<= 2;
+        asm volatile("add %0, %0, %1" : "+l"(i2) : "l"(w2));
+        w2 = 0x0002D028;
+        w2 += (s32)gwp;
+        asm volatile("add %0, %0, %1" : "+l"(i2) : "l"(w2));
+        fp = (u8*)i2;
+      }
+      v = 0;
+    setflag:
+      *fp = v;
+      {
+        register s32 i3 asm("r1");
+        register s32 w3 asm("r0");
+        w3 = (p->s).work[1];
+        i3 = 3;
+        i3 &= w3;
+        w3 = ((u32)w3) >> 2;
+        w3 += 4;
+        w3 <<= 2;
+        asm volatile("add %0, %0, %1" : "+l"(i3) : "l"(w3));
+        w3 = 0x0002D028;
+        w3 += (s32)gwp;
+        asm volatile("add %0, %0, %1" : "+l"(i3) : "l"(w3));
+        if (*(u8*)i3 != 0) {
+          register s32 mo asm("r2");
+          register s32 base asm("r0");
+          register s32 t asm("r1");
+          {
+            register s32 t8 asm("r0");
+            t8 = *((u8*)p + 0x1e);
+            mo = t8 << 8;
+          }
+          {
+            register u8* mp asm("r0");
+            mp = (u8*)p + 0x70;
+            mo |= *mp;
+          }
+          base = (p->s).unk_coord.x;
+          t = base + 1;
+          if (mo == t) {
+            goto done;
+          }
+          base += 2;
+          if (mo == base) {
+            goto done;
+          }
+          SetMotion(&p->s, t);
+        } else {
+          register s32 mo2 asm("r2");
+          register s32 t2 asm("r1");
+          {
+            register s32 t8 asm("r0");
+            t8 = *((u8*)p + 0x1e);
+            mo2 = t8 << 8;
+          }
+          {
+            register u8* mp2 asm("r0");
+            mp2 = (u8*)p + 0x70;
+            mo2 |= *mp2;
+          }
+          t2 = (p->s).unk_coord.x;
+          if (mo2 == t2) {
+            goto done;
+          }
+          t2 += 3;
+          if (mo2 == t2) {
+            goto done;
+          }
+          SetMotion(&p->s, t2);
+        }
+      }
+    done:
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > (u32)(0x80 << 5)) {
+        register s32 zz asm("r2");
+        {
+          register u8 h2 asm("r1");
+          register u8 g4 asm("r0");
+          h2 = (p->s).flags;
+          asm("" : "+r"(h2));
+          g4 = 0xFE;
+          g4 &= h2;
+          zz = 0;
+          (p->s).flags = g4;
+        }
+        *st = zz;
+        {
+          register u8* a asm("r0");
+          a = (u8*)p + 0x90;
+          asm volatile("str %0, [%1]" ::"l"(zz), "l"(a) : "memory");
+          a += 4;
+          asm("" : "+r"(a));
+          *a = zz;
+        }
+        {
+          register u8 h3 asm("r1");
+          register u8 g5 asm("r0");
+          h3 = (p->s).flags;
+          asm("" : "+r"(h3));
+          g5 = 0xFB;
+          g5 &= h3;
+          (p->s).flags = g5;
+        }
+        (p->s).mode[1] = zz;
+      }
+      break;
+    }
+  }
+}
+
 
 static const struct Collision sCollisions[2] = {
     {
