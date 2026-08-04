@@ -2641,7 +2641,112 @@ NON_MATCH void Actor34_Update(struct Solid* p) {
 #endif
 }
 
-INCASM("asm/solid/actor_p1_p2_b_b_c.inc");
+// 0x080D4228
+void Actor35_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0:
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      SetMotion(&p->s, MOTION(0xC2, 0x0D));
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) != 0) {
+        SetMotion(&p->s, MOTION(0xC2, 0x0C));
+        (p->s).work[2] = 6;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0) {
+        SetMotion(&p->s, MOTION(0xC2, 0x01));
+        (p->s).work[2] = 6;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0) {
+        SetMotion(&p->s, 0xc2 << 8);
+        (p->s).work[2] = 6;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0) {
+        SetMotion(&p->s, MOTION(0xC2, 0x06));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 2) != 0) {
+        SetMotion(&p->s, 0xc2 << 8);
+        (p->s).work[2] = 6;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] == 0) {
+        SetMotion(&p->s, MOTION(0xC2, 0x01));
+        (p->s).mode[1]++;
+      }
+      break;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 4) != 0) {
+        SetMotion(&p->s, 0xc2 << 8);
+        (p->s).work[2] = 6;
+        (p->s).mode[1]++;
+      }
+      break;
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xC2, 0x06));
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 9: {
+      register s32 xf asm("r2");
+      UpdateMotionGraphic(&p->s);
+      xf = 0;
+      if ((p->s).coord.x < ((p->s).scriptEntity->unk_04)->coord.x) {
+        xf = 1;
+      }
+      if (xf != 0) {
+        (p->s).flags |= X_FLIP;
+      } else {
+        register u8 h asm("r1");
+        register u8 g asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xEF;
+        g &= h;
+        (p->s).flags = g;
+      }
+      {
+        register s32 xv asm("r1");
+        register u8* oa asm("r3");
+        s32 sh4, ov, m11;
+        xv = xf;
+        *((u8*)p + 0x4c) = xv;
+        oa = (u8*)p + 0x4a;
+        sh4 = xv << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+      }
+      break;
+    }
+  }
+}
+
 
 void Actor36_Update(struct Solid* p) {
   switch ((p->s).mode[1]) {
