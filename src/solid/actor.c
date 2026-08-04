@@ -3665,6 +3665,155 @@ void Actor63_Update(struct Solid* p) {
   }
 }
 
+// 0x080D7944
+void Actor64_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 n asm("r4");
+      register u16* pi asm("r6");
+      register s32 tn asm("r2");
+      n = 0x8c;
+      asm("" : "+r"(n));
+      {
+        register u16* gt asm("r0");
+        register s32 o asm("r1");
+        gt = wStaticGraphicTilenums;
+        o = n << 1;
+        gt = (u16*)((u8*)gt + o);
+        tn = 0xa0 << 2;
+        *gt = tn;
+        {
+          register u16* pb2 asm("r0");
+          pb2 = wStaticMotionPalIDs;
+          pi = (u16*)((u8*)pb2 + o);
+          *pi = 7;
+        }
+      }
+      if ((p->s).work[1] == 0) {
+        register s32 ofs asm("r4");
+        ofs = n << 2;
+        ofs += 0x8c;
+        ofs <<= 2;
+        {
+          register const struct Graphic* g asm("r0");
+          register s32 t asm("r1");
+          register u32 base asm("r1");
+          base = (u32)STATIC_GRAPHICS;
+          g = (const struct Graphic*)(ofs + base);
+          t = *(const u16*)((const u8*)g + 6);
+          t = (u32)t >> 6;
+          t = tn - t;
+          t <<= 5;
+          {
+            register s32 k asm("r2");
+            k = 0x80 << 9;
+            t += k;
+          }
+          LoadGraphic((void*)g, (void*)t);
+        }
+        {
+          register const struct Palette* pal asm("r4");
+          register s32 t2 asm("r1");
+          register u32 pb asm("r0");
+          pb = (u32)STATIC_PALETTES;
+          ofs += pb;
+          pal = (const struct Palette*)ofs;
+          t2 = *pi;
+          {
+            register s32 dv asm("r0");
+            dv = *((const u8*)pal + 7);
+            t2 -= dv;
+          }
+          t2 <<= 5;
+          {
+            register s32 k2 asm("r2");
+            k2 = 0x80 << 2;
+            t2 += k2;
+          }
+          LoadPalette(pal, t2);
+        }
+      }
+      SetMotion(&p->s, 0x8C02);
+      if (((p->s).work[1] & 2) != 0) {
+        *((u8*)p + 0x25) = 0xf;
+      }
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      {
+        register s32 nx asm("r0");
+        if (((p->s).work[1] & 1) != 0) {
+          register u8* cam asm("r0");
+          (p->s).d.x = 0x80 << 1;
+          cam = (u8*)&gStageRun.vm.camera;
+          asm("" : "+r"(cam));
+          nx = *(s32*)(cam + 0x38) + 0xFFFF7800;
+        } else {
+          register u8* cam2 asm("r0");
+          (p->s).d.x = 0xFFFFFF00;
+          cam2 = (u8*)&gStageRun.vm.camera;
+          asm("" : "+r"(cam2));
+          nx = *(s32*)(cam2 + 0x38) + 0x000087FF;
+        }
+        (p->s).coord.x = nx;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 nx2 asm("r0");
+      register s32 dx asm("r2");
+      register s32 base2 asm("r1");
+      UpdateMotionGraphic(&p->s);
+      nx2 = (p->s).coord.x;
+      dx = (p->s).d.x;
+      nx2 += dx;
+      (p->s).coord.x = nx2;
+      if (dx < 0) {
+        base2 = (p->s).unk_coord.x;
+        if (nx2 <= base2) {
+          goto hit;
+        }
+      }
+      if (dx <= 0) {
+        break;
+      }
+      base2 = (p->s).unk_coord.x;
+      if (nx2 < base2) {
+        break;
+      }
+    hit:
+      (p->s).coord.x = base2;
+      SetMotion(&p->s, 0x8c << 8);
+      (p->s).work[2] = 8;
+      goto adv;
+    }
+    case 2: {
+      register s32 t3 asm("r0");
+      UpdateMotionGraphic(&p->s);
+      t3 = (p->s).work[2] - 1;
+      (p->s).work[2] = t3;
+      if ((t3 << 24) != 0) {
+        break;
+      }
+      SetMotion(&p->s, 0x8C01);
+      UpdateMotionGraphic(&p->s);
+    adv:
+      (p->s).mode[1]++;
+      break;
+    }
+    case 3:
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      SetMotion(&p->s, 0x8C03);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 INCASM("asm/solid/actor_p2b_post.inc");
 
 // ------------------------------------------------------------------------------------------------------------------------------------
