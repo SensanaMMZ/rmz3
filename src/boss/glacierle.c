@@ -1069,6 +1069,85 @@ void glacierleHammerPunch1(struct Boss* p) {
 
 INCASM("asm/boss/glacierle_b_post.inc");
 
+static const struct Coord16 ALIGNED(2) Coord16_ARRAY_08364ac6[2];
+u32 FUN_080823ec(struct Enemy* p);
+u8 glacierle_08082598(struct Enemy* p, u8 n);
+void FUN_08082348(struct Entity* e);
+
+// 0x08058740
+void glacierleHammerPunch3(struct Boss* p) {
+  u8 m = (p->s).mode[2];
+  struct Enemy* q;
+  struct Entity* e;
+  s32 v;
+  s32 w;
+
+  switch (m) {
+    case 0:
+      (p->s).work[2] = 1;
+      q = (struct Enemy*)(p->s).unk_2c;
+      *((u8*)q + 0xb5) = m;
+      (q->s).unk_coord.x = FUN_080823ec(q) + 0x300;
+      SetMotion(&p->s, MOTION(0xB2, 0x14));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      if (((p->s).work[2] & 3) == 0) {
+        PlaySound(0x8F);
+        (p->s).work[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      e = (p->s).unk_28;
+      (e->coord).x = (p->s).coord.x;
+      (e->coord).x += Coord16_ARRAY_08364ac6[(p->s).motion.cmdIdx].x;
+      v = (e->coord).x;
+      if ((p->s).flags & X_FLIP) {
+        v -= Coord16_ARRAY_08364ac6[(p->s).motion.cmdIdx].x * 2;
+      }
+      (e->coord).x = v;
+      (e->coord).y = (p->s).coord.y;
+      (e->coord).y += *(&Coord16_ARRAY_08364ac6[0].y + (p->s).motion.cmdIdx * 2);
+      q = (struct Enemy*)(p->s).unk_2c;
+      if ((q->s).unk_coord.x >= 0) {
+        (q->s).unk_coord.x -= 0x20;
+      } else {
+        (p->s).mode[2]++;
+      }
+      (p->s).work[2] += glacierle_08082598(q, 1);
+      (e->coord).x = (p->s).coord.x;
+      (e->coord).x += Coord16_ARRAY_08364ac6[(p->s).motion.cmdIdx].x;
+      w = (e->coord).x;
+      if ((p->s).flags & X_FLIP) {
+        w -= Coord16_ARRAY_08364ac6[(p->s).motion.cmdIdx].x * 2;
+      }
+      (e->coord).x = w;
+      (e->coord).y = (p->s).coord.y;
+      (e->coord).y += *(&Coord16_ARRAY_08364ac6[0].y + (p->s).motion.cmdIdx * 2);
+      break;
+    case 2:
+      SetDDP(&p->body, &sCollisions[128]);
+      q = (struct Enemy*)(p->s).unk_2c;
+      while (*((u8*)q + 0xb4) != 0) {
+        FUN_08082348(&q->s);
+      }
+      (q->s).flags &= ~DISPLAY;
+      (q->s).flags &= ~FLIPABLE;
+      EXIT_BODY(q);
+      SET_ENEMY_ROUTINE(q, ENTITY_DISAPPEAR);
+      *(u32*)((u8*)p + 0xb4) |= 1;
+      SetMotion(&p->s, MOTION(0xB2, 0x15));
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[1] = 0;
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
+
 static const u8 u8_ARRAY_08364ace[5];
 s32 FUN_0800a134(s32 x, s32 y);
 
