@@ -649,7 +649,176 @@ void FUN_0806d618(struct Enemy* p) {
 }
 
 
-INCASM("asm/enemy/gyro_cannon_p1b_b.inc");
+// 0x0806D684
+void FUN_0806d684(struct Enemy* p) {
+  if ((p->s).mode[2] == 0) {
+    register struct Zero** zp asm("r4");
+    register s32 dist asm("r6");
+    s32 dx, dy;
+    SetMotion(&p->s, MOTION(0x17, 0x00));
+    zp = &pZero2;
+    {
+      register struct Zero* z asm("r2");
+      z = *zp;
+      dx = (p->s).coord.x - (z->s).coord.x;
+      (p->s).d.x = dx;
+      dy = (p->s).coord.y - (z->s).coord.y;
+      dy += -0x1800;
+      (p->s).d.y = dy;
+    }
+    {
+      register s32 a asm("r1");
+      register s32 t1 asm("r6");
+      register s32 b asm("r0");
+      register s32 t2 asm("r1");
+      a = dx >> 8;
+      asm volatile("add %0, %1, #0" : "=&l"(t1) : "l"(a));
+      t1 *= a;
+      b = dy >> 8;
+      asm volatile("add %0, %1, #0" : "=&l"(t2) : "l"(b));
+      t2 *= b;
+      asm volatile("add %0, %1, #0" : "=&l"(b) : "l"(t2));
+      dist = t1 + b;
+    }
+    {
+      register s32 sq asm("r0");
+      sq = ((s32(*)(u32))Sqrt)(dist);
+      sq <<= 16;
+      dist = (s32)(((u32)sq) >> 16);
+    }
+    if (dist == 0) {
+      goto zerodist;
+    }
+    {
+      register s32 nx asm("r4");
+      register s32 ny asm("r0");
+      nx = (p->s).d.x / dist;
+      (p->s).d.x = nx;
+      ny = (p->s).d.y / dist;
+      {
+        register s32 q asm("r1");
+        q = (nx * 2 + nx) * 2;
+        (p->s).d.x = q;
+        q = (ny * 2 + ny) * 2;
+        (p->s).d.y = q;
+      }
+    }
+    goto haddir;
+  zerodist : {
+    register s32 v asm("r0");
+    if (((*zp)->s.flags & 0x10) == 0) {
+      goto negv;
+    }
+    v = 0xC0 * 8;
+    goto stdx;
+  negv:
+    v = -0x600;
+  stdx:
+    (p->s).d.x = v;
+    (p->s).d.y = 0;
+  }
+  haddir:;
+    if ((p->s).d.x <= 0) {
+      goto flipon;
+    }
+    {
+      register s32 zz asm("r2");
+      u8* oa;
+      s32 m11, ov;
+      zz = 0;
+      {
+        register u8 h asm("r1");
+        register u8 g asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0xEF;
+        g &= h;
+        (p->s).flags = g;
+      }
+      *((u8*)p + 0x4c) = zz;
+      oa = (u8*)p + 0x4a;
+      ov = *oa;
+      m11 = -0x11;
+      m11 &= ov;
+      *oa = m11;
+      goto flipdone;
+    }
+  flipon : {
+      register s32 one asm("r2");
+      register u8* oa2 asm("r3");
+      s32 sh4, ov2, m112;
+      one = 1;
+      {
+        register u8 fl asm("r1");
+        register s32 fv asm("r0");
+        fl = (p->s).flags;
+        fv = 0x10;
+        fv |= fl;
+        (p->s).flags = fv;
+      }
+      *((u8*)p + 0x4c) = one;
+      oa2 = (u8*)p + 0x4a;
+      one = 0x10;
+      ov2 = *oa2;
+      m112 = -0x11;
+      m112 &= ov2;
+      m112 |= one;
+      *oa2 = m112;
+    }
+  flipdone:
+    {
+      register u8* a2 asm("r1");
+      register s32 v2 asm("r0");
+      a2 = (u8*)p + 0xb4;
+      v2 = 1;
+      a2[0xa] = v2;
+    }
+    SetDDP(&p->body, &sCollisions[4]);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    register s32 cx asm("r0");
+    register s32 dxv asm("r3");
+    register s32 cy asm("r1");
+    register s32 dyv asm("r2");
+    cx = (p->s).coord.x;
+    dxv = (p->s).d.x;
+    cx += dxv;
+    (p->s).coord.x = cx;
+    cy = (p->s).coord.y;
+    dyv = (p->s).d.y;
+    cy += dyv;
+    (p->s).coord.y = cy;
+    dyv += 0x40;
+    (p->s).d.y = dyv;
+    cx += dxv;
+    if (((u16)FUN_080098a4(cx, cy) << 16) != 0) {
+      goto die;
+    }
+  }
+  {
+    register s32 bx asm("r0");
+    register s32 by asm("r1");
+    register s32 k2 asm("r2");
+    {
+      register s32 t asm("r1");
+      bx = (p->s).coord.x;
+      t = (p->s).d.x;
+      bx += t;
+    }
+    by = (p->s).coord.y;
+    k2 = -0x1800;
+    by += k2;
+    if (((u16)FUN_080098a4(bx, by) << 16) == 0) {
+      return;
+    }
+  }
+die:
+  SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+  GyroCannon_Die(p);
+}
+
 
 // 0x0806D7E0
 void FUN_0806d7e0(struct Enemy* p) {
