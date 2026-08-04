@@ -282,7 +282,123 @@ void FUN_0807daa0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/mellnet_post_post_post.inc");
+// 0x0807DB9C
+void FUN_0807db9c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8* q asm("r1");
+      register s32 four asm("r0");
+      (p->s).work[2] = 6;
+      q = (u8*)p + 0xb8;
+      four = 4;
+      *q = four;
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8* q asm("r4");
+      register s32 tx asm("r5");
+      s32 ty;
+      register s32 base asm("r8");
+      register s32 dist asm("r4");
+      register s32 idx asm("r4");
+      {
+        register s32 v asm("r2");
+        q = (u8*)p + 0xb8;
+        v = *q;
+        v += 1;
+        v += RANDOM(RNG_0202f388) & 7;
+        *q = v;
+        *q = ((u32)*q) % 9;
+      }
+      {
+        register s32 b asm("r0");
+        tx = (p->s).unk_coord.x;
+        b = 0xFFFFF000;
+        base = b;
+        tx += base;
+      }
+      idx = *q;
+      tx += ((u32)(u8)(((u32)idx) % 3)) << 12;
+      tx -= (p->s).coord.x;
+      ty = (p->s).unk_coord.y;
+      ty += base;
+      ty += ((u32)(u8)(((u32)idx) / 3)) << 12;
+      ty -= (p->s).coord.y;
+      {
+        register s32 a asm("r0");
+        register s32 b2 asm("r1");
+        a = tx >> 8;
+        dist = a;
+        dist = dist * a;
+        a = ty >> 8;
+        b2 = a;
+        b2 = b2 * a;
+        a = b2;
+        dist += a;
+        dist = (u16)Sqrt(dist) << 8;
+      }
+      tx = (tx << 8) / dist;
+      ty = (ty << 8) / dist;
+      {
+        register s32 t asm("r0");
+        t = ((tx << 3) - tx) << 7;
+        if (t < 0) {
+          t += 0xff;
+        }
+        tx = t >> 8;
+        t = ((ty << 3) - ty) << 7;
+        if (t < 0) {
+          t += 0xff;
+        }
+        ty = t >> 8;
+      }
+      (p->s).d.x = tx;
+      (p->s).d.y = ty;
+      {
+        register s32 lim asm("r1");
+        lim = 0xe0 << 2;
+        (p->s).work[3] = dist / lim;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 2:
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      if ((u8)--(p->s).work[3] == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 3:
+      (p->s).work[3] = 8;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4:
+      if ((u8)--(p->s).work[3] == 0) {
+        register s32 r asm("r1");
+        {
+          register s32 v asm("r0");
+          v = (p->s).work[2];
+          v -= 1;
+          (p->s).work[2] = v;
+          r = (u8)v;
+        }
+        if (r == 0) {
+          (p->s).mode[1] = 4;
+          (p->s).mode[2] = r;
+        } else {
+          (p->s).mode[2] = 1;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 
 // Everything reproduces (bitfield oam.xflip insert, 2D dive table, homing
 // divide) except two ties: cmdIdx lands in r3 where retail uses r7, and one
