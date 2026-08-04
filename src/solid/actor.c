@@ -4012,6 +4012,188 @@ NON_MATCH void FUN_080d6afc(struct Solid* p) {
 
 INCASM("asm/solid/actor_p2_post6afc.inc");
 
+// 0x080D724C
+void FUN_080d724c(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register u32 ofs asm("r4");
+      register u32 n2 asm("r5");
+      register const struct Graphic* g asm("r0");
+      const struct Palette* pal;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      ofs = sizeof(struct ColorGraphic) * SM140_RESISTANCE_MOB;
+      g = gStaticGraphic(ofs);
+      asm("" : "+r"(g));
+      {
+        register u16* gt asm("r1");
+        register s32 v asm("r1");
+        gt = wStaticGraphicTilenums;
+        asm("" : "+r"(gt));
+        n2 = SM140_RESISTANCE_MOB << 1;
+        gt = (u16*)((u8*)gt + n2);
+        v = *gt;
+        v -= g->ofs;
+        v *= 32;
+        {
+          register s32 k asm("r2");
+          k = 0x80 << 9;
+          v += k;
+        }
+        LoadGraphic((void*)g, (void*)v);
+      }
+      pal = gStaticPalette(ofs);
+      {
+        register u16* pt asm("r0");
+        register s32 sv asm("r1");
+        pt = wStaticMotionPalIDs;
+        pt = (u16*)((u8*)pt + n2);
+        sv = *pt;
+        sv -= pal->dst;
+        sv *= 32;
+        {
+          register s32 k2 asm("r2");
+          k2 = 0x80 << 2;
+          sv += k2;
+        }
+        LoadPalette(pal, sv);
+      }
+      SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 6));
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[1] != 0) {
+        (p->s).mode[1] = 5;
+        break;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if (((p->s).scriptEntity->flags & 1) != 0) {
+        SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 5));
+        (p->s).work[2] = 8;
+        goto bump;
+      }
+      break;
+    case 2: {
+      register s32 t asm("r2");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 v2 asm("r0");
+        v2 = (p->s).work[2];
+        v2 -= 1;
+        (p->s).work[2] = v2;
+        t = (u8)v2;
+      }
+      if (t != 0) {
+        break;
+      }
+      {
+        register u8 h asm("r1");
+        register u8 g2 asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g2 = 0xEF;
+        g2 &= h;
+        (p->s).flags = g2;
+      }
+      *((u8*)p + 0x4c) = t;
+      {
+        register u8* oa asm("r2");
+        register s32 ov asm("r1");
+        register s32 m11 asm("r0");
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11;
+      }
+      goto bump;
+    }
+    case 3: {
+      register s32 one asm("r2");
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 2) == 0) {
+        break;
+      }
+      one = 1;
+      {
+        register s32 h2 asm("r1");
+        register s32 g3 asm("r0");
+        h2 = (p->s).flags;
+        asm("" : "+r"(h2));
+        g3 = 0x10;
+        g3 |= h2;
+        (p->s).flags = g3;
+      }
+      *((u8*)p + 0x4c) = one;
+      {
+        register u8* oa2 asm("r3");
+        register s32 k16 asm("r2");
+        register s32 ov2 asm("r1");
+        register s32 m12 asm("r0");
+        oa2 = (u8*)p + 0x4a;
+        k16 = 0x10;
+        ov2 = *oa2;
+        m12 = -0x11;
+        m12 &= ov2;
+        m12 |= k16;
+        *oa2 = m12;
+      }
+      (p->s).work[2] = 8;
+      asm volatile("");
+      goto bump;
+    }
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(SM140_RESISTANCE_MOB, 6));
+      UpdateMotionGraphic(&p->s);
+    bump:
+      (p->s).mode[1]++;
+      break;
+    case 5: {
+      register s32 zz asm("r2");
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0xFFF) {
+        break;
+      }
+      {
+        register s32 h3 asm("r1");
+        register s32 g4 asm("r0");
+        h3 = (p->s).flags;
+        g4 = 0xFE;
+        g4 &= h3;
+        zz = 0;
+        {
+          register s32 m asm("r1");
+          m = 0xFD;
+          g4 &= m;
+        }
+        (p->s).flags = g4;
+      }
+      {
+        register u8* a asm("r0");
+        a = (u8*)p + 0x8c;
+        *(s32*)a = zz;
+        asm volatile("add %0, #4" : "+l"(a));
+        *(s32*)a = zz;
+        asm volatile("add %0, #4" : "+l"(a));
+        *a = zz;
+      }
+      {
+        register s32 h4 asm("r1");
+        register s32 g5 asm("r0");
+        h4 = (p->s).flags;
+        g5 = 0xFB;
+        g5 &= h4;
+        (p->s).flags = g5;
+      }
+      SET_SOLID_ROUTINE(p, ENTITY_DISAPPEAR);
+      break;
+    }
+  }
+}
+
 void FUN_080d740c(struct Solid* p) {
   switch ((p->s).mode[1]) {
     case 0:
