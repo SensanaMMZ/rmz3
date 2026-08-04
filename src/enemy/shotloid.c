@@ -7,6 +7,7 @@
 #include "story.h"
 #include "metatile.h"
 #include "zero.h"
+#include "stagerun.h"
 
 static const struct Collision sCollisions[];
 
@@ -743,6 +744,136 @@ void FUN_08094224(struct Enemy* p) {
 }
 
 INCASM("asm/enemy/shotloid_post_p2_p2b.inc");
+
+void FUN_080947c4(struct Enemy* p);
+
+// 0x08094534
+void FUN_08094534(struct Enemy* p) {
+  register s32* bp asm("r6");
+  register s32 st asm("r4");
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 n asm("r6");
+      SetDDP(&p->body, &sCollisions[2]);
+      SetMotion(&p->s, 0x8E09);
+      UpdateMotionGraphic(&p->s);
+      {
+        register struct Zero* z asm("r2");
+        register s32 dx asm("r1");
+        register s32 dy asm("r0");
+        z = pZero2;
+        dx = (p->s).coord.x;
+        dx -= (z->s).coord.x;
+        (p->s).d.x = dx;
+        dy = (p->s).coord.y;
+        dy += 0xFFFFE800;
+        dy -= (z->s).coord.y;
+        (p->s).d.y = dy;
+        dx >>= 8;
+        n = dx * dx;
+        dy >>= 8;
+        n += dy * dy;
+      }
+      n = (u16)Sqrt(n) << 8;
+      if (n != 0) {
+        register s32 q asm("r4");
+        s32 q2;
+        q = ((p->s).d.x << 8) / n;
+        (p->s).d.x = q;
+        q2 = ((p->s).d.y << 8) / n;
+        (p->s).d.x = ((q << 1) + q) << 1;
+        (p->s).d.y = ((q2 << 1) + q2) << 1;
+      } else {
+        (p->s).d.x = 0xc0 << 3;
+        (p->s).d.y = n;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      UpdateMotionGraphic(&p->s);
+      if ((u8)FUN_08093a98(p, (p->s).d.x) != 0) {
+        goto boom;
+      }
+      bp = (s32*)((u8*)p + 0x8c);
+      st = *bp;
+      {
+        register s32 four asm("r0");
+        four = 4;
+        st &= four;
+      }
+      if (st != 0) {
+      boom:
+        FUN_080947c4(p);
+        break;
+      }
+      {
+        register s32 dy asm("r0");
+        register s32 lim asm("r1");
+        dy = (p->s).d.y;
+        dy += 0x40;
+        (p->s).d.y = dy;
+        lim = 0xe0 << 3;
+        if (dy > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      {
+        register s32 cy asm("r1");
+        cy = (p->s).coord.y;
+        cy += (p->s).d.y;
+        (p->s).coord.y = cy;
+      }
+      {
+        register s32 pu asm("r1");
+        pu = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (pu < 0) {
+          (p->s).coord.y += pu;
+          FUN_080947c4(p);
+        }
+      }
+      if ((p->s).work[1] != 0) {
+        if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > (u32)(0xc0 << 7)) {
+          {
+            register s32 h asm("r1");
+            register s32 g asm("r0");
+            h = (p->s).flags;
+            asm("" : "+r"(h));
+            g = 0xFE;
+            g &= h;
+            {
+              register s32 m asm("r1");
+              m = 0xFD;
+              g &= m;
+            }
+            (p->s).flags = g;
+          }
+          *bp = st;
+          {
+            register u8* q asm("r0");
+            q = (u8*)p + 0x90;
+            asm volatile("str %0, [%1]" ::"l"(st), "l"(q) : "memory");
+            q += 4;
+            asm("" : "+r"(q));
+            *q = st;
+          }
+          {
+            register s32 h2 asm("r1");
+            register s32 g2 asm("r0");
+            h2 = (p->s).flags;
+            asm("" : "+r"(h2));
+            g2 = 0xFB;
+            g2 &= h2;
+            (p->s).flags = g2;
+          }
+          SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+        }
+      }
+      break;
+    }
+  }
+}
+
 
 // 0x0809468C -- turret sweep: clear the aim bit, flip toward the stored side,
 // step the aim angle and re-enter the motion at the new frame.
