@@ -2750,7 +2750,138 @@ void Actor32_Update(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/actor_p1_p2_b_b.inc");
+// 0x080D3F58
+void Actor33_Update(struct Solid* p) {
+  register s32 f asm("r1");
+  register s32 m asm("r0");
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register u8 h asm("r1");
+      register u8 g asm("r0");
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      h = (p->s).flags;
+      asm("" : "+r"(h));
+      g = 0xFE;
+      g &= h;
+      (p->s).flags = g;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8* pm asm("r1");
+      register u8* q asm("r2");
+      register s32 v asm("r0");
+      pm = (u8*)&gPaletteManager;
+      q = pm + 0x404;
+      v = 0x40;
+      *(u16*)q = v;
+      pm += 0x406;
+      asm("" : "+r"(pm));
+      v = 0xe0 << 1;
+      *(u16*)pm = v;
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      {
+        register s32 h2 asm("r1");
+        register s32 g2 asm("r0");
+        h2 = (p->s).flags;
+        asm("" : "+r"(h2));
+        g2 = 1;
+        g2 |= h2;
+        (p->s).flags = g2;
+      }
+      SetMotion(&p->s, 0x3503);
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 2: {
+      register u8* pm2 asm("r1");
+      register u8* q2 asm("r2");
+      register s32 v2 asm("r0");
+      pm2 = (u8*)&gPaletteManager;
+      q2 = pm2 + 0x404;
+      v2 = 0x40;
+      *(u16*)q2 = v2;
+      pm2 += 0x406;
+      asm("" : "+r"(pm2));
+      v2 = 0xe0 << 1;
+      *(u16*)pm2 = v2;
+      if (((p->s).scriptEntity->flags & 2) == 0) {
+        break;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      if (((p->s).scriptEntity->flags & 4) == 0) {
+        break;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      f = (p->s).scriptEntity->flags;
+      m = 8;
+      goto test;
+    case 5:
+      SetMotion(&p->s, 0x3501);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      goto bump;
+    case 7:
+      SetMotion(&p->s, 0);
+      (p->s).work[2] = 4;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+      goto bump;
+    case 9:
+      SetMotion(&p->s, 0xcc << 6);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 10:
+      UpdateMotionGraphic(&p->s);
+      f = (p->s).scriptEntity->flags;
+      m = 0x10;
+      goto test;
+    case 11:
+      SetMotion(&p->s, 0xc4 << 8);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 12:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x -= 0x50;
+      f = (p->s).scriptEntity->flags;
+      m = 0x20;
+    test:
+      m &= f;
+      if (m == 0) {
+        break;
+      }
+    bump:
+      (p->s).mode[1]++;
+      break;
+    case 13:
+      SetMotion(&p->s, 0x3303);
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 14:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
+
 
 // Weil-throne idle actor: one-time graphic/palette load with the tilenum and
 // palid slots written first, then breathe/flicker. Logic verified; parked on
