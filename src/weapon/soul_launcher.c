@@ -2,6 +2,7 @@
 #include "global.h"
 #include "mission.h"
 #include "weapon.h"
+#include "physics.h"
 
 // props (56bytes, offset: 0xB4..)
 struct SoulLauncherProps {
@@ -170,7 +171,108 @@ void SoulLauncher_Init(struct Weapon* p) {
   asm volatile("" ::"l"(z));
 }
 
-INCASM("asm/weapon/soul_launcher_pre.inc");
+
+s32 FUN_0800a40c(s32 x, s32 y);
+metatile_attr_t FUN_0803b4e8(s32 x, s32 y);
+void SoulLauncher_Die(struct Weapon* p);
+
+// 0x0803B298
+void SoulLauncher_Update(struct Weapon* p) {
+  s32 r, z2, zv;
+  u16 atv;
+
+  if (((struct SoulLauncherProps*)p->props.raw)->unk_c0 != 0) {
+    (p->body).status = 0;
+    (p->body).prevStatus = 0;
+    (p->body).invincibleTime = 0;
+    (p->s).flags &= ~COLLIDABLE;
+  }
+  (p->s).coord.x += FUN_0800a40c((p->s).coord.x, (p->s).coord.y + 0x800);
+  switch ((p->s).mode[1]) {
+    case 0:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      if ((u16)FUN_0803b4e8((p->s).coord.x, (p->s).coord.y) == 0) {
+        break;
+      }
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if (r >= -0x800) {
+        (p->s).coord.y += r;
+      }
+      if ((p->s).work[1] != 0) {
+        (p->s).mode[1] = 1;
+        break;
+      }
+      goto die;
+    case 1:
+      SetMotion(&p->s, 0x6701);
+      (p->s).work[2] = 0x40;
+      (p->s).mode[1] = 2;
+      /* fallthrough */
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((u16)FUN_0803b4e8((p->s).coord.x, (p->s).coord.y + 1) == 0) {
+        (p->s).coord.y += (p->s).d.y;
+      }
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+      if ((u32)(r + 0x800) <= 0x7FF) {
+        (p->s).coord.y += r;
+      }
+      (p->s).work[2]--;
+      if ((u8)(p->s).work[2] == 0xFF) {
+        (p->s).mode[1] = 3;
+      }
+      break;
+    case 3:
+      SetMotion(&p->s, 0x6702);
+      (p->s).mode[1] = 4;
+      /* fallthrough */
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((u16)FUN_0803b4e8((p->s).coord.x, (p->s).coord.y + 1) == 0) {
+        (p->s).coord.y += (p->s).d.y;
+        r = PushoutToUp1((p->s).coord.x, (p->s).coord.y);
+        if (r >= -0x800) {
+          (p->s).coord.y += r;
+        }
+      }
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    die:
+      SET_WEAPON_ROUTINE(p, ENTITY_DIE);
+      SoulLauncher_Die(p);
+      break;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.y += (p->s).d.y;
+      atv = FUN_080098a4((p->s).coord.x, (p->s).coord.y);
+      if (atv != 0) {
+        zv = (u16)(atv & 0x8000);
+        if (zv == 0) {
+          r = PushoutToDown1((p->s).coord.x, (p->s).coord.y);
+          if (r < -(p->s).d.y) {
+            (p->s).coord.y += r;
+          }
+          (p->s).d.y = zv;
+          (p->s).mode[1] = zv;
+          break;
+        }
+      }
+      (p->s).work[2]--;
+      z2 = 0;
+      if ((u8)(p->s).work[2] == 0xFF) {
+        (p->s).d.y = z2;
+        (p->s).mode[1] = z2;
+      }
+      break;
+  }
+}
 
 void SoulLauncher_Die(struct Weapon* p) {
   (p->s).flags &= ~DISPLAY;
