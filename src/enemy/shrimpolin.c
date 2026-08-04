@@ -516,7 +516,112 @@ void shrimporin_08069d00(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/shrimpolin.inc");
+
+void FUN_080b8f68(s32 x, s32 y, u8 n);
+
+// 0x08069D6C
+void shrimporinBurrowSnow(struct Enemy* p) {
+  u8 m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      (p->s).flags &= ~DISPLAY;
+      SetDDP(&p->body, sCollisions);
+      (p->s).d.x = m;
+      (p->s).work[2] = m;
+      (p->s).work[3] = m;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1: {
+      register s32 hit asm("r2");
+      register s32 g asm("r2");
+      s32 zx, v, t, r, s5, cx;
+      u16 at;
+      t = (p->s).work[3];
+      if ((t & 3) == 0) {
+        FUN_080b8f68((p->s).coord.x, (p->s).coord.y, (p->s).work[1]);
+      }
+      (p->s).work[3]++;
+      t = (p->s).work[2] + 1;
+      (p->s).work[2] = t;
+      if ((u8)t > 0x78) {
+        (p->s).mode[1] = 3;
+        (p->s).mode[2] = 0;
+      }
+      zx = (pZero2->s).coord.x;
+      zx -= 0x4000;
+      asm("" : "+l"(zx));
+      if ((pZero2->s).flags & X_FLIP) {
+        zx += 0x8000;
+      }
+      asm("" : "+l"(zx));
+      zx += 0x2000;
+      zx -= (((p->s).work[2] >> 4) & 1) << 14;
+      (p->s).unk_coord.x = 0x500;
+      v = (p->s).unk_coord.x;
+      if (zx - (p->s).coord.x < 0) {
+        v = -0x500;
+      }
+      (p->s).unk_coord.x = v;
+      (p->s).d.x += ((v - (p->s).d.x) * 24) / 256;
+      if ((p->s).d.x > 0x300) {
+        (p->s).d.x = 0x300;
+      } else if ((p->s).d.x < -0x300) {
+        (p->s).d.x = -0x300;
+      }
+      (p->s).coord.x += (p->s).d.x;
+      {
+        s32 base = *(s32*)((u8*)p + 0xb8);
+        s32 dd = (p->s).coord.x - base;
+        if (dd > 0x16800) {
+          (p->s).coord.x = base + 0x16800;
+        } else if (dd < -0x16800) {
+          (p->s).coord.x = base + -0x16800;
+        }
+      }
+      r = 0;
+      if ((p->s).d.x > 0) {
+        cx = (p->s).coord.x;
+        s5 = 0xC00;
+        hit = PushoutToLeft2(cx + s5, (p->s).coord.y - 0x800);
+        asm("" : "+r"(hit));
+        if (hit >= 0) {
+          goto nopush;
+        }
+      } else {
+        cx = (p->s).coord.x;
+        s5 = -0xC00;
+        hit = PushoutToRight2(cx + s5, (p->s).coord.y - 0x800);
+        asm("" : "+r"(hit));
+        if (hit <= 0) {
+          goto nopush;
+        }
+      }
+      r = 1;
+      (p->s).coord.x += hit;
+    nopush:
+      g = FUN_0800a05c((p->s).coord.x + s5, (p->s).coord.y);
+      asm("" : "+r"(g));
+      if ((u32)(g - (p->s).coord.y + 0xF00) > 0x1DFF) {
+        r = 1;
+        (p->s).coord.x -= (p->s).d.x;
+      }
+      asm volatile("" ::"r"(g));
+      t = (p->s).work[2];
+      (p->s).work[2] = r + t;
+      SET_XFLIP(p, (u32)(p->s).d.x >> 31);
+      at = FUN_080098a4((p->s).coord.x, (p->s).coord.y + 0x800);
+      if (at == 0) {
+        SetMotion(&p->s, MOTION(0x0D, 0x02));
+        UpdateMotionGraphic(&p->s);
+        (p->s).mode[1] = 6;
+        (p->s).mode[2] = at;
+      } else {
+        (p->s).coord.y = FUN_0800a05c((p->s).coord.x, (p->s).coord.y);
+      }
+      break;
+    }
+  }
+}
 
 void createShrimporinIce(s32 x, s32 y, u8 n);
 
