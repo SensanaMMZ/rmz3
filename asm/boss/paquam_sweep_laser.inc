@@ -1,12 +1,3 @@
-	.include "asm/macros.inc"
-
-	.syntax unified
-
-	.text
-
-
-	thumb_func_start paquamSweepLaser
-paquamSweepLaser: @ 0x08051DBC
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldrb r0, [r4, #0xe]

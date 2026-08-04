@@ -413,7 +413,153 @@ void FUN_08051cdc(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/pantheon_aqua_mod_p2b.inc");
+void createSweepLaserSign(struct Entity* e);
+
+// 0x08051dbc -- pantheon aqua mod: sweep-laser attack (sign, palette anims
+// 0x58/0x59/0x54, then the wind-down timer).  Blocker (CSE-placement basin):
+// the whole 388-byte body is byte-identical to retail EXCEPT the position of
+// the hoisted `p + 0xb8` pointer pair.  Retail emits `adds r5, r4, #0 / adds
+// r5, #0xb8` as the LAST two instructions of the dispatch block, immediately
+// before `mov pc, r0` -- the signature of a global-CSE insertion at the end of
+// the dominator block.  Writing it as an explicit statement before the switch
+// always lands it between the mode load and the `cmp` (18 bytes differ, no
+// size change); letting agbcc CSE it out of the per-case assignments does
+// place it correctly but allocates a second pseudo and copies it into pb at
+// every use, which grows the function and overflows the ROM.
+NON_MATCH void paquamSweepLaser(struct Boss* p) {
+#if MODERN
+
+  register u8* pb asm("r5");
+  register s32 md asm("r0");
+  md = (p->s).mode[2];
+  pb = (u8*)p + 0xb8;
+  switch (md) {
+    case 0: {
+      PlaySound(0xE5);
+      {
+        s32* w = (s32*)((u8*)p + 0xb4);
+        register s32 v asm("r0");
+        register s32 msk asm("r1");
+        v = *w;
+        msk = -5;
+        v &= msk;
+        msk -= 4;
+        v &= msk;
+        msk -= 8;
+        v &= msk;
+        *w = v;
+      }
+      createLaserSign(&p->s, (p->s).coord.x, (p->s).coord.y);
+      {
+        register u8* t asm("r0");
+        u8 v0;
+        t = (u8*)p + 0xb8;
+        asm("" : "+r"(t));
+        v0 = *t;
+        pb = t;
+        asm("" : "+r"(pb));
+        if (v0 != 0) {
+          RemovePaletteAnimation(*pb);
+          *pb = 0;
+        }
+        {
+          u32 g0 = GetEntityPalID(&p->s);
+          u32 g = (u8)g0 << 5;
+          StartPaletteAnimation(0x58, g | 0x200);
+        }
+        *pb = 0x58;
+      }
+      SetMotion(&p->s, 0x4D01);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 1: {
+      register s32* w1 asm("r0");
+      register s32* w asm("r6");
+      register s32 v asm("r1");
+      register s32 k asm("r2");
+      w1 = (s32*)((u8*)p + 0xb4);
+      v = *w1;
+      k = 4;
+      v &= k;
+      w = w1;
+      asm("" : "+r"(w1));
+      if (v != 0) {
+        if (*pb != 0) {
+          RemovePaletteAnimation(*pb);
+          *pb = 0;
+        }
+        {
+          u32 g0 = GetEntityPalID(&p->s);
+          u32 g = (u8)g0 << 5;
+          StartPaletteAnimation(0x59, g | 0x200);
+        }
+        *pb = 0x59;
+      }
+      if (*w & 8) {
+        (p->s).mode[2]++;
+      }
+      StepPaletteAnimation(*pb);
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 2: {
+      PlaySound(0xE6);
+      {
+        register u8* t asm("r0");
+        u8 v0;
+        t = (u8*)p + 0xb8;
+        asm("" : "+r"(t));
+        v0 = *t;
+        pb = t;
+        asm("" : "+r"(pb));
+        if (v0 != 0) {
+          RemovePaletteAnimation(*pb);
+          *pb = 0;
+        }
+        {
+          u32 g0 = GetEntityPalID(&p->s);
+          u32 g = (u8)g0 << 5;
+          StartPaletteAnimation(0x54, g | 0x200);
+        }
+        *pb = 0x54;
+      }
+      createSweepLaserSign(&p->s);
+      (p->s).mode[2]++;
+    }
+      // fallthrough
+    case 3:
+      if (*(s32*)((u8*)p + 0xb4) & 0x10) {
+        (p->s).mode[2]++;
+      }
+      StepPaletteAnimation(*pb);
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 4:
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      // fallthrough
+    case 5: {
+      s32 t = (p->s).work[2];
+      u32 u;
+      t -= 1;
+      (p->s).work[2] = t;
+      u = (u8)t;
+      if (u == 0) {
+        (p->s).mode[1] = u;
+        (p->s).mode[2] = 1;
+        (p->s).work[2] = 0x46;
+      }
+      StepPaletteAnimation(*((u8*)p + 0xb8));
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+#else
+  INCCODE("asm/boss/paquam_sweep_laser.inc");
+#endif
+}
+
 
 
 void FUN_08080858(struct Entity* e);
