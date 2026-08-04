@@ -350,7 +350,70 @@ void FUN_08015510(struct StageLayer* l, const struct Stage* stage) {
   }
 }
 
-INCASM("asm/stage_gfx/weil_labo_p1_p1b.inc");
+// 0x08015564
+void weilLabo_08015564(struct StageLayer* l, const struct Stage* stage) {
+  u32 b = (u16)l->bgIdx;
+  switch (l->phase) {
+    case 0:
+      if (gOverworld.state[0] == 0) {
+        break;
+      }
+      l->phase = 1;
+      FALLTHROUGH;
+    case 1: {
+      u32 n = b >> 4;
+      BGCNT16(n) = l->screenBase | 0x47;
+      RESET_BGOFS(n);
+      CpuFastSet(BGMAP(76), gOverworld.bgmap, 0x200);
+      LoadGraphic((void*)&TILESETS(16, 4)->g, (void*)0x4000);
+      LoadPalette(&TILESETS(16, 4)->pal, 0);
+      LoadGraphic((void*)&TILESETS(16, 5)->g, (void*)0x4000);
+      LoadPalette(&TILESETS(16, 5)->pal, 0);
+      l->phase++;
+      FALLTHROUGH;
+    }
+    case 2:
+      BGnVOFS(b >> 4) += 4;
+      break;
+  }
+  switch (l->unk_0f) {
+    case 0:
+      if (gOverworld.state[3] == 0) {
+        return;
+      }
+      StartPaletteAnimation(0x10D, 0);
+      l->unk_0f++;
+      FALLTHROUGH;
+    case 1:
+      if ((u8)StepPaletteAnimation(0x10D) != 4) {
+        return;
+      }
+      goto bump;
+    case 2:
+      RemovePaletteAnimation(0x10D);
+      StartPaletteAnimation(0x87 << 1, 0);
+      l->unk_0f++;
+      FALLTHROUGH;
+    case 3:
+      StepPaletteAnimation(0x87 << 1);
+      if (gOverworld.state[3] == 1) {
+        return;
+      }
+      LoadScreenIntoMetatileMap(0x1f, 8, 0x60);
+      l->unk_0f++;
+      FALLTHROUGH;
+    case 4:
+      if (gOverworld.state[0] == 0) {
+        StepPaletteAnimation(0x87 << 1);
+        return;
+      }
+      RemovePaletteAnimation(0x87 << 1);
+    bump:
+      l->unk_0f++;
+      break;
+  }
+}
+
 
 // 0x08015710
 void weilLabo_08015710(struct StageLayer* l, const struct Stage* stage) {
