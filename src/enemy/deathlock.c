@@ -1044,7 +1044,163 @@ void maybeKillDeathlock(struct Enemy* p) {
   SET_ENEMY_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/enemy/deathlock_post_p2b_b.inc");
+void FUN_080b83d4(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_080b857c(struct Entity* e, struct Coord* c, struct Coord* dc, s32 y, motion_t* motions, u8 frame);
+void FUN_080b2b40(u8 kind, struct Coord* c, s32 v, u8 n);
+
+// 0x0808E358
+void FUN_0808e358(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 i asm("r6");
+      s32* b8c;
+      register s32* b90 asm("r8");
+      register u8* b94 asm("sb");
+      register struct Coord* pc asm("sl");
+      register s32 dir asm("r4");
+      struct Coord c;
+      i = *((u8*)p + 0xb9);
+      b8c = (s32*)((u8*)p + 0x8c);
+      b90 = (s32*)(0x90 + (u32)p);
+      {
+        register s32 kk asm("r2");
+        kk = 0x94;
+        asm volatile("add %0, %0, %1" : "+l"(kk) : "l"(p));
+        b94 = (u8*)kk;
+      }
+      {
+        register s32 kp asm("r0");
+        kp = 0x54;
+        asm volatile("add %0, %0, %1" : "+l"(kp) : "l"(p));
+        pc = (struct Coord*)kp;
+      }
+      if (i <= 5) {
+        do {
+          CreateGhost65((p->s).coord.x, (p->s).coord.y, i, ((p->s).flags >> 4) & 1);
+          i++;
+        } while (i <= 5);
+      }
+      dir = 0;
+      {
+        register s32 zx asm("r0");
+        register s32 cx asm("r1");
+        zx = (pZero2->s).coord.x;
+        cx = (p->s).coord.x;
+        zx -= cx;
+        if (zx > 0) {
+          dir = 1;
+        }
+        zx = dir << 8;
+        {
+          register s32 nn asm("r0");
+          nn = cx - zx;
+          (p->s).coord.x = nn;
+        }
+      }
+      SetMotion(&p->s, 0x740F);
+      i = 0;
+      *b8c = i;
+      {
+        register s32* bb asm("r2");
+        bb = b90;
+        *bb = i;
+      }
+      *b94 = i;
+      (p->s).flags &= 0xFB;
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y;
+      ((void (*)(s32, struct Coord*, s32, s32))FUN_080b2b40)(0, &c, 0x80 << 2, dir);
+      {
+        register s32 r asm("r0");
+        register s32 k asm("r2");
+        register s32 yy asm("r1");
+        register s32 xx asm("r0");
+        xx = (p->s).coord.x;
+        yy = (p->s).coord.y;
+        k = 0x80 << 3;
+        yy += k;
+        r = PushoutToUp1(xx, yy);
+        r = ~r;
+        r = (u32)r >> 31;
+        (p->s).work[3] = r;
+        {
+          register s32 k60 asm("r2");
+          register s32 o asm("r1");
+          k60 = 0x60;
+          o = dir << 1;
+          o += dir;
+          o <<= 6;
+          o = k60 - o;
+          c.x = o;
+          c.y = k60;
+        }
+        if (r != 0) {
+          ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b857c)(
+              &p->s, pc, &c, 0x20, (motion_t*)0x08369328, 0x18);
+          (p->s).d.y = i;
+        } else {
+          ((void (*)(struct Entity*, struct Coord*, struct Coord*, s32, motion_t*, s32))FUN_080b83d4)(
+              &p->s, pc, &c, 0, (motion_t*)0x08369328, 0x18);
+        }
+      }
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 t asm("r1");
+      if ((p->s).work[3] != 0) {
+        register s32 dy asm("r0");
+        register s32 lim asm("r1");
+        dy = (p->s).d.y + 0x15;
+        (p->s).d.y = dy;
+        lim = 0xe0 << 3;
+        if (dy > lim) {
+          (p->s).d.y = lim;
+        }
+        (p->s).coord.y = (p->s).coord.y + (p->s).d.y;
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 w asm("r0");
+        w = (p->s).work[2];
+        t = w - 1;
+        (p->s).work[2] = t;
+      }
+      if ((p->s).work[3] == 0) {
+        goto zero;
+      }
+      {
+        register s32 tt asm("r0");
+        tt = t << 24;
+        if (tt == 0) {
+          goto kill;
+        }
+      }
+      {
+        register s32 cx2 asm("r1");
+        cx2 = (p->s).coord.x;
+        if (((u16)FUN_080098a4(cx2, cx2) << 16) == 0) {
+          break;
+        }
+      }
+    kill:
+      maybeKillDeathlock(p);
+      break;
+    zero:
+      {
+        register s32 tt2 asm("r0");
+        tt2 = t << 24;
+        if (tt2 != 0) {
+          break;
+        }
+      }
+      maybeKillDeathlock(p);
+      break;
+    }
+  }
+}
+
 
 void Deathlock_Init(struct Enemy* p);
 void Deathlock_Update(struct Enemy* p);
