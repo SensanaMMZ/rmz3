@@ -774,7 +774,139 @@ INCASM("asm/enemy/shotcounter_p1.inc");
 
 bool8 FUN_080667b8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/shotcounter_p2.inc");
+struct Projectile* CreateShotcounterBullet(struct Coord* c, struct Coord* d, u8 r2, u8 r3);
+
+// 0x080667BC
+void shotcounter_080667bc(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 z asm("r4");
+      register u8* fp asm("r1");
+      register s32 one asm("r0");
+      SetMotion(&p->s, 0x401);
+      PlaySound(0x103);
+      fp = (u8*)p + 0xbd;
+      z = 0;
+      one = 1;
+      *fp = one;
+      SetDDP(&p->body, &sCollisions[7]);
+      (p->s).work[2] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      if ((u8)++(p->s).work[2] == 2) {
+        *((u8*)p + 0xbd) = 1;
+        SetDDP(&p->body, &sCollisions[7]);
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      (p->s).work[2] = 0xc;
+      goto bump;
+    case 3:
+      SetMotion(&p->s, 0x402);
+      (p->s).work[2] = 2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4: {
+      if ((p->s).work[2] != 0) {
+        register s32 t asm("r2");
+        {
+          register s32 v asm("r0");
+          v = (p->s).work[2];
+          v -= 1;
+          (p->s).work[2] = v;
+          t = (u8)v;
+        }
+        if (t == 0) {
+          struct Coord c;
+          struct Coord d;
+          register u8* kp asm("r3");
+          c.y = (p->s).coord.y;
+          d.y = t;
+          {
+            register u8* q asm("r0");
+            register s32 kv asm("r2");
+            q = (u8*)p + 0xbc;
+            kv = *q;
+            kp = q;
+            if (kv == 0) {
+              register s32 k1 asm("r2");
+              register s32 cx asm("r0");
+              cx = (p->s).coord.x;
+              k1 = -0xe00;
+              cx += k1;
+              c.x = cx;
+              d.x = -0x280;
+            } else {
+              register s32 k2 asm("r2");
+              register s32 cx2 asm("r0");
+              cx2 = (p->s).coord.x;
+              k2 = 0xe0 << 4;
+              cx2 += k2;
+              c.x = cx2;
+              d.x = 0xa0 << 2;
+            }
+          }
+          CreateShotcounterBullet(&c, &d, *kp, 0);
+          CreateSmoke(3, &c);
+          PlaySound(0x2c);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      goto bump;
+    }
+    case 5:
+      (p->s).work[2] = 0xc;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 2:
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) == 3) {
+        goto bump;
+      }
+      if ((p->s).work[2] == 0) {
+        break;
+      }
+      if ((u8)--(p->s).work[2] != 0) {
+        break;
+      }
+    bump:
+      (p->s).mode[2]++;
+      break;
+    case 7:
+      SetMotion(&p->s, 0x403);
+      PlaySound(0x103);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 8: {
+      register s32 st asm("r6");
+      register s32 z2 asm("r4");
+      register u8* fp2 asm("r1");
+      register s32 one2 asm("r0");
+      UpdateMotionGraphic(&p->s);
+      st = *((u8*)p + 0x73);
+      if (st != 3) {
+        break;
+      }
+      fp2 = (u8*)p + 0xbd;
+      z2 = 0;
+      one2 = 1;
+      *fp2 = one2;
+      SetDDP(&p->body, &sCollisions[0]);
+      (p->s).mode[1] = st;
+      (p->s).mode[2] = z2;
+      break;
+    }
+  }
+}
+
 
 bool8 nop_08066978(struct Enemy* p) { return TRUE; }
 
