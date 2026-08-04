@@ -241,19 +241,21 @@ INCASM("asm/enemy/mothjiro_p4.inc");
 
 bool8 nop_0808889c(struct Enemy* p) { return TRUE; }
 
-// 0x080888A0 -- rush toward unk_coord, then re-target when close enough.
-// Body is instruction-exact (176/179 lines; the 3 extra retail lines are the
-// wider prologue/epilogue). Blocker: retail gives the parameter r4 and lands
-// the tail's `dy` in r7, so the frame saves r4-r7 and uses r7 as the r8
-// shuttle. agbcc here allocates the parameter LAST among the callee-saved
-// registers (r6 with three values, r7 with four), and a `register ... asm("r7")`
-// pin on `dy` is honoured for the value but never added to the save list, so
-// the push/pop lists come out one register short. Aliasing the parameter to r4
-// pulls in r9 instead. Everything from the SetMotion through the final
-// mode[1]/mode[2] stores matches byte-for-byte.
+// 0x080888A0 -- home in on unk_coord, then re-target once close enough.
+// Everything matches except one register pair: retail keeps the 0xb8 delta in
+// r6 and the 0xbc delta in r7, ours has them swapped. The prologue/epilogue
+// were fixed by 6.133 (extend both deltas to the end of the function with
+// zero-cost `asm("" ::"l"(..))` keep-alives so they are ALLOCATED, not pinned,
+// which is what puts r7 in `push {r4,r5,r6,r7,lr}`). agbcc then always gives
+// the FIRST-computed of the two the HIGHER register; declaration order, asm
+// operand order, splitting the keep-alives, and renaming the variables all
+// leave the pairing unchanged, and pinning either one drops it back out of
+// the save list.
 NON_MATCH void mothjiro_080888a0(struct Enemy* p) {
 #if MODERN
   register s32 m asm("r8");
+  s32 dxk;
+  s32 dyk;
   m = (p->s).mode[2];
   switch (m) {
     case 0: {
@@ -335,9 +337,9 @@ NON_MATCH void mothjiro_080888a0(struct Enemy* p) {
           (p->s).mode[2] = zz;
         }
         if (FUN_08088ae0(p) != 0) {
-          s32 dx;
-          s32 dy;
           s32 dist;
+#define dx dxk
+#define dy dyk
           {
             register s32 u asm("r1");
             register s32 w asm("r0");
@@ -363,7 +365,8 @@ NON_MATCH void mothjiro_080888a0(struct Enemy* p) {
             a0 += a1;
             dist = (u16)Sqrt(a0) << 2;
           }
-          asm("" ::"r"(dy));
+#undef dx
+#undef dy
           if (dist <= 0x77FF) {
             register s32 zr asm("r0");
             *q = dist;
@@ -376,6 +379,8 @@ NON_MATCH void mothjiro_080888a0(struct Enemy* p) {
       break;
     }
   }
+  asm("" ::"l"(dxk));
+  asm("" ::"l"(dyk));
 #else
   INCCODE("asm/enemy/mothjiro_888a0.inc");
 #endif
