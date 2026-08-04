@@ -318,19 +318,24 @@ bool8 FUN_0806aa9c(struct Enemy* p) { return TRUE; }
 
 
 // 0x0806AAA0
-// 2 bytes short.  Everything matches except two register-number ties -- the
-// parent entity lands in r2 (retail r1) in case 2, and the cached work[2] lands
-// in r4 (retail r3) in case 4 -- plus one instruction still missing in case 2's
-// coord setup.  Levers already applied and needed: `u32 w2` + a `asm("" : "+l")`
-// barrier so `(w2 << 24) >> 27` survives in the else arm while `w2 >> 3` stays a
-// bare `lsrs` in the if arm (§6.177); unsigned `%` so the modulos are
-// `__umodsi3`; the `u8* d = p + 0x5c; *(s32*)(d + 4) = z;` pointer form for the
-// d.y store; and `q = (p->s).unk_28;` written inside both arms of case 4.
+// 2 bytes off.  The instruction stream is now the same length as retail and every
+// opcode matches; what is left is three register-number ties that agbcc gives no
+// pin for (§6.169): the parent entity is r2 where retail uses r1 (case 2), the
+// cached work[2] is r4 where retail uses r3 (case 4), and case 4's running x
+// lands in r0 where retail uses r1.
+// Levers already applied and required to get this far: `u32 w2` + an
+// `asm("" : "+l"(w2))` barrier so `(w2 << 24) >> 27` survives in the else arm
+// while `w2 >> 3` stays a bare `lsrs` in the if arm (§6.177); an opaque `one`
+// for the `& 1` test so it is not CSE'd with another literal (§6.178); unsigned
+// `%` for `__umodsi3`; the `u8* d = p + 0x5c; *(s32*)(d + 4) = z;` pointer form;
+// a `num` temp so work[3] is loaded before work[2]; and a `pb` props pointer
+// computed before `q = (p->s).unk_28`.
 NON_MATCH void FUN_0806aaa0(struct Enemy* p) {
 #if MODERN
   struct Entity* q;
   s32 z, nx, ny;
-  u32 w2;
+  s32* pb;
+  u32 w2, one, num;
 
   switch ((p->s).mode[2]) {
     case 0:
@@ -390,8 +395,9 @@ NON_MATCH void FUN_0806aaa0(struct Enemy* p) {
     case 3:
       UpdateMotionGraphic(&p->s);
       (p->s).work[3]++;
+      num = (p->s).work[3];
       w2 = (p->s).work[2];
-      if ((u8)((u32)(p->s).work[3] % w2) == 0) {
+      if ((u8)((u32)num % w2) == 0) {
         (p->s).work[2] = w2 - 10;
         (p->s).coord.x += ((s32)(RANDOM(RNG_0202f388) % 6) - 3) << 8;
       }
@@ -404,12 +410,16 @@ NON_MATCH void FUN_0806aaa0(struct Enemy* p) {
     case 4:
       w2 = (p->s).work[2];
       asm("" : "+l"(w2));
-      if (w2 & 1) {
+      one = 1;
+      asm("" : "+l"(one));
+      if (w2 & one) {
+        pb = (s32*)((u8*)p + 0xb4);
         q = (p->s).unk_28;
-        nx = *(s32*)((u8*)p + 0xb4) + (q->coord).x + ((w2 >> 3) << 8);
+        nx = *pb + (q->coord).x + ((w2 >> 3) << 8);
       } else {
+        pb = (s32*)((u8*)p + 0xb4);
         q = (p->s).unk_28;
-        nx = *(s32*)((u8*)p + 0xb4) + (q->coord).x - (((w2 << 24) >> 27) << 8);
+        nx = *pb + (q->coord).x - (((w2 << 24) >> 27) << 8);
       }
       (p->s).coord.x = nx;
       ny = *(s32*)((u8*)p + 0xb8) + (q->coord).y;
