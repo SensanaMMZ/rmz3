@@ -432,7 +432,128 @@ void FUN_080c40ec(struct VFX* v) {
   }
 }
 
-INCASM("asm/vfx/unk_64_p3_c.inc");
+
+// 0x080C4144
+void FUN_080c4144(struct VFX* p0) {
+  register struct VFX* p asm("r4");
+  register u8* sp asm("r5");
+  register struct Entity* q asm("r6");
+  u8* sq;
+  p = p0;
+  sp = (u8*)p + 0x34;
+  q = (p->s).unk_28;
+  sq = (u8*)q + 0x34;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 z asm("r3");
+      InitScalerotMotion1(&p->s);
+      {
+        register u8* a asm("r1");
+        register s32 v asm("r0");
+        a = (u8*)p + 0x25;
+        v = 0x19;
+        *a = v;
+        a += 0x2b;
+        z = 0;
+        v += 0xE7;
+        *(u16*)a = v;
+        asm("" : "+r"(a));
+        a += 2;
+        asm("" : "+r"(a));
+        *(u16*)a = v;
+      }
+      {
+        register s32 t asm("r0");
+        register s32 k asm("r1");
+        k = *(sp + 0x15);
+        t = 0xF;
+        t &= k;
+        k = 0xD0;
+        t |= k;
+        *(sp + 0x15) = t;
+      }
+      *(u32*)(sp + 0xc) = (u32)&q->coord;
+      {
+        register u32 src asm("r1");
+        register u32 dst asm("r2");
+        register u32 msk asm("r0");
+        src = *(u16*)(sq + 0x14);
+        src <<= 22;
+        src >>= 22;
+        dst = *(u16*)(sp + 0x14);
+        msk = 0xFFFFFC00;
+        asm("" : "+r"(msk));
+        msk &= dst;
+        msk |= src;
+        *(u16*)(sp + 0x14) = msk;
+      }
+      (p->s).work[2] = z;
+      (p->s).work[3] = z;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 amp asm("r2");
+      register s32 z2 asm("r3");
+      (p->s).work[2]++;
+      (p->s).work[3]++;
+      (p->s).work[3] = (u8)(p->s).work[3] % 3;
+      {
+        s32 sv = gSineTable[(p->s).work[2] >> 1];
+        s32 t0 = ((sv * 4 + sv) << 3) / 256;
+        asm volatile("add %0, %1, #0" : "=&l"(amp) : "l"(t0));
+        amp += 0xF0;
+      }
+      {
+        register s32 w asm("r1");
+        register s32 k2 asm("r0");
+        w = (p->s).work[3] << 4;
+        k2 = 0x88 * 2;
+        k2 -= w;
+        w = amp * k2 / 256;
+        {
+          u16* h = (u16*)((u8*)p + 0x50);
+          z2 = 0;
+          *h = w;
+        }
+      }
+      {
+        register s32 w2 asm("r1");
+        register s32 k3 asm("r0");
+        w2 = (p->s).work[3] << 4;
+        k3 = 0x80 * 2;
+        k3 -= w2;
+        k3 = amp * k3 / 256;
+        *(u16*)((u8*)p + 0x52) = k3;
+      }
+      *(u32*)(sp + 8) = *(u32*)(sq + 8);
+      *(sp + 0x1a) = *(sq + 0x1a);
+      {
+        register s32 one asm("r2");
+        s32 xf = (q->flags) >> 4;
+        one = 1;
+        xf &= one;
+        *(sp + 0x18) = xf;
+        {
+          s32 xf2 = (q->flags) >> 4;
+          s32 sh4, ov, m11;
+          xf2 &= one;
+          sh4 = xf2 << 4;
+          ov = *(sp + 0x16);
+          m11 = -0x11;
+          m11 &= ov;
+          m11 |= sh4;
+          *(sp + 0x16) = m11;
+        }
+      }
+      if ((p->s).work[2] > 0x8F) {
+        (p->s).mode[1] = z2;
+        (p->s).mode[2] = z2;
+      }
+      break;
+    }
+  }
+}
 
 void Ghost64_Init(struct VFX* p);
 
