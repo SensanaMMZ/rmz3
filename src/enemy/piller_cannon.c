@@ -5,6 +5,7 @@
 #include "story.h"
 #include "zero.h"
 #include "vfx.h"
+#include "projectile.h"
 
 static const struct Collision sCollisions[14];
 static const motion_t sMotions[7];
@@ -412,7 +413,115 @@ INCASM("asm/enemy/piller_cannon_p5.inc");
 
 bool8 FUN_08068ad8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/piller_cannon_p6.inc");
+// 0x08068ADC
+void FUN_08068adc(struct Enemy* p) {
+  register s32 t asm("r0");
+  s32 z;
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[2] = 0x16;
+      (p->s).mode[2]++;
+      goto tick;
+    case 2:
+      PlaySound(0x103);
+      SetMotion(&p->s, 0x805);
+      *((u8*)p + 0xb9) = 0;
+      (p->s).work[2] = 0x16;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      *((u8*)p + 0xb9) = 1;
+      SetDDP(&p->body, (const struct Collision*)0x083661A4);
+      goto bump;
+    case 5:
+      SetMotion(&p->s, 0x806);
+      (p->s).work[2] = 8;
+      (p->s).work[3] = 3;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 6:
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] == 0) {
+          struct Coord c;
+          register s32 sy asm("r6");
+          register s32 d asm("r2");
+          c.y = (p->s).coord.y;
+          z = 0;
+          asm("" : "+l"(z));
+          if (((p->s).flags & 0x10) == 0) {
+            c.x = (p->s).coord.x + -0x1800;
+            sy = 0xa0 << 2;
+            d = 0;
+          } else {
+            c.x = (p->s).coord.x + (0xc0 << 5);
+            sy = 0xa0 << 2;
+            d = 0x80;
+          }
+          ((void (*)(struct Coord*, s32, s32))CreateLemon)(&c, sy, d);
+          CreateSmoke(3, &c);
+          PlaySound(0x2c);
+          asm("" ::"l"(z));
+          (p->s).work[2] = 8;
+          (p->s).work[3]--;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[3];
+      goto test;
+    case 7:
+      (p->s).work[2] = 0x16;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4:
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      FALLTHROUGH;
+    case 1:
+    tick:
+      t = (p->s).work[2];
+      if (t == 0) {
+        break;
+      }
+      t -= 1;
+      (p->s).work[2] = t;
+      t <<= 24;
+    test:
+      if (t != 0) {
+        break;
+      }
+    bump:
+      (p->s).mode[2]++;
+      break;
+    case 9:
+      PlaySound(0x103);
+      SetMotion(&p->s, 0x807);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 10: {
+      register u8* q asm("r0");
+      s32 z4;
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      q = (u8*)p + 0xb9;
+      z4 = 0;
+      *q = z4;
+      q -= 0x45;
+      asm("" : "+r"(q));
+      SetDDP((struct Body*)q, (const struct Collision*)0x08366144);
+      (p->s).mode[1] = 5;
+      (p->s).mode[2] = z4;
+      break;
+    }
+  }
+  asm("" ::"l"(z));
+}
+
 
 bool8 FUN_08068c84(struct Enemy* p) { return TRUE; }
 
