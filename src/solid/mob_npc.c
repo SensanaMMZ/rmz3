@@ -1192,7 +1192,85 @@ alive:
   }
 }
 
-INCASM("asm/solid/mob_npc_pre_p1_5b.inc");
+// 0x080DA93C
+TextID faucon_080da93c(struct Solid* p) {
+  switch ((p->s).work[0]) {
+    case 10:
+      if (FLAG(gCurStory.s.gameflags, 16)) {
+        return 0x2A2;
+      }
+      if (FLAG(gCurStory.s.gameflags, 11)) {
+        return 0x2A0;
+      }
+      break;
+    case 11:
+      if (FLAG(gCurStory.s.gameflags, 16)) {
+        return 0x2AB;
+      }
+      if (FLAG(gCurStory.s.gameflags, 11)) {
+        return 0x2A9;
+      }
+      if (((gStageDiskManager.disk[0xE] & 0xF) >> 1) & 1) {
+        return 0x2A7;
+      }
+      return 0x2A6;
+    case 12:
+      if (gCurStory.s.counts[15] == 0) {
+        gCurStory.s.counts[15]++;
+        return 0x2C8;
+      }
+      return 0x2C9;
+    case 13:
+      if (gCurStory.s.counts[16] == 0) {
+        gCurStory.s.counts[16]++;
+        return 0x2C0;
+      }
+      return 0x2C1;
+    case 14:
+      if (gCurStory.s.counts[17] == 0) {
+        gCurStory.s.counts[17]++;
+        return 0x2C2;
+      }
+      return 0x2C3;
+    case 15:
+      if (gCurStory.s.counts[18] == 0) {
+        gCurStory.s.counts[18]++;
+        return 0x2C4;
+      }
+      return 0x2C5;
+    case 16:
+      if (gCurStory.s.counts[19] == 0) {
+        gCurStory.s.counts[19]++;
+        return 0x2C6;
+      }
+      return 0x2C7;
+    case 17:
+      if (gCurStory.s.counts[20] == 0) {
+        gCurStory.s.counts[20]++;
+        return 0x2BC;
+      }
+      return 0x2BD;
+    case 18:
+      if (gCurStory.s.counts[21] == 0) {
+        gCurStory.s.counts[21]++;
+        return 0x2BE;
+      }
+      return 0x2BF;
+    case 19:
+      if (gCurStory.s.counts[22] == 0) {
+        gCurStory.s.counts[22]++;
+        return 0x2BA;
+      }
+      return 0x2BB;
+    case 20:
+      if (gCurStory.s.counts[23] == 0) {
+        gCurStory.s.counts[23]++;
+        return 0x2CA;
+      }
+      return 0x2CB;
+  }
+  return 0x29E;
+}
 
 // 0x080DAB40
 void FUN_080dab40(struct Solid* p) {
