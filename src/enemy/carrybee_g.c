@@ -373,7 +373,181 @@ void carrybeeg_0808b00c(struct Enemy* p) {
 
 bool8 FUN_0808b108(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/carrybee_g_p2.inc");
+struct Enemy* CreatePantheonHunter(struct Coord* c, u8 a1, u8 a2);
+
+// 0x0808B10C
+void FUN_0808b10c(struct Enemy* p) {
+  {
+    register struct Camera* cam asm("r0");
+    register s32 k asm("r2");
+    register s32* tp asm("r1");
+    tp = (s32*)((u8*)p + 0xb4);
+    cam = &gStageRun.vm.camera;
+    k = -0x4000;
+    *tp = cam->viewport.y + k;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x6E01);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).work[2]++;
+      {
+        register s32 y asm("r1");
+        register s32 d asm("r0");
+        d = *(s32*)((u8*)p + 0xb4);
+        y = (p->s).unk_coord.y;
+        d -= y;
+        d <<= 3;
+        d >>= 8;
+        y += d;
+        (p->s).unk_coord.y = y;
+        {
+          register const s16* tb asm("r2");
+          register s32 o asm("r0");
+          register s32 sv asm("r2");
+          tb = gSineTable;
+          o = (p->s).work[2];
+          o <<= 1;
+          o += (s32)tb;
+          {
+            register s32 zi asm("r3");
+            zi = 0;
+            sv = *(const s16*)(o + zi);
+          }
+          o = sv << 4;
+          o -= sv;
+          y += o;
+          (p->s).coord.y = y;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) == 3) {
+        goto tramp;
+      }
+      break;
+    tramp:
+      asm volatile("");
+      goto bump;
+    case 2:
+      (p->s).work[3] = 0xa;
+      goto bump2;
+    case 4: {
+      struct Coord c;
+      register struct Enemy** slot asm("r5");
+      (p->s).work[3] = 0xa;
+      {
+        register s32 a0 asm("r0");
+        register s32 b0 asm("r1");
+        a0 = (p->s).coord.x;
+        asm("" : "+r"(a0));
+        b0 = (p->s).coord.y;
+        c.x = a0;
+        c.y = b0;
+      }
+      asm("" ::: "memory");
+      {
+        register s32 k asm("r1");
+        k = -0xa00;
+        c.x += k;
+      }
+      asm("" ::: "memory");
+      {
+        register s32 k2 asm("r2");
+        k2 = 0xd8 << 5;
+        c.y += k2;
+      }
+      asm("" ::: "memory");
+      slot = (struct Enemy**)((u8*)p + 0xbc);
+      if (*slot == NULL) {
+        register struct Enemy* e asm("r0");
+        register u8* tc asm("r0");
+        register u8* fp asm("r1");
+        e = CreatePantheonHunter(&c, 2, 0);
+        *slot = e;
+        tc = (u8*)e + 0x25;
+        *tc = 0x15;
+        fp = (u8*)p + 0xc0;
+        goto mark;
+      } else if ((p->s).unk_2c == NULL) {
+        register struct Enemy* e asm("r0");
+        register u8* tc asm("r0");
+        register u8* fp asm("r1");
+        e = CreatePantheonHunter(&c, 2, 0);
+        (p->s).unk_2c = (struct Entity*)e;
+        tc = (u8*)e + 0x25;
+        *tc = 0x15;
+        fp = (u8*)p + 0xc1;
+      mark:
+        *fp = 0x20;
+      } else if ((p->s).unk_28 == NULL) {
+        register struct Enemy* e asm("r0");
+        register u8* tc asm("r0");
+        register u8* fp asm("r1");
+        e = CreatePantheonHunter(&c, 2, 0);
+        (p->s).unk_28 = (struct Entity*)e;
+        tc = (u8*)e + 0x25;
+        *tc = 0x15;
+        fp = (u8*)p + 0xc2;
+        *fp = 0x20;
+      }
+      SetMotion(&p->s, 0x6E03);
+    bump2:
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+    case 5:
+      (p->s).work[2]++;
+      {
+        register s32 y asm("r1");
+        register s32 d asm("r0");
+        d = *(s32*)((u8*)p + 0xb4);
+        y = (p->s).unk_coord.y;
+        d -= y;
+        d <<= 3;
+        d >>= 8;
+        y += d;
+        (p->s).unk_coord.y = y;
+        {
+          register const s16* tb asm("r2");
+          register s32 o asm("r0");
+          register s32 sv asm("r2");
+          tb = gSineTable;
+          o = (p->s).work[2];
+          o <<= 1;
+          o += (s32)tb;
+          {
+            register s32 zi asm("r3");
+            zi = 0;
+            sv = *(const s16*)(o + zi);
+          }
+          o = sv << 4;
+          o -= sv;
+          y += o;
+          (p->s).coord.y = y;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[3] != 0) {
+        if ((u8)--(p->s).work[3] != 0) {
+          break;
+        }
+      }
+    bump:
+      (p->s).mode[2]++;
+      break;
+    case 6: {
+      register s32 z asm("r1");
+      z = 0;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
+
 
 bool8 FUN_0808b2b0(struct Enemy* p) { return TRUE; }
 
