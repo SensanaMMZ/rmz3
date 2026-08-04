@@ -1,5 +1,7 @@
+#include "entity.h"
 #include "game.h"
 #include "global.h"
+#include "input.h"
 #include "minigame.h"
 #include "sound.h"
 #include "text.h"
@@ -7,6 +9,9 @@
 
 extern const u8 Unicode_SCORE_0810e2b8[];
 extern const u8 Unicode_HI_SCORE_0810e2c0[];
+
+void CreateIronStar(struct Entity* e, s32 x, s32 y);
+void FUN_080d91b4(void* m, s32 x, s32 y, u8 r3);
 
 void MinigamePhantom_DrawScoreHiscore(struct GameState* g) {
   struct MinigameState* s = (struct MinigameState*)(g->sceneState).raw;
@@ -106,7 +111,114 @@ bool32 phantomMinigame_080fc13c(struct GameState* g) {
   return 1;
 }
 
-INCASM("asm/minigame/phantom_b.inc");
+// 0x080FC1B8
+bool32 phantomMinigame_080fc1b8(struct GameState* g) {
+  u8* mg = (u8*)g + 0xDCC;
+  register s32 z asm("r4");
+  struct Entity* e;
+  s32* base;
+
+  {
+    struct KeyState* jp = gJoypad;
+    u16 kv = jp->input;
+    z = 0;
+    *(u16*)(mg + 0x10) = kv;
+    *(u16*)(mg + 0x12) = jp->pressed;
+  }
+  e = *(struct Entity**)(mg + 8);
+  {
+    register s32 k asm("r1");
+    k = 0xDC4;
+    asm("" : "+l"(k));
+    base = (s32*)((u8*)g + k);
+    asm("" : : "l"(k));
+  }
+
+  if (e->coord.x > *base) {
+    *(s32*)(mg + 0x30) += e->coord.x - *base;
+    *(s32*)(mg + 0x04) += e->coord.x - *base;
+    *(s32*)(mg + 0x1c) += e->coord.x - *base;
+    *(s32*)(mg + 0x24) += e->coord.x - *base;
+
+    if (*(s32*)(mg + 0x24) >= *(s32*)(mg + 0x28)) {
+      s32 t = *(s32*)(mg + 0x28) - 0x100;
+      s32 a;
+      u32 r;
+      *(s32*)(mg + 0x28) = t;
+      if (t < 0x3C00) {
+        *(s32*)(mg + 0x28) = 0x3C00;
+      }
+      a = *(s32*)(mg + 4) + 0xA7000;
+      r = RNG_0202f388 * 0x343FD + 0x269EC3;
+      r <<= 1;
+      RNG_0202f388 = r >> 1;
+      CreateIronStar((struct Entity*)mg, a, ((r << 1) >> 0x12) + 0x5D000);
+      *(s32*)(mg + 0x24) = z;
+    }
+
+    if (*(s32*)(mg + 0x1c) >= *(s32*)(mg + 0x20)) {
+      {
+        s32 h = *(u16*)(mg + 0x2c) + 1;
+        s32 w;
+        s32 lim;
+        u32 r;
+        *(u16*)(mg + 0x2c) = h;
+        if ((s16)h > 0x200) {
+          *(u16*)(mg + 0x2c) = 0x200;
+        }
+        lim = *(s32*)(mg + 0x20) - 0x100;
+        *(s32*)(mg + 0x20) = lim;
+        if (lim < 0x5000) {
+          *(s32*)(mg + 0x20) = 0x5000;
+        }
+        w = *(s32*)(mg + 0x18) - 0x2000;
+        r = RNG_0202f388 * 0x343FD + 0x269EC3;
+        r <<= 1;
+        RNG_0202f388 = r >> 1;
+        w += (r << 1) >> 0x12;
+        *(s32*)(mg + 0x18) = w;
+        if (w < 0x5E000) {
+          *(s32*)(mg + 0x18) = 0x5E000;
+        }
+        if (*(s32*)(mg + 0x18) > 0x63000) {
+          *(s32*)(mg + 0x18) = 0x63000;
+        }
+        FUN_080d91b4(mg, *(s32*)(mg + 4) + 0xA7000, *(s32*)(mg + 0x18), 0);
+        mg[0xd4]++;
+        *(s32*)(mg + 0x1c) = 0;
+      }
+    }
+
+    {
+      s32 v = *(s32*)(mg + 4);
+      if (v % 0xF000 < v) {
+        *(s32*)(mg + 0x14) = -0xF000;
+      } else {
+        *(s32*)(mg + 0x14) = 0;
+      }
+      *(s32*)(mg + 4) = v % 0xF000;
+    }
+    *(s32*)((u8*)g + 0xDC4) = 0x9D800;
+    *(s32*)((u8*)g + 0xDC4) = *(s32*)(mg + 4) + 0x9D800;
+    if (*(s32*)(mg + 0x30) > 0x1000) {
+      *(s32*)(mg + 0x30) -= 0x1000;
+      *(s32*)(mg + 0x34) += 1;
+    }
+  } else {
+    *(s32*)(mg + 0x14) = z;
+  }
+
+  if ((*(struct Entity**)(mg + 8))->coord.y > 0x69000 || mg[0xd5] == 0) {
+    u8* q = mg + 0xd6;
+    u8 zb = 0;
+    *q = 1;
+    mg[0] = mg[0] + 1;
+    mg[1] = zb;
+    mg[2] = zb;
+    mg[3] = zb;
+  }
+  return 1;
+}
 
 // 0x080FC390
 bool32 phantomMinigame_080fc390(struct GameState* g);
@@ -150,11 +262,11 @@ end1:
 }
 
 bool32 phantomMinigame_080fc13c(struct GameState* p);
-void phantomMinigame_080fc1b8(struct GameState* p);
+bool32 phantomMinigame_080fc1b8(struct GameState* p);
 
 const GameLoopFunc PhantomMinigameLoops[3] = {
     (GameLoopFunc)phantomMinigame_080fc13c,
-    phantomMinigame_080fc1b8,
+    (GameLoopFunc)phantomMinigame_080fc1b8,
     (GameLoopFunc)phantomMinigame_080fc390,
 };
 
