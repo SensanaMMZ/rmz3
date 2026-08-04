@@ -1286,6 +1286,162 @@ void ActorCrashedPantheon_Update(struct Solid* p) {
 
 INCASM("asm/solid/actor_p1_p1_a_post.inc");
 
+static const struct Collision sCollisions_08370B58[11];
+s32 PushoutToUp2(s32 x, s32 y);
+
+// 0x080D21F8
+void ActorLeviathan11_Update(struct Solid* p) {
+  register s32 z5 asm("r5");
+  register s32 t asm("r0");
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register struct Body* b asm("r4");
+      {
+        register u16* gt asm("r2");
+        register u16* pt asm("r1");
+        register s32 eight asm("r3");
+        gt = wDynamicGraphicTilenums;
+        asm("" : "+r"(gt));
+        t = 0xbd << 1;
+        gt = (u16*)((u8*)gt + t);
+        pt = wDynamicMotionPalIDs;
+        asm("" : "+r"(pt));
+        pt = (u16*)((u8*)pt + t);
+        eight = 8;
+        t = 0xf3 << 2;
+        *gt = t;
+        *pt = eight;
+      }
+      SetMotion(&p->s, MOTION(0xbd, 0x10));
+      {
+        register s32 one asm("r2");
+        register s32 h asm("r1");
+        register s32 g asm("r0");
+        one = 1;
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g = 0x10;
+        g |= h;
+        (p->s).flags = g;
+        {
+          register u8* xp asm("r0");
+          xp = (u8*)p + 0x4c;
+          z5 = 0;
+          *xp = one;
+        }
+      }
+      {
+        register u8* oa asm("r3");
+        register s32 k16 asm("r2");
+        register s32 ov asm("r1");
+        register s32 m11 asm("r0");
+        oa = (u8*)p + 0x4a;
+        k16 = 0x10;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= k16;
+        *oa = m11;
+      }
+      {
+        register s32 h2 asm("r1");
+        register s32 g2 asm("r0");
+        h2 = (p->s).flags;
+        asm("" : "+r"(h2));
+        g2 = 4;
+        g2 |= h2;
+        (p->s).flags = g2;
+      }
+      b = &p->body;
+      ((void (*)(struct Body*, const struct Collision*, struct Coord*, s32))InitBody)(b, &sCollisions_08370B58[1], &(p->s).coord, 9);
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (BodyFunc)z5;
+      (p->s).unk_coord.x = FUN_0800a31c((p->s).coord.x, (p->s).coord.y) + (0x80 << 4);
+      {
+        register struct Camera* cam asm("r0");
+        cam = &gStageRun.vm.camera;
+        (p->s).coord.x = cam->viewport.x + 0x87FF;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 cx asm("r0");
+      UpdateMotionGraphic(&p->s);
+      cx = (p->s).coord.x + -0x800;
+      (p->s).coord.x = cx;
+      if (cx >= (p->s).unk_coord.x) {
+        break;
+      }
+      PlaySound(0x56);
+      (p->s).coord.x = (p->s).unk_coord.x;
+      *((u8*)p + 0x94) = 0x5a;
+      goto bump;
+    }
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xbd, 0x12));
+      asm volatile("");
+      goto bump;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      (p->s).d.y = 0;
+      goto bump;
+    case 4: {
+      register s32 cy asm("r1");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 v asm("r1");
+        register s32 lim asm("r0");
+        v = (p->s).d.y;
+        lim = 0x6FF;
+        if (v <= lim) {
+          t = v;
+          t += 0x2a;
+          (p->s).d.y = t;
+        }
+      }
+      cy = (p->s).coord.y;
+      cy += (p->s).d.y;
+      (p->s).coord.y = cy;
+      if (PushoutToUp2((p->s).coord.x, cy + (0xc0 << 3)) == 0) {
+        break;
+      }
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) + -0x600;
+      SetMotion(&p->s, MOTION(0xbd, 0x1b));
+      goto bump;
+    }
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 f asm("r1");
+        f = (p->s).scriptEntity->flags;
+        t = 2;
+        t &= f;
+      }
+      goto test;
+    case 6:
+      t = FUN_080d0934(&p->s, MOTION(0xbd, 0x1b), 1) << 16;
+    test:
+      if (t == 0) {
+        break;
+      }
+    bump:
+      (p->s).mode[1]++;
+      break;
+    case 7:
+      break;
+  }
+}
+
+INCASM("asm/solid/actor_p1_p1_a_post_b.inc");
+
 // 0x080d2804
 void Actor13_Update(struct Solid* p) {
   struct Entity* q = (p->s).unk_28;
