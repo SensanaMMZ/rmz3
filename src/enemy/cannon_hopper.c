@@ -1012,15 +1012,13 @@ void FUN_080c6e70(struct Entity* e, struct Coord* c);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
 
 // 0x08097F3C
-// 4 instructions off, all the same nit and all in the two SET_YFLIP arms:
-// `(p->s).flags = Y_FLIP | fl;` puts the result in `fl`'s register
-// (`orrs r1, r0 / strb r1`) where retail puts it in the constant's
-// (`orrs r0, r1 / strb r0`).  Same for the `& 0xDF` arm.  This is the
-// destination-vs-operand tie of §6.171: r0/r1 pins are ignored, a `t = 0x20;
-// t |= fl;` temp loses 4 bytes elsewhere, and a pinned temp overflows the ROM.
-// The size is exactly retail's 468 bytes and everything else matches, including
-// the barrier-opaque `fl` cache that is needed to keep agbcc from narrowing
-// `(fl << 24) >> 29` to a plain `lsrs #5` (see below).
+// Two things have to be right in the SET_YFLIP arms.  The `fl` cache has to be
+// barrier-opaque or agbcc narrows `(fl << 24) >> 29` to a plain `lsrs #5`; and
+// the `0x20` used by the `fl & Y_FLIP` test has to be a separate opaque `m`,
+// because otherwise agbcc CSEs it with the `0x20` of the `flags |= Y_FLIP`
+// update and the OR is forced to write into `fl`'s register (`orrs r1, r0`)
+// where retail writes into the constant's (`orrs r0, r1`).  Both halves are
+// needed; neither works on its own.
 void FUN_08097f3c(struct Enemy* p) {
   s32 y0, v, up, dn;
   u32 fl, m;
