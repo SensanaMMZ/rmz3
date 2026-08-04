@@ -714,7 +714,172 @@ void childreStartRising(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/childre_pre_b2.inc");
+// 0x0804113c
+void childreRising(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      PlaySound(0x68);
+      SetDDP(&p->body, &sCollisions[1]);
+      InitRotatableMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      (p->s).angle = 0x40;
+      (p->s).work[2] = 4;
+      SetMotion(&p->s, 0xA404);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2] = (p->s).mode[2] + 1;
+      break;
+    }
+    case 2: {
+      register s32 k asm("r2");
+      PlaySound(0x67);
+      SetMotion(&p->s, 0xA405);
+      k = -0x400;
+      (p->s).d.y = k;
+      (p->s).d.x = k;
+      if (((p->s).flags & 0x10) == 0) {
+        register s32 nk asm("r0");
+        nk = -k;
+        (p->s).d.x = nk;
+      }
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32 xf asm("r5");
+      register s32 dx asm("r3");
+      register s32 nx asm("r1");
+      register s32* pbc asm("r2");
+      {
+        register s32 one asm("r0");
+        one = (p->s).flags;
+        xf = one >> 4;
+        one = 1;
+        xf &= one;
+      }
+      (p->s).coord.y = (p->s).coord.y + (p->s).d.y;
+      {
+        register s32 v asm("r0");
+        register s32 sh asm("r1");
+        v = (p->s).d.x - 0x40;
+        sh = xf << 7;
+        sh = v + sh;
+        (p->s).d.x = sh;
+        if ((p->s).work[2] != 0) {
+          goto skip1;
+        }
+        if (sh >= 0) {
+          goto a1;
+        }
+        if (xf != 1) {
+          goto do1;
+        }
+        goto skip1;
+      a1:
+        if (xf == 0) {
+          goto skip1;
+        }
+      do1:
+        SetMotion(&p->s, 0xA406);
+        (p->s).work[2] = 1;
+      }
+    skip1:
+      nx = (p->s).coord.x;
+      dx = (p->s).d.x;
+      nx += dx;
+      (p->s).coord.x = nx;
+      pbc = (s32*)((u8*)p + 0xbc);
+      {
+        register s32 d2 asm("r0");
+        register s32 c1 asm("r1");
+        d2 = *pbc - nx;
+        c1 = 0x6800;
+        d2 += c1;
+        c1 = 0xD000;
+        if ((u32)d2 > (u32)c1) {
+          if (dx >= 0) {
+            goto a2;
+          }
+          if (xf != 1) {
+            goto do2;
+          }
+          goto skip2;
+        a2:
+          if (xf == 0) {
+            goto skip2;
+          }
+        do2: {
+            register s32 nv asm("r0");
+            register s32 ofs asm("r1");
+            nv = *pbc + -0x6800;
+            ofs = xf * 2;
+            ofs += xf;
+            ofs <<= 2;
+            ofs += xf;
+            ofs <<= 12;
+            nv += ofs;
+            (p->s).coord.x = nv;
+          }
+          (p->s).mode[2]++;
+        }
+      }
+    skip2:
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 lim asm("r2");
+        register s32 cy asm("r1");
+        {
+          register s32 base asm("r0");
+          register s32 cc asm("r1");
+          base = *(s32*)((u8*)p + 0xc0);
+          cc = -0x18000;
+          lim = base + cc;
+        }
+        cy = (p->s).coord.y;
+        if (cy >= lim) {
+          struct Camera* cam = &gStageRun.vm.camera;
+          if (cy >= cam->viewport.y + -0x9000) {
+            break;
+          }
+        }
+        (p->s).coord.y = lim;
+      }
+      if ((RANDOM(RNG_0202f388) & 1) != 0) {
+        (p->s).mode[1] = 6;
+      } else {
+        (p->s).mode[1] = 9;
+      }
+      (p->s).mode[2] = 0;
+      break;
+    }
+    case 4:
+      (p->s).work[2] = 4;
+      SetMotion(&p->s, 0xA407);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2] = 2;
+      break;
+    }
+  }
+}
+
 
 // 0x08041320
 void childreMode6(struct Boss* p) {
