@@ -410,7 +410,173 @@ void hanu_0805bf10(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/hanumachine_p1_b_p2_p2b.inc");
+// 0x0805BF60
+void hanu_0805bf60(struct Boss* p) {
+  register s32 f asm("r5");
+  register s32 cx asm("r3");
+  if ((p->s).mode[2] == 0) {
+    register struct Zero* zz asm("r2");
+    register s32 v asm("r3");
+    SetMotion(&p->s, 0xB501);
+    SetDDP(&p->body, (const struct Collision*)0x08364E68);
+    v = 0;
+    zz = pZero2;
+    if ((p->s).coord.x < (zz->s).coord.x) {
+      v = 1;
+    }
+    *((u8*)p + 0x4c) = v;
+    v = 0;
+    if ((p->s).coord.x < (zz->s).coord.x) {
+      v = 1;
+    }
+    {
+      register u8* o0 asm("r0");
+      register s32 k asm("r0");
+      register u8* oa asm("ip");
+      k = 0x4a;
+      asm volatile("add %0, %0, %1" : "+l"(k) : "l"(p));
+      o0 = (u8*)k;
+      oa = o0;
+      {
+        register s32 sh asm("r2");
+        register s32 ov asm("r1");
+        register s32 m11 asm("r0");
+        sh = v << 4;
+        ov = *o0;
+        m11 = 0x11;
+        m11 = -m11;
+        m11 &= ov;
+        m11 |= sh;
+        {
+          register u8* o1 asm("r1");
+          o1 = oa;
+          *o1 = m11;
+        }
+      }
+    }
+    if (v != 0) {
+      register u8 g asm("r0");
+      register s32 k10 asm("r1");
+      g = (p->s).flags;
+      k10 = 0x10;
+      g |= k10;
+      (p->s).flags = g;
+    } else {
+      register u8 g2 asm("r0");
+      register u8 h2 asm("r1");
+      h2 = (p->s).flags;
+      asm("" : "+r"(h2));
+      g2 = 0xEF;
+      g2 &= h2;
+      (p->s).flags = g2;
+    }
+    {
+      register s32 dv asm("r0");
+      if (((p->s).flags & 0x10) != 0) {
+        dv = 0xe0 << 2;
+      } else {
+        dv = 0xFFFFFC80;
+      }
+      (p->s).d.x = dv;
+    }
+    PlaySound(0x4e);
+    (p->s).mode[2]++;
+  }
+  UpdateMotionGraphic(&p->s);
+  {
+    {
+      register s32 hv asm("r1");
+      register s32 t asm("r0");
+      hv = (p->s).flags;
+      t = 0x10;
+      t &= hv;
+      f = (u8)t;
+    }
+  }
+  if (f != 0) {
+    register u16 r0v;
+    {
+      register s32 xx asm("r0");
+      register s32 yy asm("r1");
+      xx = (p->s).coord.x;
+      f = 0x80 << 5;
+      xx += f;
+      yy = (p->s).coord.y;
+      yy += f;
+      r0v = (u16)FUN_080098a4(xx, yy);
+    }
+    if (r0v == 0) {
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = r0v;
+      *((u8*)p + 0xbe) = 1;
+    }
+    {
+      register s32 t2 asm("r2");
+      register s32 c1 asm("r1");
+      register s32 lim asm("r0");
+      c1 = (p->s).coord.x;
+      t2 = c1 + f;
+      lim = *(s32*)((u8*)p + 0xb8);
+      cx = c1;
+      if (t2 > lim) {
+        register s32 zr2 asm("r1");
+        zr2 = 0;
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = zr2;
+        return;
+      }
+      {
+        register s32 t3 asm("r1");
+        register s32 kk asm("r2");
+        kk = 0xFFFFE000;
+        asm volatile("add %0, %1, %2" : "=l"(t3) : "l"(cx), "l"(kk));
+        if (t3 > (pZero2->s).coord.x) {
+          register s32 zr3 asm("r1");
+          zr3 = 0;
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = zr3;
+          return;
+        }
+      }
+    }
+  } else {
+    if (((u16)FUN_080098a4((p->s).coord.x + 0xFFFFF000, (p->s).coord.y + (0x80 << 5)) << 16) == 0) {
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = f;
+      *((u8*)p + 0xbe) = 1;
+    }
+    {
+      register s32 t4 asm("r2");
+      register s32 c2 asm("r1");
+      register s32 lim2 asm("r0");
+      c2 = (p->s).coord.x;
+      t4 = c2 + 0xFFFFF000;
+      lim2 = *(s32*)((u8*)p + 0xb4);
+      cx = c2;
+      if (t4 < lim2) {
+        (p->s).mode[1] = 5;
+        (p->s).mode[2] = f;
+        return;
+      }
+      {
+        register s32 t5 asm("r1");
+        t5 = cx + (0x80 << 6);
+        if (t5 < (pZero2->s).coord.x) {
+          (p->s).mode[1] = 3;
+          (p->s).mode[2] = f;
+          return;
+        }
+      }
+    }
+  }
+  {
+    register s32 nx asm("r0");
+    nx = (p->s).d.x;
+    nx = cx + nx;
+    (p->s).coord.x = nx;
+  }
+}
+
 
 // 0x0805C0D0
 void hanu_0805c0d0(struct Boss* p) {
