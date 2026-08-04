@@ -1062,6 +1062,162 @@ NON_MATCH void childreScrewIce(struct Boss* p) {
 }
 
 INCASM("asm/boss/childre_pre_b4.inc");
+// 0x08041B40
+void childreStartEarShot(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 neg asm("r2");
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0;
+      {
+        register s32 d asm("r1");
+        register s32 cx asm("r0");
+        d = (pZero2->s).coord.x;
+        cx = (p->s).coord.x;
+        neg = d - cx;
+        neg = (u32)neg >> 31;
+      }
+      if (((p->s).flags & 0x10) == 0) {
+        goto clear;
+      }
+      if (neg == 0) {
+        goto skip2;
+      }
+      goto motion;
+    clear:
+      if (neg == 0) {
+        goto motion;
+      }
+    skip2:
+      (p->s).mode[2] = (p->s).mode[2] + 2;
+      break;
+    motion:
+      SetMotion(&p->s, 0xA408);
+      (p->s).d.y = 0xFFFFFE00;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 ny asm("r1");
+      {
+        register s32 dy asm("r0");
+        register s32 lim asm("r1");
+        dy = (p->s).d.y + 0x40;
+        (p->s).d.y = dy;
+        lim = 0xe0 << 3;
+        if (dy > lim) {
+          (p->s).d.y = lim;
+        }
+      }
+      {
+        register s32 dv asm("r0");
+        ny = (p->s).coord.y;
+        dv = (p->s).d.y;
+        ny += dv;
+        (p->s).coord.y = ny;
+      }
+      {
+        register s32 d2 asm("r0");
+        d2 = *(s32*)((u8*)p + 0xc0) - ny;
+        if (d2 < 0) {
+          (p->s).coord.y = ny + d2;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      (p->s).work[2] = 1;
+      goto adv;
+    }
+    case 2: {
+      SetMotion(&p->s, 0xA413);
+      if ((p->s).work[2] != 0) {
+        register s32 v asm("r1");
+        register s32 one asm("r2");
+        register u8* oa asm("ip");
+        s32 v0 = (p->s).flags >> 4;
+        one = 1;
+        v0 ^= one;
+        asm("" : "+r"(v0));
+        v0 &= one;
+        *((u8*)p + 0x4c) = v0;
+        v = (p->s).flags >> 4;
+        v ^= one;
+        asm("" : "+r"(v));
+        v &= one;
+        {
+          register u8* o0 asm("r0");
+          register s32 k asm("r0");
+          k = 0x4a;
+          asm volatile("add %0, %0, %1" : "+l"(k) : "l"(p));
+          o0 = (u8*)k;
+          oa = o0;
+          {
+            register s32 sh asm("r3");
+            register s32 ov asm("r2");
+            register s32 m11 asm("r0");
+            sh = v << 4;
+            ov = *o0;
+            m11 = 0x11;
+            m11 = -m11;
+            m11 &= ov;
+            m11 |= sh;
+            {
+              register u8* o1 asm("r2");
+              o1 = oa;
+              *o1 = m11;
+            }
+          }
+        }
+        if (v != 0) {
+          register u8 g asm("r0");
+          register s32 k10 asm("r1");
+          g = (p->s).flags;
+          k10 = 0x10;
+          g |= k10;
+          (p->s).flags = g;
+        } else {
+          register u8 g2 asm("r0");
+          register u8 h2 asm("r1");
+          h2 = (p->s).flags;
+          asm("" : "+r"(h2));
+          g2 = 0xEF;
+          g2 &= h2;
+          (p->s).flags = g2;
+        }
+      }
+      SetMotion(&p->s, 0xA403);
+      (p->s).work[2] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+    adv:
+      (p->s).mode[2] = (p->s).mode[2] + 1;
+      break;
+    case 4:
+      PlaySound(0x6c);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      register s32 zr asm("r1");
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      zr = 0;
+      (p->s).mode[1] = 0xe;
+      (p->s).mode[2] = zr;
+      break;
+    }
+  }
+}
+
 
 void createEarShot(s32 x, s32 y, u8 n, bool8 is_big);
 
