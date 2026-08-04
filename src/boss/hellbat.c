@@ -953,7 +953,143 @@ NON_MATCH void hellbatNeutral(struct Boss* p) {
 
 bool8 FUN_0804b900(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/hellbat_p2.inc");
+
+// 0x0804B904
+void hellbatMode4(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 tx asm("r3");
+      register s32 cx asm("r1");
+      {
+        struct Zero* z = pZero2;
+        cx = (p->s).coord.x;
+        if (cx >= (z->s).coord.x) {
+          goto negarm;
+        }
+      }
+      {
+        register s32 one asm("r1");
+        u8* xp;
+        u8* oa;
+        s32 ov;
+        tx = cx + 0x8000;
+        xp = (u8*)p + 0x4c;
+        *xp = 1;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        one = 0x10;
+        ov |= one;
+        *oa = ov;
+        (p->s).flags = one | (p->s).flags;
+        goto armdone;
+      }
+    negarm : {
+        register s32 zero asm("r0");
+        register s32 m11 asm("r0");
+        register s32 k asm("r0");
+        u8* xp;
+        u8* oa;
+        s32 ov;
+        k = -0x8000;
+        asm("" : "+r"(k));
+        tx = cx + k;
+        xp = (u8*)p + 0x4c;
+        zero = 0;
+        *xp = zero;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        m11 = zero - 0x11;
+        m11 &= ov;
+        *oa = m11;
+        (p->s).flags &= 0xEF;
+      }
+    armdone:
+      (p->s).work[2] = 0x3C;
+      (p->s).d.x = (tx - (p->s).coord.x) / 0x3C;
+      {
+        register s32 n asm("r0");
+        register s32 dv asm("r1");
+        n = 0x7E90;
+        asm("" : "+r"(n));
+        dv = 0x3C;
+        (p->s).d.y = n / dv;
+      }
+      (p->s).work[2] = 0x3B;
+      (p->s).work[3] = 1;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 t asm("r0");
+      t = (p->s).work[3];
+      if (t == 0) {
+        goto inc;
+      }
+      t--;
+      (p->s).work[3] = t;
+      goto chk;
+    }
+    case 2:
+      SetMotion(&p->s, MOTION(0xA8, 0x05));
+      PlaySound(0);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 t asm("r0");
+      s32 vy = (p->s).d.y - 0x12;
+      (p->s).d.y = vy;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += vy;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2];
+      if (t == 0) {
+        goto inc;
+      }
+      t--;
+      (p->s).work[2] = t;
+    chk:
+      if ((u8)t != 0) {
+        break;
+      }
+    inc:
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4: {
+      register s32 bx asm("r2");
+      register s32 cx asm("r1");
+      s32 md;
+      s32 z0;
+      s32 lim;
+      bx = *(s32*)((u8*)p + 0xd0);
+      lim = bx + 0xC0 * 64;
+      cx = (p->s).coord.x;
+      if (cx < lim) {
+        goto five;
+      }
+      {
+        register s32 k3 asm("r3");
+        register s32 lim2 asm("r0");
+        k3 = 0xE0 * 256;
+        lim2 = bx + k3;
+        if (cx <= lim2) {
+          goto three;
+        }
+      }
+    five:
+      z0 = 0;
+      md = 5;
+      goto setm;
+    three:
+      z0 = 0;
+      md = 3;
+    setm:
+      (p->s).mode[1] = md;
+      (p->s).mode[2] = z0;
+      break;
+    }
+  }
+}
 
 bool8 FUN_0804ba40(struct Boss* p) { return TRUE; }
 
