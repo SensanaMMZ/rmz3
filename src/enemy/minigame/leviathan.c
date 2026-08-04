@@ -216,7 +216,146 @@ void FUN_0809a1f0(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/minigame_leviathan_p3.inc");
+s32 PushoutToUp1(s32 x, s32 y);
+
+// 0x0809A31C
+void FUN_0809a31c(struct Enemy* p) {
+  struct Entity* q = (p->s).unk_28;
+  register s32 zero asm("r5");
+  if (*((u8*)q + 0x31) != 0) {
+    SetDDP(&p->body, (const struct Collision*)0x0836A6D4);
+    return;
+  }
+  SetDDP(&p->body, (const struct Collision*)0x0836A704);
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 xf asm("r2");
+      *((u8*)p + 0x22) = 1;
+      SetMotion(&p->s, 0x3501);
+      xf = (p->s).work[2];
+      if (xf != 0) {
+        register s32 g asm("r0");
+        register s32 k asm("r1");
+        g = (p->s).flags;
+        asm("" : "+r"(g));
+        k = 0x10;
+        g |= k;
+        (p->s).flags = g;
+      } else {
+        register u8 h asm("r1");
+        register u8 g2 asm("r0");
+        h = (p->s).flags;
+        asm("" : "+r"(h));
+        g2 = 0xEF;
+        g2 &= h;
+        (p->s).flags = g2;
+      }
+      {
+        register s32 v asm("r1");
+        u8* oa;
+        s32 sh4, ov, m11;
+        v = 1;
+        v &= xf;
+        *((u8*)p + 0x4c) = v;
+        oa = (u8*)p + 0x4a;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        m11 |= sh4;
+        *oa = m11;
+      }
+      {
+        register s32 k asm("r2");
+        s32 w;
+        k = 0x80 << 2;
+        w = (p->s).work[2];
+        k -= ((w << 1) + w) << 8;
+        (p->s).d.x = k;
+      }
+      (p->s).d.y = -0x140;
+      (p->s).work[3] = 0x3c;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[3];
+        t -= 1;
+        zero = 0;
+        (p->s).work[3] = t;
+        if ((t << 24) == 0) {
+          (p->s).work[3] = RANDOM(RNG_0202f388) % 0x1e + 0x1e;
+          SetMotion(&p->s, 0x3501);
+        }
+      }
+      {
+        register s32 dx asm("r1");
+        register s32 v asm("r0");
+        dx = (p->s).d.x;
+        v = dx << 7;
+        v -= dx;
+        v <<= 1;
+        if (v < 0) {
+          v += 0xff;
+        }
+        dx = v >> 8;
+        (p->s).d.x = dx;
+        v = (p->s).coord.x;
+        v += dx;
+        (p->s).coord.x = v;
+        {
+          register s32 cy asm("r1");
+          register s32 dy asm("r2");
+          cy = (p->s).coord.y;
+          dy = (p->s).d.y;
+          cy += dy;
+          (p->s).coord.y = cy;
+          {
+            register s32 pu asm("r1");
+            pu = ((s32(*)(s32, s32))PushoutToUp1)(v, cy);
+            if (pu < 0) {
+              (p->s).coord.y += pu;
+            }
+          }
+        }
+      }
+      (p->s).d.y += 0x10;
+      UpdateMotionGraphic(&p->s);
+      if ((s8)*((u8*)p + 0x71) == 2) {
+        register s32 k asm("r2");
+        s32 w;
+        (p->s).d.y = -0x140;
+        k = 0x80 << 2;
+        w = (p->s).work[2];
+        k -= ((w << 1) + w) << 8;
+        (p->s).d.x = k;
+      }
+      if ((u32)((p->s).coord.x + -0xD000) > 0x98 * 512) {
+        u8* a;
+        *(u32*)((u8*)q + 0x1c) = zero;
+        *((u8*)q + 0x32) = zero;
+        (p->s).flags &= ~DISPLAY;
+        (p->s).flags &= ~FLIPABLE;
+        a = (u8*)p + 0x8c;
+        *(u32*)a = zero;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *(u32*)a = zero;
+        asm("" : "+r"(a));
+        a += 4;
+        asm("" : "+r"(a));
+        *a = zero;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+  }
+}
+
 
 void FUN_0809a4bc(struct Enemy* p) {
   if (*((u8*)(p->s).unk_28 + 0x31) != 0) {
