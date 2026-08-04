@@ -453,7 +453,115 @@ void FUN_080a7a70(struct Projectile* p) {
   (p->s).mode[2] = 0;
 }
 
-INCASM("asm/projectile/cubit_post.inc");
+
+// 0x080A7A7C
+void FUN_080a7a7c(struct Projectile* p) {
+  register s32 y asm("r4");
+  s32 v, k, cx;
+
+  if (((p->s).unk_28)->mode[0] > 1) {
+    goto die;
+  }
+  if (*(s32*)((u8*)(p->s).unk_28 + 0xc0) != 0 && (p->s).mode[2] != 3) {
+    (p->s).mode[2] = 3;
+  }
+  if (((p->s).unk_28)->mode[1] == 0xB && (p->s).mode[2] != 3) {
+    (p->s).mode[2] = 3;
+  }
+  switch ((p->s).mode[2]) {
+    case 0:
+      if ((p->s).work[1] == 0) {
+        y = FUN_0800a31c((p->s).coord.x, (p->s).coord.y);
+        k = *((u8*)p + 0xb5);
+        if (k == 0) {
+          v = 0xC00;
+          goto add;
+        }
+        if (k == 1) {
+          v = 0x4C00;
+          goto add;
+        }
+        if (k == 2) {
+          v = 0x8C00;
+          goto add;
+        }
+        if (k != 3) {
+          goto noadd;
+        }
+        v = 0xCC00;
+        goto add;
+      }
+      y = FUN_0800a31c((p->s).coord.x, (p->s).coord.y);
+      k = *((u8*)p + 0xb5);
+      if (k == 0) {
+        v = 0x2C00;
+        goto add;
+      }
+      if (k != 1) {
+        goto noadd;
+      }
+      v = 0xAC00;
+    add:
+      y += v;
+    noadd:
+      SetMotion(&p->s, 0xB110);
+      (p->s).work[2] = 0x32;
+      cx = (p->s).coord.x;
+      (p->s).d.x = (y - cx) / (s32)(p->s).work[2];
+      y = 0x13880;
+      y -= FUN_08009f6c(cx, (p->s).coord.y) - (p->s).coord.y;
+      (p->s).d.y = -(y / (s32)(p->s).work[2]);
+      (p->s).work[2]--;
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 1:
+      (p->s).d.y += 0x40;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      if ((p->s).d.y > 0) {
+        if ((p->s).work[3] == 0) {
+          (p->s).work[3]++;
+          SetMotion(&p->s, 0xB111);
+        }
+        if ((p->s).work[3] == 1 && (p->s).motion.state == 3) {
+          (p->s).work[3]++;
+          SetDDP(&p->body, &sCollisions[13]);
+          SetMotion(&p->s, 0xB112);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+      (p->s).work[2] = 0x28;
+      goto bump;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        if ((u8)--(p->s).work[2] != 0) {
+          break;
+        }
+      }
+    bump:
+      (p->s).mode[2]++;
+      break;
+    case 3:
+      SetMotion(&p->s, 0xB113);
+      (p->s).mode[2]++;
+      /* fallthrough */
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    die:
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      break;
+  }
+}
 
 void CubitProjectile_Init(struct Projectile* p);
 void CubitProjectile_Update(struct Projectile* p);
