@@ -308,7 +308,243 @@ static void tryMakeFlinch(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/deathtanz_pre_a.inc");
+struct Entity* CreateVFX39(struct Coord* c, u8 r1, u8 r2);
+void FUN_080bdaf8(s32 x, s32 y);
+u8 GetEntityPalID(struct Entity* p);
+void RemovePaletteAnimation(u16 n);
+void StartPaletteAnimation(u16 blinkID, u16 ofs);
+u32 StepPaletteAnimation(u16 blinkID);
+
+// 0x080490B8
+void deathtanzMode0(struct Boss* p) {
+  u32 pa;
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, MOTION(0xA7, 0x01));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      goto inc2;
+    case 2:
+      SetMotion(&p->s, MOTION(0xA7, 0x02));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((*(u32*)((u8*)p + 0x70) & 0xFFFF00) == (0x83 << 9)) {
+        PlaySound(0x5b);
+      }
+      goto st;
+    case 4: {
+      struct Coord c;
+      register struct Entity* v asm("r3");
+      SetMotion(&p->s, MOTION(0xA7, 0x03));
+      c.x = (p->s).coord.x;
+      c.y = (p->s).coord.y - 0x2000;
+      v = CreateVFX39(&c, 1, 0);
+      (p->s).unk_2c = v;
+      if (v != NULL) {
+        register s32 z asm("r2");
+        register u8* q asm("r1");
+        q = (u8*)v + 0x74;
+        z = 0;
+        *q = 0x10;
+        q += 1;
+        asm("" : "+r"(q));
+        *q = 6;
+        q += 1;
+        asm("" : "+r"(q));
+        *q = 0x18;
+        *(s32*)((u8*)v + 0x78) = z;
+      }
+      {
+        s32 z2 = 0;
+        (p->s).work[2] = 0x1e;
+        (p->s).d.x = z2;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5: {
+      register s32 d asm("r5");
+      struct Entity* v;
+      {
+        register s32 d0 asm("r1");
+        s32 n;
+        d0 = (p->s).d.x;
+        n = (0x80 << 7) - d0;
+        if (n < 0) {
+          n += 15;
+        }
+        n >>= 4;
+        d = d0 + n;
+        (p->s).d.x = d;
+      }
+      v = (p->s).unk_2c;
+      if (v != NULL) {
+        {
+          s32 q8 = d;
+          u32 mm;
+          if (d < 0) {
+            q8 = d + 7;
+          }
+          q8 >>= 3;
+          {
+            register u32 w asm("r1");
+            w = (p->s).work[2];
+            mm = 1;
+            mm &= w;
+          }
+          mm *= q8;
+          asm volatile("add %0, %1, %0" : "+l"(mm) : "l"(d));
+          *(s32*)((u8*)v + 0x78) = mm;
+        }
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 6: {
+      u32 v2, sv, k, kc;
+      SetMotion(&p->s, MOTION(0xA7, 0x04));
+      v2 = GetEntityPalID(&p->s);
+      sv = ((u32)(u8)v2) << 5;
+      k = 0x80 << 2;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(0x29, sv | kc);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 7: {
+      struct Entity* v = (p->s).unk_2c;
+      if (v != NULL) {
+        register s32 d asm("r5");
+        d = (p->s).d.x;
+        {
+          s32 q8 = d;
+          u32 mm;
+          if (d < 0) {
+            q8 = d + 7;
+          }
+          q8 >>= 3;
+          {
+            register u32 w asm("r1");
+            w = (p->s).work[2];
+            mm = 1;
+            mm &= w;
+          }
+          mm *= q8;
+          asm volatile("add %0, %1, %0" : "+l"(mm) : "l"(d));
+          *(s32*)((u8*)v + 0x78) = mm;
+        }
+      }
+      (p->s).work[2]--;
+      pa = 0x29;
+      goto step;
+    }
+    case 8: {
+      u32 v2, sv, k, kc;
+      SetMotion(&p->s, MOTION(0xA7, 0x05));
+      RemovePaletteAnimation(0x29);
+      v2 = GetEntityPalID(&p->s);
+      sv = ((u32)(u8)v2) << 5;
+      k = 0x80 << 2;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(0x2a, sv | kc);
+      PlaySound(0x45);
+      FUN_080bdaf8((p->s).coord.x, (p->s).coord.y);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 9: {
+      register s32 d asm("r5");
+      struct Entity* v;
+      {
+        register s32 d0 asm("r1");
+        s32 n;
+        d0 = (p->s).d.x;
+        n = -d0;
+        if (n < 0) {
+          n += 15;
+        }
+        n >>= 4;
+        d = d0 + n;
+        (p->s).d.x = d;
+      }
+      v = (p->s).unk_2c;
+      if (v != NULL) {
+        {
+          s32 q8 = d;
+          u32 mm;
+          if (d < 0) {
+            q8 = d + 7;
+          }
+          q8 >>= 3;
+          {
+            register u32 w asm("r1");
+            w = (p->s).work[2];
+            mm = 1;
+            mm &= w;
+          }
+          mm *= q8;
+          asm volatile("add %0, %1, %0" : "+l"(mm) : "l"(d));
+          *(s32*)((u8*)v + 0x78) = mm;
+        }
+      }
+      (p->s).work[2]--;
+      pa = 0x2a;
+    step:
+      StepPaletteAnimation(pa);
+      UpdateMotionGraphic(&p->s);
+    st:
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    inc2:
+      (p->s).mode[2]++;
+      break;
+    }
+    case 10: {
+      register struct Entity* v asm("r3");
+      v = (p->s).unk_2c;
+      if (v != NULL) {
+        register u8* q77 asm("r1");
+        q77 = (u8*)v + 0x77;
+        *q77 = 1;
+      }
+      RemovePaletteAnimation(0x2a);
+      SetMotion(&p->s, MOTION(0xA7, 0x06));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 11: {
+      register s32 one asm("r2");
+      register s32 f asm("r1");
+      s32 g;
+      UpdateMotionGraphic(&p->s);
+      g = gStageRun.vm.active;
+      one = 1;
+      f = one;
+      f &= g;
+      if (f != 0) {
+        break;
+      }
+      (p->s).mode[1] = one;
+      (p->s).mode[2] = f;
+      break;
+    }
+  }
+}
 
 // 0x08049330
 void deathtanzNeutral(struct Boss* p) {
