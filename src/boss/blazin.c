@@ -1044,7 +1044,197 @@ void blazinMode8(struct Boss* p) {
 
 bool8 FUN_0803f9c0(struct Boss* _) { return TRUE; }
 
-INCASM("asm/boss/blazin_p10.inc");
+s32 FUN_080401d4(struct Boss* p, u8 a);
+bool8 createBlazinEXFireBall(struct Boss* p, u8 a1, u8 a2, s32 a3);
+
+// 0x0803F9C4
+void blazinEX(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 tx = (s32)blazin_080403a0(p, 1);
+      s32 t2 = (s32)blazin_080403a0(p, 2);
+      s32 d = (t2 - (s32)blazin_080403a0(p, 1)) >> 1;
+      tx += d;
+      (p->s).work[2] = 0x30;
+      (p->s).d.x = (tx - (p->s).coord.x) / (p->s).work[2];
+      (p->s).d.y = -((0x90 << 9) / (p->s).work[2]);
+      (p->s).work[2] = 0x2F;
+      (p->s).work[3] = 1;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      setBlazinDirection(&p->s);
+      if ((p->s).work[3] == 0) {
+        goto inc1;
+      }
+      {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) == 0) {
+          goto inc1;
+        }
+      }
+      break;
+    inc1:
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      {
+        u32 raw = *(u16*)((u8*)p + 0xc8) + 1;
+        register u32 k asm("r2");
+        register u32 kc asm("r0");
+        u32 mm;
+        k = 0xFFFFA200;
+        asm("" : "+r"(k));
+        kc = k;
+        asm("" : "+r"(kc));
+        mm = raw | kc;
+        SetMotion(&p->s, (u16)mm);
+      }
+      SetDDP(&p->body, &gBlazinCollisions[3]);
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 dy = (p->s).d.y + 0x40;
+      (p->s).d.y = dy;
+      if (dy > 0) {
+        if ((p->s).work[3] == 0) {
+          (p->s).work[3] = 1;
+        }
+      }
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        goto inc3;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+          goto inc3;
+        }
+      }
+      break;
+    inc3:
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4:
+      PlaySound(0x72);
+      {
+        u32 raw = *(u16*)((u8*)p + 0xc8) + 2;
+        register u32 k asm("r2");
+        register u32 kc asm("r0");
+        u32 mm;
+        k = 0xFFFFA200;
+        asm("" : "+r"(k));
+        kc = k;
+        asm("" : "+r"(kc));
+        mm = raw | kc;
+        SetMotion(&p->s, (u16)mm);
+      }
+      SetDDP(&p->body, &gBlazinCollisions[1]);
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y + -0x1000);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 6:
+      {
+        u32 raw = *(u16*)((u8*)p + 0xc8) + 8;
+        register u32 k asm("r2");
+        register u32 kc asm("r0");
+        u32 mm;
+        k = 0xFFFFA200;
+        asm("" : "+r"(k));
+        kc = k;
+        asm("" : "+r"(kc));
+        mm = raw | kc;
+        SetMotion(&p->s, (u16)mm);
+      }
+      SetDDP(&p->body, &gBlazinCollisions[7]);
+      {
+        u8 z = 0;
+        (p->s).work[2] = 0xf0;
+        (p->s).work[3] = z;
+        (p->s).mode[3] = z;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      if ((s8)(p->s).motion.cmdIdx <= 1) {
+        break;
+      }
+      (p->s).work[3] = FUN_080401d4(p, (u8)((p->s).mode[3] / 6));
+      (p->s).mode[2]++;
+      break;
+    case 8:
+      {
+        u8 m3 = (p->s).mode[3];
+        if ((m3 & 0xf) == 0) {
+        u8 a1 = (p->s).work[3];
+        createBlazinEXFireBall(p, a1, (u8)(m3 / 6), 0);
+        a1 = (p->s).work[3];
+        createBlazinEXFireBall(p, a1, (u8)((p->s).mode[3] / 6), 0x14);
+        }
+      }
+      (p->s).mode[3]++;
+      UpdateMotionGraphic(&p->s);
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        goto inc8;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+          goto inc8;
+        }
+      }
+      break;
+    inc8:
+      (p->s).mode[2]++;
+      break;
+    case 9:
+      StopSound(0x72);
+      {
+        u32 raw = *(u16*)((u8*)p + 0xc8) + 9;
+        register u32 k asm("r2");
+        register u32 kc asm("r0");
+        u32 mm;
+        k = 0xFFFFA200;
+        asm("" : "+r"(k));
+        kc = k;
+        asm("" : "+r"(kc));
+        mm = raw | kc;
+        SetMotion(&p->s, (u16)mm);
+      }
+      (p->s).work[2] = 0xff;
+      (p->s).mode[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 10: {
+      u8 st;
+      UpdateMotionGraphic(&p->s);
+      st = (p->s).motion.state;
+      if (st != 3) {
+        break;
+      }
+      (p->s).mode[1] = st;
+      (p->s).mode[2] = 0;
+      break;
+    }
+  }
+}
 
 bool8 FUN_0803fc70(struct Boss* _) { return TRUE; }
 
