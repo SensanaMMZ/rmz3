@@ -704,6 +704,239 @@ bool8 FUN_0806b8cc(struct Enemy* p) { return TRUE; }
 
 INCASM("asm/enemy/omega_white_hand_p6.inc");
 
+s32 PushoutToUp1(s32 x, s32 y);
+void AppendQuake(u8 kind, struct Coord* c);
+
+// 0x0806BB8C
+void FUN_0806bb8c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 z asm("r4");
+      register u8* oa asm("r2");
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 1;
+        f |= fl;
+        z = 0;
+        {
+          u32 m = 0xEF;
+          f &= m;
+          (p->s).flags = f;
+        }
+      }
+      {
+        u8* q = (u8*)p + 0x4c;
+        *q = z;
+      }
+      oa = (u8*)p + 0x4a;
+      {
+        s32 ov = *oa;
+        s32 m11 = -0x11;
+        m11 &= ov;
+        *oa = m11;
+      }
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 0xDF;
+        f &= fl;
+        (p->s).flags = f;
+      }
+      {
+        u8* q = (u8*)p + 0x4d;
+        *q = z;
+      }
+      {
+        s32 ov = *oa;
+        s32 m21 = -0x21;
+        m21 &= ov;
+        *oa = m21;
+      }
+      {
+        u8* q = (u8*)p + 0x24;
+        *q = z;
+      }
+      SetMotion(&p->s, 0x0901);
+      (p->s).d.x = z;
+      (p->s).d.y = z;
+      RNG_0202f388 = ((RNG_0202f388 * 0x343FD + 0x269EC3) << 1) >> 1;
+      (p->s).work[2] = z;
+      (p->s).mode[2] += 2;
+      break;
+    }
+    case 1: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      {
+        struct Entity* e = (p->s).unk_28;
+        s32 cy = (p->s).coord.y;
+        s32 k = 0xe0 << 6;
+        s32 base = cy + k;
+        s32 d = (e->coord).y - base;
+        (p->s).coord.y = cy + (((d * 2 + d) << 3) >> 8);
+      }
+      t = (p->s).work[2];
+      if (t == 0) {
+        break;
+      }
+      t -= 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 2: {
+      s32 dy;
+      s32 r;
+      dy = (p->s).d.y + 0x20;
+      (p->s).d.y = dy;
+      if (dy > (0xe0 << 2)) {
+        (p->s).d.y = 0xe0 << 2;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      r = PushoutToUp1((p->s).coord.x, (p->s).coord.y + (0xc0 << 5));
+      if (r != 0) {
+        AppendQuake(4, &(p->s).coord);
+        PlaySound(0x91);
+        (p->s).coord.y += r;
+        {
+          s32 t = (p->s).work[2];
+          if (t == 0) {
+            asm volatile("" : "+l"(t));
+            t += 1;
+            (p->s).work[2] = t;
+            (p->s).d.y = -0xe8;
+          } else {
+            (p->s).mode[2]++;
+          }
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 3:
+      (p->s).work[2] = 0xA;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2];
+      if (t == 0) {
+        break;
+      }
+      t -= 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 5:
+      RNG_0202f388 = ((RNG_0202f388 * 0x343FD + 0x269EC3) << 1) >> 1;
+      (p->s).work[2] = 5;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 6: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2];
+      if (t == 0) {
+        break;
+      }
+      t -= 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      RNG_0202f388 = ((RNG_0202f388 * 0x343FD + 0x269EC3) << 1) >> 1;
+      (p->s).work[2] = 0x28;
+      (p->s).mode[2]++;
+      break;
+    }
+    case 7: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      {
+        s32* b = (s32*)((u8*)p + 0xb4);
+        struct Entity* e = (p->s).unk_28;
+        s32 lim;
+        s32 cx;
+        {
+          register s32 bv asm("r0");
+          register s32 ex asm("r1");
+          bv = *b;
+          ex = (e->coord).x;
+          bv += ex;
+          lim = bv;
+        }
+        cx = (p->s).coord.x;
+        if (cx > lim) {
+          cx += -0x380;
+          (p->s).coord.x = cx;
+          {
+            register s32 bv asm("r1");
+            register s32 ex asm("r0");
+            bv = *b;
+            ex = (e->coord).x;
+            ex = bv + ex;
+            lim = ex;
+          }
+          if (cx >= lim) {
+            goto upd;
+          }
+        } else {
+          cx += (0xe0 << 2);
+          (p->s).coord.x = cx;
+          {
+            register s32 bv asm("r1");
+            register s32 ex asm("r0");
+            bv = *b;
+            ex = (e->coord).x;
+            ex = bv + ex;
+            lim = ex;
+          }
+          if (cx <= lim) {
+            goto upd;
+          }
+        }
+        (p->s).coord.x = lim;
+        (p->s).mode[2]++;
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).mode[2] == 8) {
+        break;
+      }
+      t = (p->s).work[2];
+      if (t == 0) {
+        break;
+      }
+      t -= 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      (p->s).mode[2] = 4;
+      break;
+    }
+    case 8:
+      break;
+  }
+  {
+    struct Entity* e = (p->s).unk_28;
+    if ((*(u32*)((u8*)e + 0xd4) & 8) != 0) {
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4) + (e->coord).x;
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y + -0x800) + -0x1800;
+      (p->s).mode[1] = 0;
+      (p->s).mode[2] = 0;
+      (p->s).mode[3] = 0;
+    }
+  }
+}
+
 // 0x0806be0c
 static void onCollision(struct Body* body UNUSED, struct Coord* r1 UNUSED, struct Coord* r2 UNUSED) {}
 
