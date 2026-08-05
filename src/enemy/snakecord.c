@@ -94,8 +94,7 @@ void Snakecord_Die(struct Enemy* p);
 // agbcc refuses to allocate r7 here -- `register u32 tbl asm("r7")`, a "+r"
 // barrier on the copy, and the literal transfer asm are all coalesced back
 // into r4, so the copy has nowhere to live. Everything else matches.
-NON_MATCH bool8 FUN_0807415c(struct Enemy* p) {
-#if MODERN
+bool8 FUN_0807415c(struct Enemy* p) {
   if ((p->s).work[0] == 0) {
     register u32* st asm("ip");
     register u32* st0 asm("r0");
@@ -114,7 +113,7 @@ NON_MATCH bool8 FUN_0807415c(struct Enemy* p) {
       e = (p->s).unk_28;
       tbl0 = (u32)gEnemyFnTable;
       if (e != NULL) {
-        register u32 tbl asm("r7");
+        u32 tbl;
         register s32 two asm("r6");
         register s32 one asm("r5");
         tbl = tbl0;
@@ -155,9 +154,6 @@ NON_MATCH bool8 FUN_0807415c(struct Enemy* p) {
     }
   }
   return FALSE;
-#else
-  INCCODE("asm/enemy/snakecord_0807415c.inc");
-#endif
 }
 
 // 0x08074208
