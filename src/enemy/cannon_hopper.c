@@ -1280,7 +1280,228 @@ void FUN_08098414(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/cannon_hopper_post_post_c.inc");
+void FUN_0809860c(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 k asm("r6");
+      k = 0;
+      switch (*((u8*)p + 0xbe)) {
+        case 1:
+          k = -0x1200;
+          if ((p->s).flags & Y_FLIP) {
+            k = 0x90 << 5;
+          }
+          break;
+        case 2:
+          k = -0x1800;
+          if ((p->s).flags & Y_FLIP) {
+            k = 0xc0 << 5;
+          }
+          break;
+        case 3: {
+          u32 f;
+          u32 tf;
+          k = -0x2300;
+          f = (p->s).flags;
+          tf = Y_FLIP;
+          asm volatile("" : "+l"(tf));
+          tf &= f;
+          if (tf) {
+            k = 0x8c << 6;
+          }
+          {
+            u32 sh = f >> 5;
+            u32 yf = 1;
+            yf &= ~sh;
+            if (yf) {
+              u32 t = Y_FLIP;
+              t |= f;
+              (p->s).flags = t;
+            } else {
+              u32 t = 0xDF;
+              t &= f;
+              (p->s).flags = t;
+            }
+            {
+              register u32 v asm("r0");
+              register u8* pa asm("r1");
+              register u8* oa asm("r3");
+              s32 sh5;
+              s32 ov;
+              s32 m21;
+              v = yf;
+              pa = (u8*)p + 0x4d;
+              *pa = v;
+              oa = (u8*)p + 0x4a;
+              sh5 = v << 5;
+              ov = *oa;
+              m21 = -0x21;
+              m21 &= ov;
+              *oa = m21 | sh5;
+            }
+          }
+          break;
+        }
+        case 4: {
+          u32 f;
+          u32 tf;
+          k = -0x2B00;
+          f = (p->s).flags;
+          tf = Y_FLIP;
+          asm volatile("" : "+l"(tf));
+          tf &= f;
+          if (tf) {
+            k = 0xac << 6;
+          }
+          {
+            u32 sh = f >> 5;
+            u32 yf = 1;
+            yf &= ~sh;
+            if (yf) {
+              u32 t = Y_FLIP;
+              t |= f;
+              (p->s).flags = t;
+            } else {
+              u32 t = 0xDF;
+              t &= f;
+              (p->s).flags = t;
+            }
+            {
+              register u32 v asm("r0");
+              register u8* pa asm("r1");
+              register u8* oa asm("r3");
+              s32 sh5;
+              s32 ov;
+              s32 m21;
+              v = yf;
+              pa = (u8*)p + 0x4d;
+              *pa = v;
+              oa = (u8*)p + 0x4a;
+              sh5 = v << 5;
+              ov = *oa;
+              m21 = -0x21;
+              m21 &= ov;
+              *oa = m21 | sh5;
+            }
+          }
+          break;
+        }
+      }
+      FUN_08097224(p, 0, k);
+      SetDDP(&p->body, (const struct Collision*)0x0836A3A8);
+      SetMotion(&p->s, MOTION(0xDC, 0x00));
+      UpdateMotionGraphic(&p->s);
+      {
+        struct Zero* z = pZero2;
+        register s32 dx asm("r1");
+        register s32 dy asm("r0");
+        u32 len;
+        {
+          register s32 zx asm("r0");
+          dx = (p->s).coord.x;
+          zx = (z->s).coord.x;
+          asm volatile("" : "+l"(dx), "+l"(zx));
+          dx -= zx;
+        }
+        (p->s).d.x = dx;
+        dy = (p->s).coord.y + -0x1800;
+        asm volatile("" : "+l"(dy));
+        dy -= (z->s).coord.y;
+        (p->s).d.y = dy;
+        {
+          register s32 sq asm("r6");
+          s32 tq;
+          dx >>= 8;
+          sq = dx * dx;
+          dy >>= 8;
+          tq = dy * dy;
+          asm volatile("" : "+l"(tq));
+          sq += tq;
+          len = ((u32)Sqrt(sq) << 16) >> 8;
+        }
+        if (len != 0) {
+          s32 vx = ((p->s).d.x << 8) / (s32)len;
+          s32 vy;
+          (p->s).d.x = vx;
+          vy = ((p->s).d.y << 8) / (s32)len;
+          (p->s).d.x = (vx * 2 + vx) * 2;
+          (p->s).d.y = (vy * 2 + vy) * 2;
+        } else {
+          (p->s).d.x = 0xc0 << 3;
+          (p->s).d.y = len;
+        }
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 hit = 0;
+      register s32 r asm("r6");
+      s32 nx;
+      s32 ny;
+      s32 cx0 = (p->s).coord.x;
+      s32 dx = (p->s).d.x;
+      nx = cx0 + dx;
+      (p->s).coord.x = nx;
+      if (dx > 0) {
+        r = PushoutToLeft1(nx, (p->s).coord.y);
+        if (r < 0) {
+          if (r <= -0x800) {
+            goto ydone;
+          }
+          goto xhit;
+        }
+      } else {
+        r = PushoutToRight1(nx, (p->s).coord.y);
+        if ((u32)(r - 1) <= 0x7FE) {
+          goto xhit;
+        }
+      }
+      goto ydone;
+    xhit:
+      hit = 1;
+      (p->s).coord.x += r;
+    ydone:
+      (p->s).d.y += 0x40;
+      if ((p->s).d.y > 0x700) {
+        (p->s).d.y = 0x700;
+      }
+      ny = (p->s).coord.y + (p->s).d.y;
+      (p->s).coord.y = ny;
+      if ((p->s).d.y > 0) {
+        r = PushoutToUp1((p->s).coord.x, ny);
+        if (r < 0) {
+          if (r <= -0x800) {
+            goto chk;
+          }
+          goto yhit;
+        }
+      } else {
+        r = PushoutToDown1((p->s).coord.x, ny);
+        if ((u32)(r - 1) <= 0x7FE) {
+          goto yhit;
+        }
+      }
+      goto chk;
+    yhit:
+      hit = 1;
+      (p->s).coord.y += r;
+    chk:
+      if (hit != 0) {
+        goto call;
+      }
+      if ((u16)FUN_080098a4((p->s).coord.x, (p->s).coord.y) != 0) {
+        goto call;
+      }
+      if (((p->body).status & 4) == 0) {
+        break;
+      }
+    call:
+      FUN_08097f3c(p);
+      break;
+    }
+  }
+}
 
 void CannonHopper_Init(struct Enemy* p);
 void CannonHopper_Update(struct Enemy* p);
