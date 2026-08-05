@@ -762,7 +762,216 @@ tail:
 #endif
 }
 
-INCASM("asm/boss/baby_elf_p2_p1_post_b.inc");
+// 0x08047338
+void babyelf_08047338(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      *(u16*)((u8*)p + 0xc4) = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register u16* acc asm("r2");
+      register u8* dir asm("r3");
+      register u32 nv asm("r1");
+      acc = (u16*)((u8*)p + 0xc4);
+      dir = (u8*)p + 0xc7;
+      {
+        register u32 d asm("r1");
+        register s32 step asm("r0");
+        register u32 av asm("r4");
+        u32 t;
+        d = *dir;
+        step = d * 2;
+        step += d;
+        step *= 2;
+        step += 0xFFFD;
+        asm volatile("" : "+l"(step));
+        av = *acc;
+        t = step + av;
+        *acc = t;
+        nv = (u16)t;
+      }
+      {
+        u32 lim = 0xFF7F;
+        asm volatile("" : "+l"(lim));
+        if (nv <= lim) {
+          if (*dir == 0) {
+            goto inc;
+          }
+        }
+      }
+      if (nv > 0x80) {
+        if (*dir == 1) {
+        inc:
+          (p->s).mode[2]++;
+        }
+      }
+      babyelf_08045c84(p);
+      break;
+    }
+    case 2: {
+      s32 cx;
+      (p->s).work[3] = 0;
+      (p->s).d.x = 0;
+      cx = (p->s).coord.x;
+      (p->s).unk_coord.x = cx;
+      (p->s).unk_coord.x = cx - *(s32*)((u8*)p + 0xb4);
+      {
+        register s32 cy0 asm("r0");
+        register s32 kk asm("r1");
+        cy0 = (p->s).coord.y;
+        (p->s).unk_coord.y = cy0;
+        kk = 0xa0 << 7;
+        asm volatile("" : "+l"(kk));
+        cy0 += kk;
+        kk = *(s32*)((u8*)p + 0xb8);
+        cy0 -= kk;
+        (p->s).unk_coord.y = cy0;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 a;
+      register s32 nx asm("r3");
+      register s32 ny asm("r2");
+      register s32 ux asm("r4");
+      register s32 uy asm("r2");
+      register s32 cs asm("r5");
+      register s32 sn asm("r1");
+      register s32 pr asm("r0");
+      s32 nx2;
+      s32 ny2;
+      if ((p->s).work[0] == 0) {
+        u8 w = (p->s).work[3];
+        w += 1;
+        (p->s).work[3] = w;
+        w = (p->s).work[3];
+        w &= 0x1f;
+        (p->s).work[3] = w;
+        if (w <= 0xf) {
+          (p->s).taskCol = 0x19;
+        } else {
+          (p->s).taskCol = 0x18;
+        }
+      }
+      a = (p->s).d.x;
+      {
+        u32 sh = (u32)(a >> 8) << 24;
+        register const s16* st asm("r2");
+        st = gSineTable;
+        asm("" : "+r"(st));
+        sn = sh >> 24;
+        cs = st[(sh + (0x80 << 23)) >> 24];
+        ux = (p->s).unk_coord.x;
+        {
+          pr = cs * ux;
+          if (pr < 0) {
+            pr += 0xff;
+          }
+          nx = pr >> 8;
+        }
+        {
+          register const s16* q asm("r0");
+          q = (const s16*)((u8*)(sn << 1) + (s32)st);
+          sn = *q;
+        }
+        uy = (p->s).unk_coord.y;
+        {
+          pr = sn * uy;
+          if (pr < 0) {
+            pr += 0xff;
+          }
+          nx += pr >> 8;
+        }
+        {
+          s32 neg;
+          pr = sn * ux;
+          if (pr < 0) {
+            pr += 0xff;
+          }
+          neg = -(pr >> 8);
+          pr = cs * uy;
+          if (pr < 0) {
+            pr += 0xff;
+          }
+          ny = neg + (pr >> 8);
+        }
+      }
+      (p->s).d.x = a + 0x14;
+      (p->s).unk_coord.x = nx;
+      (p->s).unk_coord.y = ny;
+      (p->s).coord.x = *(s32*)((u8*)p + 0xb4) + nx;
+      {
+        s32* cp = (s32*)((u8*)p + 0xb8);
+        s32 dy0 = ny + -0x5000;
+        (p->s).coord.y = *cp + dy0;
+      }
+      nx2 = (((nx << 5) - nx) << 3) / 256;
+      (p->s).unk_coord.x = nx2;
+      ny2 = (((ny << 5) - ny) << 3) / 256;
+      (p->s).unk_coord.y = ny2;
+      if ((u32)(nx2 + (0x80 << 2)) > 0x3FF) {
+        break;
+      }
+      if ((u32)(ny2 + (0x80 << 2)) > 0x3FF) {
+        break;
+      }
+      {
+        u8 w0 = (p->s).work[0];
+        if (w0 == 0) {
+          PlaySound(0x117);
+          (p->s).mode[1] = 8;
+          (p->s).mode[2] = w0;
+        } else {
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    }
+    case 4: {
+      register u8* q asm("r4");
+      {
+        u32 fv = (p->s).flags;
+        u32 f = 0xfe;
+        f &= fv;
+        (p->s).flags = f;
+      }
+      SetDDP(&p->body, sCollisions);
+      q = (u8*)p + 0xc6;
+      if (*q != 0) {
+        RemovePaletteAnimation(*q);
+        *q = 0;
+      }
+      break;
+    }
+  }
+  if ((p->s).mode[2] != 4) {
+    (p->s).work[2]++;
+    if ((u8)((p->s).work[2] % 7) == 0) {
+      u32 a = RNG_0202f388;
+      u32 r1v = (a * 0x343FD + 0x269EC3) << 1;
+      u32 s1;
+      s32 x;
+      s32 y;
+      u32 r2v;
+      s32 rx;
+      s32 ry;
+      asm("" : "+r"(r1v));
+      s1 = r1v >> 1;
+      rx = (s32)((r1v << 4) >> 21) + -0x400;
+      x = (p->s).coord.x + rx;
+      r2v = (s1 * 0x343FD + 0x269EC3) << 1;
+      asm("" : "+r"(r2v));
+      RNG_0202f388 = r2v >> 1;
+      ry = (s32)((r2v << 5) >> 22) + 0x800;
+      y = (p->s).coord.y + ry;
+      FUN_080bc594(x, y, 0, 0, (p->s).work[0]);
+    }
+    StepPaletteAnimation(*((u8*)p + 0xc6));
+    UpdateMotionGraphic(&p->s);
+  }
+}
 
 void FUN_080bc6ac(struct Entity* e, s32 x, s32 y, s32 speed, u8 angle);
 
