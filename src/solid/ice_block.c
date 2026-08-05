@@ -27,8 +27,7 @@ const SolidRoutine gIceBlockRoutine = {
 };
 // clang-format on
 
-NON_MATCH static void IceBlock_Init(struct Solid* p) {
-#if MODERN
+static void IceBlock_Init(struct Solid* p) {
   (p->s).flags |= FLIPABLE;
   (p->s).flags |= DISPLAY;
   InitNonAffineMotion(&p->s);
@@ -61,9 +60,6 @@ NON_MATCH static void IceBlock_Init(struct Solid* p) {
     INIT_BODY(p, &sCollisions[0], 80, NULL);
   }
   IceBlock_Update(p);
-#else
-  INCCODE("asm/wip/IceBlock_Init.inc");
-#endif
 }
 
 // 0x080D8CA0
