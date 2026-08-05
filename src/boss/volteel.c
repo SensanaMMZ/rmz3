@@ -657,7 +657,287 @@ INCASM("asm/boss/volteel_p5.inc");
 
 bool8 nop_08043db0(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p6.inc");
+s32 PushoutToUp2(s32 x, s32 y);
+s32 PushoutToLeft2(s32 x, s32 y);
+s32 PushoutToRight2(s32 x, s32 y);
+void volteel_08045abc(struct Boss* p);
+
+// 0x08043DB4
+void volteelMode4(struct Boss* p) {
+  s32 nm;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 best;
+      register s32 bx asm("r6");
+      register s32 cand asm("r4");
+      best = 0x7FFFFFFF;
+      {
+        register s32 v asm("r0");
+        register s32 k asm("r1");
+        v = (pZero2->s).coord.x;
+        k = -0x1200;
+        bx = v + k;
+      }
+      {
+        register s32 r asm("r1");
+        register s32 cy asm("r1");
+        cy = (p->s).coord.y + -0x5000;
+        r = FUN_0800a05c(bx, cy);
+        if (r < best && r > *(s32*)((u8*)p + 0xbc) + -0x5000) {
+          best = r;
+        }
+      }
+      {
+        register s32 v asm("r0");
+        register s32 k asm("r1");
+        v = (pZero2->s).coord.x;
+        k = 0x90 << 5;
+        cand = v + k;
+      }
+      {
+        register s32 r asm("r1");
+        register s32 cy asm("r1");
+        cy = (p->s).coord.y + -0x5000;
+        r = FUN_0800a05c(cand, cy);
+        if (r < best && r > *(s32*)((u8*)p + 0xbc) + -0x5000) {
+          best = r;
+          bx = cand;
+        }
+      }
+      {
+        register s32 r asm("r1");
+        register s32 cy asm("r1");
+        cand = (pZero2->s).coord.x;
+        cy = (p->s).coord.y + -0x5000;
+        r = FUN_0800a05c(cand, cy);
+        if (r < best && r > *(s32*)((u8*)p + 0xbc) + -0x5000) {
+          best = r;
+          bx = cand;
+        }
+      }
+      (p->s).work[2] = 0x50;
+      (p->s).d.x = (bx - (p->s).coord.x) / 0x50;
+      {
+        register s32 c asm("r1");
+        register s32 dy asm("r0");
+        c = 0xc8 << 8;
+        dy = (p->s).coord.y;
+        dy = best - dy;
+        c -= dy;
+        (p->s).d.y = -(c / 0x50);
+      }
+      (p->s).work[2] = 0x4f;
+      (p->s).work[3] = 1;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      volteel_08045abc(p);
+      if ((p->s).work[3] != 0) {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) == 0) {
+          goto inc1;
+        }
+        break;
+      }
+    inc1:
+      nm = (p->s).mode[2] + 1;
+      asm volatile("");
+      goto setmode;
+    case 2:
+      SetMotion(&p->s, 0xA501);
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 hit asm("r6");
+      register s32 r asm("r4");
+      hit = 0;
+      {
+        register s32 dy asm("r2");
+        dy = (p->s).d.y + 0x10;
+        (p->s).d.y = dy;
+        {
+          register s32 cx asm("r0");
+          register s32 dx asm("r1");
+          cx = (p->s).coord.x;
+          dx = (p->s).d.x;
+          cx += dx;
+          (p->s).coord.x = cx;
+          {
+            register s32 cy asm("r1");
+            register s32 k asm("r2");
+            cy = (p->s).coord.y;
+            cy += dy;
+            (p->s).coord.y = cy;
+            k = 0x90 << 5;
+            cx += k;
+            r = PushoutToUp2(cx, cy);
+          }
+        }
+      }
+      if (r != 0) {
+        register s32 a asm("r1");
+        a = r;
+        if (r < 0) {
+          a = -r;
+        }
+        if (a <= 0x7FF) {
+          (p->s).coord.y += r;
+          hit = 1;
+        }
+      }
+      {
+        register s32 cx asm("r0");
+        register s32 k asm("r1");
+        cx = (p->s).coord.x;
+        k = -0x1200;
+        cx += k;
+        r = PushoutToUp2(cx, (p->s).coord.y);
+      }
+      if (r != 0) {
+        register s32 a asm("r1");
+        a = r;
+        if (r < 0) {
+          a = -r;
+        }
+        if (a <= 0x7FF) {
+          (p->s).coord.y += r;
+          hit = 1;
+        }
+      }
+      r = PushoutToUp2((p->s).coord.x, (p->s).coord.y);
+      if (r != 0) {
+        register s32 a asm("r1");
+        a = r;
+        if (r < 0) {
+          a = -r;
+        }
+        if (a <= 0x7FF) {
+          (p->s).coord.y += r;
+          hit = 1;
+        }
+      }
+      {
+        register s32 cx asm("r0");
+        register s32 k asm("r2");
+        cx = (p->s).coord.x;
+        k = 0x90 << 5;
+        cx += k;
+        r = PushoutToLeft2(cx, (p->s).coord.y);
+      }
+      if (r != 0) {
+        (p->s).coord.x += r;
+      }
+      {
+        register s32 cx asm("r0");
+        register s32 k asm("r1");
+        cx = (p->s).coord.x;
+        k = -0x1200;
+        cx += k;
+        PushoutToRight2(cx, (p->s).coord.y);
+      }
+      if (r != 0) {
+        (p->s).coord.x += r;
+      }
+      {
+        register s32 mv asm("r1");
+        u32 cur = MOTION_VALUE(p);
+        mv = 0xA502;
+        if (cur != mv && (p->s).d.y > 0) {
+          SetMotion(&p->s, mv);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          goto chkhit;
+        }
+      }
+      nm = (p->s).mode[2] + 1;
+      asm volatile("");
+      goto setmode;
+    chkhit:
+      if (hit != 1) {
+        break;
+      }
+      nm = (p->s).mode[2] + 1;
+      goto setmode;
+    }
+    case 4: {
+      register s32 best asm("r4");
+      SetMotion(&p->s, 0xA503);
+      SetDDP(&p->body, &sCollisions[1]);
+      best = 0x7FFFFFFF;
+      {
+        register s32 cx asm("r0");
+        register s32 r asm("r1");
+        register s32 cy asm("r1");
+        register s32 k asm("r2");
+        cx = (p->s).coord.x;
+        cy = (p->s).coord.y;
+        k = -0x1000;
+        cy += k;
+        r = FUN_0800a05c(cx, cy);
+        if (r < best && r > *(s32*)((u8*)p + 0xbc) + -0x5000) {
+          best = r;
+          (p->s).coord.y = best;
+        }
+      }
+      {
+        register s32 r asm("r1");
+        register s32 cx asm("r0");
+        register s32 cy asm("r1");
+        register s32 k asm("r2");
+        cx = (p->s).coord.x;
+        k = -0x1200;
+        cx += k;
+        cy = (p->s).coord.y;
+        k = -0x1000;
+        cy += k;
+        r = FUN_0800a05c(cx, cy);
+        if (r < best && r > *(s32*)((u8*)p + 0xbc) + -0x5000) {
+          best = r;
+          (p->s).coord.y = best;
+        }
+      }
+      {
+        register s32 r asm("r1");
+        register s32 cx asm("r0");
+        register s32 cy asm("r1");
+        register s32 k asm("r2");
+        cx = (p->s).coord.x;
+        k = 0x90 << 5;
+        cx += k;
+        cy = (p->s).coord.y;
+        k = -0x1000;
+        cy += k;
+        r = FUN_0800a05c(cx, cy);
+        if (r < best && r > *(s32*)((u8*)p + 0xbc) + -0x5000) {
+          (p->s).coord.y = r;
+        }
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5: {
+      register u32 st asm("r1");
+      UpdateMotionGraphic(&p->s);
+      st = *((u8*)p + 0x73);
+      if (st != 3) {
+        break;
+      }
+      nm = 0;
+      (p->s).mode[1] = st;
+    setmode:
+      (p->s).mode[2] = nm;
+      break;
+    }
+  }
+}
 
 bool8 FUN_080440c0(struct Boss* p) { return TRUE; }
 
