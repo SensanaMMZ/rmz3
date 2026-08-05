@@ -347,7 +347,417 @@ void FUN_0807562c(struct Enemy* p0) {
 
 bool8 FUN_080756e8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/hammer_p2_p1.inc");
+#include "zero.h"
+
+bool8 FUN_0800daec(s32 x, s32 y);
+bool8 FUN_08075a84(struct Enemy* p);
+
+// 0x080756EC
+void FUN_080756ec(struct Enemy* p0) {
+  register struct Enemy* p asm("r4");
+  register s32 nm asm("r0");
+  p = p0;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register const s16* tb asm("r0");
+      register u16* ang asm("r3");
+      register s8* st asm("r2");
+      SetDDP(&p->body, &sCollisions[3]);
+      if ((p->s).coord.x > (pZero2->s).coord.x) {
+        tb = gSineTable;
+        ang = (u16*)((u8*)p + 0xc0);
+        st = (s8*)((u8*)p + 0xb4);
+        {
+          register s32 sv asm("r1");
+          {
+            register u32 a asm("r1");
+            register u32 b asm("r5");
+            a = *(u8*)st;
+            b = *(u8*)ang;
+            a += b;
+            sv = tb[(u8)a];
+          }
+          {
+            register s32 cur asm("r0");
+            cur = *(s16*)((u8*)p + 0xc2);
+            if (cur > sv) {
+              register s32 v asm("r0");
+              v = -*st;
+              *st = v;
+            }
+          }
+        }
+        (p->s).d.x = 0x40;
+        *ang = 0x40;
+        *st = 2;
+        nm = 1;
+      } else {
+        tb = gSineTable;
+        ang = (u16*)((u8*)p + 0xc0);
+        st = (s8*)((u8*)p + 0xb4);
+        {
+          register s32 sv asm("r1");
+          {
+            register u32 a asm("r1");
+            register u32 b asm("r5");
+            a = *(u8*)st;
+            b = *(u8*)ang;
+            a += b;
+            sv = tb[(u8)a];
+          }
+          {
+            register s32 cur asm("r0");
+            cur = *(s16*)((u8*)p + 0xc2);
+            if (cur > sv) {
+              register s32 v asm("r0");
+              v = -*st;
+              *st = v;
+            }
+          }
+        }
+        {
+          register s32 v asm("r0");
+          v = 0x40;
+          v = -v;
+          (p->s).d.x = v;
+        }
+        *ang = 0xc0;
+        *st = 2;
+        nm = 5;
+      }
+      (p->s).mode[2] = nm;
+      (p->s).work[2] = 0xf0;
+      FALLTHROUGH;
+    }
+    case 1: {
+      struct Coord sc1;
+      {
+        register s32 dy asm("r0");
+        register s32 dx asm("r1");
+        dy = (p->s).d.y;
+        dx = (p->s).d.x;
+        if (dy < dx) {
+          dy += 3;
+          (p->s).d.y = dy;
+          if (dy < dx) {
+            goto spin1;
+          }
+          {
+            register s32 k asm("r2");
+            register s32 ax asm("r0");
+            ax = (p->s).coord.x;
+            sc1.x = ax;
+            dx = (p->s).coord.y;
+            k = -0x800;
+            dx += k;
+          }
+        } else {
+          dy -= 3;
+          (p->s).d.y = dy;
+          if (dy > dx) {
+            goto spin1;
+          }
+          {
+            register s32 k asm("r3");
+            register s32 ax asm("r0");
+            ax = (p->s).coord.x;
+            sc1.x = ax;
+            dx = (p->s).coord.y;
+            k = -0x800;
+            dx += k;
+          }
+        }
+        sc1.y = dx;
+        asm("" : "+m"(sc1));
+        {
+          register s32 ax asm("r0");
+          if (((u16)((s32 (*)(s32, s32))FUN_0800daec)(ax, dx)) == 1) {
+            ((bool8 (*)(struct Enemy*, s32))FUN_08075a84)(p, 0);
+            PlaySound(0x2d);
+          }
+        }
+      }
+      (p->s).d.x = 0x80 << 7;
+      (p->s).mode[2]++;
+    spin1:
+      {
+        register const s16* tb asm("r1");
+        register s32 t2 asm("r2");
+        register s32* r asm("r3");
+        tb = gSineTable;
+        t2 = (p->s).d.y;
+        {
+          register s32 sv asm("r5");
+          sv = tb[(u8)t2];
+          sc1.x = sv;
+          sv = tb[(u8)(t2 + 0x40)];
+          sc1.y = sv;
+        }
+        asm("" : "+m"(sc1));
+        r = (s32*)((u8*)p + 0xbc);
+        {
+          register s32 v asm("r0");
+          register s32 s1 asm("r5");
+          v = *r;
+          s1 = sc1.x;
+          v = s1 * v;
+          v >>= 8;
+          v += (p->s).unk_coord.x;
+          (p->s).coord.x = v;
+          v = *r;
+          {
+            register s32 cc asm("r1");
+            cc = sc1.y;
+            v = cc * v;
+          }
+          v >>= 8;
+          v += (p->s).unk_coord.y;
+          (p->s).coord.y = v;
+        }
+        {
+          register s32 a asm("r2");
+          register u8* q asm("r0");
+          a = -t2;
+          q = (u8*)p + 0x24;
+          *q = a;
+        }
+        UpdateMotionGraphic(&p->s);
+      }
+      break;
+    }
+    case 2: {
+      s32 sc2x;
+      s32 sc2y;
+      register s32 t asm("r2");
+      register s32 rc asm("r1");
+      {
+        register s32* r asm("r3");
+        register const s16* tb asm("r3");
+        {
+          register u16* ang asm("r1");
+          register s32 a asm("r0");
+          tb = gSineTable;
+          ang = (u16*)((u8*)p + 0xc0);
+          a = *(s8*)((u8*)p + 0xb4);
+          {
+            register u32 cur asm("r2");
+            cur = *ang;
+            a += cur;
+          }
+          *ang = a;
+          t = tb[(u8)a];
+          *(u16*)((u8*)p + 0xc2) = t;
+        }
+        {
+          register s32 dx asm("r1");
+          register s32 v asm("r0");
+          dx = (p->s).d.x;
+          v = 0xe0 << 6;
+          v -= dx;
+          v <<= 3;
+          v >>= 8;
+          dx += v;
+          (p->s).d.x = dx;
+          t = dx * t;
+          t >>= 0x10;
+          (p->s).d.y = t;
+        }
+        {
+          register s32 sv asm("r1");
+          sv = tb[(u8)t];
+          *(volatile s32*)&sc2x = sv;
+          sv = tb[(u8)(t + 0x40)];
+          *(volatile s32*)&sc2y = sv;
+        }
+        r = (s32*)((u8*)p + 0xbc);
+        {
+          register s32 v asm("r0");
+          register s32 s1 asm("r5");
+          v = *r;
+          s1 = sc2x;
+          v = s1 * v;
+          v >>= 8;
+          v += (p->s).unk_coord.x;
+          (p->s).coord.x = v;
+          nm = *r;
+        }
+        rc = sc2y;
+      }
+      goto rotortail;
+    }
+    case 5:
+      {
+        register s32 dy asm("r0");
+        register s32 dx asm("r1");
+        dy = (p->s).d.y;
+        dx = (p->s).d.x;
+        if (dy < dx) {
+          dy += 3;
+          (p->s).d.y = dy;
+          if (dy < dx) {
+            goto spin5;
+          }
+          {
+            register s32 k asm("r2");
+            dy = (p->s).coord.x;
+            dx = (p->s).coord.y;
+            k = -0x800;
+            asm("" : "+l"(k));
+            dx += k;
+          }
+        } else {
+          dy -= 3;
+          (p->s).d.y = dy;
+          if (dy > dx) {
+            goto spin5;
+          }
+          {
+            register s32 k asm("r3");
+            dy = (p->s).coord.x;
+            dx = (p->s).coord.y;
+            k = -0x800;
+            asm("" : "+l"(k));
+            dx += k;
+          }
+        }
+        if (((u16)((s32 (*)(s32, s32))FUN_0800daec)(dy, dx)) == 1) {
+          ((bool8 (*)(struct Enemy*, s32))FUN_08075a84)(p, 0);
+          PlaySound(0x2d);
+        }
+      }
+      (p->s).d.x = 0x80 << 7;
+      (p->s).mode[2]++;
+    spin5:
+      {
+        register const s16* tb asm("r1");
+        register s32 t2 asm("r2");
+        register s32* r asm("r3");
+        register s32 s1v asm("r5");
+        register s32 c1v asm("r6");
+        tb = gSineTable;
+        t2 = (p->s).d.y;
+        s1v = tb[(u8)t2];
+        c1v = tb[(u8)(t2 + 0x40)];
+        r = (s32*)((u8*)p + 0xbc);
+        {
+          register s32 v asm("r0");
+          register s32 s1 asm("r5");
+          v = *r;
+          s1 = s1v;
+          v = s1 * v;
+          v >>= 8;
+          v += (p->s).unk_coord.x;
+          (p->s).coord.x = v;
+          v = *r;
+          {
+            register s32 cc asm("r1");
+            cc = c1v;
+            v = cc * v;
+          }
+          v >>= 8;
+          v += (p->s).unk_coord.y;
+          (p->s).coord.y = v;
+        }
+        {
+          register s32 a asm("r2");
+          register u8* q asm("r0");
+          a = -t2;
+          q = (u8*)p + 0x24;
+          *q = a;
+        }
+        UpdateMotionGraphic(&p->s);
+      }
+      break;
+    case 6: {
+      s32 sc6x;
+      s32 sc6y;
+      register s32 t asm("r2");
+      register s32 rc asm("r1");
+      {
+        register s32* r asm("r3");
+        register const s16* tb asm("r3");
+        {
+          register u16* ang asm("r1");
+          register s32 a asm("r0");
+          tb = gSineTable;
+          ang = (u16*)((u8*)p + 0xc0);
+          a = *(s8*)((u8*)p + 0xb4);
+          {
+            register u32 cur asm("r2");
+            cur = *ang;
+            a += cur;
+          }
+          *ang = a;
+          t = tb[(u8)a];
+          *(u16*)((u8*)p + 0xc2) = t;
+        }
+        {
+          register s32 dx asm("r1");
+          register s32 v asm("r0");
+          dx = (p->s).d.x;
+          v = 0xe0 << 6;
+          v -= dx;
+          v <<= 3;
+          v >>= 8;
+          dx += v;
+          (p->s).d.x = dx;
+          t = dx * t;
+          t >>= 0x10;
+          (p->s).d.y = t;
+        }
+        {
+          register s32 sv asm("r1");
+          sv = tb[(u8)t];
+          *(volatile s32*)&sc6x = sv;
+          sv = tb[(u8)(t + 0x40)];
+          *(volatile s32*)&sc6y = sv;
+        }
+        r = (s32*)((u8*)p + 0xbc);
+        {
+          register s32 v asm("r0");
+          register s32 s1 asm("r5");
+          v = *r;
+          s1 = sc6x;
+          v = s1 * v;
+          v >>= 8;
+          v += (p->s).unk_coord.x;
+          (p->s).coord.x = v;
+          nm = *r;
+        }
+        rc = sc6y;
+      }
+    rotortail:
+      nm = rc * nm;
+      nm >>= 8;
+      nm += (p->s).unk_coord.y;
+      (p->s).coord.y = nm;
+      {
+        register s32 a asm("r2");
+        register u8* q asm("r0");
+        a = -t;
+        q = (u8*)p + 0x24;
+        *q = a;
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        register s32 v asm("r0");
+        v = (p->s).work[2] - 1;
+        (p->s).work[2] = v;
+        if ((v << 24) != 0) {
+          break;
+        }
+      }
+      {
+        register s32 one asm("r0");
+        one = 1;
+        (p->s).mode[1] = one;
+        one = 0;
+        (p->s).mode[2] = one;
+      }
+      break;
+    }
+  }
+}
 
 bool8 FUN_08075a30(struct Enemy* p) {
   if ((p->body).status & BODY_STATUS_B3) {
