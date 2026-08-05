@@ -4999,7 +4999,175 @@ void Actor64_Update(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/actor_p2b_post.inc");
+void Actor65_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 z asm("r6");
+      u32 n = 0xb8;
+      u16* base = wStaticGraphicTilenums;
+      u16* tp;
+      u32 v;
+      tp = base + n;
+      z = 0;
+      v = 0xe0 << 2;
+      *tp = v;
+      wStaticMotionPalIDs[n] = 8;
+      {
+        const struct Graphic* g;
+        const struct Palette* pal;
+        u32 ofs;
+        ofs = (sizeof(struct ColorGraphic) * n);
+        g = gStaticGraphic(ofs);
+        LoadGraphic((void*)g, (void*)((v - g->ofs) * 32 + 0x10000));
+        pal = gStaticPalette(ofs);
+        LoadPalette(pal, (wStaticMotionPalIDs[n] - pal->dst) * 32 + PLTT_SIZE / 2);
+      }
+      SetMotion(&p->s, MOTION(0xb8, 0x00));
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) - 0x1800;
+      (p->s).d.y = z;
+      (p->s).unk_coord.y = 0x10;
+      {
+        register s32 k asm("r3");
+        register s32 i asm("r2");
+        k = 0x10;
+        i = 0x5f;
+        do {
+          s32 t = (p->s).d.y + k;
+          (p->s).d.y = t;
+          (p->s).coord.y -= t;
+          i -= 1;
+        } while (i >= 0);
+      }
+      (p->s).work[3] = 0;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 t asm("r4");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 dy asm("r1");
+        s32 cy = (p->s).coord.y;
+        register s32 uy asm("r0");
+        dy = (p->s).d.y;
+        (p->s).coord.y = cy + dy;
+        uy = (p->s).unk_coord.y;
+        t = dy - uy;
+        (p->s).d.y = t;
+      }
+      if (t != 0) {
+        break;
+      }
+      {
+        register u8* pm asm("r1");
+        register u8* q asm("r2");
+        register s32 v asm("r0");
+        pm = (u8*)&gPaletteManager;
+        q = pm + 0x404;
+        v = 0x40;
+        *(u16*)q = v;
+        pm += 0x406;
+        asm("" : "+r"(pm));
+        v = 0xe0 << 1;
+        *(u16*)pm = v;
+      }
+      SetMotion(&p->s, MOTION(0xb8, 0x01));
+      (p->s).d.y = t;
+      {
+        u32 fv = (p->s).flags;
+        u32 f = 1;
+        f |= fv;
+        (p->s).flags = f;
+      }
+      asm volatile("");
+      goto inc;
+    }
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) != 3) {
+        break;
+      }
+      SetMotion(&p->s, MOTION(0xb8, 0x02));
+      PlaySound(0x13d);
+      goto inc;
+    case 3: {
+      u32 r;
+      UpdateMotionGraphic(&p->s);
+      if (*(u8*)((u8*)p + 0x73) == 3) {
+        SetMotion(&p->s, MOTION(0xb8, 0x02));
+      }
+      r = RNG_0202f388 * 0x343FD + 0x269EC3;
+      r <<= 1;
+      RNG_0202f388 = r >> 1;
+      if (((r >> 0x11) & 0x1f) == 0) {
+        SetMotion(&p->s, MOTION(0xb8, 0x03));
+      }
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      StopSound(0x13d);
+      {
+        register u8* pm asm("r1");
+        register u8* q asm("r2");
+        register s32 c40 asm("r4");
+        register s32 v asm("r0");
+        pm = (u8*)&gPaletteManager;
+        q = pm + 0x404;
+        c40 = 0x40;
+        v = 0x40;
+        *(u16*)q = v;
+        pm += 0x406;
+        asm("" : "+r"(pm));
+        v = 0xe0 << 1;
+        *(u16*)pm = v;
+        SetMotion(&p->s, MOTION(0xb8, 0x00));
+        (p->s).spr.c = (struct Coord*)((u8*)p + 0x64);
+        {
+          u32 fv = (p->s).flags;
+          u32 f = 1;
+          asm volatile("" : "+l"(f));
+          f |= fv;
+          (p->s).flags = f;
+        }
+        asm volatile("");
+        (p->s).d.y = -0x100;
+        (p->s).work[3] = c40;
+      }
+      goto inc;
+    }
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 2) == 0) {
+        break;
+      }
+      (p->s).coord.y += (p->s).d.y;
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= 0xFFF) {
+        break;
+      }
+      {
+        register u32 fv2 asm("r0");
+        register u32 f3 asm("r1");
+        fv2 = (p->s).flags;
+        f3 = 0xFE;
+        f3 &= fv2;
+        (p->s).flags = f3;
+      }
+    inc:
+      (p->s).mode[1]++;
+      break;
+    case 5:
+      break;
+  }
+  if ((((p->s).motionID << 8) | *(u8*)((u8*)p + 0x70)) == (0xb8 << 8)) {
+    if ((p->s).d.y < 0) {
+      u8 w = (p->s).work[3];
+      s32 w2 = w + 1;
+      (p->s).work[3] = w2;
+      (p->s).unk_coord.x = (p->s).coord.x + gSineTable[(u8)(w + 0x41)] * 4;
+      (p->s).unk_coord.y = (p->s).coord.y - gSineTable[(u8)(w2 * 2)] * 8;
+    }
+  }
+}
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
