@@ -191,7 +191,290 @@ void Projectile17_Die(struct Projectile* p) {
   SET_PROJECTILE_ROUTINE(p, ENTITY_EXIT);
 }
 
-INCASM("asm/projectile/unk_17_pre_p4_p2.inc");
+s32 PushoutToUp1(s32 x, s32 y);
+s32 PushoutToDown1(s32 x, s32 y);
+struct Projectile* FUN_080a27e4(struct Coord* c, u8 n);
+
+// 0x080A2ADC
+void FUN_080a2adc(struct Projectile* p) {
+  struct Coord c;
+  {
+    register u32* st asm("r3");
+    register s32 z asm("r1");
+    register u32 v asm("r0");
+    st = (u32*)((u8*)p + 0x8c);
+    v = *st;
+    z = 0x80 << 2;
+    z &= v;
+    if (z != 0) {
+      z = 0;
+      goto clr;
+    }
+    {
+      register s32 m2 asm("r2");
+      m2 = 0x00400100;
+      m2 &= v;
+      if (m2 != 0) {
+      clr : {
+        u8* a;
+        *st = z;
+        a = (u8*)p + 0x90;
+        asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("strb %0, [%1]" ::"l"(z), "l"(a) : "memory");
+      }
+        {
+          register u8 fl asm("r1");
+          register u32 f asm("r0");
+          fl = (p->s).flags;
+          f = 0xfb;
+          f &= fl;
+          (p->s).flags = f;
+        }
+        SetMotion(&p->s, 0x4201);
+        (p->s).mode[2] = 4;
+        goto dispatch;
+      }
+      {
+        register s32 four asm("r4");
+        four = 4;
+        if ((v & four) != 0) {
+          u8* a;
+          *st = m2;
+          a = (u8*)p + 0x90;
+          asm volatile("str %0, [%1]" ::"l"(m2), "l"(a) : "memory");
+          a += 4;
+          asm("" : "+r"(a));
+          asm volatile("strb %0, [%1]" ::"l"(m2), "l"(a) : "memory");
+        } else {
+          register s32 t asm("r0");
+          register u32 t8 asm("r1");
+          t = (p->s).work[2] - 1;
+          (p->s).work[2] = t;
+          t8 = (u32)(t << 24) >> 24;
+          if (t8 != 0) {
+            goto dispatch;
+          }
+          {
+            u8* a;
+            *st = t8;
+            a = (u8*)p + 0x90;
+            asm volatile("str %0, [%1]" ::"l"(t8), "l"(a) : "memory");
+            a += 4;
+            asm("" : "+r"(a));
+            asm volatile("strb %0, [%1]" ::"l"(t8), "l"(a) : "memory");
+          }
+        }
+        {
+          register u8 fl asm("r1");
+          register u32 f asm("r0");
+          fl = (p->s).flags;
+          f = 0xfb;
+          f &= fl;
+          (p->s).flags = f;
+        }
+        SetMotion(&p->s, 0x4201);
+        (p->s).mode[2] = four;
+      }
+    }
+  }
+dispatch:
+  switch ((p->s).mode[2]) {
+    case 0:
+      SetMotion(&p->s, 0x84 << 7);
+      (p->s).work[3] = 0xc;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1:
+      (p->s).coord.y = ((p->s).unk_28)->coord.y + -0xA00;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[3] != 0) {
+        s32 t = (p->s).work[3] - 1;
+        (p->s).work[3] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2: {
+      s32 tx;
+      if (((p->s).flags & 0x10) == 0) {
+        register s32 k2 asm("r2");
+        k2 = -0x4000;
+        tx = (p->s).coord.x + k2;
+        asm volatile("");
+      } else {
+        register s32 cx3 asm("r0");
+        register s32 k3 asm("r3");
+        cx3 = (p->s).coord.x;
+        k3 = 0x80;
+        k3 <<= 7;
+        asm volatile("" : "+l"(k3));
+        tx = cx3 + k3;
+      }
+      {
+        register s32 z0 asm("r1");
+        (p->s).unk_coord.x = 0x4c;
+        (p->s).d.x = (tx - (p->s).coord.x) / 0x4c;
+        z0 = 0;
+        (p->s).d.y = -0x260;
+        (p->s).unk_coord.x = 0x4b;
+        (p->s).work[3] = z0;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      register s32 hit asm("r4");
+      s32 dy = (p->s).d.y + 0x10;
+      (p->s).d.y = dy;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += dy;
+      UpdateMotionGraphic(&p->s);
+      hit = 0;
+      {
+        register s32 cy asm("r1");
+        register s32 px asm("r2");
+        cy = (p->s).coord.y;
+        if ((p->s).d.x < 0) {
+          register s32 cx5 asm("r0");
+          register s32 k5 asm("r3");
+          cx5 = (p->s).coord.x;
+          k5 = -0xA00;
+          px = cx5 + k5;
+        } else {
+          register s32 cx5 asm("r0");
+          register s32 k5 asm("r3");
+          cx5 = (p->s).coord.x;
+          k5 = 0xa0;
+          k5 <<= 4;
+          px = cx5 + k5;
+        }
+        {
+          u32 rv = FUN_080098a4(px, cy);
+          u32 sv = rv << 16;
+          u32 tv = 0xf0 << 12;
+          tv &= sv;
+          if ((tv >> 16) == 1) {
+            register u8* a asm("r0");
+            register s32 z asm("r1");
+            a = (u8*)p + 0x8c;
+            z = 0;
+            asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+            a += 4;
+            asm("" : "+r"(a));
+            asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+            a += 4;
+            asm("" : "+r"(a));
+            asm volatile("strb %0, [%1]" ::"l"(z), "l"(a) : "memory");
+            {
+              register u8 fl asm("r1");
+              register u32 f asm("r0");
+              fl = (p->s).flags;
+              f = 0xfb;
+              f &= fl;
+              (p->s).flags = f;
+            }
+            SetMotion(&p->s, 0x4201);
+            (p->s).mode[2] = 4;
+            hit = 1;
+          }
+        }
+      }
+      if (hit != 0) {
+        break;
+      }
+      {
+        register s32 cx asm("r2");
+        register s32 cy asm("r0");
+        register s32 k asm("r3");
+        s32 r;
+        cx = (p->s).coord.x;
+        cy = (p->s).coord.y;
+        k = 0x80;
+        k <<= 3;
+        r = PushoutToUp1(cx, cy + k);
+        if (r != 0) {
+          (p->s).coord.y += r;
+          (p->s).mode[2] = 2;
+        }
+      }
+      {
+        register s32 cx asm("r2");
+        register s32 cy asm("r0");
+        register s32 k asm("r3");
+        s32 r;
+        cx = (p->s).coord.x;
+        cy = (p->s).coord.y;
+        k = -0x400;
+        asm volatile("" : "+l"(k));
+        r = PushoutToDown1(cx, cy + k);
+        if (r != 0) {
+          (p->s).coord.y += r;
+          (p->s).d.y = -(p->s).d.y;
+        }
+      }
+      break;
+    }
+    case 4: {
+      register s32 one asm("r5");
+      register s32 k asm("r4");
+      s32 i;
+      (p->s).work[2] = 0xff;
+      c.x = (p->s).coord.x;
+      {
+        register s32 cy asm("r0");
+        register s32 kk asm("r1");
+        cy = (p->s).coord.y;
+        kk = -0xC00;
+        c.y = cy + kk;
+      }
+      {
+        register u32 fv asm("r1");
+        fv = (u32)(p->s).flags >> 4;
+        one = 1;
+        fv &= one;
+        FUN_080a2790(&c, fv);
+      }
+      {
+        register s32 cx asm("r0");
+        cx = (p->s).coord.x;
+        k = 0xc0;
+        k <<= 4;
+        c.x = cx + k;
+      }
+      c.y = (p->s).coord.y + k;
+      FUN_080a2790(&c, one & ~((u32)(p->s).flags >> 4));
+      {
+        register s32 cx asm("r0");
+        register s32 kk asm("r2");
+        cx = (p->s).coord.x;
+        kk = -0xC00;
+        c.x = cx + kk;
+      }
+      c.y = (p->s).coord.y + k;
+      FUN_080a2790(&c, ((p->s).flags >> 4) & one);
+      i = 0;
+      do {
+        FUN_080a27e4(&(p->s).coord, (u8)i);
+        i += 1;
+      } while (i <= 4);
+      SetMotion(&p->s, 0x4201);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      PlaySound(0x31);
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+      break;
+  }
+}
 
 void FUN_080a2d9c(struct Projectile* p) {
   switch ((p->s).mode[2]) {
