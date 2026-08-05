@@ -1405,7 +1405,390 @@ void glacierleIceCarnival1(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/glacierle_b2.inc");
+void FUN_080aa5e8(s32 x, s32 y);
+void FUN_0808242c(struct Enemy* p, s32 a, s32 b);
+
+// 0x0805908C
+void glacierleIceCarnival2(struct Boss* p) {
+  register s32 md asm("r4");
+  struct Enemy* q;
+  struct Enemy* sk;
+  md = (p->s).mode[2];
+  if (md == 1) {
+    goto case1;
+  }
+  if (md > 1) {
+    goto gt;
+  }
+  if (md == 0) {
+    goto case0;
+  }
+  return;
+gt:
+  if (md != 2) {
+    goto n2;
+  }
+  goto case2;
+n2:
+  if (md != 3) {
+    goto n3;
+  }
+  goto case3;
+n3:
+  return;
+case0:
+  SetDDP(&p->body, (const struct Collision*)0x08363F04);
+  (p->s).work[2] = md;
+  {
+    register u32* w asm("r2");
+    register u32 v asm("r0");
+    register s32 m asm("r1");
+    w = (u32*)((u8*)p + 0xb4);
+    v = *w;
+    m = -2;
+    v &= m;
+    *w = v;
+  }
+  q = createGlacierleAtkHand(&p->s);
+  (p->s).unk_2c = &q->s;
+  if (q != NULL) {
+    struct Enemy* j;
+    j = createGlacierleJoint(&q->s, &p->s);
+    createGlacierleJoint(&q->s, &p->s);
+    createGlacierleJoint(&q->s, &p->s);
+    createGlacierleJoint(&q->s, &p->s);
+    if (j != NULL) {
+      register s32 c asm("r3");
+      register s32 v asm("r2");
+      sk = createGlacierleSucker(&j->s, &p->s);
+      (p->s).unk_28 = &sk->s;
+      c = (p->s).coord.x;
+      {
+        register s32 k asm("r1");
+        register s32 t asm("r0");
+        k = 0xa0 << 4;
+        t = c + k;
+        (sk->s).coord.x = t;
+        v = t;
+      }
+      {
+        register u32 fl asm("r1");
+        register u32 m asm("r0");
+        fl = (p->s).flags;
+        m = 0x10;
+        m &= fl;
+        if (m != 0) {
+          register s32 k asm("r0");
+          k = -0xa00;
+          v = c + k;
+        }
+      }
+      (sk->s).coord.x = v;
+      {
+        register s32 y asm("r0");
+        register s32 k asm("r1");
+        y = (p->s).coord.y;
+        k = -0x2500;
+        y += k;
+        (sk->s).coord.y = y;
+      }
+    }
+    {
+      register s32 c asm("r3");
+      register s32 v asm("r2");
+      register s32 one asm("r4");
+      c = (p->s).coord.x;
+      {
+        register s32 k asm("r2");
+        register s32 t asm("r0");
+        k = 0xb0 << 6;
+        t = c + k;
+        (q->s).coord.x = t;
+        v = t;
+      }
+      {
+        register u32 fl asm("r1");
+        register u32 m asm("r0");
+        fl = (p->s).flags;
+        one = 0x10;
+        m = one;
+        m &= fl;
+        if (m != 0) {
+          register s32 k asm("r0");
+          k = -0x2c00;
+          v = c + k;
+        }
+      }
+      (q->s).coord.x = v;
+      {
+        register s32 y asm("r0");
+        register s32 k asm("r1");
+        y = (p->s).coord.y;
+        k = -0x3700;
+        y += k;
+        (q->s).coord.y = y;
+      }
+      {
+        register s32 hx asm("r3");
+        register s32 hy asm("r2");
+        {
+          register s32 c2 asm("r2");
+          register s32 k asm("r0");
+          c2 = (p->s).coord.x;
+          k = 0x88 << 5;
+          hx = c2 + k;
+          {
+            register u32 fl asm("r1");
+            register u32 m asm("r0");
+            fl = (p->s).flags;
+            m = one;
+            m &= fl;
+            if (m != 0) {
+              register s32 k2 asm("r1");
+              k2 = -0x1100;
+              hx = c2 + k2;
+            }
+          }
+        }
+        hy = (p->s).coord.y;
+        {
+          register s32 k asm("r0");
+          k = -0x2c00;
+          hy += k;
+        }
+        FUN_08082484(q, hx, hy);
+      }
+      {
+        register u8* b5 asm("r1");
+        register s32 z asm("r0");
+        b5 = (u8*)q + 0xb5;
+        z = 0;
+        *b5 = z;
+      }
+      {
+        register s32 k asm("r0");
+        k = 0x80 << 3;
+        *(s32*)((u8*)q + 0x64) = k;
+      }
+      {
+        register u8* a asm("r0");
+        register s32 v2 asm("r0");
+        a = (u8*)q + 0x24;
+        v2 = *a;
+        v2 += 0x80;
+        (p->s).work[2] = v2;
+      }
+      FUN_0808242c(q, 0, 0x98 << 1);
+    }
+  }
+  {
+    register s32 z asm("r1");
+    z = 0;
+    (p->s).work[3] = 0x20;
+    *(s32*)((u8*)p + 0x64) = z;
+  }
+  SetMotion(&p->s, 0xB217);
+  (p->s).mode[2]++;
+  FALLTHROUGH;
+case1 : {
+  register s32 base asm("r4");
+  q = (struct Enemy*)(p->s).unk_2c;
+  base = 0x80 << 3;
+  *(s32*)((u8*)q + 0x64) = base;
+  {
+    register const s16* tb asm("r5");
+    register s32 t asm("r0");
+    tb = gSineTable;
+    t = *(s32*)((u8*)p + 0x64) << 8;
+    t = t / 0x212;
+    t = (u8)t;
+    {
+      register const s16* e asm("r0");
+      register s32 s asm("r1");
+      e = (const s16*)((u8*)(t * 2) + (u32)tb);
+      s = *e;
+      t = s << 2;
+      t += s;
+      t += base;
+      *(s32*)((u8*)q + 0x64) = t;
+    }
+  }
+  if ((*(u32*)((u8*)pZero2 + 0xc) & 0x00FFFF00) == base) {
+    if ((*(u32*)((u8*)q + 0x8c) & 4) != 0) {
+      PlaySound(0x52);
+    }
+  }
+  if (*((u8*)q + 0xb4) <= 6) {
+    register s32 t asm("r0");
+    t = (p->s).work[3] - 1;
+    (p->s).work[3] = t;
+    if ((t << 24) == 0) {
+      (p->s).work[3] = 8;
+      createGlacierleJoint(&q->s, &p->s);
+    }
+  }
+  sk = (struct Enemy*)(p->s).unk_28;
+  {
+    register s32 n asm("r0");
+    n = *(s32*)((u8*)p + 0x64) + 1;
+    *(s32*)((u8*)p + 0x64) = n;
+    if (n > 2) {
+      register u32 fl asm("r1");
+      register u32 m asm("r0");
+      fl = (p->s).flags;
+      m = 0x10;
+      m &= fl;
+      if (m != 0) {
+        (p->s).work[2] = (p->s).work[2] - 6;
+      } else {
+        (p->s).work[2] = (p->s).work[2] + 6;
+      }
+    }
+  }
+  if (*(s32*)((u8*)p + 0x64) > 0x90) {
+    register u32 fl asm("r1");
+    register u32 m asm("r0");
+    fl = (p->s).flags;
+    m = 0x10;
+    m &= fl;
+    if (m != 0) {
+      goto flipped;
+    }
+    if ((p->s).work[2] == 0x1c) {
+      goto bump;
+    }
+    goto swing;
+  flipped:
+    if ((p->s).work[2] != 0x64) {
+      goto swing;
+    }
+  bump:
+    (p->s).mode[2]++;
+  }
+swing : {
+    register u32 wv asm("r0");
+    register u32 mk asm("r1");
+    wv = (p->s).work[2];
+    mk = 0x1f;
+    wv &= mk;
+    if (wv <= 5) {
+    register s32 a asm("r3");
+    register const s16* tb asm("r5");
+    register s32 dx asm("r2");
+    register s32 dy asm("r3");
+    {
+      register u8* w asm("r0");
+      register s32 v asm("r0");
+      w = (u8*)q + 0x24;
+      v = *w;
+      v += 0x80;
+      v = (u8)v;
+      asm("" : "+l"(v));
+      a = v;
+    }
+    tb = gSineTable;
+    {
+      register const s16* e asm("r0");
+      register s32 s asm("r1");
+      register s32 v asm("r0");
+      e = (const s16*)((u8*)((u8)(a + 0x40) * 2) + (u32)tb);
+      s = *e;
+      v = ((s << 3) - s) << 7;
+      dx = v / 0x100;
+    }
+    {
+      register const s16* e asm("r0");
+      register s32 s asm("r1");
+      register s32 v asm("r0");
+      e = (const s16*)((u8*)(a * 2) + (u32)tb);
+      s = *e;
+      v = ((s << 3) - s) << 7;
+      dy = v / 0x100;
+    }
+    FUN_080aa5e8((q->s).coord.x + dx, (q->s).coord.y + dy);
+    }
+  }
+  if ((p->s).work[2] <= 5) {
+    PlaySound(0x96);
+  }
+  FUN_0808288c(sk, (p->s).work[2]);
+  glacierle_08082598(q, 0);
+  FUN_0808288c(sk, (p->s).work[2]);
+  UpdateMotionGraphic(&p->s);
+  return;
+}
+case2:
+  (p->s).work[3] = 0x1e;
+  *(s32*)((u8*)p + 0x64) = 0xc0 << 3;
+  (p->s).mode[2]++;
+  FALLTHROUGH;
+case3 : {
+  q = (struct Enemy*)(p->s).unk_2c;
+  sk = (struct Enemy*)(p->s).unk_28;
+  {
+    register u32 mv asm("r0");
+    register u32 mk asm("r1");
+    mv = *(u32*)((u8*)pZero2 + 0xc);
+    mk = 0x00FFFF00;
+    mv &= mk;
+    mk = 0x80 << 3;
+    if (mv == mk) {
+      if ((*(u32*)((u8*)q + 0x8c) & 4) != 0) {
+        PlaySound(0x52);
+      }
+    }
+  }
+  {
+    register s32 v asm("r0");
+    register s32 lim asm("r1");
+    v = *(s32*)((u8*)p + 0x64) - 0x64;
+    *(s32*)((u8*)p + 0x64) = v;
+    lim = 0x2FF;
+    if (v <= lim) {
+      v = 0xc0 << 2;
+      *(s32*)((u8*)p + 0x64) = v;
+    }
+  }
+  {
+    register u32 fl asm("r1");
+    register u32 m asm("r0");
+    fl = (p->s).flags;
+    m = 0x10;
+    m &= fl;
+    if (m != 0) {
+      register s32 d asm("r1");
+      register s32 v asm("r0");
+      d = *(s32*)((u8*)p + 0x64) >> 8;
+      v = (p->s).work[2];
+      v -= d;
+      (p->s).work[2] = v;
+    } else {
+      register s32 d asm("r0");
+      register s32 v asm("r1");
+      d = *(s32*)((u8*)p + 0x64) >> 8;
+      v = (p->s).work[2];
+      d += v;
+      (p->s).work[2] = d;
+    }
+  }
+  FUN_0808288c(sk, (p->s).work[2]);
+  glacierle_08082598(q, 0);
+  FUN_0808288c(sk, (p->s).work[2]);
+  {
+    register s32 t asm("r0");
+    register u32 z asm("r1");
+    t = (p->s).work[3] - 1;
+    (p->s).work[3] = t;
+    z = (u8)(t << 24 >> 24);
+    if (z == 0) {
+      (p->s).mode[1] = 0x11;
+      (p->s).mode[2] = z;
+    }
+  }
+  UpdateMotionGraphic(&p->s);
+}
+}
+
 
 void FUN_08082348(struct Entity* e);
 static const u8 u8_ARRAY_08364b26[5];
