@@ -1006,7 +1006,260 @@ void FUN_08097cc8(struct Enemy* p) {
   }
 }
 
-INCASM("asm/enemy/cannon_hopper_post_post.inc");
+struct Entity* CreateLemon(struct Coord* c, s32 spd, s32 ang);
+
+void cannonHopper_08097d10(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 sgn;
+      s32 dz;
+      u8 dir = ((p->s).flags >> 4) & 1;
+      *((u8*)p + 0xbd) = dir;
+      dz = (pZero2->s).coord.x - (p->s).coord.x;
+      sgn = (u32)dz >> 0x1f;
+      if (sgn != 0) {
+        u32 t = (p->s).flags;
+        t |= 0x10;
+        (p->s).flags = t;
+      } else {
+        u32 f0 = (p->s).flags;
+        u32 t = 0xef;
+        t &= f0;
+        (p->s).flags = t;
+      }
+      {
+        register u32 v asm("r1");
+        register u8* oa asm("r4");
+        u8* xf;
+        s32 z3;
+        s32 sh4;
+        s32 ov;
+        s32 m11;
+        v = sgn;
+        xf = (u8*)p + 0x4c;
+        z3 = 0;
+        *xf = v;
+        oa = (u8*)p + 0x4a;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+        (p->s).work[3] = z3;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u32 m asm("r0");
+      register u32 m2 asm("r1");
+      m = 0xDC14;
+      asm volatile("add %0, %1, #0" : "=&l"(m2) : "l"(m));
+      m2 += (p->s).work[3];
+      SetMotion(&p->s, (u16)m2);
+      (p->s).work[2] = 0xc;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 2: {
+      s32 t0;
+      u8 t;
+      FUN_08096ffc(p, (p->s).d.x, (p->s).d.y);
+      t0 = (p->s).work[2] - 1;
+      (p->s).work[2] = t0;
+      t = t0;
+      if (t == 0xb && (p->s).work[3] != 0) {
+        struct Coord c;
+        register u32 ang asm("r4");
+        u32 xf;
+        u32 yf;
+        register s32 idx asm("r2");
+        u32 fl;
+        u32 m10;
+        u32 m20;
+        const u8* tb = (const u8*)0x0836A42D;
+        register u32 w3 asm("r1");
+        asm volatile("" : "+l"(tb));
+        w3 = (p->s).work[3];
+        asm volatile("" : "+l"(w3));
+        idx = w3 - 1;
+        ang = *(const u8*)(idx + (u32)tb);
+        fl = (p->s).flags;
+        m10 = 0x10;
+        m10 &= fl;
+        m10 <<= 24;
+        asm volatile("" : "+l"(m10));
+        xf = m10 >> 24;
+        if (xf != 0) {
+          u32 a2 = 0x80;
+          a2 -= ang;
+          a2 <<= 24;
+          asm volatile("" : "+l"(a2));
+          ang = a2 >> 24;
+        }
+        m20 = 0x20;
+        m20 &= fl;
+        m20 <<= 24;
+        asm volatile("" : "+l"(m20));
+        yf = m20 >> 24;
+        if (yf != 0) {
+          u32 a3 = 0xff;
+          a3 -= ang;
+          a3 <<= 24;
+          asm volatile("" : "+l"(a3));
+          ang = a3 >> 24;
+        }
+        {
+          register s32 sh asm("r3");
+          const s32* tx;
+          s32 bx = (p->s).coord.x;
+          s32 v0;
+          s32 vx;
+          c.x = bx;
+          {
+            const s32* bx0 = (const s32*)0x0836A434;
+            asm volatile("" : "+l"(bx0));
+            sh = idx << 2;
+            tx = (const s32*)(sh + (u32)bx0);
+          }
+          v0 = *tx + bx;
+          c.x = v0;
+          vx = v0;
+          if (xf != 0) {
+            vx -= *tx * 2;
+          }
+          c.x = vx;
+          {
+            const s32* ty;
+            s32 by = (p->s).coord.y;
+            s32 w0;
+            register s32 vy asm("r2");
+            c.y = by;
+            ty = (const s32*)(sh + 0x0836A448);
+            w0 = *ty + by;
+            c.y = w0;
+            asm volatile("add %0, %1, #0" : "=&l"(vy) : "l"(w0));
+            if (yf != 0) {
+              vy -= *ty * 2;
+            }
+            c.y = vy;
+          }
+        }
+        PlaySound(0x2c);
+        ((void (*)(struct Coord*, s32, s32))CreateLemon)(&c, 0xa0 << 2, ang);
+      }
+      if ((p->s).work[2] == 0) {
+        s32 n0 = (p->s).work[3] + 1;
+        u8 n;
+        (p->s).work[3] = n0;
+        n = n0;
+        if (n == 6) {
+          (p->s).mode[2] = 3;
+        } else {
+          (p->s).mode[2] = 1;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 3:
+      SetMotion(&p->s, MOTION(0xDC, 0x00));
+      (p->s).work[2] = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 4: {
+      s32 t;
+      FUN_08096ffc(p, (p->s).d.x, (p->s).d.y);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        goto upd;
+      }
+      {
+        register u32 d asm("r2");
+        u32 one;
+        register u8* xf asm("r4");
+        register u8* oa asm("r3");
+        u32 v;
+        s32 sh4;
+        s32 ov;
+        s32 m11;
+        d = *((u8*)p + 0xbd);
+        if (d != 0) {
+          u32 t2 = (p->s).flags;
+          t2 |= 0x10;
+          (p->s).flags = t2;
+        } else {
+          u32 f0 = (p->s).flags;
+          u32 t2 = 0xef;
+          t2 &= f0;
+          (p->s).flags = t2;
+        }
+        one = 1;
+        asm volatile("" : "+l"(one));
+        {
+          u32 vv = one;
+          vv &= d;
+          v = vv;
+        }
+        xf = (u8*)p + 0x4c;
+        *xf = v;
+        oa = (u8*)p + 0x4a;
+        sh4 = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh4;
+        {
+          register u8* oa2 asm("r6");
+          s32 c0;
+          c0 = *(s32*)((u8*)p + 0xc0);
+          asm volatile("add %0, %1, #0" : "=&l"(oa2) : "l"(oa));
+          if (c0 <= 0x4f) {
+            s32 z0;
+            (p->s).mode[1] = 3;
+            z0 = 0;
+            asm volatile("" : "+l"(z0));
+            (p->s).mode[2] = z0;
+          } else {
+            register u32 f2 asm("r2");
+            register u32 nv asm("r1");
+            s32 z3;
+            f2 = (p->s).flags;
+            nv = one;
+            nv &= ~(f2 >> 4);
+            if (nv != 0) {
+              u32 t3 = 0x10;
+              t3 |= f2;
+              (p->s).flags = t3;
+            } else {
+              u32 t3 = 0xef;
+              t3 &= f2;
+              (p->s).flags = t3;
+            }
+            z3 = 0;
+            asm volatile("" : "+l"(z3));
+            *xf = nv;
+            {
+              s32 ov2;
+              s32 m2;
+              nv <<= 4;
+              ov2 = *oa2;
+              m2 = -0x11;
+              m2 &= ov2;
+              *oa2 = m2 | nv;
+            }
+            (p->s).mode[1] = z3;
+            (p->s).mode[2] = z3;
+          }
+        }
+      }
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
 
 void FUN_080c6e70(struct Entity* e, struct Coord* c);
 void TryDropZakoDisk(struct Enemy* p, struct Coord* c);
