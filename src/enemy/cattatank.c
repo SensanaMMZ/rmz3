@@ -373,7 +373,232 @@ void FUN_080990d8(struct Enemy* p) {
 
 bool8 nop_0809925c(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/cattatank_p4.inc");
+void FUN_08099260(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 v;
+      SetMotion(&p->s, 0xD501);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).d.y = 0;
+      if (!((p->s).flags & 0x10)) {
+        s32 c = 0xC0;
+        asm volatile("" : "+l"(c));
+        v = -c;
+      } else {
+        v = 0xC0;
+      }
+      (p->s).d.x = v;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 nx asm("r0");
+      register s32 dx0 asm("r1");
+      register s32 r asm("r2");
+      s32 g;
+      register s32 cyr asm("r1");
+      register s32 g2 asm("r2");
+      s32 dx;
+      s32 cx;
+      s32 cy;
+      s32 w1;
+      UpdateMotionGraphic(&p->s);
+      {
+        nx = (p->s).coord.x;
+        dx0 = (p->s).d.x;
+        asm volatile("" : "+l"(nx), "+l"(dx0));
+        nx += dx0;
+        (p->s).coord.x = nx;
+        if (dx0 > 0) {
+          r = PushoutToLeft1(nx + 0xA00, (p->s).coord.y);
+        } else {
+          r = -0xA00;
+          asm volatile("" : "+l"(r));
+          r = PushoutToRight1(nx + r, (p->s).coord.y);
+        }
+      }
+      if (r != 0) {
+        (p->s).coord.x += r;
+      }
+      {
+        s32 tw = (p->s).work[1];
+        asm volatile("add %0, %1, #0" : "=&l"(w1) : "l"(tw));
+      }
+      if (w1 == 1) {
+        u8 bb = *((u8*)p + 0xbb);
+        cx = (p->s).coord.x;
+        dx = (p->s).d.x;
+        cy = (p->s).coord.y;
+        if (bb > 1) {
+          struct Zero* z2 = pZero2;
+          if (cy >= (z2->s).coord.y) {
+            if (dx > 0) {
+              if ((z2->s).coord.x >= cx) {
+                goto noturn;
+              }
+              asm volatile("");
+              goto turn;
+            } else {
+              if ((z2->s).coord.x <= cx) {
+                goto noturn;
+              }
+              goto turn;
+            }
+          }
+        }
+        goto noturn;
+      } else {
+        dx = (p->s).d.x;
+        if (dx > 0) {
+          s32 zx = (pZero2->s).coord.x;
+          cx = (p->s).coord.x;
+          cy = (p->s).coord.y;
+          if (zx >= cx) {
+            goto noturn;
+          }
+          goto turn;
+        } else {
+          s32 zx = (pZero2->s).coord.x;
+          cx = (p->s).coord.x;
+          cy = (p->s).coord.y;
+          if (zx <= cx) {
+            goto noturn;
+          }
+        }
+      }
+    turn:
+      (p->s).mode[2] = 0xA;
+    noturn:
+      if ((p->s).mode[2] != 0xA) {
+        s32 d;
+        s32 zx;
+        if ((u8)w1 == 1) {
+          if (*((u8*)p + 0xbb) > 1) {
+            struct Zero* z2 = pZero2;
+            if (cy >= (z2->s).coord.y) {
+              zx = (z2->s).coord.x;
+              d = zx - cx;
+              if (d > 0) {
+                goto rng;
+              }
+              goto neg;
+            }
+          }
+        } else {
+          zx = (pZero2->s).coord.x;
+          d = zx - cx;
+          if (d > 0) {
+          rng:
+            if (d <= 0x3BFF) {
+              goto hit;
+            }
+            goto done;
+          }
+        neg:
+          d = cx - zx;
+          if (d > 0x3BFF) {
+            goto done;
+          }
+        hit:
+          (p->s).mode[1] = 4;
+          (p->s).mode[2] = 0;
+        }
+      }
+    done:
+      if (dx > 0) {
+        g = FUN_08009f6c(cx + -0xA00, cy);
+        asm volatile("add %0, %1, #0" : "=&l"(g2) : "l"(g));
+        cyr = (p->s).coord.y;
+        if (g2 != cyr) {
+          nx = (p->s).coord.x;
+          g2 = 0xA00;
+          goto probe2;
+        }
+      } else {
+        g = FUN_08009f6c(cx + 0xA00, cy);
+        asm volatile("add %0, %1, #0" : "=&l"(g2) : "l"(g));
+        cyr = (p->s).coord.y;
+        if (g2 != cyr) {
+          nx = (p->s).coord.x;
+          g2 = -0xA00;
+        probe2:
+          g = FUN_08009f6c(nx + g2, cyr);
+          asm volatile("add %0, %1, #0" : "=&l"(g2) : "l"(g));
+          if (g2 != (p->s).coord.y) {
+            (p->s).d.y = 0;
+            (p->s).mode[1] = 1;
+            (p->s).mode[2] = 0;
+          }
+        }
+      }
+      break;
+    }
+    case 10:
+      SetMotion(&p->s, 0xD511);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 11:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 12: {
+      u32 m10;
+      u32 f;
+      u32 tt;
+      SetMotion(&p->s, 0xD512);
+      f = (p->s).flags;
+      m10 = 0x10;
+      asm("" : "+r"(m10));
+      tt = m10;
+      tt &= f;
+      if (tt == 0) {
+        u32 nf;
+        s32 ov;
+        s32 mEF;
+        u8* oa;
+        u8 one;
+        one = 1;
+        nf = 0x10;
+        nf |= f;
+        (p->s).flags = nf;
+        ((p->s).spr).xflip = one;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        mEF = -0x11;
+        asm volatile("" : "+l"(mEF));
+        mEF &= ov;
+        *oa = (u8)(mEF | m10);
+      } else {
+        u32 nf;
+        s32 ov;
+        s32 mEF;
+        u8* oa;
+        u8 zz;
+        zz = 0;
+        nf = 0xEF;
+        nf &= f;
+        (p->s).flags = nf;
+        ((p->s).spr).xflip = zz;
+        oa = (u8*)p + 0x4a;
+        ov = *oa;
+        mEF = -0x11;
+        asm volatile("" : "+l"(mEF));
+        mEF &= ov;
+        *oa = (u8)mEF;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 13:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2] = 0;
+      }
+      break;
+  }
+}
 
 bool8 nop_080994e8(struct Enemy* p) { return TRUE; }
 
