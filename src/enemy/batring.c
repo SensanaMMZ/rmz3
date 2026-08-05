@@ -1143,7 +1143,239 @@ void FUN_08067a64(struct Enemy* p) {
 
 bool8 FUN_08067c48(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/batring_p3.inc");
+// 0x08067C4C
+void FUN_08067c4c(struct Enemy* p) {
+  s32 hit;
+  s32 c;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 z asm("r4");
+      z = 0;
+      (p->s).d.x = z;
+      (p->s).d.y = z;
+      p->props[5] = z;
+      SetDDP(&p->body, &sCollisions[8]);
+      (p->s).work[2] = 4;
+      p->props[7] = z;
+      (p->s).mode[2]++;
+      goto count;
+    }
+    case 2:
+      (p->s).d.y = 0;
+      if ((pZero2->s).coord.x < (p->s).coord.x) {
+        (p->s).d.x = -0x200;
+        SetMotion(&p->s, 0x603);
+      } else {
+        (p->s).d.x = 0x80 << 2;
+        SetMotion(&p->s, 0x605);
+      }
+      (p->s).work[2] = 0xff;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 g asm("r2");
+      hit = 0;
+      {
+        register s32 y asm("r1");
+        register s32 dx asm("r2");
+        register s32 x asm("r0");
+        register s32 k asm("r2");
+        u16 at;
+        y = (p->s).coord.y;
+        dx = (p->s).d.x;
+        if (dx < 0) {
+          x = (p->s).coord.x + dx;
+          k = -0xE00;
+        } else {
+          x = (p->s).coord.x + dx;
+          k = 0xe0 << 4;
+        }
+        x += k;
+        at = FUN_080098a4(x, y);
+        if ((at & 0xF) == 1) {
+          hit = 1;
+          goto tick;
+        }
+      }
+      (p->s).coord.x = (p->s).coord.x + (p->s).d.x;
+      g = FUN_08009f6c((p->s).coord.x, (p->s).coord.y - 0x800) - 0xE00;
+      {
+        register s32 d asm("r0");
+        register s32 lim asm("r1");
+        d = g - (p->s).coord.y;
+        lim = 0xe0 << 3;
+        if (d > lim) {
+          register s32 v asm("r0");
+          v = (p->s).d.y + 0x40;
+          (p->s).d.y = v;
+          if (v > lim) {
+            (p->s).d.y = lim;
+          }
+          v = (p->s).coord.y;
+          {
+            register s32 dy asm("r1");
+            dy = (p->s).d.y;
+            v += dy;
+          }
+          (p->s).coord.y = v;
+          if ((u32)v > (u32)g) {
+            (p->s).coord.y = g;
+          }
+          if ((p->s).d.x < 0) {
+            v = -0x100;
+          } else {
+            v = 0x80 << 1;
+          }
+          (p->s).d.x = v;
+        } else {
+          register s32 v asm("r0");
+          (p->s).d.y = 0;
+          (p->s).coord.y = g;
+          if ((p->s).d.x < 0) {
+            v = -0x200;
+          } else {
+            v = 0x80 << 2;
+          }
+          (p->s).d.x = v;
+        }
+      }
+    tick:
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+      } else {
+        hit = 1;
+      }
+      UpdateMotionGraphic(&p->s);
+      c = (p->s).motion.cmdIdx;
+      if ((u8)(c - 2) <= 2 || (u8)(c - 8) <= 2) {
+        SetDDP(&p->body, &sCollisions[10]);
+      } else {
+        SetDDP(&p->body, &sCollisions[8]);
+      }
+      if (hit != 1) {
+        break;
+      }
+      goto inc;
+    }
+    case 4: {
+      register s32 z asm("r1");
+      z = 0;
+      (p->s).d.x = z;
+      (p->s).d.y = -0x100;
+      p->props[5] = z;
+      SetDDP(&p->body, &sCollisions[8]);
+      (p->s).work[2] = 8;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5: {
+      register s32 y asm("r1");
+      y = (p->s).coord.y;
+      {
+        register s32 dy asm("r0");
+        dy = (p->s).d.y;
+        y += dy;
+      }
+      (p->s).coord.y = y;
+      y = (p->s).coord.y + PushoutToDown1((p->s).coord.x, y - 0xE00);
+      (p->s).coord.y = y;
+      UpdateMotionGraphic(&p->s);
+      c = (p->s).motion.cmdIdx;
+      if ((u8)(c - 2) <= 2 || (u8)(c - 8) <= 2) {
+        SetDDP(&p->body, &sCollisions[10]);
+      } else {
+        SetDDP(&p->body, &sCollisions[8]);
+      }
+      goto count;
+    }
+    case 1:
+    count:
+      if ((p->s).work[2] == 0) {
+        break;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+    inc:
+      (p->s).mode[2]++;
+      break;
+    case 6: {
+      register struct Zero** pz asm("r4");
+      register s32 d asm("r2");
+      {
+        register struct Zero** q asm("r1");
+        register struct Zero* z asm("r0");
+        register s32 v asm("r3");
+        q = &pZero2;
+        z = *q;
+        v = (p->s).coord.x;
+        {
+          register s32 zx asm("r0");
+          zx = (z->s).coord.x;
+          d = v - zx;
+          pz = q;
+          if (d > 0) {
+            register s32 lim asm("r0");
+            lim = 0xf0 << 8;
+            if (d > lim) {
+              goto leave;
+            }
+          } else {
+            register s32 dd asm("r1");
+            register s32 lim asm("r0");
+            dd = zx - v;
+            lim = 0xf0 << 8;
+            if (dd > lim) {
+              goto leave;
+            }
+          }
+        }
+      }
+      {
+        register struct Zero* z asm("r0");
+        register s32 cy asm("r1");
+        z = *pz;
+        cy = (p->s).coord.y;
+        {
+          register s32 zy asm("r0");
+          zy = (z->s).coord.y;
+          d = cy - zy;
+          if (d > 0) {
+            register s32 lim asm("r0");
+            lim = 0xa0 << 8;
+            if (d > lim) {
+              goto leave;
+            }
+            goto near;
+          } else {
+            register s32 dd asm("r1");
+            register s32 lim asm("r0");
+            dd = zy - cy;
+            lim = 0xa0 << 8;
+            if (dd <= lim) {
+              goto near;
+            }
+          }
+        }
+      }
+    leave:
+      (p->s).work[1] = 1;
+      SET_ENEMY_ROUTINE(p, ENTITY_DIE);
+      break;
+    near : {
+      register s32 z asm("r1");
+      z = 0;
+      (p->s).mode[1] = 2;
+      (p->s).mode[2] = z;
+      break;
+    }
+    }
+  }
+}
 
 bool8 FUN_08067f18(struct Enemy* p) { return TRUE; }
 
