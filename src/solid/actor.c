@@ -2342,7 +2342,289 @@ void Actor24_Update(struct Solid* p) {
   UpdateMotionGraphic(&p->s);
 }
 
-INCASM("asm/solid/actor_p1_p2_a2.inc");
+#include "palette_animation.h"
+
+u8 GetEntityPalID(struct Entity* p);
+struct Entity* CreateVFX39(struct Coord* c, u8 r1, u8 r2);
+struct VFX* FUN_080c5684(u8 r0, u8 r1, s32 x, s32 y, s32 dx, s32 dy);
+extern const s32 s32_ARRAY_08370de8[8];
+
+// 0x080D3280
+void Actor25_Update(struct Solid* p) {
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register u32 orig asm("r6");
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y);
+      orig = (p->s).work[1];
+      (p->s).work[1] = orig & 0xf;
+      {
+        register u32 n asm("r4");
+        register u32 ofs asm("r5");
+        const struct Graphic* g;
+        n = (p->s).work[1] + 0xF5;
+        ofs = sizeof(struct ColorGraphic) * n;
+        g = gStaticGraphic(ofs);
+        {
+          register const u16* gt asm("r1");
+          gt = wStaticGraphicTilenums;
+          n = n * 2;
+          LoadGraphic((void*)g, (void*)((*(u16*)((u8*)n + (u32)gt) - g->ofs) * 32 + 0x10000));
+        }
+        {
+          register const struct Palette* pal asm("r5");
+          register s32 v asm("r1");
+          register s32 k asm("r0");
+          pal = gStaticPalette(ofs);
+          v = *(u16*)((u8*)wStaticMotionPalIDs + n);
+          k = pal->dst;
+          v -= k;
+          v <<= 5;
+          k = 0x80;
+          k <<= 2;
+          v += k;
+          LoadPalette(pal, v);
+        }
+      }
+      SetMotion(&p->s, (u8)((p->s).work[1] + 0xF5) << 8);
+      if (orig > 0xf) {
+        (p->s).mode[1]++;
+        goto case1;
+      }
+      UpdateMotionGraphic(&p->s);
+      (p->s).mode[1] += 2;
+      break;
+    }
+    case 1:
+    case1:
+      if ((((s32)FUN_080d0aa0(&p->s, (u8)((p->s).work[1] + 0xF5) << 8, 0)) << 16) == 0) {
+        break;
+      }
+      goto bump;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      {
+        u32 v = GetEntityPalID(&p->s);
+        u32 sv = ((u32)(u8)v) << 5;
+        register u32 k asm("r2");
+        register u32 kc asm("r0");
+        k = 0x80;
+        k <<= 2;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0xF8, sv | kc);
+      }
+      goto bump;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)StepPaletteAnimation(0xF8) != 3) {
+        break;
+      }
+      RemovePaletteAnimation(0xF8);
+      goto bump;
+    case 4:
+      {
+        u32 v = GetEntityPalID(&p->s);
+        u32 sv = ((u32)(u8)v) << 5;
+        register u32 k asm("r3");
+        register u32 kc asm("r0");
+        k = 0x80;
+        k <<= 2;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0xF9, sv | kc);
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    case 5:
+      UpdateMotionGraphic(&p->s);
+      if ((u8)StepPaletteAnimation(0xF9) != 4) {
+        break;
+      }
+      RemovePaletteAnimation(0xF9);
+      {
+        u32 v = GetEntityPalID(&p->s);
+        u32 sv = ((u32)(u8)v) << 5;
+        register u32 k asm("r2");
+        register u32 kc asm("r0");
+        k = 0x80;
+        k <<= 2;
+        asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+        ((void (*)(u16, u32))StartPaletteAnimation)(0xFA, sv | kc);
+      }
+      goto bump;
+    case 6: {
+      register const s32* tb asm("r5");
+      register s32 z4 asm("r4");
+      UpdateMotionGraphic(&p->s);
+      if ((u8)StepPaletteAnimation(0xFA) != 3) {
+        break;
+      }
+      (p->s).unk_coord.x = (p->s).coord.x;
+      tb = s32_ARRAY_08370de8;
+      {
+        register s32 v asm("r1");
+        v = tb[(p->s).work[1]] << 7;
+        (p->s).unk_coord.y = (p->s).coord.y - v;
+      }
+      (p->s).unk_28 = CreateVFX39(&(p->s).unk_coord, 1, 0);
+      {
+        register u8* q asm("r0");
+        register u32 k asm("r1");
+        q = (u8*)(p->s).unk_28 + 0x74;
+        z4 = 0;
+        k = 0x1f;
+        *q = k;
+        q = (u8*)(p->s).unk_28 + 0x75;
+        *q = k;
+        q = (u8*)(p->s).unk_28 + 0x76;
+        *q = k;
+      }
+      PlaySound(0x58);
+      (p->s).work[2] = z4;
+      (p->s).d.x = tb[(p->s).work[1]];
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 7: {
+      register s32 w asm("r3");
+      register u32 w8 asm("r0");
+      register struct Entity* q asm("r2");
+      register s32 sv asm("r1");
+      register s32 base asm("r0");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 v asm("r0");
+        v = (p->s).work[2];
+        w = v + 1;
+      }
+      (p->s).work[2] = w;
+      w8 = (u32)(w << 24) >> 24;
+      if (w8 <= 0x1f) {
+        register const s16* tb asm("r1");
+        register s32 i asm("r0");
+        register s32 zz asm("r3");
+        q = (p->s).unk_28;
+        tb = gSineTable;
+        i = w << 25;
+        i = (s32)((u32)i >> 23);
+        i += (s32)tb;
+        zz = 0;
+        sv = *(const s16*)(i + zz);
+        base = (p->s).d.x;
+        goto mul;
+      }
+      if (w8 == 0x20) {
+        register struct Entity* q1 asm("r1");
+        register s32 v asm("r0");
+        q1 = (p->s).unk_28;
+        v = (p->s).d.x - 2;
+        v <<= 8;
+        *(s32*)((u8*)q1 + 0x78) = v;
+        {
+          u8 fl = (p->s).flags;
+          u32 f = 0xFE;
+          f &= fl;
+          (p->s).flags = f;
+        }
+        goto wobble;
+      }
+      if (w8 <= 0x35) {
+        register struct Entity* q1 asm("r1");
+        register s32 v asm("r0");
+        q1 = (p->s).unk_28;
+        v = (p->s).d.x - 4;
+        v <<= 8;
+        *(s32*)((u8*)q1 + 0x78) = v;
+        goto wobble;
+      }
+      if (w8 <= 0x3f) {
+        register const s16* tb asm("r1");
+        register s32 t asm("r0");
+        register s32 zz asm("r3");
+        q = (p->s).unk_28;
+        tb = gSineTable;
+        t = 0x40;
+        t -= w;
+        t <<= 27;
+        t = (s32)((u32)t >> 23);
+        t += (s32)tb;
+        zz = 0;
+        sv = *(const s16*)(t + zz);
+        base = (p->s).d.x - 4;
+      mul:
+        base = sv * base;
+        *(s32*)((u8*)q + 0x78) = base;
+        goto wobble;
+      }
+      {
+        register u32 a asm("r4");
+        register const s32* tb asm("r5");
+        a = 0;
+        tb = s32_ARRAY_08370de8;
+        do {
+          FUN_080c5684(2, (u8)a, (p->s).coord.x, (p->s).coord.y, tb[(p->s).work[1]], 0);
+          {
+            register s32 t asm("r0");
+            register s32 k asm("r1");
+            t = a << 16;
+            k = 0x80 << 12;
+            t += k;
+            a = (u32)t >> 16;
+            t >>= 16;
+            if (t > 0xff) {
+              break;
+            }
+          }
+        } while (1);
+      }
+      *((u8*)(p->s).unk_28 + 0x77) = 1;
+      RemovePaletteAnimation(0xFA);
+      {
+        register u32 id asm("r4");
+        id = (p->s).work[1] + 0xFB;
+        {
+          u32 v = GetEntityPalID(&p->s);
+          u32 sv2 = ((u32)(u8)v) << 5;
+          register u32 k asm("r2");
+          register u32 kc asm("r0");
+          k = 0x80;
+          k <<= 2;
+          asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+          ((void (*)(u16, u32))StartPaletteAnimation)(id, sv2 | kc);
+        }
+      }
+      (p->s).mode[1]++;
+    wobble : {
+      register struct Entity* q2 asm("r2");
+      register u32 v asm("r1");
+      register s32 t asm("r0");
+      q2 = (p->s).unk_28;
+      {
+        register u32 w2 asm("r0");
+        w2 = (p->s).work[2];
+        v = 1;
+        v &= w2;
+      }
+      v <<= 0xb;
+      t = *(s32*)((u8*)q2 + 0x78);
+      t += v;
+      *(s32*)((u8*)q2 + 0x78) = t;
+    }
+      break;
+    }
+    case 8:
+      if ((u8)StepPaletteAnimation((p->s).work[1] + 0xFB) != 3) {
+        break;
+      }
+    bump:
+      (p->s).mode[1]++;
+      break;
+    case 9:
+      RemovePaletteAnimation((p->s).work[1] + 0xFB);
+      break;
+  }
+}
 
 struct VFX* FUN_080c5628(u8 r0, u8 r1, s32 x, s32 y);
 
