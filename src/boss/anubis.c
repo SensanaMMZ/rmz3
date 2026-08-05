@@ -227,6 +227,147 @@ void Anubis_Die(struct Boss* p) {
 
 void nop_080503c8(struct Boss* p) {}
 
+void FUN_080bf3d8(struct Entity* p);
+void FUN_080a4ef8(struct Entity* p);
+
+void anubisMode0(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32 f0 = (p->s).flags;
+      u32 t0 = 0xFE;
+      t0 &= f0;
+      (p->s).flags = t0;
+      if ((p->s).work[0] == 0) {
+        LOAD_STATIC_GRAPHIC(SM075_ANUBIS_COFFIN);
+        {
+          s32* c = (s32*)((u8*)p + 0xbc);
+          register s32 n asm("r1");
+          register s32 q asm("r0");
+          (p->s).coord.y = *c + -0xC000;
+          SetMotion(&p->s, 0xAF0C);
+          {
+            register s32 cv asm("r0");
+            cv = *c;
+            n = cv + -0x7600;
+          }
+          n -= (p->s).coord.y;
+          q = n;
+          if (n < 0) {
+            q = n + 3;
+          }
+          q >>= 2;
+          (p->s).d.y = ((u32)Sqrt(q) << 16) >> 13;
+        }
+        FUN_080bf3d8(&p->s);
+        (p->s).work[2] = 0x10;
+        (p->s).mode[2]++;
+      } else {
+        s32* c = (s32*)((u8*)p + 0xbc);
+        s32 y = *c + -0x7600;
+        (p->s).coord.y = y;
+        *(s32*)((u8*)p + 0xc4) = y;
+        (p->s).mode[2] = 6;
+        break;
+      }
+      FALLTHROUGH;
+    }
+    case 1: {
+      s32 dy = (p->s).d.y;
+      if (dy < 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          goto upd;
+        }
+        (p->s).flags |= 1;
+        {
+          u32* a = (u32*)((u8*)p + 0xc0);
+          *a |= 1;
+        }
+        goto inc2;
+      }
+      (p->s).coord.y += dy;
+      (p->s).d.y = dy - 8;
+      goto upd;
+    }
+    case 2:
+      *(s32*)((u8*)p + 0xc4) = (p->s).coord.y;
+      (p->s).work[2] = 0x64;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      goto inc2b;
+    }
+    case 4:
+      SetMotion(&p->s, 0xAF0D);
+      (p->s).mode[2]++;
+      goto st;
+    case 6:
+      {
+        u32 f6 = (p->s).flags;
+        u32 t6 = 1;
+        t6 |= f6;
+        (p->s).flags = t6;
+      }
+      FUN_080a4ef8(&p->s);
+      SetMotion(&p->s, 0xAF01);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7:
+      FUN_08050090(p);
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        goto upd;
+      }
+    inc2:
+      (p->s).mode[2]++;
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 8:
+      SetMotion(&p->s, 0xAF02);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+    case 9:
+    st:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+    inc2b:
+      (p->s).mode[2]++;
+      break;
+    case 10:
+      SetMotion(&p->s, 0xAF01);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 11: {
+      register s32 one asm("r4");
+      register s32 m asm("r0");
+      register s32 g asm("r1");
+      FUN_08050090(p);
+      g = gStageRun.vm.active;
+      one = 1;
+      m = one;
+      m &= g;
+      if (m == 0) {
+        SetDDP(&p->body, (const struct Collision*)0x08363584);
+        (p->s).mode[1] = one;
+        (p->s).mode[2] = one;
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
 INCASM("asm/boss/anubis_p2.inc");
 
 // 0x080507E0
