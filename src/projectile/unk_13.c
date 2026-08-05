@@ -413,7 +413,349 @@ void FUN_0809fcfc(struct Projectile* p) {
   }
 }
 
-INCASM("asm/projectile/unk_13_p3a.inc");
+// 0x0809FF74
+void FUN_0809ff74(struct Projectile* p) {
+  s32 nv;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u32 xf asm("r2");
+      register s32 one asm("r3");
+      register s32 z4 asm("r4");
+      register u8* oa asm("r5");
+      SetDDP(&p->body, &sCollisions[2]);
+      {
+        register u32 w asm("r1");
+        register u32 k asm("r0");
+        w = (p->s).work[2];
+        k = 1;
+        asm("" : "+l"(k));
+        xf = k;
+        xf ^= w;
+      }
+      if (xf != 0) {
+        u8 fl = (p->s).flags;
+        u32 f = 0x10;
+        f |= fl;
+        (p->s).flags = f;
+      } else {
+        u8 fl = (p->s).flags;
+        u32 f = 0xEF;
+        f &= fl;
+        (p->s).flags = f;
+      }
+      one = 1;
+      {
+        register u32 v asm("r1");
+        v = one;
+        v &= xf;
+        {
+          u8* q = (u8*)p + 0x4c;
+          z4 = 0;
+          *q = v;
+        }
+        oa = (u8*)p + 0x4a;
+        v <<= 4;
+        {
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          m11 |= v;
+          *oa = m11;
+        }
+      }
+      {
+        u8* q = (u8*)p + 0x22;
+        *q = one;
+      }
+      *(s32*)((u8*)p + 0x60) = z4;
+      SetMotion(&p->s, 0x3101);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      (p->s).mode[2]++;
+      break;
+    case 2:
+      (p->s).work[3] = 0;
+      SetMotion(&p->s, 0x3102);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register const s16* tb asm("r4");
+      register s32 acc asm("r0");
+      {
+        register u32 w asm("r0");
+        w = (p->s).work[3] + 1;
+        (p->s).work[3] = w;
+        w = (u32)(w << 24) >> 24;
+        if (w > 0x2a) {
+          (p->s).mode[2]++;
+        }
+      }
+      if ((p->s).work[2] != 0) {
+        tb = gSineTable;
+        {
+          register s32 num asm("r0");
+          register s32 den asm("r1");
+          den = *(volatile u8*)&(p->s).work[3];
+          num = den << 4;
+          num -= den;
+          den = 0xa;
+          acc = num / den;
+        }
+        {
+          register s32 sv asm("r0");
+          register s32 s3 asm("r1");
+          sv = tb[(u8)acc];
+          s3 = sv << 1;
+          s3 += sv;
+          sv = (p->s).coord.x;
+          sv -= s3;
+          acc = sv;
+        }
+      } else {
+        tb = gSineTable;
+        {
+          register s32 num asm("r0");
+          register s32 den asm("r1");
+          den = *(volatile u8*)&(p->s).work[3];
+          num = den << 4;
+          num -= den;
+          den = 0xa;
+          acc = num / den;
+        }
+        {
+          register s32 sv asm("r0");
+          register s32 s3 asm("r1");
+          sv = tb[(u8)acc];
+          s3 = sv << 1;
+          s3 += sv;
+          sv = (p->s).coord.x;
+          sv += s3;
+          acc = sv;
+        }
+      }
+      (p->s).coord.x = acc;
+      {
+        register const s16* tb5 asm("r5");
+        tb5 = tb;
+        {
+          register s32 num asm("r0");
+          register s32 den asm("r1");
+          den = *(volatile u8*)&(p->s).work[3];
+          num = den << 4;
+          num -= den;
+          den = 0xa;
+          acc = num / den;
+          acc += 0x40;
+        }
+        {
+          register s32 sv asm("r0");
+          register s32 s3 asm("r1");
+          sv = tb5[(u8)acc];
+          s3 = sv << 1;
+          s3 += sv;
+          sv = (p->s).coord.y;
+          sv += s3;
+          acc = sv;
+        }
+      }
+      nv = acc;
+      goto sety;
+    }
+    case 4:
+      *(s32*)((u8*)p + 0x64) = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      register s32 t asm("r4");
+      register const s16* tb asm("r5");
+      register s32 acc asm("r0");
+      {
+        register s32 v asm("r0");
+        v = *(s32*)((u8*)p + 0x64) + 3;
+        *(s32*)((u8*)p + 0x64) = v;
+        if (v > 0xaa) {
+          (p->s).mode[2]++;
+        }
+      }
+      if ((p->s).work[2] != 0) {
+        tb = gSineTable;
+        t = *(s32*)((u8*)p + 0x64);
+        acc = ((t << 4) - t) / 0xa + 0x40;
+        {
+          register s32 sv asm("r0");
+          register s32 s3 asm("r1");
+          sv = tb[(u8)acc];
+          s3 = sv << 1;
+          s3 += sv;
+          sv = (p->s).coord.x;
+          sv -= s3;
+          acc = sv;
+        }
+      } else {
+        tb = gSineTable;
+        t = *(s32*)((u8*)p + 0x64);
+        acc = ((t << 4) - t) / 0xa + 0x40;
+        {
+          register s32 sv asm("r0");
+          register s32 s3 asm("r1");
+          sv = tb[(u8)acc];
+          s3 = sv << 1;
+          s3 += sv;
+          sv = (p->s).coord.x;
+          sv += s3;
+          acc = sv;
+        }
+      }
+      (p->s).coord.x = acc;
+      {
+        acc = ((t << 4) - t) / 0xa;
+        {
+          register s32 sv asm("r0");
+          register s32 s3 asm("r1");
+          sv = tb[(u8)acc];
+          s3 = sv << 1;
+          s3 += sv;
+          sv = (p->s).coord.y;
+          sv -= s3;
+          acc = sv;
+        }
+      }
+      nv = acc;
+    sety:
+      (p->s).coord.y = nv;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 6: {
+      register s32 k asm("r2");
+      register u32 w asm("r1");
+      register s32 v asm("r0");
+      k = 0xc0;
+      k <<= 2;
+      w = (p->s).work[2];
+      v = w << 1;
+      v += w;
+      v <<= 9;
+      k -= v;
+      (p->s).d.x = k;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 7:
+      (p->s).coord.x += (p->s).d.x;
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) > (0x80 << 6)) {
+        {
+          u8 fl = (p->s).flags;
+          u32 f = 0xFE;
+          register s32 z asm("r2");
+          f &= fl;
+          z = 0;
+          {
+            u32 m = 0xFD;
+            f &= m;
+          }
+          (p->s).flags = f;
+          {
+            register u8* a asm("r0");
+            a = (u8*)p + 0x8c;
+            asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+            a += 4;
+            asm("" : "+r"(a));
+            asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+            a += 4;
+            asm("" : "+r"(a));
+            asm volatile("strb %0, [%1]" ::"l"(z), "l"(a) : "memory");
+          }
+        }
+        {
+          u8 fl = (p->s).flags;
+          u32 f = 0xFB;
+          f &= fl;
+          (p->s).flags = f;
+        }
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+  if (((p->s).unk_28)->mode[0] > 1) {
+    register s32 c asm("r1");
+    {
+      register s32 v asm("r0");
+      v = *(s32*)((u8*)p + 0x60);
+      c = v + 1;
+      *(s32*)((u8*)p + 0x60) = c;
+    }
+    if (c > 0xf) {
+      register s32 m asm("r0");
+      m = 2;
+      c &= m;
+      if (c != 0) {
+        goto seton;
+      }
+      goto setoff;
+    } else {
+      register s32 m asm("r0");
+      m = 1;
+      c &= m;
+      if (c == 0) {
+        goto setoff;
+      }
+    }
+  seton : {
+    u8 fl = (p->s).flags;
+    u32 f = 1;
+    f |= fl;
+    (p->s).flags = f;
+    goto stored;
+  }
+  setoff : {
+    u8 fl = (p->s).flags;
+    u32 f = 0xFE;
+    f &= fl;
+    (p->s).flags = f;
+  }
+  stored:
+    if (*(s32*)((u8*)p + 0x60) > 0x1e) {
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 0xFE;
+        register s32 z asm("r2");
+        f &= fl;
+        z = 0;
+        {
+          u32 m = 0xFD;
+          f &= m;
+        }
+        (p->s).flags = f;
+        {
+          register u8* a asm("r0");
+          a = (u8*)p + 0x8c;
+          asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+          a += 4;
+          asm("" : "+r"(a));
+          asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+          a += 4;
+          asm("" : "+r"(a));
+          asm volatile("strb %0, [%1]" ::"l"(z), "l"(a) : "memory");
+        }
+      }
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 0xFB;
+        f &= fl;
+        (p->s).flags = f;
+      }
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+    }
+  }
+}
 
 s32 PushoutToUp1(s32 x, s32 y);
 void FUN_080bc6ac(struct Entity* e, s32 x, s32 y, s32 speed, u8 angle);
