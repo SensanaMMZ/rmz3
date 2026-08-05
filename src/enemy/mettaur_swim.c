@@ -182,8 +182,7 @@ void FUN_08089218(struct Body* body);
 // Alloc-copy basin: retail keeps s2 in r2 with an adds-copy into r1 feeding
 // the xflip store and the oam insert's shift; every pin/transfer/manual-insert
 // spelling either loses the copy, blocks the &1 fold, or shifts the k1 web.
-NON_MATCH void MettaurSwim_Init(struct Enemy* p) {
-#if MODERN
+void MettaurSwim_Init(struct Enemy* p) {
   s32 one;
   if ((p->s).work[0] == 2 && (p->s).coord.y < gOverworld.sea + 0x1000) {
     (p->s).flags &= ~DISPLAY;
@@ -255,9 +254,6 @@ NON_MATCH void MettaurSwim_Init(struct Enemy* p) {
     (sUpdates[(p->s).mode[1]])(p);
   }
   MettaurSwim_Update(p);
-#else
-  INCCODE("asm/enemy/mettaur_swim_init.inc");
-#endif
 }
 
 INCASM("asm/enemy/mettaur_swim_p1_pre_p2.inc");
