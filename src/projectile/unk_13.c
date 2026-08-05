@@ -4,6 +4,7 @@
 #include "stagerun.h"
 #include "trig.h"
 #include "vfx.h"
+#include "zero.h"
 
 static const ProjectileFunc sUpdates1[7];
 static const ProjectileFunc sUpdates2[7];
@@ -222,6 +223,190 @@ void FUN_0809fbdc(struct Projectile* p) {
       }
       (p->s).coord.x += (p->s).d.x;
       (p->s).coord.y += (p->s).d.y;
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+  }
+}
+
+u8 makeZeroSlower(struct Zero* z, u8 val);
+void FUN_0809f970(s32 x, s32 y, u8 k);
+
+// 0x0809FCFC
+void FUN_0809fcfc(struct Projectile* p) {
+  switch ((p->s).mode[2]) {
+    case 0:
+      (p->s).work[3] = 8;
+      SetDDP(&p->body, (const struct Collision*)0x0836B068);
+      {
+        u32 r = RNG_0202f388 * 0x343FD + 0x269EC3;
+        r <<= 1;
+        RNG_0202f388 = r >> 1;
+        SetMotion(&p->s, ((r >> 0x11) & 1) + 0x3203);
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register u32* st asm("r6");
+      {
+        u8 w2 = (p->s).work[2];
+        if (w2 <= 2) {
+          s32 t = (p->s).work[3];
+          if (t != 0) {
+            t -= 1;
+            (p->s).work[3] = t;
+            if ((t << 24) == 0) {
+              FUN_0809f970((p->s).unk_coord.x, (p->s).unk_coord.y, (u8)(w2 + 1));
+            }
+          }
+        }
+      }
+      {
+        u32* a = (u32*)((u8*)p + 0x8c);
+        u32 f = *a & 4;
+        asm volatile("add %0, %1, #0" : "=&l"(st) : "l"(a));
+        if (f != 0) {
+          struct Zero* z;
+          if ((u8)makeZeroSlower(pZero2, 0) <= 0x5f) {
+            z = pZero2;
+            (p->s).unk_coord.x = (p->s).coord.x - (z->s).coord.x;
+            (p->s).unk_coord.y = (p->s).coord.y - (z->s).coord.y;
+            (p->s).mode[2]++;
+          }
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.y += 0x100;
+      if (CalcFromCamera(&gStageRun.vm.camera, &(p->s).coord) <= (0x80 << 6)) {
+        break;
+      }
+      {
+        register s32 f asm("r0");
+        register s32 z2 asm("r2");
+        register u8 e1 asm("r1");
+        e1 = *(volatile u8*)&(p->s).flags;
+        f = 0xFE;
+        f &= e1;
+        z2 = 0;
+        {
+          register s32 c2 asm("r1");
+          c2 = 0xFD;
+          f &= c2;
+        }
+        (p->s).flags = f;
+        *st = z2;
+        (p->body).prevStatus = z2;
+        (p->body).invincibleTime = z2;
+        (p->s).flags &= ~COLLIDABLE;
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      break;
+    }
+    case 2: {
+      register u8* a asm("r0");
+      register s32 z1 asm("r1");
+      a = (u8*)p + 0x8c;
+      z1 = 0;
+      asm volatile("str %0, [%1]" ::"l"(z1), "l"(a) : "memory");
+      a += 4;
+      asm("" : "+r"(a));
+      asm volatile("str %0, [%1]" ::"l"(z1), "l"(a) : "memory");
+      a += 4;
+      asm("" : "+r"(a));
+      asm volatile("strb %0, [%1]" ::"l"(z1), "l"(a) : "memory");
+      (p->s).flags &= ~COLLIDABLE;
+      makeZeroSlower(pZero2, 0xc);
+      (p->s).work[2] = 0x80;
+      (p->s).d.x = 0x18;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      struct Zero* z = pZero2;
+      s32 d1;
+      s32 t;
+      (p->s).coord.x = (z->s).coord.x + (p->s).unk_coord.x;
+      (p->s).coord.y = (z->s).coord.y + (p->s).unk_coord.y;
+      d1 = (p->s).d.x - (u8)CountButtonMashing(z);
+      (p->s).d.x = d1;
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0 && d1 >= 0) {
+        struct Zero* z2 = pZero2;
+        if ((*(u32*)((u8*)z2 + 0x8c) & (0x80 << 2)) == 0) {
+          if (*(s16*)((u8*)z2 + 0xa4) != 0) {
+            goto upd;
+          }
+        }
+      }
+      makeZeroFaster(pZero2, 0xc);
+      (p->s).mode[2]++;
+    upd:
+      UpdateMotionGraphic(&p->s);
+      break;
+    }
+    case 4:
+      (p->s).work[2] = 8;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5: {
+      register s32 tz asm("r2");
+      {
+        register s32 t2 asm("r0");
+        t2 = (p->s).work[2] - 1;
+        (p->s).work[2] = t2;
+        tz = (u8)t2;
+      }
+      if (tz == 0) {
+        register s32 f asm("r0");
+        register u8 e1 asm("r1");
+        register u8* a asm("r0");
+        e1 = *(volatile u8*)&(p->s).flags;
+        f = 0xFE;
+        f &= e1;
+        {
+          register s32 c2 asm("r1");
+          c2 = 0xFD;
+          f &= c2;
+        }
+        (p->s).flags = f;
+        a = (u8*)p + 0x8c;
+        asm volatile("str %0, [%1]" ::"l"(tz), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("str %0, [%1]" ::"l"(tz), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("strb %0, [%1]" ::"l"(tz), "l"(a) : "memory");
+        (p->s).flags &= ~COLLIDABLE;
+        SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+      }
+      {
+        register s32 f2 asm("r0");
+        u32 w = (p->s).work[2];
+        u32 m = 1;
+        asm volatile("" : "+l"(m));
+        m &= w;
+        if (m != 0) {
+          f2 = (p->s).flags;
+          f2 |= 1;
+        } else {
+          u8 fl = (p->s).flags;
+          f2 = 0xFE;
+          f2 &= fl;
+        }
+        (p->s).flags = f2;
+      }
+      {
+        struct Zero* z = pZero2;
+        s32 uy;
+        s32 zy;
+        (p->s).coord.x = (z->s).coord.x + (p->s).unk_coord.x;
+        zy = (z->s).coord.y;
+        uy = (p->s).unk_coord.y;
+        (p->s).coord.y = zy + uy;
+        (p->s).unk_coord.y = uy + 0x100;
+      }
       UpdateMotionGraphic(&p->s);
       break;
     }
