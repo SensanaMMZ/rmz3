@@ -528,7 +528,448 @@ body:
   }
 }
 
-INCASM("asm/enemy/pantheon_aqua_mod_obj_p3_b.inc");
+// 0x08081990
+void FUN_08081990(struct Enemy* p) {
+  register struct Entity* q asm("r6");
+  register u8* a asm("r4");
+  register s32 z asm("r2");
+  q = (p->s).unk_28;
+  if (q->mode[0] > 1) {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    h = (p->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    z = 0;
+    h = 0xFD;
+    g &= h;
+    (p->s).flags = g;
+    {
+      register u8* b asm("r0");
+      b = (u8*)p + 0x8c;
+      *(u32*)b = z;
+      asm("" : "+r"(b));
+      b += 4;
+      asm("" : "+r"(b));
+      goto clean2;
+    }
+  }
+  {
+  register u32 md asm("r0");
+  md = (p->s).mode[2];
+  a = (u8*)p + 0x8c;
+  asm("" : "+r"(a));
+  switch (md) {
+    case 0: {
+      register u32 ang asm("r4");
+      SetDDP(&p->body, (const struct Collision*)0x08368030);
+      {
+        register u8* t asm("r1");
+        t = (u8*)p + 0x25;
+        z = 0;
+        *t = 0xe;
+      }
+      (p->s).flags2 |= 0x10;
+      (p->s).invincibleID = q->uniqueID;
+      *(s32*)((u8*)p + 0x68) = z;
+      {
+        register s32 dx asm("r0");
+        register s32 dy asm("r1");
+        {
+          register struct Zero* zz asm("r3");
+          register s32 k asm("r4");
+          dx = (p->s).coord.x;
+          zz = pZero2;
+          dx -= (zz->s).coord.x;
+          dy = (p->s).coord.y;
+          k = 0xc0 << 5;
+          z = dy + k;
+          dy = z - (zz->s).coord.y;
+        }
+        dx <<= 8;
+        dx >>= 16;
+        asm("" : "+l"(dy) : "l"(dx));
+        dy <<= 8;
+        dy >>= 16;
+        ang = ArcTan2(dx, dy);
+      }
+      {
+        register u32 t asm("r0");
+        t = (u16)ang >> 8;
+        t += 0x80;
+        ang = (u8)t;
+      }
+      if ((p->s).work[1] == 0) {
+        {
+          register u32 t asm("r0");
+          t = ang;
+          t -= 0x48;
+          ang = (u8)t;
+        }
+        if (ang > 0x40) {
+          register u32 v asm("r0");
+          v = 0;
+          if (ang <= 0x9f) {
+            v = 0x40;
+          }
+          ang = v;
+        }
+        {
+          register u32 t asm("r0");
+          t = ang;
+          t += 0x48;
+          ang = (u8)t;
+        }
+        SetMotion(&p->s, 0x4D05);
+      } else {
+        {
+          register u32 t asm("r0");
+          t = ang;
+          t += 8;
+          ang = (u8)t;
+        }
+        if (ang > 0x40) {
+          register u32 v asm("r0");
+          v = 0;
+          if (ang <= 0x9f) {
+            v = 0x40;
+          }
+          ang = v;
+        }
+        {
+          register u32 t asm("r0");
+          t = ang;
+          t -= 8;
+          ang = (u8)t;
+        }
+        SetMotion(&p->s, 0x4D0A);
+      }
+      {
+        register const s16* tb asm("r1");
+        tb = gSineTable;
+        (p->s).d.x = tb[(u8)(ang + 0x40)] << 2;
+        {
+          register const s16* e asm("r0");
+          e = (const s16*)((u8*)(ang * 2) + (u32)tb);
+          (p->s).d.y = *e << 2;
+        }
+      }
+      *(s32*)((u8*)p + 0x64) = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register u8* b asm("r0");
+      register u32 st asm("r1");
+      {
+        struct Enemy* pp = p;
+        asm("" : "+r"(pp));
+        b = (u8*)pp + 0x8c;
+      }
+      st = *(u32*)b;
+      {
+        register u32 m asm("r2");
+        m = 0x80 << 4;
+        st &= m;
+      }
+      a = b;
+      if (st == 0) {
+        goto nohit1;
+      }
+      (p->s).mode[2]++;
+      goto tail;
+    nohit1:
+      *(s32*)((u8*)p + 0x64) = *(s32*)((u8*)p + 0x64) + 1;
+      {
+        register s32 x asm("r0");
+        register s32 y asm("r1");
+        register s32 dy asm("r2");
+        register s32 dx asm("r3");
+        x = (p->s).coord.x;
+        dx = (p->s).d.x;
+        x += dx;
+        (p->s).coord.x = x;
+        y = (p->s).coord.y;
+        dy = (p->s).d.y;
+        y += dy;
+        (p->s).coord.y = y;
+        dx <<= 2;
+        x += dx;
+        dy <<= 2;
+        y += dy;
+        if (((u16)FUN_080098a4(x, y)) == 0) {
+          goto upd;
+        }
+      }
+    inc1:
+      (p->s).mode[2]++;
+      goto upd;
+    }
+    case 2:
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3: {
+      register s32 t asm("r0");
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) == 0) {
+        (p->s).mode[2]++;
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        struct Enemy* pp = p;
+        asm("" : "+r"(pp));
+        a = (u8*)pp + 0x8c;
+      }
+      goto tail;
+    }
+    case 4: {
+      register s32 k asm("r4");
+      {
+        register s32 v asm("r0");
+        v = (p->s).d.x;
+        k = -3;
+        (p->s).d.x = v / k;
+      }
+      (p->s).d.y = (p->s).d.y / k;
+      {
+        register s32 v asm("r1");
+        register s32 w asm("r0");
+        v = *(s32*)((u8*)p + 0x64);
+        w = v << 1;
+        w += v;
+        *(s32*)((u8*)p + 0x64) = w;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5: {
+      register s32 n asm("r0");
+      (p->s).coord.x = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.y = (p->s).coord.y + (p->s).d.y;
+      n = *(s32*)((u8*)p + 0x64) - 1;
+      *(s32*)((u8*)p + 0x64) = n;
+      {
+        struct Enemy* pp = p;
+        asm("" : "+r"(pp));
+        a = (u8*)pp + 0x8c;
+      }
+      if (n > 7) {
+        goto upd;
+      }
+      {
+        register u32 st asm("r0");
+        register u32 m asm("r1");
+        st = *(u32*)a;
+        m = 0x80 << 4;
+        st &= m;
+        if (st != 0) {
+          goto inc1;
+        }
+      }
+      if ((p->s).work[1] != 0) {
+        goto clr100;
+      }
+      {
+        register u32* qq asm("r0");
+        register u32 v asm("r1");
+        register s32 m asm("r2");
+        qq = (u32*)((u8*)q + 0xb4);
+        v = *qq;
+        m = -0x81;
+        goto storeq;
+      }
+    }
+  upd:
+      UpdateMotionGraphic(&p->s);
+      goto tail;
+    case 6:
+      SetDDP(&p->body, (const struct Collision*)0x083680D8);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7: {
+      register u8* b asm("r0");
+      register u32 st asm("r1");
+      {
+        struct Enemy* pp = p;
+        asm("" : "+r"(pp));
+        b = (u8*)pp + 0x8c;
+      }
+      st = *(u32*)b;
+      {
+        register u32 m asm("r2");
+        m = 0x80 << 4;
+        st &= m;
+      }
+      a = b;
+      if (st != 0) {
+        goto upd7;
+      }
+      if ((p->s).work[1] != 0) {
+        goto clr100;
+      }
+      {
+        register u32* qq asm("r0");
+        register u32 v asm("r1");
+        register s32 m asm("r2");
+        qq = (u32*)((u8*)q + 0xb4);
+        v = *qq;
+        m = -0x81;
+        asm("" : "+l"(m));
+        goto storeq;
+      }
+    }
+  }
+  goto tail;
+clr100 : {
+  register u32* qq asm("r0");
+  register u32 v asm("r1");
+  register s32 m asm("r2");
+  qq = (u32*)((u8*)q + 0xb4);
+  v = *qq;
+  m = 0xFFFFFEFF;
+storeq:
+  v &= m;
+  *qq = v;
+}
+  {
+    register u8 g asm("r0");
+    register u8 h asm("r1");
+    h = (p->s).flags;
+    asm("" : "+r"(h));
+    g = 0xFE;
+    g &= h;
+    z = 0;
+    h = 0xFD;
+    g &= h;
+    (p->s).flags = g;
+  }
+  *(u32*)a = z;
+  {
+    register u8* b asm("r0");
+    b = (u8*)p + 0x90;
+  clean2:
+    *(u32*)b = z;
+    asm("" : "+r"(b));
+    b += 4;
+    asm("" : "+r"(b));
+    *b = z;
+  }
+  (p->s).flags &= 0xFB;
+  SET_ENEMY_ROUTINE(p, ENTITY_DISAPPEAR);
+  return;
+upd7:
+  UpdateMotionGraphic(&p->s);
+tail:
+  if (*(s32*)((u8*)p + 0x68) == 0) {
+    goto zeropath;
+  }
+  {
+    register u32 st asm("r1");
+    register u32 m asm("r0");
+    st = *(u32*)a;
+    m = 0x80 << 4;
+    st &= m;
+    if (st != 0) {
+      goto coordcopy;
+    }
+    *(s32*)((u8*)p + 0x68) = st;
+    *(u32*)a = st;
+    {
+      register u8* b asm("r0");
+      b = (u8*)p + 0x90;
+      *(u32*)b = st;
+      asm("" : "+r"(b));
+      b += 4;
+      asm("" : "+r"(b));
+      *b = st;
+    }
+    {
+      register u32 fl asm("r1");
+      register u32 mm asm("r0");
+      fl = (p->s).flags;
+      mm = 0xFB;
+      mm &= fl;
+      (p->s).flags = mm;
+    }
+    if ((p->s).work[1] == 0) {
+      SetMotion(&p->s, 0x4D05);
+    } else {
+      SetMotion(&p->s, 0x4D0A);
+    }
+    UpdateMotionGraphic(&p->s);
+    return;
+  coordcopy : {
+    register struct Zero* zz asm("r2");
+    register s32 v asm("r0");
+    register s32 k asm("r1");
+    zz = pZero2;
+    v = (p->s).coord.x;
+    (zz->s).coord.x = v;
+    k = *(s32*)((u8*)p + 0xb8);
+    v += k;
+    (zz->s).coord.x = v;
+    v = (p->s).coord.y;
+    (zz->s).coord.y = v;
+    k = *(s32*)((u8*)p + 0xbc);
+    v += k;
+    (zz->s).coord.y = v;
+  }
+    return;
+  }
+zeropath:
+  {
+    register u32 st asm("r0");
+    register u32 m asm("r1");
+    st = *(u32*)a;
+    m = 0x80 << 4;
+    st &= m;
+    if (st == 0) {
+      return;
+    }
+    SetDDP(&p->body, (const struct Collision*)0x08368060);
+    {
+      register u32* qq asm("r2");
+      register u32 v asm("r0");
+      register u32 k asm("r1");
+      qq = (u32*)((u8*)q + 0xb4);
+      v = *qq;
+      k = 0x40;
+      v |= k;
+      *qq = v;
+    }
+    *(s32*)((u8*)p + 0x68) = 1;
+    {
+      register s32* d asm("r2");
+      register struct Zero* zz asm("r3");
+      register s32 v asm("r0");
+      d = (s32*)((u8*)p + 0xb8);
+      zz = pZero2;
+      v = (zz->s).coord.x;
+      *d = v;
+      v -= (p->s).coord.x;
+      *d = v;
+      asm("" : "+r"(d));
+      d += 1;
+      asm("" : "+r"(d));
+      v = (zz->s).coord.y;
+      *d = v;
+      v -= (p->s).coord.y;
+      *d = v;
+    }
+    if ((p->s).work[1] == 0) {
+      SetMotion(&p->s, 0x4D06);
+    } else {
+      SetMotion(&p->s, 0x4D0B);
+    }
+    UpdateMotionGraphic(&p->s);
+    return;
+  }
+  }
+}
+
 
 u8 GetEntityPalID(struct Entity* p);
 
