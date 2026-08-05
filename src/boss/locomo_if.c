@@ -167,7 +167,125 @@ void FUN_08054b98(struct Boss* p) {
   }
 }
 
-INCASM("asm/boss/locomo_if_p2_post.inc");
+static const struct Collision sCollisions[3];
+u8 GetEntityPalID(struct Entity* p);
+void RemovePaletteAnimation(u16 n);
+void StartPaletteAnimation(u16 blinkID, u16 ofs);
+u32 StepPaletteAnimation(u16 blinkID);
+
+// 0x08054CAC
+void FUN_08054cac(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u8* r;
+      u16 id;
+      u32 v, sv, k, kc;
+      PlaySound(0x96);
+      SetDDP(&p->body, sCollisions);
+      (p->s).angle = 0x80;
+      SetMotion(&p->s, MOTION(0x54, 0x01));
+      {
+        u8* a = (u8*)p + 0xbe;
+        u8 n = *a;
+        if (n != 0) {
+          RemovePaletteAnimation(*(volatile u8*)((u8*)p + 0xbe));
+          *((u8*)p + 0xbe) = 0;
+        }
+      }
+      r = (u8*)p + 0xbc;
+      id = *r * 2 + 0xF5;
+      v = GetEntityPalID(&p->s);
+      sv = ((u32)(u8)v) << 5;
+      k = 0x200;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(id, sv | kc);
+      *((u8*)p + 0xbe) = *r * 2 - 11;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      StepPaletteAnimation(*((u8*)p + 0xbe));
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.cmdIdx == 1) {
+        SetDDP(&p->body, &sCollisions[1]);
+      }
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 2: {
+      u8* r;
+      u16 id;
+      u32 v, sv, k, kc;
+      u8* ap = (u8*)p + 0x24;
+      u8 z;
+      z = 0;
+      *ap = z;
+      SetMotion(&p->s, MOTION(0x54, 0x02));
+      {
+        u8* a = (u8*)p + 0xbe;
+        u8 n = *a;
+        if (n != 0) {
+          RemovePaletteAnimation(*(volatile u8*)((u8*)p + 0xbe));
+          *((u8*)p + 0xbe) = z;
+        }
+      }
+      r = (u8*)p + 0xbc;
+      id = 0xF7 - *r * 2;
+      v = GetEntityPalID(&p->s);
+      sv = ((u32)(u8)v) << 5;
+      k = 0x200;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(id, sv | kc);
+      *((u8*)p + 0xbe) = -9 - *r * 2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3:
+      StepPaletteAnimation(*((u8*)p + 0xbe));
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.cmdIdx == 1) {
+        SetDDP(&p->body, sCollisions);
+      }
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      break;
+    case 4: {
+      u8* r;
+      u16 id;
+      u32 v, sv, k, kc;
+      u8 z;
+      SetMotion(&p->s, MOTION(0x54, 0x00));
+      if (*((u8*)p + 0xbe) != 0) {
+        RemovePaletteAnimation(*((u8*)p + 0xbe));
+        *((u8*)p + 0xbe) = 0;
+      }
+      r = (u8*)p + 0xbc;
+      id = 0xF6 - *r * 2;
+      v = GetEntityPalID(&p->s);
+      sv = ((u32)(u8)v) << 5;
+      k = 0x200;
+      asm volatile("add %0, %1, #0" : "=&l"(kc) : "l"(k));
+      ((void (*)(u16, u32))StartPaletteAnimation)(id, sv | kc);
+      {
+        s32 m2 = *r * 2;
+        s32 c = -10;
+        s32 t;
+        asm volatile("add %0, %1, #0" : "=&l"(t) : "l"(c));
+        t -= m2;
+        z = 0;
+        *((u8*)p + 0xbe) = t;
+      }
+      StepPaletteAnimation(*((u8*)p + 0xbe));
+      UpdateMotionGraphic(&p->s);
+      *r ^= 1;
+      (p->s).mode[1] = 5;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
 
 void FUN_08054e94(struct Boss* p) {
   switch ((p->s).mode[2]) {
