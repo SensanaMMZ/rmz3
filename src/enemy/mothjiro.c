@@ -237,7 +237,420 @@ void mothjiro_080884a4(struct Enemy* p) {
 
 bool8 nop_080885f8(struct Enemy* p) { return TRUE; }
 
-INCASM("asm/enemy/mothjiro_p4.inc");
+// 0x080885FC
+void mothjiro_080885fc(struct Enemy* p0) {
+  register struct Enemy* p asm("r6");
+  s32 m;
+  p = p0;
+  m = (p->s).mode[2];
+  switch (m) {
+    case 0:
+      SetMotion(&p->s, 0xd6 << 7);
+      SetDDP(&p->body, (const struct Collision*)0x083687C8);
+      (p->s).d = (p->s).unk_coord;
+      (p->s).unk_coord.x = (p->s).coord.x;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      {
+        register u32* rng asm("r5");
+        register u32 K asm("r3");
+        register u32 C asm("r2");
+        register u32 t asm("r0");
+        register u32 h asm("r4");
+        register s32 acc asm("r1");
+        {
+          register s32* q asm("r0");
+          acc = *(s32*)((u8*)p + 0xb8);
+          {
+            register s32 k asm("r0");
+            k = -0x1000;
+            acc += k;
+          }
+          (void)q;
+        }
+        rng = &RNG_0202f388;
+        t = *rng;
+        K = 0x343FD;
+        t = K * t;
+        C = 0x269EC3;
+        t += C;
+        t <<= 1;
+        h = t >> 1;
+        t <<= 2;
+        t >>= 0x13;
+        acc += t;
+        (p->s).unk_coord.x = acc;
+        {
+          register s32* q asm("r1");
+          q = (s32*)((u8*)p + 0xbc);
+          t = h;
+          t = t * K;
+          t += C;
+          t <<= 1;
+          h = t >> 1;
+          t <<= 3;
+          t >>= 0x14;
+          {
+            register s32 v asm("r1");
+            v = *q;
+            v += t;
+            (p->s).unk_coord.y = v;
+          }
+        }
+        t = h;
+        t = t * K;
+        t += C;
+        t <<= 1;
+        {
+          register u32 v asm("r1");
+          v = t >> 1;
+          *rng = v;
+          t >>= 0x11;
+          v = 1;
+          t &= v;
+          (p->s).work[2] = t;
+        }
+      }
+      asm volatile("" : "+l"(m));
+      (p->s).work[3] = m;
+      (p->s).mode[3] = m;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 1: {
+      register u32 r4v asm("r4");
+      register u32 fl asm("r3");
+      register u32 v asm("r1");
+      register u32 m0 asm("r0");
+      register u32 nw asm("r0");
+      if ((p->s).work[0] == 0) {
+        fl = (p->s).flags;
+        r4v = 0x10;
+        m0 = 0x10;
+        m0 &= fl;
+        if (m0 == 0) {
+          register s32 cx asm("r0");
+          register s32 ux asm("r2");
+          register s32 k asm("r1");
+          cx = (p->s).coord.x;
+          k = -0x180;
+          cx += k;
+          (p->s).coord.x = cx;
+          ux = (p->s).unk_coord.x;
+          cx = ux - cx;
+          k = 0xc0;
+          k <<= 6;
+          if (cx <= k) {
+            goto xdone;
+          }
+          k = -0x3000;
+          cx = ux + k;
+          (p->s).coord.x = cx;
+          {
+            register u32 sh asm("r0");
+            sh = fl << 24;
+            asm("" : "+l"(sh));
+            sh >>= 28;
+            v = 1;
+            v &= ~sh;
+            if (v == 0) {
+              goto clr;
+            }
+          }
+          {
+            register u32 nf asm("r0");
+            nf = r4v;
+            nf |= fl;
+            (p->s).flags = nf;
+          }
+          goto setfl;
+        } else {
+          register s32 cx asm("r0");
+          register s32 ux asm("r2");
+          register s32 k asm("r1");
+          cx = (p->s).coord.x;
+          k = 0xc0;
+          k <<= 1;
+          cx += k;
+          (p->s).coord.x = cx;
+          ux = (p->s).unk_coord.x;
+          cx = cx - ux;
+          k = 0xc0;
+          k <<= 6;
+          if (cx <= k) {
+            goto xdone;
+          }
+          cx = ux + k;
+          (p->s).coord.x = cx;
+          {
+            register u32 sh asm("r0");
+            sh = fl << 24;
+            asm("" : "+l"(sh));
+            sh >>= 28;
+            v = 1;
+            v &= ~sh;
+            if (v == 0) {
+              goto clr;
+            }
+          }
+          {
+            register u32 nf asm("r0");
+            nf = fl;
+            nf |= r4v;
+            (p->s).flags = nf;
+          }
+          goto setfl;
+        }
+      } else {
+        fl = (p->s).flags;
+        r4v = 0x10;
+        m0 = 0x10;
+        m0 &= fl;
+        if (m0 == 0) {
+          register s32 cx asm("r0");
+          register s32 ux asm("r2");
+          register s32 k asm("r1");
+          cx = (p->s).coord.x;
+          k = -0x180;
+          cx += k;
+          (p->s).coord.x = cx;
+          ux = (p->s).unk_coord.x;
+          cx = ux - cx;
+          k = 0xc0;
+          k <<= 6;
+          if (cx <= k) {
+            goto xdone;
+          }
+          k = -0x3000;
+          cx = ux + k;
+          (p->s).coord.x = cx;
+          {
+            register u32 sh asm("r0");
+            sh = fl << 24;
+            asm("" : "+l"(sh));
+            sh >>= 28;
+            v = 1;
+            v &= ~sh;
+            if (v == 0) {
+              goto clr;
+            }
+          }
+          {
+            register u32 nf asm("r0");
+            nf = r4v;
+            nf |= fl;
+            (p->s).flags = nf;
+          }
+          goto setfl;
+        } else {
+          register s32 cx asm("r0");
+          register s32 ux asm("r2");
+          register s32 k asm("r1");
+          cx = (p->s).coord.x;
+          k = 0xc0;
+          k <<= 1;
+          cx += k;
+          (p->s).coord.x = cx;
+          ux = (p->s).unk_coord.x;
+          cx = cx - ux;
+          k = 0xc0;
+          k <<= 6;
+          if (cx <= k) {
+            goto xdone;
+          }
+          cx = ux + k;
+          (p->s).coord.x = cx;
+          {
+            register u32 sh asm("r0");
+            sh = fl << 24;
+            asm("" : "+l"(sh));
+            sh >>= 28;
+            v = 1;
+            v &= ~sh;
+            if (v == 0) {
+              goto clr;
+            }
+          }
+          {
+            register u32 nf asm("r0");
+            nf = fl;
+            nf |= r4v;
+            (p->s).flags = nf;
+          }
+          goto setfl;
+        }
+      }
+      clr : {
+        u32 nf = 0xef;
+        nf &= fl;
+        (p->s).flags = nf;
+      }
+      setfl : {
+        register u8* xf asm("r0");
+        register u8* oa asm("r3");
+        register s32 sh asm("r1");
+        register s32 ov asm("r2");
+        register s32 m11 asm("r0");
+        xf = (u8*)p + 0x4c;
+        *xf = v;
+        oa = (u8*)p + 0x4a;
+        sh = v << 4;
+        ov = *oa;
+        m11 = -0x11;
+        m11 &= ov;
+        *oa = m11 | sh;
+      }
+    xdone:
+      r4v = (p->s).work[3];
+      if (r4v <= 7) {
+        register u32 t2 asm("r3");
+        t2 = (p->s).work[2];
+        if (t2 == 0) {
+          register s32 cy asm("r0");
+          register s32 uy asm("r2");
+          register s32 k asm("r1");
+          cy = (p->s).coord.y;
+          k = -0x500;
+          cy += k;
+          (p->s).coord.y = cy;
+          uy = (p->s).unk_coord.y;
+          cy = uy - cy;
+          k = 0xc0;
+          k <<= 4;
+          if (cy <= k) {
+            goto ydone;
+          }
+          k = -0xc00;
+          cy = uy + k;
+          (p->s).coord.y = cy;
+          {
+            register u32 nv asm("r0");
+            nv = 1;
+            nv ^= t2;
+            (p->s).work[2] = nv;
+          }
+          nw = r4v + 1;
+          asm volatile("");
+          goto setw3;
+        } else {
+          register s32 cy asm("r0");
+          register s32 uy asm("r2");
+          register s32 k asm("r1");
+          cy = (p->s).coord.y;
+          k = 0xa0;
+          k <<= 3;
+          cy += k;
+          (p->s).coord.y = cy;
+          uy = (p->s).unk_coord.y;
+          cy = cy - uy;
+          k = 0xc0;
+          k <<= 4;
+          if (cy <= k) {
+            goto ydone;
+          }
+          cy = uy + k;
+          (p->s).coord.y = cy;
+          {
+            register u32 nv asm("r0");
+            nv = 1;
+            nv ^= t2;
+            (p->s).work[2] = nv;
+          }
+          nw = r4v + 1;
+          asm volatile("");
+          goto setw3;
+        }
+      } else {
+        register u32 t2 asm("r3");
+        register s32 k asm("r1");
+        register s32 uy asm("r2");
+        t2 = (p->s).work[2];
+        if (t2 == 0) {
+          register s32 cy asm("r0");
+          cy = (p->s).coord.y;
+          k = -0x500;
+          cy += k;
+          (p->s).coord.y = cy;
+          uy = (p->s).unk_coord.y;
+          cy = uy - cy;
+          k = 0xc0;
+          k <<= 5;
+          if (cy <= k) {
+            goto chk;
+          }
+          k = -0x1800;
+        } else {
+          register s32 cy asm("r0");
+          cy = (p->s).coord.y;
+          k = 0xa0;
+          k <<= 3;
+          cy += k;
+          (p->s).coord.y = cy;
+          uy = (p->s).unk_coord.y;
+          cy = cy - uy;
+          k = 0xc0;
+          k <<= 5;
+          if (cy <= k) {
+            goto chk;
+          }
+        }
+        {
+          register s32 cy asm("r0");
+          cy = uy + k;
+          (p->s).coord.y = cy;
+        }
+        {
+          register u32 nv asm("r0");
+          nv = 1;
+          nv ^= t2;
+          (p->s).work[2] = nv;
+        }
+        {
+          register u32 nv2 asm("r0");
+          nv2 = r4v + 1;
+          (p->s).work[3] = nv2;
+        }
+      chk:
+        if ((p->s).work[3] <= 0xa) {
+          goto ydone;
+        }
+        nw = 0;
+      setw3:
+        (p->s).work[3] = nw;
+      }
+    ydone:
+      {
+        register u32 md asm("r0");
+        md = (p->s).mode[3] + 1;
+        (p->s).mode[3] = md;
+        md = (u32)(md << 24) >> 24;
+        md = md % 12;
+        md <<= 24;
+        if (md == 0) {
+          FUN_080c2f3c(&(p->s).coord, ((p->s).flags >> 4) & 1);
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        register u32 r asm("r2");
+        r = FUN_08088ae0(p);
+        if (r == 0) {
+          register s32 dx asm("r0");
+          register s32 dy asm("r1");
+          dx = (p->s).d.x;
+          dy = (p->s).d.y;
+          (p->s).unk_coord.x = dx;
+          (p->s).unk_coord.y = dy;
+          {
+            register u32 three asm("r0");
+            three = 3;
+            (p->s).mode[1] = three;
+          }
+          (p->s).mode[2] = r;
+        }
+      }
+      break;
+    }
+  }
+}
 
 bool8 nop_0808889c(struct Enemy* p) { return TRUE; }
 
