@@ -139,7 +139,261 @@ void Enemy60_Die(struct Enemy* p) {
   (sDeads[(p->s).mode[1]])(p);
 }
 
-INCASM("asm/enemy/unk_60_post_p1a.inc");
+// 0x08092664
+void FUN_08092664(struct Enemy* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register u8 z asm("r3");
+      z = (p->s).work[0];
+      if (z == 0) {
+        register u8* oa asm("r2");
+        register s32 one asm("r4");
+        {
+          u8 fl = (p->s).flags;
+          u32 f = 1;
+          f |= fl;
+          {
+            u32 m = 0xEF;
+            f &= m;
+            (p->s).flags = f;
+          }
+        }
+        one = 1;
+        {
+          u8* q = (u8*)p + 0x4c;
+          *q = z;
+        }
+        oa = (u8*)p + 0x4a;
+        {
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+        {
+          u8 fl = (p->s).flags;
+          u32 f = 0xDF;
+          f &= fl;
+          (p->s).flags = f;
+        }
+        {
+          u8* q = (u8*)p + 0x4d;
+          *q = z;
+        }
+        {
+          s32 ov = *oa;
+          s32 m21 = -0x21;
+          m21 &= ov;
+          *oa = m21;
+        }
+        {
+          u8* q = (u8*)p + 0x24;
+          *q = z;
+        }
+        SetMotion(&p->s, 0xB601);
+        (p->s).mode[2] = one;
+      } else {
+        register u8 z asm("r2");
+        register u8* oa asm("r3");
+        {
+          u8 fl = (p->s).flags;
+          u32 f = 1;
+          f |= fl;
+          z = 0;
+          {
+            u32 m = 0xEF;
+            f &= m;
+            (p->s).flags = f;
+          }
+        }
+        {
+          u8* q = (u8*)p + 0x4c;
+          *q = z;
+        }
+        oa = (u8*)p + 0x4a;
+        {
+          s32 ov = *oa;
+          s32 m11 = -0x11;
+          m11 &= ov;
+          *oa = m11;
+        }
+        {
+          u8 fl = (p->s).flags;
+          u32 f = 0xDF;
+          f &= fl;
+          (p->s).flags = f;
+        }
+        {
+          u8* q = (u8*)p + 0x4d;
+          *q = z;
+        }
+        {
+          s32 ov = *oa;
+          s32 m21 = -0x21;
+          m21 &= ov;
+          *oa = m21;
+        }
+        {
+          u8* q = (u8*)p + 0x24;
+          *q = z;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      {
+        register u8* a asm("r0");
+        register s32 zz asm("r1");
+        a = (u8*)p + 0x8c;
+        zz = 0;
+        asm volatile("str %0, [%1]" ::"l"(zz), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("str %0, [%1]" ::"l"(zz), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("strb %0, [%1]" ::"l"(zz), "l"(a) : "memory");
+        {
+          register u8 fl asm("r2");
+          u32 f;
+          fl = (p->s).flags;
+          f = 0xFB;
+          f &= fl;
+          (p->s).flags = f;
+        }
+        (p->s).d.x = zz;
+        (p->s).d.y = zz;
+      }
+      (p->s).work[2] = 0x14;
+      break;
+    }
+    case 1:
+      if ((p->s).work[0] == 0) {
+        struct Entity* e = (p->s).unk_28;
+        s32 cy = (p->s).coord.y;
+        s32 k = 0xe0 << 6;
+        s32 base = cy + k;
+        s32 d = (e->coord).y - base;
+        (p->s).coord.y = cy + (((d * 2 + d) << 3) >> 8);
+      }
+      UpdateMotionGraphic(&p->s);
+      break;
+    case 10:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) == 0) {
+          (p->s).mode[2]++;
+        }
+      }
+      break;
+    case 11:
+      (p->s).coord.x += -0x2E00;
+      (p->s).coord.y += -0x5000;
+      SetMotion(&p->s, 0xB601);
+      UpdateMotionGraphic(&p->s);
+      goto set14;
+    case 15:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state != 3) {
+        break;
+      }
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      {
+        register u32 w asm("r1");
+        w = (p->s).work[3];
+        asm("" : "+l"(w));
+        if (w <= 0xFB) {
+          register s32 n asm("r0");
+          n = w + 3;
+          (p->s).work[3] = n;
+        } else {
+          register u32 v asm("r0");
+          v = 0xFF;
+          v |= w;
+          (p->s).work[3] = v;
+          (p->s).mode[2]++;
+        }
+      }
+      {
+        register u8 w asm("r1");
+        register u8* q asm("r0");
+        w = (p->s).work[3];
+        q = (u8*)p + 0x24;
+        *q = w;
+      }
+      break;
+    case 16: {
+      register u8 z asm("r2");
+      register u8* oa asm("r2");
+      SetMotion(&p->s, 0xb6 << 8);
+      z = 0;
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 0xEF;
+        f &= fl;
+        (p->s).flags = f;
+      }
+      {
+        u8* q = (u8*)p + 0x4c;
+        *q = z;
+      }
+      oa = (u8*)p + 0x4a;
+      {
+        s32 ov = *oa;
+        s32 m11 = -0x11;
+        m11 &= ov;
+        *oa = m11;
+      }
+      (p->s).work[2] = 0xa;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 17:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+    set14:
+      (p->s).mode[2] = 0x14;
+      break;
+    case 20:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[0] == 1) {
+        struct Entity* e = (p->s).unk_28;
+        {
+          s32 cx = (p->s).coord.x;
+          s32 k = 0x98 << 5;
+          s32 base = cx + k;
+          s32 d = (e->coord).x - base;
+          (p->s).coord.x = cx + (((d * 2 + d) << 3) >> 8);
+        }
+        {
+          s32 cy = (p->s).coord.y;
+          s32 k = 0xe8 << 6;
+          s32 base = cy + k;
+          s32 d = (e->coord).y - base;
+          (p->s).coord.y = cy + (((d * 2 + d) << 3) >> 8);
+        }
+      }
+      break;
+    case 30: {
+      u8 z = 0;
+      (p->s).mode[1] = 1;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
 
 void FUN_08092918(struct Enemy* p) {
   struct Coord c;
