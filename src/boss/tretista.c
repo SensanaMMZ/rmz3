@@ -731,7 +731,270 @@ INCASM("asm/boss/tretista_p9.inc");
 
 bool8 FUN_0804f2b4(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/tretista_p10.inc");
+struct Enemy* createHellBouncer(struct Entity* e, struct Coord* c, u8 a2, u8 a3);
+
+// 0x0804F2B8
+void tretistaHellBouncers(struct Boss* p) {
+  struct Coord c;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 cx asm("r1");
+      SetMotion(&p->s, 0xAB1C);
+      SetDDP(&p->body, &sCollisions[1]);
+      {
+        register s32 lim asm("r0");
+        register s32 k asm("r1");
+        lim = *(s32*)((u8*)p + 0xd0);
+        k = 0xc8 << 6;
+        lim += k;
+        cx = (p->s).coord.x;
+        if (cx < lim) {
+          {
+            u8* x = (u8*)p + 0x4c;
+            *x = 1;
+          }
+          {
+            register u8* oa asm("r2");
+            register u32 m asm("r1");
+            oa = (u8*)p + 0x4a;
+            {
+              register u32 v asm("r0");
+              v = *oa;
+              m = 0x10;
+              v |= m;
+              *oa = v;
+            }
+            {
+              register u32 fl asm("r0");
+              fl = (p->s).flags;
+              m |= fl;
+              (p->s).flags = m;
+            }
+          }
+          goto settimer;
+        }
+      }
+      {
+        register s32 lim asm("r0");
+        register s32 k asm("r2");
+        lim = *(s32*)((u8*)p + 0xdc);
+        k = -0x3200;
+        lim += k;
+        if (cx <= lim) {
+          goto settimer;
+        }
+      }
+      {
+        register s32 z asm("r0");
+        u8* x = (u8*)p + 0x4c;
+        z = 0;
+        *x = z;
+        {
+          register u8* oa asm("r2");
+          register s32 ov asm("r1");
+          oa = (u8*)p + 0x4a;
+          ov = *oa;
+          z -= 0x11;
+          z &= ov;
+          *oa = z;
+        }
+      }
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 0xEF;
+        f &= fl;
+        (p->s).flags = f;
+      }
+    settimer:
+      (p->s).work[2] = 0xa;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      if ((p->s).work[2] == 0) {
+        goto bump;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        asm volatile("");
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      asm volatile("");
+      goto bump;
+    case 2:
+      SetMotion(&p->s, 0xAB1D);
+      SetDDP(&p->body, &sCollisions[7]);
+      (p->s).work[2] = 0x10;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] == 0) {
+        goto bump;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        asm volatile("");
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      goto bump;
+    case 4: {
+      register struct Enemy** b1 asm("r4");
+      c.y = (p->s).coord.y + -0x2B00;
+      c.x = (p->s).coord.x + -0x1100;
+      {
+        register struct Enemy* r asm("r0");
+        r = createHellBouncer(&p->s, &c, 1, 1);
+        b1 = (struct Enemy**)((u8*)p + 0xc8);
+        *b1 = r;
+      }
+      {
+        register s32 v asm("r0");
+        register s32 k asm("r1");
+        v = (p->s).coord.x;
+        k = 0x88 << 5;
+        v += k;
+        c.x = v;
+      }
+      {
+        register struct Enemy** b2 asm("r2");
+        register struct Enemy* r asm("r0");
+        r = createHellBouncer(&p->s, &c, 1, 0);
+        b2 = (struct Enemy**)((u8*)p + 0xcc);
+        *b2 = r;
+        *(struct Enemy**)((u8*)r + 0x2c) = *b1;
+        {
+          register struct Enemy* q asm("r1");
+          q = *b1;
+          *(struct Enemy**)((u8*)q + 0x2c) = *b2;
+        }
+      }
+      PlaySound(0xd6);
+      SetMotion(&p->s, 0xAB1A);
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2] = 0x1e;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 5:
+      if ((p->s).work[2] == 0) {
+        goto stage12;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        asm volatile("");
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      goto stage12;
+    case 6:
+      SetMotion(&p->s, 0xAB03);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).work[2] = 0xff;
+      (p->s).work[3] = 0;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)(*(u8**)((u8*)p + 0xc8)) + 0xb9) != 1) {
+        break;
+      }
+      if (*((u8*)(*(u8**)((u8*)p + 0xcc)) + 0xb9) != 1) {
+        break;
+      }
+      goto bump;
+    case 8:
+      SetMotion(&p->s, 0xAB04);
+      SetDDP(&p->body, &sCollisions[7]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 9:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      {
+        register u8* q asm("r0");
+        register s32 two asm("r1");
+        q = (u8*)(*(u8**)((u8*)p + 0xc8)) + 0xb9;
+        two = 2;
+        *q = two;
+        q = (u8*)(*(u8**)((u8*)p + 0xcc)) + 0xb9;
+        *q = two;
+      }
+      goto bump;
+    case 10:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)(*(u8**)((u8*)p + 0xc8)) + 0xb9) != 3) {
+        break;
+      }
+      if (*((u8*)(*(u8**)((u8*)p + 0xcc)) + 0xb9) != 3) {
+        break;
+      }
+      SetMotion(&p->s, 0xAB08);
+      UpdateMotionGraphic(&p->s);
+      goto bump;
+    case 11:
+      PlaySound(0xd7);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 12:
+    stage12:
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+    bump:
+      (p->s).mode[2]++;
+      break;
+    case 13:
+      SetMotion(&p->s, 0xAB1F);
+      SetDDP(&p->body, &sCollisions[1]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 14: {
+      register u8* q asm("r0");
+      register u32 st asm("r2");
+      UpdateMotionGraphic(&p->s);
+      q = (u8*)p + 0x73;
+      st = *q;
+      if (st != 3) {
+        break;
+      }
+      {
+        register s32 z asm("r1");
+        q += 0x55;
+        z = 0;
+        *(s32*)q = z;
+        asm("" : "+r"(q));
+        q += 4;
+        *(s32*)q = z;
+        (p->s).mode[1] = st;
+        (p->s).mode[2] = z;
+      }
+      break;
+    }
+  }
+  {
+    register u32 m asm("r1");
+    register u8* q asm("r0");
+    m = (p->s).mode[2];
+    q = (u8*)p + 0xe2;
+    *q = m;
+  }
+}
 
 bool8 FUN_0804f5c0(struct Boss* p) { return TRUE; }
 
