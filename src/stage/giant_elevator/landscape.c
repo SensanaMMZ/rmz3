@@ -413,8 +413,7 @@ void giantElevator_08014a34(struct StageLayer* l, const struct Stage* _ UNUSED) 
 // One pool apart: retail splits &gOverworld and the 0x2D025 state offset into
 // two literals where agbcc folds them into one relocated word; every C
 // spelling tried (base var, offset var, pointer accumulator) refolds.
-NON_MATCH void giantElevator_08014a64(struct StageLayer* l, const struct Stage* stage) {
-#if MODERN
+void giantElevator_08014a64(struct StageLayer* l, const struct Stage* stage) {
   u16 b = l->bgIdx;
   u32 ph = l->phase;
   if (ph == 0) {
@@ -428,9 +427,6 @@ NON_MATCH void giantElevator_08014a64(struct StageLayer* l, const struct Stage* 
   if (gOverworld.state[1] != 0) {
     l->unk_10++;
   }
-#else
-  INCCODE("asm/stage_gfx/gelev_14a64.inc");
-#endif
 }
 
 // 0x08014ad4
