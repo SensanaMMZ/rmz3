@@ -377,12 +377,7 @@ INCASM("asm/enemy/cattatank_p4.inc");
 
 bool8 nop_080994e8(struct Enemy* p) { return TRUE; }
 
-// Scratch-parity basin: the case-12 flip block wants its flags load before the
-// m10 const with mask-side and/or dests, the -0x11 synth after the byte load,
-// and one turn-check arm keeps re-inverting to a direct conditional. Six sites
-// of pure register parity; the walker, probes, and turn logic stream-match.
-NON_MATCH void FUN_080994ec(struct Enemy* p) {
-#if MODERN
+void FUN_080994ec(struct Enemy* p) {
   switch ((p->s).mode[2]) {
     case 0:
       (p->s).unk_coord.x = 0;
@@ -444,9 +439,10 @@ NON_MATCH void FUN_080994ec(struct Enemy* p) {
               asm volatile("");
               goto turn;
             } else {
-              if ((z2->s).coord.x < (p->s).coord.x) {
-                goto turn;
+              if ((z2->s).coord.x >= (p->s).coord.x) {
+                goto noturn;
               }
+              goto turn;
             }
           }
         }
@@ -458,10 +454,11 @@ NON_MATCH void FUN_080994ec(struct Enemy* p) {
           asm volatile("");
           goto turn;
         } else {
-          if ((pZero2->s).coord.x < (p->s).coord.x) {
-          turn:
-            (p->s).mode[2] = 0xA;
+          if ((pZero2->s).coord.x >= (p->s).coord.x) {
+            goto noturn;
           }
+        turn:
+          (p->s).mode[2] = 0xA;
         }
       }
     noturn:
@@ -500,26 +497,48 @@ NON_MATCH void FUN_080994ec(struct Enemy* p) {
       break;
     case 12: {
       u32 m10;
-      s32 mEF;
+      u32 f;
+      u32 tt;
       SetMotion(&p->s, 0xD512);
+      f = (p->s).flags;
       m10 = 0x10;
       asm("" : "+r"(m10));
-      if (!((p->s).flags & m10)) {
-        u8 one = 1;
+      tt = m10;
+      tt &= f;
+      if (tt == 0) {
+        u32 nf;
+        s32 ov;
+        s32 mEF;
         u8* oa;
-        (p->s).flags |= 0x10;
+        u8 one;
+        one = 1;
+        nf = 0x10;
+        nf |= f;
+        (p->s).flags = nf;
         ((p->s).spr).xflip = one;
         oa = (u8*)p + 0x4a;
-        asm volatile("mov %0, #0x11\n\tneg %0, %0" : "=l"(mEF));
-        *oa = (u8)((*oa & mEF) | m10);
+        ov = *oa;
+        mEF = -0x11;
+        asm volatile("" : "+l"(mEF));
+        mEF &= ov;
+        *oa = (u8)(mEF | m10);
       } else {
-        u8 z = 0;
+        u32 nf;
+        s32 ov;
+        s32 mEF;
         u8* oa;
-        (p->s).flags &= ~0x10;
-        ((p->s).spr).xflip = z;
+        u8 zz;
+        zz = 0;
+        nf = 0xEF;
+        nf &= f;
+        (p->s).flags = nf;
+        ((p->s).spr).xflip = zz;
         oa = (u8*)p + 0x4a;
-        asm volatile("mov %0, #0x11\n\tneg %0, %0" : "=l"(mEF));
-        *oa = (u8)(*oa & mEF);
+        ov = *oa;
+        mEF = -0x11;
+        asm volatile("" : "+l"(mEF));
+        mEF &= ov;
+        *oa = (u8)mEF;
       }
       (p->s).mode[2]++;
       FALLTHROUGH;
@@ -531,9 +550,6 @@ NON_MATCH void FUN_080994ec(struct Enemy* p) {
       }
       break;
   }
-#else
-  INCCODE("asm/enemy/cattatank_94ec.inc");
-#endif
 }
 
 bool8 nop_0809973c(struct Enemy* p) { return TRUE; }
