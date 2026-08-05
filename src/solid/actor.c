@@ -1284,7 +1284,235 @@ void ActorCrashedPantheon_Update(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/actor_p1_p1_a_post.inc");
+static const struct Collision sCollisions_08370B58[11];
+
+// 0x080D1F18
+void Actor10_Update(struct Solid* p) {
+  register s32 nx asm("r1");
+  switch ((p->s).mode[1]) {
+    case 0: {
+      LOAD_STATIC_GRAPHIC(SM009_OMEGA_HAND);
+      InitRotatableMotion(&p->s);
+      SetMotion(&p->s, MOTION(SM009_OMEGA_HAND, 2));
+      {
+        register u8* q asm("r1");
+        register s32 one asm("r2");
+        q = (u8*)p + 0x24;
+        *q = 0x40;
+        one = 1;
+        {
+          u8 fl = (p->s).flags;
+          u32 f = 0x20;
+          f |= fl;
+          (p->s).flags = f;
+        }
+        {
+          u8* y = (u8*)p + 0x4d;
+          *y = one;
+        }
+        {
+          register u8* oa asm("r3");
+          register s32 k asm("r2");
+          oa = (u8*)p + 0x4a;
+          k = 0x20;
+          {
+            s32 ov = *oa;
+            s32 m21 = -0x21;
+            m21 &= ov;
+            m21 |= k;
+            *oa = m21;
+          }
+        }
+      }
+      (p->s).unk_coord.x = FUN_0800a31c((p->s).coord.x, (p->s).coord.y) + (0xe0 << 5);
+      {
+        register struct Camera* cam asm("r0");
+        cam = &gStageRun.vm.camera;
+        (p->s).coord.x = cam->viewport.x + 0x9BFF;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 cx asm("r0");
+      UpdateMotionGraphic(&p->s);
+      cx = (p->s).coord.x + -0x800;
+      (p->s).coord.x = cx;
+      if (cx >= (p->s).unk_coord.x) {
+        break;
+      }
+      AppendQuake(0x10, &(p->s).coord);
+      (p->s).coord.x = (p->s).unk_coord.x;
+      goto bump;
+    }
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      (p->s).work[2] = 0x1E;
+      goto bump;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      goto bump;
+    case 4: {
+      register s32 k asm("r2");
+      UpdateMotionGraphic(&p->s);
+      nx = (p->s).coord.x;
+      k = 0x80 << 2;
+      nx += k;
+      goto setx;
+    }
+    case 5: {
+      register s32 z5 asm("r5");
+      register u8* oa asm("r2");
+      register struct Body* b asm("r4");
+      if (((p->s).scriptEntity->flags & 2) == 0) {
+        break;
+      }
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 1;
+        f |= fl;
+        (p->s).flags = f;
+      }
+      LOAD_STATIC_GRAPHIC(SM009_OMEGA_HAND);
+      SetMotion(&p->s, MOTION(SM009_OMEGA_HAND, 2));
+      {
+        register u8* q asm("r1");
+        q = (u8*)p + 0x24;
+        *q = 0x20;
+      }
+      z5 = 0;
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 0xDF;
+        f &= fl;
+        (p->s).flags = f;
+      }
+      {
+        u8* y = (u8*)p + 0x4d;
+        *y = z5;
+      }
+      oa = (u8*)p + 0x4a;
+      {
+        s32 ov = *oa;
+        s32 m21 = -0x21;
+        m21 &= ov;
+        *oa = m21;
+      }
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 4;
+        f |= fl;
+        (p->s).flags = f;
+      }
+      b = &p->body;
+      {
+        register const struct Collision* col asm("r1");
+        col = &sCollisions_08370B58[0];
+        oa += 0xa;
+        InitBody(b, col, (struct Coord*)oa, 1);
+      }
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (BodyFunc)z5;
+      {
+        register struct Camera* cam asm("r0");
+        register s32 vx asm("r0");
+        cam = &gStageRun.vm.camera;
+        vx = cam->viewport.x;
+        (p->s).coord.x = vx + 0x97FF;
+        vx += 0x1FFF;
+        (p->s).unk_coord.y = FUN_08009f6c(vx, (p->s).coord.y);
+        (p->s).coord.y = (p->s).unk_coord.y + -0x3000;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      (p->s).coord.x += -0x600;
+      {
+        s32 cy = (p->s).coord.y;
+        (p->s).coord.y = (((cy << 6) - cy) + (p->s).unk_coord.y) >> 6;
+      }
+      if ((*(u32*)((u8*)p + 0x8c) & 4) == 0) {
+        break;
+      }
+      AppendQuake(4, &(p->s).coord);
+      (p->s).d.x = 0;
+      (p->s).work[2] = 0xF;
+      goto bump;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 cy asm("r1");
+        register s32 t asm("r0");
+        register s32 k asm("r2");
+        cy = (p->s).coord.y;
+        t = cy << 6;
+        t -= cy;
+        k = -0x3000;
+        t += k;
+        cy = (p->s).unk_coord.y;
+        t += cy;
+        (p->s).coord.y = t >> 6;
+      }
+      {
+        register u8* q asm("r2");
+        s32 a;
+        q = (u8*)p + 0x24;
+        a = *q;
+        *q = (((a << 4) - a) + 0x4F) >> 4;
+      }
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+        break;
+      }
+      {
+        register s32 dv asm("r1");
+        register s32 t asm("r0");
+        dv = (p->s).d.x;
+        t = dv << 5;
+        t -= dv;
+        dv = 0xc0 << 3;
+        t += dv;
+        t >>= 5;
+        (p->s).d.x = t;
+        nx = (p->s).coord.x;
+        nx += t;
+      }
+    setx:
+      (p->s).coord.x = nx;
+      {
+        register struct Camera* cam asm("r0");
+        cam = &gStageRun.vm.camera;
+        if (nx < cam->viewport.x + 0x97FF) {
+          break;
+        }
+      }
+      {
+        register u8 fl asm("r0");
+        u32 f;
+        fl = (p->s).flags;
+        f = 0xFE;
+        f &= fl;
+        (p->s).flags = f;
+      }
+    bump:
+      (p->s).mode[1]++;
+      break;
+    case 8:
+      break;
+  }
+}
 
 static const struct Collision sCollisions_08370B58[11];
 s32 PushoutToUp2(s32 x, s32 y);
