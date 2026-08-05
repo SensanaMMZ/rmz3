@@ -117,10 +117,9 @@ void FUN_080dc8e8(struct Solid* p) {
 // register vars, which it exempts from the save set entirely (emitting
 // an unsound caller-clobber). Same basin as icebon_080ca154. Full
 // snowflake-spawn logic (dual-arm LCG chains, seed anchors) verified.
-NON_MATCH void FUN_080dc900(struct Solid* p) {
-#if MODERN
+void FUN_080dc900(struct Solid* p) {
   register s32 one4 asm("r4");
-  register u32 keep7 asm("r7");
+  u32 keep7;
   {
     u32 tbl = (u32)(gSolidFnTable);
     u32 id;
@@ -253,9 +252,6 @@ NON_MATCH void FUN_080dc900(struct Solid* p) {
   }
   Solid37_Update(p);
   asm volatile("" : : "r"(keep7));
-#else
-  INCCODE("asm/solid/unk_37_c900.inc");
-#endif
 }
 
 void FUN_080dca60(struct Solid* p) {
