@@ -403,7 +403,336 @@ NON_MATCH void FUN_080a0dc0(struct Projectile* p) {
 #endif
 }
 
-INCASM("asm/projectile/unk_14_p2.inc");
+// 0x080A0FA8
+void FUN_080a0fa8(struct Projectile* p) {
+  struct Entity* q = (p->s).unk_28;
+  s32 lim;
+  switch ((p->s).mode[2]) {
+    case 0: {
+      register s32 one asm("r4");
+      register u32 w asm("r2");
+      SetDDP(&p->body, &sCollisions[3]);
+      (p->s).unk_coord.x = (p->s).coord.x;
+      InitNonAffineMotion(&p->s);
+      ResetDynamicMotion(&p->s);
+      SetMotion(&p->s, 0xA71C);
+      w = (p->s).work[2];
+      asm("" : "+l"(w));
+      if (w != 0) {
+        u8 fl = (p->s).flags;
+        u32 f = 0x10;
+        f |= fl;
+        (p->s).flags = f;
+      } else {
+        u8 fl = (p->s).flags;
+        u32 f = 0xEF;
+        f &= fl;
+        (p->s).flags = f;
+      }
+      one = 1;
+      {
+        register u32 xf asm("r1");
+        xf = one;
+        xf &= w;
+        {
+          u8* x = (u8*)p + 0x4c;
+          *x = xf;
+        }
+        {
+          register u8* oa asm("r3");
+          oa = (u8*)p + 0x4a;
+          xf <<= 4;
+          {
+            s32 ov = *oa;
+            s32 m11 = -0x11;
+            m11 &= ov;
+            m11 |= xf;
+            *oa = m11;
+          }
+        }
+      }
+      {
+        register s32 base asm("r2");
+        u32 b;
+        base = -0x280;
+        {
+          u32* rng = &RNG_0202f388;
+          register u32 t asm("r0");
+          {
+            register u32 sd asm("r1");
+            sd = *rng;
+            t = 0x343FD;
+            t *= sd;
+          }
+          {
+            register u32 c asm("r1");
+            c = 0x269EC3;
+            t += c;
+          }
+          t <<= 1;
+          {
+            register u32 h asm("r1");
+            h = t >> 1;
+            *rng = h;
+          }
+          t >>= 0x11;
+          t &= one;
+          asm("" : "+l"(t));
+          b = t;
+        }
+        {
+          register s32 m asm("r1");
+          m = b * 2 + b;
+          m <<= 7;
+          base -= m;
+        }
+        {
+          register s32 nb asm("r1");
+          register s32 wv asm("r0");
+          nb = -base;
+          wv = (p->s).work[2] << 1;
+          wv *= nb;
+          base += wv;
+        }
+        (p->s).d.x = base;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 cx asm("r1");
+      register s32 lim1 asm("r0");
+      cx = (p->s).coord.x + (p->s).d.x;
+      (p->s).coord.x = cx;
+      if ((p->s).work[2] != 0) {
+        register s32 k asm("r2");
+        lim1 = *(s32*)((u8*)p + 0xb4);
+        k = 0xa0 << 7;
+        lim1 += k;
+        if (cx <= lim1) {
+          goto upd;
+        }
+      } else {
+        register s32 k asm("r2");
+        lim1 = *(s32*)((u8*)p + 0xb4);
+        k = -0x5000;
+        lim1 += k;
+        if (cx >= lim1) {
+          goto upd;
+        }
+      }
+      (p->s).coord.x = lim1;
+      goto bump;
+    }
+    case 2: {
+      u32 b;
+      {
+        u32* rng = &RNG_0202f388;
+        register u32 t asm("r1");
+        {
+          register u32 k asm("r0");
+          t = *rng;
+          k = 0x343FD;
+          t *= k;
+        }
+        {
+          register u32 c asm("r0");
+          c = 0x269EC3;
+          t += c;
+        }
+        t <<= 1;
+        {
+          register u32 h asm("r0");
+          h = t >> 1;
+          *rng = h;
+        }
+        t >>= 0x11;
+        {
+          register u32 one asm("r0");
+          one = 1;
+          t &= one;
+        }
+        b = t;
+      }
+      (p->s).work[2] = ((b * 2 + b) << 2) + 8;
+      SetMotion(&p->s, 0xA71D);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 t;
+      FUN_0801779c(&p->s);
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      if ((t << 24) != 0) {
+        break;
+      }
+      goto bump2;
+    }
+    case 4:
+      SetDDP(&p->body, &sCollisions[4]);
+      SetMotion(&p->s, 0xA71E);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 5:
+      FUN_0801779c(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+    bump2:
+      (p->s).mode[2]++;
+      break;
+    case 6: {
+      register s32 dv asm("r2");
+      u32 b;
+      SetMotion(&p->s, 0xA71F);
+      {
+        u32* rng = &RNG_0202f388;
+        register u32 t asm("r0");
+        {
+          register u32 sd asm("r1");
+          sd = *rng;
+          t = 0x343FD;
+          t *= sd;
+        }
+        {
+          register u32 c asm("r1");
+          c = 0x269EC3;
+          t += c;
+        }
+        t <<= 1;
+        {
+          register u32 h asm("r1");
+          h = t >> 1;
+          *rng = h;
+        }
+        t >>= 0x11;
+        {
+          register u32 one asm("r1");
+          one = 1;
+          t &= one;
+        }
+        b = t;
+      }
+      dv = b << 7;
+      (p->s).d.x = dv;
+      {
+        register s32 nv asm("r0");
+        if (((p->s).flags & 0x10) != 0) {
+          nv = -dv;
+          nv <<= 1;
+        } else {
+          nv = 0;
+        }
+        (p->s).d.x = nv;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 7: {
+      register s32 dv asm("r2");
+      register s32 lim7 asm("r1");
+      {
+        register s32 cx0 asm("r0");
+        cx0 = (p->s).coord.x;
+        dv = (p->s).d.x;
+        cx0 += dv;
+        (p->s).coord.x = cx0;
+      }
+      if (((p->s).flags & 0x10) != 0) {
+        register s32 nd asm("r0");
+        register s32 k asm("r1");
+        nd = dv;
+        nd -= 0x30;
+        (p->s).d.x = nd;
+        k = -0x600;
+        if (nd < k) {
+          (p->s).d.x = k;
+        }
+        {
+          register s32 cx2 asm("r0");
+          cx2 = (p->s).coord.x;
+          lim7 = (p->s).unk_coord.x;
+          if (cx2 >= lim7) {
+            goto upd;
+          }
+        }
+      } else {
+        register s32 nd asm("r0");
+        register s32 k asm("r1");
+        nd = dv;
+        nd += 0x30;
+        (p->s).d.x = nd;
+        k = 0xc0 << 3;
+        if (nd > k) {
+          (p->s).d.x = k;
+        }
+        {
+          register s32 cx2 asm("r0");
+          cx2 = (p->s).coord.x;
+          lim7 = (p->s).unk_coord.x;
+          if (cx2 <= lim7) {
+            goto upd;
+          }
+        }
+      }
+      (p->s).coord.x = lim7;
+      *((u8*)q + 0xbe) = 1;
+    bump:
+      (p->s).mode[2]++;
+    upd:
+      FUN_0801779c(&p->s);
+      break;
+    }
+    case 8:
+      (p->s).work[2] = 2;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 9: {
+      register u32 z asm("r2");
+      register s32 t asm("r0");
+      t = (p->s).work[2] - 1;
+      (p->s).work[2] = t;
+      z = (u32)(t << 24) >> 24;
+      if (z != 0) {
+        FUN_0801779c(&p->s);
+        break;
+      }
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 0xFE;
+        f &= fl;
+        {
+          u32 m = 0xFD;
+          f &= m;
+        }
+        (p->s).flags = f;
+      }
+      {
+        register u8* a asm("r0");
+        a = (u8*)p + 0x8c;
+        asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("str %0, [%1]" ::"l"(z), "l"(a) : "memory");
+        a += 4;
+        asm("" : "+r"(a));
+        asm volatile("strb %0, [%1]" ::"l"(z), "l"(a) : "memory");
+      }
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 0xFB;
+        f &= fl;
+        (p->s).flags = f;
+      }
+      SET_PROJECTILE_ROUTINE(p, ENTITY_DISAPPEAR);
+      return;
+    }
+  }
+  if (q->mode[0] > 1) {
+    SET_PROJECTILE_ROUTINE(p, ENTITY_DIE);
+  }
+}
 
 void CreateDeathtanzRock(struct Entity* e, s32 x, s32 y, u8 n);
 
