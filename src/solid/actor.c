@@ -3789,7 +3789,297 @@ void ActorLastFefnirFireball_Update(struct Solid* p) {
   }
 }
 
-INCASM("asm/solid/actor_p1_p2_b_d.inc");
+extern const struct Rect Rect_08370e10;
+s32 PushoutToUp1(s32 x, s32 y);
+
+// 0x080D56B0
+void ActorLastLeviathan_Update(struct Solid* p) {
+  struct Coord c;
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 off asm("r2");
+      {
+        register u16* q asm("r0");
+        register s32 v asm("r1");
+        q = wDynamicGraphicTilenums;
+        off = 0xbd << 1;
+        q = (u16*)((u8*)q + off);
+        v = 0xb0;
+        v <<= 2;
+        *q = v;
+      }
+      {
+        register u16* q asm("r0");
+        register s32 v asm("r1");
+        q = wDynamicMotionPalIDs;
+        q = (u16*)((u8*)q + off);
+        v = 7;
+        *q = v;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 cx asm("r0");
+      register s32 cy asm("r1");
+      cx = (p->s).coord.x;
+      c.x = cx;
+      cy = (p->s).coord.y;
+      c.y = FUN_08009f6c(cx, cy) + 1;
+      AppendHazard(0x80 << 8, 1, &c, &Rect_08370e10);
+      if ((((s32)FUN_080d0aa0(&p->s, 0xbd << 8, 1)) << 16) == 0) {
+        break;
+      }
+      SetMotion(&p->s, 0xBD05);
+      (p->s).work[2] = 0x14;
+      asm volatile("");
+      goto bump;
+    }
+    case 2: {
+      register s32 z5 asm("r5");
+      register struct Body* b asm("r4");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        z5 = (u32)(t << 24) >> 24;
+        if (z5 != 0) {
+          break;
+        }
+      }
+      SetMotion(&p->s, 0xBD09);
+      PlaySound(0xf7);
+      {
+        register u32 f asm("r0");
+        register u32 m asm("r1");
+        f = (p->s).flags;
+        m = 4;
+        f |= m;
+        (p->s).flags = f;
+      }
+      b = &p->body;
+      InitBody(b, &sCollisions_08370C68[11], &(p->s).coord, 1);
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (BodyFunc)z5;
+      (p->s).work[2] = 0x14;
+      asm volatile("");
+      goto bump;
+    }
+    case 3: {
+      register s32 z5 asm("r5");
+      register struct Body* b asm("r4");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        z5 = (u32)(t << 24) >> 24;
+        if (z5 != 0) {
+          break;
+        }
+      }
+      SetMotion(&p->s, 0xBD0B);
+      PlaySound(0xf7);
+      {
+        register u32 f asm("r0");
+        register u32 m asm("r1");
+        f = (p->s).flags;
+        m = 4;
+        f |= m;
+        (p->s).flags = f;
+      }
+      b = &p->body;
+      InitBody(b, &sCollisions_08370C68[12], &(p->s).coord, 1);
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (BodyFunc)z5;
+      (p->s).work[2] = 0xa;
+      asm volatile("");
+      goto bump;
+    }
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      SetMotion(&p->s, 0xBD0C);
+      (p->s).work[2] = 0xa;
+      asm volatile("");
+      goto bump;
+    case 5: {
+      register s32 z4 asm("r4");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 t asm("r0");
+        t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        z4 = (u32)(t << 24) >> 24;
+        if (z4 != 0) {
+          break;
+        }
+      }
+      SetMotion(&p->s, 0xBD14);
+      (p->s).work[2] = z4;
+      goto bump;
+    }
+    case 6: {
+      register struct Body* b asm("r4");
+      UpdateMotionGraphic(&p->s);
+      {
+        register u32 t asm("r0");
+        t = (p->s).work[2] + 1;
+        (p->s).work[2] = t;
+        t = (u32)(t << 24) >> 24;
+        if (t != 0x14) {
+          break;
+        }
+      }
+      PlaySound(0xf7);
+      {
+        register u32 f asm("r0");
+        register u32 m asm("r1");
+        f = (p->s).flags;
+        m = 4;
+        f |= m;
+        (p->s).flags = f;
+      }
+      b = &p->body;
+      InitBody(b, &sCollisions_08370C68[13], &(p->s).coord, 1);
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (BodyFunc)0;
+      goto bump;
+    }
+    case 7: {
+      register s32 z5 asm("r5");
+      register struct Body* b asm("r4");
+      {
+        register u32 m asm("r1");
+        register u32 f asm("r0");
+        m = (p->s).flags;
+        f = 4;
+        z5 = 0;
+        f |= m;
+        (p->s).flags = f;
+      }
+      b = &p->body;
+      InitBody(b, &sCollisions_08370C68[14], &(p->s).coord, 1);
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (BodyFunc)z5;
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 8:
+      UpdateMotionGraphic(&p->s);
+      if (((p->body).status & 1) == 0) {
+        break;
+      }
+      SetMotion(&p->s, 0xBD10);
+      PlaySound(0xf6);
+      (p->s).d.x = 0xa0 << 3;
+      (p->s).d.y = -0x140;
+      goto bump;
+    case 9: {
+      register s32 cx asm("r0");
+      register s32 cy asm("r1");
+      register s32 dy asm("r2");
+      UpdateMotionGraphic(&p->s);
+      cx = (p->s).coord.x;
+      cy = (p->s).d.x;
+      cx -= cy;
+      (p->s).coord.x = cx;
+      cy = (p->s).coord.y;
+      dy = (p->s).d.y;
+      cy += dy;
+      (p->s).coord.y = cy;
+      dy += 0x40;
+      (p->s).d.y = dy;
+      {
+        register s32 k asm("r2");
+        k = 0xa0 << 5;
+        cy += k;
+      }
+      if (PushoutToUp1(cx, cy) == 0) {
+        break;
+      }
+      (p->s).coord.y = FUN_08009f6c((p->s).coord.x, (p->s).coord.y) + -0x1400;
+      (p->s).d.y = 0;
+      goto bump;
+    }
+    case 10: {
+      register s32 d asm("r1");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 v asm("r0");
+        v = (p->s).d.x;
+        d = v << 3;
+        d -= v;
+        d >>= 3;
+        (p->s).d.x = d;
+        v = (p->s).coord.x;
+        v -= d;
+        (p->s).coord.x = v;
+      }
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      SetMotion(&p->s, 0xbd << 8);
+      (p->s).work[2] = 2;
+      goto bump;
+    }
+    case 11: {
+      register s32 d asm("r1");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 v asm("r0");
+        v = (p->s).d.x;
+        d = v << 3;
+        d -= v;
+        d >>= 3;
+        (p->s).d.x = d;
+        v = (p->s).coord.x;
+        v -= d;
+        (p->s).coord.x = v;
+      }
+      {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      SetMotion(&p->s, 0xBD0F);
+      goto bump;
+    }
+    case 12: {
+      register s32 d asm("r1");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 v asm("r0");
+        v = (p->s).d.x;
+        d = v << 3;
+        d -= v;
+        d >>= 3;
+        (p->s).d.x = d;
+        v = (p->s).coord.x;
+        v -= d;
+        (p->s).coord.x = v;
+      }
+      if (d > 3) {
+        break;
+      }
+    bump:
+      (p->s).mode[1]++;
+      break;
+    }
+    case 13:
+      UpdateMotionGraphic(&p->s);
+      break;
+  }
+}
 
 // 0x080D59D4
 void ActorLastX_Update(struct Solid* p) {
