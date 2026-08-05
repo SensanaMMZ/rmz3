@@ -4353,7 +4353,244 @@ NON_MATCH void FUN_080d6afc(struct Solid* p) {
 #endif
 }
 
-INCASM("asm/solid/actor_p2_post6afc.inc");
+s32 PushoutToUp1(s32 x, s32 y);
+
+// 0x080D6C80
+void FUN_080d6c80(struct Solid* p) {
+  register s32 t asm("r0");
+  switch ((p->s).mode[1]) {
+    case 0: {
+      register s32 off asm("r2");
+      {
+        register u16* q asm("r0");
+        register s32 v asm("r1");
+        q = wDynamicGraphicTilenums;
+        off = 0xbe << 1;
+        q = (u16*)((u8*)q + off);
+        v = 0xf0;
+        v <<= 2;
+        *q = v;
+      }
+      {
+        register u16* q asm("r0");
+        register s32 v asm("r1");
+        q = wDynamicMotionPalIDs;
+        q = (u16*)((u8*)q + off);
+        v = 9;
+        *q = v;
+      }
+      (p->s).mode[1]++;
+      FALLTHROUGH;
+    }
+    case 1:
+      t = ((s32(*)(struct Entity*, motion_t, u8))FUN_080d0aa0)(&p->s, 0xbe << 8, 1);
+      goto test16;
+    case 2:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 1) == 0) {
+        break;
+      }
+      SetMotion(&p->s, 0xBE01);
+      (p->s).work[2] = 8;
+      goto bump;
+    case 3:
+      UpdateMotionGraphic(&p->s);
+      {
+        s32 w = (p->s).work[2] - 1;
+        (p->s).work[2] = w;
+        if ((w << 24) == 0) {
+          PlaySound(0x101);
+        }
+      }
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      SetMotion(&p->s, 0xBE02);
+      asm volatile("");
+      goto bump;
+    case 4:
+      UpdateMotionGraphic(&p->s);
+      asm volatile("");
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      SetMotion(&p->s, 0xBE03);
+      (p->s).work[2] = 0x40;
+      (p->s).unk_coord.y = (p->s).coord.y;
+      goto bump;
+    case 5: {
+      register u32 w4 asm("r4");
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 sv asm("r0");
+        register s32 u asm("r1");
+        sv = gSineTable[(p->s).work[2]];
+        u = (p->s).unk_coord.y;
+        u -= sv;
+        (p->s).unk_coord.y = u;
+        {
+          register s32 cy asm("r2");
+          register s32 acc asm("r0");
+          cy = (p->s).coord.y;
+          acc = cy << 3;
+          acc -= cy;
+          acc += u;
+          (p->s).coord.y = acc >> 3;
+        }
+      }
+      {
+        register s32 w asm("r0");
+        w = (p->s).work[2] - 1;
+        (p->s).work[2] = w;
+        w4 = (u32)(w << 24) >> 24;
+        if (w4 != 0) {
+          break;
+        }
+      }
+      SetMotion(&p->s, 0xBE11);
+      (p->s).work[2] = w4;
+      *(s32*)((u8*)p + 0x60) = (p->s).coord.y;
+      goto bump;
+    }
+    case 6:
+      UpdateMotionGraphic(&p->s);
+      asm volatile("");
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      PlaySound(0x92 << 1);
+      SetMotion(&p->s, 0xBE12);
+      asm volatile("");
+      goto bump;
+    case 7:
+      UpdateMotionGraphic(&p->s);
+      if (((p->s).scriptEntity->flags & 2) == 0) {
+        break;
+      }
+      StopSound(0x92 << 1);
+      SetMotion(&p->s, 0xBE13);
+      asm volatile("");
+      goto bump;
+    case 8: {
+      register s32 z5 asm("r5");
+      register struct Body* b asm("r4");
+      UpdateMotionGraphic(&p->s);
+      if (*((u8*)p + 0x73) != 3) {
+        break;
+      }
+      {
+        u8 fl = (p->s).flags;
+        u32 f = 4;
+        z5 = 0;
+        f |= fl;
+        (p->s).flags = f;
+      }
+      b = &p->body;
+      InitBody(b, &sCollisions_08370C68[15], &(p->s).coord, 1);
+      b->parent = (struct CollidableEntity*)p;
+      b->fn = (BodyFunc)z5;
+      SetMotion(&p->s, 0xBE03);
+      (p->s).d.x = z5;
+      (p->s).work[3] = z5;
+      goto bump;
+    }
+    case 9:
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).d.x != 0) {
+        s32 d = (p->s).d.x + 0x20;
+        (p->s).d.x = d;
+        if (d > (0xe0 << 3)) {
+          (p->s).d.x = 0xe0 << 3;
+        }
+        *(s32*)((u8*)p + 0x60) += (p->s).d.x;
+        if (PushoutToUp1((p->s).coord.x, *(s32*)((u8*)p + 0x60)) != 0) {
+          *(s32*)((u8*)p + 0x60) = FUN_08009f6c((p->s).coord.x, *(s32*)((u8*)p + 0x60));
+        }
+      }
+      if ((p->s).work[3] != 0) {
+        s32 w = (p->s).work[3] - 1;
+        (p->s).work[3] = w;
+        if ((w & 2) != 0) {
+          PaintEntityWhite(&p->s);
+        } else {
+          UpdateEntityPaletteID(&p->s);
+        }
+        if ((p->s).work[3] == 0x16) {
+          SetMotion(&p->s, 0xBE0D);
+        }
+      }
+      if (((p->s).scriptEntity->flags & 4) != 0) {
+        (p->s).coord.y = FUN_08009f6c((p->s).coord.x, *(s32*)((u8*)p + 0x60));
+        SetMotion(&p->s, 0xBE0E);
+        asm volatile("");
+        goto bump;
+      }
+      if ((*(u32*)((u8*)p + 0x8c) & 1) == 0) {
+        break;
+      }
+      SetMotion(&p->s, 0xBE0C);
+      (p->s).work[3] = 0x1E;
+      (p->s).d.x++;
+      if (isSoundPlaying(0xf8) != 0) {
+        break;
+      }
+      PlaySound(0xf8);
+      break;
+    case 10:
+      UpdateMotionGraphic(&p->s);
+      {
+        register s32 fl asm("r1");
+        register s32 m asm("r0");
+        fl = (p->s).scriptEntity->flags;
+        m = 8;
+        m &= fl;
+        t = m;
+      }
+      goto test0;
+    case 11:
+      t = ((s32(*)(struct Entity*, motion_t, u8))FUN_080d0934)(&p->s, 0xBE0B, 1);
+    test16:
+      t <<= 16;
+    test0:
+      if (t == 0) {
+        break;
+      }
+    bump:
+      (p->s).mode[1]++;
+      break;
+    case 12:
+      break;
+  }
+  {
+    register u32 md asm("r0");
+    md = (p->s).mode[1] - 6;
+    md = (u32)(md << 24) >> 24;
+    if (md > 3) {
+      return;
+    }
+  }
+  {
+    register s32 u asm("r1");
+    (p->s).work[2]++;
+    {
+      register s32 sv asm("r0");
+      sv = gSineTable[(p->s).work[2]];
+      sv <<= 2;
+      u = *(s32*)((u8*)p + 0x60);
+      u += sv;
+    }
+    (p->s).unk_coord.y = u;
+    {
+      register s32 cy asm("r2");
+      register s32 acc asm("r0");
+      cy = (p->s).coord.y;
+      acc = cy << 3;
+      acc -= cy;
+      acc += u;
+      (p->s).coord.y = acc >> 3;
+    }
+  }
+}
 
 // 0x080D6FA0
 void FUN_080d6fa0(struct Solid* p) {
