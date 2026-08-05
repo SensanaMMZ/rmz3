@@ -299,7 +299,206 @@ void cubitDeath0(struct Boss* p0) {
   }
 }
 
-INCASM("asm/boss/cubit_p1_post.inc");
+struct Entity* FUN_080b2b40(u8 kind, struct Coord* c, s32 r2, u8 r3);
+void FUN_0809c3b4(struct Entity* e, struct Coord* c, motion_t m, u8 dir);
+struct Entity* CreateBossExplosion(struct Entity* boss, struct Coord* c);
+
+// 0x080528C8
+void cubitDeath1(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      u32* st;
+      (p->s).angle = 0;
+      {
+        register u16* m asm("r0");
+        u16 v;
+        m = (u16*)((u8*)p + 0x50);
+        asm volatile("" : "+l"(m));
+        v = 0x80 << 1;
+        *m = v;
+        m += 1;
+        asm("" : "+r"(m));
+        *m = v;
+      }
+      SetMotion(&p->s, 0xB01E);
+      {
+        register u32* sp2 asm("r2");
+        u32 f;
+        sp2 = (u32*)((u8*)p + 0x8c);
+        st = sp2;
+        f = *st & (0x80 << 2);
+        if (f == 0) {
+          if (*(s16*)((u8*)p + 0xa4) != 0) {
+            goto ten;
+          }
+        }
+        if ((gStageRun.missionStatus & 8) != 0) {
+          goto ten;
+        }
+        {
+          u8 m3 = (p->s).mode[3];
+          if (m3 == 1) {
+            (p->s).mode[2] = m3;
+            goto setm;
+          }
+        }
+      ten:
+        (p->s).mode[2] = 0xA;
+        goto setm;
+      }
+    setm: {
+      register s32 z asm("r1");
+      register u8* a2 asm("r0");
+      z = 0;
+      *st = z;
+      a2 = (u8*)p + 0x90;
+      asm volatile("str %0, [%1]" ::"l"(z), "l"(a2) : "memory");
+      a2 += 4;
+      asm("" : "+r"(a2));
+      asm volatile("strb %0, [%1]" ::"l"(z), "l"(a2) : "memory");
+      {
+        register u32 f2 asm("r0");
+        register u8 fl asm("r2");
+        fl = (p->s).flags;
+        f2 = 0xFB;
+        f2 &= fl;
+        (p->s).flags = f2;
+      }
+      {
+        s32* d = (s32*)((u8*)p + 0x5c);
+        d[1] = z;
+        (p->s).d.x = z;
+      }
+    }
+      FALLTHROUGH;
+    }
+    case 1:
+    case 10:
+      UpdateMotionGraphic(&p->s);
+      goto inc;
+    case 2: {
+      struct Coord c;
+      s32 cx;
+      s32 cy;
+      (p->s).d.y = 0;
+      cx = (p->s).coord.x;
+      c.x = cx;
+      cy = (p->s).coord.y;
+      c.y = cy;
+      if (((p->s).flags & 0x10) != 0) {
+        *(volatile s32*)&c.x = cx;
+      }
+      c.y = cy + -0x2100;
+      if ((p->s).work[1] == 0xff) {
+        goto one;
+      }
+      if ((p->s).work[1] == 0xfe) {
+        FUN_080b2b40(0, &c, 0x80 << 2, 0);
+      } else {
+        if ((pZero2->s).coord.x > cx) {
+        one:
+          FUN_080b2b40(0, &c, 0x80 << 2, 1);
+        } else {
+          FUN_080b2b40(0, &c, 0x80 << 2, 0);
+        }
+      }
+      PlaySound(0x2f);
+      goto inc;
+    }
+    case 3:
+      ((void (*)(struct Entity*, struct Coord*, s32, s32))FUN_0809c3b4)(
+          &p->s, &(p->s).coord, 0xB01C, ((p->s).flags >> 4) & 1);
+      SetMotion(&p->s, 0xB01D);
+      UpdateMotionGraphic(&p->s);
+      (p->s).work[2] = 0x44;
+      goto inc;
+    case 4: {
+      s32 t;
+      UpdateMotionGraphic(&p->s);
+      t = (p->s).work[2];
+      if (t != 0) {
+        t -= 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      FALLTHROUGH;
+    }
+    case 11:
+      if (((p->s).scriptEntity->flags & 0x80) == 0) {
+        break;
+      }
+      (p->s).mode[2] = 0x14;
+      break;
+    case 20:
+      (p->s).work[2] = 0x50;
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 21:
+      if (((p->s).scriptEntity->flags & 0x80) == 0) {
+        break;
+      }
+      goto inc;
+    case 22: {
+      const struct Coord* ec;
+      if ((p->s).mode[3] == 1) {
+        if (((p->s).flags & 0x10) == 0) {
+          ec = (const struct Coord*)0x08363A88;
+          asm volatile("" : "+l"(ec));
+        } else {
+          ec = (const struct Coord*)0x08363A90;
+          asm volatile("" : "+l"(ec));
+        }
+      } else {
+        if (((p->s).flags & 0x10) == 0) {
+          ec = (const struct Coord*)0x08363A78;
+          asm volatile("" : "+l"(ec));
+        } else {
+          ec = (const struct Coord*)0x08363A80;
+          asm volatile("" : "+l"(ec));
+        }
+      }
+      *(struct Entity**)((u8*)p + 0xc0) = CreateBossExplosion(&p->s, (struct Coord*)ec);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 23:
+      if ((*(struct Entity**)((u8*)p + 0xc0))->mode[0] <= 1) {
+        break;
+      }
+    inc:
+      (p->s).mode[2]++;
+      break;
+    case 24:
+      (p->s).work[2] = 0x30;
+      {
+        u8 v = gStageRun.vm.active;
+        u32 t = 2;
+        t |= v;
+        gStageRun.vm.active = t;
+      }
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    case 25: {
+      s32 t = (p->s).work[2];
+      if (t != 0) {
+        t -= 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      {
+        u8 fl = (p->s).flags;
+        u32 f2 = 0xFE;
+        f2 &= fl;
+        (p->s).flags = f2;
+      }
+      break;
+    }
+  }
+}
 
 bool8 FUN_08052b48(struct Boss* p) { return TRUE; }
 
