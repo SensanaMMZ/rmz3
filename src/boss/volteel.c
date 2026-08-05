@@ -4,6 +4,7 @@
 #include "global.h"
 #include "motion.h"
 #include "overworld.h"
+#include "physics.h"
 #include "script.h"
 #include "stagerun.h"
 #include "zero.h"
@@ -664,7 +665,244 @@ INCASM("asm/boss/volteel_p7.inc");
 
 bool8 FUN_080449f0(struct Boss* p) { return TRUE; }
 
-INCASM("asm/boss/volteel_p8.inc");
+// 0x080449F4
+void volteelMode6(struct Boss* p) {
+  switch ((p->s).mode[2]) {
+    case 0: {
+      s32 mid;
+      {
+        s32* pa;
+        register s32* pb asm("r6");
+        register s32 t asm("r2");
+        register s32 zx asm("r3");
+        register s32 b asm("r5");
+        register s32* q1 asm("r1");
+        register s32* q2 asm("r0");
+        register s32 u asm("r1");
+        register s32 v asm("r0");
+        s32 a;
+        {
+          u8 fl = (p->s).flags;
+          u32 f = 1;
+          f |= fl;
+          (p->s).flags = f;
+        }
+        {
+          struct Zero* z0 = pZero2;
+          q1 = (s32*)((u8*)p + 0xdc);
+          zx = (z0->s).coord.x;
+        }
+        a = *q1;
+        t = zx - a;
+        pa = q1;
+        if (t <= 0) {
+          t = a - zx;
+        }
+        q2 = (s32*)((u8*)p + 0xe0);
+        b = *q2;
+        u = zx - b;
+        pb = q2;
+        if (u > 0 ? t > u : t > (v = b - zx)) {
+          register u8* q asm("r2");
+          register u32 z asm("r1");
+          (p->s).coord.x = *pb;
+          (p->s).unk_coord.x = *pa + (0x80 << 7);
+          q = (u8*)p + 0xca;
+          z = 0;
+          *q = 1;
+          {
+            u8* x = (u8*)p + 0x4c;
+            *x = z;
+          }
+          q -= 0x80;
+          {
+            s32 ov = *q;
+            s32 m11 = -0x11;
+            m11 &= ov;
+            *q = m11;
+          }
+          {
+            u8 fl = (p->s).flags;
+            u32 f = 0xEF;
+            f &= fl;
+            (p->s).flags = f;
+          }
+        } else {
+          register u8* q asm("r1");
+          register u32 k asm("r1");
+          (p->s).coord.x = *pa;
+          (p->s).unk_coord.x = *pb + -0x4000;
+          q = (u8*)p + 0xca;
+          *q = 3;
+          q -= 0x7e;
+          *q = 1;
+          {
+            u8* oa = (u8*)p + 0x4a;
+            u32 v = *oa;
+            k = 0x10;
+            v |= k;
+            *oa = v;
+          }
+          {
+            u8 fl = (p->s).flags;
+            k |= fl;
+            (p->s).flags = k;
+          }
+        }
+      }
+      {
+        s32* hi = (s32*)((u8*)p + 0xd8);
+        s32* lo = (s32*)((u8*)p + 0xd4);
+        s32 h = *hi;
+        mid = h - ((h - *lo) >> 1);
+      }
+      (p->s).coord.y = mid + (0x90 << 6);
+      (p->s).unk_coord.y = 0x7FFFFFFF;
+      {
+        register s32 r asm("r2");
+        r = FUN_0800a05c((p->s).unk_coord.x, mid + -0x2C00);
+        if (r < (p->s).unk_coord.y && r > *(s32*)((u8*)p + 0xbc) + -0x5000) {
+          (p->s).unk_coord.y = r;
+        }
+      }
+      {
+        register s32 r asm("r2");
+        r = FUN_0800a05c((p->s).unk_coord.x + (0x90 << 5), (p->s).coord.y + -0x5000);
+        if (r < (p->s).unk_coord.y && r > *(s32*)((u8*)p + 0xbc) + -0x5000) {
+          (p->s).unk_coord.y = r;
+        }
+      }
+      {
+        register s32 r asm("r2");
+        r = FUN_0800a05c((p->s).unk_coord.x + -0x1200, (p->s).coord.y + -0x5000);
+        if (r < (p->s).unk_coord.y && r > *(s32*)((u8*)p + 0xbc) + -0x5000) {
+          (p->s).unk_coord.y = r;
+        }
+      }
+      {
+        register s32 ux asm("r0");
+        s32 q;
+        ux = (p->s).unk_coord.x;
+        (p->s).work[2] = 0x50;
+        (p->s).d.x = (ux - (p->s).coord.x) / 0x50;
+        {
+          register s32 c asm("r2");
+          register s32 uy asm("r0");
+          register s32 cy asm("r1");
+          c = 0xc8 << 8;
+          uy = (p->s).unk_coord.y;
+          cy = (p->s).coord.y;
+          uy -= cy;
+          c -= uy;
+          q = c / 0x50;
+        }
+        (p->s).d.y = -q;
+      }
+      {
+        u8 w = 0x4f;
+        (p->s).work[2] = w;
+        (p->s).work[3] = w;
+      }
+      PlaySound(0x7a);
+      SetMotion(&p->s, MOTION(0xA5, 0x12));
+      SetDDP(&p->body, &sCollisions[0]);
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 1: {
+      register s32 mv asm("r5");
+      u32 mvv;
+      s32 dy = (p->s).d.y + 0x10;
+      (p->s).d.y = dy;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += dy;
+      mvv = MOTION_VALUE(p);
+      asm("" : "+r"(mvv));
+      mv = 0xA513;
+      if (mvv != mv) {
+        register u32 half asm("r0");
+        register u32 w2 asm("r1");
+        half = (p->s).work[3];
+        w2 = (p->s).work[2];
+        half >>= 1;
+        if (w2 < half) {
+          {
+            u8 fl = (p->s).flags;
+            u32 f = 1;
+            f |= fl;
+            (p->s).flags = f;
+          }
+          SetDDP(&p->body, &sCollisions[15]);
+          {
+            register struct Entity* e asm("r0");
+            register s32 m asm("r1");
+            e = &p->s;
+            m = mv;
+            SetMotion(e, m);
+          }
+        } else {
+          register u32 one asm("r0");
+          register u32 f asm("r0");
+          one = 1;
+          one &= w2;
+          if (one != 0) {
+            u8 fl = (p->s).flags;
+            f = 1;
+            f |= fl;
+          } else {
+            u8 fl = (p->s).flags;
+            f = 0xFE;
+            f &= fl;
+          }
+          (p->s).flags = f;
+        }
+      }
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).motion.state == 3) {
+        (p->s).mode[2]++;
+      }
+      if ((p->s).work[2] != 0) {
+        (p->s).work[2]--;
+      }
+      break;
+    }
+    case 2: {
+      u8* a = (u8*)p + 0x49;
+      u32 v = *a;
+      s32 m = -0xd;
+      u32 e8a;
+      m &= v;
+      e8a = 8;
+      m |= e8a;
+      *a = m;
+      SetMotion(&p->s, MOTION(0xA5, 0x02));
+      (p->s).mode[2]++;
+      FALLTHROUGH;
+    }
+    case 3: {
+      s32 dy = (p->s).d.y + 0x10;
+      (p->s).d.y = dy;
+      (p->s).coord.x += (p->s).d.x;
+      (p->s).coord.y += dy;
+      UpdateMotionGraphic(&p->s);
+      if ((p->s).work[2] != 0) {
+        s32 t = (p->s).work[2] - 1;
+        (p->s).work[2] = t;
+        if ((t << 24) != 0) {
+          break;
+        }
+      }
+      (p->s).mode[2]++;
+      break;
+    }
+    case 4: {
+      u8 z = 0;
+      (p->s).mode[1] = 3;
+      (p->s).mode[2] = z;
+      break;
+    }
+  }
+}
 
 bool8 FUN_08044cb4(struct Boss* p) { return TRUE; }
 
